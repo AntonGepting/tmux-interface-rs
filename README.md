@@ -38,4 +38,5 @@ Tested on: tmux 2.8
 
 ## License
 
-t
+tmux interface is licensed under the MIT license. Please read the license file in this repository for more information.
+
