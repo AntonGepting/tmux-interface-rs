@@ -17,28 +17,28 @@ fn sessions_parse() {
 }
 
 
-#[test]
-fn list_sessions() {
-    use crate::session::Sessions;
-    use crate::tmux_interface::TmuxInterface;
-    use crate::LIST_SESSIONS_FORMAT;
+//#[test]
+//fn list_sessions() {
+    //use crate::session::Sessions;
+    //use crate::tmux_interface::TmuxInterface;
+    //use crate::LIST_SESSIONS_FORMAT;
 
-    let tmux = TmuxInterface::new(None);
-    let sessions_str = tmux.list_sessions(Some(LIST_SESSIONS_FORMAT)).unwrap();
-    let sessions = Sessions::parse(&sessions_str).unwrap();
-    for session in &sessions {
-        if session.id == 0 {
-        }
-    }
-    assert_eq!(sessions[0].id, 0);
-}
+    //let tmux = TmuxInterface::new(None);
+    //let sessions_str = tmux.list_sessions(Some(LIST_SESSIONS_FORMAT)).unwrap();
+    //let sessions = Sessions::parse(&sessions_str).unwrap();
+    //for session in &sessions {
+        //if session.id == 0 {
+        //}
+    //}
+    //assert_eq!(sessions[0].id, 0);
+//}
 
 
-#[test]
-fn has_session() {
-    use crate::tmux_interface::TmuxInterface;
+//#[test]
+//fn has_session() {
+    //use crate::tmux_interface::TmuxInterface;
 
-    let tmux = TmuxInterface::new(None);
-    assert_eq!(tmux.has_session("0").unwrap(), true);
-    assert_ne!(tmux.has_session("1").unwrap(), true);
-}
+    //let tmux = TmuxInterface::new(None);
+    //assert_eq!(tmux.has_session("0").unwrap(), true);
+    //assert_ne!(tmux.has_session("1").unwrap(), true);
+//}

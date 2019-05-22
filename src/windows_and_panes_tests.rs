@@ -1,29 +1,29 @@
-#[test]
-fn list_windows() {
-    use crate::tmux_interface::TmuxInterface;
-    use crate::window::Windows;
-    use crate::LIST_WINDOWS_FORMAT;
+//#[test]
+//fn list_windows() {
+    //use crate::tmux_interface::TmuxInterface;
+    //use crate::window::Windows;
+    //use crate::LIST_WINDOWS_FORMAT;
 
-    let tmux = TmuxInterface::new(None);
-    let windows_str = tmux.list_windows(false, Some(LIST_WINDOWS_FORMAT), Some("0")).unwrap();
-    let windows = Windows::parse(&windows_str).unwrap();
-    assert_eq!(windows[0].id, 0);
-}
+    //let tmux = TmuxInterface::new(None);
+    //let windows_str = tmux.list_windows(false, Some(LIST_WINDOWS_FORMAT), Some("0")).unwrap();
+    //let windows = Windows::parse(&windows_str).unwrap();
+    //assert_eq!(windows[0].id, 0);
+//}
 
 
-#[test]
-fn list_panes() {
-    use crate::tmux_interface::TmuxInterface;
-    use crate::pane::Panes;
-    use crate::LIST_PANES_FORMAT;
+//#[test]
+//fn list_panes() {
+    //use crate::tmux_interface::TmuxInterface;
+    //use crate::pane::Panes;
+    //use crate::LIST_PANES_FORMAT;
 
-    let tmux = TmuxInterface::new(None);
-    let panes_str = tmux.list_panes(false, true, Some(LIST_PANES_FORMAT), Some("0")).unwrap();
-    dbg!(&panes_str);
-    let panes = Panes::parse(&panes_str).unwrap();
-    dbg!(&panes);
-    assert_eq!(panes[0].id, 0);
-}
+    //let tmux = TmuxInterface::new(None);
+    //let panes_str = tmux.list_panes(false, true, Some(LIST_PANES_FORMAT), Some("0")).unwrap();
+    //dbg!(&panes_str);
+    //let panes = Panes::parse(&panes_str).unwrap();
+    //dbg!(&panes);
+    //assert_eq!(panes[0].id, 0);
+//}
 
 
 #[test]
