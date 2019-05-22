@@ -131,5 +131,3 @@ impl<'a> TmuxInterface<'a> {
         }
     }
 }
-
-
