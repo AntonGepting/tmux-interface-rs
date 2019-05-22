@@ -1,4 +1,8 @@
-# tmux_interface
+tmux_interface
+==============
+
+Ubuntu Trusty 14.04: [![Build Status](https://travis-ci.com/AntonGepting/tmux-interface-rs.svg?branch=dev)](https://travis-ci.com/AntonGepting/tmux-interface-rs)
+
 
 Tmux Interface is a rust language library for communication with TMUX via CLI.
 
@@ -34,4 +38,4 @@ Tested on: tmux 2.8
 
 ## License
 
-tmux interface is licensed under the MIT license. Please read the license file in this repository for more information.
+t
