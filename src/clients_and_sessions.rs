@@ -77,7 +77,7 @@ impl<'a> AttachSession<'a> {
 }
 
 
-
+/// All functions from man tmux "Clients and Sessions" listed below
 impl<'a> TmuxInterface<'a> {
 
     const NEW_SESSION: &'static str = "new-session";
