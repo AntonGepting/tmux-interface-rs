@@ -22,12 +22,12 @@ fn has_session() {
     let tmux = TmuxInterface::new(None);
     let new_session = NewSession {
         detached: Some(true),
-        session_name: Some(Cow::Borrowed("test_new_session")),
+        session_name: Some(Cow::Borrowed("test_has_session")),
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
-    assert_eq!(tmux.has_session("test_new_session").unwrap(), true);
-    tmux.kill_session("test_new_session", false, false).unwrap();
+    assert_eq!(tmux.has_session("test_has_session").unwrap(), true);
+    tmux.kill_session("test_has_session", false, false).unwrap();
 }
 
 
@@ -45,11 +45,11 @@ fn kill_session() {
     let tmux = TmuxInterface::new(None);
     let new_session = NewSession {
         detached: Some(true),
-        session_name: Some(Cow::Borrowed("test_new_session")),
+        session_name: Some(Cow::Borrowed("test_kill_session")),
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
-    tmux.kill_session("test_new_session", false, false).unwrap();
+    tmux.kill_session("test_kill_session", false, false).unwrap();
 }
 
 
@@ -73,12 +73,12 @@ fn list_sessions() {
     let tmux = TmuxInterface::new(None);
     let new_session = NewSession {
         detached: Some(true),
-        session_name: Some(Cow::Borrowed("test_new_session")),
+        session_name: Some(Cow::Borrowed("test_list_sessions")),
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
     tmux.list_sessions(None).unwrap();
-    tmux.kill_session("test_new_session", false, false).unwrap();
+    tmux.kill_session("test_list_sessions", false, false).unwrap();
 }
 
 
@@ -124,11 +124,11 @@ fn rename_session() {
     let tmux = TmuxInterface::new(None);
     let new_session = NewSession {
         detached: Some(true),
-        session_name: Some(Cow::Borrowed("test_new_session")),
+        session_name: Some(Cow::Borrowed("test_rename_session")),
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
-    tmux.rename_session(Some("test_new_session"), "rename_test_session").unwrap();
+    tmux.rename_session(Some("test_rename_session"), "rename_test_session").unwrap();
     assert_eq!(tmux.has_session("rename_test_session").unwrap(), true);
     tmux.kill_session("rename_test_session", false, false).unwrap();
 }
