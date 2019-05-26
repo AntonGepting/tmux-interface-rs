@@ -22,6 +22,7 @@ an improvment, an idea etc.
 - [ ] Parse full information from tmux responses into structures
 - [ ] Prepare documentation
 - [ ] Prepare tests
+- [ ] Function results
 
 
 **tmux interface v0.0.1**
