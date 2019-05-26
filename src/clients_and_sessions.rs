@@ -233,7 +233,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux refresh-client [-cDlLRSU] [-C width,height] [-t target-client] [adjustment]
     /// (alias: refresh)
     /// ```
-    pub fn refresh_ckient() {
+    pub fn refresh_client() {
         unimplemented!();
     }
 
