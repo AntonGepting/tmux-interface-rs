@@ -27,10 +27,11 @@ an improvment, an idea etc.
 
 **tmux interface v0.0.1**
 
-- [x] Prepare sources for publication on github.com, crates.io, travis-ci
+- [x] Prepare sources for publication on github.com
     - [x] .editorconfig
     - [x] .travis.yml
     - [x] LICENSE.md
+- [ ] Prepare crate for publication on crates.io
 - [x] Add all tmux subcommands stubs
 
 
