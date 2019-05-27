@@ -11,6 +11,7 @@ pub mod clients_and_sessions;
 pub mod key_bindings;
 pub mod status_line;
 pub mod options;
+pub mod hooks;
 
 
 pub use self::tmux_interface::TmuxInterface;
