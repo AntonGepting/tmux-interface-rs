@@ -175,17 +175,84 @@ impl<'a> TmuxInterface<'a> {
     const SELECT_WINDOW: &'static str = "select-window";
     const SELECT_PANE: &'static str = "select-pane";
 
-    ///  ```text
-    ///  rename-window [-t target-window] new-name
-    ///  (alias: renamew)
-    ///  ```
-    pub fn rename_window(&self, target_window: Option<&str>, new_name: &str) -> Result<bool, TmuxInterfaceError> {
-        let mut args: Vec<&str> = Vec::new();
-        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        args.push(new_name);
-        let output = self.subcommand(TmuxInterface::RENAME_WINDOW, &args)?;
-        Ok(output.status.success())
+
+    /// ```text
+    /// copy-mode [-Meu] [-t target-pane]
+    /// ```
+    pub fn copy_mode() {
+        unimplemented!();
     }
+
+
+    /// ```text
+    /// break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
+    /// (alias: breakp)
+    /// ```
+    pub fn break_pane() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line]
+    /// [-t target-pane]
+    /// (alias: capturep)
+    /// ```
+    pub fn capture_pane() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+    /// ```
+    pub fn choose_client() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+    /// ```
+    pub fn choose_tree() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// display-panes [-b] [-d duration] [-t target-client] [template] (alias: displayp)
+    /// ```
+    pub fn display_panes() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// find-window [-CNTZ] [-t target-pane] match-string
+    /// (alias: findw)
+    /// ```
+    pub fn find_window() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+    /// (alias: joinp)
+    /// ```
+    pub fn join_pane() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// kill-pane [-a] [-t target-pane]
+    /// (alias: killp)
+    /// ```
+    pub fn kill_pane() {
+        unimplemented!();
+    }
+
 
     /// ```text
     /// kill-window [-a] [-t target-window]
@@ -198,6 +265,51 @@ impl<'a> TmuxInterface<'a> {
         let output = self.subcommand(TmuxInterface::KILL_WINDOW, &args)?;
         Ok(output.status.success())
     }
+
+
+    /// ```text
+    /// last-pane [-de] [-t target-window]
+    /// (alias: lastp)
+    /// ```
+    pub fn last_pane() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// last-window [-t target-session]
+    /// (alias: last)
+    /// ```
+    pub fn last_window() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// link-window [-adk] [-s src-window] [-t dst-window]
+    /// (alias: linkw)
+    /// ```
+    pub fn link_window() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// tmux list-panes [-as] [-F format] [-t target]
+    /// (alias: lsp)
+    /// ```
+    pub fn list_panes(&self, all: bool, session: bool, format: Option<&str>, target: Option<&str>)
+        -> Result<String, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if all { args.push(a_KEY); }
+        if session { args.push(s_KEY); }
+        format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        target.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::LIST_PANES, &args)?;
+        let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
+        Ok(stdout.to_string())
+    }
+
 
     /// ```text
     /// tmux list-windows [-a] [-F format] [-t target-session]
@@ -214,15 +326,24 @@ impl<'a> TmuxInterface<'a> {
         Ok(stdout.to_string())
     }
 
+
     /// ```text
-    /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+    /// move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: movep)
     /// ```
+    pub fn move_pane() {
+        unimplemented!();
+    }
+
 
     /// ```text
     /// tmux move-window [-ardk] [-s src-window] [-t dst-window]
     /// (alias: movew)
     /// ```
+    pub fn move_window() {
+        unimplemented!();
+    }
+
 
     /// ```text
     /// tmux new-window [-adkP] [-c start-directory] [-F format] [-n window-name] [-t target-window] [shell-command]
@@ -245,19 +366,136 @@ impl<'a> TmuxInterface<'a> {
 
 
     /// ```text
-    /// tmux list-panes [-as] [-F format] [-t target]
-    /// (alias: lsp)
+    /// pipe-pane [-IOo] [-t target-pane] [shell-command]
+    /// (alias: pipep)
     /// ```
-    pub fn list_panes(&self, all: bool, session: bool, format: Option<&str>, target: Option<&str>)
-        -> Result<String, TmuxInterfaceError> {
+    pub fn pipe_pane() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// previous-layout [-t target-window]
+    /// (alias: prevl)
+    /// ```
+    pub fn previous_layout() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// previous-window [-a] [-t target-session]
+    /// (alias: prev)
+    /// ```
+    pub fn previous_window() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// rename-window [-t target-window] new-name
+    /// (alias: renamew)
+    /// ```
+    pub fn rename_window(&self, target_window: Option<&str>, new_name: &str) -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
-        if all { args.push(a_KEY); }
-        if session { args.push(s_KEY); }
-        format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        target.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        let output = self.subcommand(TmuxInterface::LIST_PANES, &args)?;
-        let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
-        Ok(stdout.to_string())
+        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        args.push(new_name);
+        let output = self.subcommand(TmuxInterface::RENAME_WINDOW, &args)?;
+        Ok(output.status.success())
+    }
+
+
+    /// ```text
+    /// resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+    /// (alias: resizep)
+    /// ```
+    pub fn resize_pane() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
+    /// (alias: resizew)
+    /// ```
+    pub fn resize_window() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// respawn-pane [-k] [-c start-directory] [-e environment] [-t target-pane] [shell-command]
+    /// (alias: respawnp)
+    /// ```
+    pub fn respawn_pane() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// respawn-window [-k] [-c start-directory] [-e environment] [-t target-window] [shell-command]
+    /// (alias: respawnw)
+    /// ```
+    pub fn respawn_window() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// rotate-window [-DU] [-t target-window]
+    /// (alias: rotatew)
+    /// ```
+    pub fn rotate_window() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// select-layout [-Enop] [-t target-pane] [layout-name]
+    /// (alias: selectl)
+    /// ```
+    pub fn select_layout() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// tmux select-pane [-DdegLlMmRU] [-P style] [-T title] [-t target-pane]
+    /// (alias: selectp)
+    /// ```
+    pub fn select_pane(&self, select_pane: &SelectPane) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if select_pane.down.unwrap_or(false) { args.push(D_KEY); }
+        if select_pane.disable.unwrap_or(false) { args.push(d_KEY); }
+        if select_pane.enable.unwrap_or(false) { args.push(e_KEY); }
+        if select_pane.show_style.unwrap_or(false) { args.push(g_KEY); }
+        if select_pane.left.unwrap_or(false) { args.push(L_KEY); }
+        if select_pane.last.unwrap_or(false) { args.push(l_KEY); }
+        if select_pane.set_marked.unwrap_or(false) { args.push(M_KEY); }
+        if select_pane.clear_marked.unwrap_or(false) { args.push(m_KEY); }
+        if select_pane.right.unwrap_or(false) { args.push(R_KEY); }
+        if select_pane.up.unwrap_or(false) { args.push(U_KEY); }
+        select_pane.style.and_then(|s| Some(args.extend_from_slice(&[P_KEY, s])));
+        select_pane.title.and_then(|s| Some(args.extend_from_slice(&[T_KEY, s])));
+        select_pane.target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
+        let output = self.subcommand(TmuxInterface::SELECT_PANE, &args)?;
+        Ok(output.status.success())
+    }
+
+
+    /// ```text
+    /// tmux select-window [-lnpT] [-t target-window]
+    /// (alias: selectw)
+    /// ```
+    pub fn select_window(&self, select_window: &SelectWindow) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if select_window.last.unwrap_or(false) { args.push(l_KEY); }
+        if select_window.next.unwrap_or(false) { args.push(n_KEY); }
+        if select_window.previous.unwrap_or(false) { args.push(p_KEY); }
+        if select_window.switch.unwrap_or(false) { args.push(T_KEY); }
+        select_window.target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
+        let output = self.subcommand(TmuxInterface::SELECT_WINDOW, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -292,41 +530,32 @@ impl<'a> TmuxInterface<'a> {
         Ok(output.status.success())
     }
 
-    /// ```text
-    /// tmux select-pane [-DdegLlMmRU] [-P style] [-T title] [-t target-pane]
-    /// (alias: selectp)
-    /// ```
-    pub fn select_pane(&self, select_pane: &SelectPane) -> Result<bool, TmuxInterfaceError> {
-        let mut args: Vec<&str> = Vec::new();
-        if select_pane.down.unwrap_or(false) { args.push(D_KEY); }
-        if select_pane.disable.unwrap_or(false) { args.push(d_KEY); }
-        if select_pane.enable.unwrap_or(false) { args.push(e_KEY); }
-        if select_pane.show_style.unwrap_or(false) { args.push(g_KEY); }
-        if select_pane.left.unwrap_or(false) { args.push(L_KEY); }
-        if select_pane.last.unwrap_or(false) { args.push(l_KEY); }
-        if select_pane.set_marked.unwrap_or(false) { args.push(M_KEY); }
-        if select_pane.clear_marked.unwrap_or(false) { args.push(m_KEY); }
-        if select_pane.right.unwrap_or(false) { args.push(R_KEY); }
-        if select_pane.up.unwrap_or(false) { args.push(U_KEY); }
-        select_pane.style.and_then(|s| Some(args.extend_from_slice(&[P_KEY, s])));
-        select_pane.title.and_then(|s| Some(args.extend_from_slice(&[T_KEY, s])));
-        select_pane.target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
-        let output = self.subcommand(TmuxInterface::SELECT_PANE, &args)?;
-        Ok(output.status.success())
-    }
 
     /// ```text
-    /// tmux select-window [-lnpT] [-t target-window]
-    /// (alias: selectw)
+    /// swap-pane [-dDU] [-s src-pane] [-t dst-pane]
+    /// (alias: swapp)
     /// ```
-    pub fn select_window(&self, select_window: &SelectWindow) -> Result<bool, TmuxInterfaceError> {
-        let mut args: Vec<&str> = Vec::new();
-        if select_window.last.unwrap_or(false) { args.push(l_KEY); }
-        if select_window.next.unwrap_or(false) { args.push(n_KEY); }
-        if select_window.previous.unwrap_or(false) { args.push(p_KEY); }
-        if select_window.switch.unwrap_or(false) { args.push(T_KEY); }
-        select_window.target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
-        let output = self.subcommand(TmuxInterface::SELECT_WINDOW, &args)?;
-        Ok(output.status.success())
+    pub fn swap_pane() {
+        unimplemented!();
     }
+
+
+    /// ```text
+    /// swap-window [-d] [-s src-window] [-t dst-window]
+    /// (alias: swapw)
+    /// ```
+    pub fn swap_window() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// unlink-window [-k] [-t target-window]
+    /// (alias: unlinkw)
+    /// ```
+    pub fn unlink_window() {
+        unimplemented!();
+    }
+
+
 }
