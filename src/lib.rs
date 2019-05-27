@@ -10,6 +10,7 @@ pub mod windows_and_panes;
 pub mod clients_and_sessions;
 pub mod key_bindings;
 pub mod status_line;
+pub mod options;
 
 
 pub use self::tmux_interface::TmuxInterface;
