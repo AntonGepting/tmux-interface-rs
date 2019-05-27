@@ -12,6 +12,7 @@ pub mod key_bindings;
 pub mod status_line;
 pub mod options;
 pub mod hooks;
+pub mod buffers;
 
 
 pub use self::tmux_interface::TmuxInterface;
