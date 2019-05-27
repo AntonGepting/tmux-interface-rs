@@ -34,6 +34,7 @@ pub struct Session {
     pub windows: usize,
 }
 
+
 impl Default for Session {
     fn default() -> Self {
         Session {
@@ -48,9 +49,8 @@ impl Default for Session {
     }
 }
 
+
 impl Session {
-
-
     pub fn new() -> Session {
         Default::default()
     }
@@ -70,25 +70,4 @@ impl Session {
         session.windows = cap[7].parse().unwrap();
         Ok(session)
     }
-
-
 }
-
-
-pub struct Sessions {
-    //sessions: Vec<Session>
-}
-
-
-impl Sessions {
-
-    pub fn parse(sessions_str: &str) -> Result<Vec<Session>, ()> {
-        let mut sessions: Vec<Session> = Vec::new();
-        for line in sessions_str.lines() {
-            sessions.push(Session::parse(line).unwrap());
-        }
-        Ok(sessions)
-    }
-}
-
-
