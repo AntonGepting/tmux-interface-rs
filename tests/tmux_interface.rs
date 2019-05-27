@@ -19,7 +19,7 @@ fn has_session() {
     use crate::tmux_interface::NewSession;
     use std::borrow::Cow;
 
-    let tmux = TmuxInterface::new(None);
+    let tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
         session_name: Some(Cow::Borrowed("test_has_session")),
@@ -42,7 +42,7 @@ fn kill_session() {
     use crate::tmux_interface::NewSession;
     use std::borrow::Cow;
 
-    let tmux = TmuxInterface::new(None);
+    let tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
         session_name: Some(Cow::Borrowed("test_kill_session")),
@@ -70,7 +70,7 @@ fn list_sessions() {
     use crate::tmux_interface::NewSession;
     use std::borrow::Cow;
 
-    let tmux = TmuxInterface::new(None);
+    let tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
         session_name: Some(Cow::Borrowed("test_list_sessions")),
@@ -99,7 +99,7 @@ fn new_session() {
     use crate::tmux_interface::NewSession;
     use std::borrow::Cow;
 
-    let tmux = TmuxInterface::new(None);
+    let tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
         session_name: Some(Cow::Borrowed("test_new_session")),
@@ -121,7 +121,7 @@ fn rename_session() {
     use crate::tmux_interface::NewSession;
     use std::borrow::Cow;
 
-    let tmux = TmuxInterface::new(None);
+    let tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
         session_name: Some(Cow::Borrowed("test_rename_session")),
@@ -173,7 +173,7 @@ fn rename_session() {
     //use crate::tmux_interface::TmuxInterface;
     //use crate::LIST_SESSIONS_FORMAT;
 
-    //let tmux = TmuxInterface::new(None);
+    //let tmux = TmuxInterface::new();
     //let sessions_str = tmux.list_sessions(Some(LIST_SESSIONS_FORMAT)).unwrap();
     //let sessions = Sessions::parse(&sessions_str).unwrap();
     //for session in &sessions {
