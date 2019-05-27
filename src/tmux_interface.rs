@@ -86,7 +86,7 @@ pub struct TmuxInterface<'a> {
     pub socket_path: Option<&'a str>,                   // -S socket-path
     pub force_utf8: Option<bool>,                       // -u
     pub verbose_logging: Option<bool>,                  // -v
-    // -V
+    //pub version                                       // -V
 }
 
 
@@ -104,6 +104,7 @@ impl<'a> Default for TmuxInterface<'a> {
             socket_path: None,
             force_utf8: None,
             verbose_logging: None
+            //version
         }
     }
 }
