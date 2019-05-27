@@ -120,20 +120,21 @@ impl<'a> TmuxInterface<'a> {
         Default::default()
     }
 
-
+    /// tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path]
+    /// [command [flags]]
     pub fn subcommand(&self, subcmd: &str, args: &[&str]) -> Result<Output, TmuxInterfaceError> {
         let mut options: Vec<&str> = Vec::new();
         let mut tmux = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
         if self.colours256.unwrap_or(false) { options.push(_2_KEY); };
         if self.control_mode.unwrap_or(false) { options.push(C_KEY); };
         if self.disable_echo.unwrap_or(false) { options.push(CC_KEY); };
+        if self.login_shell.unwrap_or(false) { options.push(l_KEY) };
+        if self.force_utf8.unwrap_or(false) { options.push(u_KEY) }
+        if self.verbose_logging.unwrap_or(false) { options.push(v_KEY) }
         self.shell_cmd.as_ref().and_then(|s| Some(options.extend_from_slice(&[c_KEY, &s])));
         self.file.as_ref().and_then(|s| Some(options.extend_from_slice(&[f_KEY, &s])));
         self.socket_name.as_ref().and_then(|s| Some(options.extend_from_slice(&[L_KEY, &s])));
-        if self.login_shell.unwrap_or(false) { options.push(l_KEY) };
         self.socket_path.as_ref().and_then(|s| Some(options.extend_from_slice(&[S_KEY, &s])));
-        if self.force_utf8.unwrap_or(false) { options.push(u_KEY) }
-        if self.verbose_logging.unwrap_or(false) { options.push(v_KEY) }
         tmux.args(options);
         tmux.arg(subcmd);
         let output = tmux.args(args).output()?;
