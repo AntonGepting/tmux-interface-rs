@@ -18,7 +18,7 @@ an improvment, an idea etc.
 
 - [ ] Support basic tmux subcommands (references:
 [tmuxinator](https://github.com/tmuxinator/tmuxinator),
-[libtmux](https://github.com/tmux-python/libtmux))
+[libtmux](https://github.com/tmux-python/libtmux), rust crates using tmux)
 - [ ] Parse full information from tmux responses into structures
 - [ ] Prepare documentation
 - [ ] Prepare tests
@@ -27,10 +27,11 @@ an improvment, an idea etc.
 
 **tmux interface v0.0.1**
 
-- [ ] Prepare sources for publication on github.com, crates.io, travis-ci
+- [x] Prepare sources for publication on github.com, crates.io, travis-ci
     - [x] .editorconfig
-    - [ ] .travis.yml
-    - [ ] LICENSE.md
+    - [x] .travis.yml
+    - [x] LICENSE.md
+- [x] Add all tmux subcommands stubs
 
 
 # Wishlist
