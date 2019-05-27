@@ -14,6 +14,7 @@ pub mod options;
 pub mod hooks;
 pub mod buffers;
 pub mod global_and_session_environment;
+pub mod miscellaneous;
 
 
 pub use self::tmux_interface::TmuxInterface;
