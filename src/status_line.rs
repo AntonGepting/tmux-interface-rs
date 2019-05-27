@@ -1,10 +1,29 @@
 use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
 
+
 /// Status line
 impl<'a> TmuxInterface<'a> {
 
     const DISPLAY_MESSAGE: &'static str = "display-message";
+
+
+    /// ```text
+    /// command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
+    /// ```
+    pub fn command_prompt() {
+        unimplemented!();
+    }
+
+
+    /// ```text
+    /// confirm-before [-p prompt] [-t target-client] command
+    /// (alias: confirm)
+    /// ```
+    pub fn confirm_before() {
+        unimplemented!();
+    }
+
 
     /// ```text
     /// tmux display-message [-p] [-c target-client] [-t target-pane] [message]
