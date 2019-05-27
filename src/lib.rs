@@ -35,4 +35,8 @@ pub use self::tmux_interface_error::TmuxInterfaceError;
 #[cfg(test)]
 mod tmux_interface_tests;
 mod session_tests;
-mod windows_and_panes_tests;
+mod sessions_tests;
+mod window_tests;
+mod windows_tests;
+mod pane_tests;
+mod panes_tests;
