@@ -1,5 +1,6 @@
 use std::time::Duration;
 use regex::Regex;
+use crate::TmuxInterfaceError;
 
 
 pub const WINDOW_VARS_SEPARATOR: &str = "'";
@@ -97,42 +98,42 @@ impl Window {
 
 
     // XXX: mb deserialize like serde something?
-    pub fn parse(window_str: &str) -> Result<Window, ()> {
+    pub fn parse(window_str: &str) -> Result<Window, TmuxInterfaceError> {
         let regex_str = format!("^{}$", WINDOW_VARS_REGEX_VEC.iter()
                                 .map(|t| t.1).collect::<Vec<&str>>().join(WINDOW_VARS_SEPARATOR));
-        let regex = Regex::new(&regex_str).unwrap();
+        let regex = Regex::new(&regex_str)?;
         let caps = regex.captures(window_str).unwrap();
         let mut window = Window::new();
-        window.activity = Duration::from_millis(caps[1].parse().unwrap());
-        window.active = caps[2].parse::<usize>().map(|i| i == 1).unwrap();
-        window.activity_flag = caps[3].parse::<usize>().map(|i| i == 1).unwrap();
-        window.bell_flag = caps[4].parse::<usize>().map(|i| i == 1).unwrap();
+        window.activity = Duration::from_millis(caps[1].parse()?);
+        window.active = caps[2].parse::<usize>().map(|i| i == 1)?;
+        window.activity_flag = caps[3].parse::<usize>().map(|i| i == 1)?;
+        window.bell_flag = caps[4].parse::<usize>().map(|i| i == 1)?;
         if let Some(bigger) = caps.get(5) {
-            window.bigger = Some(bigger.as_str().parse().unwrap());
+            window.bigger = Some(bigger.as_str().parse()?);
         }
         if let Some(flags) = caps.get(6) {
-            window.flags = Some(flags.as_str().parse().unwrap());
+            window.flags = Some(flags.as_str().parse()?);
         }
-        window.format = caps[7].parse().unwrap();
-        window.height = caps[8].parse().unwrap();
-        window.id = caps[9].parse().unwrap();
-        window.index = caps[10].parse().unwrap();
-        window.last_flag = caps[11].parse().unwrap();
-        window.layout = caps[12].parse().unwrap();
-        window.linked = caps[13].parse().unwrap();
-        window.name = caps[14].parse().unwrap();
+        window.format = caps[7].parse()?;
+        window.height = caps[8].parse()?;
+        window.id = caps[9].parse()?;
+        window.index = caps[10].parse()?;
+        window.last_flag = caps[11].parse()?;
+        window.layout = caps[12].parse()?;
+        window.linked = caps[13].parse()?;
+        window.name = caps[14].parse()?;
         if let Some(offset_x) = caps.get(15) {
-            window.offset_x = Some(offset_x.as_str().parse().unwrap());
+            window.offset_x = Some(offset_x.as_str().parse()?);
         }
         if let Some(offset_y) = caps.get(16) {
-            window.offset_y = Some(offset_y.as_str().parse().unwrap());
+            window.offset_y = Some(offset_y.as_str().parse()?);
         }
-        window.panes = caps[17].parse().unwrap();
-        window.silence_flag = caps[18].parse().unwrap();
-        window.stack_index = caps[19].parse().unwrap();
-        window.visible_layout = caps[20].parse().unwrap();
-        window.width = caps[21].parse().unwrap();
-        window.zoomed_flag = caps[22].parse().unwrap();
+        window.panes = caps[17].parse()?;
+        window.silence_flag = caps[18].parse()?;
+        window.stack_index = caps[19].parse()?;
+        window.visible_layout = caps[20].parse()?;
+        window.width = caps[21].parse()?;
+        window.zoomed_flag = caps[22].parse()?;
         Ok(window)
     }
 

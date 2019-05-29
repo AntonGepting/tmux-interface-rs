@@ -1,5 +1,6 @@
 use std::time::Duration;
 use regex::Regex;
+use crate::TmuxInterfaceError;
 
 
 pub const SESSION_VARS_SEPARATOR: &str = ":";
@@ -106,44 +107,44 @@ impl Session {
 
     // XXX: mb deserialize?
     // XXX: mb callback
-    pub fn parse(session_str: &str) -> Result<Session, ()> {
+    pub fn parse(session_str: &str) -> Result<Session, TmuxInterfaceError> {
         let regex_str = format!("^{}$", SESSION_VARS_REGEX_VEC.iter()
                                 .map(|t| t.1).collect::<Vec<&str>>().join(SESSION_VARS_SEPARATOR));
-        let regex = Regex::new(&regex_str).unwrap();
+        let regex = Regex::new(&regex_str)?;
         let caps = regex.captures(session_str).unwrap();
         let mut session = Session::new();
         // XXX: optimize?
         if let Some(alerts) = caps.get(1) {
-            session.alerts = Some(alerts.as_str().parse().unwrap());
+            session.alerts = Some(alerts.as_str().parse()?);
         }
-        session.attached = caps[2].parse().unwrap();
-        session.activity = Duration::from_millis(caps[3].parse().unwrap());
-        session.created = Duration::from_millis(caps[4].parse().unwrap());
+        session.attached = caps[2].parse()?;
+        session.activity = Duration::from_millis(caps[3].parse()?);
+        session.created = Duration::from_millis(caps[4].parse()?);
         if let Some(format) = caps.get(5) {
-            session.format = Some(format.as_str().parse().unwrap());
+            session.format = Some(format.as_str().parse()?);
         }
-        session.last_attached = Duration::from_millis(caps[6].parse().unwrap());
+        session.last_attached = Duration::from_millis(caps[6].parse()?);
         if let Some(group) = caps.get(7) {
-            session.group = Some(group.as_str().parse().unwrap());
+            session.group = Some(group.as_str().parse()?);
         }
         if let Some(group_size) = caps.get(8) {
-            session.group_size = Some(group_size.as_str().parse().unwrap());
+            session.group_size = Some(group_size.as_str().parse()?);
         }
         if let Some(group_list) = caps.get(9) {
-            session.group_list = Some(group_list.as_str().parse().unwrap());
+            session.group_list = Some(group_list.as_str().parse()?);
         }
         if let Some(grouped) = caps.get(10) {
-            session.grouped = Some(grouped.as_str().parse().unwrap());
+            session.grouped = Some(grouped.as_str().parse()?);
         }
-        session.id = caps[11].parse().unwrap();
+        session.id = caps[11].parse()?;
         if let Some(many_attached) = caps.get(12) {
-            session.many_attached = Some(many_attached.as_str().parse().unwrap());
+            session.many_attached = Some(many_attached.as_str().parse()?);
         }
-        session.name = caps[13].parse().unwrap();
+        session.name = caps[13].parse()?;
         if let Some(stack) = caps.get(14) {
-            session.stack = stack.as_str().parse().unwrap();
+            session.stack = stack.as_str().parse()?;
         }
-        session.windows = caps[15].parse().unwrap();
+        session.windows = caps[15].parse()?;
         Ok(session)
     }
 }

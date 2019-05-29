@@ -69,6 +69,28 @@ impl From<std::num::ParseIntError> for TmuxInterfaceError {
 }
 
 
+impl From<std::string::ParseError> for TmuxInterfaceError {
+    fn from(_error: std::string::ParseError) -> Self {
+        TmuxInterfaceError {
+            err_text: String::from("parse"),
+            err_type: 1
+            //message: error.to_string(),
+        }
+    }
+}
+
+
+//impl From<std::option::NoneError> for TmuxInterfaceError {
+    //fn from(_error: std::option::NoneError) -> Self {
+        //TmuxInterfaceError {
+            //err_text: String::from("parse"),
+            //err_type: 1
+            ////message: error.to_string(),
+        //}
+    //}
+//}
+
+
 impl fmt::Display for TmuxInterfaceError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.err_text)

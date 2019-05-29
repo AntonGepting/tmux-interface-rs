@@ -1,4 +1,5 @@
 use regex::Regex;
+use crate::TmuxInterfaceError;
 
 
 pub const PANE_VARS_SEPARATOR: &str = "'";
@@ -117,49 +118,49 @@ impl Pane {
 
 
     // XXX: mb serde, deserialize?
-    pub fn parse(pane_str: &str) -> Result<Pane, ()> {
+    pub fn parse(pane_str: &str) -> Result<Pane, TmuxInterfaceError> {
         let regex_str = format!("^{}$", PANE_VARS_REGEX_VEC.iter()
                                 .map(|t| t.1).collect::<Vec<&str>>().join(PANE_VARS_SEPARATOR));
-        let regex = Regex::new(&regex_str).unwrap();
+        let regex = Regex::new(&regex_str)?;
         let caps = regex.captures(pane_str).unwrap();
         let mut pane = Pane::new();
-        pane.active = caps[1].parse::<usize>().map(|i| i == 1).unwrap();
-        pane.at_bottom = caps[2].parse::<usize>().map(|i| i == 1).unwrap();
-        pane.at_left = caps[3].parse::<usize>().map(|i| i == 1).unwrap();
-        pane.at_right = caps[4].parse::<usize>().map(|i| i == 1).unwrap();
-        pane.at_top = caps[5].parse::<usize>().map(|i| i == 1).unwrap();
-        pane.bottom = caps[6].parse().unwrap();
-        pane.current_command = caps[7].parse().unwrap();
-        pane.current_path = caps[8].parse().unwrap(); // path needs 2 caps, acc. to regex
-        pane.dead = caps[10].parse::<usize>().map(|i| i == 1).unwrap();
+        pane.active = caps[1].parse::<usize>().map(|i| i == 1)?;
+        pane.at_bottom = caps[2].parse::<usize>().map(|i| i == 1)?;
+        pane.at_left = caps[3].parse::<usize>().map(|i| i == 1)?;
+        pane.at_right = caps[4].parse::<usize>().map(|i| i == 1)?;
+        pane.at_top = caps[5].parse::<usize>().map(|i| i == 1)?;
+        pane.bottom = caps[6].parse()?;
+        pane.current_command = caps[7].parse()?;
+        pane.current_path = caps[8].parse()?; // path needs 2 caps, acc. to regex
+        pane.dead = caps[10].parse::<usize>().map(|i| i == 1)?;
         if let Some(dead_status) = caps.get(11) {
-            pane.dead_status = Some(dead_status.as_str().parse().unwrap());
+            pane.dead_status = Some(dead_status.as_str().parse()?);
         }
-        pane.format = caps[12].parse::<usize>().map(|i| i == 1).unwrap();
-        pane.height = caps[13].parse().unwrap();
-        pane.id = caps[14].parse().unwrap();
-        pane.in_mode = caps[15].parse().unwrap();
-        pane.input_off = caps[16].parse().unwrap();
-        pane.index = caps[17].parse().unwrap();
-        pane.left = caps[18].parse().unwrap();
+        pane.format = caps[12].parse::<usize>().map(|i| i == 1)?;
+        pane.height = caps[13].parse()?;
+        pane.id = caps[14].parse()?;
+        pane.in_mode = caps[15].parse()?;
+        pane.input_off = caps[16].parse()?;
+        pane.index = caps[17].parse()?;
+        pane.left = caps[18].parse()?;
         if let Some(mode) = caps.get(19) {
-            pane.mode = Some(mode.as_str().parse().unwrap());
+            pane.mode = Some(mode.as_str().parse()?);
         }
-        pane.pid = caps[20].parse().unwrap();
-        pane.pipe = caps[21].parse().unwrap();
-        pane.right = caps[22].parse().unwrap();
+        pane.pid = caps[20].parse()?;
+        pane.pipe = caps[21].parse()?;
+        pane.right = caps[22].parse()?;
         if let Some(search_string) = caps.get(23) {
-            pane.search_string = Some(search_string.as_str().parse().unwrap());
+            pane.search_string = Some(search_string.as_str().parse()?);
         }
         if let Some(start_command) = caps.get(24) {
-            pane.start_command = Some(start_command.as_str().parse().unwrap());
+            pane.start_command = Some(start_command.as_str().parse()?);
         }
-        pane.synchronized = caps[25].parse().unwrap();
-        pane.tabs = caps[26].parse().unwrap();
-        pane.title = caps[27].parse().unwrap();
-        pane.top = caps[28].parse().unwrap();
-        pane.tty = caps[29].parse().unwrap();
-        pane.width = caps[30].parse().unwrap();
+        pane.synchronized = caps[25].parse()?;
+        pane.tabs = caps[26].parse()?;
+        pane.title = caps[27].parse()?;
+        pane.top = caps[28].parse()?;
+        pane.tty = caps[29].parse()?;
+        pane.width = caps[30].parse()?;
         Ok(pane)
     }
 
