@@ -2,21 +2,36 @@ use std::time::Duration;
 use regex::Regex;
 
 
-pub const LIST_WINDOWS_FORMAT: &str = "#{window_activity}'#{window_activity_flag}'\
-#{window_active}'#{window_bell_flag}'#{window_bigger}'#{window_flags}'#{window_format}'\
-#{window_height}'#{window_id}'#{window_index}'#{window_last_flag}'#{window_layout}'\
-#{window_linked}'#{window_name}'#{window_offset_x}'#{window_offset_y}'#{window_panes}'\
-#{window_silence_flag}'#{window_stack_index}'#{window_visible_layout}'#{window_width}'\
-#{window_zoomed_flag}";
-
-
-// numbered capture groups enclosed in parenthesis (...)
-//
+pub const WINDOW_VARS_SEPARATOR: &str = "'";
 // FIXME: regex name can be anything, and other keys should be checked better
-pub const WINDOW_STR_REGEX: &str = r"^(\d+)'(1|0)'(1|0)'(1|0)'(\w+)?'([\w\*]*)?'(\w+)'(\d+)'@(\d+)'(\d+)'(\d+)'([\w,]*)?'(\d+)'(\w+)'(\w+)?'(\w+)?'(\d+)'(\d+)'(\d+)'([\w,]*)'(\d+)'(\d+)$";
+pub const WINDOW_VARS_REGEX_VEC: [(&str, &str); 22] = [
+    ("window_activity",       r"(\d+)"),
+    ("window_activity_flag",  r"(1|0)"),
+    ("window_active",         r"(1|0)"),
+    ("window_bell_flag",      r"(1|0)"),
+    ("window_bigger",         r"(\w+)?"),
+    ("window_flags",          r"([\w\*]*)?"),
+    ("window_format",         r"(\w+)"),
+    ("window_height",         r"(\d+)"),
+    ("window_id",             r"@(\d+)"),
+    ("window_index",          r"(\d+)"),
+    ("window_last_flag",      r"(\d+)"),
+    ("window_layout",         r"([\w,]*)?"),
+    ("window_linked",         r"(\d+)"),
+    ("window_name",           r"(\w+)"),
+    ("window_offset_x",       r"(\w+)?"),
+    ("window_offset_y",       r"(\w+)?"),
+    ("window_panes",          r"(\d+)"),
+    ("window_silence_flag",   r"(\d+)"),
+    ("window_stack_index",    r"(\d+)"),
+    ("window_visible_layout", r"([\w,]*)"),
+    ("window_width",          r"(\d+)"),
+    ("window_zoomed_flag",    r"(\d+)"),
+];
+
 
 // accordingly to tmux.h: Formats
-//
+// XXX: check all types
 #[derive(Clone, Debug)]
 pub struct Window {
     pub activity: Duration,
@@ -82,9 +97,10 @@ impl Window {
 
 
     // XXX: mb deserialize like serde something?
-    //
     pub fn parse(window_str: &str) -> Result<Window, ()> {
-        let regex = Regex::new(WINDOW_STR_REGEX).unwrap();
+        let regex_str = format!("^{}$", WINDOW_VARS_REGEX_VEC.iter()
+                                .map(|t| t.1).collect::<Vec<&str>>().join(WINDOW_VARS_SEPARATOR));
+        let regex = Regex::new(&regex_str).unwrap();
         let caps = regex.captures(window_str).unwrap();
         let mut window = Window::new();
         window.activity = Duration::from_millis(caps[1].parse().unwrap());

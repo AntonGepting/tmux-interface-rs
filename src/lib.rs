@@ -27,13 +27,10 @@ pub use self::windows_and_panes::SelectWindow;
 pub use self::key_bindings::SendKeys;
 pub use self::session::Session;
 pub use self::sessions::Sessions;
-pub use self::session::LIST_SESSIONS_FORMAT;
 pub use self::window::Window;
 pub use self::windows::Windows;
-pub use self::window::LIST_WINDOWS_FORMAT;
 pub use self::pane::Pane;
 pub use self::panes::Panes;
-pub use self::pane::LIST_PANES_FORMAT;
 pub use self::tmux_interface_error::TmuxInterfaceError;
 
 
