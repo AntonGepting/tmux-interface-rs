@@ -10,4 +10,4 @@ tmux lsw -a -F "#{window_activity}'#{window_activity_flag}'#{window_active}'#{wi
 
 echo "test panes"
 echo "========================================================================="
-tmux lsp -a -F "#{pane_active} #{pane_at_bottom} #{pane_at_left} #{pane_at_right} #{pane_at_top} #{pane_current_command} #{pane_id} #{pane_index}"
+tmux lsp -a -F "#{pane_active}'#{pane_at_bottom}'#{pane_at_left}'#{pane_at_right}'#{pane_at_top}'#{pane_bottom}'#{pane_current_command}'#{pane_current_path}'#{pane_dead}'#{pane_dead_status}'#{pane_format}'#{pane_height}'#{pane_id}'#{pane_in_mode}'#{pane_input_off}'#{pane_index}'#{pane_left}'#{pane_mode}'#{pane_pid}'#{pane_pipe}'#{pane_right}'#{pane_search_string}'#{pane_start_command}'#{pane_synchronized}'#{pane_tabs}'#{pane_title}'#{pane_top}'#{pane_tty}'#{pane_width}"

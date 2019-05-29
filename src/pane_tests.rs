@@ -24,11 +24,27 @@ fn path_regex() {
 
 
 #[test]
-fn pane_parse() {
-    use crate::Pane;
-    let pane = Pane::parse("1 0 0 0 0 vim /home/user/Documents/rust/mosaic %0 0 asdf").unwrap();
-    assert_eq!(pane.id, 0);
-    assert_eq!(pane.current_path, "/home/user/Documents/rust/mosaic");
+fn tty_parse() {
+    use regex::Regex;
+    let regex = Regex::new(r"^([\w/]*)$").unwrap();
+    assert!(regex.is_match("/dev/pts/2"));
 }
 
+
+#[test]
+fn tabs_parse() {
+    use regex::Regex;
+    let regex = Regex::new(r"^([\w,]*)$").unwrap();
+    assert!(regex.is_match("8,16,24,32,40,48,56,64,72,80,88,96,104,112,120,128,136,144,152,160,168,176"));
+}
+
+
+#[test]
+fn parse() {
+    use crate::Pane;
+
+    let pane = Pane::parse("1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0''1945'0'176'''0'8,16,24,32,40,48,56,64,72,80,88,96,104,112,120,128,136,144,152,160,168,176'asus'0'/dev/pts/2'177").unwrap();
+    assert_eq!(pane.current_path, "/home/user");
+    assert_eq!(pane.tty, "/dev/pts/2");
+}
 
