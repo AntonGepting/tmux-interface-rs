@@ -22,7 +22,7 @@ Tmux Interface is a rust language library for communication with TMUX via CLI.
 
 3. Use it's functions
     ```
-    let tmux = TmuxInterface::new(None);
+    let tmux = TmuxInterface::new();
     tmux.list_sessions();
     ```
 
