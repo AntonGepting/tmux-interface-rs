@@ -8,7 +8,7 @@ description = "Rust language library for communication with TMUX via CLI"
 readme = "README.md"
 keywords = ["tmux", "cli", "interface"]
 categories = ["api-bindings", "command-line-utilities", "command-line-interface"]
-
+repository = "https://github.com/AntonGepting/tmux-interface-rs"
 
 
 [dependencies]
