@@ -5,6 +5,10 @@ authors = ["Anton Gepting <anton.gepting@gmail.com>"]
 edition = "2018"
 license = "MIT"
 description = "Rust language library for communication with TMUX via CLI"
+readme = "README.md"
+keywords = ["tmux", "cli", "interface"]
+categories = ["api-bindings", "command-line-utilities", "command-line-interface"]
+
 
 
 [dependencies]
