@@ -120,8 +120,10 @@ impl<'a> TmuxInterface<'a> {
         Default::default()
     }
 
+    /// ```text
     /// tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path]
     /// [command [flags]]
+    /// ```
     pub fn subcommand(&self, subcmd: &str, args: &[&str]) -> Result<Output, TmuxInterfaceError> {
         let mut options: Vec<&str> = Vec::new();
         let mut tmux = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
