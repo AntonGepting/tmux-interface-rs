@@ -1,6 +1,8 @@
 # tmux_interface
 
 Ubuntu Trusty 14.04: [![Build Status](https://travis-ci.com/AntonGepting/tmux-interface-rs.svg?branch=master)](https://travis-ci.com/AntonGepting/tmux-interface-rs)
+[![Crates.io](https://img.shields.io/crates/v/tmux_interface.svg)]
+
 
 Tmux Interface is a rust language library for communication with TMUX via CLI.
 
