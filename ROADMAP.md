@@ -22,7 +22,7 @@ an improvment, an idea etc.
 - [ ] Parse full information from tmux responses into structures
 - [ ] Prepare documentation
 - [ ] Prepare tests
-- [ ] Function results
+- [ ] Function results and errors
 
 
 **tmux interface v0.0.1**
@@ -32,6 +32,7 @@ an improvment, an idea etc.
     - [x] .travis.yml
     - [x] LICENSE.md
 - [ ] Prepare crate for publication on crates.io
+    - [ ] Documentation for existing functionality
 - [x] Add all tmux subcommands stubs
 
 
