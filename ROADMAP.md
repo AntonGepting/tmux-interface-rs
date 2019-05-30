@@ -25,13 +25,19 @@ an improvment, an idea etc.
 - [ ] Function results and errors
 
 
+**tmux interface v0.0.2**
+
+- [ ] Documentation for all existing functionality and items
+
+
 **tmux interface v0.0.1**
 
 - [x] Prepare sources for publication on github.com
     - [x] .editorconfig
     - [x] .travis.yml
     - [x] LICENSE.md
-- [ ] Prepare crate for publication on crates.io
+- [x] Prepare crate for publication on crates.io
+    - [x] Cargo.toml
     - [ ] Documentation for existing functionality
 - [x] Add all tmux subcommands stubs
 
