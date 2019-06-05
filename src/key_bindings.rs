@@ -48,7 +48,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// bind-key [-nr] [-T key-table] key command [arguments]
+    /// tmux bind-key [-nr] [-T key-table] key command [arguments]
     /// (alias: bind)
     /// ```
     pub fn bind_key() {
@@ -59,7 +59,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// list-keys [-T key-table]
+    /// tmux list-keys [-T key-table]
     /// (alias: lsk)
     /// ```
     pub fn list_keys() {
@@ -97,7 +97,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// send-prefix [-2] [-t target-pane]
+    /// tmux send-prefix [-2] [-t target-pane]
     /// ```
     pub fn send_prefix() {
         unimplemented!();
@@ -107,10 +107,12 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// unbind-key [-an] [-T key-table] key
+    /// tmux unbind-key [-an] [-T key-table] key
     /// (alias: unbind)
     /// ```
     pub fn unbind_key() {
         unimplemented!();
     }
+
+
 }

@@ -11,7 +11,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
+    /// tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
     /// ```
     pub fn command_prompt() {
         unimplemented!();
@@ -21,7 +21,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// confirm-before [-p prompt] [-t target-client] command
+    /// tmux confirm-before [-p prompt] [-t target-client] command
     /// (alias: confirm)
     /// ```
     pub fn confirm_before() {

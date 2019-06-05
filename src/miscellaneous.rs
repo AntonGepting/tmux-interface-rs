@@ -8,7 +8,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// clock-mode [-t target-pane]
+    /// tmux clock-mode [-t target-pane]
     /// ```
     pub fn clock_mode() {
         unimplemented!();
@@ -18,7 +18,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// if-shell [-bF] [-t target-pane] shell-command command [command]
+    /// tmux if-shell [-bF] [-t target-pane] shell-command command [command]
     /// (alias: if)
     /// ```
     pub fn if_shell() {
@@ -29,7 +29,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// lock-server
+    /// tmux lock-server
     /// (alias: lock)
     /// ```
     pub fn lock_server() {
@@ -40,7 +40,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// run-shell [-b] [-t target-pane] shell-command
+    /// tmux run-shell [-b] [-t target-pane] shell-command
     /// (alias: run)
     /// ```
     pub fn run_shell() {
@@ -51,7 +51,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// wait-for [-L | -S | -U] channel
+    /// tmux wait-for [-L | -S | -U] channel
     /// (alias: wait)
     /// ```
     pub fn wait_for() {

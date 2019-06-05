@@ -8,7 +8,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// set-hook [-agRu] [-t target-session] hook-name command
+    /// tmux set-hook [-agRu] [-t target-session] hook-name command
     /// ```
     pub fn set_hook() {
         unimplemented!();
@@ -18,7 +18,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// show-hooks [-g] [-t target-session]
+    /// tmux show-hooks [-g] [-t target-session]
     /// ```
     pub fn show_hooks() {
         unimplemented!();

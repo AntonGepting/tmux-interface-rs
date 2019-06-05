@@ -10,7 +10,7 @@ use super::tmux_interface_error::TmuxInterfaceError;
 /// # Manual
 ///
 /// ```text
-/// new-window [-adkP] [-c start-directory] [-F format] [-n window-name] [-t target-window]
+/// tmux new-window [-adkP] [-c start-directory] [-F format] [-n window-name] [-t target-window]
 /// [shell-command]
 /// (alias: neww)
 /// ```
@@ -153,7 +153,7 @@ impl<'a> SelectPane<'a> {
 /// # Manual
 ///
 /// ```text
-/// select-window [-lnpT] [-t target-window]
+/// tmux select-window [-lnpT] [-t target-window]
 /// (alias: selectw)
 /// ```
 pub struct SelectWindow<'a> {
@@ -204,7 +204,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// copy-mode [-Meu] [-t target-pane]
+    /// tmux copy-mode [-Meu] [-t target-pane]
     /// ```
     pub fn copy_mode() {
         unimplemented!();
@@ -216,7 +216,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
+    /// tmux break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
     /// (alias: breakp)
     /// ```
     pub fn break_pane() {
@@ -229,7 +229,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line]
+    /// tmux capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line]
     /// [-t target-pane]
     /// (alias: capturep)
     /// ```
@@ -243,7 +243,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+    /// tmux choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
     /// ```
     pub fn choose_client() {
         unimplemented!();
@@ -256,7 +256,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+    /// tmux choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
     /// ```
     pub fn choose_tree() {
         unimplemented!();
@@ -268,7 +268,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// display-panes [-b] [-d duration] [-t target-client] [template] (alias: displayp)
+    /// tmux display-panes [-b] [-d duration] [-t target-client] [template] (alias: displayp)
     /// ```
     pub fn display_panes() {
         unimplemented!();
@@ -281,7 +281,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// find-window [-CNTZ] [-t target-pane] match-string
+    /// tmux find-window [-CNTZ] [-t target-pane] match-string
     /// (alias: findw)
     /// ```
     pub fn find_window() {
@@ -295,7 +295,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+    /// tmux join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: joinp)
     /// ```
     pub fn join_pane() {
@@ -308,7 +308,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// kill-pane [-a] [-t target-pane]
+    /// tmux kill-pane [-a] [-t target-pane]
     /// (alias: killp)
     /// ```
     pub fn kill_pane() {
@@ -322,7 +322,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// kill-window [-a] [-t target-window]
+    /// tmux kill-window [-a] [-t target-window]
     /// (alias: killw)
     /// ```
     pub fn kill_window(&self, all: Option<bool>, target_window: Option<&str>) -> Result<bool, TmuxInterfaceError> {
@@ -339,7 +339,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// last-pane [-de] [-t target-window]
+    /// tmux last-pane [-de] [-t target-window]
     /// (alias: lastp)
     /// ```
     pub fn last_pane() {
@@ -352,7 +352,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// last-window [-t target-session]
+    /// tmux last-window [-t target-session]
     /// (alias: last)
     /// ```
     pub fn last_window() {
@@ -365,7 +365,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// link-window [-adk] [-s src-window] [-t dst-window]
+    /// tmux link-window [-adk] [-s src-window] [-t dst-window]
     /// (alias: linkw)
     /// ```
     pub fn link_window() {
@@ -419,7 +419,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+    /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: movep)
     /// ```
     pub fn move_pane() {
@@ -506,7 +506,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// previous-layout [-t target-window]
+    /// tmux previous-layout [-t target-window]
     /// (alias: prevl)
     /// ```
     pub fn previous_layout() {
@@ -519,7 +519,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// previous-window [-a] [-t target-session]
+    /// tmux previous-window [-a] [-t target-session]
     /// (alias: prev)
     /// ```
     pub fn previous_window() {
@@ -532,7 +532,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// rename-window [-t target-window] new-name
+    /// tmux rename-window [-t target-window] new-name
     /// (alias: renamew)
     /// ```
     pub fn rename_window(&self, target_window: Option<&str>, new_name: &str) -> Result<bool, TmuxInterfaceError> {
@@ -549,7 +549,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+    /// tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
     /// (alias: resizep)
     /// ```
     pub fn resize_pane() {
@@ -562,7 +562,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
+    /// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
     /// (alias: resizew)
     /// ```
     pub fn resize_window() {
@@ -575,7 +575,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// respawn-pane [-k] [-c start-directory] [-e environment] [-t target-pane] [shell-command]
+    /// tmux respawn-pane [-k] [-c start-directory] [-e environment] [-t target-pane] [shell-command]
     /// (alias: respawnp)
     /// ```
     pub fn respawn_pane() {
@@ -588,7 +588,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// respawn-window [-k] [-c start-directory] [-e environment] [-t target-window] [shell-command]
+    /// tmux respawn-window [-k] [-c start-directory] [-e environment] [-t target-window] [shell-command]
     /// (alias: respawnw)
     /// ```
     pub fn respawn_window() {
@@ -601,7 +601,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// rotate-window [-DU] [-t target-window]
+    /// tmux rotate-window [-DU] [-t target-window]
     /// (alias: rotatew)
     /// ```
     pub fn rotate_window() {
@@ -614,7 +614,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// select-layout [-Enop] [-t target-pane] [layout-name]
+    /// tmux select-layout [-Enop] [-t target-pane] [layout-name]
     /// (alias: selectl)
     /// ```
     pub fn select_layout() {
@@ -711,7 +711,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// swap-pane [-dDU] [-s src-pane] [-t dst-pane]
+    /// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
     /// (alias: swapp)
     /// ```
     pub fn swap_pane() {
@@ -724,7 +724,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// swap-window [-d] [-s src-window] [-t dst-window]
+    /// tmux swap-window [-d] [-s src-window] [-t dst-window]
     /// (alias: swapw)
     /// ```
     pub fn swap_window() {
@@ -737,7 +737,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// unlink-window [-k] [-t target-window]
+    /// tmux unlink-window [-k] [-t target-window]
     /// (alias: unlinkw)
     /// ```
     pub fn unlink_window() {
