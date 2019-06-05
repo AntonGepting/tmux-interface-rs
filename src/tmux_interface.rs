@@ -99,8 +99,8 @@ pub struct TmuxInterface<'a> {
     pub force_utf8: Option<bool>,                       // -u
     /// Request verbose logging
     pub verbose_logging: Option<bool>,                  // -v
-    // Report the tmux version
-    //pub version                                       // -V
+    /// Report the tmux version
+    pub version: Option<bool>                           // -V
 }
 
 
@@ -117,8 +117,8 @@ impl<'a> Default for TmuxInterface<'a> {
             login_shell: None,
             socket_path: None,
             force_utf8: None,
-            verbose_logging: None
-            //version
+            verbose_logging: None,
+            version: None
         }
     }
 }
@@ -153,7 +153,15 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn subcommand(&self, subcmd: &str, args: &[&str]) -> Result<Output, TmuxInterfaceError> {
         let mut options: Vec<&str> = Vec::new();
-        let mut tmux = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
+        options.push(subcmd);
+        options.extend_from_slice(args);
+        self.exec(&options)
+    }
+
+
+    pub fn exec(&self, args: &[&str]) -> Result<Output, TmuxInterfaceError> {
+        let mut options: Vec<&str> = Vec::new();
+        let mut cmd = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
         if self.colours256.unwrap_or(false) { options.push(_2_KEY); };
         if self.control_mode.unwrap_or(false) { options.push(C_KEY); };
         if self.disable_echo.unwrap_or(false) { options.push(CC_KEY); };
@@ -164,26 +172,13 @@ impl<'a> TmuxInterface<'a> {
         self.file.as_ref().and_then(|s| Some(options.extend_from_slice(&[f_KEY, &s])));
         self.socket_name.as_ref().and_then(|s| Some(options.extend_from_slice(&[L_KEY, &s])));
         self.socket_path.as_ref().and_then(|s| Some(options.extend_from_slice(&[S_KEY, &s])));
-        tmux.args(options);
-        tmux.arg(subcmd);
-        let output = tmux.args(args).output()?;
+        cmd.args(options);
+        let output = cmd.args(args).output()?;
         Ok(output)
     }
 
 
-    //pub fn exec(&self, subcmd: &str, args: &[String]) -> Result<ExitStatus, MyError> {
-        //let mut tmux = Command::new(self.tmux);
-        //tmux.arg(subcmd);
-        //let status = tmux.args(args).status()?;
-        ////println!("{} {} {:?}", Tmux::TMUX, subcmd, args);
-        ////println!("[exec output]: {} {} {:?} {:?}", self.tmux, subcmd, args, status);
-        ////if !status.success() {
-            ////println!("[exec status error]: {}", status);
-        ////}
-        //Ok(status)
-    //}
-
-
+    // XXX: refactor: move
     /// # Manual
     ///
     /// ```text
