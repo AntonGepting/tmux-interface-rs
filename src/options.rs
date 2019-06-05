@@ -5,6 +5,8 @@ use super::tmux_interface::*;
 impl<'a> TmuxInterface<'a> {
 
 
+    /// # Manual
+    ///
     /// ```text
     /// set-option [-aFgoqsuw] [-t target-session | target-window] option value
     /// (alias: set)
@@ -14,6 +16,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// set-window-option [-aFgoqu] [-t target-window] option value
     /// (alias: setw)
@@ -23,6 +27,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// show-options [-gHqsvw] [-t target-session | target-window] [option]
     /// (alias: show)
@@ -31,6 +37,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// show-window-options [-gv] [-t target-window] [option]
     /// (alias: showw)

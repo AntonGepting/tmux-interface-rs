@@ -5,6 +5,8 @@ use super::tmux_interface::*;
 impl<'a> TmuxInterface<'a> {
 
 
+    /// # Manual
+    ///
     /// ```text
     /// choose-buffer [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
     /// ```
@@ -13,6 +15,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// clear-history [-t target-pane]
     /// (alias: clearhist)
@@ -22,6 +26,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// delete-buffer [-b buffer-name]
     /// (alias: deleteb)
@@ -31,6 +37,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// list-buffers [-F format]
     /// (alias: lsb)
@@ -40,6 +48,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// load-buffer [-b buffer-name] path
     /// (alias: loadb)
@@ -49,6 +59,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// paste-buffer [-dpr] [-b buffer-name] [-s separator] [-t target-pane]
     /// (alias: pasteb)
@@ -58,6 +70,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// save-buffer [-a] [-b buffer-name] path
     /// (alias: saveb)
@@ -67,6 +81,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// set-buffer [-a] [-b buffer-name] [-n new-buffer-name] data
     /// (alias: setb)
@@ -76,6 +92,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// show-buffer [-b buffer-name]
     /// (alias: showb)

@@ -5,6 +5,8 @@ use super::tmux_interface::*;
 impl<'a> TmuxInterface<'a> {
 
 
+    /// # Manual
+    ///
     /// ```text
     /// clock-mode [-t target-pane]
     /// ```
@@ -13,6 +15,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// if-shell [-bF] [-t target-pane] shell-command command [command]
     /// (alias: if)
@@ -22,6 +26,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// lock-server
     /// (alias: lock)
@@ -31,6 +37,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// run-shell [-b] [-t target-pane] shell-command
     /// (alias: run)
@@ -40,6 +48,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// wait-for [-L | -S | -U] channel
     /// (alias: wait)

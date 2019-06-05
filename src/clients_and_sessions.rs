@@ -3,19 +3,42 @@ use super::tmux_interface_error::TmuxInterfaceError;
 use std::borrow::Cow;
 
 
+/// Structure for creating a new session
+///
+/// # Manual
+///
+/// ```text
+/// tmux new-session [-AdDEP] [-c start-directory] [-F format] [-n window-name]
+/// [-s session-name] [-t group-name] [-x width] [-y height]
+/// [shell-command]
+/// (alias: new)
+/// ```
 pub struct NewSession<'a> {
+    /// behave like `attach-session` if `session-name` already exists
     pub attach: Option<bool>,                   // [-A]
+    /// new session is not attached to the current terminal
     pub detached: Option<bool>,                 // [-d]
+    /// any other clients attached to the session are detached
     pub detach_other: Option<bool>,             // [-D]
+    /// `update-environment` option will not be applied
     pub not_update_env: Option<bool>,           // [-E]
+    /// print information about the new session after it has been created
     pub print: Option<bool>,                    // [-P]
+    /// specify starting directory
     pub cwd: Option<Cow<'a, str>>,              // [-c start-directory]
+    /// specify different format
     pub format: Option<Cow<'a, str>>,           // [-F format]
+    /// window name of the initial window
     pub window_name: Option<Cow<'a, str>>,      // [-n window-name]
+    /// specify a session name
     pub session_name: Option<Cow<'a, str>>,     // [-s session-name]
+    /// specify a session group
     pub group_name: Option<Cow<'a, str>>,       // [-t group-name]
+    /// specify a different width
     pub width: Option<usize>,                   // [-x width]
+    /// specify a different height
     pub height: Option<usize>,                  // [-y height]
+    /// shell command to execute in the initial window
     pub shell_command: Option<Cow<'a, str>>     // [shell-command]
 }
 
@@ -48,11 +71,24 @@ impl<'a> NewSession<'a> {
 }
 
 
+/// Session for attaching client to already existing session
+///
+/// # Manual
+///
+/// ```text
+/// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
+/// (alias: attach)
+/// ```
 pub struct AttachSession<'a> {
+    /// any other clients attached to the session are detached
     pub detach_other: Option<bool>,             // [-d]
+    /// `update-environment` option will not be applied
     pub not_update_env: Option<bool>,           // [-E]
+    /// signifies the client is read-only
     pub read_only: Option<bool>,                // [-r]
+    /// specify starting directory
     pub cwd: Option<Cow<'a, str>>,              // [-c working-directory]
+    /// specify target session name
     pub target_session: Option<Cow<'a, str>>,   // [-t target-session]
 }
 
@@ -78,7 +114,9 @@ impl<'a> AttachSession<'a> {
 
 
 /// All functions from man tmux "Clients and Sessions" listed below
+/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#CLIENTS_AND_SESSIONS)
 impl<'a> TmuxInterface<'a> {
+
 
     const NEW_SESSION: &'static str = "new-session";
     const ATTACH_SESSION: &'static str = "attach-session";
@@ -87,14 +125,15 @@ impl<'a> TmuxInterface<'a> {
     const LIST_SESSIONS: &'static str = "list-sessions";
     const RENAME_SESSION: &'static str = "rename-session";
 
-    // Clients and Sessions
-    // ===========================================================================================
-    //
+
+    /// Create a new client in the current terminal and attach it to `target-session`
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
     /// (alias: attach)
     /// ```
-    ///
     pub fn attach_session(&self, attach_session: &AttachSession) -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if attach_session.detach_other.unwrap_or(false) { args.push(d_KEY); }
@@ -107,6 +146,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Detach the current client
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
     /// (alias: detach)
@@ -116,6 +159,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Report if the specified session exist
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux has-session [-t target-session]
     /// (alias: has)
@@ -128,6 +175,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Kill the tmux server and clients and destroy all sessions
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux kill-server
     /// ```
@@ -136,6 +187,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Destroy the given session
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux kill-session [-aC] [-t target-session]
     /// ```
@@ -149,6 +204,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// List all clients attached to the server
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux list-clients [-F format] [-t target-session]
     /// (alias: lsc)
@@ -158,6 +217,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// List the syntax of all commands supported by tmux
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux list-commands [-F format]
     /// (alias: lscm)
@@ -167,6 +230,9 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// List all sessions managed by the server
+    /// # Manual
+    ///
     /// ```text
     /// tmux list-sessions [-F format]
     /// (alias: ls)
@@ -180,6 +246,11 @@ impl<'a> TmuxInterface<'a> {
         Ok(stdout.to_string())
     }
 
+
+    /// Lock `target-client`
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux lock-client [-t target-client]
     /// (alias: lockc)
@@ -188,6 +259,10 @@ impl<'a> TmuxInterface<'a> {
         unimplemented!();
     }
 
+
+    /// Lock all clients attached to `target-session`
+    /// # Manual
+    ///
     /// ```text
     /// tmux lock-session [-t target-session]
     /// (alias: locks)
@@ -196,6 +271,11 @@ impl<'a> TmuxInterface<'a> {
         unimplemented!();
     }
 
+
+    /// Create a new session with name `session-name`
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux new-session [-AdDEP] [-c start-directory] [-F format] [-n window-name]
     /// [-s session-name] [-t group-name] [-x width] [-y height] [shell-command]
@@ -229,6 +309,11 @@ impl<'a> TmuxInterface<'a> {
         Ok(output.status.success())
     }
 
+
+    /// Refresh the current client
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux refresh-client [-cDlLRSU] [-C width,height] [-t target-client] [adjustment]
     /// (alias: refresh)
@@ -237,6 +322,11 @@ impl<'a> TmuxInterface<'a> {
         unimplemented!();
     }
 
+
+    /// Rename the session to `new-name`
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux rename-session [-t target-session] new-name
     /// (alias: rename)
@@ -249,6 +339,11 @@ impl<'a> TmuxInterface<'a> {
         Ok(output.status.success())
     }
 
+
+    /// Show client messages or server information
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux show-messages [-JT] [-t target-client]
     /// (alias: showmsgs)
@@ -257,6 +352,11 @@ impl<'a> TmuxInterface<'a> {
         unimplemented!();
     }
 
+
+    /// Execute commands from path
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux source-file [-q] path
     /// (alias: source)
@@ -265,6 +365,11 @@ impl<'a> TmuxInterface<'a> {
         unimplemented!();
     }
 
+
+    /// Start the tmux server, if not already running, without creating any sessions
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux start-server
     /// (alias: start)
@@ -273,6 +378,11 @@ impl<'a> TmuxInterface<'a> {
         unimplemented!();
     }
 
+
+    /// Suspend a client by sending SIGTSTP (tty stop)
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux suspend-client [-t target-client]
     /// (alias: suspendc)
@@ -281,6 +391,11 @@ impl<'a> TmuxInterface<'a> {
         unimplemented!();
     }
 
+
+    /// Switch the current session for client `target-client` to `target-session`
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
     /// (alias: switchc)

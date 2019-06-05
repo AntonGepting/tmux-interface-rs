@@ -5,6 +5,8 @@ use super::tmux_interface::*;
 impl<'a> TmuxInterface<'a> {
 
 
+    /// # Manual
+    ///
     /// ```text
     /// set-hook [-agRu] [-t target-session] hook-name command
     /// ```
@@ -13,6 +15,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// show-hooks [-g] [-t target-session]
     /// ```

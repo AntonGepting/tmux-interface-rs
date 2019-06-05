@@ -8,6 +8,8 @@ impl<'a> TmuxInterface<'a> {
     const DISPLAY_MESSAGE: &'static str = "display-message";
 
 
+    /// # Manual
+    ///
     /// ```text
     /// command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
     /// ```
@@ -16,6 +18,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// confirm-before [-p prompt] [-t target-client] command
     /// (alias: confirm)
@@ -25,6 +29,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// tmux display-message [-p] [-c target-client] [-t target-pane] [message]
     /// (alias: display)

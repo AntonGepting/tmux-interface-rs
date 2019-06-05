@@ -5,6 +5,8 @@ use super::tmux_interface::*;
 impl<'a> TmuxInterface<'a> {
 
 
+    /// # Manual
+    ///
     /// ```text
     /// set-environment [-gru] [-t target-session] name [value]
     /// (alias: setenv)
@@ -14,6 +16,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// show-environment [-gs] [-t target-session] [variable]
     /// (alias: showenv)

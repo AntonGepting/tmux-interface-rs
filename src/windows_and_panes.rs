@@ -6,13 +6,14 @@ use super::tmux_interface_error::TmuxInterfaceError;
 
 
 /// Structure for creating new window, using `tmux new-window` command
+///
+/// # Manual
+///
 /// ```text
 /// new-window [-adkP] [-c start-directory] [-F format] [-n window-name] [-t target-window]
 /// [shell-command]
 /// (alias: neww)
 /// ```
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES)
-///
 pub struct NewWindow<'a> {
     pub add: Option<bool>,                      // [-a]
     pub detached: Option<bool>,                 // [-d]
@@ -48,7 +49,13 @@ impl<'a> NewWindow<'a> {
     }
 }
 
-
+/// # Manual
+///
+/// ```text
+/// tmux split-window [-bdfhIvP] [-c start-directory] [-e environment] [-l size | -p percentage]
+/// [-t target-pane] [shell-command] [-F format]
+/// (alias: splitw)
+/// ```
 pub struct SplitWindow<'a> {
     pub before: Option<bool>,                   // [-b]
     pub detached: Option<bool>,                 // [-d]
@@ -91,6 +98,13 @@ impl<'a> SplitWindow<'a> {
 }
 
 
+///
+/// # Manual
+///
+/// ```text
+/// tmux select-pane [-DdegLlMmRU] [-P style] [-T title] [-t target-pane]
+/// (alias: selectp)
+/// ```
 pub struct SelectPane<'a> {
     pub down: Option<bool>,                     // [-D]
     pub disable: Option<bool>,                  // [-d]
@@ -135,6 +149,13 @@ impl<'a> SelectPane<'a> {
 }
 
 
+///
+/// # Manual
+///
+/// ```text
+/// select-window [-lnpT] [-t target-window]
+/// (alias: selectw)
+/// ```
 pub struct SelectWindow<'a> {
     pub last: Option<bool>,                     // [-l]
     pub next: Option<bool>,                     // [-n]
@@ -164,7 +185,9 @@ impl<'a> SelectWindow<'a> {
 
 
 /// Windows and panes
+/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES)
 impl<'a> TmuxInterface<'a> {
+
 
     const KILL_WINDOW: &'static str = "kill-window";
     const NEW_WINDOW: &'static str = "new-window";
@@ -176,6 +199,10 @@ impl<'a> TmuxInterface<'a> {
     const SELECT_PANE: &'static str = "select-pane";
 
 
+    /// Enter copy mode
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// copy-mode [-Meu] [-t target-pane]
     /// ```
@@ -184,6 +211,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Break `src-pane` off from its containing window to make it the only pane in `dst-window`
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
     /// (alias: breakp)
@@ -193,6 +224,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Capture the contents of a pane
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line]
     /// [-t target-pane]
@@ -203,6 +238,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Put a pane into client mode, allowing a client to be selected interactively from a list
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
     /// ```
@@ -211,6 +250,11 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Put a pane into tree mode, where a session, window or pane may be chosen interactively
+    /// from a list
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
     /// ```
@@ -219,6 +263,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Display a visible indicator of each pane shown by `target-client`
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// display-panes [-b] [-d duration] [-t target-client] [template] (alias: displayp)
     /// ```
@@ -227,6 +275,11 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Search for the fnmatch(3) pattern `match-string` in window names,
+    /// titles, and visible content (but not history)
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// find-window [-CNTZ] [-t target-pane] match-string
     /// (alias: findw)
@@ -236,6 +289,11 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Like split-window, but instead of splitting `dst-pane` and creating a new pane, split it
+    /// and move `src-pane` into the space
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: joinp)
@@ -245,6 +303,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Destroy the given pane
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// kill-pane [-a] [-t target-pane]
     /// (alias: killp)
@@ -254,6 +316,11 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Kill the current window or the window at target-window, removing it from any sessions
+    /// to which it is linked
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// kill-window [-a] [-t target-window]
     /// (alias: killw)
@@ -267,6 +334,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Select the last (previously selected) pane
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// last-pane [-de] [-t target-window]
     /// (alias: lastp)
@@ -276,6 +347,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Select the last (previously selected) window
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// last-window [-t target-session]
     /// (alias: last)
@@ -285,6 +360,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Link the window at src-window to the specified dst-window
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// link-window [-adk] [-s src-window] [-t dst-window]
     /// (alias: linkw)
@@ -294,6 +373,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// List panes on the server
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux list-panes [-as] [-F format] [-t target]
     /// (alias: lsp)
@@ -311,6 +394,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// List windows on the server
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux list-windows [-a] [-F format] [-t target-session]
     /// (alias: lsw)
@@ -327,6 +414,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Like join-pane, but `src-pane` and `dst-pane` may belong to the same window
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: movep)
@@ -336,6 +427,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// This is similar to link-window, except the window at `src-window` is moved to `dst-window`
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux move-window [-ardk] [-s src-window] [-t dst-window]
     /// (alias: movew)
@@ -345,6 +440,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Create a new window
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux new-window [-adkP] [-c start-directory] [-F format] [-n window-name] [-t target-window] [shell-command]
     /// (alias: neww)
@@ -365,8 +464,36 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Move a window to the next layout and rearrange the panes to fit
+    ///
+    /// # Manual
+    ///
     /// ```text
-    /// pipe-pane [-IOo] [-t target-pane] [shell-command]
+    /// tmux next-layout [-t target-window]
+    /// (alias: nextl)
+    /// ```
+    pub fn next_layout() {
+        unimplemented!();
+    }
+
+
+    /// Move to the next window in the session
+    ///
+    /// # Manual
+    ///
+    /// tmux next-window [-a] [-t target-session]
+    /// (alias: next)
+    pub fn next_window() {
+        unimplemented!();
+    }
+
+
+    /// Pipe output sent by the program in target-pane to a shell command or vice versa
+    ///
+    /// # Manual
+    ///
+    /// ```text
+    /// tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
     /// (alias: pipep)
     /// ```
     pub fn pipe_pane() {
@@ -374,6 +501,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Move to the previous layout in the session
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// previous-layout [-t target-window]
     /// (alias: prevl)
@@ -383,6 +514,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Move to the previous window in the session
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// previous-window [-a] [-t target-session]
     /// (alias: prev)
@@ -392,6 +527,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Rename the current window, or the window at target-window if specified, to new-name
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// rename-window [-t target-window] new-name
     /// (alias: renamew)
@@ -405,6 +544,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Resize a pane, up, down, left or right
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
     /// (alias: resizep)
@@ -414,6 +557,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Resize a window, up, down, left or right
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
     /// (alias: resizew)
@@ -423,6 +570,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Reactivate a pane in which the command has exited
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// respawn-pane [-k] [-c start-directory] [-e environment] [-t target-pane] [shell-command]
     /// (alias: respawnp)
@@ -432,6 +583,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Reactivate a window in which the command has exited
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// respawn-window [-k] [-c start-directory] [-e environment] [-t target-window] [shell-command]
     /// (alias: respawnw)
@@ -441,6 +596,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Rotate the positions of the panes within a window
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// rotate-window [-DU] [-t target-window]
     /// (alias: rotatew)
@@ -450,6 +609,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Choose a specific layout for a window
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// select-layout [-Enop] [-t target-pane] [layout-name]
     /// (alias: selectl)
@@ -459,6 +622,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Make pane `target-pane` the active pane in window `target-window`
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux select-pane [-DdegLlMmRU] [-P style] [-T title] [-t target-pane]
     /// (alias: selectp)
@@ -483,6 +650,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Select the window at target-window
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux select-window [-lnpT] [-t target-window]
     /// (alias: selectw)
@@ -499,6 +670,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Create a new pane by splitting `target-pane`
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux split-window [-bdfhvP] [-c start-directory] [-l size | -p percentage]
     /// [-t target-pane] [shell-command] [-F format]
@@ -531,6 +706,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Swap two panes
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// swap-pane [-dDU] [-s src-pane] [-t dst-pane]
     /// (alias: swapp)
@@ -540,6 +719,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// This is similar to link-window, except the source and destination windows are swapped
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// swap-window [-d] [-s src-window] [-t dst-window]
     /// (alias: swapw)
@@ -549,6 +732,10 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// Unlink `target-window`
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// unlink-window [-k] [-t target-window]
     /// (alias: unlinkw)

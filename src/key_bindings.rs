@@ -45,6 +45,8 @@ impl<'a> TmuxInterface<'a> {
 
     const SEND_KEYS: &'static str = "send-keys";
 
+    /// # Manual
+    ///
     /// ```text
     /// bind-key [-nr] [-T key-table] key command [arguments]
     /// (alias: bind)
@@ -54,6 +56,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// list-keys [-T key-table]
     /// (alias: lsk)
@@ -64,6 +68,8 @@ impl<'a> TmuxInterface<'a> {
 
 
     // FIXME: repeat-count
+    /// # Manual
+    ///
     /// ```text
     /// tmux send-keys [-lMRX] [-N repeat-count] [-t target-pane] key ...
     /// (alias: send)
@@ -88,6 +94,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// send-prefix [-2] [-t target-pane]
     /// ```
@@ -96,6 +104,8 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
+    /// # Manual
+    ///
     /// ```text
     /// unbind-key [-an] [-T key-table] key
     /// (alias: unbind)

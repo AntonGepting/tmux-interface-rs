@@ -73,19 +73,33 @@ pub const CC_KEY: &str = "-C";
 
 
 // XXX: mb also add_env, clear_env, remove_env for std::process::Command?
+/// This structure is used to store execution parameters of `tmux`, including binary
+/// name. Full description of fields can be found using `man tmux`.
+/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#DESCRIPTION)
 pub struct TmuxInterface<'a> {
     /// Tmux binary name (default: `tmux`, can be set as `tmux_mock.sh` for "sniffing")
     pub tmux: Option<&'a str>,                          // tmux (or tmux_mock.sh)
+    /// Force tmux to assume the terminal supports 256 colours
     pub colours256: Option<bool>,                       // -2
+    /// Start in control mode
     pub control_mode: Option<bool>,                     // -C
+    /// Disables echo
     pub disable_echo: Option<bool>,                     // -CC
+    /// Execute shell-command using the default shell
     pub shell_cmd: Option<&'a str>,                     // -c shell-command
+    /// Specify an alternative configuration file
     pub file: Option<&'a str>,                          // -f file
+    /// Allows a different socket name to be specified
     pub socket_name: Option<&'a str>,                   // -L socket-name
+    /// Behave as a login shell
     pub login_shell: Option<bool>,                      // -l
+    /// Specify a full alternative path to the server socket
     pub socket_path: Option<&'a str>,                   // -S socket-path
+    /// Write UTF-8 output to the terminal
     pub force_utf8: Option<bool>,                       // -u
+    /// Request verbose logging
     pub verbose_logging: Option<bool>,                  // -v
+    // Report the tmux version
     //pub version                                       // -V
 }
 
@@ -109,20 +123,31 @@ impl<'a> Default for TmuxInterface<'a> {
     }
 }
 
-
+/// Common `TmuxInterface` functions
 impl<'a> TmuxInterface<'a> {
 
     const TMUX: &'static str = "tmux";
     const VERSION_STR_REGEX: &'static str = r"^tmux\s(\d+).(\d+)\n$";
 
-
+    /// Create new `TmuxInterface` instance initialized with default values
     pub fn new() -> Self {
         Default::default()
     }
 
+    /// Execute subcommand of tmux
+    ///
+    /// # Manual
+    ///
     /// ```text
     /// tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path]
     /// [command [flags]]
+    /// ```
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let tmux = TmuxInterface::new();
+    /// tmux.subcommand("has-session", &["-t", "session_name"])?;
     /// ```
     pub fn subcommand(&self, subcmd: &str, args: &[&str]) -> Result<Output, TmuxInterfaceError> {
         let mut options: Vec<&str> = Vec::new();
@@ -157,9 +182,8 @@ impl<'a> TmuxInterface<'a> {
     //}
 
 
-    // tmux parameter
-    // ===========================================================================================
-
+    /// # Manual
+    ///
     /// ```text
     /// tmux -V
     /// ```
