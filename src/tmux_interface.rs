@@ -146,8 +146,10 @@ impl<'a> TmuxInterface<'a> {
     /// # Examples
     ///
     /// ```
+    /// use crate::tmux_interface::TmuxInterface;
+    ///
     /// let tmux = TmuxInterface::new();
-    /// tmux.subcommand("has-session", &["-t", "session_name"])?;
+    /// tmux.subcommand("has-session", &["-t", "session_name"]).unwrap();
     /// ```
     pub fn subcommand(&self, subcmd: &str, args: &[&str]) -> Result<Output, TmuxInterfaceError> {
         let mut options: Vec<&str> = Vec::new();
