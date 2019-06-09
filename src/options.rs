@@ -47,6 +47,13 @@ impl<'a> Default for ShowOptions<'a> {
 }
 
 
+impl<'a> ShowOptions<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+}
+
+
 /// Options
 impl<'a> TmuxInterface<'a> {
 
@@ -82,7 +89,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-options [-gHqsvw] [-t target-session | target-window] [option]
     /// (alias: show)
     /// ```
-    pub fn show_options(&self, show_options: &ShowOptions) -> Result<bool, TmuxInterfaceError> {
+    pub fn show_options(&self, show_options: &ShowOptions) -> Result<String, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if show_options.global_options.unwrap_or(false) { args.push(g_KEY); }
         if show_options.hooks.unwrap_or(false) { args.push(H_KEY); }
@@ -93,7 +100,8 @@ impl<'a> TmuxInterface<'a> {
         show_options.target.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         show_options.option.as_ref().and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::SHOW_OPTIONS, &args)?;
-        Ok(output.status.success())
+        let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
+        Ok(stdout.to_string())
     }
 
 

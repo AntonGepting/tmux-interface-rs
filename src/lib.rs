@@ -32,6 +32,7 @@ pub use self::windows::Windows;
 pub use self::pane::Pane;
 pub use self::panes::Panes;
 pub use self::tmux_interface_error::TmuxInterfaceError;
+pub use self::options::ShowOptions;
 
 
 #[cfg(test)]
@@ -42,3 +43,4 @@ mod window_tests;
 mod windows_tests;
 mod pane_tests;
 mod panes_tests;
+mod options_tests;
