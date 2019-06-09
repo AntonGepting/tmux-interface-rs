@@ -688,12 +688,12 @@ impl<'a> TmuxInterface<'a> {
         if split_window.vertical.unwrap_or(false) { args.push(v_KEY); }
         if split_window.print.unwrap_or(false) { args.push(P_KEY); }
         split_window.cwd.as_ref().and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        let mut s;
+        let s;
         if let Some(size) = split_window.size {
             s = size.to_string();
             args.extend_from_slice(&[l_KEY, &s]);
         }
-        let mut p;
+        let p;
         if let Some(percentage) = split_window.percentage {
             p = percentage.to_string();
             args.extend_from_slice(&[p_KEY, &p]);

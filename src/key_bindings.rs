@@ -81,7 +81,7 @@ impl<'a> TmuxInterface<'a> {
         if send_keys.copy_mode.unwrap_or(false) { args.push(R_KEY); }
         if send_keys.reset.unwrap_or(false) { args.push(X_KEY); }
         //send_keys.repeat_count.and_then(|s| Some(args.extend_from_slice(&[N_KEY, s])));
-        let mut s;
+        let s;
         if let Some(repeat_count) = send_keys.repeat_count {
             s = repeat_count.to_string();
             args.extend_from_slice(&[N_KEY, &s]);

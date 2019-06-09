@@ -294,12 +294,12 @@ impl<'a> TmuxInterface<'a> {
         new_session.session_name.as_ref().and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
         new_session.group_name.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         //new_session.width.and_then(|n| Some(args.extend_from_slice(&[x_KEY, &n.to_string()])));
-        let mut x;
+        let x;
         if let Some(width) = new_session.width {
             x = width.to_string();
             args.extend_from_slice(&[x_KEY, &x]);
         }
-        let mut y;
+        let y;
         if let Some(height) = new_session.height {
             y = height.to_string();
             args.extend_from_slice(&[y_KEY, &y]);
