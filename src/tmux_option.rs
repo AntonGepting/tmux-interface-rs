@@ -24,9 +24,12 @@ impl TmuxOption {
         };
         let value = tmux.show_options(&show_options)?;
         let regex = Regex::new(TmuxOption::GET_INT_OPTION_REGEX)?;
-        let caps = regex.captures(&value).unwrap();
-        let int = caps[1].parse::<usize>()?;
-        Ok(int)
+        if let Some(caps) = regex.captures(&value) {
+            let int = caps[1].parse::<usize>()?;
+            return Ok(int);
+        } else {
+            return Err(TmuxInterfaceError::new("regex parse error"));
+        }
     }
 
 
