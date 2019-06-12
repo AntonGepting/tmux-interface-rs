@@ -17,12 +17,11 @@ use crate::tmux_interface::TmuxInterface;
 #[test]
 fn has_session() {
     use crate::tmux_interface::NewSession;
-    use std::borrow::Cow;
 
     let tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
-        session_name: Some(Cow::Borrowed("test_has_session")),
+        session_name: Some("test_has_session"),
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
@@ -40,12 +39,11 @@ fn has_session() {
 #[test]
 fn kill_session() {
     use crate::tmux_interface::NewSession;
-    use std::borrow::Cow;
 
     let tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
-        session_name: Some(Cow::Borrowed("test_kill_session")),
+        session_name: Some("test_kill_session"),
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
@@ -68,12 +66,11 @@ fn kill_session() {
 #[test]
 fn list_sessions() {
     use crate::tmux_interface::NewSession;
-    use std::borrow::Cow;
 
     let tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
-        session_name: Some(Cow::Borrowed("test_list_sessions")),
+        session_name: Some("test_list_sessions"),
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
@@ -97,12 +94,11 @@ fn list_sessions() {
 #[test]
 fn new_session() {
     use crate::tmux_interface::NewSession;
-    use std::borrow::Cow;
 
     let tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
-        session_name: Some(Cow::Borrowed("test_new_session")),
+        session_name: Some("test_new_session"),
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
@@ -119,12 +115,11 @@ fn new_session() {
 #[test]
 fn rename_session() {
     use crate::tmux_interface::NewSession;
-    use std::borrow::Cow;
 
     let tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
-        session_name: Some(Cow::Borrowed("test_rename_session")),
+        session_name: Some("test_rename_session"),
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();

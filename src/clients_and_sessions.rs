@@ -1,6 +1,5 @@
 use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
-use std::borrow::Cow;
 
 
 /// Structure for creating a new session
@@ -25,21 +24,21 @@ pub struct NewSession<'a> {
     /// print information about the new session after it has been created
     pub print: Option<bool>,                    // [-P]
     /// specify starting directory
-    pub cwd: Option<Cow<'a, str>>,              // [-c start-directory]
+    pub cwd: Option<&'a str>,              // [-c start-directory]
     /// specify different format
-    pub format: Option<Cow<'a, str>>,           // [-F format]
+    pub format: Option<&'a str>,           // [-F format]
     /// window name of the initial window
-    pub window_name: Option<Cow<'a, str>>,      // [-n window-name]
+    pub window_name: Option<&'a str>,      // [-n window-name]
     /// specify a session name
-    pub session_name: Option<Cow<'a, str>>,     // [-s session-name]
+    pub session_name: Option<&'a str>,     // [-s session-name]
     /// specify a session group
-    pub group_name: Option<Cow<'a, str>>,       // [-t group-name]
+    pub group_name: Option<&'a str>,       // [-t group-name]
     /// specify a different width
     pub width: Option<usize>,                   // [-x width]
     /// specify a different height
     pub height: Option<usize>,                  // [-y height]
     /// shell command to execute in the initial window
-    pub shell_command: Option<Cow<'a, str>>     // [shell-command]
+    pub shell_command: Option<&'a str>     // [shell-command]
 }
 
 
@@ -87,9 +86,9 @@ pub struct AttachSession<'a> {
     /// signifies the client is read-only
     pub read_only: Option<bool>,                // [-r]
     /// specify starting directory
-    pub cwd: Option<Cow<'a, str>>,              // [-c working-directory]
+    pub cwd: Option<&'a str>,              // [-c working-directory]
     /// specify target session name
-    pub target_session: Option<Cow<'a, str>>,   // [-t target-session]
+    pub target_session: Option<&'a str>,   // [-t target-session]
 }
 
 
