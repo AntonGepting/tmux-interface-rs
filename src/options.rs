@@ -1,6 +1,5 @@
 use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
-use std::borrow::Cow;
 
 
 /// Show options structure
@@ -25,9 +24,9 @@ pub struct ShowOptions<'a> {
     /// show the window options
     pub window_options: Option<bool>,           // [-w]
     /// target session or window name
-    pub target: Option<Cow<'a, str>>,           // [-t target-session | target-window]
+    pub target: Option<&'a str>,                // [-t target-session | target-window]
     /// option name
-    pub option: Option<Cow<'a, str>>,           // [option]
+    pub option: Option<&'a str>,                // [option]
 }
 
 

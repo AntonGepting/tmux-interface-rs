@@ -2,7 +2,6 @@ use super::ShowOptions;
 use super::TmuxInterface;
 use super::tmux_interface_error::TmuxInterfaceError;
 use regex::Regex;
-use std::borrow::Cow;
 
 
 pub struct TmuxOption;
@@ -19,7 +18,7 @@ impl TmuxOption {
         let show_options = ShowOptions {
             global_options: Some(true),
             option_value: Some(true),
-            option: Some(Cow::Borrowed(option_name)),
+            option: Some(option_name),
             ..Default::default()
         };
         let value = tmux.show_options(&show_options)?;
