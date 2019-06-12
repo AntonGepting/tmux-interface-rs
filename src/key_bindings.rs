@@ -1,6 +1,3 @@
-use std::borrow::Cow;
-
-
 use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
 
@@ -12,11 +9,8 @@ pub struct SendKeys<'a> {
     pub copy_mode: Option<bool>,                // [-R]
     pub reset: Option<bool>,                    // [-X]
     pub repeat_count: Option<usize>,            // [-N repeat-count]
-    pub target_pane: Option<Cow<'a, str>>,      // [-t target-pane]
-    //pub keys: &'a Vec<String>                   // key
-    //pub keys: Cow<'a, str>
-    //pub keys: &'a [&'a str]
-    pub keys: Vec<&'a str>
+    pub target_pane: Option<&'a str>,           // [-t target-pane]
+    pub keys: Vec<&'a str>                      // key
 }
 
 
@@ -29,7 +23,6 @@ impl<'a> Default for SendKeys<'a> {
             reset: None,
             repeat_count: None,
             target_pane: None,
-            //keys: "".to_string()
             keys: Vec::new()
         }
     }
