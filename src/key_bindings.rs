@@ -13,8 +13,10 @@ pub struct SendKeys<'a> {
     pub reset: Option<bool>,                    // [-X]
     pub repeat_count: Option<usize>,            // [-N repeat-count]
     pub target_pane: Option<Cow<'a, str>>,      // [-t target-pane]
-    pub keys: &'a str                           // key
+    //pub keys: &'a Vec<String>                   // key
     //pub keys: Cow<'a, str>
+    //pub keys: &'a [&'a str]
+    pub keys: Vec<&'a str>
 }
 
 
@@ -27,7 +29,8 @@ impl<'a> Default for SendKeys<'a> {
             reset: None,
             repeat_count: None,
             target_pane: None,
-            keys: ""
+            //keys: "".to_string()
+            keys: Vec::new()
         }
     }
 }
@@ -87,8 +90,10 @@ impl<'a> TmuxInterface<'a> {
             args.extend_from_slice(&[N_KEY, &s]);
         }
         send_keys.target_pane.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        args.push(send_keys.keys);
-        args.push("C-m");
+        //args.extend_from_slice(send_keys.keys.as_slice());
+        //args.extend_from_slice(send_keys.keys);
+        args.append(&mut send_keys.keys.clone());
+        //args.push("C-m");
         let output = self.subcommand(TmuxInterface::SEND_KEYS, &args)?;
         Ok(output.status.success())
     }

@@ -47,3 +47,4 @@ mod pane_tests;
 mod panes_tests;
 //mod options_tests;
 mod tmux_option_tests;
+mod key_bindings_tests;
