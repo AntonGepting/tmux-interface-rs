@@ -1,6 +1,3 @@
-use std::borrow::Cow;
-
-
 use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
 
@@ -19,11 +16,11 @@ pub struct NewWindow<'a> {
     pub detached: Option<bool>,                 // [-d]
     pub kill: Option<bool>,                     // [-k]
     pub print: Option<bool>,                    // [-P]
-    pub cwd: Option<Cow<'a, str>>,              // [-c start-directory]
-    pub format: Option<Cow<'a, str>>,           // [-F format]
-    pub window_name: Option<Cow<'a, str>>,      // [-n window-name]
-    pub target_window: Option<Cow<'a, str>>,    // [-t target-window]
-    pub shell_command: Option<Cow<'a, str>>,    // [shell-command]
+    pub cwd: Option<&'a str>,                   // [-c start-directory]
+    pub format: Option<&'a str>,                // [-F format]
+    pub window_name: Option<&'a str>,           // [-n window-name]
+    pub target_window: Option<&'a str>,         // [-t target-window]
+    pub shell_command: Option<&'a str>,         // [shell-command]
 }
 
 
@@ -63,12 +60,12 @@ pub struct SplitWindow<'a> {
     pub horizontal: Option<bool>,               // [-h]
     pub vertical: Option<bool>,                 // [-v]
     pub print: Option<bool>,                    // [-P]
-    pub cwd: Option<Cow<'a, str>>,              // [-c start-directory]
+    pub cwd: Option<&'a str>,                   // [-c start-directory]
     pub size: Option<usize>,                    // [-l size]
     pub percentage: Option<usize>,              // [-p percentage]
-    pub target_pane: Option<Cow<'a, str>>,      // [-t target-pane]
-    pub shell_command: Option<Cow<'a, str>>,    // [shell-command]
-    pub format: Option<Cow<'a, str>>,           // [-F format]
+    pub target_pane: Option<&'a str>,           // [-t target-pane]
+    pub shell_command: Option<&'a str>,         // [shell-command]
+    pub format: Option<&'a str>,                // [-F format]
 }
 
 impl<'a> Default for SplitWindow<'a> {
