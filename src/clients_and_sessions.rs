@@ -193,11 +193,12 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux kill-session [-aC] [-t target-session]
     /// ```
-    pub fn kill_session(&self, name: &str, all: bool, clear_alerts: bool) -> Result<bool, TmuxInterfaceError> {
+    pub fn kill_session(&self, name: Option<&str>, all: Option<bool>, clear_alerts: Option<bool>)
+        -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
-        if all { args.push(a_KEY); }
-        if clear_alerts { args.push(C_KEY); }
-        args.extend_from_slice(&[t_KEY, name]);
+        if all.unwrap_or(false) { args.push(a_KEY); }
+        if clear_alerts.unwrap_or(false) { args.push(C_KEY); }
+        name.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::KILL_SESSION, &args)?;
         Ok(output.status.success())
     }
