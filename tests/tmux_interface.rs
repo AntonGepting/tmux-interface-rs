@@ -159,7 +159,27 @@ fn rename_session() {
 //}
 
 
+#[test]
+fn send_keys() {
+    use crate::tmux_interface::{NewSession, SendKeys};
 
+    let tmux = TmuxInterface::new();
+    let new_session = NewSession {
+        detached: Some(true),
+        session_name: Some("test_send_keys"),
+        ..Default::default()
+    };
+    tmux.new_session(&new_session).unwrap();
+
+    let send_keys = SendKeys {
+        target_pane: Some("test_send_keys:^.0"),
+        keys: vec!["top", "C-m"],
+        ..Default::default()
+    };
+    tmux.send_keys(&send_keys).unwrap();
+
+    tmux.kill_session("test_send_keys", false, false).unwrap();
+}
 
 
 //#[test]
