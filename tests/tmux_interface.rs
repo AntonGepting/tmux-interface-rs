@@ -26,7 +26,7 @@ fn has_session() {
     };
     tmux.new_session(&new_session).unwrap();
     assert_eq!(tmux.has_session("test_has_session").unwrap(), true);
-    tmux.kill_session("test_has_session", false, false).unwrap();
+    tmux.kill_session(Some("test_has_session"), None, None).unwrap();
 }
 
 
@@ -47,7 +47,7 @@ fn kill_session() {
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
-    tmux.kill_session("test_kill_session", false, false).unwrap();
+    tmux.kill_session(Some("test_kill_session"), None, None).unwrap();
 }
 
 
@@ -75,7 +75,7 @@ fn list_sessions() {
     };
     tmux.new_session(&new_session).unwrap();
     tmux.list_sessions(None).unwrap();
-    tmux.kill_session("test_list_sessions", false, false).unwrap();
+    tmux.kill_session(Some("test_list_session"), None, None).unwrap();
 }
 
 
@@ -102,7 +102,7 @@ fn new_session() {
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
-    tmux.kill_session("test_new_session", false, false).unwrap();
+    tmux.kill_session(Some("test_new_session"), None, None).unwrap();
 }
 
 
@@ -125,7 +125,7 @@ fn rename_session() {
     tmux.new_session(&new_session).unwrap();
     tmux.rename_session(Some("test_rename_session"), "rename_test_session").unwrap();
     assert_eq!(tmux.has_session("rename_test_session").unwrap(), true);
-    tmux.kill_session("rename_test_session", false, false).unwrap();
+    tmux.kill_session(Some("rename_test_session"), None, None).unwrap();
 }
 
 
@@ -178,7 +178,7 @@ fn send_keys() {
     };
     tmux.send_keys(&send_keys).unwrap();
 
-    tmux.kill_session("test_send_keys", false, false).unwrap();
+    tmux.kill_session(Some("test_send_keys"), None, None).unwrap();
 }
 
 
