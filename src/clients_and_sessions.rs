@@ -166,9 +166,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux has-session [-t target-session]
     /// (alias: has)
     /// ```
-    pub fn has_session(&self, target_session: &str) -> Result<bool, TmuxInterfaceError> {
+    pub fn has_session(&self, target_session: Option<&str>) -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
-        args.extend_from_slice(&[t_KEY, target_session]);
+        target_session.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
         let output = self.subcommand(TmuxInterface::HAS_SESSION, &args)?;
         Ok(output.status.success())
     }
