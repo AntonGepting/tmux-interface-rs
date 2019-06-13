@@ -25,7 +25,7 @@ fn has_session() {
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
-    assert_eq!(tmux.has_session("test_has_session").unwrap(), true);
+    assert_eq!(tmux.has_session(Some("test_has_session")).unwrap(), true);
     tmux.kill_session(Some("test_has_session"), None, None).unwrap();
 }
 
@@ -124,7 +124,7 @@ fn rename_session() {
     };
     tmux.new_session(&new_session).unwrap();
     tmux.rename_session(Some("test_rename_session"), "rename_test_session").unwrap();
-    assert_eq!(tmux.has_session("rename_test_session").unwrap(), true);
+    assert_eq!(tmux.has_session(Some("rename_test_session")).unwrap(), true);
     tmux.kill_session(Some("rename_test_session"), None, None).unwrap();
 }
 
