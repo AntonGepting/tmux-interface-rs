@@ -12,7 +12,7 @@ pub const SESSION_VARS_REGEX_VEC: [(&str, &str); 15] = [
     ("session_activity",        r"(\d+)"),
     ("session_created",         r"(\d+)"),
     ("session_format",          r"(\w+)?"),
-    ("session_last_attached",   r"(\d+)"),
+    ("session_last_attached",   r"(\d+)?"),
     ("session_group",           r"(\w+)?"),
     ("session_group_size",      r"(\w+)?"),
     ("session_group_list",      r"(\w+)?"),
@@ -63,7 +63,7 @@ pub struct Session {
     pub activity: Duration,
     pub created: Duration,
     pub format: Option<String>,
-    pub last_attached: Duration,
+    pub last_attached: Option<Duration>,
     pub group: Option<String>,
     pub group_size: Option<String>,
     pub group_list: Option<String>,
@@ -84,7 +84,7 @@ impl Default for Session {
             activity: Duration::from_millis(0),
             created: Duration::from_millis(0),
             format: None,
-            last_attached: Duration::from_millis(0),
+            last_attached: None,
             group: None,
             group_size: None,
             group_list: None,
@@ -123,7 +123,9 @@ impl Session {
         if let Some(format) = caps.get(5) {
             session.format = Some(format.as_str().parse()?);
         }
-        session.last_attached = Duration::from_millis(caps[6].parse()?);
+        if let Some(last_attached) = caps.get(6) {
+            session.last_attached = Some(Duration::from_millis(last_attached.as_str().parse()?));
+        }
         if let Some(group) = caps.get(7) {
             session.group = Some(group.as_str().parse()?);
         }
