@@ -46,6 +46,7 @@ an improvment, an idea etc.
 
 
 # Wishlist
-- better error reporting (mb, add enum)
-- mb, function parameter names from tmux source?
+- mb better error reporting (mb add enum)
+- mb function parameter names from tmux source?
 - mb tmux plugin for more options?
+- mb folder structure, separate tmux functions from parse functions
