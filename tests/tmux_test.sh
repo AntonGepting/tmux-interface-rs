@@ -6,7 +6,8 @@ tmux ls -F "#{session_alerts}:#{session_attached}:#{session_activity}:#{session_
 
 echo "test windows"
 echo "========================================================================="
-tmux lsw -a -F "#{window_activity}'#{window_activity_flag}'#{window_active}'#{window_bell_flag}'#{window_bigger}'#{window_flags}'#{window_format}'#{window_height}'#{window_id}'#{window_index}'#{window_last_flag}'#{window_layout}'#{window_linked}'#{window_name}'#{window_offset_x}'#{window_offset_y}'#{window_panes}'#{window_silence_flag}'#{window_stack_index}'#{window_visible_layout}'#{window_width}'#{window_zoomed_flag}"
+tmux lsw -a -F "#{window_activity}'#{window_activity_flag}'#{window_active}'#{window_bell_flag}'#{window_bigger}'#{window_end_flag}'#{window_flags}'#{window_format}'#{window_height}'#{window_id}'#{window_index}'#{window_last_flag}'#{window_layout}'#{window_linked}'#{window_name}'#{window_offset_x}'#{window_offset_y}'#{window_panes}'#{window_silence_flag}'#{window_stack_index}'#{window_start_flag}'#{window_visible_layout}'#{window_width}'#{window_zoomed_flag}"
+
 
 echo "test panes"
 echo "========================================================================="
