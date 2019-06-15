@@ -4,6 +4,7 @@ use crate::TmuxInterfaceError;
 
 
 pub const SESSION_VARS_SEPARATOR: &str = ":";
+// XXX: mb make all fields optional
 // FIXME: regex name can be anything, and other keys should be checked better
 // NOTE: no colons or periods (ref: int session_check_name(const char *name))
 pub const SESSION_VARS_REGEX_VEC: [(&str, &str); 15] = [

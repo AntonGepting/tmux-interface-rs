@@ -3,6 +3,7 @@ use crate::TmuxInterfaceError;
 
 
 pub const PANE_VARS_SEPARATOR: &str = "'";
+// XXX: mb make all fields optional
 // FIXME: regex name can be anything, and other keys should be checked better
 pub const PANE_VARS_REGEX_VEC: [(&str, &str); 29] = [
     ("pane_active",             r"(1|0)"),
