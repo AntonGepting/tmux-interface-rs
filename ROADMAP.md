@@ -36,6 +36,9 @@ an improvment, an idea etc.
     - [x] .editorconfig
     - [x] .travis.yml
     - [x] LICENSE.md
+    - [x] README.md
+    - [x] ROADMAP.md
+    - [x] CHANGELOG.md
 - [x] Prepare crate for publication on crates.io
     - [x] Cargo.toml
     - [ ] Documentation for existing functionality
