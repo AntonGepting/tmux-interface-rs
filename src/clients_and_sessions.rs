@@ -107,6 +107,96 @@ impl<'a> DetachClient<'a> {
 }
 
 
+/// Switch the current session for client `target-client` to `target-session`
+///
+/// # Manual
+///
+/// ```text
+/// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
+/// (alias: switchc)
+/// ```
+pub struct SwitchClient<'a> {
+    pub not_update_env: Option<bool>,           // [-E]
+    pub last: Option<bool>,                     // [-l]
+    pub next: Option<bool>,                     // [-n]
+    pub previous: Option<bool>,                 // [-p]
+    pub read_only: Option<bool>,                // [-r]
+    pub target_client: Option<&'a str>,         // [-c target-client]
+    pub target_session: Option<&'a str>,        // [-t target-session]
+    pub key_table: Option<&'a str>,             // [-T key-table]
+}
+
+
+impl<'a> Default for SwitchClient<'a> {
+    fn default() -> Self {
+        SwitchClient {
+            not_update_env: None,
+            last: None,
+            next: None,
+            previous: None,
+            read_only: None,
+            target_client: None,
+            target_session: None,
+            key_table: None
+        }
+    }
+}
+
+
+impl<'a> SwitchClient<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+}
+
+
+/// Refresh the current client
+///
+/// # Manual
+///
+/// ```text
+/// tmux refresh-client [-cDlLRSU] [-C width,height] [-t target-client] [adjustment]
+/// (alias: refresh)
+/// ```
+pub struct RefreshClient<'a> {
+    pub tracking_cursor: Option<bool>,          // [-c]
+    pub down: Option<bool>,                     // [-D]
+    pub request_clipboard: Option<bool>,        // [-l]
+    pub left: Option<bool>,                     // [-L]
+    pub right: Option<bool>,                    // [-R]
+    pub status_line: Option<bool>,              // [-S]
+    pub up: Option<bool>,                       // [-U]
+    pub size: Option<(usize, usize)>,           // [-C width,height]
+    pub target_client: Option<&'a str>,         // [-t target-client]
+    pub adjustment: Option<usize>               // [adjustment]
+}
+
+
+impl<'a> Default for RefreshClient<'a> {
+    fn default() -> Self {
+        RefreshClient {
+            tracking_cursor: None,
+            down: None,
+            request_clipboard: None,
+            left: None,
+            right: None,
+            status_line: None,
+            up: None,
+            size: None,
+            target_client: None,
+            adjustment: None
+        }
+    }
+}
+
+
+impl<'a> RefreshClient<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+}
+
+
 /// Session for attaching client to already existing session
 ///
 /// # Manual
@@ -269,9 +359,12 @@ impl<'a> TmuxInterface<'a> {
     /// tmux list-clients [-F format] [-t target-session]
     /// (alias: lsc)
     /// ```
-    pub fn list_clients(&self) -> Result<bool, TmuxInterfaceError> {
-        unimplemented!();
-        let output = self.subcommand(TmuxInterface::LIST_CLIENTS, &[""])?;
+    pub fn list_clients(&self, format: Option<&str>, target_session: Option<&str>) ->
+        Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        format.as_ref().and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        target_session.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::LIST_CLIENTS, &args)?;
         Ok(output.status.success())
     }
 
@@ -284,9 +377,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux list-commands [-F format]
     /// (alias: lscm)
     /// ```
-    pub fn list_commands(&self) -> Result<bool, TmuxInterfaceError> {
-        unimplemented!();
-        let output = self.subcommand(TmuxInterface::LIST_COMMANDS, &[""])?;
+    pub fn list_commands(&self, format: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        format.as_ref().and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::LIST_COMMANDS, &args)?;
         Ok(output.status.success())
     }
 
@@ -316,9 +410,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux lock-client [-t target-client]
     /// (alias: lockc)
     /// ```
-    pub fn lock_client(&self) -> Result<bool, TmuxInterfaceError> {
-        unimplemented!();
-        let output = self.subcommand(TmuxInterface::LOCK_CLIENT, &[""])?;
+    pub fn lock_client(&self, target_client: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
+        let output = self.subcommand(TmuxInterface::LOCK_CLIENT, &args)?;
         Ok(output.status.success())
     }
 
@@ -330,8 +425,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux lock-session [-t target-session]
     /// (alias: locks)
     /// ```
-    pub fn lock_session(&self) -> Result<bool, TmuxInterfaceError> {
-        unimplemented!();
+    pub fn lock_session(&self, target_session: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
         let output = self.subcommand(TmuxInterface::LOCK_SESSION, &[""])?;
         Ok(output.status.success())
     }
@@ -383,9 +479,26 @@ impl<'a> TmuxInterface<'a> {
     /// tmux refresh-client [-cDlLRSU] [-C width,height] [-t target-client] [adjustment]
     /// (alias: refresh)
     /// ```
-    pub fn refresh_client(&self) -> Result<bool, TmuxInterfaceError> {
-        unimplemented!();
-        let output = self.subcommand(TmuxInterface::REFRESH_CLIENT, &[""])?;
+    pub fn refresh_client(&self, refresh_client: &RefreshClient) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if refresh_client.tracking_cursor.unwrap_or(false) { args.push(c_KEY); }
+        if refresh_client.down.unwrap_or(false) { args.push(D_KEY); }
+        if refresh_client.request_clipboard.unwrap_or(false) { args.push(l_KEY); }
+        if refresh_client.left.unwrap_or(false) { args.push(L_KEY); }
+        if refresh_client.right.unwrap_or(false) { args.push(R_KEY); }
+        if refresh_client.status_line.unwrap_or(false) { args.push(S_KEY); }
+        let s;
+        if let Some(size) = refresh_client.size {
+            s = format!("{},{}", size.0, size.1);
+            args.extend_from_slice(&[C_KEY, &s]);
+        }
+        refresh_client.target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let n;
+        if let Some(adjustment) = refresh_client.adjustment {
+            n = adjustment.to_string();
+            args.push(&n);
+        }
+        let output = self.subcommand(TmuxInterface::REFRESH_CLIENT, &args)?;
         Ok(output.status.success())
     }
 
@@ -415,9 +528,13 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-messages [-JT] [-t target-client]
     /// (alias: showmsgs)
     /// ```
-    pub fn show_messages(&self) -> Result<bool, TmuxInterfaceError> {
-        unimplemented!();
-        let output = self.subcommand(TmuxInterface::SHOW_MESSAGES, &[""])?;
+    pub fn show_messages(&self, jobs: Option<bool>, terminal: Option<bool>,
+                         target_client: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if jobs.unwrap_or(false) { args.push(J_KEY); }
+        if terminal.unwrap_or(false) { args.push(T_KEY); }
+        target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::SHOW_MESSAGES, &args)?;
         Ok(output.status.success())
     }
 
@@ -430,9 +547,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux source-file [-q] path
     /// (alias: source)
     /// ```
-    pub fn source_file(&self) -> Result<bool, TmuxInterfaceError> {
-        unimplemented!();
-        let output = self.subcommand(TmuxInterface::SOURCE_FILE, &[""])?;
+    pub fn source_file(&self, quite: Option<bool>, path: &str) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if quite.unwrap_or(false) { args.push(q_KEY); }
+        args.push(path);
+        let output = self.subcommand(TmuxInterface::SOURCE_FILE, &args)?;
         Ok(output.status.success())
     }
 
@@ -446,7 +565,6 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: start)
     /// ```
     pub fn start_server(&self) -> Result<bool, TmuxInterfaceError> {
-        unimplemented!();
         let output = self.subcommand(TmuxInterface::START_SERVER, &[""])?;
         Ok(output.status.success())
     }
@@ -460,9 +578,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux suspend-client [-t target-client]
     /// (alias: suspendc)
     /// ```
-    pub fn suspend_client(&self) -> Result<bool, TmuxInterfaceError> {
-        unimplemented!();
-        let output = self.subcommand(TmuxInterface::SUSPEND_CLIENT, &[""])?;
+    pub fn suspend_client(&self, target_client: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::SUSPEND_CLIENT, &args)?;
         Ok(output.status.success())
     }
 
@@ -475,9 +594,17 @@ impl<'a> TmuxInterface<'a> {
     /// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
     /// (alias: switchc)
     /// ```
-    pub fn switch_client(&self) -> Result<bool, TmuxInterfaceError> {
-        unimplemented!();
-        let output = self.subcommand(TmuxInterface::SWITCH_CLIENT, &[""])?;
+    pub fn switch_client(&self, switch_client: &SwitchClient) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if switch_client.not_update_env.unwrap_or(false) { args.push(E_KEY); }
+        if switch_client.last.unwrap_or(false) { args.push(l_KEY); }
+        if switch_client.next.unwrap_or(false) { args.push(n_KEY); }
+        if switch_client.previous.unwrap_or(false) { args.push(p_KEY); }
+        if switch_client.read_only.unwrap_or(false) { args.push(r_KEY); }
+        switch_client.target_client.as_ref().and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
+        switch_client.target_session.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        switch_client.key_table.as_ref().and_then(|s| Some(args.extend_from_slice(&[T_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::SWITCH_CLIENT, &args)?;
         Ok(output.status.success())
     }
 
