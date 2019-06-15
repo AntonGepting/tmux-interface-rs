@@ -70,6 +70,43 @@ impl<'a> NewSession<'a> {
 }
 
 
+/// Detach the current client
+///
+/// # Manual
+///
+/// ```text
+/// tmux detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
+/// (alias: detach)
+/// ```
+pub struct DetachClient<'a> {
+    pub all: Option<bool>,                      // [-a]
+    pub parent_sighup: Option<bool>,            // [-P]
+    pub shell_command: Option<&'a str>,         // [-E shell-command]
+    pub target_session: Option<&'a str>,        // [-s target-session]
+    pub target_client: Option<&'a str>          // [-t target-client]
+}
+
+
+impl<'a> Default for DetachClient<'a> {
+    fn default() -> Self {
+        DetachClient {
+            all: None,
+            parent_sighup: None,
+            shell_command: None,
+            target_session: None,
+            target_client: None
+        }
+    }
+}
+
+
+impl<'a> DetachClient<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+}
+
+
 /// Session for attaching client to already existing session
 ///
 /// # Manual
@@ -119,8 +156,10 @@ impl<'a> TmuxInterface<'a> {
 
     const NEW_SESSION: &'static str = "new-session";
     const ATTACH_SESSION: &'static str = "attach-session";
+    const DETACH_CLIENT: &'static str = "detach-client";
     const HAS_SESSION: &'static str = "has-session";
     const KILL_SESSION: &'static str = "kill-session";
+    const KILL_SERVER: &'static str = "kill-server";
     const LIST_SESSIONS: &'static str = "list-sessions";
     const RENAME_SESSION: &'static str = "rename-session";
 
@@ -153,8 +192,15 @@ impl<'a> TmuxInterface<'a> {
     /// tmux detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
     /// (alias: detach)
     /// ```
-    pub fn detach_client() {
-        unimplemented!();
+    pub fn detach_client(&self, detach_client: &DetachClient) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if detach_client.all.unwrap_or(false) { args.push(a_KEY); }
+        if detach_client.parent_sighup.unwrap_or(false) { args.push(P_KEY); }
+        detach_client.shell_command.as_ref().and_then(|s| Some(args.extend_from_slice(&[E_KEY, &s])));
+        detach_client.target_session.as_ref().and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        detach_client.target_client.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::DETACH_CLIENT, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -181,8 +227,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux kill-server
     /// ```
-    pub fn kill_server() {
-        unimplemented!();
+    pub fn kill_server(&self) -> Result<bool, TmuxInterfaceError> {
+        let output = self.subcommand(TmuxInterface::KILL_SERVER, &[""])?;
+        Ok(output.status.success())
     }
 
 
