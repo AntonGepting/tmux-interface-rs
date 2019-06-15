@@ -4,11 +4,11 @@ fn parse() {
 
     let sessions_str = ":1:1557947146:1557947146:1:1557947146::::0:$0:0:0:3,2,1:3\n:1:1557947146:1557947146:1:1557947146::::0:$0:0:0:3,2,1:3";
     let sessions = Sessions::parse(sessions_str).unwrap();
-    assert_eq!(sessions[0].id, 0);
+    assert_eq!(sessions[0].id, Some(0));
 
     let sessions_str = ":1:1557947146:1557947146:1:1557947146::::0:$0:0:0:4,3,2,1:4\n:0:1557947146:1557947146:1:::::0:$40:0:test_has_session:1:1";
     let sessions = Sessions::parse(sessions_str).unwrap();
-    assert_eq!(sessions[1].id, 40);
+    assert_eq!(sessions[1].id, Some(40));
 }
 
 

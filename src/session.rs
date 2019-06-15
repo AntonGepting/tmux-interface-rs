@@ -9,20 +9,20 @@ pub const SESSION_VARS_SEPARATOR: &str = ":";
 // NOTE: no colons or periods (ref: int session_check_name(const char *name))
 pub const SESSION_VARS_REGEX_VEC: [(&str, &str); 15] = [
     ("session_alerts",          r"(\w+)?"),
-    ("session_attached",        r"(\d+)"),
-    ("session_activity",        r"(\d+)"),
-    ("session_created",         r"(\d+)"),
+    ("session_attached",        r"(\d+)?"),
+    ("session_activity",        r"(\d+)?"),
+    ("session_created",         r"(\d+)?"),
     ("session_format",          r"(\w+)?"),
     ("session_last_attached",   r"(\d+)?"),
     ("session_group",           r"(\w+)?"),
     ("session_group_size",      r"(\w+)?"),
     ("session_group_list",      r"(\w+)?"),
     ("session_grouped",         r"(\w+)?"),
-    ("session_id",              r"\$(\d+)"),
+    ("session_id",              r"\$(\d+)?"),
     ("session_many_attached",   r"(\w+)?"),
-    ("session_name",            r"(\w+)"),
-    ("session_stack",           r"([\w,]*)"),
-    ("session_windows",         r"(\d+)"),
+    ("session_name",            r"(\w+)?"),
+    ("session_stack",           r"([\w,]*)?"),
+    ("session_windows",         r"(\d+)?"),
 ];
 
 
@@ -60,20 +60,20 @@ pub const SESSION_VARS_REGEX_VEC: [(&str, &str); 15] = [
 #[derive(Clone, Debug)]
 pub struct Session {
     pub alerts: Option<String>,
-    pub attached: usize,
-    pub activity: Duration,
-    pub created: Duration,
+    pub attached: Option<usize>,
+    pub activity: Option<Duration>,
+    pub created: Option<Duration>,
     pub format: Option<String>,
     pub last_attached: Option<Duration>,
     pub group: Option<String>,
     pub group_size: Option<String>,
     pub group_list: Option<String>,
     pub grouped: Option<String>,
-    pub id: usize,
+    pub id: Option<usize>,
     pub many_attached: Option<String>,
-    pub name: String,
-    pub stack: String,
-    pub windows: usize,
+    pub name: Option<String>,
+    pub stack: Option<String>,
+    pub windows: Option<usize>,
 }
 
 
@@ -81,20 +81,20 @@ impl Default for Session {
     fn default() -> Self {
         Session {
             alerts: None,
-            attached: 0,
-            activity: Duration::from_millis(0),
-            created: Duration::from_millis(0),
+            attached: None,
+            activity: None,
+            created: None,
             format: None,
             last_attached: None,
             group: None,
             group_size: None,
             group_list: None,
             grouped: None,
-            id: 0,
+            id: None,
             many_attached: None,
-            name: "".to_string(),
-            stack: "".to_string(),
-            windows: 0,
+            name: None,
+            stack: None,
+            windows: None,
         }
     }
 }
@@ -114,13 +114,20 @@ impl Session {
         let regex = Regex::new(&regex_str)?;
         let caps = regex.captures(session_str).unwrap();
         let mut session = Session::new();
+
         // XXX: optimize?
         if let Some(alerts) = caps.get(1) {
             session.alerts = Some(alerts.as_str().parse()?);
         }
-        session.attached = caps[2].parse()?;
-        session.activity = Duration::from_millis(caps[3].parse()?);
-        session.created = Duration::from_millis(caps[4].parse()?);
+        if let Some(attached) = caps.get(2) {
+            session.attached = Some(attached.as_str().parse()?);
+        }
+        if let Some(activity) = caps.get(3) {
+            session.activity = Some(Duration::from_millis(activity.as_str().parse()?));
+        }
+        if let Some(created) = caps.get(4) {
+            session.created = Some(Duration::from_millis(created.as_str().parse()?));
+        }
         if let Some(format) = caps.get(5) {
             session.format = Some(format.as_str().parse()?);
         }
@@ -139,15 +146,21 @@ impl Session {
         if let Some(grouped) = caps.get(10) {
             session.grouped = Some(grouped.as_str().parse()?);
         }
-        session.id = caps[11].parse()?;
+        if let Some(id) = caps.get(11) {
+            session.id = Some(id.as_str().parse()?);
+        }
         if let Some(many_attached) = caps.get(12) {
             session.many_attached = Some(many_attached.as_str().parse()?);
         }
-        session.name = caps[13].parse()?;
-        if let Some(stack) = caps.get(14) {
-            session.stack = stack.as_str().parse()?;
+        if let Some(name) = caps.get(13) {
+            session.name = Some(name.as_str().parse()?);
         }
-        session.windows = caps[15].parse()?;
+        if let Some(stack) = caps.get(14) {
+            session.stack = Some(stack.as_str().parse()?);
+        }
+        if let Some(windows) = caps.get(15) {
+            session.windows = Some(windows.as_str().parse()?);
+        }
         Ok(session)
     }
 }
