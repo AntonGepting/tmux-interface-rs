@@ -154,14 +154,24 @@ impl<'a> AttachSession<'a> {
 impl<'a> TmuxInterface<'a> {
 
 
-    const NEW_SESSION: &'static str = "new-session";
     const ATTACH_SESSION: &'static str = "attach-session";
     const DETACH_CLIENT: &'static str = "detach-client";
     const HAS_SESSION: &'static str = "has-session";
-    const KILL_SESSION: &'static str = "kill-session";
     const KILL_SERVER: &'static str = "kill-server";
+    const KILL_SESSION: &'static str = "kill-session";
+    const LIST_CLIENTS: &'static str = "list-clients";
+    const LIST_COMMANDS: &'static str = "list-commands";
     const LIST_SESSIONS: &'static str = "list-sessions";
+    const LOCK_CLIENT: &'static str = "lock-client";
+    const LOCK_SESSION: &'static str = "lock-session";
+    const NEW_SESSION: &'static str = "new-session";
+    const REFRESH_CLIENT: &'static str = "refresh-client";
     const RENAME_SESSION: &'static str = "rename-session";
+    const SHOW_MESSAGES: &'static str = "show-messages";
+    const SOURCE_FILE: &'static str = "source-file";
+    const START_SERVER: &'static str = "start-server";
+    const SUSPEND_CLIENT: &'static str = "suspend-client";
+    const SWITCH_CLIENT: &'static str = "switch-client";
 
 
     /// Create a new client in the current terminal and attach it to `target-session`
@@ -259,8 +269,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux list-clients [-F format] [-t target-session]
     /// (alias: lsc)
     /// ```
-    pub fn list_clients() {
+    pub fn list_clients(&self) -> Result<bool, TmuxInterfaceError> {
         unimplemented!();
+        let output = self.subcommand(TmuxInterface::LIST_CLIENTS, &[""])?;
+        Ok(output.status.success())
     }
 
 
@@ -272,8 +284,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux list-commands [-F format]
     /// (alias: lscm)
     /// ```
-    pub fn list_commands() {
+    pub fn list_commands(&self) -> Result<bool, TmuxInterfaceError> {
         unimplemented!();
+        let output = self.subcommand(TmuxInterface::LIST_COMMANDS, &[""])?;
+        Ok(output.status.success())
     }
 
 
@@ -302,8 +316,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux lock-client [-t target-client]
     /// (alias: lockc)
     /// ```
-    pub fn lock_client() {
+    pub fn lock_client(&self) -> Result<bool, TmuxInterfaceError> {
         unimplemented!();
+        let output = self.subcommand(TmuxInterface::LOCK_CLIENT, &[""])?;
+        Ok(output.status.success())
     }
 
 
@@ -314,8 +330,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux lock-session [-t target-session]
     /// (alias: locks)
     /// ```
-    pub fn lock_session() {
+    pub fn lock_session(&self) -> Result<bool, TmuxInterfaceError> {
         unimplemented!();
+        let output = self.subcommand(TmuxInterface::LOCK_SESSION, &[""])?;
+        Ok(output.status.success())
     }
 
 
@@ -365,8 +383,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux refresh-client [-cDlLRSU] [-C width,height] [-t target-client] [adjustment]
     /// (alias: refresh)
     /// ```
-    pub fn refresh_client() {
+    pub fn refresh_client(&self) -> Result<bool, TmuxInterfaceError> {
         unimplemented!();
+        let output = self.subcommand(TmuxInterface::REFRESH_CLIENT, &[""])?;
+        Ok(output.status.success())
     }
 
 
@@ -395,8 +415,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-messages [-JT] [-t target-client]
     /// (alias: showmsgs)
     /// ```
-    pub fn show_messages() {
+    pub fn show_messages(&self) -> Result<bool, TmuxInterfaceError> {
         unimplemented!();
+        let output = self.subcommand(TmuxInterface::SHOW_MESSAGES, &[""])?;
+        Ok(output.status.success())
     }
 
 
@@ -408,8 +430,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux source-file [-q] path
     /// (alias: source)
     /// ```
-    pub fn source_file() {
+    pub fn source_file(&self) -> Result<bool, TmuxInterfaceError> {
         unimplemented!();
+        let output = self.subcommand(TmuxInterface::SOURCE_FILE, &[""])?;
+        Ok(output.status.success())
     }
 
 
@@ -421,8 +445,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux start-server
     /// (alias: start)
     /// ```
-    pub fn start_server() {
+    pub fn start_server(&self) -> Result<bool, TmuxInterfaceError> {
         unimplemented!();
+        let output = self.subcommand(TmuxInterface::START_SERVER, &[""])?;
+        Ok(output.status.success())
     }
 
 
@@ -434,8 +460,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux suspend-client [-t target-client]
     /// (alias: suspendc)
     /// ```
-    pub fn suspend_client() {
+    pub fn suspend_client(&self) -> Result<bool, TmuxInterfaceError> {
         unimplemented!();
+        let output = self.subcommand(TmuxInterface::SUSPEND_CLIENT, &[""])?;
+        Ok(output.status.success())
     }
 
 
@@ -447,8 +475,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
     /// (alias: switchc)
     /// ```
-    pub fn switch_client() {
+    pub fn switch_client(&self) -> Result<bool, TmuxInterfaceError> {
         unimplemented!();
+        let output = self.subcommand(TmuxInterface::SWITCH_CLIENT, &[""])?;
+        Ok(output.status.success())
     }
 
 
