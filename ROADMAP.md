@@ -47,6 +47,7 @@ an improvment, an idea etc.
 [tmuxinator](https://github.com/tmuxinator/tmuxinator),
 [libtmux](https://github.com/tmux-python/libtmux), rust crates using tmux)
 - [ ] Parse full information from tmux responses into structures
+    [ ] Window, layouts full parsing
 - [ ] Prepare documentation
 - [ ] Prepare tests
 - [ ] Function results and errors
