@@ -8,8 +8,35 @@ an improvment, an idea etc.
 **tmux interface v1.0.0**
 
 - [ ] Support all tmux subcommands
+    - [x] Clients and Sessions
+    - [ ] Windows and Panes
+    - [ ] Key Bindings
+    - [ ] Options
+    - [ ] Hooks
+    - [ ] Global and Session Environments
+    - [ ] Status Line
+    - [ ] Buffers
+    - [ ] Miscellaneous
 - [ ] Documentation
+    - [ ] Clients and Sessions
+    - [ ] Windows and Panes
+    - [ ] Key Bindings
+    - [ ] Options
+    - [ ] Hooks
+    - [ ] Global and Session Environments
+    - [ ] Status Line
+    - [ ] Buffers
+    - [ ] Miscellaneous
 - [ ] Tests
+    - [ ] Clients and Sessions
+    - [ ] Windows and Panes
+    - [ ] Key Bindings
+    - [ ] Options
+    - [ ] Hooks
+    - [ ] Global and Session Environments
+    - [ ] Status Line
+    - [ ] Buffers
+    - [ ] Miscellaneous
 - [ ] Freeze basic architecture
 - [ ] Freeze API
 
