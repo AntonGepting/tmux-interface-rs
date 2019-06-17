@@ -639,7 +639,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux kill-pane [-a] [-t target-pane]
     /// (alias: killp)
     /// ```
-    pub fn kill_pane(&self, all: Option<bool>, target_pane: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+    pub fn kill_pane(&self,
+                     all: Option<bool>,
+                     target_pane: Option<&str>
+                     ) -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if all.unwrap_or(false) { args.push(a_KEY); }
         target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
@@ -657,7 +660,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux kill-window [-a] [-t target-window]
     /// (alias: killw)
     /// ```
-    pub fn kill_window(&self, all: Option<bool>, target_window: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+    pub fn kill_window(&self,
+                       all: Option<bool>,
+                       target_window: Option<&str>
+                       ) -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if all.unwrap_or(false) { args.push(a_KEY); }
         target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
@@ -822,7 +828,8 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux new-window [-adkP] [-c start-directory] [-F format] [-n window-name] [-t target-window] [shell-command]
+    /// tmux new-window [-adkP] [-c start-directory] [-F format] [-n window-name]
+    /// [-t target-window] [shell-command]
     /// (alias: neww)
     /// ```
     pub fn new_window(&self, new_window: NewWindow) -> Result<bool, TmuxInterfaceError> {
@@ -863,7 +870,10 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// tmux next-window [-a] [-t target-session]
     /// (alias: next)
-    pub fn next_window(&self, alert: Option<bool>, target_session: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+    pub fn next_window(&self,
+                       alert: Option<bool>,
+                       target_session: Option<&str>
+                       ) -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if alert.unwrap_or(false) { args.push(a_KEY); }
         target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
@@ -909,7 +919,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux previous-window [-a] [-t target-session]
     /// (alias: prev)
     /// ```
-    pub fn previous_window(&self, alert: Option<bool>, target_session: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+    pub fn previous_window(&self,
+                           alert: Option<bool>,
+                           target_session: Option<&str>
+                           ) -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if alert.unwrap_or(false) { args.push(a_KEY); }
         target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
@@ -926,7 +939,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux rename-window [-t target-window] new-name
     /// (alias: renamew)
     /// ```
-    pub fn rename_window(&self, target_window: Option<&str>, new_name: &str) -> Result<bool, TmuxInterfaceError> {
+    pub fn rename_window(&self,
+                         target_window: Option<&str>,
+                         new_name: &str
+                         ) -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         args.push(new_name);
@@ -999,7 +1015,8 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux respawn-window [-k] [-c start-directory] [-e environment] [-t target-window] [shell-command]
+    /// tmux respawn-window [-k] [-c start-directory] [-e environment] [-t target-window]
+    /// [shell-command]
     /// (alias: respawnw)
     /// ```
     pub fn respawn_window(&self) {
@@ -1015,7 +1032,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux rotate-window [-DU] [-t target-window]
     /// (alias: rotatew)
     /// ```
-    pub fn rotate_window(&self, down: Option<bool>, up: Option<bool>, target_window: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+    pub fn rotate_window(&self,
+                         down: Option<bool>,
+                         up: Option<bool>,
+                         target_window: Option<&str>
+                         ) -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if down.unwrap_or(false) { args.push(D_KEY); }
         if up.unwrap_or(false) { args.push(U_KEY); }
