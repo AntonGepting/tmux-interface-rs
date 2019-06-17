@@ -81,8 +81,8 @@ impl<'a> TmuxInterface<'a> {
         if show_options.server_options.unwrap_or(false) { args.push(s_KEY); }
         if show_options.option_value.unwrap_or(false) { args.push(v_KEY); }
         if show_options.window_options.unwrap_or(false) { args.push(w_KEY); }
-        show_options.target.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        show_options.option.as_ref().and_then(|s| Some(args.push(&s)));
+        show_options.target.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        show_options.option.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::SHOW_OPTIONS, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         Ok(stdout.to_string())

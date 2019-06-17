@@ -67,7 +67,7 @@ impl<'a> TmuxInterface<'a> {
             s = repeat_count.to_string();
             args.extend_from_slice(&[N_KEY, &s]);
         }
-        send_keys.target_pane.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        send_keys.target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         //args.extend_from_slice(send_keys.keys.as_slice());
         //args.extend_from_slice(send_keys.keys);
         args.append(&mut send_keys.keys.clone());
