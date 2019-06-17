@@ -2,7 +2,7 @@ use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
 
 
-#[derive(Clone, Debug)]
+#[derive(Default, Clone, Debug)]
 pub struct SendKeys<'a> {
     pub disable_lookup: Option<bool>,           // [-l]
     pub mouse_event: Option<bool>,              // [-M]
@@ -11,21 +11,6 @@ pub struct SendKeys<'a> {
     pub repeat_count: Option<usize>,            // [-N repeat-count]
     pub target_pane: Option<&'a str>,           // [-t target-pane]
     pub keys: Vec<&'a str>                      // key
-}
-
-
-impl<'a> Default for SendKeys<'a> {
-    fn default() -> Self {
-        SendKeys {
-            disable_lookup: None,
-            mouse_event: None,
-            copy_mode: None,
-            reset: None,
-            repeat_count: None,
-            target_pane: None,
-            keys: Vec::new()
-        }
-    }
 }
 
 

@@ -11,6 +11,7 @@ use super::tmux_interface_error::TmuxInterfaceError;
 /// tmux break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
 /// (alias: breakp)
 /// ```
+#[derive(Default)]
 pub struct BreakPane<'a> {
     pub detached: Option<bool>,                 // [-d]
     pub print: Option<bool>,                    // [-P]
@@ -18,20 +19,6 @@ pub struct BreakPane<'a> {
     pub window_name: Option<&'a str>,           // [-n window-name]
     pub src_pane: Option<&'a str>,              // [-s src-pane]
     pub dst_window: Option<&'a str>,            // [-t dst-window]
-}
-
-
-impl<'a> Default for BreakPane<'a> {
-    fn default() -> Self {
-        BreakPane {
-            detached: None,
-            print: None,
-            format: None,
-            window_name: None,
-            src_pane: None,
-            dst_window: None
-        }
-    }
 }
 
 
@@ -51,6 +38,7 @@ impl<'a> BreakPane<'a> {
 /// [-t target-pane]
 /// (alias: capturep)
 /// ```
+#[derive(Default)]
 pub struct CapturePane<'a> {
     pub alternate_screen: Option<bool>,         // [-a]
     pub escape_sequences: Option<bool>,         // [-e]
@@ -62,24 +50,6 @@ pub struct CapturePane<'a> {
     pub buffer_name: Option<&'a str>,           // [-F buffen_name]
     pub end_line: Option<&'a str>,              // [-n end_line]
     pub start_line: Option<&'a str>,            // [-s start_line]
-}
-
-
-impl<'a> Default for CapturePane<'a> {
-    fn default() -> Self {
-        CapturePane {
-            alternate_screen: None,
-            escape_sequences: None,
-            stdout: None,
-            pane: None,
-            quite: None,
-            escape_non_printable: None,
-            join: None,
-            buffer_name: None,
-            end_line: None,
-            start_line: None,
-        }
-    }
 }
 
 
@@ -99,6 +69,7 @@ impl<'a> CapturePane<'a> {
 /// [shell-command]
 /// (alias: neww)
 /// ```
+#[derive(Default)]
 pub struct NewWindow<'a> {
     pub add: Option<bool>,                      // [-a]
     pub detached: Option<bool>,                 // [-d]
@@ -109,23 +80,6 @@ pub struct NewWindow<'a> {
     pub window_name: Option<&'a str>,           // [-n window-name]
     pub target_window: Option<&'a str>,         // [-t target-window]
     pub shell_command: Option<&'a str>,         // [shell-command]
-}
-
-
-impl<'a> Default for NewWindow<'a> {
-    fn default() -> Self {
-        NewWindow {
-            add: None,
-            detached: None,
-            kill: None,
-            print: None,
-            cwd: None,
-            format: None,
-            window_name: None,
-            target_window: None,
-            shell_command: None
-        }
-    }
 }
 
 
@@ -143,6 +97,7 @@ impl<'a> NewWindow<'a> {
 /// [-t target-pane] [shell-command] [-F format]
 /// (alias: splitw)
 /// ```
+#[derive(Default)]
 pub struct SplitWindow<'a> {
     pub before: Option<bool>,                   // [-b]
     pub detached: Option<bool>,                 // [-d]
@@ -156,25 +111,6 @@ pub struct SplitWindow<'a> {
     pub target_pane: Option<&'a str>,           // [-t target-pane]
     pub shell_command: Option<&'a str>,         // [shell-command]
     pub format: Option<&'a str>,                // [-F format]
-}
-
-impl<'a> Default for SplitWindow<'a> {
-    fn default() -> Self {
-        SplitWindow {
-            before: None,
-            detached: None,
-            full: None,
-            horizontal: None,
-            vertical: None,
-            print: None,
-            cwd: None,
-            size: None,
-            percentage: None,
-            target_pane: None,
-            shell_command: None,
-            format: None
-        }
-    }
 }
 
 
@@ -192,6 +128,7 @@ impl<'a> SplitWindow<'a> {
 /// tmux select-pane [-DdegLlMmRU] [-P style] [-T title] [-t target-pane]
 /// (alias: selectp)
 /// ```
+#[derive(Default)]
 pub struct SelectPane<'a> {
     pub down: Option<bool>,                     // [-D]
     pub disable: Option<bool>,                  // [-d]
@@ -209,26 +146,6 @@ pub struct SelectPane<'a> {
 }
 
 
-impl<'a> Default for SelectPane<'a> {
-    fn default() -> Self {
-        SelectPane {
-            down: None,
-            disable: None,
-            enable: None,
-            show_style: None,
-            left: None,
-            last: None,
-            set_marked: None,
-            clear_marked: None,
-            right: None,
-            up: None,
-            style: None,
-            title: None,
-            target_pane: None
-        }
-    }
-}
-
 impl<'a> SelectPane<'a> {
     pub fn new() -> SelectPane<'a> {
         Default::default()
@@ -243,6 +160,7 @@ impl<'a> SelectPane<'a> {
 /// tmux select-window [-lnpT] [-t target-window]
 /// (alias: selectw)
 /// ```
+#[derive(Default)]
 pub struct SelectWindow<'a> {
     pub last: Option<bool>,                     // [-l]
     pub next: Option<bool>,                     // [-n]
@@ -251,18 +169,6 @@ pub struct SelectWindow<'a> {
     pub target_window: Option<&'a str>          // [-t target-window]
 }
 
-
-impl<'a> Default for SelectWindow<'a> {
-    fn default() -> Self {
-        SelectWindow {
-            last: None,
-            next: None,
-            previous: None,
-            switch: None,
-            target_window: None
-        }
-    }
-}
 
 impl<'a> SelectWindow<'a> {
     pub fn new() -> SelectWindow<'a> {

@@ -12,6 +12,7 @@ use super::tmux_interface_error::TmuxInterfaceError;
 /// [shell-command]
 /// (alias: new)
 /// ```
+#[derive(Default)]
 pub struct NewSession<'a> {
     /// behave like `attach-session` if `session-name` already exists
     pub attach: Option<bool>,                   // [-A]
@@ -42,27 +43,6 @@ pub struct NewSession<'a> {
 }
 
 
-impl<'a> Default for NewSession<'a> {
-    fn default() -> Self {
-        NewSession {
-            attach: None,
-            detached: None,
-            detach_other: None,
-            not_update_env: None,
-            print: None,
-            cwd: None,
-            format: None,
-            window_name: None,
-            session_name: None,
-            group_name: None,
-            width: None,
-            height: None,
-            shell_command: None
-        }
-    }
-}
-
-
 impl<'a> NewSession<'a> {
     pub fn new() -> Self {
         Default::default()
@@ -78,25 +58,13 @@ impl<'a> NewSession<'a> {
 /// tmux detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
 /// (alias: detach)
 /// ```
+#[derive(Default)]
 pub struct DetachClient<'a> {
     pub all: Option<bool>,                      // [-a]
     pub parent_sighup: Option<bool>,            // [-P]
     pub shell_command: Option<&'a str>,         // [-E shell-command]
     pub target_session: Option<&'a str>,        // [-s target-session]
     pub target_client: Option<&'a str>          // [-t target-client]
-}
-
-
-impl<'a> Default for DetachClient<'a> {
-    fn default() -> Self {
-        DetachClient {
-            all: None,
-            parent_sighup: None,
-            shell_command: None,
-            target_session: None,
-            target_client: None
-        }
-    }
 }
 
 
@@ -115,6 +83,7 @@ impl<'a> DetachClient<'a> {
 /// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
 /// (alias: switchc)
 /// ```
+#[derive(Default)]
 pub struct SwitchClient<'a> {
     pub not_update_env: Option<bool>,           // [-E]
     pub last: Option<bool>,                     // [-l]
@@ -124,22 +93,6 @@ pub struct SwitchClient<'a> {
     pub target_client: Option<&'a str>,         // [-c target-client]
     pub target_session: Option<&'a str>,        // [-t target-session]
     pub key_table: Option<&'a str>,             // [-T key-table]
-}
-
-
-impl<'a> Default for SwitchClient<'a> {
-    fn default() -> Self {
-        SwitchClient {
-            not_update_env: None,
-            last: None,
-            next: None,
-            previous: None,
-            read_only: None,
-            target_client: None,
-            target_session: None,
-            key_table: None
-        }
-    }
 }
 
 
@@ -158,6 +111,7 @@ impl<'a> SwitchClient<'a> {
 /// tmux refresh-client [-cDlLRSU] [-C width,height] [-t target-client] [adjustment]
 /// (alias: refresh)
 /// ```
+#[derive(Default)]
 pub struct RefreshClient<'a> {
     pub tracking_cursor: Option<bool>,          // [-c]
     pub down: Option<bool>,                     // [-D]
@@ -169,24 +123,6 @@ pub struct RefreshClient<'a> {
     pub size: Option<(usize, usize)>,           // [-C width,height]
     pub target_client: Option<&'a str>,         // [-t target-client]
     pub adjustment: Option<usize>               // [adjustment]
-}
-
-
-impl<'a> Default for RefreshClient<'a> {
-    fn default() -> Self {
-        RefreshClient {
-            tracking_cursor: None,
-            down: None,
-            request_clipboard: None,
-            left: None,
-            right: None,
-            status_line: None,
-            up: None,
-            size: None,
-            target_client: None,
-            adjustment: None
-        }
-    }
 }
 
 
@@ -205,6 +141,7 @@ impl<'a> RefreshClient<'a> {
 /// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
 /// (alias: attach)
 /// ```
+#[derive(Default)]
 pub struct AttachSession<'a> {
     /// any other clients attached to the session are detached
     pub detach_other: Option<bool>,             // [-d]
@@ -216,19 +153,6 @@ pub struct AttachSession<'a> {
     pub cwd: Option<&'a str>,              // [-c working-directory]
     /// specify target session name
     pub target_session: Option<&'a str>,   // [-t target-session]
-}
-
-
-impl<'a> Default for AttachSession<'a> {
-    fn default() -> Self {
-        AttachSession {
-            detach_other: None,
-            not_update_env: None,
-            read_only: None,
-            cwd: None,
-            target_session: None,
-        }
-    }
 }
 
 

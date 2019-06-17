@@ -10,6 +10,7 @@ use super::tmux_interface_error::TmuxInterfaceError;
 /// tmux show-options [-gHqsvw] [-t target-session | target-window] [option]
 /// (alias: show)
 /// ```
+#[derive(Default)]
 pub struct ShowOptions<'a> {
     /// global session or window options are listed
     pub global_options: Option<bool>,           // [-g]
@@ -27,22 +28,6 @@ pub struct ShowOptions<'a> {
     pub target: Option<&'a str>,                // [-t target-session | target-window]
     /// option name
     pub option: Option<&'a str>,                // [option]
-}
-
-
-impl<'a> Default for ShowOptions<'a> {
-    fn default() -> Self {
-        ShowOptions {
-            global_options: None,
-            hooks: None,
-            quiet: None,
-            server_options: None,
-            option_value: None,
-            window_options: None,
-            target: None,
-            option: None
-        }
-    }
 }
 
 
