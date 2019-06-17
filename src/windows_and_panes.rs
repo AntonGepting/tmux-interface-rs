@@ -172,6 +172,114 @@ impl<'a> JoinPane<'a> {
 }
 
 
+/// Link the window at src-window to the specified dst-window
+///
+/// # Manual
+///
+/// ```text
+/// tmux link-window [-adk] [-s src-window] [-t dst-window]
+/// (alias: linkw)
+/// ```
+#[derive(Default)]
+pub struct LinkWindow<'a> {
+    pub add: Option<bool>,                   // [-a]
+    pub detached: Option<bool>,              // [-d]
+    pub kill: Option<bool>,                  // [-k]
+    pub src_window: Option<&'a str>,         // [-t target-window]
+    pub dst_window: Option<&'a str>,         // [shell-command]
+}
+
+
+impl<'a> LinkWindow<'a> {
+    pub fn new() -> LinkWindow<'a> {
+        Default::default()
+    }
+}
+
+
+/// Resize a pane, up, down, left or right
+///
+/// # Manual
+///
+/// ```text
+/// tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+/// (alias: resizep)
+/// ```
+#[derive(Default)]
+pub struct ResizePane<'a> {
+    pub down: Option<bool>,                     // [-D]
+    pub left: Option<bool>,                     // [-L]
+    pub mouse: Option<bool>,                    // [-M]
+    pub right: Option<bool>,                    // [-R]
+    pub up: Option<bool>,                       // [-U]
+    pub zoom: Option<bool>,                     // [-Z]
+    pub target_pane: Option<&'a str>,           // [-t target-pane]
+    pub width: Option<usize>,                   // [-x width]
+    pub height: Option<usize>,                  // [-y height]
+    pub adjustment: Option<&'a str>,            // [adjustment]
+}
+
+
+impl<'a> ResizePane<'a> {
+    pub fn new() -> ResizePane<'a> {
+        Default::default()
+    }
+}
+
+
+/// Like join-pane, but `src-pane` and `dst-pane` may belong to the same window
+///
+/// # Manual
+///
+/// ```text
+/// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+/// (alias: movep)
+/// ```
+#[derive(Default)]
+pub struct MovePane<'a> {
+    pub left_above: Option<bool>,               // [-b]
+    pub detached: Option<bool>,                 // [-d]
+    pub horizontal: Option<bool>,               // [-h]
+    pub vertical: Option<bool>,                 // [-v]
+    pub size: Option<usize>,                    // [-l size]
+    pub percentage: Option<usize>,              // [-p percentage]
+    pub src_pane: Option<&'a str>,              // [-s src-pane]
+    pub dst_pane: Option<&'a str>,              // [-t dst-pane]
+}
+
+
+impl<'a> MovePane<'a> {
+    pub fn new() -> JoinPane<'a> {
+        Default::default()
+    }
+}
+
+/// This is similar to link-window, except the window at `src-window` is moved to `dst-window`
+///
+/// # Manual
+///
+/// ```text
+/// tmux move-window [-ardk] [-s src-window] [-t dst-window]
+/// (alias: movew)
+/// ```
+#[derive(Default)]
+pub struct MoveWindow<'a> {
+    pub add: Option<bool>,                      // [-a]
+    pub renumber: Option<bool>,                 // [-r]
+    pub detached: Option<bool>,                 // [-d]
+    pub kill: Option<bool>,                     // [-k]
+    pub src_window: Option<&'a str>,            // [-s src-window]
+    pub dst_window: Option<&'a str>,            // [-t dst-window]
+}
+
+
+impl<'a> MoveWindow<'a> {
+    pub fn new() -> MoveWindow<'a> {
+        Default::default()
+    }
+}
+
+
 /// Structure for creating new window, using `tmux new-window` command
 ///
 /// # Manual
@@ -305,11 +413,11 @@ impl<'a> TmuxInterface<'a> {
     const KILL_WINDOW: &'static str = "kill-window";
     const LAST_PANE: &'static str = "last-pane";
     const LAST_WINDOW: &'static str = "last-window";
-    //const LINK_WINDOW: &'static str = "link-window";
+    const LINK_WINDOW: &'static str = "link-window";
     const LIST_PANES: &'static str = "list-panes";
     const LIST_WINDOWS: &'static str = "list-windows";
-    //const MOVE_PANE: &'static str = "move-pane";
-    //const MOVE_WINDOW: &'static str = "move-window";
+    const MOVE_PANE: &'static str = "move-pane";
+    const MOVE_WINDOW: &'static str = "move-window";
     const NEW_WINDOW: &'static str = "new-window";
     const NEXT_LAYOUT: &'static str = "next-layout";
     const NEXT_WINDOW: &'static str = "next-window";
@@ -317,7 +425,7 @@ impl<'a> TmuxInterface<'a> {
     const PREVIOUS_LAYOUT: &'static str = "previous-layout";
     const PREVIOUS_WINDOW: &'static str = "previous-window";
     const RENAME_WINDOW: &'static str = "rename-window";
-    //const RESIZE_PANE: &'static str = "resize-pane";
+    const RESIZE_PANE: &'static str = "resize-pane";
     //const RESIZE_WINDOW: &'static str = "resize-window";
     //const RESPAWN_WINDOW: &'static str = "respawn-window";
     const ROTATE_WINDOW: &'static str = "rotate-window";
@@ -604,8 +712,15 @@ impl<'a> TmuxInterface<'a> {
     /// tmux link-window [-adk] [-s src-window] [-t dst-window]
     /// (alias: linkw)
     /// ```
-    pub fn link_window(&self) {
-        unimplemented!();
+    pub fn link_window(&self, link_window: &LinkWindow) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if link_window.add.unwrap_or(false) { args.push(a_KEY); }
+        if link_window.detached.unwrap_or(false) { args.push(d_KEY); }
+        if link_window.kill.unwrap_or(false) { args.push(k_KEY); }
+        link_window.src_window.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        link_window.dst_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::LINK_WINDOW, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -658,8 +773,26 @@ impl<'a> TmuxInterface<'a> {
     /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: movep)
     /// ```
-    pub fn move_pane(&self) {
-        unimplemented!();
+    pub fn move_pane(&self, move_pane: &MovePane) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if move_pane.left_above.unwrap_or(false) { args.push(b_KEY); }
+        if move_pane.detached.unwrap_or(false) { args.push(d_KEY); }
+        if move_pane.horizontal.unwrap_or(false) { args.push(h_KEY); }
+        if move_pane.vertical.unwrap_or(false) { args.push(v_KEY); }
+        let s;
+        if let Some(size) = move_pane.size {
+            s = size.to_string();
+            args.extend_from_slice(&[l_KEY, &s]);
+        }
+        let p;
+        if let Some(percentage) = move_pane.percentage {
+            p = percentage.to_string();
+            args.extend_from_slice(&[p_KEY, &p]);
+        }
+        move_pane.src_pane.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        move_pane.dst_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::MOVE_PANE, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -671,8 +804,16 @@ impl<'a> TmuxInterface<'a> {
     /// tmux move-window [-ardk] [-s src-window] [-t dst-window]
     /// (alias: movew)
     /// ```
-    pub fn move_window(&self) {
-        unimplemented!();
+    pub fn move_window(&self, move_window: &MoveWindow) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if move_window.add.unwrap_or(false) { args.push(a_KEY); }
+        if move_window.renumber.unwrap_or(false) { args.push(r_KEY); }
+        if move_window.detached.unwrap_or(false) { args.push(d_KEY); }
+        if move_window.kill.unwrap_or(false) { args.push(k_KEY); }
+        move_window.src_window.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        move_window.dst_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::MOVE_WINDOW, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -802,8 +943,28 @@ impl<'a> TmuxInterface<'a> {
     /// tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
     /// (alias: resizep)
     /// ```
-    pub fn resize_pane(&self) {
-        unimplemented!();
+    pub fn resize_pane(&self, resize_pane: &ResizePane) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if resize_pane.down.unwrap_or(false) { args.push(D_KEY); }
+        if resize_pane.left.unwrap_or(false) { args.push(L_KEY); }
+        if resize_pane.mouse.unwrap_or(false) { args.push(M_KEY); }
+        if resize_pane.right.unwrap_or(false) { args.push(R_KEY); }
+        if resize_pane.up.unwrap_or(false) { args.push(U_KEY); }
+        if resize_pane.zoom.unwrap_or(false) { args.push(Z_KEY); }
+        resize_pane.target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let x;
+        if let Some(width) = resize_pane.width {
+            x = width.to_string();
+            args.extend_from_slice(&[x_KEY, &x]);
+        }
+        let y;
+        if let Some(height) = resize_pane.height {
+            y = height.to_string();
+            args.extend_from_slice(&[y_KEY, &y]);
+        }
+        resize_pane.adjustment.and_then(|s| Some(args.push(s)));
+        let output = self.subcommand(TmuxInterface::RESIZE_PANE, &args)?;
+        Ok(output.status.success())
     }
 
 
