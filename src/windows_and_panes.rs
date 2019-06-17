@@ -16,8 +16,8 @@ pub struct BreakPane<'a> {
     pub print: Option<bool>,                    // [-P]
     pub format: Option<&'a str>,                // [-F format]
     pub window_name: Option<&'a str>,           // [-n window-name]
-    pub src_pane: Option<&'a str>,              // [-s target-window]
-    pub dst_window: Option<&'a str>,            // [-t target-window]
+    pub src_pane: Option<&'a str>,              // [-s src-pane]
+    pub dst_window: Option<&'a str>,            // [-t dst-window]
 }
 
 
@@ -37,6 +37,54 @@ impl<'a> Default for BreakPane<'a> {
 
 impl<'a> BreakPane<'a> {
     pub fn new() -> BreakPane<'a> {
+        Default::default()
+    }
+}
+
+
+/// Capture the contents of a pane
+///
+/// # Manual
+///
+/// ```text
+/// tmux capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line]
+/// [-t target-pane]
+/// (alias: capturep)
+/// ```
+pub struct CapturePane<'a> {
+    pub alternate_screen: Option<bool>,         // [-a]
+    pub escape_sequences: Option<bool>,         // [-e]
+    pub stdout: Option<bool>,                   // [-p]
+    pub pane: Option<bool>,                     // [-P]
+    pub quite: Option<bool>,                    // [-q]
+    pub escape_non_printable: Option<bool>,     // [-C]
+    pub join: Option<bool>,                     // [-J]
+    pub buffer_name: Option<&'a str>,           // [-F buffen_name]
+    pub end_line: Option<&'a str>,              // [-n end_line]
+    pub start_line: Option<&'a str>,            // [-s start_line]
+}
+
+
+impl<'a> Default for CapturePane<'a> {
+    fn default() -> Self {
+        CapturePane {
+            alternate_screen: None,
+            escape_sequences: None,
+            stdout: None,
+            pane: None,
+            quite: None,
+            escape_non_printable: None,
+            join: None,
+            buffer_name: None,
+            end_line: None,
+            start_line: None,
+        }
+    }
+}
+
+
+impl<'a> CapturePane<'a> {
+    pub fn new() -> CapturePane<'a> {
         Default::default()
     }
 }
@@ -229,6 +277,7 @@ impl<'a> TmuxInterface<'a> {
 
     const COPY_MODE: &'static str = "copy-mode";
     const BREAK_PANE: &'static str = "break-pane";
+    const CAPTURE_PANE: &'static str = "capture-pane";
 
     const KILL_WINDOW: &'static str = "kill-window";
     const NEW_WINDOW: &'static str = "new-window";
@@ -293,8 +342,20 @@ impl<'a> TmuxInterface<'a> {
     /// [-t target-pane]
     /// (alias: capturep)
     /// ```
-    pub fn capture_pane() {
-        unimplemented!();
+    pub fn capture_pane(&self, capture_pane: &CapturePane) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if capture_pane.alternate_screen.unwrap_or(false) { args.push(a_KEY); }
+        if capture_pane.escape_sequences.unwrap_or(false) { args.push(e_KEY); }
+        if capture_pane.stdout.unwrap_or(false) { args.push(p_KEY); }
+        if capture_pane.pane.unwrap_or(false) { args.push(P_KEY); }
+        if capture_pane.quite.unwrap_or(false) { args.push(q_KEY); }
+        if capture_pane.escape_non_printable.unwrap_or(false) { args.push(C_KEY); }
+        if capture_pane.join.unwrap_or(false) { args.push(J_KEY); }
+        capture_pane.buffer_name.and_then(|s| Some(args.extend_from_slice(&[b_KEY, &s])));
+        capture_pane.end_line.and_then(|s| Some(args.extend_from_slice(&[E_KEY, &s])));
+        capture_pane.start_line.and_then(|s| Some(args.extend_from_slice(&[S_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::CAPTURE_PANE, &args)?;
+        Ok(output.status.success())
     }
 
 
