@@ -185,6 +185,7 @@ impl<'a> SelectWindow<'a> {
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES)
 impl<'a> TmuxInterface<'a> {
 
+    const COPY_MODE: &'static str = "copy-mode";
 
     const KILL_WINDOW: &'static str = "kill-window";
     const NEW_WINDOW: &'static str = "new-window";
@@ -203,8 +204,19 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux copy-mode [-Meu] [-t target-pane]
     /// ```
-    pub fn copy_mode() {
-        unimplemented!();
+    pub fn copy_mode(&self,
+                     mouse_drag: Option<bool>,
+                     bottom_exit: Option<bool>,
+                     page_up: Option<bool>,
+                     target_pane: Option<&str>
+                     ) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if mouse_drag.unwrap_or(false) { args.push(M_KEY); }
+        if bottom_exit.unwrap_or(false) { args.push(e_KEY); }
+        if page_up.unwrap_or(false) { args.push(u_KEY); }
+        target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::COPY_MODE, &args)?;
+        Ok(output.status.success())
     }
 
 
