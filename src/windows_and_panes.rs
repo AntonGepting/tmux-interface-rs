@@ -690,11 +690,11 @@ impl<'a> TmuxInterface<'a> {
         if new_window.detached.unwrap_or(false) { args.push(d_KEY); }
         if new_window.kill.unwrap_or(false) { args.push(k_KEY); }
         if new_window.print.unwrap_or(false) { args.push(P_KEY); }
-        new_window.cwd.as_ref().and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        new_window.window_name.as_ref().and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
-        new_window.format.as_ref().and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        new_window.target_window.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        new_window.shell_command.as_ref().and_then(|s| Some(args.push(&s)));
+        new_window.cwd.and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
+        new_window.window_name.and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
+        new_window.format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        new_window.target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        new_window.shell_command.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::NEW_WINDOW, &args)?;
         Ok(output.status.success())
     }
@@ -942,7 +942,7 @@ impl<'a> TmuxInterface<'a> {
         if split_window.horizontal.unwrap_or(false) { args.push(h_KEY); }
         if split_window.vertical.unwrap_or(false) { args.push(v_KEY); }
         if split_window.print.unwrap_or(false) { args.push(P_KEY); }
-        split_window.cwd.as_ref().and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
+        split_window.cwd.and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
         let s;
         if let Some(size) = split_window.size {
             s = size.to_string();
@@ -953,9 +953,9 @@ impl<'a> TmuxInterface<'a> {
             p = percentage.to_string();
             args.extend_from_slice(&[p_KEY, &p]);
         }
-        split_window.target_pane.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        split_window.shell_command.as_ref().and_then(|s| Some(args.push(&s)));
-        split_window.format.as_ref().and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        split_window.target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        split_window.shell_command.and_then(|s| Some(args.push(&s)));
+        split_window.format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
         let output = self.subcommand(TmuxInterface::SPLIT_WINDOW, &args)?;
         Ok(output.status.success())
     }

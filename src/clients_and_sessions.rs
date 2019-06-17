@@ -201,8 +201,8 @@ impl<'a> TmuxInterface<'a> {
         if attach_session.detach_other.unwrap_or(false) { args.push(d_KEY); }
         if attach_session.not_update_env.unwrap_or(false) { args.push(E_KEY); }
         if attach_session.read_only.unwrap_or(false) { args.push(r_KEY); }
-        attach_session.cwd.as_ref().and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        attach_session.target_session.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        attach_session.cwd.and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
+        attach_session.target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::ATTACH_SESSION, &args)?;
         Ok(output.status.success())
     }
@@ -220,9 +220,9 @@ impl<'a> TmuxInterface<'a> {
         let mut args: Vec<&str> = Vec::new();
         if detach_client.all.unwrap_or(false) { args.push(a_KEY); }
         if detach_client.parent_sighup.unwrap_or(false) { args.push(P_KEY); }
-        detach_client.shell_command.as_ref().and_then(|s| Some(args.extend_from_slice(&[E_KEY, &s])));
-        detach_client.target_session.as_ref().and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        detach_client.target_client.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        detach_client.shell_command.and_then(|s| Some(args.extend_from_slice(&[E_KEY, &s])));
+        detach_client.target_session.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        detach_client.target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::DETACH_CLIENT, &args)?;
         Ok(output.status.success())
     }
@@ -238,7 +238,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn has_session(&self, target_session: Option<&str>) -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
-        target_session.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
+        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
         let output = self.subcommand(TmuxInterface::HAS_SESSION, &args)?;
         Ok(output.status.success())
     }
@@ -269,7 +269,7 @@ impl<'a> TmuxInterface<'a> {
         let mut args: Vec<&str> = Vec::new();
         if all.unwrap_or(false) { args.push(a_KEY); }
         if clear_alerts.unwrap_or(false) { args.push(C_KEY); }
-        name.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        name.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::KILL_SESSION, &args)?;
         Ok(output.status.success())
     }
@@ -286,8 +286,8 @@ impl<'a> TmuxInterface<'a> {
     pub fn list_clients(&self, format: Option<&str>, target_session: Option<&str>) ->
         Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
-        format.as_ref().and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        target_session.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::LIST_CLIENTS, &args)?;
         Ok(output.status.success())
     }
@@ -303,7 +303,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn list_commands(&self, format: Option<&str>) -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
-        format.as_ref().and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
         let output = self.subcommand(TmuxInterface::LIST_COMMANDS, &args)?;
         Ok(output.status.success())
     }
@@ -373,11 +373,11 @@ impl<'a> TmuxInterface<'a> {
         if new_session.detach_other.unwrap_or(false) { args.push(D_KEY); }
         if new_session.not_update_env.unwrap_or(false) { args.push(E_KEY); }
         if new_session.print.unwrap_or(false) { args.push(P_KEY); }
-        new_session.cwd.as_ref().and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        new_session.format.as_ref().and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        new_session.window_name.as_ref().and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
-        new_session.session_name.as_ref().and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        new_session.group_name.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        new_session.cwd.and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
+        new_session.format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        new_session.window_name.and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
+        new_session.session_name.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        new_session.group_name.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         //new_session.width.and_then(|n| Some(args.extend_from_slice(&[x_KEY, &n.to_string()])));
         let x;
         if let Some(width) = new_session.width {
@@ -389,7 +389,7 @@ impl<'a> TmuxInterface<'a> {
             y = height.to_string();
             args.extend_from_slice(&[y_KEY, &y]);
         }
-        new_session.shell_command.as_ref().and_then(|s| Some(args.push(&s)));
+        new_session.shell_command.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::NEW_SESSION, &args)?;
         Ok(output.status.success())
     }
@@ -525,9 +525,9 @@ impl<'a> TmuxInterface<'a> {
         if switch_client.next.unwrap_or(false) { args.push(n_KEY); }
         if switch_client.previous.unwrap_or(false) { args.push(p_KEY); }
         if switch_client.read_only.unwrap_or(false) { args.push(r_KEY); }
-        switch_client.target_client.as_ref().and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        switch_client.target_session.as_ref().and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        switch_client.key_table.as_ref().and_then(|s| Some(args.extend_from_slice(&[T_KEY, &s])));
+        switch_client.target_client.and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
+        switch_client.target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        switch_client.key_table.and_then(|s| Some(args.extend_from_slice(&[T_KEY, &s])));
         let output = self.subcommand(TmuxInterface::SWITCH_CLIENT, &args)?;
         Ok(output.status.success())
     }
