@@ -320,14 +320,14 @@ impl<'a> TmuxInterface<'a> {
     //const RESIZE_PANE: &'static str = "resize-pane";
     //const RESIZE_WINDOW: &'static str = "resize-window";
     //const RESPAWN_WINDOW: &'static str = "respawn-window";
-    //const ROTATE_WINDOW: &'static str = "rotate-window";
+    const ROTATE_WINDOW: &'static str = "rotate-window";
     //const SELECT_LAYOUT: &'static str = "select-layout";
     const SELECT_PANE: &'static str = "select-pane";
     const SELECT_WINDOW: &'static str = "select-window";
     const SPLIT_WINDOW: &'static str = "split-window";
     //const SWAP_PANE: &'static str = "swap-pane";
-    //const SWAP_WINDOW: &'static str = "swap-window";
-    //const UNLINK_WINDOW: &'static str = "unlink-window";
+    const SWAP_WINDOW: &'static str = "swap-window";
+    const UNLINK_WINDOW: &'static str = "unlink-window";
 
 
     /// Enter copy mode
@@ -854,8 +854,13 @@ impl<'a> TmuxInterface<'a> {
     /// tmux rotate-window [-DU] [-t target-window]
     /// (alias: rotatew)
     /// ```
-    pub fn rotate_window(&self) {
-        unimplemented!();
+    pub fn rotate_window(&self, down: Option<bool>, up: Option<bool>, target_window: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if down.unwrap_or(false) { args.push(D_KEY); }
+        if up.unwrap_or(false) { args.push(U_KEY); }
+        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::ROTATE_WINDOW, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -977,8 +982,17 @@ impl<'a> TmuxInterface<'a> {
     /// tmux swap-window [-d] [-s src-window] [-t dst-window]
     /// (alias: swapw)
     /// ```
-    pub fn swap_window(&self) {
-        unimplemented!();
+    pub fn swap_window(&self,
+                       detached: Option<bool>,
+                       src_window: Option<&str>,
+                       dst_window: Option<&str>
+                       ) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if detached.unwrap_or(false) { args.push(d_KEY); }
+        src_window.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        dst_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::SWAP_WINDOW, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -990,8 +1004,15 @@ impl<'a> TmuxInterface<'a> {
     /// tmux unlink-window [-k] [-t target-window]
     /// (alias: unlinkw)
     /// ```
-    pub fn unlink_window(&self) {
-        unimplemented!();
+    pub fn unlink_window(&self,
+                         k: Option<bool>,
+                         target_window: Option<&str>
+                         ) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if k.unwrap_or(false) { args.push(k_KEY); }
+        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::UNLINK_WINDOW, &args)?;
+        Ok(output.status.success())
     }
 
 
