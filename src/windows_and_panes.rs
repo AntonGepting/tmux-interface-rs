@@ -2,6 +2,46 @@ use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
 
 
+
+/// Break `src-pane` off from its containing window to make it the only pane in `dst-window`
+///
+/// # Manual
+///
+/// ```text
+/// tmux break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
+/// (alias: breakp)
+/// ```
+pub struct BreakPane<'a> {
+    pub detached: Option<bool>,                 // [-d]
+    pub print: Option<bool>,                    // [-P]
+    pub format: Option<&'a str>,                // [-F format]
+    pub window_name: Option<&'a str>,           // [-n window-name]
+    pub src_pane: Option<&'a str>,              // [-s target-window]
+    pub dst_window: Option<&'a str>,            // [-t target-window]
+}
+
+
+impl<'a> Default for BreakPane<'a> {
+    fn default() -> Self {
+        BreakPane {
+            detached: None,
+            print: None,
+            format: None,
+            window_name: None,
+            src_pane: None,
+            dst_window: None
+        }
+    }
+}
+
+
+impl<'a> BreakPane<'a> {
+    pub fn new() -> BreakPane<'a> {
+        Default::default()
+    }
+}
+
+
 /// Structure for creating new window, using `tmux new-window` command
 ///
 /// # Manual
@@ -40,11 +80,13 @@ impl<'a> Default for NewWindow<'a> {
     }
 }
 
+
 impl<'a> NewWindow<'a> {
     pub fn new() -> NewWindow<'a> {
         Default::default()
     }
 }
+
 
 /// # Manual
 ///
@@ -228,8 +270,16 @@ impl<'a> TmuxInterface<'a> {
     /// tmux break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
     /// (alias: breakp)
     /// ```
-    pub fn break_pane() {
-        unimplemented!();
+    pub fn break_pane(&self, break_pane: &BreakPane) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if break_pane.detached.unwrap_or(false) { args.push(d_KEY); }
+        if break_pane.print.unwrap_or(false) { args.push(P_KEY); }
+        break_pane.format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        break_pane.window_name.and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
+        break_pane.src_pane.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        break_pane.dst_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::COPY_MODE, &args)?;
+        Ok(output.status.success())
     }
 
 
