@@ -303,19 +303,19 @@ impl<'a> TmuxInterface<'a> {
     const JOIN_PANE: &'static str = "join-pane";
     const KILL_PANE: &'static str = "kill-pane";
     const KILL_WINDOW: &'static str = "kill-window";
-    //const LAST_PANE: &'static str = "last-pane";
-    //const LAST_WINDOW: &'static str = "last-window";
+    const LAST_PANE: &'static str = "last-pane";
+    const LAST_WINDOW: &'static str = "last-window";
     //const LINK_WINDOW: &'static str = "link-window";
     const LIST_PANES: &'static str = "list-panes";
     const LIST_WINDOWS: &'static str = "list-windows";
     //const MOVE_PANE: &'static str = "move-pane";
     //const MOVE_WINDOW: &'static str = "move-window";
     const NEW_WINDOW: &'static str = "new-window";
-    //const NEXT_LAYOUT: &'static str = "next-layout";
-    //const NEXT_WINDOW: &'static str = "next-window";
+    const NEXT_LAYOUT: &'static str = "next-layout";
+    const NEXT_WINDOW: &'static str = "next-window";
     //const PIPE_PANE: &'static str = "pipe-pane";
-    //const PREVIOUS_LAYOUT: &'static str = "previous-layout";
-    //const PREVIOUS_WINDOW: &'static str = "previous-window";
+    const PREVIOUS_LAYOUT: &'static str = "previous-layout";
+    const PREVIOUS_WINDOW: &'static str = "previous-window";
     const RENAME_WINDOW: &'static str = "rename-window";
     //const RESIZE_PANE: &'static str = "resize-pane";
     //const RESIZE_WINDOW: &'static str = "resize-window";
@@ -566,8 +566,17 @@ impl<'a> TmuxInterface<'a> {
     /// tmux last-pane [-de] [-t target-window]
     /// (alias: lastp)
     /// ```
-    pub fn last_pane(&self) {
-        unimplemented!();
+    pub fn last_pane(&self,
+                     disable: Option<bool>,
+                     enable: Option<bool>,
+                     target_window: Option<&str>
+                     ) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if disable.unwrap_or(false) { args.push(d_KEY); }
+        if enable.unwrap_or(false) { args.push(e_KEY); }
+        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::LAST_PANE, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -579,8 +588,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux last-window [-t target-session]
     /// (alias: last)
     /// ```
-    pub fn last_window(&self) {
-        unimplemented!();
+    pub fn last_window(&self, target_session: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::LAST_WINDOW, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -696,8 +708,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux next-layout [-t target-window]
     /// (alias: nextl)
     /// ```
-    pub fn next_layout(&self) {
-        unimplemented!();
+    pub fn next_layout(&self, target_window: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::NEXT_LAYOUT, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -707,8 +722,12 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// tmux next-window [-a] [-t target-session]
     /// (alias: next)
-    pub fn next_window(&self) {
-        unimplemented!();
+    pub fn next_window(&self, alert: Option<bool>, target_session: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if alert.unwrap_or(false) { args.push(a_KEY); }
+        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::NEXT_WINDOW, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -733,8 +752,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux previous-layout [-t target-window]
     /// (alias: prevl)
     /// ```
-    pub fn previous_layout(&self) {
-        unimplemented!();
+    pub fn previous_layout(&self, target_window: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::PREVIOUS_LAYOUT, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -746,8 +768,12 @@ impl<'a> TmuxInterface<'a> {
     /// tmux previous-window [-a] [-t target-session]
     /// (alias: prev)
     /// ```
-    pub fn previous_window(&self) {
-        unimplemented!();
+    pub fn previous_window(&self, alert: Option<bool>, target_session: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if alert.unwrap_or(false) { args.push(a_KEY); }
+        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::PREVIOUS_WINDOW, &args)?;
+        Ok(output.status.success())
     }
 
 
