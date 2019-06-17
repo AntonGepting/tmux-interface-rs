@@ -228,6 +228,7 @@ impl<'a> SelectWindow<'a> {
 impl<'a> TmuxInterface<'a> {
 
     const COPY_MODE: &'static str = "copy-mode";
+    const BREAK_PANE: &'static str = "break-pane";
 
     const KILL_WINDOW: &'static str = "kill-window";
     const NEW_WINDOW: &'static str = "new-window";
@@ -278,7 +279,7 @@ impl<'a> TmuxInterface<'a> {
         break_pane.window_name.and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
         break_pane.src_pane.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
         break_pane.dst_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        let output = self.subcommand(TmuxInterface::COPY_MODE, &args)?;
+        let output = self.subcommand(TmuxInterface::BREAK_PANE, &args)?;
         Ok(output.status.success())
     }
 
