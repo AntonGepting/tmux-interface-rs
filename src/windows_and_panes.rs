@@ -271,15 +271,34 @@ impl<'a> TmuxInterface<'a> {
     const CHOOSE_TREE: &'static str = "choose-tree";
     const DISPLAY_PANES: &'static str = "display-panes";
     const FIND_WINDOW: &'static str = "find-window";
-
+    //const JOIN_PANE: &'static str = "join-pane";
+    const KILL_PANE: &'static str = "kill-pane";
     const KILL_WINDOW: &'static str = "kill-window";
-    const NEW_WINDOW: &'static str = "new-window";
-    const LIST_WINDOWS: &'static str = "list-windows";
-    const RENAME_WINDOW: &'static str = "rename-window";
-    const SPLIT_WINDOW: &'static str = "split-window";
+    //const LAST_PANE: &'static str = "last-pane";
+    //const LAST_WINDOW: &'static str = "last-window";
+    //const LINK_WINDOW: &'static str = "link-window";
     const LIST_PANES: &'static str = "list-panes";
-    const SELECT_WINDOW: &'static str = "select-window";
+    const LIST_WINDOWS: &'static str = "list-windows";
+    //const MOVE_PANE: &'static str = "move-pane";
+    //const MOVE_WINDOW: &'static str = "move-window";
+    const NEW_WINDOW: &'static str = "new-window";
+    //const NEXT_LAYOUT: &'static str = "next-layout";
+    //const NEXT_WINDOW: &'static str = "next-window";
+    //const PIPE_PANE: &'static str = "pipe-pane";
+    //const PREVIOUS_LAYOUT: &'static str = "previous-layout";
+    //const PREVIOUS_WINDOW: &'static str = "previous-window";
+    const RENAME_WINDOW: &'static str = "rename-window";
+    //const RESIZE_PANE: &'static str = "resize-pane";
+    //const RESIZE_WINDOW: &'static str = "resize-window";
+    //const RESPAWN_WINDOW: &'static str = "respawn-window";
+    //const ROTATE_WINDOW: &'static str = "rotate-window";
+    //const SELECT_LAYOUT: &'static str = "select-layout";
     const SELECT_PANE: &'static str = "select-pane";
+    const SELECT_WINDOW: &'static str = "select-window";
+    const SPLIT_WINDOW: &'static str = "split-window";
+    //const SWAP_PANE: &'static str = "swap-pane";
+    //const SWAP_WINDOW: &'static str = "swap-window";
+    //const UNLINK_WINDOW: &'static str = "unlink-window";
 
 
     /// Enter copy mode
@@ -465,8 +484,12 @@ impl<'a> TmuxInterface<'a> {
     /// tmux kill-pane [-a] [-t target-pane]
     /// (alias: killp)
     /// ```
-    pub fn kill_pane(&self) {
-        unimplemented!();
+    pub fn kill_pane(&self, all: Option<bool>, target_pane: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if all.unwrap_or(false) { args.push(a_KEY); }
+        target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::KILL_PANE, &args)?;
+        Ok(output.status.success())
     }
 
 
