@@ -47,14 +47,97 @@ pub struct CapturePane<'a> {
     pub quite: Option<bool>,                    // [-q]
     pub escape_non_printable: Option<bool>,     // [-C]
     pub join: Option<bool>,                     // [-J]
-    pub buffer_name: Option<&'a str>,           // [-F buffen_name]
-    pub end_line: Option<&'a str>,              // [-n end_line]
-    pub start_line: Option<&'a str>,            // [-s start_line]
+    pub buffer_name: Option<&'a str>,           // [-b buffen_name]
+    pub end_line: Option<&'a str>,              // [-E end_line]
+    pub start_line: Option<&'a str>,            // [-S start_line]
 }
 
 
 impl<'a> CapturePane<'a> {
     pub fn new() -> CapturePane<'a> {
+        Default::default()
+    }
+}
+
+
+/// Put a pane into client mode, allowing a client to be selected interactively from a list
+///
+/// # Manual
+///
+/// ```text
+/// tmux choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+/// ```
+#[derive(Default)]
+pub struct ChooseClient<'a> {
+    pub without_preview: Option<bool>,          // [-N]
+    pub zoom: Option<bool>,                     // [-Z]
+    pub format: Option<&'a str>,                // [-F format]
+    pub filter: Option<&'a str>,                // [-f filter]
+    pub sort_order: Option<&'a str>,            // [-O sort-order]
+    pub target_pane: Option<&'a str>,           // [-t target-pane]
+    pub template: Option<&'a str>,              // [template]
+}
+
+
+impl<'a> ChooseClient<'a> {
+    pub fn new() -> ChooseClient<'a> {
+        Default::default()
+    }
+}
+
+
+/// Put a pane into tree mode, where a session, window or pane may be chosen interactively
+/// from a list
+///
+/// # Manual
+///
+/// ```text
+/// tmux choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+/// ```
+#[derive(Default)]
+pub struct ChooseTree<'a> {
+    pub all: Option<bool>,                      // [-G]
+    pub without_preview: Option<bool>,          // [-N]
+    pub collapsed_sessions: Option<bool>,       // [-s]
+    pub collapsed_windows: Option<bool>,        // [-w]
+    pub zoom: Option<bool>,                     // [-Z]
+    pub format: Option<&'a str>,                // [-F format]
+    pub filter: Option<&'a str>,                // [-f filter]
+    pub sort_order: Option<&'a str>,            // [-O sort-order]
+    pub target_pane: Option<&'a str>,           // [-t target-pane]
+    pub template: Option<&'a str>,              // [template]
+}
+
+
+impl<'a> ChooseTree<'a> {
+    pub fn new() -> ChooseTree<'a> {
+        Default::default()
+    }
+}
+
+
+/// Search for the fnmatch(3) pattern `match-string` in window names,
+/// titles, and visible content (but not history)
+///
+/// # Manual
+///
+/// ```text
+/// tmux find-window [-CNTZ] [-t target-pane] match-string
+/// (alias: findw)
+/// ```
+#[derive(Default)]
+pub struct FindWindow<'a> {
+    pub only_visible: Option<bool>,             // [-C]
+    pub only_name: Option<bool>,                // [-N]
+    pub only_title: Option<bool>,               // [-T]
+    pub zoom: Option<bool>,                     // [-Z]
+    pub target_pane: Option<&'a str>,           // [-t target-pane]
+    pub match_string: &'a str,                  // match-string
+}
+
+
+impl<'a> FindWindow<'a> {
+    pub fn new() -> FindWindow<'a> {
         Default::default()
     }
 }
@@ -184,6 +267,10 @@ impl<'a> TmuxInterface<'a> {
     const COPY_MODE: &'static str = "copy-mode";
     const BREAK_PANE: &'static str = "break-pane";
     const CAPTURE_PANE: &'static str = "capture-pane";
+    const CHOOSE_CLIENT: &'static str = "choose-client";
+    const CHOOSE_TREE: &'static str = "choose-tree";
+    const DISPLAY_PANES: &'static str = "display-panes";
+    const FIND_WINDOW: &'static str = "find-window";
 
     const KILL_WINDOW: &'static str = "kill-window";
     const NEW_WINDOW: &'static str = "new-window";
@@ -272,8 +359,17 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
     /// ```
-    pub fn choose_client(&self) {
-        unimplemented!();
+    pub fn choose_client(&self, choose_client: &ChooseClient) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if choose_client.without_preview.unwrap_or(false) { args.push(N_KEY); }
+        if choose_client.zoom.unwrap_or(false) { args.push(Z_KEY); }
+        choose_client.format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        choose_client.filter.and_then(|s| Some(args.extend_from_slice(&[f_KEY, &s])));
+        choose_client.sort_order.and_then(|s| Some(args.extend_from_slice(&[O_KEY, &s])));
+        choose_client.target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        choose_client.template.and_then(|s| Some(args.push(&s)));
+        let output = self.subcommand(TmuxInterface::CHOOSE_CLIENT, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -285,8 +381,20 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
     /// ```
-    pub fn choose_tree(&self) {
-        unimplemented!();
+    pub fn choose_tree(&self, choose_tree: &ChooseTree) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if choose_tree.all.unwrap_or(false) { args.push(G_KEY); }
+        if choose_tree.without_preview.unwrap_or(false) { args.push(N_KEY); }
+        if choose_tree.collapsed_sessions.unwrap_or(false) { args.push(s_KEY); }
+        if choose_tree.collapsed_windows.unwrap_or(false) { args.push(w_KEY); }
+        if choose_tree.zoom.unwrap_or(false) { args.push(Z_KEY); }
+        choose_tree.format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        choose_tree.filter.and_then(|s| Some(args.extend_from_slice(&[f_KEY, &s])));
+        choose_tree.sort_order.and_then(|s| Some(args.extend_from_slice(&[O_KEY, &s])));
+        choose_tree.target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        choose_tree.template.and_then(|s| Some(args.push(&s)));
+        let output = self.subcommand(TmuxInterface::CHOOSE_TREE, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -297,8 +405,19 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux display-panes [-b] [-d duration] [-t target-client] [template] (alias: displayp)
     /// ```
-    pub fn display_panes(&self) {
-        unimplemented!();
+    pub fn display_panes(&self,
+                         not_block: Option<bool>,
+                         duration: Option<&str>,
+                         target_client: Option<&str>,
+                         template: Option<&str>
+                         ) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if not_block.unwrap_or(false) { args.push(b_KEY); }
+        duration.and_then(|s| Some(args.extend_from_slice(&[d_KEY, &s])));
+        target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        template.and_then(|s| Some(args.push(&s)));
+        let output = self.subcommand(TmuxInterface::DISPLAY_PANES, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -311,8 +430,16 @@ impl<'a> TmuxInterface<'a> {
     /// tmux find-window [-CNTZ] [-t target-pane] match-string
     /// (alias: findw)
     /// ```
-    pub fn find_window(&self) {
-        unimplemented!();
+    pub fn find_window(&self, find_window: &FindWindow) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if find_window.only_visible.unwrap_or(false) { args.push(C_KEY); }
+        if find_window.only_name.unwrap_or(false) { args.push(N_KEY); }
+        if find_window.only_title.unwrap_or(false) { args.push(T_KEY); }
+        if find_window.zoom.unwrap_or(false) { args.push(Z_KEY); }
+        find_window.target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        args.push(find_window.match_string);
+        let output = self.subcommand(TmuxInterface::FIND_WINDOW, &args)?;
+        Ok(output.status.success())
     }
 
 

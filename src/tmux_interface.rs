@@ -47,7 +47,7 @@ pub const C_KEY: &str = "-C";
 pub const D_KEY: &str = "-D";
 pub const E_KEY: &str = "-E";
 pub const F_KEY: &str = "-F";
-//pub const G_KEY: &str = "-G";
+pub const G_KEY: &str = "-G";
 pub const H_KEY: &str = "-H";
 //pub const I_KEY: &str = "-I";
 pub const J_KEY: &str = "-J";
@@ -55,7 +55,7 @@ pub const J_KEY: &str = "-J";
 pub const L_KEY: &str = "-L";
 pub const M_KEY: &str = "-M";
 pub const N_KEY: &str = "-N";
-//pub const O_KEY: &str = "-O";
+pub const O_KEY: &str = "-O";
 pub const P_KEY: &str = "-P";
 //pub const Q_KEY: &str = "-Q";
 pub const R_KEY: &str = "-R";
@@ -66,7 +66,7 @@ pub const V_KEY: &str = "-V";
 //pub const W_KEY: &str = "-W";
 pub const X_KEY: &str = "-X";
 //pub const Y_KEY: &str = "-Y";
-//pub const Z_KEY: &str = "-Z";
+pub const Z_KEY: &str = "-Z";
 
 
 pub const CC_KEY: &str = "-C";
