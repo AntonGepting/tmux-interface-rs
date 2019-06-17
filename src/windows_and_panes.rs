@@ -143,6 +143,35 @@ impl<'a> FindWindow<'a> {
 }
 
 
+/// Like split-window, but instead of splitting `dst-pane` and creating a new pane, split it
+/// and move `src-pane` into the space
+///
+/// # Manual
+///
+/// ```text
+/// tmux join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+/// (alias: joinp)
+/// ```
+#[derive(Default)]
+pub struct JoinPane<'a> {
+    pub left_above: Option<bool>,               // [-b]
+    pub detached: Option<bool>,                 // [-d]
+    pub horizontal: Option<bool>,               // [-h]
+    pub vertical: Option<bool>,                 // [-v]
+    pub size: Option<usize>,                    // [-l size]
+    pub percentage: Option<usize>,              // [-p percentage]
+    pub src_pane: Option<&'a str>,              // [-s src-pane]
+    pub dst_pane: Option<&'a str>,              // [-t dst-pane]
+}
+
+
+impl<'a> JoinPane<'a> {
+    pub fn new() -> JoinPane<'a> {
+        Default::default()
+    }
+}
+
+
 /// Structure for creating new window, using `tmux new-window` command
 ///
 /// # Manual
@@ -271,7 +300,7 @@ impl<'a> TmuxInterface<'a> {
     const CHOOSE_TREE: &'static str = "choose-tree";
     const DISPLAY_PANES: &'static str = "display-panes";
     const FIND_WINDOW: &'static str = "find-window";
-    //const JOIN_PANE: &'static str = "join-pane";
+    const JOIN_PANE: &'static str = "join-pane";
     const KILL_PANE: &'static str = "kill-pane";
     const KILL_WINDOW: &'static str = "kill-window";
     //const LAST_PANE: &'static str = "last-pane";
@@ -471,8 +500,26 @@ impl<'a> TmuxInterface<'a> {
     /// tmux join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: joinp)
     /// ```
-    pub fn join_pane(&self) {
-        unimplemented!();
+    pub fn join_pane(&self, join_pane: &JoinPane) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if join_pane.left_above.unwrap_or(false) { args.push(b_KEY); }
+        if join_pane.detached.unwrap_or(false) { args.push(d_KEY); }
+        if join_pane.horizontal.unwrap_or(false) { args.push(h_KEY); }
+        if join_pane.vertical.unwrap_or(false) { args.push(v_KEY); }
+        let s;
+        if let Some(size) = join_pane.size {
+            s = size.to_string();
+            args.extend_from_slice(&[l_KEY, &s]);
+        }
+        let p;
+        if let Some(percentage) = join_pane.percentage {
+            p = percentage.to_string();
+            args.extend_from_slice(&[p_KEY, &p]);
+        }
+        join_pane.src_pane.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        join_pane.dst_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::JOIN_PANE, &args)?;
+        Ok(output.status.success())
     }
 
 
