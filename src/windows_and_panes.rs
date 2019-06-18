@@ -390,6 +390,55 @@ impl<'a> RespawnWindow<'a> {
     }
 }
 
+/// Pipe output sent by the program in target-pane to a shell command or vice versa
+///
+/// # Manual
+///
+/// ```text
+/// tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
+/// (alias: pipep)
+/// ```
+#[derive(Default)]
+pub struct PipePane<'a> {
+    pub stdout: Option<bool>,                   // [-I]
+    pub stdin: Option<bool>,                    // [-O]
+    pub open: Option<bool>,                     // [-o]
+    pub target_pane: Option<&'a str>,           // [-t target-pane]
+    pub shell_command: Option<&'a str>,         // [shell-command]
+}
+
+
+impl<'a> PipePane<'a> {
+    pub fn new() -> PipePane<'a> {
+        Default::default()
+    }
+}
+
+
+/// Swap two panes
+///
+/// # Manual
+///
+/// ```text
+/// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
+/// (alias: swapp)
+/// ```
+#[derive(Default)]
+pub struct SwapPane<'a> {
+    pub detached: Option<bool>,                 // [-d]
+    pub previous: Option<&'a str>,              // [-D]
+    pub next: Option<&'a str>,                  // [-U]
+    pub src_pane: Option<&'a str>,              // [-s src-pane]
+    pub dst_pane: Option<&'a str>,              // [-t dst-pane]
+}
+
+
+impl<'a> SwapPane<'a> {
+    pub fn new() -> SwapPane<'a> {
+        Default::default()
+    }
+}
+
 
 /// # Manual
 ///
@@ -502,7 +551,7 @@ impl<'a> TmuxInterface<'a> {
     const NEW_WINDOW: &'static str = "new-window";
     const NEXT_LAYOUT: &'static str = "next-layout";
     const NEXT_WINDOW: &'static str = "next-window";
-    //const PIPE_PANE: &'static str = "pipe-pane";
+    const PIPE_PANE: &'static str = "pipe-pane";
     const PREVIOUS_LAYOUT: &'static str = "previous-layout";
     const PREVIOUS_WINDOW: &'static str = "previous-window";
     const RENAME_WINDOW: &'static str = "rename-window";
@@ -515,7 +564,7 @@ impl<'a> TmuxInterface<'a> {
     const SELECT_PANE: &'static str = "select-pane";
     const SELECT_WINDOW: &'static str = "select-window";
     const SPLIT_WINDOW: &'static str = "split-window";
-    //const SWAP_PANE: &'static str = "swap-pane";
+    const SWAP_PANE: &'static str = "swap-pane";
     const SWAP_WINDOW: &'static str = "swap-window";
     const UNLINK_WINDOW: &'static str = "unlink-window";
 
@@ -972,8 +1021,15 @@ impl<'a> TmuxInterface<'a> {
     /// tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
     /// (alias: pipep)
     /// ```
-    pub fn pipe_pane(&self) {
-        unimplemented!();
+    pub fn pipe_pane(&self, pipe_pane: &PipePane) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if pipe_pane.stdout.unwrap_or(false) { args.push(I_KEY); }
+        if pipe_pane.stdin.unwrap_or(false) { args.push(O_KEY); }
+        if pipe_pane.open.unwrap_or(false) { args.push(o_KEY); }
+        pipe_pane.target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        pipe_pane.shell_command.and_then(|s| Some(args.push(&s)));
+        let output = self.subcommand(TmuxInterface::PIPE_PANE, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -1267,8 +1323,15 @@ impl<'a> TmuxInterface<'a> {
     /// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
     /// (alias: swapp)
     /// ```
-    pub fn swap_pane(&self) {
-        unimplemented!();
+    pub fn swap_pane(&self, swap_pane: &SwapPane) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if swap_pane.detached.unwrap_or(false) { args.push(d_KEY); }
+        if swap_pane.detached.unwrap_or(false) { args.push(D_KEY); }
+        if swap_pane.detached.unwrap_or(false) { args.push(U_KEY); }
+        swap_pane.src_pane.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        swap_pane.dst_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        let output = self.subcommand(TmuxInterface::SWAP_PANE, &args)?;
+        Ok(output.status.success())
     }
 
 
