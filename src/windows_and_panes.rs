@@ -440,6 +440,31 @@ impl<'a> SwapPane<'a> {
 }
 
 
+/// Choose a specific layout for a window
+///
+/// # Manual
+///
+/// ```text
+/// tmux select-layout [-Enop] [-t target-pane] [layout-name]
+/// (alias: selectl)
+/// ```
+#[derive(Default)]
+pub struct SelectLayot<'a> {
+    pub spread: Option<bool>,                   // [-E]
+    pub next: Option<bool>,                     // [-n]
+    pub last: Option<bool>,                     // [-o]
+    pub previous: Option<bool>,                 // [-p]
+    pub target_pane: Option<&'a str>,           // [-t target-pane]
+    pub layout_name: Option<&'a str>,           // [layout-name]
+}
+
+
+impl<'a> SelectLayot<'a> {
+    pub fn new() -> SelectLayot<'a> {
+        Default::default()
+    }
+}
+
 /// # Manual
 ///
 /// ```text
@@ -560,7 +585,7 @@ impl<'a> TmuxInterface<'a> {
     const RESPAWN_PANE: &'static str = "respawn-pane";
     const RESPAWN_WINDOW: &'static str = "respawn-window";
     const ROTATE_WINDOW: &'static str = "rotate-window";
-    //const SELECT_LAYOUT: &'static str = "select-layout";
+    const SELECT_LAYOUT: &'static str = "select-layout";
     const SELECT_PANE: &'static str = "select-pane";
     const SELECT_WINDOW: &'static str = "select-window";
     const SPLIT_WINDOW: &'static str = "split-window";
@@ -1226,8 +1251,16 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-layout [-Enop] [-t target-pane] [layout-name]
     /// (alias: selectl)
     /// ```
-    pub fn select_layout(&self) {
-        unimplemented!();
+    pub fn select_layout(&self, select_layout: &SelectLayot) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if select_layout.spread.unwrap_or(false) { args.push(E_KEY); }
+        if select_layout.next.unwrap_or(false) { args.push(n_KEY); }
+        if select_layout.last.unwrap_or(false) { args.push(o_KEY); }
+        if select_layout.previous.unwrap_or(false) { args.push(p_KEY); }
+        select_layout.target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        select_layout.layout_name.and_then(|s| Some(args.push(&s)));
+        let output = self.subcommand(TmuxInterface::SELECT_LAYOUT, &args)?;
+        Ok(output.status.success())
     }
 
 
