@@ -46,6 +46,7 @@ pub use self::windows_and_panes::SelectWindow;
 pub use self::windows_and_panes::SplitWindow;
 pub use self::windows_and_panes::SwapPane;
 
+pub use self::key_bindings::BindKey;
 pub use self::key_bindings::SendKeys;
 
 pub use self::options::ShowOptions;
