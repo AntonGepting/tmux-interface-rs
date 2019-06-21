@@ -2,6 +2,59 @@ use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
 
 
+/// Session for attaching client to already existing session
+///
+/// # Manual
+///
+/// ```text
+/// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
+/// (alias: attach)
+/// ```
+#[derive(Default)]
+pub struct AttachSession<'a> {
+    /// any other clients attached to the session are detached
+    pub detach_other: Option<bool>,             // [-d]
+    /// `update-environment` option will not be applied
+    pub not_update_env: Option<bool>,           // [-E]
+    /// signifies the client is read-only
+    pub read_only: Option<bool>,                // [-r]
+    /// specify starting directory
+    pub cwd: Option<&'a str>,              // [-c working-directory]
+    /// specify target session name
+    pub target_session: Option<&'a str>,   // [-t target-session]
+}
+
+impl<'a> AttachSession<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+}
+
+
+/// Detach the current client
+///
+/// # Manual
+///
+/// ```text
+/// tmux detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
+/// (alias: detach)
+/// ```
+#[derive(Default)]
+pub struct DetachClient<'a> {
+    pub all: Option<bool>,                      // [-a]
+    pub parent_sighup: Option<bool>,            // [-P]
+    pub shell_command: Option<&'a str>,         // [-E shell-command]
+    pub target_session: Option<&'a str>,        // [-s target-session]
+    pub target_client: Option<&'a str>          // [-t target-client]
+}
+
+impl<'a> DetachClient<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+}
+
+
 /// Structure for creating a new session
 ///
 /// # Manual
@@ -42,61 +95,7 @@ pub struct NewSession<'a> {
     pub shell_command: Option<&'a str>     // [shell-command]
 }
 
-
 impl<'a> NewSession<'a> {
-    pub fn new() -> Self {
-        Default::default()
-    }
-}
-
-
-/// Detach the current client
-///
-/// # Manual
-///
-/// ```text
-/// tmux detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
-/// (alias: detach)
-/// ```
-#[derive(Default)]
-pub struct DetachClient<'a> {
-    pub all: Option<bool>,                      // [-a]
-    pub parent_sighup: Option<bool>,            // [-P]
-    pub shell_command: Option<&'a str>,         // [-E shell-command]
-    pub target_session: Option<&'a str>,        // [-s target-session]
-    pub target_client: Option<&'a str>          // [-t target-client]
-}
-
-
-impl<'a> DetachClient<'a> {
-    pub fn new() -> Self {
-        Default::default()
-    }
-}
-
-
-/// Switch the current session for client `target-client` to `target-session`
-///
-/// # Manual
-///
-/// ```text
-/// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
-/// (alias: switchc)
-/// ```
-#[derive(Default)]
-pub struct SwitchClient<'a> {
-    pub not_update_env: Option<bool>,           // [-E]
-    pub last: Option<bool>,                     // [-l]
-    pub next: Option<bool>,                     // [-n]
-    pub previous: Option<bool>,                 // [-p]
-    pub read_only: Option<bool>,                // [-r]
-    pub target_client: Option<&'a str>,         // [-c target-client]
-    pub target_session: Option<&'a str>,        // [-t target-session]
-    pub key_table: Option<&'a str>,             // [-T key-table]
-}
-
-
-impl<'a> SwitchClient<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -125,7 +124,6 @@ pub struct RefreshClient<'a> {
     pub adjustment: Option<usize>               // [adjustment]
 }
 
-
 impl<'a> RefreshClient<'a> {
     pub fn new() -> Self {
         Default::default()
@@ -133,30 +131,27 @@ impl<'a> RefreshClient<'a> {
 }
 
 
-/// Session for attaching client to already existing session
+/// Switch the current session for client `target-client` to `target-session`
 ///
 /// # Manual
 ///
 /// ```text
-/// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
-/// (alias: attach)
+/// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
+/// (alias: switchc)
 /// ```
 #[derive(Default)]
-pub struct AttachSession<'a> {
-    /// any other clients attached to the session are detached
-    pub detach_other: Option<bool>,             // [-d]
-    /// `update-environment` option will not be applied
+pub struct SwitchClient<'a> {
     pub not_update_env: Option<bool>,           // [-E]
-    /// signifies the client is read-only
+    pub last: Option<bool>,                     // [-l]
+    pub next: Option<bool>,                     // [-n]
+    pub previous: Option<bool>,                 // [-p]
     pub read_only: Option<bool>,                // [-r]
-    /// specify starting directory
-    pub cwd: Option<&'a str>,              // [-c working-directory]
-    /// specify target session name
-    pub target_session: Option<&'a str>,   // [-t target-session]
+    pub target_client: Option<&'a str>,         // [-c target-client]
+    pub target_session: Option<&'a str>,        // [-t target-session]
+    pub key_table: Option<&'a str>,             // [-T key-table]
 }
 
-
-impl<'a> AttachSession<'a> {
+impl<'a> SwitchClient<'a> {
     pub fn new() -> Self {
         Default::default()
     }
