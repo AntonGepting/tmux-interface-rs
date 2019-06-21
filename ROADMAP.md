@@ -9,10 +9,10 @@ an improvment, an idea etc.
 
 - [ ] Support all tmux subcommands
     - [x] Clients and Sessions
-    - [ ] Windows and Panes
-    - [ ] Key Bindings
-    - [ ] Options
-    - [ ] Hooks
+    - [x] Windows and Panes
+    - [x] Key Bindings
+    - [x] Options
+    - [x] Hooks
     - [ ] Global and Session Environments
     - [ ] Status Line
     - [ ] Buffers
@@ -28,6 +28,16 @@ an improvment, an idea etc.
     - [ ] Buffers
     - [ ] Miscellaneous
 - [ ] Tests
+    - [ ] Clients and Sessions
+    - [ ] Windows and Panes
+    - [ ] Key Bindings
+    - [ ] Options
+    - [ ] Hooks
+    - [ ] Global and Session Environments
+    - [ ] Status Line
+    - [ ] Buffers
+    - [ ] Miscellaneous
+- [ ] Improve output, return
     - [ ] Clients and Sessions
     - [ ] Windows and Panes
     - [ ] Key Bindings
