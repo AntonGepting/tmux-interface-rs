@@ -56,6 +56,7 @@ an improvment, an idea etc.
 **tmux interface v0.0.2**
 
 - [ ] Documentation for all existing functionality and items
+- [ ] All tmux functions output return in right way
 
 
 **tmux interface v0.0.1**
