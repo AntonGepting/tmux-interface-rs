@@ -28,5 +28,5 @@ fn new_session() {
     //let sessions = Sessions::get().unwrap();
     //assert_eq!(sessions[1].name, "test_has_session");
     //dbg!(sessions);
-    tmux.kill_session(Some("test_has_session"), None, None).unwrap();
+    tmux.kill_session(None, None, Some("test_has_session")).unwrap();
 }
