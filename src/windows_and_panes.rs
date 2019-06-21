@@ -21,7 +21,6 @@ pub struct BreakPane<'a> {
     pub dst_window: Option<&'a str>,            // [-t dst-window]
 }
 
-
 impl<'a> BreakPane<'a> {
     pub fn new() -> BreakPane<'a> {
         Default::default()
@@ -52,7 +51,6 @@ pub struct CapturePane<'a> {
     pub start_line: Option<&'a str>,            // [-S start_line]
 }
 
-
 impl<'a> CapturePane<'a> {
     pub fn new() -> CapturePane<'a> {
         Default::default()
@@ -77,7 +75,6 @@ pub struct ChooseClient<'a> {
     pub target_pane: Option<&'a str>,           // [-t target-pane]
     pub template: Option<&'a str>,              // [template]
 }
-
 
 impl<'a> ChooseClient<'a> {
     pub fn new() -> ChooseClient<'a> {
@@ -108,7 +105,6 @@ pub struct ChooseTree<'a> {
     pub template: Option<&'a str>,              // [template]
 }
 
-
 impl<'a> ChooseTree<'a> {
     pub fn new() -> ChooseTree<'a> {
         Default::default()
@@ -134,7 +130,6 @@ pub struct FindWindow<'a> {
     pub target_pane: Option<&'a str>,           // [-t target-pane]
     pub match_string: &'a str,                  // match-string
 }
-
 
 impl<'a> FindWindow<'a> {
     pub fn new() -> FindWindow<'a> {
@@ -164,7 +159,6 @@ pub struct JoinPane<'a> {
     pub dst_pane: Option<&'a str>,              // [-t dst-pane]
 }
 
-
 impl<'a> JoinPane<'a> {
     pub fn new() -> JoinPane<'a> {
         Default::default()
@@ -189,39 +183,8 @@ pub struct LinkWindow<'a> {
     pub dst_window: Option<&'a str>,         // [shell-command]
 }
 
-
 impl<'a> LinkWindow<'a> {
     pub fn new() -> LinkWindow<'a> {
-        Default::default()
-    }
-}
-
-
-/// Resize a pane, up, down, left or right
-///
-/// # Manual
-///
-/// ```text
-/// tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
-/// (alias: resizep)
-/// ```
-#[derive(Default)]
-pub struct ResizePane<'a> {
-    pub down: Option<bool>,                     // [-D]
-    pub left: Option<bool>,                     // [-L]
-    pub mouse: Option<bool>,                    // [-M]
-    pub right: Option<bool>,                    // [-R]
-    pub up: Option<bool>,                       // [-U]
-    pub zoom: Option<bool>,                     // [-Z]
-    pub target_pane: Option<&'a str>,           // [-t target-pane]
-    pub width: Option<usize>,                   // [-x width]
-    pub height: Option<usize>,                  // [-y height]
-    pub adjustment: Option<&'a str>,            // [adjustment]
-}
-
-
-impl<'a> ResizePane<'a> {
-    pub fn new() -> ResizePane<'a> {
         Default::default()
     }
 }
@@ -247,12 +210,12 @@ pub struct MovePane<'a> {
     pub dst_pane: Option<&'a str>,              // [-t dst-pane]
 }
 
-
 impl<'a> MovePane<'a> {
     pub fn new() -> JoinPane<'a> {
         Default::default()
     }
 }
+
 
 /// This is similar to link-window, except the window at `src-window` is moved to `dst-window`
 ///
@@ -271,7 +234,6 @@ pub struct MoveWindow<'a> {
     pub src_window: Option<&'a str>,            // [-s src-window]
     pub dst_window: Option<&'a str>,            // [-t dst-window]
 }
-
 
 impl<'a> MoveWindow<'a> {
     pub fn new() -> MoveWindow<'a> {
@@ -302,9 +264,36 @@ pub struct NewWindow<'a> {
     pub shell_command: Option<&'a str>,         // [shell-command]
 }
 
-
 impl<'a> NewWindow<'a> {
     pub fn new() -> NewWindow<'a> {
+        Default::default()
+    }
+}
+
+/// Resize a pane, up, down, left or right
+///
+/// # Manual
+///
+/// ```text
+/// tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+/// (alias: resizep)
+/// ```
+#[derive(Default)]
+pub struct ResizePane<'a> {
+    pub down: Option<bool>,                     // [-D]
+    pub left: Option<bool>,                     // [-L]
+    pub mouse: Option<bool>,                    // [-M]
+    pub right: Option<bool>,                    // [-R]
+    pub up: Option<bool>,                       // [-U]
+    pub zoom: Option<bool>,                     // [-Z]
+    pub target_pane: Option<&'a str>,           // [-t target-pane]
+    pub width: Option<usize>,                   // [-x width]
+    pub height: Option<usize>,                  // [-y height]
+    pub adjustment: Option<&'a str>,            // [adjustment]
+}
+
+impl<'a> ResizePane<'a> {
+    pub fn new() -> ResizePane<'a> {
         Default::default()
     }
 }
@@ -332,7 +321,6 @@ pub struct ResizeWindow<'a> {
     pub adjustment: Option<&'a str>,            // [adjustment]
 }
 
-
 impl<'a> ResizeWindow<'a> {
     pub fn new() -> ResizeWindow<'a> {
         Default::default()
@@ -356,7 +344,6 @@ pub struct RespawnPane<'a> {
     pub target_pane: Option<&'a str>,           // [-t target-pane]
     pub shell_command: Option<&'a str>,         // [shell-command]
 }
-
 
 impl<'a> RespawnPane<'a> {
     pub fn new() -> RespawnPane<'a> {
@@ -383,12 +370,12 @@ pub struct RespawnWindow<'a> {
     pub shell_command: Option<&'a str>,         // [shell-command]
 }
 
-
 impl<'a> RespawnWindow<'a> {
     pub fn new() -> RespawnWindow<'a> {
         Default::default()
     }
 }
+
 
 /// Pipe output sent by the program in target-pane to a shell command or vice versa
 ///
@@ -415,31 +402,6 @@ impl<'a> PipePane<'a> {
 }
 
 
-/// Swap two panes
-///
-/// # Manual
-///
-/// ```text
-/// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
-/// (alias: swapp)
-/// ```
-#[derive(Default)]
-pub struct SwapPane<'a> {
-    pub detached: Option<bool>,                 // [-d]
-    pub previous: Option<&'a str>,              // [-D]
-    pub next: Option<&'a str>,                  // [-U]
-    pub src_pane: Option<&'a str>,              // [-s src-pane]
-    pub dst_pane: Option<&'a str>,              // [-t dst-pane]
-}
-
-
-impl<'a> SwapPane<'a> {
-    pub fn new() -> SwapPane<'a> {
-        Default::default()
-    }
-}
-
-
 /// Choose a specific layout for a window
 ///
 /// # Manual
@@ -458,39 +420,8 @@ pub struct SelectLayot<'a> {
     pub layout_name: Option<&'a str>,           // [layout-name]
 }
 
-
 impl<'a> SelectLayot<'a> {
     pub fn new() -> SelectLayot<'a> {
-        Default::default()
-    }
-}
-
-/// # Manual
-///
-/// ```text
-/// tmux split-window [-bdfhIvP] [-c start-directory] [-e environment] [-l size | -p percentage]
-/// [-t target-pane] [shell-command] [-F format]
-/// (alias: splitw)
-/// ```
-#[derive(Default)]
-pub struct SplitWindow<'a> {
-    pub before: Option<bool>,                   // [-b]
-    pub detached: Option<bool>,                 // [-d]
-    pub full: Option<bool>,                     // [-f]
-    pub horizontal: Option<bool>,               // [-h]
-    pub vertical: Option<bool>,                 // [-v]
-    pub print: Option<bool>,                    // [-P]
-    pub cwd: Option<&'a str>,                   // [-c start-directory]
-    pub size: Option<usize>,                    // [-l size]
-    pub percentage: Option<usize>,              // [-p percentage]
-    pub target_pane: Option<&'a str>,           // [-t target-pane]
-    pub shell_command: Option<&'a str>,         // [shell-command]
-    pub format: Option<&'a str>,                // [-F format]
-}
-
-
-impl<'a> SplitWindow<'a> {
-    pub fn new() -> SplitWindow<'a> {
         Default::default()
     }
 }
@@ -520,7 +451,6 @@ pub struct SelectPane<'a> {
     pub target_pane: Option<&'a str>,           // [-t target-pane]
 }
 
-
 impl<'a> SelectPane<'a> {
     pub fn new() -> SelectPane<'a> {
         Default::default()
@@ -544,12 +474,67 @@ pub struct SelectWindow<'a> {
     pub target_window: Option<&'a str>          // [-t target-window]
 }
 
-
 impl<'a> SelectWindow<'a> {
     pub fn new() -> SelectWindow<'a> {
         Default::default()
     }
 }
+
+
+/// # Manual
+///
+/// ```text
+/// tmux split-window [-bdfhIvP] [-c start-directory] [-e environment] [-l size | -p percentage]
+/// [-t target-pane] [shell-command] [-F format]
+/// (alias: splitw)
+/// ```
+#[derive(Default)]
+pub struct SplitWindow<'a> {
+    pub before: Option<bool>,                   // [-b]
+    pub detached: Option<bool>,                 // [-d]
+    pub full: Option<bool>,                     // [-f]
+    pub horizontal: Option<bool>,               // [-h]
+    pub vertical: Option<bool>,                 // [-v]
+    pub print: Option<bool>,                    // [-P]
+    pub cwd: Option<&'a str>,                   // [-c start-directory]
+    pub size: Option<usize>,                    // [-l size]
+    pub percentage: Option<usize>,              // [-p percentage]
+    pub target_pane: Option<&'a str>,           // [-t target-pane]
+    pub shell_command: Option<&'a str>,         // [shell-command]
+    pub format: Option<&'a str>,                // [-F format]
+}
+
+impl<'a> SplitWindow<'a> {
+    pub fn new() -> SplitWindow<'a> {
+        Default::default()
+    }
+}
+
+
+/// Swap two panes
+///
+/// # Manual
+///
+/// ```text
+/// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
+/// (alias: swapp)
+/// ```
+#[derive(Default)]
+pub struct SwapPane<'a> {
+    pub detached: Option<bool>,                 // [-d]
+    pub previous: Option<&'a str>,              // [-D]
+    pub next: Option<&'a str>,                  // [-U]
+    pub src_pane: Option<&'a str>,              // [-s src-pane]
+    pub dst_pane: Option<&'a str>,              // [-t dst-pane]
+}
+
+
+impl<'a> SwapPane<'a> {
+    pub fn new() -> SwapPane<'a> {
+        Default::default()
+    }
+}
+
 
 
 /// Windows and panes
