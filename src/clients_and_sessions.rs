@@ -264,12 +264,12 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux kill-session [-aC] [-t target-session]
     /// ```
-    pub fn kill_session(&self, name: Option<&str>, all: Option<bool>, clear_alerts: Option<bool>)
+    pub fn kill_session(&self, all: Option<bool>, clear_alerts: Option<bool>, target_session: Option<&str>)
         -> Result<bool, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if all.unwrap_or(false) { args.push(a_KEY); }
         if clear_alerts.unwrap_or(false) { args.push(C_KEY); }
-        name.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::KILL_SESSION, &args)?;
         Ok(output.status.success())
     }
