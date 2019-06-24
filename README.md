@@ -55,13 +55,13 @@ Principles:
 
 ## Folder Structure
 
-- `src/` - crate sources
+- [`src/`](src/) - crate sources
 
     1. Common:
 
-        - `tmux_interface.rs` - common functions
-        - `tmux_interface_error.rs` - error propagating functions
-        - `lib.rs` - main library file
+        - [`tmux_interface.rs`](src/tmux_interface.rs) - common functions
+        - [`tmux_interface_error.rs`](src/tmux_interface_error.rs) - error propagating functions
+        - [`lib.rs`](src/lib.rs) - main library file
 
     2. TMUX functions (structure like in TMUX manual):
 
