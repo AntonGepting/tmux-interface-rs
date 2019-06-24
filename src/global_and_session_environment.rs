@@ -2,6 +2,12 @@ use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
 
 
+/// # Manual
+///
+/// ```text
+/// tmux set-environment [-gru] [-t target-session] name [value]
+/// (alias: setenv)
+/// ```
 #[derive(Default)]
 pub struct SetEnvironment<'a> {
     pub global: Option<bool>,                   // [-g]
