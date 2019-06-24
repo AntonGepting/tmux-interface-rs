@@ -9,6 +9,7 @@ use regex::Regex;
 use super::tmux_interface_error::TmuxInterfaceError;
 
 
+pub const _1_KEY: &str = "-1";
 pub const _2_KEY: &str = "-2";
 
 // constants for use as keys for subcommands
@@ -20,7 +21,7 @@ pub const e_KEY: &str = "-e";
 pub const f_KEY: &str = "-f";
 pub const g_KEY: &str = "-g";
 pub const h_KEY: &str = "-h";
-//pub const i_KEY: &str = "-i";
+pub const i_KEY: &str = "-i";
 //pub const j_KEY: &str = "-j";
 pub const k_KEY: &str = "-k";
 pub const l_KEY: &str = "-l";

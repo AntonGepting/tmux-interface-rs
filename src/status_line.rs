@@ -2,9 +2,34 @@ use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
 
 
+/// # Manual
+///
+/// ```text
+/// tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
+/// ```
+#[derive(Default)]
+pub struct CommandPrompt<'a> {
+    pub one_keypress: Option<bool>,             // [-1]
+    pub on_input_change: Option<bool>,          // [-i]
+    pub inputs: Option<&'a str>,                // [-I inputs]
+    pub prompts: Option<&'a str>,               // [-p prompts]
+    pub target_client: Option<&'a str>,         // [-t target-client]
+    pub template: Option<&'a str>,              // [template]
+}
+
+impl<'a> CommandPrompt<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+}
+
+
 /// Status line
 impl<'a> TmuxInterface<'a> {
 
+
+    const COMMAND_PROMPT: &'static str = "command-prompt";
+    const CONFIRM_BEFORE: &'static str = "confirm-before";
     const DISPLAY_MESSAGE: &'static str = "display-message";
 
 
@@ -13,8 +38,16 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
     /// ```
-    pub fn command_prompt() {
-        unimplemented!();
+    pub fn command_prompt(&self, command_prompt: &CommandPrompt) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        if command_prompt.one_keypress.unwrap_or(false) { args.push(_1_KEY); }
+        if command_prompt.on_input_change.unwrap_or(false) { args.push(i_KEY); }
+        command_prompt.inputs.and_then(|s| Some(args.extend_from_slice(&[I_KEY, &s])));
+        command_prompt.prompts.and_then(|s| Some(args.extend_from_slice(&[p_KEY, &s])));
+        command_prompt.target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        command_prompt.template.and_then(|s| Some(args.push(&s)));
+        let output = self.subcommand(TmuxInterface::COMMAND_PROMPT, &args)?;
+        Ok(output.status.success())
     }
 
 
@@ -24,8 +57,13 @@ impl<'a> TmuxInterface<'a> {
     /// tmux confirm-before [-p prompt] [-t target-client] command
     /// (alias: confirm)
     /// ```
-    pub fn confirm_before() {
-        unimplemented!();
+    pub fn confirm_before(&self, prompt: Option<&str>, target_client: Option<&str>, command: &str) -> Result<bool, TmuxInterfaceError> {
+        let mut args: Vec<&str> = Vec::new();
+        prompt.and_then(|s| Some(args.extend_from_slice(&[p_KEY, &s])));
+        target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        args.push(command);
+        let output = self.subcommand(TmuxInterface::CONFIRM_BEFORE, &args)?;
+        Ok(output.status.success())
     }
 
 
