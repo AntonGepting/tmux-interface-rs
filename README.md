@@ -65,54 +65,54 @@ Principles:
 
     2. TMUX functions (structure like in TMUX manual):
 
-        - `clients_and_sessions.rs`
-        - `windows_and_panes.rs`
-        - `key_bindings.rs`
-        - `options.rs`
-        - `hooks.rs`
-        - `global_and_session_environment.rs`
-        - `status_line.rs`
-        - `buffers.rs`
-        - `miscellaneous.rs`
+        - [`clients_and_sessions.rs`](src/clients_and_sessions.rs)
+        - [`windows_and_panes.rs`](src/windows_and_panes.rs)
+        - [`key_bindings.rs`](src/key_bindings.rs)
+        - [`options.rs`](src/options.rs)
+        - [`hooks.rs`](src/hooks.rs)
+        - [`global_and_session_environment.rs`](src/global_and_session_environment.rs)
+        - [`status_line.rs`](src/status_line.rs)
+        - [`buffers.rs`](src/buffers.rs)
+        - [`miscellaneous.rs`](src/miscellaneous.rs)
 
     3. Unit tests for functions and their parts:
 
-        - `tmux_interface_tests.rs`
+        - [`tmux_interface_tests.rs`](src/tmux_interface_tests.rs)
 
     4. Parsing functions:
 
-        - `sessions.rs` - parse a session list
-        - `session.rs` - parse a session
-        - `windows.rs` - parse a windows list
-        - `window.rs` - parse a window
-        - `panes.rs` - parse a panes list
-        - `pane.rs` - parse a pane
-        - `tmux_option.rs` - parse an option
+        - [`sessions.rs`](src/sessions.rs) - parse a session list
+        - [`session.rs`](src/session.rs) - parse a session
+        - [`windows.rs`](src/windows.rs) - parse a windows list
+        - [`window.rs`](src/window.rs) - parse a window
+        - [`panes.rs`](src/panes.rs) - parse a panes list
+        - [`pane.rs`](src/pane.rs) - parse a pane
+        - [`tmux_option.rs`](src/tmux_option.rs) - parse an option
 
     5. Unit tests for parsing functions:
 
-        - `sessions_tests.rs`
-        - `session_tests.rs`
-        - `windows_tests.rs`
-        - `window_tests.rs`
-        - `panes_tests.rs`
-        - `pane_tests.rs`
-        - `tmux_option_tests.rs`
+        - [`sessions_tests.rs`](src/sessions_tests.rs)
+        - [`session_tests.rs`](src/session_tests.rs)
+        - [`windows_tests.rs`](src/windows_tests.rs)
+        - [`window_tests.rs`](src/window_tests.rs)
+        - [`panes_tests.rs`](src/panes_tests.rs)
+        - [`pane_tests.rs`](src/pane_tests.rs)
+        - [`tmux_option_tests.rs`](src/tmux_option_tests.rs)
 
-- `tests/` - crate integration tests (multiple functions):
+- [`tests/`](tests/) - crate integration tests (multiple functions):
 
-    - `tmux_interface.rs`
-    - `tmux_mock.sh` - bash script can be used instead of tmux binary, for simple logging
+    - [`tmux_interface.rs`](tests/tmux_interface.rs)
+    - [`tmux_mock.sh`](tests/tmux_mock.sh) - bash script can be used instead of tmux binary, for simple logging
         (sniffing) intercommmunication between library functions and tmux
-    - `tmux_test.sh` - bash script for output testing of tmux functions
+    - [`tmux_test.sh`](tests/tmux_test.sh) - bash script for output testing of tmux functions
 
 - `README.md` - common information (this file)
-- `LICENSE.md` - license text
-- `ROADMAP.md` - future goals, wishlist, ideas
-- `CHANGELOG.md` - version history
-- `Cargo.toml` - crate configuration ([File Format](https://doc.rust-lang.org/cargo/reference/manifest.html))
-- `.travis.yml` - travis CI configuration ([File Format](https://docs.travis-ci.com/user/tutorial/))
-- `.editorconfig` - consisten conding style configuration ([File Format](https://editorconfig.org/#file-format-details))
+- [`LICENSE.md`](LICENSE.md) - license text
+- [`ROADMAP.md`](ROADMAP.md) - future goals, wishlist, ideas
+- [`CHANGELOG.md`](CHANGELOG.md) - version history
+- [`Cargo.toml`](Cargo.toml) - crate configuration ([File Format](https://doc.rust-lang.org/cargo/reference/manifest.html))
+- [`.travis.yml`](.travis.yml) - travis CI configuration ([File Format](https://docs.travis-ci.com/user/tutorial/))
+- [`.editorconfig`](.editorconfig) - consisten conding style configuration ([File Format](https://editorconfig.org/#file-format-details))
 
 
 ## License
