@@ -77,7 +77,10 @@ pub const CC_KEY: &str = "-C";
 /// This structure is used to store execution parameters of `tmux`, including binary
 /// name. Full description of fields can be found using `man tmux`.
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#DESCRIPTION)
+#[derive(Default)]
 pub struct TmuxInterface<'a> {
+    /// Environment variables for tmux
+    pub environment: Option<&'a str>,                   //
     /// Tmux binary name (default: `tmux`, can be set as `tmux_mock.sh` for "sniffing")
     pub tmux: Option<&'a str>,                          // tmux (or tmux_mock.sh)
     /// Force tmux to assume the terminal supports 256 colours
@@ -104,25 +107,6 @@ pub struct TmuxInterface<'a> {
     pub version: Option<bool>                           // -V
 }
 
-
-impl<'a> Default for TmuxInterface<'a> {
-    fn default() -> Self {
-        TmuxInterface {
-            tmux: None,
-            colours256: None,
-            control_mode: None,
-            disable_echo: None,
-            shell_cmd: None,
-            file: None,
-            socket_name: None,
-            login_shell: None,
-            socket_path: None,
-            force_utf8: None,
-            verbose_logging: None,
-            version: None
-        }
-    }
-}
 
 /// Common `TmuxInterface` functions
 impl<'a> TmuxInterface<'a> {
