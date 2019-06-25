@@ -39,7 +39,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-environment [-gru] [-t target-session] name [value]
     /// (alias: setenv)
     /// ```
-    pub fn set_environment(&self, set_environment: &SetEnvironment) -> Result<Output, TmuxInterfaceError> {
+    pub fn set_environment(&self,
+                           set_environment: &SetEnvironment
+                           ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if set_environment.global.unwrap_or(false) { args.push(g_KEY); }
         if set_environment.remove.unwrap_or(false) { args.push(r_KEY); }
