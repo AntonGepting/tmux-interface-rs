@@ -1,5 +1,6 @@
 use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
+use std::process::Output;
 
 
 /// # Manual
@@ -38,7 +39,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux set-hook [-agRu] [-t target-session] hook-name command
     /// ```
-    pub fn set_hook(&self, set_hook: &SetHook) -> Result<bool, TmuxInterfaceError> {
+    pub fn set_hook(&self, set_hook: &SetHook) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if set_hook.append.unwrap_or(false) { args.push(a_KEY); }
         if set_hook.global.unwrap_or(false) { args.push(g_KEY); }
@@ -48,7 +49,7 @@ impl<'a> TmuxInterface<'a> {
         args.push(set_hook.hook_name);
         args.push(set_hook.command);
         let output = self.subcommand(TmuxInterface::SET_HOOK, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -57,12 +58,12 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux show-hooks [-g] [-t target-session]
     /// ```
-    pub fn show_hooks(&self, global: Option<bool>, target_session: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+    pub fn show_hooks(&self, global: Option<bool>, target_session: Option<&str>) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if global.unwrap_or(false) { args.push(g_KEY); }
         target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::SHOW_HOOK, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
