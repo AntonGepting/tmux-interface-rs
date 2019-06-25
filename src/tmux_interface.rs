@@ -147,6 +147,8 @@ impl<'a> TmuxInterface<'a> {
     pub fn exec(&self, args: &[&str]) -> Result<Output, TmuxInterfaceError> {
         let mut options: Vec<&str> = Vec::new();
         let mut cmd = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
+        // XXX: using environment vars
+        //self.environment.and_then(|s| Some(envs.push(s)));
         if self.colours256.unwrap_or(false) { options.push(_2_KEY); };
         if self.control_mode.unwrap_or(false) { options.push(C_KEY); };
         if self.disable_echo.unwrap_or(false) { options.push(CC_KEY); };
