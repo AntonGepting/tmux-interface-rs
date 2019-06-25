@@ -191,7 +191,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
     /// (alias: attach)
     /// ```
-    pub fn attach_session(&self, attach_session: &AttachSession) -> Result<Output, TmuxInterfaceError> {
+    pub fn attach_session(&self,
+                          attach_session: &AttachSession
+                          ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if attach_session.detach_other.unwrap_or(false) { args.push(d_KEY); }
         if attach_session.not_update_env.unwrap_or(false) { args.push(E_KEY); }
@@ -211,7 +213,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
     /// (alias: detach)
     /// ```
-    pub fn detach_client(&self, detach_client: &DetachClient) -> Result<Output, TmuxInterfaceError> {
+    pub fn detach_client(&self,
+                         detach_client: &DetachClient
+                         ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if detach_client.all.unwrap_or(false) { args.push(a_KEY); }
         if detach_client.parent_sighup.unwrap_or(false) { args.push(P_KEY); }
@@ -260,8 +264,11 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux kill-session [-aC] [-t target-session]
     /// ```
-    pub fn kill_session(&self, all: Option<bool>, clear_alerts: Option<bool>, target_session: Option<&str>)
-        -> Result<Output, TmuxInterfaceError> {
+    pub fn kill_session(&self,
+                        all: Option<bool>,
+                        clear_alerts: Option<bool>,
+                        target_session: Option<&str>
+                        ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if all.unwrap_or(false) { args.push(a_KEY); }
         if clear_alerts.unwrap_or(false) { args.push(C_KEY); }
@@ -279,8 +286,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux list-clients [-F format] [-t target-session]
     /// (alias: lsc)
     /// ```
-    pub fn list_clients(&self, format: Option<&str>, target_session: Option<&str>) ->
-        Result<Output, TmuxInterfaceError> {
+    pub fn list_clients(&self,
+                        format: Option<&str>,
+                        target_session: Option<&str>
+                        ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
         target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
@@ -312,7 +321,6 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux list-sessions [-F format]
     /// (alias: ls)
-    /// default response form: 0: 4 windows (created Mon Apr 21 22:51:13 2019) [177x64] (attached)
     /// ```
     pub fn list_sessions(&self, format: Option<&str>) -> Result<String, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
@@ -400,7 +408,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux refresh-client [-cDlLRSU] [-C width,height] [-t target-client] [adjustment]
     /// (alias: refresh)
     /// ```
-    pub fn refresh_client(&self, refresh_client: &RefreshClient) -> Result<Output, TmuxInterfaceError> {
+    pub fn refresh_client(&self,
+                          refresh_client: &RefreshClient
+                          ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if refresh_client.tracking_cursor.unwrap_or(false) { args.push(c_KEY); }
         if refresh_client.down.unwrap_or(false) { args.push(D_KEY); }
@@ -432,7 +442,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux rename-session [-t target-session] new-name
     /// (alias: rename)
     /// ```
-    pub fn rename_session(&self, target_session: Option<&str>, new_name: &str) -> Result<Output, TmuxInterfaceError> {
+    pub fn rename_session(&self,
+                          target_session: Option<&str>,
+                          new_name: &str
+                          ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         args.push(new_name);
@@ -449,8 +462,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-messages [-JT] [-t target-client]
     /// (alias: showmsgs)
     /// ```
-    pub fn show_messages(&self, jobs: Option<bool>, terminal: Option<bool>,
-                         target_client: Option<&str>) -> Result<Output, TmuxInterfaceError> {
+    pub fn show_messages(&self,
+                         jobs: Option<bool>,
+                         terminal: Option<bool>,
+                         target_client: Option<&str>
+                         ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if jobs.unwrap_or(false) { args.push(J_KEY); }
         if terminal.unwrap_or(false) { args.push(T_KEY); }
@@ -468,7 +484,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux source-file [-q] path
     /// (alias: source)
     /// ```
-    pub fn source_file(&self, quite: Option<bool>, path: &str) -> Result<Output, TmuxInterfaceError> {
+    pub fn source_file(&self,
+                       quite: Option<bool>,
+                       path: &str
+                       ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if quite.unwrap_or(false) { args.push(q_KEY); }
         args.push(path);
@@ -499,7 +518,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux suspend-client [-t target-client]
     /// (alias: suspendc)
     /// ```
-    pub fn suspend_client(&self, target_client: Option<&str>) -> Result<Output, TmuxInterfaceError> {
+    pub fn suspend_client(&self,
+                          target_client: Option<&str>
+                          ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::SUSPEND_CLIENT, &args)?;
@@ -515,7 +536,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
     /// (alias: switchc)
     /// ```
-    pub fn switch_client(&self, switch_client: &SwitchClient) -> Result<Output, TmuxInterfaceError> {
+    pub fn switch_client(&self,
+                         switch_client: &SwitchClient
+                         ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if switch_client.not_update_env.unwrap_or(false) { args.push(E_KEY); }
         if switch_client.last.unwrap_or(false) { args.push(l_KEY); }
