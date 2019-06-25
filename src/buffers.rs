@@ -66,9 +66,12 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux choose-buffer [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+    /// tmux choose-buffer [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane]
+    /// [template]
     /// ```
-    pub fn choose_buffer(&self, choose_buffer: &ChooseBuffer) -> Result<Output, TmuxInterfaceError> {
+    pub fn choose_buffer(&self,
+                         choose_buffer: &ChooseBuffer
+                         ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if choose_buffer.no_preview.unwrap_or(false) { args.push(N_KEY); }
         if choose_buffer.zoom.unwrap_or(false) { args.push(Z_KEY); }
