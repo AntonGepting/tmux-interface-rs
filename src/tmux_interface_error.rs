@@ -61,7 +61,7 @@ impl From<regex::Error> for TmuxInterfaceError {
 impl From<std::num::ParseIntError> for TmuxInterfaceError {
     fn from(_error: std::num::ParseIntError) -> Self {
         TmuxInterfaceError {
-            err_text: String::from("parse"),
+            err_text: String::from("parse num"),
             err_type: 1
             //message: error.to_string(),
         }
@@ -72,7 +72,7 @@ impl From<std::num::ParseIntError> for TmuxInterfaceError {
 impl From<std::string::ParseError> for TmuxInterfaceError {
     fn from(_error: std::string::ParseError) -> Self {
         TmuxInterfaceError {
-            err_text: String::from("parse"),
+            err_text: String::from("parse string"),
             err_type: 1
             //message: error.to_string(),
         }
