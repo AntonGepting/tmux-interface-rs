@@ -127,7 +127,10 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux send-prefix [-2] [-t target-pane]
     /// ```
-    pub fn send_prefix(&self, secondary: Option<bool>, target_pane: Option<&str>) -> Result<Output, TmuxInterfaceError> {
+    pub fn send_prefix(&self,
+                       secondary: Option<bool>,
+                       target_pane: Option<&str>
+                       ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if secondary.unwrap_or(false) { args.push(_2_KEY); }
         target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
