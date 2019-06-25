@@ -654,9 +654,12 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+    /// tmux choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane]
+    /// [template]
     /// ```
-    pub fn choose_client(&self, choose_client: &ChooseClient) -> Result<Output, TmuxInterfaceError> {
+    pub fn choose_client(&self,
+                         choose_client: &ChooseClient
+                         ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if choose_client.without_preview.unwrap_or(false) { args.push(N_KEY); }
         if choose_client.zoom.unwrap_or(false) { args.push(Z_KEY); }
@@ -676,7 +679,8 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+    /// tmux choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane]
+    /// [template]
     /// ```
     pub fn choose_tree(&self, choose_tree: &ChooseTree) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
@@ -880,8 +884,12 @@ impl<'a> TmuxInterface<'a> {
     /// tmux list-panes [-as] [-F format] [-t target]
     /// (alias: lsp)
     /// ```
-    pub fn list_panes(&self, all: bool, session: bool, format: Option<&str>, target: Option<&str>)
-        -> Result<String, TmuxInterfaceError> {
+    pub fn list_panes(&self,
+                      all: bool,
+                      session: bool,
+                      format: Option<&str>,
+                      target: Option<&str>
+                      ) -> Result<String, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if all { args.push(a_KEY); }
         if session { args.push(s_KEY); }
@@ -902,8 +910,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux list-windows [-a] [-F format] [-t target-session]
     /// (alias: lsw)
     /// ```
-    pub fn list_windows(&self, all: bool, format: Option<&str>, target_session: Option<&str>)
-        -> Result<String, TmuxInterfaceError> {
+    pub fn list_windows(&self,
+                        all: bool,
+                        format: Option<&str>,
+                        target_session: Option<&str>
+                        ) -> Result<String, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if all { args.push(a_KEY); }
         format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, s])));
@@ -1053,7 +1064,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux previous-layout [-t target-window]
     /// (alias: prevl)
     /// ```
-    pub fn previous_layout(&self, target_window: Option<&str>) -> Result<Output, TmuxInterfaceError> {
+    pub fn previous_layout(&self,
+                           target_window: Option<&str>
+                           ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::PREVIOUS_LAYOUT, &args)?;
@@ -1142,7 +1155,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
     /// (alias: resizew)
     /// ```
-    pub fn resize_window(&self, resize_window: &ResizeWindow) -> Result<Output, TmuxInterfaceError> {
+    pub fn resize_window(&self,
+                         resize_window: &ResizeWindow
+                         ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if resize_window.smallest.unwrap_or(false) { args.push(a_KEY); }
         if resize_window.largest.unwrap_or(false) { args.push(A_KEY); }
@@ -1172,7 +1187,8 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux respawn-pane [-k] [-c start-directory] [-e environment] [-t target-pane] [shell-command]
+    /// tmux respawn-pane [-k] [-c start-directory] [-e environment] [-t target-pane]
+    /// [shell-command]
     /// (alias: respawnp)
     /// ```
     pub fn respawn_pane(&self, respawn_pane: &RespawnPane) -> Result<Output, TmuxInterfaceError> {
@@ -1196,7 +1212,9 @@ impl<'a> TmuxInterface<'a> {
     /// [shell-command]
     /// (alias: respawnw)
     /// ```
-    pub fn respawn_window(&self, respawn_window: &RespawnWindow) -> Result<Output, TmuxInterfaceError> {
+    pub fn respawn_window(&self,
+                          respawn_window: &RespawnWindow
+                          ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if respawn_window.kill.unwrap_or(false) { args.push(k_KEY); }
         respawn_window.start_directory.and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
@@ -1238,7 +1256,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-layout [-Enop] [-t target-pane] [layout-name]
     /// (alias: selectl)
     /// ```
-    pub fn select_layout(&self, select_layout: &SelectLayot) -> Result<Output, TmuxInterfaceError> {
+    pub fn select_layout(&self,
+                         select_layout: &SelectLayot
+                         ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if select_layout.spread.unwrap_or(false) { args.push(E_KEY); }
         if select_layout.next.unwrap_or(false) { args.push(n_KEY); }
@@ -1287,7 +1307,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-window [-lnpT] [-t target-window]
     /// (alias: selectw)
     /// ```
-    pub fn select_window(&self, select_window: &SelectWindow) -> Result<Output, TmuxInterfaceError> {
+    pub fn select_window(&self,
+                         select_window: &SelectWindow
+                         ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if select_window.last.unwrap_or(false) { args.push(l_KEY); }
         if select_window.next.unwrap_or(false) { args.push(n_KEY); }
