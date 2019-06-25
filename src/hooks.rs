@@ -58,7 +58,10 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux show-hooks [-g] [-t target-session]
     /// ```
-    pub fn show_hooks(&self, global: Option<bool>, target_session: Option<&str>) -> Result<Output, TmuxInterfaceError> {
+    pub fn show_hooks(&self,
+                      global: Option<bool>,
+                      target_session: Option<&str>
+                      ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if global.unwrap_or(false) { args.push(g_KEY); }
         target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
