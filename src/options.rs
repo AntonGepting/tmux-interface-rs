@@ -1,5 +1,6 @@
 use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
+use std::process::Output;
 
 
 /// # Manual
@@ -107,7 +108,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-option [-aFgoqsuw] [-t target-session | target-window] option value
     /// (alias: set)
     /// ```
-    pub fn set_option(&self, set_option: &SetOption) -> Result<bool, TmuxInterfaceError> {
+    pub fn set_option(&self, set_option: &SetOption) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if set_option.append.unwrap_or(false) { args.push(a_KEY); }
         if set_option.format.unwrap_or(false) { args.push(F_KEY); }
@@ -121,7 +122,7 @@ impl<'a> TmuxInterface<'a> {
         args.push(set_option.option);
         args.push(set_option.value);
         let output = self.subcommand(TmuxInterface::SET_OPTION, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -131,7 +132,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-window-option [-aFgoqu] [-t target-window] option value
     /// (alias: setw)
     /// ```
-    pub fn set_window_option(&self, set_window_option: &SetWindowOption) -> Result<bool, TmuxInterfaceError> {
+    pub fn set_window_option(&self, set_window_option: &SetWindowOption) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if set_window_option.append.unwrap_or(false) { args.push(a_KEY); }
         if set_window_option.format.unwrap_or(false) { args.push(F_KEY); }
@@ -143,10 +144,10 @@ impl<'a> TmuxInterface<'a> {
         args.push(set_window_option.option);
         args.push(set_window_option.value);
         let output = self.subcommand(TmuxInterface::SET_WINDOW_OPTION, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
-
+    // XXX: better result type?
     /// # Manual
     ///
     /// ```text
@@ -180,14 +181,14 @@ impl<'a> TmuxInterface<'a> {
                                only_value: Option<bool>,
                                target_window: Option<&str>,
                                option: Option<&str>
-                               ) -> Result<bool, TmuxInterfaceError> {
+                               ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if global.unwrap_or(false) { args.push(g_KEY); }
         if only_value.unwrap_or(false) { args.push(v_KEY); }
         target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         option.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::SHOW_WINDOW_OPTIONS, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
