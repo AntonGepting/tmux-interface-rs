@@ -132,7 +132,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-window-option [-aFgoqu] [-t target-window] option value
     /// (alias: setw)
     /// ```
-    pub fn set_window_option(&self, set_window_option: &SetWindowOption) -> Result<Output, TmuxInterfaceError> {
+    pub fn set_window_option(&self,
+                             set_window_option: &SetWindowOption
+                             ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if set_window_option.append.unwrap_or(false) { args.push(a_KEY); }
         if set_window_option.format.unwrap_or(false) { args.push(F_KEY); }
