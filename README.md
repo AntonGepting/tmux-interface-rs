@@ -53,7 +53,7 @@ Principles:
 3. Functions can have max. 4 arguments, otherwise a structure will be used
 
 
-## Folder Structure
+## Directory Structure
 
 - [`src/`](src/) - crate sources
 
