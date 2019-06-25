@@ -1,3 +1,61 @@
+//! **tmux_interface** as a Rust library provides functionality to communicate with TMUX via CLI.
+//!
+//! Main purpose of the tmux_interface is to implement simple sending and recieving data mechanisms
+//! for some Rust application, using intercommunication with TMUX only via standard streams (stdin,
+//! stdout, stderr).
+//!
+//! This goal can be reached by splitting it into two separate tasks:
+//!
+//! 1. Providing wrapper functions for tmux subcommands (sending data). Wrapper functions are
+//! structured like in tmux manual in few next categories:
+//!     - Clients and Sessions
+//!     - Windows and Panes
+//!     - Key Bindings
+//!     - Options
+//!     - Hooks
+//!     - Global and Session Environment
+//!     - Status Line
+//!     - Buffers
+//!     - Miscellaneous
+//!
+//! 2. Parsing functions for tmux output as rust structures (recieving data). Parsing function are
+//! structured by objects they operate with:
+//!     - Sessions
+//!     - Session
+//!     - Windows
+//!     - Window
+//!     - Panes
+//!     - Pane
+//!     - ...
+//!     - Option
+//!
+//! Example:
+//!
+//! ```
+//! use crate::tmux_interface::TmuxInterface;
+//! use crate::tmux_interface::NewSession;
+//!
+//!
+//! fn main() {
+//!     let tmux = TmuxInterface::new();
+//!
+//!     let new_session = NewSession {
+//!         detached: Some(true),
+//!         session_name: Some("test_session_name1"),
+//!         ..Default::default()
+//!     };
+//!     tmux.new_session(&new_session).unwrap();
+//!
+//!     // or alternatively
+//!     let new_session = NewSession::new();
+//!     new_session.detached = Some(true);
+//!     new_session.session_name = Some("test_session_name2");
+//!     tmux.new_session(&new_session).unwrap();
+//! }
+//! ```
+//!
+
+
 pub mod tmux_interface;
 pub mod session;
 pub mod sessions;
