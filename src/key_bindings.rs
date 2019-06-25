@@ -1,5 +1,6 @@
 use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
+use std::process::Output;
 
 
 /// # Manual
@@ -65,7 +66,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux bind-key [-nr] [-T key-table] key command [arguments]
     /// (alias: bind)
     /// ```
-    pub fn bind_key(&self, bind_key: &BindKey) -> Result<bool, TmuxInterfaceError> {
+    pub fn bind_key(&self, bind_key: &BindKey) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if bind_key.root.unwrap_or(false) { args.push(n_KEY); }
         if bind_key.repeat.unwrap_or(false) { args.push(r_KEY); }
@@ -74,7 +75,7 @@ impl<'a> TmuxInterface<'a> {
         args.push(bind_key.command);
         bind_key.arguments.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::BIND_KEY, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -84,11 +85,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux list-keys [-T key-table]
     /// (alias: lsk)
     /// ```
-    pub fn list_keys(&self, key_table: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+    pub fn list_keys(&self, key_table: Option<&str>) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         key_table.and_then(|s| Some(args.extend_from_slice(&[T_KEY, &s])));
         let output = self.subcommand(TmuxInterface::LIST_KEYS, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -99,7 +100,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux send-keys [-lMRX] [-N repeat-count] [-t target-pane] key ...
     /// (alias: send)
     /// ```
-    pub fn send_keys(&self, send_keys: &SendKeys) -> Result<bool, TmuxInterfaceError> {
+    pub fn send_keys(&self, send_keys: &SendKeys) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if send_keys.disable_lookup.unwrap_or(false) { args.push(l_KEY); }
         if send_keys.mouse_event.unwrap_or(false) { args.push(M_KEY); }
@@ -117,7 +118,7 @@ impl<'a> TmuxInterface<'a> {
         args.append(&mut send_keys.key.clone());
         //args.push("C-m");
         let output = self.subcommand(TmuxInterface::SEND_KEYS, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -126,12 +127,12 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux send-prefix [-2] [-t target-pane]
     /// ```
-    pub fn send_prefix(&self, secondary: Option<bool>, target_pane: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+    pub fn send_prefix(&self, secondary: Option<bool>, target_pane: Option<&str>) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if secondary.unwrap_or(false) { args.push(_2_KEY); }
         target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::SEND_PREFIX, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -146,14 +147,14 @@ impl<'a> TmuxInterface<'a> {
                       root: Option<bool>,
                       key_table: Option<&str>,
                       key: &str
-                      ) -> Result<bool, TmuxInterfaceError> {
+                      ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if all.unwrap_or(false) { args.push(a_KEY); }
         if root.unwrap_or(false) { args.push(n_KEY); }
         key_table.and_then(|s| Some(args.extend_from_slice(&[T_KEY, &s])));
         args.push(key);
         let output = self.subcommand(TmuxInterface::UNBIND_KEY, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
