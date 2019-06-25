@@ -1,5 +1,6 @@
 use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
+use std::process::Output;
 
 
 /// # Manual
@@ -38,7 +39,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
     /// ```
-    pub fn command_prompt(&self, command_prompt: &CommandPrompt) -> Result<bool, TmuxInterfaceError> {
+    pub fn command_prompt(&self, command_prompt: &CommandPrompt) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if command_prompt.one_keypress.unwrap_or(false) { args.push(_1_KEY); }
         if command_prompt.on_input_change.unwrap_or(false) { args.push(i_KEY); }
@@ -47,7 +48,7 @@ impl<'a> TmuxInterface<'a> {
         command_prompt.target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         command_prompt.template.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::COMMAND_PROMPT, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -57,13 +58,13 @@ impl<'a> TmuxInterface<'a> {
     /// tmux confirm-before [-p prompt] [-t target-client] command
     /// (alias: confirm)
     /// ```
-    pub fn confirm_before(&self, prompt: Option<&str>, target_client: Option<&str>, command: &str) -> Result<bool, TmuxInterfaceError> {
+    pub fn confirm_before(&self, prompt: Option<&str>, target_client: Option<&str>, command: &str) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         prompt.and_then(|s| Some(args.extend_from_slice(&[p_KEY, &s])));
         target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         args.push(command);
         let output = self.subcommand(TmuxInterface::CONFIRM_BEFORE, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -74,14 +75,14 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: display)
     /// ```
     pub fn display_message(&self, print: Option<bool>, target_client: Option<&str>,
-                           target_pane: Option<&str>, message: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+                           target_pane: Option<&str>, message: Option<&str>) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if print.unwrap_or(false) { args.push(p_KEY); }
         target_client.and_then(|s| Some(args.extend_from_slice(&[c_KEY, s])));
         target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
         message.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::DISPLAY_MESSAGE, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
