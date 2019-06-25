@@ -1,5 +1,6 @@
 use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
+use std::process::Output;
 
 
 /// # Manual
@@ -42,11 +43,11 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux clock-mode [-t target-pane]
     /// ```
-    pub fn clock_mode(&self, target_pane: Option<&str>) -> Result<bool, TmuxInterfaceError> {
+    pub fn clock_mode(&self, target_pane: Option<&str>) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::CLOCK_MODE, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -56,7 +57,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux if-shell [-bF] [-t target-pane] shell-command command [command]
     /// (alias: if)
     /// ```
-    pub fn if_shell(&self, if_shell: &IfShell) -> Result<bool, TmuxInterfaceError> {
+    pub fn if_shell(&self, if_shell: &IfShell) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if if_shell.backgroud.unwrap_or(false) { args.push(b_KEY); }
         if if_shell.not_execute.unwrap_or(false) { args.push(F_KEY); }
@@ -65,7 +66,7 @@ impl<'a> TmuxInterface<'a> {
         args.push(if_shell.first_command);
         if_shell.second_command.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::IF_SHELL, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -75,9 +76,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux lock-server
     /// (alias: lock)
     /// ```
-    pub fn lock_server(&self) -> Result<bool, TmuxInterfaceError> {
+    pub fn lock_server(&self) -> Result<Output, TmuxInterfaceError> {
         let output = self.subcommand(TmuxInterface::LOCK_SERVER, &[])?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -91,13 +92,13 @@ impl<'a> TmuxInterface<'a> {
                      backgroud: Option<bool>,
                      target_pane: Option<&str>,
                      shell_command: &str
-                     ) -> Result<bool, TmuxInterfaceError> {
+                     ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if backgroud.unwrap_or(false) { args.push(b_KEY); }
         target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         args.push(shell_command);
         let output = self.subcommand(TmuxInterface::RUN_SHELL, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -112,14 +113,14 @@ impl<'a> TmuxInterface<'a> {
                     prevent_exit: Option<bool>,
                     unlock: Option<bool>,
                     channel: &str
-                    ) -> Result<bool, TmuxInterfaceError> {
+                    ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if lock.unwrap_or(false) { args.push(L_KEY); }
         if prevent_exit.unwrap_or(false) { args.push(S_KEY); }
         if unlock.unwrap_or(false) { args.push(U_KEY); }
         args.push(channel);
         let output = self.subcommand(TmuxInterface::WAIT_FOR, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
