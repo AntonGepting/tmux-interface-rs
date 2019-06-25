@@ -1,5 +1,6 @@
 use super::tmux_interface::*;
 use super::tmux_interface_error::TmuxInterfaceError;
+use std::process::Output;
 
 
 /// # Manual
@@ -38,7 +39,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-environment [-gru] [-t target-session] name [value]
     /// (alias: setenv)
     /// ```
-    pub fn set_environment(&self, set_environment: &SetEnvironment) -> Result<bool, TmuxInterfaceError> {
+    pub fn set_environment(&self, set_environment: &SetEnvironment) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if set_environment.global.unwrap_or(false) { args.push(g_KEY); }
         if set_environment.remove.unwrap_or(false) { args.push(r_KEY); }
@@ -47,7 +48,7 @@ impl<'a> TmuxInterface<'a> {
         args.push(set_environment.name);
         set_environment.value.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::SET_ENVIRONMENT, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
@@ -62,14 +63,14 @@ impl<'a> TmuxInterface<'a> {
                             shell_format: Option<bool>,
                             target_session: Option<&str>,
                             variable: Option<&str>
-                            ) -> Result<bool, TmuxInterfaceError> {
+                            ) -> Result<Output, TmuxInterfaceError> {
         let mut args: Vec<&str> = Vec::new();
         if global.unwrap_or(false) { args.push(g_KEY); }
         if shell_format.unwrap_or(false) { args.push(s_KEY); }
         target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         variable.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::SHOW_ENVIRONMENT, &args)?;
-        Ok(output.status.success())
+        Ok(output)
     }
 
 
