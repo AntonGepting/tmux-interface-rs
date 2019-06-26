@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.com/AntonGepting/tmux-interface-rs.svg?branch=master)](https://travis-ci.com/AntonGepting/tmux-interface-rs)
 [![Crates.io](https://img.shields.io/crates/v/tmux_interface.svg)](https://crates.io/crates/tmux_interface)
 [![Documentation](https://docs.rs/tmux_interface/badge.svg)](https://docs.rs/tmux_interface)
+[![dependency status](https://deps.rs/crate/tmux_interface/0.0.4/status.svg)](https://deps.rs/crate/tmux_interface/0.0.4)
 
 ## Description
 
