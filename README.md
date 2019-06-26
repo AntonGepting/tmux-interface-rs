@@ -44,14 +44,6 @@ and testing purposes. Do not use them in your Projects.
 ## Project Structure
 -->
 
-## Library Functions
-
-Principles:
-
-1. Function names and their grouping are inherited from tmux manual
-2. Function arguments and their optionality inherited from tmux manual
-3. Functions can have max. 4 arguments, otherwise a structure will be used
-
 
 ## Directory Structure
 

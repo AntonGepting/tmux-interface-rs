@@ -1,5 +1,7 @@
 //! **tmux_interface** as a Rust library provides functionality to communicate with TMUX via CLI.
 //!
+//! # Description
+//!
 //! Main purpose of the tmux_interface is to implement simple sending and recieving data mechanisms
 //! for some Rust application, using intercommunication with TMUX only via standard streams (stdin,
 //! stdout, stderr).
@@ -33,6 +35,11 @@
 //!     - ...
 //!     - [`TmuxOption`](crate::TmuxOption)
 //!
+//! # Library Functions
+//!
+//! 1. Function names and their grouping are inherited from tmux manual
+//! 2. Function arguments and their optionality inherited from tmux manual
+//! 3. Functions can have max. 4 arguments, otherwise a structure will be used
 //!
 //! # Examples
 //!
