@@ -27,7 +27,13 @@ tmux_interface is a rust language library for communication with TMUX via CLI.
 3. Use it's functions
     ```
     let tmux = TmuxInterface::new();
-    tmux.list_sessions();
+    let new_session = NewSession {
+        detached: Some(true),
+        session_name: Some("session_name"),
+        ..Default::default()
+    };
+    tmux.new_session(&new_session).unwrap();
+    tmux.kill_session(None, None, Some("session_name")).unwrap();
     ```
 
 
