@@ -8,28 +8,33 @@
 //!
 //! 1. Providing wrapper functions for tmux subcommands (sending data). Wrapper functions are
 //! structured like in tmux manual in few next categories:
-//!     - Clients and Sessions
-//!     - Windows and Panes
-//!     - Key Bindings
-//!     - Options
-//!     - Hooks
-//!     - Global and Session Environment
-//!     - Status Line
-//!     - Buffers
-//!     - Miscellaneous
+//!
+//!     - Clients and Sessions ([`clients_and_sessions`](crate::clients_and_sessions))
+//!     - Windows and Panes ([`windows_and_panes`](crate::windows_and_panes))
+//!     - Key Bindings ([`key_bindings`](crate::key_bindings))
+//!     - Options ([`options`](crate::options))
+//!     - Hooks ([`hooks`](crate::hooks))
+//!     - Global and Session Environment ([`global_and_session_environment`](crate::global_and_session_environment))
+//!     - Status Line ([`status_line`](crate::status_line))
+//!     - Buffers ([`buffers`](crate::buffers))
+//!     - Miscellaneous ([`miscellaneous`](crate::miscellaneous))
+//!
+//! Main structure is [`TmuxInterface`](crate::tmux_interface::TmuxInterface) wich has all these wrapper functions implementations.
 //!
 //! 2. Parsing functions for tmux output as rust structures (recieving data). Parsing function are
 //! structured by objects they operate with:
-//!     - Sessions
-//!     - Session
-//!     - Windows
-//!     - Window
-//!     - Panes
-//!     - Pane
-//!     - ...
-//!     - Option
 //!
-//! Example:
+//!     - [`Sessions`](crate::Sessions)
+//!     - [`Session`](crate::Session)
+//!     - [`Windows`](crate::Windows)
+//!     - [`Window`](crate::Window)
+//!     - [`Panes`](crate::Panes)
+//!     - [`Pane`](crate::Pane)
+//!     - ...
+//!     - [`TmuxOption`](crate::TmuxOption)
+//!
+//!
+//! # Examples
 //!
 //! ```
 //! use crate::tmux_interface::TmuxInterface;
@@ -45,14 +50,29 @@
 //!         ..Default::default()
 //!     };
 //!     tmux.new_session(&new_session).unwrap();
+//!     tmux.kill_session(None, None, Some("test_session_name1"));
 //!
 //!     // or alternatively
-//!     let new_session = NewSession::new();
+//!     let mut new_session = NewSession::new();
 //!     new_session.detached = Some(true);
 //!     new_session.session_name = Some("test_session_name2");
 //!     tmux.new_session(&new_session).unwrap();
+//!     tmux.kill_session(None, None, Some("test_session_name2"));
 //! }
 //! ```
+//!
+//!
+//! # Examples
+//!
+//! ```
+//! use crate::tmux_interface::Sessions;
+//!
+//!
+//! fn main() {
+//!     let sessions = Sessions::get().unwrap();
+//! }
+//! ```
+//!
 //!
 
 
