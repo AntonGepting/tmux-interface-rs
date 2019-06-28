@@ -111,7 +111,7 @@ and testing purposes. Do not use them in your Projects.
 - [`CHANGELOG.md`](CHANGELOG.md) - version history
 - [`Cargo.toml`](Cargo.toml) - crate configuration ([File Format](https://doc.rust-lang.org/cargo/reference/manifest.html))
 - [`.travis.yml`](.travis.yml) - travis CI configuration ([File Format](https://docs.travis-ci.com/user/tutorial/))
-- [`.editorconfig`](.editorconfig) - consisten conding style configuration ([File Format](https://editorconfig.org/#file-format-details))
+- [`.editorconfig`](.editorconfig) - consistent conding style configuration ([File Format](https://editorconfig.org/#file-format-details))
 
 
 ## License
