@@ -36,7 +36,7 @@ pub const WINDOW_VARS_REGEX_VEC: [(&str, &str); 24] = [
 
 // accordingly to tmux.h: Formats
 // XXX: check all types
-#[derive(Clone, Debug)]
+#[derive(Default, Clone, Debug)]
 pub struct Window {
     pub activity: Option<Duration>,
     pub activity_flag: Option<bool>,
@@ -62,38 +62,6 @@ pub struct Window {
     pub visible_layout: Option<String>,
     pub width: Option<usize>,
     pub zoomed_flag: Option<usize>
-}
-
-
-impl Default for Window {
-    fn default() -> Self {
-        Window {
-            activity: None,
-            activity_flag: None,
-            active: None,
-            bell_flag: None,
-            bigger: None,
-            end_flag: None,
-            flags: None,
-            format: None,
-            height: None,
-            id: None,
-            index: None,
-            last_flag: None,
-            layout: None,
-            linked: None,
-            name: None,
-            offset_x: None,
-            offset_y: None,
-            panes: None,
-            silence_flag: None,
-            stack_index: None,
-            start_flag: None,
-            visible_layout: None,
-            width: None,
-            zoomed_flag: None
-        }
-    }
 }
 
 

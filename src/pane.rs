@@ -40,7 +40,7 @@ pub const PANE_VARS_REGEX_VEC: [(&str, &str); 29] = [
 
 // accordingly to tmux.h: Formats
 // XXX: check all types
-#[derive(Clone, Debug)]
+#[derive(Default, Clone, Debug)]
 pub struct Pane {
     pub active: Option<bool>,
     pub at_bottom: Option<bool>,
@@ -71,43 +71,6 @@ pub struct Pane {
     pub top: Option<usize>,
     pub tty: Option<String>,
     pub width: Option<usize>
-}
-
-
-impl Default for Pane {
-    fn default() -> Self {
-        Pane {
-            active: None,
-            at_bottom: None,
-            at_left: None,
-            at_right: None,
-            at_top: None,
-            bottom: None,
-            current_command: None,
-            current_path: None,
-            dead: None,
-            dead_status: None,
-            format: None,
-            height: None,
-            id: None,
-            in_mode: None,
-            input_off: None,
-            index: None,
-            left: None,
-            mode: None,
-            pid: None,
-            pipe: None,
-            right: None,
-            search_string: None,
-            start_command: None,
-            synchronized: None,
-            tabs: None,
-            title: None,
-            top: None,
-            tty: None,
-            width: None
-        }
-    }
 }
 
 

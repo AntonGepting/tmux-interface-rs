@@ -57,7 +57,7 @@ pub const SESSION_VARS_REGEX_VEC: [(&str, &str); 15] = [
 
 // accordingly to tmux.h: Formats
 // XXX: check all types
-#[derive(Clone, Debug)]
+#[derive(Default, Clone, Debug)]
 pub struct Session {
     pub alerts: Option<String>,
     pub attached: Option<usize>,
@@ -74,29 +74,6 @@ pub struct Session {
     pub name: Option<String>,
     pub stack: Option<String>,
     pub windows: Option<usize>,
-}
-
-
-impl Default for Session {
-    fn default() -> Self {
-        Session {
-            alerts: None,
-            attached: None,
-            activity: None,
-            created: None,
-            format: None,
-            last_attached: None,
-            group: None,
-            group_size: None,
-            group_list: None,
-            grouped: None,
-            id: None,
-            many_attached: None,
-            name: None,
-            stack: None,
-            windows: None,
-        }
-    }
 }
 
 
