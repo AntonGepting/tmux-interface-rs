@@ -76,7 +76,7 @@ pub struct Pane {
 
 impl Pane {
 
-    pub fn new() -> Pane {
+    pub fn new() -> Self {
         Default::default()
     }
 
