@@ -19,7 +19,7 @@ pub const WINDOW_VARS_REGEX_VEC: [(&str, &str); 24] = [
     ("window_id",             r"@(\d+)?"),
     ("window_index",          r"(\d+)?"),
     ("window_last_flag",      r"(\d+)?"),
-    ("window_layout",         r"([\w,\[\]]*)?"),
+    ("window_layout",         r"([\w,\[\]\{\}]*)?"),
     ("window_linked",         r"(\d+)?"),
     ("window_name",           r"(\w+)?"),
     ("window_offset_x",       r"(\w+)?"),
@@ -28,7 +28,7 @@ pub const WINDOW_VARS_REGEX_VEC: [(&str, &str); 24] = [
     ("window_silence_flag",   r"(\d+)?"),
     ("window_stack_index",    r"(\d+)?"),
     ("window_start_flag",     r"(\d+)?"),
-    ("window_visible_layout", r"([\w,\[\]]*)?"),
+    ("window_visible_layout", r"([\w,\[\]\{\}]*)?"),
     ("window_width",          r"(\d+)?"),
     ("window_zoomed_flag",    r"(\d+)?"),
 ];
@@ -67,7 +67,7 @@ pub struct Window {
 
 impl Window {
 
-    pub fn new() -> Window {
+    pub fn new() -> Self {
         Default::default()
     }
 
