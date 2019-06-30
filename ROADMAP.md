@@ -13,10 +13,10 @@ an improvment, an idea etc.
     - [x] Key Bindings
     - [x] Options
     - [x] Hooks
-    - [ ] Global and Session Environments
-    - [ ] Status Line
-    - [ ] Buffers
-    - [ ] Miscellaneous
+    - [x] Global and Session Environments
+    - [x] Status Line
+    - [x] Buffers
+    - [x] Miscellaneous
 - [ ] Documentation
     - [ ] Clients and Sessions
     - [ ] Windows and Panes
@@ -63,10 +63,13 @@ an improvment, an idea etc.
 - [ ] Function results and errors
 
 
-**tmux interface v0.0.2**
+**tmux interface v0.0.5**
 
 - [ ] Documentation for all existing functionality and items
 - [ ] All tmux functions output return in right way
+- [ ] No panics, no unwrap in lib functions
+- [ ] Error reporting num, enum, string like in std
+- [ ] Layout parser
 
 
 **tmux interface v0.0.1**
@@ -85,7 +88,6 @@ an improvment, an idea etc.
 
 
 # Wishlist
-- mb better error reporting (mb add enum)
 - mb function parameter names from tmux source?
 - mb tmux plugin for more options?
 - mb folder structure, separate tmux functions from parse functions
