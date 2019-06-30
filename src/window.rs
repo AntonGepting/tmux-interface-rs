@@ -77,81 +77,84 @@ impl Window {
         let regex_str = format!("^{}$", WINDOW_VARS_REGEX_VEC.iter()
                                 .map(|t| t.1).collect::<Vec<&str>>().join(WINDOW_VARS_SEPARATOR));
         let regex = Regex::new(&regex_str)?;
-        let caps = regex.captures(window_str).unwrap();
-        let mut window = Window::new();
-        if let Some(activity) = caps.get(1) {
-            window.activity = Some(Duration::from_millis(activity.as_str().parse()?));
+        if let Some(caps) = regex.captures(window_str) {
+            let mut window = Window::new();
+            if let Some(activity) = caps.get(1) {
+                window.activity = Some(Duration::from_millis(activity.as_str().parse()?));
+            }
+            if let Some(activity_flag) = caps.get(2) {
+                window.activity_flag = Some(activity_flag.as_str().parse::<usize>().map(|i| i == 1)?);
+            }
+            if let Some(active) = caps.get(3) {
+                window.active = Some(active.as_str().parse::<usize>().map(|i| i == 1)?);
+            }
+            if let Some(bell_flag) = caps.get(4) {
+                window.bell_flag = Some(bell_flag.as_str().parse::<usize>().map(|i| i == 1)?);
+            }
+            if let Some(bigger) = caps.get(5) {
+                window.bigger = Some(bigger.as_str().parse()?);
+            }
+            if let Some(end_flag) = caps.get(6) {
+                window.end_flag = Some(end_flag.as_str().parse::<usize>().map(|i| i == 1)?);
+            }
+            if let Some(flags) = caps.get(7) {
+                window.flags = Some(flags.as_str().parse()?);
+            }
+            if let Some(format) = caps.get(8) {
+                window.format = Some(format.as_str().parse()?);
+            }
+            if let Some(height) = caps.get(9) {
+                window.height = Some(height.as_str().parse()?);
+            }
+            if let Some(id) = caps.get(10) {
+                window.id = Some(id.as_str().parse()?);
+            }
+            if let Some(index) = caps.get(11) {
+                window.index = Some(index.as_str().parse()?);
+            }
+            if let Some(last_flag) = caps.get(12) {
+                window.last_flag = Some(last_flag.as_str().parse()?);
+            }
+            if let Some(layout) = caps.get(13) {
+                window.layout = Some(layout.as_str().parse()?);
+            }
+            if let Some(linked) = caps.get(14) {
+                window.linked = Some(linked.as_str().parse()?);
+            }
+            if let Some(name) = caps.get(15) {
+                window.name = Some(name.as_str().parse()?);
+            }
+            if let Some(offset_x) = caps.get(16) {
+                window.offset_x = Some(offset_x.as_str().parse()?);
+            }
+            if let Some(offset_y) = caps.get(17) {
+                window.offset_y = Some(offset_y.as_str().parse()?);
+            }
+            if let Some(panes) = caps.get(18) {
+                window.panes = Some(panes.as_str().parse()?);
+            }
+            if let Some(silence_flag) = caps.get(19) {
+                window.silence_flag = Some(silence_flag.as_str().parse()?);
+            }
+            if let Some(stack_index) = caps.get(20) {
+                window.stack_index = Some(stack_index.as_str().parse()?);
+            }
+            if let Some(start_flag) = caps.get(21) {
+                window.start_flag = Some(start_flag.as_str().parse()?);
+            }
+            if let Some(visible_layout) = caps.get(22) {
+                window.visible_layout = Some(visible_layout.as_str().parse()?);
+            }
+            if let Some(width) = caps.get(23) {
+                window.width = Some(width.as_str().parse()?);
+            }
+            if let Some(zoomed_flag) = caps.get(24) {
+                window.zoomed_flag = Some(zoomed_flag.as_str().parse()?);
+            }
+            Ok(window)
+        } else {
+            Err(TmuxInterfaceError::new("regex not matched"))
         }
-        if let Some(activity_flag) = caps.get(2) {
-            window.activity_flag = Some(activity_flag.as_str().parse::<usize>().map(|i| i == 1)?);
-        }
-        if let Some(active) = caps.get(3) {
-            window.active = Some(active.as_str().parse::<usize>().map(|i| i == 1)?);
-        }
-        if let Some(bell_flag) = caps.get(4) {
-            window.bell_flag = Some(bell_flag.as_str().parse::<usize>().map(|i| i == 1)?);
-        }
-        if let Some(bigger) = caps.get(5) {
-            window.bigger = Some(bigger.as_str().parse()?);
-        }
-        if let Some(end_flag) = caps.get(6) {
-            window.end_flag = Some(end_flag.as_str().parse::<usize>().map(|i| i == 1)?);
-        }
-        if let Some(flags) = caps.get(7) {
-            window.flags = Some(flags.as_str().parse()?);
-        }
-        if let Some(format) = caps.get(8) {
-            window.format = Some(format.as_str().parse()?);
-        }
-        if let Some(height) = caps.get(9) {
-            window.height = Some(height.as_str().parse()?);
-        }
-        if let Some(id) = caps.get(10) {
-            window.id = Some(id.as_str().parse()?);
-        }
-        if let Some(index) = caps.get(11) {
-            window.index = Some(index.as_str().parse()?);
-        }
-        if let Some(last_flag) = caps.get(12) {
-            window.last_flag = Some(last_flag.as_str().parse()?);
-        }
-        if let Some(layout) = caps.get(13) {
-            window.layout = Some(layout.as_str().parse()?);
-        }
-        if let Some(linked) = caps.get(14) {
-            window.linked = Some(linked.as_str().parse()?);
-        }
-        if let Some(name) = caps.get(15) {
-            window.name = Some(name.as_str().parse()?);
-        }
-        if let Some(offset_x) = caps.get(16) {
-            window.offset_x = Some(offset_x.as_str().parse()?);
-        }
-        if let Some(offset_y) = caps.get(17) {
-            window.offset_y = Some(offset_y.as_str().parse()?);
-        }
-        if let Some(panes) = caps.get(18) {
-            window.panes = Some(panes.as_str().parse()?);
-        }
-        if let Some(silence_flag) = caps.get(19) {
-            window.silence_flag = Some(silence_flag.as_str().parse()?);
-        }
-        if let Some(stack_index) = caps.get(20) {
-            window.stack_index = Some(stack_index.as_str().parse()?);
-        }
-        if let Some(start_flag) = caps.get(21) {
-            window.start_flag = Some(start_flag.as_str().parse()?);
-        }
-        if let Some(visible_layout) = caps.get(22) {
-            window.visible_layout = Some(visible_layout.as_str().parse()?);
-        }
-        if let Some(width) = caps.get(23) {
-            window.width = Some(width.as_str().parse()?);
-        }
-        if let Some(zoomed_flag) = caps.get(24) {
-            window.zoomed_flag = Some(zoomed_flag.as_str().parse()?);
-        }
-        Ok(window)
     }
 
 }

@@ -90,55 +90,58 @@ impl Session {
         let regex_str = format!("^{}$", SESSION_VARS_REGEX_VEC.iter()
                                 .map(|t| t.1).collect::<Vec<&str>>().join(SESSION_VARS_SEPARATOR));
         let regex = Regex::new(&regex_str)?;
-        let caps = regex.captures(session_str).unwrap();
-        let mut session = Session::new();
+        if let Some(caps) = regex.captures(session_str) {
+            let mut session = Session::new();
 
-        // XXX: optimize?
-        if let Some(alerts) = caps.get(1) {
-            session.alerts = Some(alerts.as_str().parse()?);
+            // XXX: optimize?
+            if let Some(alerts) = caps.get(1) {
+                session.alerts = Some(alerts.as_str().parse()?);
+            }
+            if let Some(attached) = caps.get(2) {
+                session.attached = Some(attached.as_str().parse()?);
+            }
+            if let Some(activity) = caps.get(3) {
+                session.activity = Some(Duration::from_millis(activity.as_str().parse()?));
+            }
+            if let Some(created) = caps.get(4) {
+                session.created = Some(Duration::from_millis(created.as_str().parse()?));
+            }
+            if let Some(format) = caps.get(5) {
+                session.format = Some(format.as_str().parse()?);
+            }
+            if let Some(last_attached) = caps.get(6) {
+                session.last_attached = Some(Duration::from_millis(last_attached.as_str().parse()?));
+            }
+            if let Some(group) = caps.get(7) {
+                session.group = Some(group.as_str().parse()?);
+            }
+            if let Some(group_size) = caps.get(8) {
+                session.group_size = Some(group_size.as_str().parse()?);
+            }
+            if let Some(group_list) = caps.get(9) {
+                session.group_list = Some(group_list.as_str().parse()?);
+            }
+            if let Some(grouped) = caps.get(10) {
+                session.grouped = Some(grouped.as_str().parse()?);
+            }
+            if let Some(id) = caps.get(11) {
+                session.id = Some(id.as_str().parse()?);
+            }
+            if let Some(many_attached) = caps.get(12) {
+                session.many_attached = Some(many_attached.as_str().parse()?);
+            }
+            if let Some(name) = caps.get(13) {
+                session.name = Some(name.as_str().parse()?);
+            }
+            if let Some(stack) = caps.get(14) {
+                session.stack = Some(stack.as_str().parse()?);
+            }
+            if let Some(windows) = caps.get(15) {
+                session.windows = Some(windows.as_str().parse()?);
+            }
+            Ok(session)
+        } else {
+            Err(TmuxInterfaceError::new("regex not matched"))
         }
-        if let Some(attached) = caps.get(2) {
-            session.attached = Some(attached.as_str().parse()?);
-        }
-        if let Some(activity) = caps.get(3) {
-            session.activity = Some(Duration::from_millis(activity.as_str().parse()?));
-        }
-        if let Some(created) = caps.get(4) {
-            session.created = Some(Duration::from_millis(created.as_str().parse()?));
-        }
-        if let Some(format) = caps.get(5) {
-            session.format = Some(format.as_str().parse()?);
-        }
-        if let Some(last_attached) = caps.get(6) {
-            session.last_attached = Some(Duration::from_millis(last_attached.as_str().parse()?));
-        }
-        if let Some(group) = caps.get(7) {
-            session.group = Some(group.as_str().parse()?);
-        }
-        if let Some(group_size) = caps.get(8) {
-            session.group_size = Some(group_size.as_str().parse()?);
-        }
-        if let Some(group_list) = caps.get(9) {
-            session.group_list = Some(group_list.as_str().parse()?);
-        }
-        if let Some(grouped) = caps.get(10) {
-            session.grouped = Some(grouped.as_str().parse()?);
-        }
-        if let Some(id) = caps.get(11) {
-            session.id = Some(id.as_str().parse()?);
-        }
-        if let Some(many_attached) = caps.get(12) {
-            session.many_attached = Some(many_attached.as_str().parse()?);
-        }
-        if let Some(name) = caps.get(13) {
-            session.name = Some(name.as_str().parse()?);
-        }
-        if let Some(stack) = caps.get(14) {
-            session.stack = Some(stack.as_str().parse()?);
-        }
-        if let Some(windows) = caps.get(15) {
-            session.windows = Some(windows.as_str().parse()?);
-        }
-        Ok(session)
     }
 }
