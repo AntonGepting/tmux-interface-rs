@@ -13,7 +13,7 @@ impl Panes {
 
     pub fn get(target_window: &str) -> Result<Vec<Pane>, TmuxInterfaceError> {
         let tmux = TmuxInterface::new();
-        let lsp_format = PANE_VARS_REGEX_VEC.iter().map(|t| format!("#{{{}}}", t.0))
+        let lsp_format = PANE_VARS_REGEX_VEC.iter().map(|t| format!("#{{{}}}", t))
             .collect::<Vec<String>>().join(PANE_VARS_SEPARATOR);
         let panes_str = tmux.list_panes(false, false, Some(&lsp_format), Some(target_window))?;
         Panes::parse(&panes_str)
