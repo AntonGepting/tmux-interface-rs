@@ -111,6 +111,7 @@ impl<'a> TmuxInterface<'a> {
     const TMUX: &'static str = "tmux";
     const VERSION_VARS_SEPARATOR1: &'static str = " ";
     const VERSION_VARS_SEPARATOR2: &'static str = ".";
+    const VERSION_VARS_SEPARATOR3: &'static str = "\n";
 
     /// Create new `TmuxInterface` instance initialized with default values
     pub fn new() -> Self {
@@ -177,7 +178,8 @@ impl<'a> TmuxInterface<'a> {
         let name = version_vars[0].to_string();
         let version_vars: Vec<&str> = version_vars[1].split(TmuxInterface::VERSION_VARS_SEPARATOR2).collect();
         let major = version_vars[0].parse::<usize>()?;
-        let minor = version_vars[1].parse::<usize>()?;
+        let version_vars: Vec<&str> = version_vars[1].split(TmuxInterface::VERSION_VARS_SEPARATOR3).collect();
+        let minor = version_vars[0].parse::<usize>()?;
         Ok((name, major, minor))
     }
 }
