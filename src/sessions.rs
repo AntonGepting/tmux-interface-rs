@@ -13,7 +13,7 @@ impl Sessions {
 
     pub fn get() -> Result<Vec<Session>, TmuxInterfaceError> {
         let tmux = TmuxInterface::new();
-        let ls_format = SESSION_VARS_REGEX_VEC.iter().map(|t| format!("#{{{}}}", t.0))
+        let ls_format = SESSION_VARS_REGEX_VEC.iter().map(|t| format!("#{{{}}}", t))
             .collect::<Vec<String>>().join(SESSION_VARS_SEPARATOR);
         let sessions_str = tmux.list_sessions(Some(&ls_format))?;
         Sessions::parse(&sessions_str)
