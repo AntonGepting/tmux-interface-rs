@@ -76,30 +76,30 @@ impl Window {
         let window_vars: Vec<&str> = window_str.split(WINDOW_VARS_SEPARATOR).collect();
         let mut window = Window::new();
         // XXX: optimize?
-        window.activity = window_vars[2].parse().ok().map(Duration::from_millis);
-        window.activity_flag = window_vars[0].parse::<usize>().map(|i| i == 0).ok();
-        window.active = window_vars[0].parse::<usize>().map(|i| i == 1).ok();
-        window.bell_flag = window_vars[0].parse::<usize>().map(|i| i == 1).ok();
-        window.bigger = window_vars[0].parse().ok();
-        window.end_flag = window_vars[0].parse::<usize>().map(|i| i == 1).ok();
-        window.flags = window_vars[0].parse().ok();
-        window.format = window_vars[0].parse().ok();
-        window.height = window_vars[0].parse().ok();
-        window.id = window_vars[0].parse().ok();
-        window.index = window_vars[0].parse().ok();
-        window.last_flag = window_vars[0].parse().ok();
-        window.layout = window_vars[0].parse().ok();
-        window.linked = window_vars[0].parse().ok();
-        window.name = window_vars[0].parse().ok();
-        window.offset_x = window_vars[0].parse().ok();
-        window.offset_y = window_vars[0].parse().ok();
-        window.panes = window_vars[0].parse().ok();
-        window.silence_flag = window_vars[0].parse().ok();
-        window.stack_index = window_vars[0].parse().ok();
-        window.start_flag = window_vars[0].parse().ok();
-        window.visible_layout = window_vars[0].parse().ok();
-        window.width = window_vars[0].parse().ok();
-        window.zoomed_flag = window_vars[0].parse().ok();
+        window.activity = window_vars[0].parse().ok().map(Duration::from_millis);
+        window.activity_flag = window_vars[1].parse::<usize>().map(|i| i == 0).ok();
+        window.active = window_vars[2].parse::<usize>().map(|i| i == 1).ok();
+        window.bell_flag = window_vars[3].parse::<usize>().map(|i| i == 1).ok();
+        window.bigger = window_vars[4].parse().ok();
+        window.end_flag = window_vars[5].parse::<usize>().map(|i| i == 1).ok();
+        window.flags = window_vars[6].parse().ok();
+        window.format = window_vars[7].parse().ok();
+        window.height = window_vars[8].parse().ok();
+        window.id = window_vars[9][1..].parse().ok();
+        window.index = window_vars[10].parse().ok();
+        window.last_flag = window_vars[11].parse().ok();
+        window.layout = window_vars[12].parse().ok();
+        window.linked = window_vars[13].parse().ok();
+        window.name = window_vars[14].parse().ok();
+        window.offset_x = window_vars[15].parse().ok();
+        window.offset_y = window_vars[16].parse().ok();
+        window.panes = window_vars[17].parse().ok();
+        window.silence_flag = window_vars[18].parse().ok();
+        window.stack_index = window_vars[19].parse().ok();
+        window.start_flag = window_vars[20].parse().ok();
+        window.visible_layout = window_vars[21].parse().ok();
+        window.width = window_vars[22].parse().ok();
+        window.zoomed_flag = window_vars[23].parse().ok();
         Ok(window)
     }
 
