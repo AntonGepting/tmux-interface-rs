@@ -1,16 +1,12 @@
 use super::ShowOptions;
 use super::TmuxInterface;
 use super::tmux_interface_error::TmuxInterfaceError;
-use regex::Regex;
 
 
 pub struct TmuxOption;
 
 
 impl TmuxOption {
-
-
-    const GET_INT_OPTION_REGEX: &'static str = r"^(\d+)\n$";
 
 
     pub fn get_int(option_name: &str) -> Result<usize, TmuxInterfaceError>{
@@ -22,13 +18,8 @@ impl TmuxOption {
             ..Default::default()
         };
         let value = tmux.show_options(&show_options)?;
-        let regex = Regex::new(TmuxOption::GET_INT_OPTION_REGEX)?;
-        if let Some(caps) = regex.captures(&value) {
-            let int = caps[1].parse::<usize>()?;
-            return Ok(int);
-        } else {
-            return Err(TmuxInterfaceError::new("regex parse error"));
-        }
+        let int = value.parse::<usize>()?;
+        Ok(int)
     }
 
 
