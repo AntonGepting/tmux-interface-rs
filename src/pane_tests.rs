@@ -12,34 +12,6 @@ fn bool() {
 
 
 #[test]
-fn path_regex() {
-    use regex::Regex;
-    let regex = Regex::new(r"^(/[^/ ]*)+/?$").unwrap();
-    assert!(regex.is_match("/var/log/.asd"));
-    assert!(regex.is_match("/var/log"));
-    assert!(regex.is_match("/var/log/asdf-asdf"));
-    assert!(regex.is_match("/"));
-    assert!(regex.is_match("/home/user/Documents/rust/tmux-itf"));
-}
-
-
-#[test]
-fn tty_parse() {
-    use regex::Regex;
-    let regex = Regex::new(r"^([\w/]*)$").unwrap();
-    assert!(regex.is_match("/dev/pts/2"));
-}
-
-
-#[test]
-fn tabs_parse() {
-    use regex::Regex;
-    let regex = Regex::new(r"^([\w,]*)$").unwrap();
-    assert!(regex.is_match("8,16,24,32,40,48,56,64,72,80,88,96,104,112,120,128,136,144,152,160,168,176"));
-}
-
-
-#[test]
 fn parse() {
     use crate::Pane;
 

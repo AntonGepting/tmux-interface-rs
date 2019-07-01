@@ -22,6 +22,7 @@ fn subcommand() {
 fn version() {
     let tmux = TmuxInterface::new();
     let version = tmux.version().unwrap();
-    assert!(version.0 >= 1);
+    assert_eq!(version.0, "tmux");
+    assert!(version.1 >= 1);
     //assert!(version.1 >= 0);
 }

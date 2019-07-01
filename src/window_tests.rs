@@ -1,26 +1,4 @@
 #[test]
-fn layout_parse() {
-    use regex::Regex;
-    let regex = Regex::new(r"^'([\w,\[\]]*)?'$").unwrap();
-    assert!(regex.is_match("'c3bf,177x64,0,0,2'"));
-    assert!(regex.is_match("'8b65,177x64,0,0[177x46,0,0,1,177x17,0,47,4]'"));
-    assert!(regex.is_match("'8b65,177x64,0,0[177x46,0,0,1,177x17,0,47,4]'"));
-    assert!(regex.is_match("'8b65,177x64,0,0{177x46,0,0,1,177x17,0,47,4}'"));
-    assert!(regex.is_match("''"));
-}
-
-
-#[test]
-fn flags_parse() {
-    use regex::Regex;
-    let regex = Regex::new(r"^'([\w\*-]*)'$").unwrap();
-    assert!(regex.is_match("'*'"));
-    assert!(regex.is_match("'-'"));
-    assert!(regex.is_match("''"));
-}
-
-
-#[test]
 fn parse() {
     use crate::Window;
 
