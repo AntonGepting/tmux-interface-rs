@@ -46,18 +46,6 @@ impl From<io::Error> for TmuxInterfaceError {
 }
 
 
-//
-impl From<regex::Error> for TmuxInterfaceError {
-    fn from(_error: regex::Error) -> Self {
-        TmuxInterfaceError {
-            err_text: String::from("regex"),
-            err_type: 1
-            //message: error.to_string(),
-        }
-    }
-}
-
-
 impl From<std::num::ParseIntError> for TmuxInterfaceError {
     fn from(_error: std::num::ParseIntError) -> Self {
         TmuxInterfaceError {

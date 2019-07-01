@@ -1,11 +1,8 @@
 #![allow(non_upper_case_globals)]
 
-extern crate regex;
-
 
 use std::process::{Command, Output};
 use std::str;
-use regex::Regex;
 use super::tmux_interface_error::TmuxInterfaceError;
 
 
@@ -112,7 +109,8 @@ pub struct TmuxInterface<'a> {
 impl<'a> TmuxInterface<'a> {
 
     const TMUX: &'static str = "tmux";
-    const VERSION_STR_REGEX: &'static str = r"^tmux\s(\d+).(\d+)\n$";
+    const VERSION_VARS_SEPARATOR1: &'static str = " ";
+    const VERSION_VARS_SEPARATOR2: &'static str = ".";
 
     /// Create new `TmuxInterface` instance initialized with default values
     pub fn new() -> Self {
@@ -171,17 +169,15 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux -V
     /// ```
-    pub fn version(&self) -> Result<(usize, usize), TmuxInterfaceError> {
+    pub fn version(&self) -> Result<(String, usize, usize), TmuxInterfaceError> {
         let mut tmux = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
         let output = tmux.arg(V_KEY).output()?;
         let version_str = String::from_utf8_lossy(&output.stdout).to_string();
-        let regex = Regex::new(TmuxInterface::VERSION_STR_REGEX)?;
-        if let Some(cap) = regex.captures(&version_str) {
-            let major = cap[1].parse::<usize>()?;
-            let minor = cap[2].parse::<usize>()?;
-            Ok((major, minor))
-        } else {
-            Err(TmuxInterfaceError::new("cap"))
-        }
+        let version_vars: Vec<&str> = version_str.split(TmuxInterface::VERSION_VARS_SEPARATOR1).collect();
+        let name = version_vars[0].to_string();
+        let version_vars: Vec<&str> = version_vars[1].split(TmuxInterface::VERSION_VARS_SEPARATOR2).collect();
+        let major = version_vars[0].parse::<usize>()?;
+        let minor = version_vars[1].parse::<usize>()?;
+        Ok((name, major, minor))
     }
 }
