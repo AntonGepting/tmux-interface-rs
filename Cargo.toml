@@ -12,4 +12,3 @@ repository = "https://github.com/AntonGepting/tmux-interface-rs"
 
 
 [dependencies]
-regex = "1.1.6"
