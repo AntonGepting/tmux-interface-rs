@@ -84,6 +84,28 @@ impl Session {
     }
 
 
+    //pub fn parse2(session_str: &str) -> Result<Session, TmuxInterfaceError> {
+        //let session_vars: Vec<&str> = session_str.split(SESSION_VARS_SEPARATOR).collect();
+        //let mut session = Session::new();
+        //session.alerts = session_vars[0].parse().ok();
+        //session.attached = session_vars[1].parse().ok();
+        //session.activity = session_vars[2].parse().ok().map(Duration::from_millis);
+        //session.created = session_vars[3].parse().ok().map(Duration::from_millis);
+        //session.format = session_vars[4].parse().ok();
+        //session.last_attached = session_vars[5].parse().ok().map(Duration::from_millis);
+        //session.group = session_vars[6].parse().ok();
+        //session.group_size = session_vars[7].parse().ok();
+        //session.group_list = session_vars[8].parse().ok();
+        //session.grouped = session_vars[9].parse().ok();
+        //session.id = session_vars[10].parse().ok();
+        //session.many_attached = session_vars[11].parse().ok();
+        //session.name = session_vars[12].parse().ok();
+        //session.stack = session_vars[13].parse().ok();
+        //session.windows = session_vars[14].parse().ok();
+        //Ok(session)
+    //}
+
+
     // XXX: mb deserialize?
     // XXX: mb callback
     pub fn parse(session_str: &str) -> Result<Session, TmuxInterfaceError> {
@@ -94,51 +116,27 @@ impl Session {
         let mut session = Session::new();
 
         // XXX: optimize?
-        if let Some(alerts) = caps.get(1) {
-            session.alerts = Some(alerts.as_str().parse()?);
-        }
-        if let Some(attached) = caps.get(2) {
-            session.attached = Some(attached.as_str().parse()?);
-        }
-        if let Some(activity) = caps.get(3) {
-            session.activity = Some(Duration::from_millis(activity.as_str().parse()?));
-        }
-        if let Some(created) = caps.get(4) {
-            session.created = Some(Duration::from_millis(created.as_str().parse()?));
-        }
-        if let Some(format) = caps.get(5) {
-            session.format = Some(format.as_str().parse()?);
-        }
-        if let Some(last_attached) = caps.get(6) {
-            session.last_attached = Some(Duration::from_millis(last_attached.as_str().parse()?));
-        }
-        if let Some(group) = caps.get(7) {
-            session.group = Some(group.as_str().parse()?);
-        }
-        if let Some(group_size) = caps.get(8) {
-            session.group_size = Some(group_size.as_str().parse()?);
-        }
-        if let Some(group_list) = caps.get(9) {
-            session.group_list = Some(group_list.as_str().parse()?);
-        }
-        if let Some(grouped) = caps.get(10) {
-            session.grouped = Some(grouped.as_str().parse()?);
-        }
-        if let Some(id) = caps.get(11) {
-            session.id = Some(id.as_str().parse()?);
-        }
-        if let Some(many_attached) = caps.get(12) {
-            session.many_attached = Some(many_attached.as_str().parse()?);
-        }
-        if let Some(name) = caps.get(13) {
-            session.name = Some(name.as_str().parse()?);
-        }
-        if let Some(stack) = caps.get(14) {
-            session.stack = Some(stack.as_str().parse()?);
-        }
-        if let Some(windows) = caps.get(15) {
-            session.windows = Some(windows.as_str().parse()?);
-        }
+        session.alerts = caps.get(1).and_then(|s| s.as_str().parse().ok());
+        session.attached = caps.get(2).and_then(|s| s.as_str().parse().ok());
+        session.activity = caps.get(3)
+            .and_then(|s| s.as_str().parse().ok())
+            .and_then(|u| Some(Duration::from_millis(u)));
+        session.created = caps.get(4)
+            .and_then(|s| s.as_str().parse().ok())
+            .and_then(|u| Some(Duration::from_millis(u)));
+        session.format = caps.get(5).and_then(|s| s.as_str().parse().ok());
+        session.last_attached = caps.get(6)
+            .and_then(|s| s.as_str().parse().ok())
+            .and_then(|u| Some(Duration::from_millis(u)));
+        session.group = caps.get(7).and_then(|s| s.as_str().parse().ok());
+        session.group_size = caps.get(8).and_then(|s| s.as_str().parse().ok());
+        session.group_list = caps.get(9).and_then(|s| s.as_str().parse().ok());
+        session.grouped = caps.get(10).and_then(|s| s.as_str().parse().ok());
+        session.id = caps.get(11).and_then(|s| s.as_str().parse().ok());
+        session.many_attached = caps.get(12).and_then(|s| s.as_str().parse().ok());
+        session.name = caps.get(13).and_then(|s| s.as_str().parse().ok());
+        session.stack = caps.get(14).and_then(|s| s.as_str().parse().ok());
+        session.windows = caps.get(15).and_then(|s| s.as_str().parse().ok());
         Ok(session)
     }
 }
