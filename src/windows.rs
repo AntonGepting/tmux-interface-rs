@@ -13,7 +13,7 @@ impl Windows {
 
     pub fn get(target_session: &str) -> Result<Vec<Window>, TmuxInterfaceError> {
         let tmux = TmuxInterface::new();
-        let lsw_format = WINDOW_VARS_REGEX_VEC.iter().map(|t| format!("#{{{}}}", t.0))
+        let lsw_format = WINDOW_VARS_REGEX_VEC.iter().map(|t| format!("#{{{}}}", t))
             .collect::<Vec<String>>().join(WINDOW_VARS_SEPARATOR);
         let windows_str = tmux.list_windows(false, Some(&lsw_format), Some(target_session))?;
         Windows::parse(&windows_str)
