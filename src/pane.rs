@@ -82,39 +82,39 @@ impl Pane {
 
     // XXX: mb serde, deserialize?
     pub fn parse(pane_str: &str) -> Result<Pane, TmuxInterfaceError> {
-        let pane_vars: Vec<&str> = pane_str.split(PANE_VARS_SEPARATOR).collect();
-        let mut pane = Pane::new();
+        let pv: Vec<&str> = pane_str.split(PANE_VARS_SEPARATOR).collect();
+        let mut p = Pane::new();
         // XXX: optimize?
-        pane.active = pane_vars[0].parse::<usize>().map(|i| i == 0).ok();
-        pane.at_bottom = pane_vars[1].parse::<usize>().map(|i| i == 1).ok();
-        pane.at_left = pane_vars[2].parse::<usize>().map(|i| i == 1).ok();
-        pane.at_right = pane_vars[3].parse::<usize>().map(|i| i == 1).ok();
-        pane.at_top = pane_vars[4].parse::<usize>().map(|i| i == 1).ok();
-        pane.bottom = pane_vars[5].parse().ok();
-        pane.current_command = pane_vars[6].parse().ok();
-        pane.current_path = pane_vars[7].parse().ok();
-        pane.dead = pane_vars[8].parse::<usize>().map(|i| i == 1).ok();
-        pane.dead_status = pane_vars[9].parse().ok();
-        pane.format = pane_vars[10].parse::<usize>().map(|i| i == 1).ok();
-        pane.height = pane_vars[11].parse().ok();
-        pane.id = pane_vars[12][1..].parse().ok();
-        pane.in_mode = pane_vars[12].parse().ok();
-        pane.input_off = pane_vars[14].parse().ok();
-        pane.index = pane_vars[15].parse().ok();
-        pane.left = pane_vars[16].parse().ok();
-        pane.mode = pane_vars[17].parse().ok();
-        pane.pid = pane_vars[18].parse().ok();
-        pane.pipe = pane_vars[19].parse().ok();
-        pane.right = pane_vars[20].parse().ok();
-        pane.search_string = pane_vars[21].parse().ok();
-        pane.start_command = pane_vars[22].parse().ok();
-        pane.synchronized = pane_vars[23].parse().ok();
-        pane.tabs = pane_vars[24].parse().ok();
-        pane.title = pane_vars[25].parse().ok();
-        pane.top = pane_vars[26].parse().ok();
-        pane.tty = pane_vars[27].parse().ok();
-        pane.width = pane_vars[28].parse().ok();
-        Ok(pane)
+        if !pv[0].is_empty() { p.active = pv[0].parse::<usize>().map(|i| i == 0).ok(); }
+        if !pv[1].is_empty() { p.at_bottom = pv[1].parse::<usize>().map(|i| i == 1).ok(); }
+        if !pv[2].is_empty() { p.at_left = pv[2].parse::<usize>().map(|i| i == 1).ok(); }
+        if !pv[3].is_empty() { p.at_right = pv[3].parse::<usize>().map(|i| i == 1).ok(); }
+        if !pv[4].is_empty() { p.at_top = pv[4].parse::<usize>().map(|i| i == 1).ok(); }
+        if !pv[5].is_empty() { p.bottom = pv[5].parse().ok(); }
+        if !pv[6].is_empty() { p.current_command = pv[6].parse().ok(); }
+        if !pv[7].is_empty() { p.current_path = pv[7].parse().ok(); }
+        if !pv[8].is_empty() { p.dead = pv[8].parse::<usize>().map(|i| i == 1).ok(); }
+        if !pv[9].is_empty() { p.dead_status = pv[9].parse().ok(); }
+        if !pv[10].is_empty() { p.format = pv[10].parse::<usize>().map(|i| i == 1).ok(); }
+        if !pv[11].is_empty() { p.height = pv[11].parse().ok(); }
+        if !pv[12].is_empty() { p.id = pv[12][1..].parse().ok(); }
+        if !pv[13].is_empty() { p.in_mode = pv[12].parse().ok(); }
+        if !pv[14].is_empty() { p.input_off = pv[14].parse().ok(); }
+        if !pv[15].is_empty() { p.index = pv[15].parse().ok(); }
+        if !pv[16].is_empty() { p.left = pv[16].parse().ok(); }
+        if !pv[17].is_empty() { p.mode = pv[17].parse().ok(); }
+        if !pv[18].is_empty() { p.pid = pv[18].parse().ok(); }
+        if !pv[19].is_empty() { p.pipe = pv[19].parse().ok(); }
+        if !pv[20].is_empty() { p.right = pv[20].parse().ok(); }
+        if !pv[21].is_empty() { p.search_string = pv[21].parse().ok(); }
+        if !pv[22].is_empty() { p.start_command = pv[22].parse().ok(); }
+        if !pv[23].is_empty() { p.synchronized = pv[23].parse().ok(); }
+        if !pv[24].is_empty() { p.tabs = pv[24].parse().ok(); }
+        if !pv[25].is_empty() { p.title = pv[25].parse().ok(); }
+        if !pv[26].is_empty() { p.top = pv[26].parse().ok(); }
+        if !pv[27].is_empty() { p.tty = pv[27].parse().ok(); }
+        if !pv[28].is_empty() { p.width = pv[28].parse().ok(); }
+        Ok(p)
     }
 
 }

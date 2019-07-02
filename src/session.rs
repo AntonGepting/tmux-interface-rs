@@ -56,7 +56,7 @@ pub const SESSION_VARS_REGEX_VEC: [&str; 15] = [
 
 // accordingly to tmux.h: Formats
 // XXX: check all types
-#[derive(Default, Clone, Debug)]
+#[derive(Default, PartialEq, Clone, Debug)]
 pub struct Session {
     pub alerts: Option<String>,
     pub attached: Option<usize>,
@@ -86,25 +86,25 @@ impl Session {
     // XXX: mb deserialize?
     // XXX: mb callback
     pub fn parse(session_str: &str) -> Result<Session, TmuxInterfaceError> {
-        let session_vars: Vec<&str> = session_str.split(SESSION_VARS_SEPARATOR).collect();
-        let mut session = Session::new();
+        let sv: Vec<&str> = session_str.split(SESSION_VARS_SEPARATOR).collect();
+        let mut s = Session::new();
         // XXX: optimize?
-        session.alerts = session_vars[0].parse().ok();
-        session.attached = session_vars[1].parse().ok();
-        session.activity = session_vars[2].parse().ok().map(Duration::from_millis);
-        session.created = session_vars[3].parse().ok().map(Duration::from_millis);
-        session.format = session_vars[4].parse().ok();
-        session.last_attached = session_vars[5].parse().ok().map(Duration::from_millis);
-        session.group = session_vars[6].parse().ok();
-        session.group_size = session_vars[7].parse().ok();
-        session.group_list = session_vars[8].parse().ok();
-        session.grouped = session_vars[9].parse().ok();
-        session.id = session_vars[10][1..].parse().ok(); // skip '$' char
-        session.many_attached = session_vars[11].parse().ok();
-        session.name = session_vars[12].parse().ok();
-        session.stack = session_vars[13].parse().ok();
-        session.windows = session_vars[14].parse().ok();
-        Ok(session)
+        if !sv[0].is_empty() { s.alerts = sv[0].parse().ok(); }
+        if !sv[1].is_empty() { s.attached = sv[1].parse().ok(); }
+        if !sv[2].is_empty() { s.activity = sv[2].parse().ok().map(Duration::from_millis); }
+        if !sv[3].is_empty() { s.created = sv[3].parse().ok().map(Duration::from_millis); }
+        if !sv[4].is_empty() { s.format = sv[4].parse().ok(); }
+        if !sv[5].is_empty() { s.last_attached = sv[5].parse().ok().map(Duration::from_millis); }
+        if !sv[6].is_empty() { s.group = sv[6].parse().ok(); }
+        if !sv[7].is_empty() { s.group_size = sv[7].parse().ok(); }
+        if !sv[8].is_empty() { s.group_list = sv[8].parse().ok(); }
+        if !sv[9].is_empty() { s.grouped = sv[9].parse().ok(); }
+        if !sv[10].is_empty() { s.id = sv[10][1..].parse().ok(); } // skip '$' char
+        if !sv[11].is_empty() { s.many_attached = sv[11].parse().ok(); }
+        if !sv[12].is_empty() { s.name = sv[12].parse().ok(); }
+        if !sv[13].is_empty() { s.stack = sv[13].parse().ok(); }
+        if !sv[14].is_empty() { s.windows = sv[14].parse().ok(); }
+        Ok(s)
     }
 
 }
