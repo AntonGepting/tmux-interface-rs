@@ -1,5 +1,4 @@
 use crate::TmuxInterface;
-use crate::Version;
 
 
 #[test]
