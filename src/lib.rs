@@ -101,6 +101,7 @@ pub mod buffers;
 pub mod global_and_session_environment;
 pub mod miscellaneous;
 pub mod tmux_option;
+pub mod version;
 
 
 pub use self::tmux_interface::TmuxInterface;
@@ -143,6 +144,7 @@ pub use self::window::Window;
 pub use self::windows::Windows;
 pub use self::pane::Pane;
 pub use self::panes::Panes;
+pub use self::version::Version;
 
 pub use self::tmux_interface_error::TmuxInterfaceError;
 
@@ -157,3 +159,4 @@ mod pane_tests;
 mod panes_tests;
 //mod options_tests;
 mod tmux_option_tests;
+mod version_tests;

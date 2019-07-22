@@ -3,7 +3,8 @@
 
 use std::process::{Command, Output};
 use std::str;
-use super::tmux_interface_error::TmuxInterfaceError;
+use crate::TmuxInterfaceError;
+use crate::Version;
 
 
 pub const _1_KEY: &str = "-1";
@@ -67,7 +68,7 @@ pub const X_KEY: &str = "-X";
 pub const Z_KEY: &str = "-Z";
 
 
-pub const CC_KEY: &str = "-C";
+pub const CC_KEY: &str = "-CC";
 
 
 // XXX: mb also add_env, clear_env, remove_env for std::process::Command?
@@ -109,9 +110,6 @@ pub struct TmuxInterface<'a> {
 impl<'a> TmuxInterface<'a> {
 
     const TMUX: &'static str = "tmux";
-    const VERSION_VARS_SEPARATOR1: &'static str = " ";
-    const VERSION_VARS_SEPARATOR2: &'static str = ".";
-    const VERSION_VARS_SEPARATOR3: &'static str = "\n";
 
     /// Create new `TmuxInterface` instance initialized with default values
     pub fn new() -> Self {
@@ -170,16 +168,11 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux -V
     /// ```
-    pub fn version(&self) -> Result<(String, usize, usize), TmuxInterfaceError> {
+    pub fn version(&self) -> Result<Version, TmuxInterfaceError> {
         let mut tmux = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
         let output = tmux.arg(V_KEY).output()?;
         let version_str = String::from_utf8_lossy(&output.stdout).to_string();
-        let version_vars: Vec<&str> = version_str.split(TmuxInterface::VERSION_VARS_SEPARATOR1).collect();
-        let name = version_vars[0].to_string();
-        let version_vars: Vec<&str> = version_vars[1].split(TmuxInterface::VERSION_VARS_SEPARATOR2).collect();
-        let major = version_vars[0].parse::<usize>()?;
-        let version_vars: Vec<&str> = version_vars[1].split(TmuxInterface::VERSION_VARS_SEPARATOR3).collect();
-        let minor = version_vars[0].parse::<usize>()?;
-        Ok((name, major, minor))
+        let version = Version::from_str(&version_str)?;
+        Ok(version)
     }
 }

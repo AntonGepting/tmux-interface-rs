@@ -1,4 +1,5 @@
-use crate::tmux_interface::TmuxInterface;
+use crate::TmuxInterface;
+use crate::Version;
 
 
 #[test]
@@ -22,7 +23,6 @@ fn subcommand() {
 fn version() {
     let tmux = TmuxInterface::new();
     let version = tmux.version().unwrap();
-    assert_eq!(version.0, "tmux");
-    assert!(version.1 >= 1);
-    //assert!(version.1 >= 0);
+    assert_eq!(version.prog_name, "tmux");
+    assert!(version.major >= 1);
 }
