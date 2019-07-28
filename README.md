@@ -86,6 +86,7 @@ and testing purposes. Do not use them in your Projects.
         - [`panes.rs`](src/panes.rs) - parse a panes list
         - [`pane.rs`](src/pane.rs) - parse a pane
         - [`tmux_option.rs`](src/tmux_option.rs) - parse an option
+        - [`version.rs`](src/version.rs) - parse version response
 
     5. Unit tests for parsing functions:
 
@@ -96,6 +97,7 @@ and testing purposes. Do not use them in your Projects.
         - [`panes_tests.rs`](src/panes_tests.rs)
         - [`pane_tests.rs`](src/pane_tests.rs)
         - [`tmux_option_tests.rs`](src/tmux_option_tests.rs)
+        - [`version_tests.rs`](src/version_tests.rs)
 
 - [`tests/`](tests/) - crate integration tests (multiple functions):
 
