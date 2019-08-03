@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "test sessions"
+echo "tmux ls -F \"...\""
 echo "========================================================================="
 tmux ls -F "#{session_alerts}:#{session_attached}:#{session_activity}:\
 #{session_created}:#{session_format}:#{session_last_attached}:#{session_group}:\
@@ -8,7 +8,7 @@ tmux ls -F "#{session_alerts}:#{session_attached}:#{session_activity}:\
 #{session_many_attached}:#{session_name}:#{session_stack}:#{session_windows}"
 
 
-echo "test windows"
+echo "tmux list-windows -a -F \"...\""
 echo "========================================================================="
 tmux lsw -a -F "#{window_activity}'#{window_activity_flag}'#{window_active}'\
 #{window_bell_flag}'#{window_bigger}'#{window_end_flag}'#{window_flags}'\
@@ -19,7 +19,7 @@ tmux lsw -a -F "#{window_activity}'#{window_activity_flag}'#{window_active}'\
 #{window_width}'#{window_zoomed_flag}"
 
 
-echo "test panes"
+echo "tmux list-panes -a -F \"...\""
 echo "========================================================================="
 tmux lsp -a -F "#{pane_active}'#{pane_at_bottom}'#{pane_at_left}'\
 #{pane_at_right}'#{pane_at_top}'#{pane_bottom}'#{pane_current_command}'\
