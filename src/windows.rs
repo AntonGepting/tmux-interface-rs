@@ -23,7 +23,7 @@ impl Windows {
     pub fn parse(windows_str: &str) -> Result<Vec<Window>, TmuxInterfaceError> {
         let mut windows: Vec<Window> = Vec::new();
         for line in windows_str.lines() {
-            windows.push(Window::parse(line)?);
+            windows.push(line.parse()?);
         }
         Ok(windows)
     }

@@ -22,7 +22,7 @@ impl Panes {
     pub fn parse(panes_str: &str) -> Result<Vec<Pane>, TmuxInterfaceError> {
         let mut panes: Vec<Pane> = Vec::new();
         for line in panes_str.lines() {
-            panes.push(Pane::parse(line)?);
+            panes.push(line.parse()?);
         }
         Ok(panes)
     }

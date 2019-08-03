@@ -29,7 +29,7 @@ fn from_str() {
     ];
 
     for example in examples {
-        let version = Version::from_str(example).unwrap();
+        let version: Version = example.parse().unwrap();
         assert_eq!(version.prog_name, "tmux");
         //assert!(version.major >= 0);
         //assert!(version.minor >= 0);

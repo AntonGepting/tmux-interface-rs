@@ -1,4 +1,5 @@
 use crate::TmuxInterfaceError;
+use std::str::FromStr;
 
 
 #[derive(PartialEq, Debug, Clone)]
@@ -20,13 +21,10 @@ pub struct Version {
 }
 
 
-impl Version {
-    pub fn new() -> Self {
-        Default::default()
-    }
+impl FromStr for Version {
+    type Err = TmuxInterfaceError;
 
-
-    pub fn from_str(version_str: &str) -> Result<Self, TmuxInterfaceError> {
+    fn from_str(version_str: &str) -> Result<Self, Self::Err> {
         let mut version = Version::new();
         let mut chars = version_str.chars();
         let mut state = VersionState::ProgName;
@@ -79,6 +77,17 @@ impl Version {
         }
         Ok(version)
     }
+
+}
+
+
+
+
+impl Version {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
 }
 
 

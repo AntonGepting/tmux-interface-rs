@@ -1,5 +1,6 @@
 use std::time::Duration;
 use crate::TmuxInterfaceError;
+use std::str::FromStr;
 
 
 pub const SESSION_VARS_SEPARATOR: &str = ":";
@@ -76,17 +77,13 @@ pub struct Session {
 }
 
 
-impl Session {
-
-    pub fn new() -> Self {
-        Default::default()
-    }
-
+impl FromStr for Session {
+    type Err = TmuxInterfaceError;
 
     // XXX: mb deserialize?
     // XXX: mb callback
-    pub fn parse(session_str: &str) -> Result<Session, TmuxInterfaceError> {
-        let sv: Vec<&str> = session_str.split(SESSION_VARS_SEPARATOR).collect();
+    fn from_str(s: &str) -> Result<Session, TmuxInterfaceError> {
+        let sv: Vec<&str> = s.split(SESSION_VARS_SEPARATOR).collect();
         let mut s = Session::new();
         // XXX: optimize?
         if !sv[0].is_empty() { s.alerts = sv[0].parse().ok(); }
@@ -105,6 +102,14 @@ impl Session {
         if !sv[13].is_empty() { s.stack = sv[13].parse().ok(); }
         if !sv[14].is_empty() { s.windows = sv[14].parse().ok(); }
         Ok(s)
+    }
+}
+
+
+impl Session {
+
+    pub fn new() -> Self {
+        Default::default()
     }
 
 }

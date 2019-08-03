@@ -23,7 +23,7 @@ impl Sessions {
     pub fn parse(sessions_str: &str) -> Result<Vec<Session>, TmuxInterfaceError> {
         let mut sessions: Vec<Session> = Vec::new();
         for line in sessions_str.lines() {
-            sessions.push(Session::parse(line)?);
+            sessions.push(line.parse()?);
         }
         Ok(sessions)
     }

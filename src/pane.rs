@@ -1,4 +1,5 @@
 use crate::TmuxInterfaceError;
+use std::str::FromStr;
 
 
 pub const PANE_VARS_SEPARATOR: &str = "'";
@@ -73,15 +74,11 @@ pub struct Pane {
 }
 
 
-impl Pane {
-
-    pub fn new() -> Self {
-        Default::default()
-    }
-
+impl FromStr for Pane {
+    type Err = TmuxInterfaceError;
 
     // XXX: mb serde, deserialize?
-    pub fn parse(pane_str: &str) -> Result<Pane, TmuxInterfaceError> {
+    fn from_str(pane_str: &str) -> Result<Pane, TmuxInterfaceError> {
         let pv: Vec<&str> = pane_str.split(PANE_VARS_SEPARATOR).collect();
         let mut p = Pane::new();
         // XXX: optimize?
@@ -116,5 +113,16 @@ impl Pane {
         if !pv[28].is_empty() { p.width = pv[28].parse().ok(); }
         Ok(p)
     }
+
+
+}
+
+
+impl Pane {
+
+    pub fn new() -> Self {
+        Default::default()
+    }
+
 
 }

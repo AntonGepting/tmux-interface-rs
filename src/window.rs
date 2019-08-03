@@ -1,5 +1,6 @@
 use std::time::Duration;
 use crate::TmuxInterfaceError;
+use std::str::FromStr;
 
 
 pub const WINDOW_VARS_SEPARATOR: &str = "'";
@@ -64,16 +65,13 @@ pub struct Window {
 }
 
 
-impl Window {
 
-    pub fn new() -> Self {
-        Default::default()
-    }
-
+impl FromStr for Window {
+    type Err = TmuxInterfaceError;
 
     // XXX: mb deserialize like serde something?
-    pub fn parse(window_str: &str) -> Result<Window, TmuxInterfaceError> {
-        let wv: Vec<&str> = window_str.split(WINDOW_VARS_SEPARATOR).collect();
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let wv: Vec<&str> = s.split(WINDOW_VARS_SEPARATOR).collect();
         let mut w = Window::new();
         // XXX: optimize?
         if !wv[0].is_empty() { w.activity = wv[0].parse().ok().map(Duration::from_millis); }
@@ -101,6 +99,16 @@ impl Window {
         if !wv[22].is_empty() { w.width = wv[22].parse().ok(); }
         if !wv[23].is_empty() { w.zoomed_flag = wv[23].parse().ok(); }
         Ok(w)
+    }
+
+
+}
+
+
+impl Window {
+
+    pub fn new() -> Self {
+        Default::default()
     }
 
 }

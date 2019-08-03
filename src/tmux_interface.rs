@@ -172,7 +172,7 @@ impl<'a> TmuxInterface<'a> {
         let mut tmux = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
         let output = tmux.arg(V_KEY).output()?;
         let version_str = String::from_utf8_lossy(&output.stdout).to_string();
-        let version = Version::from_str(&version_str)?;
+        let version = version_str.parse()?;
         Ok(version)
     }
 }
