@@ -3,7 +3,8 @@ fn parse() {
     use crate::Session;
     use std::time::Duration;
 
-    let session: Session = ":1:1557947146:1557947146:1:1557947146::::0:$0:0:0:3,2,1:3".parse().unwrap();
+    let session_str = ":1:1557947146:1557947146:1:1557947146::::0:$0:0:0:3,2,1:3";
+    let session: Session = session_str.parse().unwrap();
     let session_sample = Session {
         alerts: None,
         attached: Some(1),
