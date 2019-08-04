@@ -1,5 +1,6 @@
 use std::time::Duration;
 use crate::TmuxInterfaceError;
+use crate::Layout;
 use std::str::FromStr;
 
 
@@ -50,7 +51,7 @@ pub struct Window {
     pub id: Option<usize>,
     pub index: Option<usize>,
     pub last_flag: Option<usize>,
-    pub layout: Option<String>,
+    pub layout: Option<Layout>,
     pub linked: Option<usize>,
     pub name: Option<String>,
     pub offset_x: Option<String>,

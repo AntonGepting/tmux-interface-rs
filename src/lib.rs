@@ -101,6 +101,9 @@ pub mod buffers;
 pub mod global_and_session_environment;
 pub mod miscellaneous;
 pub mod tmux_option;
+pub mod layout_cell;
+pub mod layout;
+pub mod layout_checksum;
 pub mod version;
 
 
@@ -145,6 +148,10 @@ pub use self::windows::Windows;
 pub use self::pane::Pane;
 pub use self::panes::Panes;
 pub use self::version::Version;
+pub use self::layout::Layout;
+pub use self::layout_cell::LayoutCell;
+pub use self::layout_cell::LayoutType;
+pub use self::layout_checksum::LayoutChecksum;
 
 pub use self::tmux_interface_error::TmuxInterfaceError;
 
@@ -159,4 +166,7 @@ mod pane_tests;
 mod panes_tests;
 //mod options_tests;
 mod tmux_option_tests;
+mod layout_tests;
+mod layout_cell_tests;
+mod layout_checksum_tests;
 mod version_tests;
