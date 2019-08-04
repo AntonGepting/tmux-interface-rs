@@ -60,7 +60,7 @@ pub struct Window {
     pub silence_flag: Option<usize>,
     pub stack_index: Option<usize>,
     pub start_flag: Option<usize>,
-    pub visible_layout: Option<String>,
+    pub visible_layout: Option<Layout>,
     pub width: Option<usize>,
     pub zoomed_flag: Option<usize>
 }
