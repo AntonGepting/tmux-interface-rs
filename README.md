@@ -87,6 +87,9 @@ and testing purposes. Do not use them in your Projects.
         - [`pane.rs`](src/pane.rs) - parse a pane
         - [`tmux_option.rs`](src/tmux_option.rs) - parse an option
         - [`version.rs`](src/version.rs) - parse version response
+        - [`layout_cell.rs`](src/layout_cell.rs) - parse layout cell string
+        - [`layout_checksum.rs`](src/layout_checksum.rs) - calculate layout checksum
+        - [`layout.rs`](src/layout.rs) - parse layot tree string
 
     5. Unit tests for parsing functions:
 
@@ -98,6 +101,9 @@ and testing purposes. Do not use them in your Projects.
         - [`pane_tests.rs`](src/pane_tests.rs)
         - [`tmux_option_tests.rs`](src/tmux_option_tests.rs)
         - [`version_tests.rs`](src/version_tests.rs)
+        - [`layout_cell_tests.rs`](src/layout_cell_tests.rs)
+        - [`layout_checksum_tests.rs`](src/layout_checksum_tests.rs)
+        - [`layout_tests.rs`](src/layout_tests.rs)
 
 - [`tests/`](tests/) - crate integration tests (multiple functions):
 
