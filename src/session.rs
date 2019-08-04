@@ -26,35 +26,6 @@ pub const SESSION_VARS_REGEX_VEC: [&str; 15] = [
 ];
 
 
-//struct asdf<'a> {
-    //vec: Vec<(&'a str, &'a str)>,
-    //separator: &'a str
-//}
-
-
-//impl<'a> asdf<'a> {
-    //fn new(vec: &Vec<(&str, &str)>, separator: &str) {
-    //}
-
-
-    //fn get_format(&self) -> String {
-        //self.vec.iter()
-            //.map(|t| format!("#{{{}}}", t.0))
-            //.collect::<Vec<String>>()
-            //.join(self.separator)
-    //}
-
-
-    //fn get_regex(&self) -> String {
-        //format!("^{}$", self.vec.iter()
-                //.map(|t| t.1)
-                //.collect::<Vec<&str>>()
-                //.join(self.separator)
-        //)
-    //}
-//}
-
-
 // accordingly to tmux.h: Formats
 // XXX: check all types
 #[derive(Default, PartialEq, Clone, Debug)]
