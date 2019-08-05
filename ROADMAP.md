@@ -71,6 +71,7 @@ an improvment, an idea etc.
 - [ ] Error reporting num, enum, string like in std
 - [ ] Layout parser
 - [ ] Better names for tmux subcommands wrapper function arguments
+- [ ] Parsed structures check Option, Type
 
 
 **tmux interface v0.0.1**
