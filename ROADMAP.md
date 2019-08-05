@@ -70,6 +70,7 @@ an improvment, an idea etc.
 - [ ] No panics, no unwrap in lib functions
 - [ ] Error reporting num, enum, string like in std
 - [ ] Layout parser
+- [ ] Better names for tmux subcommands wrapper function arguments
 
 
 **tmux interface v0.0.1**
