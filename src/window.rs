@@ -35,8 +35,58 @@ pub const WINDOW_VARS_REGEX_VEC: [&str; 24] = [
 ];
 
 
+const WINDOW_FLAG_DEFAULT: usize     = 0b0000_0000;
+const WINDOW_FLAG_CURRENT: usize     = 0b0000_0001;
+const WINDOW_FLAG_LAST: usize        = 0b0000_0010;
+const WINDOW_FLAG_ACTIVITY: usize    = 0b0000_0100;
+const WINDOW_FLAG_BELL: usize        = 0b0000_1000;
+const WINDOW_FLAG_SILENCED: usize    = 0b0001_0000;
+const WINDOW_FLAG_MARKED: usize      = 0b0010_0000;
+const WINDOW_FLAG_ZOOMED: usize      = 0b0100_0000;
+
+
+#[derive(Debug, Clone)]
+pub struct WindowFlag(usize);
+
+
+impl Default for WindowFlag {
+    fn default() -> Self {
+        WindowFlag(WINDOW_FLAG_DEFAULT)
+    }
+}
+
+
+impl FromStr for WindowFlag {
+    type Err = TmuxInterfaceError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut wf = WindowFlag(WINDOW_FLAG_DEFAULT);
+        let mut chrs = s.chars();
+        loop {
+            if let Some(c) = chrs.next() {
+                dbg!(c);
+                match c {
+                    '*' => wf.0 += WINDOW_FLAG_CURRENT,
+                    '-' => wf.0 += WINDOW_FLAG_LAST,
+                    '#' => wf.0 += WINDOW_FLAG_ACTIVITY,
+                    '!' => wf.0 += WINDOW_FLAG_BELL,
+                    '~' => wf.0 += WINDOW_FLAG_SILENCED,
+                    'M' => wf.0 += WINDOW_FLAG_MARKED,
+                    'Z' => wf.0 += WINDOW_FLAG_ZOOMED,
+                    // XXX: Error description
+                    _ => return Err(TmuxInterfaceError::new("Parse WindowFlag Error"))
+                }
+            } else {
+                break;
+            }
+        }
+        Ok(wf)
+    }
+}
+
+
 // accordingly to tmux.h: Formats
-// XXX: check all types
+// XXX: check all types, optionality
 #[derive(Default, Clone, Debug)]
 pub struct Window {
     /// 1 if window active
@@ -52,7 +102,7 @@ pub struct Window {
     /// 1 if window has the highest index
     pub end_flag: Option<bool>,
     /// #F Window flags
-    pub flags: Option<String>,
+    pub flags: Option<WindowFlag>,
     /// 1 if format is for a window (not assuming the current)
     pub format: Option<bool>,
     /// Height of window
@@ -107,7 +157,7 @@ impl FromStr for Window {
         if !wv[6].is_empty() { w.flags = wv[6].parse().ok(); }
         if !wv[7].is_empty() { w.format = wv[7].parse::<usize>().map(|i| i == 1).ok(); }
         if !wv[8].is_empty() { w.height = wv[8].parse().ok(); }
-        if !wv[9].is_empty() { w.id = wv[9][1..].parse().ok(); }
+        if !wv[9].is_empty() { w.id = wv[9][1..].parse().ok(); } // skip '@' char
         if !wv[10].is_empty() { w.index = wv[10].parse().ok(); }
         if !wv[11].is_empty() { w.last_flag = wv[11].parse::<usize>().map(|i| i == 1).ok(); }
         if !wv[12].is_empty() { w.layout = wv[12].parse().ok(); }
