@@ -1,8 +1,9 @@
 # Roadmap
 
 Some goals for further versions and current development are listed below.
-Please [contact me](mailto:anton.gepting@gmail.com) if any feature is missing or if you have a request,
-an improvment, an idea etc.
+Please send an [e-mail](mailto:anton.gepting@gmail.com) or open an
+[issue](https://github.com/AntonGepting/tmux-interface-rs/issues/new)
+if any feature is missing or if you have a request, an improvment, an idea etc.
 
 
 **tmux interface v1.0.0**
@@ -70,8 +71,16 @@ an improvment, an idea etc.
 - [ ] No panics, no unwrap in lib functions
 - [ ] Error reporting num, enum, string like in std
 - [ ] Layout parser
+- [ ] Parse all tmux variables
 - [ ] Better names for tmux subcommands wrapper function arguments
-- [ ] Parsed structures check Option, Type
+- [ ] Parsed structures check Type
+    - [ ] Session
+    - [ ] Window
+    - [ ] Pane
+- [ ] Parsed structures check Option
+    - [ ] Session
+    - [ ] Window
+    - [ ] Pane
 
 
 **tmux interface v0.0.1**
@@ -93,3 +102,4 @@ an improvment, an idea etc.
 - mb function parameter names from tmux source?
 - mb tmux plugin for more options?
 - mb folder structure, separate tmux functions from parse functions
+- does `Option<bool>` as function arguments and structure fields make sense
