@@ -120,9 +120,9 @@ pub struct Window {
     /// #W Name of window
     pub name: Option<String>,
     /// X offset into window if larger than client
-    pub offset_x: Option<String>,
+    pub offset_x: Option<usize>,
     /// Y offset into window if larger than client
-    pub offset_y: Option<String>,
+    pub offset_y: Option<usize>,
     /// Number of panes in window
     pub panes: Option<usize>,
     /// 1 if window has silence alert
