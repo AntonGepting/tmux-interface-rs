@@ -26,6 +26,24 @@ pub const SESSION_VARS_REGEX_VEC: [&str; 15] = [
 ];
 
 
+#[derive(Default, PartialEq, Clone, Debug)]
+pub struct SessionStack(pub Vec<usize>);
+
+
+impl FromStr for SessionStack {
+    type Err = TmuxInterfaceError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        //let a: Vec<usize> = s.split(",").map(|c| c.parse::<usize>().unwrap()).collect();
+        let mut sv = Vec::new();
+        for id in s.split(",").collect::<Vec<&str>>() {
+            sv.push(id.parse()?);
+        }
+        Ok(SessionStack(sv))
+    }
+}
+
+
 // accordingly to tmux.h: Formats
 // XXX: check all types
 #[derive(Default, PartialEq, Clone, Debug)]
@@ -57,7 +75,7 @@ pub struct Session {
     /// #S Name of session
     pub name: Option<String>,
     /// Window indexes in most recent order
-    pub stack: Option<String>,
+    pub stack: Option<SessionStack>,
     /// Number of windows in session
     pub windows: Option<usize>,
 }
@@ -68,10 +86,10 @@ impl FromStr for Session {
 
     // XXX: mb deserialize?
     // XXX: mb callback
+    // XXX: optimize?
     fn from_str(s: &str) -> Result<Session, TmuxInterfaceError> {
         let sv: Vec<&str> = s.split(SESSION_VARS_SEPARATOR).collect();
         let mut s = Session::new();
-        // XXX: optimize?
         if !sv[0].is_empty() { s.activity = sv[0].parse().ok().map(Duration::from_millis); }
         if !sv[1].is_empty() { s.alerts = sv[1].parse().ok(); }
         if !sv[2].is_empty() { s.attached = sv[2].parse().ok(); }
