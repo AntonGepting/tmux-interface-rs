@@ -103,3 +103,4 @@ if any feature is missing or if you have a request, an improvment, an idea etc.
 - mb tmux plugin for more options?
 - mb folder structure, separate tmux functions from parse functions
 - does `Option<bool>` as function arguments and structure fields make sense
+- mb store `PathBuf` or other type for paths in parsed structures?
