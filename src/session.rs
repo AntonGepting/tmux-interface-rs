@@ -39,7 +39,7 @@ impl FromStr for SessionStack {
         for id in s.split(",").collect::<Vec<&str>>() {
             sv.push(id.parse()?);
         }
-        Ok(SessionStack(sv))
+        Ok(Self(sv))
     }
 }
 
