@@ -97,7 +97,7 @@ pub struct Pane {
     /// 1 if pane is synchronized
     pub synchronized: Option<bool>,
     /// Pane tab positions
-    pub tabs: Option<String>,
+    pub tabs: Option<PaneTabs>,
     /// #T Title of pane
     pub title: Option<String>,
     /// Top of pane
@@ -106,6 +106,24 @@ pub struct Pane {
     pub tty: Option<String>,
     /// Width of pane
     pub width: Option<usize>
+}
+
+
+#[derive(Default, PartialEq, Clone, Debug)]
+pub struct PaneTabs(pub Vec<usize>);
+
+
+impl FromStr for PaneTabs {
+    type Err = TmuxInterfaceError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        //let a: Vec<usize> = s.split(",").map(|c| c.parse::<usize>().unwrap()).collect();
+        let mut tabs = Vec::new();
+        for tab in s.split(",").collect::<Vec<&str>>() {
+            tabs.push(tab.parse()?);
+        }
+        Ok(Self(tabs))
+    }
 }
 
 
