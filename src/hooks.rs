@@ -1,5 +1,5 @@
 use super::tmux_interface::*;
-use super::tmux_interface_error::TmuxInterfaceError;
+use super::error::Error;
 use std::process::Output;
 
 
@@ -39,7 +39,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux set-hook [-agRu] [-t target-session] hook-name command
     /// ```
-    pub fn set_hook(&self, set_hook: &SetHook) -> Result<Output, TmuxInterfaceError> {
+    pub fn set_hook(&self, set_hook: &SetHook) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if set_hook.append.unwrap_or(false) { args.push(a_KEY); }
         if set_hook.global.unwrap_or(false) { args.push(g_KEY); }
@@ -61,7 +61,7 @@ impl<'a> TmuxInterface<'a> {
     pub fn show_hooks(&self,
                       global: Option<bool>,
                       target_session: Option<&str>
-                      ) -> Result<Output, TmuxInterfaceError> {
+                      ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if global.unwrap_or(false) { args.push(g_KEY); }
         target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));

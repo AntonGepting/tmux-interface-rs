@@ -1,6 +1,6 @@
 use crate::Session;
 use crate::TmuxInterface;
-use crate::TmuxInterfaceError;
+use crate::Error;
 use crate::session::{SESSION_VARS_REGEX_VEC, SESSION_VARS_SEPARATOR};
 
 
@@ -11,7 +11,7 @@ pub struct Sessions {
 
 impl Sessions {
 
-    pub fn get() -> Result<Vec<Session>, TmuxInterfaceError> {
+    pub fn get() -> Result<Vec<Session>, Error> {
         let tmux = TmuxInterface::new();
         let ls_format = SESSION_VARS_REGEX_VEC.iter().map(|t| format!("#{{{}}}", t))
             .collect::<Vec<String>>().join(SESSION_VARS_SEPARATOR);
@@ -20,7 +20,7 @@ impl Sessions {
     }
 
 
-    pub fn parse(sessions_str: &str) -> Result<Vec<Session>, TmuxInterfaceError> {
+    pub fn parse(sessions_str: &str) -> Result<Vec<Session>, Error> {
         let mut sessions: Vec<Session> = Vec::new();
         for line in sessions_str.lines() {
             sessions.push(line.parse()?);

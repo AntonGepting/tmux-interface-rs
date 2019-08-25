@@ -1,5 +1,5 @@
 use crate::LayoutCell;
-use crate::TmuxInterfaceError;
+use crate::Error;
 use std::str::FromStr;
 
 
@@ -13,9 +13,9 @@ pub struct Layout {
 // NOTE: tmux source: layout_custom.c
 // XXX: Optimize?
 impl FromStr for Layout {
-    type Err = TmuxInterfaceError;
+    type Err = Error;
 
-    fn from_str(s: &str) -> Result<Layout, TmuxInterfaceError> {
+    fn from_str(s: &str) -> Result<Layout, Error> {
         let mut layout = Layout::new();
         let ls: Vec<&str> = s.split(',').collect();
         layout.checksum = usize::from_str_radix(ls[0], 16)?;

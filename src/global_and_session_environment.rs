@@ -1,5 +1,5 @@
 use super::tmux_interface::*;
-use super::tmux_interface_error::TmuxInterfaceError;
+use super::error::Error;
 use std::process::Output;
 
 
@@ -41,7 +41,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn set_environment(&self,
                            set_environment: &SetEnvironment
-                           ) -> Result<Output, TmuxInterfaceError> {
+                           ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if set_environment.global.unwrap_or(false) { args.push(g_KEY); }
         if set_environment.remove.unwrap_or(false) { args.push(r_KEY); }
@@ -65,7 +65,7 @@ impl<'a> TmuxInterface<'a> {
                             shell_format: Option<bool>,
                             target_session: Option<&str>,
                             variable: Option<&str>
-                            ) -> Result<Output, TmuxInterfaceError> {
+                            ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if global.unwrap_or(false) { args.push(g_KEY); }
         if shell_format.unwrap_or(false) { args.push(s_KEY); }

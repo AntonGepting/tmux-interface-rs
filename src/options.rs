@@ -1,5 +1,5 @@
 use super::tmux_interface::*;
-use super::tmux_interface_error::TmuxInterfaceError;
+use super::error::Error;
 use std::process::Output;
 
 
@@ -108,7 +108,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-option [-aFgoqsuw] [-t target-session | target-window] option value
     /// (alias: set)
     /// ```
-    pub fn set_option(&self, set_option: &SetOption) -> Result<Output, TmuxInterfaceError> {
+    pub fn set_option(&self, set_option: &SetOption) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if set_option.append.unwrap_or(false) { args.push(a_KEY); }
         if set_option.format.unwrap_or(false) { args.push(F_KEY); }
@@ -134,7 +134,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn set_window_option(&self,
                              set_window_option: &SetWindowOption
-                             ) -> Result<Output, TmuxInterfaceError> {
+                             ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if set_window_option.append.unwrap_or(false) { args.push(a_KEY); }
         if set_window_option.format.unwrap_or(false) { args.push(F_KEY); }
@@ -156,7 +156,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-options [-gHqsvw] [-t target-session | target-window] [option]
     /// (alias: show)
     /// ```
-    pub fn show_options(&self, show_options: &ShowOptions) -> Result<String, TmuxInterfaceError> {
+    pub fn show_options(&self, show_options: &ShowOptions) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         if show_options.global_options.unwrap_or(false) { args.push(g_KEY); }
         if show_options.hooks.unwrap_or(false) { args.push(H_KEY); }
@@ -183,7 +183,7 @@ impl<'a> TmuxInterface<'a> {
                                only_value: Option<bool>,
                                target_window: Option<&str>,
                                option: Option<&str>
-                               ) -> Result<Output, TmuxInterfaceError> {
+                               ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if global.unwrap_or(false) { args.push(g_KEY); }
         if only_value.unwrap_or(false) { args.push(v_KEY); }

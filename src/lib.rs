@@ -88,7 +88,7 @@ pub mod window;
 pub mod windows;
 pub mod pane;
 pub mod panes;
-pub mod tmux_interface_error;
+pub mod error;
 pub mod windows_and_panes;
 pub mod clients_and_sessions;
 pub mod key_bindings;
@@ -152,7 +152,7 @@ pub use self::layout_cell::LayoutCell;
 pub use self::layout_cell::LayoutType;
 pub use self::layout_checksum::LayoutChecksum;
 
-pub use self::tmux_interface_error::TmuxInterfaceError;
+pub use self::error::Error;
 
 
 #[cfg(test)]

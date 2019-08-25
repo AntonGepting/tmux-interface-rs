@@ -3,7 +3,7 @@
 
 use std::process::{Command, Output};
 use std::str;
-use crate::TmuxInterfaceError;
+use crate::Error;
 use crate::Version;
 
 
@@ -133,7 +133,7 @@ impl<'a> TmuxInterface<'a> {
     /// let tmux = TmuxInterface::new();
     /// tmux.subcommand("has-session", &["-t", "session_name"]).unwrap();
     /// ```
-    pub fn subcommand(&self, subcmd: &str, args: &[&str]) -> Result<Output, TmuxInterfaceError> {
+    pub fn subcommand(&self, subcmd: &str, args: &[&str]) -> Result<Output, Error> {
         let mut options: Vec<&str> = Vec::new();
         options.push(subcmd);
         options.extend_from_slice(args);
@@ -141,7 +141,7 @@ impl<'a> TmuxInterface<'a> {
     }
 
 
-    pub fn exec(&self, args: &[&str]) -> Result<Output, TmuxInterfaceError> {
+    pub fn exec(&self, args: &[&str]) -> Result<Output, Error> {
         let mut options: Vec<&str> = Vec::new();
         let mut cmd = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
         // XXX: using environment vars
@@ -168,7 +168,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux -V
     /// ```
-    pub fn version(&self) -> Result<Version, TmuxInterfaceError> {
+    pub fn version(&self) -> Result<Version, Error> {
         let mut tmux = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
         let output = tmux.arg(V_KEY).output()?;
         let version_str = String::from_utf8_lossy(&output.stdout).to_string();

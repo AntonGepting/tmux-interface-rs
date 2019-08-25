@@ -1,4 +1,4 @@
-use crate::TmuxInterfaceError;
+use crate::Error;
 use std::str::FromStr;
 
 
@@ -22,7 +22,7 @@ pub struct Version {
 
 
 impl FromStr for Version {
-    type Err = TmuxInterfaceError;
+    type Err = Error;
 
     fn from_str(version_str: &str) -> Result<Self, Self::Err> {
         let mut version = Version::new();

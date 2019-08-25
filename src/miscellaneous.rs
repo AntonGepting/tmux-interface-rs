@@ -1,5 +1,5 @@
 use super::tmux_interface::*;
-use super::tmux_interface_error::TmuxInterfaceError;
+use super::error::Error;
 use std::process::Output;
 
 
@@ -43,7 +43,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux clock-mode [-t target-pane]
     /// ```
-    pub fn clock_mode(&self, target_pane: Option<&str>) -> Result<Output, TmuxInterfaceError> {
+    pub fn clock_mode(&self, target_pane: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::CLOCK_MODE, &args)?;
@@ -57,7 +57,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux if-shell [-bF] [-t target-pane] shell-command command [command]
     /// (alias: if)
     /// ```
-    pub fn if_shell(&self, if_shell: &IfShell) -> Result<Output, TmuxInterfaceError> {
+    pub fn if_shell(&self, if_shell: &IfShell) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if if_shell.backgroud.unwrap_or(false) { args.push(b_KEY); }
         if if_shell.not_execute.unwrap_or(false) { args.push(F_KEY); }
@@ -76,7 +76,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux lock-server
     /// (alias: lock)
     /// ```
-    pub fn lock_server(&self) -> Result<Output, TmuxInterfaceError> {
+    pub fn lock_server(&self) -> Result<Output, Error> {
         let output = self.subcommand(TmuxInterface::LOCK_SERVER, &[])?;
         Ok(output)
     }
@@ -92,7 +92,7 @@ impl<'a> TmuxInterface<'a> {
                      backgroud: Option<bool>,
                      target_pane: Option<&str>,
                      shell_command: &str
-                     ) -> Result<Output, TmuxInterfaceError> {
+                     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if backgroud.unwrap_or(false) { args.push(b_KEY); }
         target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
@@ -113,7 +113,7 @@ impl<'a> TmuxInterface<'a> {
                     prevent_exit: Option<bool>,
                     unlock: Option<bool>,
                     channel: &str
-                    ) -> Result<Output, TmuxInterfaceError> {
+                    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if lock.unwrap_or(false) { args.push(L_KEY); }
         if prevent_exit.unwrap_or(false) { args.push(S_KEY); }

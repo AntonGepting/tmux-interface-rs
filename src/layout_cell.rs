@@ -1,4 +1,4 @@
-use crate::TmuxInterfaceError;
+use crate::Error;
 use std::str::Chars;
 use std::str::FromStr;
 
@@ -19,7 +19,7 @@ impl Default for LayoutType {
 
 
 impl FromStr for LayoutCell {
-    type Err = TmuxInterfaceError;
+    type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut chars = s.chars();
@@ -87,7 +87,7 @@ impl LayoutCell {
     // TODO: optimization
     pub fn fsm(&mut self,
                chars: &mut Chars,
-               mut state: LayoutFSMState) -> Result<LayoutFSMState, TmuxInterfaceError> {
+               mut state: LayoutFSMState) -> Result<LayoutFSMState, Error> {
         let mut child: LayoutCell;
         let mut buff = String::new();
         loop {

@@ -1,5 +1,5 @@
 use std::time::Duration;
-use crate::TmuxInterfaceError;
+use crate::Error;
 use crate::Layout;
 use std::str::FromStr;
 
@@ -57,7 +57,7 @@ impl Default for WindowFlag {
 
 
 impl FromStr for WindowFlag {
-    type Err = TmuxInterfaceError;
+    type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut wf = WindowFlag(WINDOW_FLAG_DEFAULT);
@@ -74,7 +74,7 @@ impl FromStr for WindowFlag {
                     'M' => wf.0 += WINDOW_FLAG_MARKED,
                     'Z' => wf.0 += WINDOW_FLAG_ZOOMED,
                     // XXX: Error description
-                    _ => return Err(TmuxInterfaceError::new("Parse WindowFlag Error"))
+                    _ => return Err(Error::new("Parse WindowFlag Error"))
                 }
             } else {
                 break;
@@ -141,7 +141,7 @@ pub struct Window {
 
 
 impl FromStr for Window {
-    type Err = TmuxInterfaceError;
+    type Err = Error;
 
     // XXX: mb deserialize like serde something?
     fn from_str(s: &str) -> Result<Self, Self::Err> {

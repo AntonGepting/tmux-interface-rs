@@ -1,6 +1,6 @@
 use super::ShowOptions;
 use super::TmuxInterface;
-use super::tmux_interface_error::TmuxInterfaceError;
+use super::error::Error;
 
 
 pub struct TmuxOption;
@@ -9,7 +9,7 @@ pub struct TmuxOption;
 impl TmuxOption {
 
 
-    pub fn get_int(option_name: &str) -> Result<usize, TmuxInterfaceError>{
+    pub fn get_int(option_name: &str) -> Result<usize, Error>{
         let tmux = TmuxInterface::new();
         let show_options = ShowOptions {
             global_options: Some(true),

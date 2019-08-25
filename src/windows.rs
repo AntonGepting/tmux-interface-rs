@@ -1,6 +1,6 @@
 use crate::Window;
 use crate::TmuxInterface;
-use crate::TmuxInterfaceError;
+use crate::Error;
 use crate::window::{WINDOW_VARS_REGEX_VEC, WINDOW_VARS_SEPARATOR};
 
 
@@ -11,7 +11,7 @@ pub struct Windows {
 
 impl Windows {
 
-    pub fn get(target_session: &str) -> Result<Vec<Window>, TmuxInterfaceError> {
+    pub fn get(target_session: &str) -> Result<Vec<Window>, Error> {
         let tmux = TmuxInterface::new();
         let lsw_format = WINDOW_VARS_REGEX_VEC.iter().map(|t| format!("#{{{}}}", t))
             .collect::<Vec<String>>().join(WINDOW_VARS_SEPARATOR);
@@ -20,7 +20,7 @@ impl Windows {
     }
 
 
-    pub fn parse(windows_str: &str) -> Result<Vec<Window>, TmuxInterfaceError> {
+    pub fn parse(windows_str: &str) -> Result<Vec<Window>, Error> {
         let mut windows: Vec<Window> = Vec::new();
         for line in windows_str.lines() {
             windows.push(line.parse()?);

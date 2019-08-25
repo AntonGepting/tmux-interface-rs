@@ -1,5 +1,5 @@
 use std::time::Duration;
-use crate::TmuxInterfaceError;
+use crate::Error;
 use std::str::FromStr;
 
 
@@ -31,7 +31,7 @@ pub struct SessionStack(pub Vec<usize>);
 
 
 impl FromStr for SessionStack {
-    type Err = TmuxInterfaceError;
+    type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         //let a: Vec<usize> = s.split(",").map(|c| c.parse::<usize>().unwrap()).collect();
@@ -82,12 +82,12 @@ pub struct Session {
 
 
 impl FromStr for Session {
-    type Err = TmuxInterfaceError;
+    type Err = Error;
 
     // XXX: mb deserialize?
     // XXX: mb callback
     // XXX: optimize?
-    fn from_str(s: &str) -> Result<Session, TmuxInterfaceError> {
+    fn from_str(s: &str) -> Result<Session, Error> {
         let sv: Vec<&str> = s.split(SESSION_VARS_SEPARATOR).collect();
         let mut s = Session::new();
         if !sv[0].is_empty() { s.activity = sv[0].parse().ok().map(Duration::from_millis); }

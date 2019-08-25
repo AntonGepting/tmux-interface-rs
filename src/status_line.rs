@@ -1,5 +1,5 @@
 use super::tmux_interface::*;
-use super::tmux_interface_error::TmuxInterfaceError;
+use super::error::Error;
 use std::process::Output;
 
 
@@ -41,7 +41,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn command_prompt(&self,
                           command_prompt: &CommandPrompt
-                          ) -> Result<Output, TmuxInterfaceError> {
+                          ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if command_prompt.one_keypress.unwrap_or(false) { args.push(_1_KEY); }
         if command_prompt.on_input_change.unwrap_or(false) { args.push(i_KEY); }
@@ -64,7 +64,7 @@ impl<'a> TmuxInterface<'a> {
                           prompt: Option<&str>,
                           target_client: Option<&str>,
                           command: &str
-                          ) -> Result<Output, TmuxInterfaceError> {
+                          ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         prompt.and_then(|s| Some(args.extend_from_slice(&[p_KEY, &s])));
         target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
@@ -85,7 +85,7 @@ impl<'a> TmuxInterface<'a> {
                            target_client: Option<&str>,
                            target_pane: Option<&str>,
                            message: Option<&str>
-                           ) -> Result<Output, TmuxInterfaceError> {
+                           ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if print.unwrap_or(false) { args.push(p_KEY); }
         target_client.and_then(|s| Some(args.extend_from_slice(&[c_KEY, s])));

@@ -1,4 +1,4 @@
-use crate::TmuxInterfaceError;
+use crate::Error;
 use std::str::FromStr;
 
 
@@ -114,7 +114,7 @@ pub struct PaneTabs(pub Vec<usize>);
 
 
 impl FromStr for PaneTabs {
-    type Err = TmuxInterfaceError;
+    type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         //let a: Vec<usize> = s.split(",").map(|c| c.parse::<usize>().unwrap()).collect();
@@ -128,10 +128,10 @@ impl FromStr for PaneTabs {
 
 
 impl FromStr for Pane {
-    type Err = TmuxInterfaceError;
+    type Err = Error;
 
     // XXX: mb serde, deserialize?
-    fn from_str(pane_str: &str) -> Result<Pane, TmuxInterfaceError> {
+    fn from_str(pane_str: &str) -> Result<Pane, Error> {
         let pv: Vec<&str> = pane_str.split(PANE_VARS_SEPARATOR).collect();
         let mut p = Pane::new();
         // XXX: optimize?
