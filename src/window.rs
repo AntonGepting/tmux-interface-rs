@@ -64,7 +64,6 @@ impl FromStr for WindowFlag {
         let mut chrs = s.chars();
         loop {
             if let Some(c) = chrs.next() {
-                dbg!(c);
                 match c {
                     '*' => wf.0 += WINDOW_FLAG_CURRENT,
                     '-' => wf.0 += WINDOW_FLAG_LAST,
