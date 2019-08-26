@@ -58,7 +58,7 @@ and testing purposes. Do not use them in your Projects.
     1. Common:
 
         - [`tmux_interface.rs`](src/tmux_interface.rs) - common functions
-        - [`tmux_interface_error.rs`](src/tmux_interface_error.rs) - error propagating functions
+        - [`error.rs`](src/error.rs) - error propagating functions
         - [`lib.rs`](src/lib.rs) - main library file
 
     2. TMUX functions (structure like in TMUX manual):
@@ -107,6 +107,7 @@ and testing purposes. Do not use them in your Projects.
 
 - [`tests/`](tests/) - crate integration tests (multiple functions):
 
+    - [`tmux_error_mock.sh`](tests/tmux_error_mock.sh) - bash script for testing of tmux error handling functions
     - [`tmux_interface.rs`](tests/tmux_interface.rs)
     - [`tmux_mock.sh`](tests/tmux_mock.sh) - bash script can be used instead of tmux binary, for simple logging
         (sniffing) intercommmunication between library functions and tmux
