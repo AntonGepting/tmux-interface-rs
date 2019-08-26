@@ -1,23 +1,29 @@
 use std::fmt;
-//use std::io;
-//use std::error;
+
+
+#[derive(Debug)]
+pub enum ErrorKind {
+    A,
+    B,
+    ParseVersionError
+}
 
 
 /// Project_cfg error
 #[derive(Debug)]
 pub struct Error {
     /// The formatted error message
-    pub err_text: String,
+    pub message: String,
     /// The type of error
-    pub err_type: usize
+    pub kind: ErrorKind
 }
 
 
 impl Error {
     pub fn new(error: &str) -> Self {
         Error {
-            err_text: error.to_string(),
-            err_type: 0
+            message: error.to_string(),
+            kind: ErrorKind::A
         }
     }
 }
@@ -35,12 +41,11 @@ impl std::error::Error for Error {
 }
 
 
-// Implement std::convert::From for MyError; from io::Error
 impl From<std::io::Error> for Error {
     fn from(_error: std::io::Error) -> Self {
         Error {
-            err_text: String::from("io"),
-            err_type: 1
+            message: String::from("io"),
+            kind: ErrorKind::A
             //message: error.to_string(),
         }
     }
@@ -50,8 +55,8 @@ impl From<std::io::Error> for Error {
 impl From<std::num::ParseIntError> for Error {
     fn from(_error: std::num::ParseIntError) -> Self {
         Error {
-            err_text: String::from("parse num"),
-            err_type: 1
+            message: String::from("parse num"),
+            kind: ErrorKind::A
             //message: error.to_string(),
         }
     }
@@ -61,29 +66,16 @@ impl From<std::num::ParseIntError> for Error {
 impl From<std::string::ParseError> for Error {
     fn from(_error: std::string::ParseError) -> Self {
         Error {
-            err_text: String::from("parse string"),
-            err_type: 1
+            message: String::from("parse string"),
+            kind: ErrorKind::A
             //message: error.to_string(),
         }
     }
 }
 
 
-//impl From<std::option::NoneError> for TmuxInterfaceError {
-    //fn from(_error: std::option::NoneError) -> Self {
-        //TmuxInterfaceError {
-            //err_text: String::from("parse"),
-            //err_type: 1
-            ////message: error.to_string(),
-        //}
-    //}
-//}
-
-
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.err_text)
+        write!(f, "{}", self.message)
     }
 }
-
-

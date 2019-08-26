@@ -35,3 +35,10 @@ fn from_str() {
         //assert!(version.minor >= 0);
     }
 }
+
+
+#[test]
+fn from_str_error() {
+    use crate::Version;
+    assert_eq!("tmux a2.8a".parse::<Version>().unwrap_err().message, "parse num");
+}
