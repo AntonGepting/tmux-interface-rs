@@ -51,7 +51,7 @@ impl FromStr for Version {
                         break;
                     },
                     // end of minor part
-                    ('a'...'z', VersionState::Minor) => {
+                    ('a'..='z', VersionState::Minor) => {
                         version.minor = buff.parse()?;
                         state = VersionState::Suffix;
                         version.suffix.push(c);
@@ -60,10 +60,10 @@ impl FromStr for Version {
                     ('\n', VersionState::Suffix) => {
                         break;
                     },
-                    ('a'...'z', VersionState::ProgName) => {
+                    ('a'..='z', VersionState::ProgName) => {
                         version.prog_name.push(c);
                     },
-                    ('a'...'z', VersionState::Suffix) => {
+                    ('a'..='z', VersionState::Suffix) => {
                         version.suffix.push(c);
                     },
                     (_, _) => {
