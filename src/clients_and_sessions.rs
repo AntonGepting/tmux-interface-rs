@@ -371,7 +371,7 @@ impl<'a> TmuxInterface<'a> {
     /// [-s session-name] [-t group-name] [-x width] [-y height] [shell-command]
     /// (alias: new)
     /// ```
-    pub fn new_session(&self, new_session: &NewSession) -> Result<Output, Error> {
+    pub fn new_session(&self, new_session: &NewSession) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         if new_session.attach.unwrap_or(false) { args.push(A_KEY); }
         if new_session.detached.unwrap_or(false) { args.push(d_KEY); }
@@ -396,7 +396,13 @@ impl<'a> TmuxInterface<'a> {
         }
         new_session.shell_command.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::NEW_SESSION, &args)?;
-        Ok(output)
+        if output.status.success() {
+            let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
+            Ok(stdout.to_string())
+        } else {
+            let stdout = String::from_utf8_lossy(&output.stderr.as_slice());
+            Err(Error::new(&stdout))
+        }
     }
 
 

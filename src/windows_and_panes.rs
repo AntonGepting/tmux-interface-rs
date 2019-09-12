@@ -984,7 +984,8 @@ impl<'a> TmuxInterface<'a> {
     /// [-t target-window] [shell-command]
     /// (alias: neww)
     /// ```
-    pub fn new_window(&self, new_window: NewWindow) -> Result<Output, Error> {
+    // TODO: target_window exitst error
+    pub fn new_window(&self, new_window: NewWindow) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         if new_window.add.unwrap_or(false) { args.push(a_KEY); }
         if new_window.detached.unwrap_or(false) { args.push(d_KEY); }
@@ -996,7 +997,13 @@ impl<'a> TmuxInterface<'a> {
         new_window.target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         new_window.shell_command.and_then(|s| Some(args.push(&s)));
         let output = self.subcommand(TmuxInterface::NEW_WINDOW, &args)?;
-        Ok(output)
+        if output.status.success() {
+            let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
+            Ok(stdout.to_string())
+        } else {
+            let stdout = String::from_utf8_lossy(&output.stderr.as_slice());
+            Err(Error::new(&stdout))
+        }
     }
 
 
@@ -1328,7 +1335,7 @@ impl<'a> TmuxInterface<'a> {
     /// [-t target-pane] [shell-command] [-F format]
     /// (alias: splitw)
     /// ```
-    pub fn split_window(&self, split_window: &SplitWindow) -> Result<Output, Error> {
+    pub fn split_window(&self, split_window: &SplitWindow) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         if split_window.before.unwrap_or(false) { args.push(b_KEY); }
         if split_window.detached.unwrap_or(false) { args.push(d_KEY); }
@@ -1351,7 +1358,8 @@ impl<'a> TmuxInterface<'a> {
         split_window.shell_command.and_then(|s| Some(args.push(&s)));
         split_window.format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
         let output = self.subcommand(TmuxInterface::SPLIT_WINDOW, &args)?;
-        Ok(output)
+        let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
+        Ok(stdout.to_string())
     }
 
 
