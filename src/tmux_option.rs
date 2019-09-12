@@ -18,7 +18,8 @@ impl TmuxOption {
             ..Default::default()
         };
         let value = tmux.show_options(&show_options)?;
-        let int = value.parse::<usize>()?;
+        let value_parts: Vec<&str> = value.split('\n').collect();
+        let int = value_parts[0][0..].parse::<usize>()?;
         Ok(int)
     }
 
