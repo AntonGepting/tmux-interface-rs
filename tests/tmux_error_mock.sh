@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # get subcommand
 subcommand=$1
