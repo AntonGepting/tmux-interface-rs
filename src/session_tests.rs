@@ -1,7 +1,7 @@
 #[test]
 fn parse() {
-    use crate::Session;
     use crate::session::SessionStack;
+    use crate::Session;
     use std::time::Duration;
 
     let session_str = "1557947146::1:1557947146:1::::0:$0:1557947146:0:0:3,2,1:3";
@@ -20,7 +20,7 @@ fn parse() {
         last_attached: Some(Duration::from_millis(1557947146)),
         many_attached: Some(false),
         name: Some("0".to_string()),
-        stack: Some(SessionStack(vec!(3,2,1))),
+        stack: Some(SessionStack(vec![3, 2, 1])),
         windows: Some(3),
     };
     assert_eq!(session, session_sample);

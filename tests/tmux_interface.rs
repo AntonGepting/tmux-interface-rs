@@ -1,18 +1,15 @@
 extern crate tmux_interface;
 use crate::tmux_interface::TmuxInterface;
 
-
 //#[test]
 //fn attach_session() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 //#[test]
 //fn detach_client() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 #[test]
 fn has_session() {
@@ -26,15 +23,14 @@ fn has_session() {
     };
     tmux.new_session(&new_session).unwrap();
     assert_eq!(tmux.has_session(Some("test_has_session")).unwrap(), true);
-    tmux.kill_session(None, None, Some("test_has_session")).unwrap();
+    tmux.kill_session(None, None, Some("test_has_session"))
+        .unwrap();
 }
-
 
 //#[test]
 //fn kill_server() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 #[test]
 fn kill_session() {
@@ -47,21 +43,19 @@ fn kill_session() {
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
-    tmux.kill_session(None, None, Some("test_kill_session")).unwrap();
+    tmux.kill_session(None, None, Some("test_kill_session"))
+        .unwrap();
 }
-
 
 //#[test]
 //fn list_clients() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 //#[test]
 //fn list_commands() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 #[test]
 fn list_sessions() {
@@ -75,21 +69,19 @@ fn list_sessions() {
     };
     tmux.new_session(&new_session).unwrap();
     tmux.list_sessions(None).unwrap();
-    tmux.kill_session(None, None, Some("test_list_session")).unwrap();
+    tmux.kill_session(None, None, Some("test_list_session"))
+        .unwrap();
 }
-
 
 //#[test]
 //fn lock_client() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 //#[test]
 //fn lock_session() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 #[test]
 fn new_session() {
@@ -102,15 +94,14 @@ fn new_session() {
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
-    tmux.kill_session(None, None, Some("test_new_session")).unwrap();
+    tmux.kill_session(None, None, Some("test_new_session"))
+        .unwrap();
 }
-
 
 //#[test]
 //fn refresh_client() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 #[test]
 fn rename_session() {
@@ -123,41 +114,37 @@ fn rename_session() {
         ..Default::default()
     };
     tmux.new_session(&new_session).unwrap();
-    tmux.rename_session(Some("test_rename_session"), "rename_test_session").unwrap();
+    tmux.rename_session(Some("test_rename_session"), "rename_test_session")
+        .unwrap();
     assert_eq!(tmux.has_session(Some("rename_test_session")).unwrap(), true);
-    tmux.kill_session(None, None, Some("rename_test_session")).unwrap();
+    tmux.kill_session(None, None, Some("rename_test_session"))
+        .unwrap();
 }
-
 
 //#[test]
 //fn show_messages() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 //#[test]
 //fn source_file() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 //#[test]
 //fn start_server() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 //#[test]
 //fn suspend_client() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 //#[test]
 //fn switch_client() {
-    //unimplemented!();
+//unimplemented!();
 //}
-
 
 #[test]
 fn send_keys() {
@@ -178,22 +165,22 @@ fn send_keys() {
     };
     tmux.send_keys(&send_keys).unwrap();
 
-    tmux.kill_session(None, None, Some("test_send_keys")).unwrap();
+    tmux.kill_session(None, None, Some("test_send_keys"))
+        .unwrap();
 }
-
 
 //#[test]
 //fn list_sessions() {
-    //use crate::session::Sessions;
-    //use crate::tmux_interface::TmuxInterface;
-    //use crate::LIST_SESSIONS_FORMAT;
+//use crate::session::Sessions;
+//use crate::tmux_interface::TmuxInterface;
+//use crate::LIST_SESSIONS_FORMAT;
 
-    //let tmux = TmuxInterface::new();
-    //let sessions_str = tmux.list_sessions(Some(LIST_SESSIONS_FORMAT)).unwrap();
-    //let sessions = Sessions::parse(&sessions_str).unwrap();
-    //for session in &sessions {
-        //if session.id == 0 {
-        //}
-    //}
-    //assert_eq!(sessions[0].id, 0);
+//let tmux = TmuxInterface::new();
+//let sessions_str = tmux.list_sessions(Some(LIST_SESSIONS_FORMAT)).unwrap();
+//let sessions = Sessions::parse(&sessions_str).unwrap();
+//for session in &sessions {
+//if session.id == 0 {
+//}
+//}
+//assert_eq!(sessions[0].id, 0);
 //}

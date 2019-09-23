@@ -1,5 +1,5 @@
-use super::tmux_interface::*;
 use super::error::Error;
+use super::tmux_interface::*;
 use std::process::Output;
 
 /// Session for attaching client to already existing session
@@ -13,15 +13,15 @@ use std::process::Output;
 #[derive(Default)]
 pub struct AttachSession<'a> {
     /// any other clients attached to the session are detached
-    pub detach_other: Option<bool>,             // [-d]
+    pub detach_other: Option<bool>, // [-d]
     /// `update-environment` option will not be applied
-    pub not_update_env: Option<bool>,           // [-E]
+    pub not_update_env: Option<bool>, // [-E]
     /// signifies the client is read-only
-    pub read_only: Option<bool>,                // [-r]
+    pub read_only: Option<bool>, // [-r]
     /// specify starting directory
-    pub cwd: Option<&'a str>,              // [-c working-directory]
+    pub cwd: Option<&'a str>, // [-c working-directory]
     /// specify target session name
-    pub target_session: Option<&'a str>,   // [-t target-session]
+    pub target_session: Option<&'a str>, // [-t target-session]
 }
 
 impl<'a> AttachSession<'a> {
@@ -29,7 +29,6 @@ impl<'a> AttachSession<'a> {
         Default::default()
     }
 }
-
 
 /// Detach the current client
 ///
@@ -41,11 +40,11 @@ impl<'a> AttachSession<'a> {
 /// ```
 #[derive(Default)]
 pub struct DetachClient<'a> {
-    pub all: Option<bool>,                      // [-a]
-    pub parent_sighup: Option<bool>,            // [-P]
-    pub shell_command: Option<&'a str>,         // [-E shell-command]
-    pub target_session: Option<&'a str>,        // [-s target-session]
-    pub target_client: Option<&'a str>          // [-t target-client]
+    pub all: Option<bool>,               // [-a]
+    pub parent_sighup: Option<bool>,     // [-P]
+    pub shell_command: Option<&'a str>,  // [-E shell-command]
+    pub target_session: Option<&'a str>, // [-s target-session]
+    pub target_client: Option<&'a str>,  // [-t target-client]
 }
 
 impl<'a> DetachClient<'a> {
@@ -53,7 +52,6 @@ impl<'a> DetachClient<'a> {
         Default::default()
     }
 }
-
 
 /// Structure for creating a new session
 ///
@@ -68,31 +66,31 @@ impl<'a> DetachClient<'a> {
 #[derive(Default)]
 pub struct NewSession<'a> {
     /// behave like `attach-session` if `session-name` already exists
-    pub attach: Option<bool>,                   // [-A]
+    pub attach: Option<bool>, // [-A]
     /// new session is not attached to the current terminal
-    pub detached: Option<bool>,                 // [-d]
+    pub detached: Option<bool>, // [-d]
     /// any other clients attached to the session are detached
-    pub detach_other: Option<bool>,             // [-D]
+    pub detach_other: Option<bool>, // [-D]
     /// `update-environment` option will not be applied
-    pub not_update_env: Option<bool>,           // [-E]
+    pub not_update_env: Option<bool>, // [-E]
     /// print information about the new session after it has been created
-    pub print: Option<bool>,                    // [-P]
+    pub print: Option<bool>, // [-P]
     /// specify starting directory
-    pub cwd: Option<&'a str>,              // [-c start-directory]
+    pub cwd: Option<&'a str>, // [-c start-directory]
     /// specify different format
-    pub format: Option<&'a str>,           // [-F format]
+    pub format: Option<&'a str>, // [-F format]
     /// window name of the initial window
-    pub window_name: Option<&'a str>,      // [-n window-name]
+    pub window_name: Option<&'a str>, // [-n window-name]
     /// specify a session name
-    pub session_name: Option<&'a str>,     // [-s session-name]
+    pub session_name: Option<&'a str>, // [-s session-name]
     /// specify a session group
-    pub group_name: Option<&'a str>,       // [-t group-name]
+    pub group_name: Option<&'a str>, // [-t group-name]
     /// specify a different width
-    pub width: Option<usize>,                   // [-x width]
+    pub width: Option<usize>, // [-x width]
     /// specify a different height
-    pub height: Option<usize>,                  // [-y height]
+    pub height: Option<usize>, // [-y height]
     /// shell command to execute in the initial window
-    pub shell_command: Option<&'a str>     // [shell-command]
+    pub shell_command: Option<&'a str>, // [shell-command]
 }
 
 impl<'a> NewSession<'a> {
@@ -100,7 +98,6 @@ impl<'a> NewSession<'a> {
         Default::default()
     }
 }
-
 
 /// Refresh the current client
 ///
@@ -112,16 +109,16 @@ impl<'a> NewSession<'a> {
 /// ```
 #[derive(Default)]
 pub struct RefreshClient<'a> {
-    pub tracking_cursor: Option<bool>,          // [-c]
-    pub down: Option<bool>,                     // [-D]
-    pub request_clipboard: Option<bool>,        // [-l]
-    pub left: Option<bool>,                     // [-L]
-    pub right: Option<bool>,                    // [-R]
-    pub status_line: Option<bool>,              // [-S]
-    pub up: Option<bool>,                       // [-U]
-    pub size: Option<(usize, usize)>,           // [-C width,height]
-    pub target_client: Option<&'a str>,         // [-t target-client]
-    pub adjustment: Option<usize>               // [adjustment]
+    pub tracking_cursor: Option<bool>,   // [-c]
+    pub down: Option<bool>,              // [-D]
+    pub request_clipboard: Option<bool>, // [-l]
+    pub left: Option<bool>,              // [-L]
+    pub right: Option<bool>,             // [-R]
+    pub status_line: Option<bool>,       // [-S]
+    pub up: Option<bool>,                // [-U]
+    pub size: Option<(usize, usize)>,    // [-C width,height]
+    pub target_client: Option<&'a str>,  // [-t target-client]
+    pub adjustment: Option<usize>,       // [adjustment]
 }
 
 impl<'a> RefreshClient<'a> {
@@ -129,7 +126,6 @@ impl<'a> RefreshClient<'a> {
         Default::default()
     }
 }
-
 
 /// Switch the current session for client `target-client` to `target-session`
 ///
@@ -141,14 +137,14 @@ impl<'a> RefreshClient<'a> {
 /// ```
 #[derive(Default)]
 pub struct SwitchClient<'a> {
-    pub not_update_env: Option<bool>,           // [-E]
-    pub last: Option<bool>,                     // [-l]
-    pub next: Option<bool>,                     // [-n]
-    pub previous: Option<bool>,                 // [-p]
-    pub read_only: Option<bool>,                // [-r]
-    pub target_client: Option<&'a str>,         // [-c target-client]
-    pub target_session: Option<&'a str>,        // [-t target-session]
-    pub key_table: Option<&'a str>,             // [-T key-table]
+    pub not_update_env: Option<bool>,    // [-E]
+    pub last: Option<bool>,              // [-l]
+    pub next: Option<bool>,              // [-n]
+    pub previous: Option<bool>,          // [-p]
+    pub read_only: Option<bool>,         // [-r]
+    pub target_client: Option<&'a str>,  // [-c target-client]
+    pub target_session: Option<&'a str>, // [-t target-session]
+    pub key_table: Option<&'a str>,      // [-T key-table]
 }
 
 impl<'a> SwitchClient<'a> {
@@ -157,12 +153,9 @@ impl<'a> SwitchClient<'a> {
     }
 }
 
-
 /// All functions from man tmux "Clients and Sessions" listed below
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#CLIENTS_AND_SESSIONS)
 impl<'a> TmuxInterface<'a> {
-
-
     const ATTACH_SESSION: &'static str = "attach-session";
     const DETACH_CLIENT: &'static str = "detach-client";
     const HAS_SESSION: &'static str = "has-session";
@@ -182,7 +175,6 @@ impl<'a> TmuxInterface<'a> {
     const SUSPEND_CLIENT: &'static str = "suspend-client";
     const SWITCH_CLIENT: &'static str = "switch-client";
 
-
     /// Create a new client in the current terminal and attach it to `target-session`
     ///
     /// # Manual
@@ -191,19 +183,26 @@ impl<'a> TmuxInterface<'a> {
     /// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
     /// (alias: attach)
     /// ```
-    pub fn attach_session(&self,
-                          attach_session: &AttachSession
-                          ) -> Result<Output, Error> {
+    pub fn attach_session(&self, attach_session: &AttachSession) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if attach_session.detach_other.unwrap_or(false) { args.push(d_KEY); }
-        if attach_session.not_update_env.unwrap_or(false) { args.push(E_KEY); }
-        if attach_session.read_only.unwrap_or(false) { args.push(r_KEY); }
-        attach_session.cwd.and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        attach_session.target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if attach_session.detach_other.unwrap_or(false) {
+            args.push(d_KEY);
+        }
+        if attach_session.not_update_env.unwrap_or(false) {
+            args.push(E_KEY);
+        }
+        if attach_session.read_only.unwrap_or(false) {
+            args.push(r_KEY);
+        }
+        attach_session
+            .cwd
+            .and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
+        attach_session
+            .target_session
+            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::ATTACH_SESSION, &args)?;
         Ok(output)
     }
-
 
     /// Detach the current client
     ///
@@ -213,19 +212,26 @@ impl<'a> TmuxInterface<'a> {
     /// tmux detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
     /// (alias: detach)
     /// ```
-    pub fn detach_client(&self,
-                         detach_client: &DetachClient
-                         ) -> Result<Output, Error> {
+    pub fn detach_client(&self, detach_client: &DetachClient) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if detach_client.all.unwrap_or(false) { args.push(a_KEY); }
-        if detach_client.parent_sighup.unwrap_or(false) { args.push(P_KEY); }
-        detach_client.shell_command.and_then(|s| Some(args.extend_from_slice(&[E_KEY, &s])));
-        detach_client.target_session.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        detach_client.target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if detach_client.all.unwrap_or(false) {
+            args.push(a_KEY);
+        }
+        if detach_client.parent_sighup.unwrap_or(false) {
+            args.push(P_KEY);
+        }
+        detach_client
+            .shell_command
+            .and_then(|s| Some(args.extend_from_slice(&[E_KEY, &s])));
+        detach_client
+            .target_session
+            .and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        detach_client
+            .target_client
+            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::DETACH_CLIENT, &args)?;
         Ok(output)
     }
-
 
     // XXX: better result return?
     /// Report if the specified session exist
@@ -243,7 +249,6 @@ impl<'a> TmuxInterface<'a> {
         Ok(output.status.success())
     }
 
-
     /// Kill the tmux server and clients and destroy all sessions
     ///
     /// # Manual
@@ -256,7 +261,6 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
-
     /// Destroy the given session
     ///
     /// # Manual
@@ -264,19 +268,23 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux kill-session [-aC] [-t target-session]
     /// ```
-    pub fn kill_session(&self,
-                        all: Option<bool>,
-                        clear_alerts: Option<bool>,
-                        target_session: Option<&str>
-                        ) -> Result<Output, Error> {
+    pub fn kill_session(
+        &self,
+        all: Option<bool>,
+        clear_alerts: Option<bool>,
+        target_session: Option<&str>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if all.unwrap_or(false) { args.push(a_KEY); }
-        if clear_alerts.unwrap_or(false) { args.push(C_KEY); }
+        if all.unwrap_or(false) {
+            args.push(a_KEY);
+        }
+        if clear_alerts.unwrap_or(false) {
+            args.push(C_KEY);
+        }
         target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::KILL_SESSION, &args)?;
         Ok(output)
     }
-
 
     /// List all clients attached to the server
     ///
@@ -286,17 +294,17 @@ impl<'a> TmuxInterface<'a> {
     /// tmux list-clients [-F format] [-t target-session]
     /// (alias: lsc)
     /// ```
-    pub fn list_clients(&self,
-                        format: Option<&str>,
-                        target_session: Option<&str>
-                        ) -> Result<Output, Error> {
+    pub fn list_clients(
+        &self,
+        format: Option<&str>,
+        target_session: Option<&str>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
         target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::LIST_CLIENTS, &args)?;
         Ok(output)
     }
-
 
     /// List the syntax of all commands supported by tmux
     ///
@@ -312,7 +320,6 @@ impl<'a> TmuxInterface<'a> {
         let output = self.subcommand(TmuxInterface::LIST_COMMANDS, &args)?;
         Ok(output)
     }
-
 
     // XXX: better result return?
     /// List all sessions managed by the server
@@ -330,7 +337,6 @@ impl<'a> TmuxInterface<'a> {
         Ok(stdout.to_string())
     }
 
-
     /// Lock `target-client`
     ///
     /// # Manual
@@ -346,7 +352,6 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
-
     /// Lock all clients attached to `target-session`
     /// # Manual
     ///
@@ -361,7 +366,6 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
-
     /// Create a new session with name `session-name`
     ///
     /// # Manual
@@ -373,16 +377,36 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn new_session(&self, new_session: &NewSession) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if new_session.attach.unwrap_or(false) { args.push(A_KEY); }
-        if new_session.detached.unwrap_or(false) { args.push(d_KEY); }
-        if new_session.detach_other.unwrap_or(false) { args.push(D_KEY); }
-        if new_session.not_update_env.unwrap_or(false) { args.push(E_KEY); }
-        if new_session.print.unwrap_or(false) { args.push(P_KEY); }
-        new_session.cwd.and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        new_session.format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        new_session.window_name.and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
-        new_session.session_name.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        new_session.group_name.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if new_session.attach.unwrap_or(false) {
+            args.push(A_KEY);
+        }
+        if new_session.detached.unwrap_or(false) {
+            args.push(d_KEY);
+        }
+        if new_session.detach_other.unwrap_or(false) {
+            args.push(D_KEY);
+        }
+        if new_session.not_update_env.unwrap_or(false) {
+            args.push(E_KEY);
+        }
+        if new_session.print.unwrap_or(false) {
+            args.push(P_KEY);
+        }
+        new_session
+            .cwd
+            .and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
+        new_session
+            .format
+            .and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        new_session
+            .window_name
+            .and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
+        new_session
+            .session_name
+            .and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
+        new_session
+            .group_name
+            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         //new_session.width.and_then(|n| Some(args.extend_from_slice(&[x_KEY, &n.to_string()])));
         let x;
         if let Some(width) = new_session.width {
@@ -405,7 +429,6 @@ impl<'a> TmuxInterface<'a> {
         }
     }
 
-
     /// Refresh the current client
     ///
     /// # Manual
@@ -414,22 +437,34 @@ impl<'a> TmuxInterface<'a> {
     /// tmux refresh-client [-cDlLRSU] [-C width,height] [-t target-client] [adjustment]
     /// (alias: refresh)
     /// ```
-    pub fn refresh_client(&self,
-                          refresh_client: &RefreshClient
-                          ) -> Result<Output, Error> {
+    pub fn refresh_client(&self, refresh_client: &RefreshClient) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if refresh_client.tracking_cursor.unwrap_or(false) { args.push(c_KEY); }
-        if refresh_client.down.unwrap_or(false) { args.push(D_KEY); }
-        if refresh_client.request_clipboard.unwrap_or(false) { args.push(l_KEY); }
-        if refresh_client.left.unwrap_or(false) { args.push(L_KEY); }
-        if refresh_client.right.unwrap_or(false) { args.push(R_KEY); }
-        if refresh_client.status_line.unwrap_or(false) { args.push(S_KEY); }
+        if refresh_client.tracking_cursor.unwrap_or(false) {
+            args.push(c_KEY);
+        }
+        if refresh_client.down.unwrap_or(false) {
+            args.push(D_KEY);
+        }
+        if refresh_client.request_clipboard.unwrap_or(false) {
+            args.push(l_KEY);
+        }
+        if refresh_client.left.unwrap_or(false) {
+            args.push(L_KEY);
+        }
+        if refresh_client.right.unwrap_or(false) {
+            args.push(R_KEY);
+        }
+        if refresh_client.status_line.unwrap_or(false) {
+            args.push(S_KEY);
+        }
         let s;
         if let Some(size) = refresh_client.size {
             s = format!("{},{}", size.0, size.1);
             args.extend_from_slice(&[C_KEY, &s]);
         }
-        refresh_client.target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        refresh_client
+            .target_client
+            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let n;
         if let Some(adjustment) = refresh_client.adjustment {
             n = adjustment.to_string();
@@ -439,7 +474,6 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
-
     /// Rename the session to `new-name`
     ///
     /// # Manual
@@ -448,17 +482,17 @@ impl<'a> TmuxInterface<'a> {
     /// tmux rename-session [-t target-session] new-name
     /// (alias: rename)
     /// ```
-    pub fn rename_session(&self,
-                          target_session: Option<&str>,
-                          new_name: &str
-                          ) -> Result<Output, Error> {
+    pub fn rename_session(
+        &self,
+        target_session: Option<&str>,
+        new_name: &str,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         args.push(new_name);
         let output = self.subcommand(TmuxInterface::RENAME_SESSION, &args)?;
         Ok(output)
     }
-
 
     /// Show client messages or server information
     ///
@@ -468,19 +502,23 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-messages [-JT] [-t target-client]
     /// (alias: showmsgs)
     /// ```
-    pub fn show_messages(&self,
-                         jobs: Option<bool>,
-                         terminal: Option<bool>,
-                         target_client: Option<&str>
-                         ) -> Result<Output, Error> {
+    pub fn show_messages(
+        &self,
+        jobs: Option<bool>,
+        terminal: Option<bool>,
+        target_client: Option<&str>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if jobs.unwrap_or(false) { args.push(J_KEY); }
-        if terminal.unwrap_or(false) { args.push(T_KEY); }
+        if jobs.unwrap_or(false) {
+            args.push(J_KEY);
+        }
+        if terminal.unwrap_or(false) {
+            args.push(T_KEY);
+        }
         target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::SHOW_MESSAGES, &args)?;
         Ok(output)
     }
-
 
     /// Execute commands from path
     ///
@@ -490,17 +528,15 @@ impl<'a> TmuxInterface<'a> {
     /// tmux source-file [-q] path
     /// (alias: source)
     /// ```
-    pub fn source_file(&self,
-                       quite: Option<bool>,
-                       path: &str
-                       ) -> Result<Output, Error> {
+    pub fn source_file(&self, quite: Option<bool>, path: &str) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if quite.unwrap_or(false) { args.push(q_KEY); }
+        if quite.unwrap_or(false) {
+            args.push(q_KEY);
+        }
         args.push(path);
         let output = self.subcommand(TmuxInterface::SOURCE_FILE, &args)?;
         Ok(output)
     }
-
 
     /// Start the tmux server, if not already running, without creating any sessions
     ///
@@ -515,7 +551,6 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
-
     /// Suspend a client by sending SIGTSTP (tty stop)
     ///
     /// # Manual
@@ -524,15 +559,12 @@ impl<'a> TmuxInterface<'a> {
     /// tmux suspend-client [-t target-client]
     /// (alias: suspendc)
     /// ```
-    pub fn suspend_client(&self,
-                          target_client: Option<&str>
-                          ) -> Result<Output, Error> {
+    pub fn suspend_client(&self, target_client: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
         let output = self.subcommand(TmuxInterface::SUSPEND_CLIENT, &args)?;
         Ok(output)
     }
-
 
     /// Switch the current session for client `target-client` to `target-session`
     ///
@@ -542,21 +574,33 @@ impl<'a> TmuxInterface<'a> {
     /// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
     /// (alias: switchc)
     /// ```
-    pub fn switch_client(&self,
-                         switch_client: &SwitchClient
-                         ) -> Result<Output, Error> {
+    pub fn switch_client(&self, switch_client: &SwitchClient) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if switch_client.not_update_env.unwrap_or(false) { args.push(E_KEY); }
-        if switch_client.last.unwrap_or(false) { args.push(l_KEY); }
-        if switch_client.next.unwrap_or(false) { args.push(n_KEY); }
-        if switch_client.previous.unwrap_or(false) { args.push(p_KEY); }
-        if switch_client.read_only.unwrap_or(false) { args.push(r_KEY); }
-        switch_client.target_client.and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        switch_client.target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        switch_client.key_table.and_then(|s| Some(args.extend_from_slice(&[T_KEY, &s])));
+        if switch_client.not_update_env.unwrap_or(false) {
+            args.push(E_KEY);
+        }
+        if switch_client.last.unwrap_or(false) {
+            args.push(l_KEY);
+        }
+        if switch_client.next.unwrap_or(false) {
+            args.push(n_KEY);
+        }
+        if switch_client.previous.unwrap_or(false) {
+            args.push(p_KEY);
+        }
+        if switch_client.read_only.unwrap_or(false) {
+            args.push(r_KEY);
+        }
+        switch_client
+            .target_client
+            .and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
+        switch_client
+            .target_session
+            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        switch_client
+            .key_table
+            .and_then(|s| Some(args.extend_from_slice(&[T_KEY, &s])));
         let output = self.subcommand(TmuxInterface::SWITCH_CLIENT, &args)?;
         Ok(output)
     }
-
-
 }

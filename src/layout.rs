@@ -1,14 +1,12 @@
-use crate::LayoutCell;
 use crate::Error;
+use crate::LayoutCell;
 use std::str::FromStr;
-
 
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct Layout {
-    pub checksum: usize,       // layout checksum (ref: layout-custom.c -> layout_checksum())
-    pub cell: LayoutCell
+    pub checksum: usize, // layout checksum (ref: layout-custom.c -> layout_checksum())
+    pub cell: LayoutCell,
 }
-
 
 // NOTE: tmux source: layout_custom.c
 // XXX: Optimize?
@@ -22,14 +20,10 @@ impl FromStr for Layout {
         layout.cell = ls[1].parse()?;
         Ok(layout)
     }
-
 }
 
-
 impl Layout {
-
     pub fn new() -> Self {
         Default::default()
     }
-
 }

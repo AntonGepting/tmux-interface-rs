@@ -2,14 +2,9 @@
 fn bool() {
     //let a = "1".parse::<bool>().unwrap();
     let a = "1".parse::<usize>().unwrap();
-    let b = if a == 1 {
-        true
-    } else {
-        false
-    };
+    let b = if a == 1 { true } else { false };
     assert_eq!(b, true);
 }
-
 
 #[test]
 fn parse() {
@@ -20,4 +15,3 @@ fn parse() {
     assert_eq!(pane.current_path, Some("/home/user".to_string()));
     assert_eq!(pane.tty, Some("/dev/pts/2".to_string()));
 }
-

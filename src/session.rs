@@ -1,7 +1,6 @@
-use std::time::Duration;
 use crate::Error;
 use std::str::FromStr;
-
+use std::time::Duration;
 
 pub const SESSION_VARS_SEPARATOR: &str = ":";
 // XXX: mb make all fields optional
@@ -25,10 +24,8 @@ pub const SESSION_VARS_REGEX_VEC: [&str; 15] = [
     "session_windows",
 ];
 
-
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct SessionStack(pub Vec<usize>);
-
 
 impl FromStr for SessionStack {
     type Err = Error;
@@ -42,7 +39,6 @@ impl FromStr for SessionStack {
         Ok(Self(sv))
     }
 }
-
 
 // accordingly to tmux.h: Formats
 // XXX: check all types
@@ -80,7 +76,6 @@ pub struct Session {
     pub windows: Option<usize>,
 }
 
-
 impl FromStr for Session {
     type Err = Error;
 
@@ -90,30 +85,57 @@ impl FromStr for Session {
     fn from_str(s: &str) -> Result<Session, Error> {
         let sv: Vec<&str> = s.split(SESSION_VARS_SEPARATOR).collect();
         let mut s = Session::new();
-        if !sv[0].is_empty() { s.activity = sv[0].parse().ok().map(Duration::from_millis); }
-        if !sv[1].is_empty() { s.alerts = sv[1].parse().ok(); }
-        if !sv[2].is_empty() { s.attached = sv[2].parse().ok(); }
-        if !sv[3].is_empty() { s.created = sv[3].parse().ok().map(Duration::from_millis); }
-        if !sv[4].is_empty() { s.format = sv[4].parse::<usize>().map(|i| i == 1).ok(); }
-        if !sv[5].is_empty() { s.group = sv[5].parse().ok(); }
-        if !sv[6].is_empty() { s.group_list = sv[6].parse().ok(); }
-        if !sv[7].is_empty() { s.group_size = sv[7].parse().ok(); }
-        if !sv[8].is_empty() { s.grouped = sv[8].parse::<usize>().map(|i| i == 1).ok(); }
-        if !sv[9].is_empty() { s.id = sv[9][1..].parse().ok(); } // skip '$' char
-        if !sv[10].is_empty() { s.last_attached = sv[10].parse().ok().map(Duration::from_millis); }
-        if !sv[11].is_empty() { s.many_attached = sv[11].parse::<usize>().map(|i| i == 1).ok(); }
-        if !sv[12].is_empty() { s.name = sv[12].parse().ok(); }
-        if !sv[13].is_empty() { s.stack = sv[13].parse().ok(); }
-        if !sv[14].is_empty() { s.windows = sv[14].parse().ok(); }
+        if !sv[0].is_empty() {
+            s.activity = sv[0].parse().ok().map(Duration::from_millis);
+        }
+        if !sv[1].is_empty() {
+            s.alerts = sv[1].parse().ok();
+        }
+        if !sv[2].is_empty() {
+            s.attached = sv[2].parse().ok();
+        }
+        if !sv[3].is_empty() {
+            s.created = sv[3].parse().ok().map(Duration::from_millis);
+        }
+        if !sv[4].is_empty() {
+            s.format = sv[4].parse::<usize>().map(|i| i == 1).ok();
+        }
+        if !sv[5].is_empty() {
+            s.group = sv[5].parse().ok();
+        }
+        if !sv[6].is_empty() {
+            s.group_list = sv[6].parse().ok();
+        }
+        if !sv[7].is_empty() {
+            s.group_size = sv[7].parse().ok();
+        }
+        if !sv[8].is_empty() {
+            s.grouped = sv[8].parse::<usize>().map(|i| i == 1).ok();
+        }
+        if !sv[9].is_empty() {
+            s.id = sv[9][1..].parse().ok();
+        } // skip '$' char
+        if !sv[10].is_empty() {
+            s.last_attached = sv[10].parse().ok().map(Duration::from_millis);
+        }
+        if !sv[11].is_empty() {
+            s.many_attached = sv[11].parse::<usize>().map(|i| i == 1).ok();
+        }
+        if !sv[12].is_empty() {
+            s.name = sv[12].parse().ok();
+        }
+        if !sv[13].is_empty() {
+            s.stack = sv[13].parse().ok();
+        }
+        if !sv[14].is_empty() {
+            s.windows = sv[14].parse().ok();
+        }
         Ok(s)
     }
 }
 
-
 impl Session {
-
     pub fn new() -> Self {
         Default::default()
     }
-
 }

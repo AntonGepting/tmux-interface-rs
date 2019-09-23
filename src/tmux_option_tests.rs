@@ -1,5 +1,3 @@
-
-
 #[test]
 fn show_options_get_int() {
     use crate::TmuxOption;

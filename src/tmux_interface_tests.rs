@@ -1,6 +1,5 @@
 use crate::TmuxInterface;
 
-
 #[test]
 fn new() {
     let tmux = TmuxInterface::new();
@@ -10,7 +9,6 @@ fn new() {
     assert_eq!(tmux.tmux, Some("tmux_mock"));
 }
 
-
 #[test]
 fn exec_io_error() {
     let mut tmux = TmuxInterface::new();
@@ -19,13 +17,11 @@ fn exec_io_error() {
     assert_eq!(err.message, "io");
 }
 
-
 #[test]
 fn subcommand() {
     let tmux = TmuxInterface::new();
     tmux.subcommand("has", &["-t", "session_name"]).unwrap();
 }
-
 
 #[test]
 fn version() {
@@ -35,7 +31,6 @@ fn version() {
     assert!(version.major >= 1);
 }
 
-
 #[test]
 fn version_io_error() {
     let mut tmux = TmuxInterface::new();
@@ -43,7 +38,6 @@ fn version_io_error() {
     let err = tmux.version().unwrap_err();
     assert_eq!(err.message, "io");
 }
-
 
 #[test]
 fn version_parse_error() {

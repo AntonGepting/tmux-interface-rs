@@ -1,11 +1,10 @@
 #![allow(non_upper_case_globals)]
 
 
-use std::process::{Command, Output};
-use std::str;
 use crate::Error;
 use crate::Version;
-
+use std::process::{Command, Output};
+use std::str;
 
 pub const _1_KEY: &str = "-1";
 pub const _2_KEY: &str = "-2";
@@ -38,7 +37,6 @@ pub const x_KEY: &str = "-x";
 pub const y_KEY: &str = "-y";
 //pub const z_KEY: &str = "-z";
 
-
 #[allow(non_upper_case_globals)]
 pub const A_KEY: &str = "-A";
 //pub const B_KEY: &str = "-B";
@@ -67,9 +65,7 @@ pub const X_KEY: &str = "-X";
 //pub const Y_KEY: &str = "-Y";
 pub const Z_KEY: &str = "-Z";
 
-
 pub const CC_KEY: &str = "-CC";
-
 
 // XXX: mb also add_env, clear_env, remove_env for std::process::Command?
 /// This structure is used to store execution parameters of `tmux`, including binary
@@ -78,37 +74,35 @@ pub const CC_KEY: &str = "-CC";
 #[derive(Default)]
 pub struct TmuxInterface<'a> {
     /// Environment variables for tmux
-    pub environment: Option<&'a str>,                   //
+    pub environment: Option<&'a str>, //
     /// Tmux binary name (default: `tmux`, can be set as `tmux_mock.sh` for "sniffing")
-    pub tmux: Option<&'a str>,                          // tmux (or tmux_mock.sh)
+    pub tmux: Option<&'a str>, // tmux (or tmux_mock.sh)
     /// Force tmux to assume the terminal supports 256 colours
-    pub colours256: Option<bool>,                       // -2
+    pub colours256: Option<bool>, // -2
     /// Start in control mode
-    pub control_mode: Option<bool>,                     // -C
+    pub control_mode: Option<bool>, // -C
     /// Disables echo
-    pub disable_echo: Option<bool>,                     // -CC
+    pub disable_echo: Option<bool>, // -CC
     /// Execute shell-command using the default shell
-    pub shell_cmd: Option<&'a str>,                     // -c shell-command
+    pub shell_cmd: Option<&'a str>, // -c shell-command
     /// Specify an alternative configuration file
-    pub file: Option<&'a str>,                          // -f file
+    pub file: Option<&'a str>, // -f file
     /// Allows a different socket name to be specified
-    pub socket_name: Option<&'a str>,                   // -L socket-name
+    pub socket_name: Option<&'a str>, // -L socket-name
     /// Behave as a login shell
-    pub login_shell: Option<bool>,                      // -l
+    pub login_shell: Option<bool>, // -l
     /// Specify a full alternative path to the server socket
-    pub socket_path: Option<&'a str>,                   // -S socket-path
+    pub socket_path: Option<&'a str>, // -S socket-path
     /// Write UTF-8 output to the terminal
-    pub force_utf8: Option<bool>,                       // -u
+    pub force_utf8: Option<bool>, // -u
     /// Request verbose logging
-    pub verbose_logging: Option<bool>,                  // -v
+    pub verbose_logging: Option<bool>, // -v
     /// Report the tmux version
-    pub version: Option<bool>                           // -V
+    pub version: Option<bool>, // -V
 }
-
 
 /// Common `TmuxInterface` functions
 impl<'a> TmuxInterface<'a> {
-
     const TMUX: &'static str = "tmux";
 
     /// Create new `TmuxInterface` instance initialized with default values
@@ -140,27 +134,41 @@ impl<'a> TmuxInterface<'a> {
         self.exec(&options)
     }
 
-
     pub fn exec(&self, args: &[&str]) -> Result<Output, Error> {
         let mut options: Vec<&str> = Vec::new();
         let mut cmd = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
         // XXX: using environment vars
         //self.environment.and_then(|s| Some(envs.push(s)));
-        if self.colours256.unwrap_or(false) { options.push(_2_KEY); };
-        if self.control_mode.unwrap_or(false) { options.push(C_KEY); };
-        if self.disable_echo.unwrap_or(false) { options.push(CC_KEY); };
-        if self.login_shell.unwrap_or(false) { options.push(l_KEY) };
-        if self.force_utf8.unwrap_or(false) { options.push(u_KEY) }
-        if self.verbose_logging.unwrap_or(false) { options.push(v_KEY) }
-        self.shell_cmd.and_then(|s| Some(options.extend_from_slice(&[c_KEY, &s])));
-        self.file.and_then(|s| Some(options.extend_from_slice(&[f_KEY, &s])));
-        self.socket_name.and_then(|s| Some(options.extend_from_slice(&[L_KEY, &s])));
-        self.socket_path.and_then(|s| Some(options.extend_from_slice(&[S_KEY, &s])));
+        if self.colours256.unwrap_or(false) {
+            options.push(_2_KEY);
+        };
+        if self.control_mode.unwrap_or(false) {
+            options.push(C_KEY);
+        };
+        if self.disable_echo.unwrap_or(false) {
+            options.push(CC_KEY);
+        };
+        if self.login_shell.unwrap_or(false) {
+            options.push(l_KEY)
+        };
+        if self.force_utf8.unwrap_or(false) {
+            options.push(u_KEY)
+        }
+        if self.verbose_logging.unwrap_or(false) {
+            options.push(v_KEY)
+        }
+        self.shell_cmd
+            .and_then(|s| Some(options.extend_from_slice(&[c_KEY, &s])));
+        self.file
+            .and_then(|s| Some(options.extend_from_slice(&[f_KEY, &s])));
+        self.socket_name
+            .and_then(|s| Some(options.extend_from_slice(&[L_KEY, &s])));
+        self.socket_path
+            .and_then(|s| Some(options.extend_from_slice(&[S_KEY, &s])));
         cmd.args(options);
         let output = cmd.args(args).output()?;
         Ok(output)
     }
-
 
     // XXX: refactor: move
     /// # Manual

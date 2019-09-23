@@ -11,7 +11,8 @@ fn parse() {
     assert_eq!(window.name, Some("bash".to_string()));
     assert_eq!(window.id, Some(0));
 
-    let window_str = "1557947146'0'0'0''''1'64'@0'1'0'c3bd,177x64,0,0,0'0'bash'''1'0'3''c3bd,177x64,0,0,0'177'0";
+    let window_str =
+        "1557947146'0'0'0''''1'64'@0'1'0'c3bd,177x64,0,0,0'0'bash'''1'0'3''c3bd,177x64,0,0,0'177'0";
     let window: Window = window_str.parse().unwrap();
     assert_eq!(window.id, Some(0));
 

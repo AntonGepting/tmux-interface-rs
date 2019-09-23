@@ -25,7 +25,7 @@ fn from_str() {
         "tmux 1.1",
         "tmux 1.0",
         "tmux 0.9",
-        "tmux 0.8"
+        "tmux 0.8",
     ];
 
     for example in examples {
@@ -36,9 +36,11 @@ fn from_str() {
     }
 }
 
-
 #[test]
 fn from_str_error() {
     use crate::Version;
-    assert_eq!("tmux a2.8a".parse::<Version>().unwrap_err().message, "parse num");
+    assert_eq!(
+        "tmux a2.8a".parse::<Version>().unwrap_err().message,
+        "parse num"
+    );
 }

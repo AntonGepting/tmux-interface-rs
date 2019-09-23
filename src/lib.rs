@@ -80,37 +80,35 @@
 //! }
 //! ```
 
-
-pub mod tmux_interface;
-pub mod session;
-pub mod sessions;
-pub mod window;
-pub mod windows;
+pub mod buffers;
+pub mod clients_and_sessions;
+pub mod error;
+pub mod global_and_session_environment;
+pub mod hooks;
+pub mod key_bindings;
+pub mod layout;
+pub mod layout_cell;
+pub mod layout_checksum;
+pub mod miscellaneous;
+pub mod options;
 pub mod pane;
 pub mod panes;
-pub mod error;
-pub mod windows_and_panes;
-pub mod clients_and_sessions;
-pub mod key_bindings;
+pub mod session;
+pub mod sessions;
 pub mod status_line;
-pub mod options;
-pub mod hooks;
-pub mod buffers;
-pub mod global_and_session_environment;
-pub mod miscellaneous;
+pub mod tmux_interface;
 pub mod tmux_option;
-pub mod layout_cell;
-pub mod layout;
-pub mod layout_checksum;
 pub mod version;
+pub mod window;
+pub mod windows;
+pub mod windows_and_panes;
 
-
-pub use self::tmux_interface::TmuxInterface;
 pub use self::clients_and_sessions::AttachSession;
 pub use self::clients_and_sessions::DetachClient;
 pub use self::clients_and_sessions::NewSession;
 pub use self::clients_and_sessions::RefreshClient;
 pub use self::clients_and_sessions::SwitchClient;
+pub use self::tmux_interface::TmuxInterface;
 
 pub use self::windows_and_panes::BreakPane;
 pub use self::windows_and_panes::CapturePane;
@@ -139,33 +137,32 @@ pub use self::key_bindings::SendKeys;
 pub use self::options::ShowOptions;
 pub use self::tmux_option::TmuxOption;
 
-pub use self::session::Session;
-pub use self::session::SessionStack;
-pub use self::sessions::Sessions;
-pub use self::window::Window;
-pub use self::windows::Windows;
-pub use self::pane::Pane;
-pub use self::panes::Panes;
-pub use self::version::Version;
 pub use self::layout::Layout;
 pub use self::layout_cell::LayoutCell;
 pub use self::layout_cell::LayoutType;
 pub use self::layout_checksum::LayoutChecksum;
+pub use self::pane::Pane;
+pub use self::panes::Panes;
+pub use self::session::Session;
+pub use self::session::SessionStack;
+pub use self::sessions::Sessions;
+pub use self::version::Version;
+pub use self::window::Window;
+pub use self::windows::Windows;
 
 pub use self::error::Error;
 
-
-#[cfg(test)]
-mod tmux_interface_tests;
-mod session_tests;
-mod sessions_tests;
-mod window_tests;
-mod windows_tests;
 mod pane_tests;
 mod panes_tests;
+mod session_tests;
+mod sessions_tests;
+#[cfg(test)]
+mod tmux_interface_tests;
+mod window_tests;
+mod windows_tests;
 //mod options_tests;
-mod tmux_option_tests;
-mod layout_tests;
 mod layout_cell_tests;
 mod layout_checksum_tests;
+mod layout_tests;
+mod tmux_option_tests;
 mod version_tests;
