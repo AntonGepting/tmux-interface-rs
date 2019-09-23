@@ -19,6 +19,7 @@ impl Panes {
         Panes::parse(&panes_str)
     }
 
+    // TODO: from_str
     pub fn parse(panes_str: &str) -> Result<Vec<Pane>, Error> {
         let mut panes: Vec<Pane> = Vec::new();
         for line in panes_str.lines() {
@@ -26,5 +27,8 @@ impl Panes {
         }
         Ok(panes)
     }
+
+    //pub fn find(&self, id: usize) -> Result<Pane, Error> {
+    //}
 }
 
