@@ -19,6 +19,15 @@ impl FromStr for Windows {
     }
 }
 
+impl IntoIterator for Windows {
+    type Item = Window;
+    type IntoIter = ::std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
+    }
+}
+
 impl Index<usize> for Windows {
     type Output = Window;
 

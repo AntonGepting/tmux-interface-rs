@@ -19,6 +19,15 @@ impl FromStr for Panes {
     }
 }
 
+impl IntoIterator for Panes {
+    type Item = Pane;
+    type IntoIter = ::std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
+    }
+}
+
 impl Index<usize> for Panes {
     type Output = Pane;
 

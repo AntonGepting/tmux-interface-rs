@@ -19,6 +19,15 @@ impl FromStr for Sessions {
     }
 }
 
+impl IntoIterator for Sessions {
+    type Item = Session;
+    type IntoIter = ::std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
+    }
+}
+
 impl Index<usize> for Sessions {
     type Output = Session;
 
