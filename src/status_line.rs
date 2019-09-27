@@ -7,7 +7,7 @@ use std::process::Output;
 /// ```text
 /// tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct CommandPrompt<'a> {
     pub one_keypress: Option<bool>,     // [-1]
     pub on_input_change: Option<bool>,  // [-i]

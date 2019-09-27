@@ -8,7 +8,7 @@ use std::process::Output;
 /// tmux if-shell [-bF] [-t target-pane] shell-command command [command]
 /// (alias: if)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct IfShell<'a> {
     pub backgroud: Option<bool>,         // [-b]
     pub not_execute: Option<bool>,       // [-F]

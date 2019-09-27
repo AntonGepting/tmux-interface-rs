@@ -8,7 +8,7 @@ use std::process::Output;
 /// tmux set-option [-aFgoqsuw] [-t target-session | target-window] option value
 /// (alias: set)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SetOption<'a> {
     pub append: Option<bool>,        // [-a]
     pub format: Option<bool>,        // [-F]
@@ -35,7 +35,7 @@ impl<'a> SetOption<'a> {
 /// tmux set-window-option [-aFgoqu] [-t target-window] option value
 /// (alias: setw)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SetWindowOption<'a> {
     pub append: Option<bool>,           // [-a]
     pub format: Option<bool>,           // [-F]
@@ -62,7 +62,7 @@ impl<'a> SetWindowOption<'a> {
 /// tmux show-options [-gHqsvw] [-t target-session | target-window] [option]
 /// (alias: show)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct ShowOptions<'a> {
     /// global session or window options are listed
     pub global_options: Option<bool>, // [-g]

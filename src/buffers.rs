@@ -7,7 +7,7 @@ use std::process::Output;
 /// ```text
 /// tmux choose-buffer [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct ChooseBuffer<'a> {
     pub no_preview: Option<bool>,     // [-N]
     pub zoom: Option<bool>,           // [-Z]
@@ -30,7 +30,7 @@ impl<'a> ChooseBuffer<'a> {
 /// tmux paste-buffer [-dpr] [-b buffer-name] [-s separator] [-t target-pane]
 /// (alias: pasteb)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct PasteBuffer<'a> {
     pub delete: Option<bool>,         // [-d]
     pub bracket_codes: Option<bool>,  // [-p]

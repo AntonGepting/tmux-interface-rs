@@ -10,7 +10,7 @@ use std::process::Output;
 /// tmux break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
 /// (alias: breakp)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct BreakPane<'a> {
     pub detached: Option<bool>,       // [-d]
     pub print: Option<bool>,          // [-P]
@@ -35,7 +35,7 @@ impl<'a> BreakPane<'a> {
 /// [-t target-pane]
 /// (alias: capturep)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct CapturePane<'a> {
     pub alternate_screen: Option<bool>,     // [-a]
     pub escape_sequences: Option<bool>,     // [-e]
@@ -62,7 +62,7 @@ impl<'a> CapturePane<'a> {
 /// ```text
 /// tmux choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct ChooseClient<'a> {
     pub without_preview: Option<bool>, // [-N]
     pub zoom: Option<bool>,            // [-Z]
@@ -87,7 +87,7 @@ impl<'a> ChooseClient<'a> {
 /// ```text
 /// tmux choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct ChooseTree<'a> {
     pub all: Option<bool>,                // [-G]
     pub without_preview: Option<bool>,    // [-N]
@@ -116,7 +116,7 @@ impl<'a> ChooseTree<'a> {
 /// tmux find-window [-CNTZ] [-t target-pane] match-string
 /// (alias: findw)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct FindWindow<'a> {
     pub only_visible: Option<bool>,   // [-C]
     pub only_name: Option<bool>,      // [-N]
@@ -141,7 +141,7 @@ impl<'a> FindWindow<'a> {
 /// tmux join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct JoinPane<'a> {
     pub left_above: Option<bool>,  // [-b]
     pub detached: Option<bool>,    // [-d]
@@ -167,7 +167,7 @@ impl<'a> JoinPane<'a> {
 /// tmux link-window [-adk] [-s src-window] [-t dst-window]
 /// (alias: linkw)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct LinkWindow<'a> {
     pub add: Option<bool>,           // [-a]
     pub detached: Option<bool>,      // [-d]
@@ -190,7 +190,7 @@ impl<'a> LinkWindow<'a> {
 /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: movep)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct MovePane<'a> {
     pub left_above: Option<bool>,  // [-b]
     pub detached: Option<bool>,    // [-d]
@@ -216,7 +216,7 @@ impl<'a> MovePane<'a> {
 /// tmux move-window [-ardk] [-s src-window] [-t dst-window]
 /// (alias: movew)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct MoveWindow<'a> {
     pub add: Option<bool>,           // [-a]
     pub renumber: Option<bool>,      // [-r]
@@ -241,7 +241,7 @@ impl<'a> MoveWindow<'a> {
 /// [shell-command]
 /// (alias: neww)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct NewWindow<'a> {
     pub add: Option<bool>,              // [-a]
     pub detached: Option<bool>,         // [-d]
@@ -268,7 +268,7 @@ impl<'a> NewWindow<'a> {
 /// tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
 /// (alias: resizep)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct ResizePane<'a> {
     pub down: Option<bool>,           // [-D]
     pub left: Option<bool>,           // [-L]
@@ -296,7 +296,7 @@ impl<'a> ResizePane<'a> {
 /// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
 /// (alias: resizew)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct ResizeWindow<'a> {
     pub smallest: Option<bool>,         // [-a]
     pub largest: Option<bool>,          // [-A]
@@ -324,7 +324,7 @@ impl<'a> ResizeWindow<'a> {
 /// tmux respawn-pane [-k] [-c start-directory] [-e environment] [-t target-pane] [shell-command]
 /// (alias: respawnp)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct RespawnPane<'a> {
     pub kill: Option<bool>,               // [-k]
     pub start_directory: Option<&'a str>, // [-c start-directory]
@@ -348,7 +348,7 @@ impl<'a> RespawnPane<'a> {
 /// [shell-command]
 /// (alias: respawnw)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct RespawnWindow<'a> {
     pub kill: Option<bool>,               // [-k]
     pub start_directory: Option<&'a str>, // [-c start-directory]
@@ -371,7 +371,7 @@ impl<'a> RespawnWindow<'a> {
 /// tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
 /// (alias: pipep)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct PipePane<'a> {
     pub stdout: Option<bool>,           // [-I]
     pub stdin: Option<bool>,            // [-O]
@@ -394,7 +394,7 @@ impl<'a> PipePane<'a> {
 /// tmux select-layout [-Enop] [-t target-pane] [layout-name]
 /// (alias: selectl)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SelectLayot<'a> {
     pub spread: Option<bool>,         // [-E]
     pub next: Option<bool>,           // [-n]
@@ -417,7 +417,7 @@ impl<'a> SelectLayot<'a> {
 /// tmux select-pane [-DdegLlMmRU] [-P style] [-T title] [-t target-pane]
 /// (alias: selectp)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SelectPane<'a> {
     pub down: Option<bool>,           // [-D]
     pub disable: Option<bool>,        // [-d]
@@ -447,7 +447,7 @@ impl<'a> SelectPane<'a> {
 /// tmux select-window [-lnpT] [-t target-window]
 /// (alias: selectw)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SelectWindow<'a> {
     pub last: Option<bool>,             // [-l]
     pub next: Option<bool>,             // [-n]
@@ -469,7 +469,7 @@ impl<'a> SelectWindow<'a> {
 /// [-t target-pane] [shell-command] [-F format]
 /// (alias: splitw)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SplitWindow<'a> {
     pub before: Option<bool>,           // [-b]
     pub detached: Option<bool>,         // [-d]
@@ -499,7 +499,7 @@ impl<'a> SplitWindow<'a> {
 /// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
 /// (alias: swapp)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SwapPane<'a> {
     pub detached: Option<bool>,    // [-d]
     pub previous: Option<&'a str>, // [-D]

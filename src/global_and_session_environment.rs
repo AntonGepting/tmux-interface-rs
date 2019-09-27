@@ -8,7 +8,7 @@ use std::process::Output;
 /// tmux set-environment [-gru] [-t target-session] name [value]
 /// (alias: setenv)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SetEnvironment<'a> {
     pub global: Option<bool>,            // [-g]
     pub remove: Option<bool>,            // [-r]

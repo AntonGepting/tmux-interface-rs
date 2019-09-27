@@ -10,7 +10,7 @@ use std::process::Output;
 /// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
 /// (alias: attach)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct AttachSession<'a> {
     /// any other clients attached to the session are detached
     pub detach_other: Option<bool>, // [-d]
@@ -38,7 +38,7 @@ impl<'a> AttachSession<'a> {
 /// tmux detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
 /// (alias: detach)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct DetachClient<'a> {
     pub all: Option<bool>,               // [-a]
     pub parent_sighup: Option<bool>,     // [-P]
@@ -63,7 +63,7 @@ impl<'a> DetachClient<'a> {
 /// [shell-command]
 /// (alias: new)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct NewSession<'a> {
     /// behave like `attach-session` if `session-name` already exists
     pub attach: Option<bool>, // [-A]
@@ -107,7 +107,7 @@ impl<'a> NewSession<'a> {
 /// tmux refresh-client [-cDlLRSU] [-C width,height] [-t target-client] [adjustment]
 /// (alias: refresh)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct RefreshClient<'a> {
     pub tracking_cursor: Option<bool>,   // [-c]
     pub down: Option<bool>,              // [-D]
@@ -135,7 +135,7 @@ impl<'a> RefreshClient<'a> {
 /// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
 /// (alias: switchc)
 /// ```
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SwitchClient<'a> {
     pub not_update_env: Option<bool>,    // [-E]
     pub last: Option<bool>,              // [-l]
