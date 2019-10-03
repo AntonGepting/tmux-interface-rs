@@ -115,7 +115,7 @@ impl FromStr for PaneTabs {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         //let a: Vec<usize> = s.split(",").map(|c| c.parse::<usize>().unwrap()).collect();
         let mut tabs = Vec::new();
-        for tab in s.split(",").collect::<Vec<&str>>() {
+        for tab in s.split(',').collect::<Vec<&str>>() {
             tabs.push(tab.parse()?);
         }
         Ok(Self(tabs))

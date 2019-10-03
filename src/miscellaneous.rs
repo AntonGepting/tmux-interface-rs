@@ -39,7 +39,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn clock_mode(&self, target_pane: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::CLOCK_MODE, &args)?;
         Ok(output)
     }
@@ -58,12 +60,14 @@ impl<'a> TmuxInterface<'a> {
         if if_shell.not_execute.unwrap_or(false) {
             args.push(F_KEY);
         }
-        if_shell
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = if_shell.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         args.push(if_shell.shell_command);
         args.push(if_shell.first_command);
-        if_shell.second_command.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = if_shell.second_command {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::IF_SHELL, &args)?;
         Ok(output)
     }
@@ -95,7 +99,9 @@ impl<'a> TmuxInterface<'a> {
         if backgroud.unwrap_or(false) {
             args.push(b_KEY);
         }
-        target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         args.push(shell_command);
         let output = self.subcommand(TmuxInterface::RUN_SHELL, &args)?;
         Ok(output)

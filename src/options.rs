@@ -127,9 +127,9 @@ impl<'a> TmuxInterface<'a> {
         if set_option.window.unwrap_or(false) {
             args.push(w_KEY);
         }
-        set_option
-            .target
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = set_option.target {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         args.push(set_option.option);
         args.push(set_option.value);
         let output = self.subcommand(TmuxInterface::SET_OPTION, &args)?;
@@ -162,9 +162,9 @@ impl<'a> TmuxInterface<'a> {
         if set_window_option.unset.unwrap_or(false) {
             args.push(u_KEY);
         }
-        set_window_option
-            .target_window
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = set_window_option.target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         args.push(set_window_option.option);
         args.push(set_window_option.value);
         let output = self.subcommand(TmuxInterface::SET_WINDOW_OPTION, &args)?;
@@ -198,10 +198,12 @@ impl<'a> TmuxInterface<'a> {
         if show_options.window_options.unwrap_or(false) {
             args.push(w_KEY);
         }
-        show_options
-            .target
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        show_options.option.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = show_options.target {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = show_options.option {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::SHOW_OPTIONS, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         Ok(stdout.to_string())
@@ -227,8 +229,12 @@ impl<'a> TmuxInterface<'a> {
         if only_value.unwrap_or(false) {
             args.push(v_KEY);
         }
-        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        option.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = option {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::SHOW_WINDOW_OPTIONS, &args)?;
         Ok(output)
     }

@@ -146,7 +146,9 @@ impl LayoutCell {
                             child = Default::default();
                             // TODO: remove unwrap
                             state = child.fsm(chars, LayoutFSMState::X).unwrap();
-                            self.cells.as_mut().and_then(|c| Some(c.push(child)));
+                            if let Some(c) = self.cells.as_mut() {
+                                c.push(child)
+                            }
                             if state == LayoutFSMState::EndNested || state == LayoutFSMState::EOL {
                                 break;
                             }
@@ -162,7 +164,9 @@ impl LayoutCell {
                             child = Default::default();
                             // TODO: remove unwrap
                             state = child.fsm(chars, LayoutFSMState::X).unwrap();
-                            self.cells.as_mut().and_then(|c| Some(c.push(child)));
+                            if let Some(c) = self.cells.as_mut() {
+                                c.push(child)
+                            }
                             if state == LayoutFSMState::EndNested || state == LayoutFSMState::EOL {
                                 break;
                             }

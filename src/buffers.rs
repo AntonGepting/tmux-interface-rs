@@ -72,19 +72,21 @@ impl<'a> TmuxInterface<'a> {
         if choose_buffer.zoom.unwrap_or(false) {
             args.push(Z_KEY);
         }
-        choose_buffer
-            .format
-            .and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        choose_buffer
-            .filter
-            .and_then(|s| Some(args.extend_from_slice(&[f_KEY, &s])));
-        choose_buffer
-            .sort_order
-            .and_then(|s| Some(args.extend_from_slice(&[O_KEY, &s])));
-        choose_buffer
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        choose_buffer.template.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = choose_buffer.format {
+            args.extend_from_slice(&[F_KEY, &s])
+        }
+        if let Some(s) = choose_buffer.filter {
+            args.extend_from_slice(&[f_KEY, &s])
+        }
+        if let Some(s) = choose_buffer.sort_order {
+            args.extend_from_slice(&[O_KEY, &s])
+        }
+        if let Some(s) = choose_buffer.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = choose_buffer.template {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::CHOOSE_BUFFER, &args)?;
         Ok(output)
     }
@@ -97,7 +99,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn clear_history(&self, target_pane: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::CLEAR_HISTORY, &args)?;
         Ok(output)
     }
@@ -110,7 +114,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn delete_buffer(&self, buffer_name: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        buffer_name.and_then(|s| Some(args.extend_from_slice(&[b_KEY, &s])));
+        if let Some(s) = buffer_name {
+            args.extend_from_slice(&[b_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::DELETE_BUFFER, &args)?;
         Ok(output)
     }
@@ -123,7 +129,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn list_buffers(&self, format: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        if let Some(s) = format {
+            args.extend_from_slice(&[F_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::LIST_BUFFERS, &args)?;
         Ok(output)
     }
@@ -136,7 +144,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn load_buffer(&self, buffer_name: Option<&str>, path: &str) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        buffer_name.and_then(|s| Some(args.extend_from_slice(&[b_KEY, &s])));
+        if let Some(s) = buffer_name {
+            args.extend_from_slice(&[b_KEY, &s])
+        }
         args.push(path);
         let output = self.subcommand(TmuxInterface::LOAD_BUFFER, &args)?;
         Ok(output)
@@ -159,15 +169,15 @@ impl<'a> TmuxInterface<'a> {
         if paste_buffer.no_replacement.unwrap_or(false) {
             args.push(r_KEY);
         }
-        paste_buffer
-            .buffer_name
-            .and_then(|s| Some(args.extend_from_slice(&[b_KEY, &s])));
-        paste_buffer
-            .separator
-            .and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        paste_buffer
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = paste_buffer.buffer_name {
+            args.extend_from_slice(&[b_KEY, &s])
+        }
+        if let Some(s) = paste_buffer.separator {
+            args.extend_from_slice(&[s_KEY, &s])
+        }
+        if let Some(s) = paste_buffer.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::PASTE_BUFFER, &args)?;
         Ok(output)
     }
@@ -188,7 +198,9 @@ impl<'a> TmuxInterface<'a> {
         if append.unwrap_or(false) {
             args.push(a_KEY);
         }
-        buffer_name.and_then(|s| Some(args.extend_from_slice(&[b_KEY, &s])));
+        if let Some(s) = buffer_name {
+            args.extend_from_slice(&[b_KEY, &s])
+        }
         args.push(path);
         let output = self.subcommand(TmuxInterface::SAVE_BUFFER, &args)?;
         Ok(output)
@@ -211,8 +223,12 @@ impl<'a> TmuxInterface<'a> {
         if append.unwrap_or(false) {
             args.push(a_KEY);
         }
-        buffer_name.and_then(|s| Some(args.extend_from_slice(&[b_KEY, &s])));
-        new_buffer_name.and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
+        if let Some(s) = buffer_name {
+            args.extend_from_slice(&[b_KEY, &s])
+        }
+        if let Some(s) = new_buffer_name {
+            args.extend_from_slice(&[n_KEY, &s])
+        }
         args.push(data);
         let output = self.subcommand(TmuxInterface::SET_BUFFER, &args)?;
         Ok(output)
@@ -226,7 +242,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn show_buffer(&self, buffer_name: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        buffer_name.and_then(|s| Some(args.extend_from_slice(&[b_KEY, &s])));
+        if let Some(s) = buffer_name {
+            args.extend_from_slice(&[b_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::SHOW_BUFFER, &args)?;
         Ok(output)
     }

@@ -56,22 +56,18 @@ impl FromStr for WindowFlag {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut wf = WindowFlag(WINDOW_FLAG_DEFAULT);
-        let mut chrs = s.chars();
-        loop {
-            if let Some(c) = chrs.next() {
-                match c {
-                    '*' => wf.0 += WINDOW_FLAG_CURRENT,
-                    '-' => wf.0 += WINDOW_FLAG_LAST,
-                    '#' => wf.0 += WINDOW_FLAG_ACTIVITY,
-                    '!' => wf.0 += WINDOW_FLAG_BELL,
-                    '~' => wf.0 += WINDOW_FLAG_SILENCED,
-                    'M' => wf.0 += WINDOW_FLAG_MARKED,
-                    'Z' => wf.0 += WINDOW_FLAG_ZOOMED,
-                    // XXX: Error description
-                    _ => return Err(Error::new("Parse WindowFlag Error")),
-                }
-            } else {
-                break;
+        let chrs = s.chars();
+        for c in chrs {
+            match c {
+                '*' => wf.0 += WINDOW_FLAG_CURRENT,
+                '-' => wf.0 += WINDOW_FLAG_LAST,
+                '#' => wf.0 += WINDOW_FLAG_ACTIVITY,
+                '!' => wf.0 += WINDOW_FLAG_BELL,
+                '~' => wf.0 += WINDOW_FLAG_SILENCED,
+                'M' => wf.0 += WINDOW_FLAG_MARKED,
+                'Z' => wf.0 += WINDOW_FLAG_ZOOMED,
+                // XXX: Error description
+                _ => return Err(Error::new("Parse WindowFlag Error")),
             }
         }
         Ok(wf)

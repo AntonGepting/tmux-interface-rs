@@ -203,7 +203,7 @@ pub struct MovePane<'a> {
 }
 
 impl<'a> MovePane<'a> {
-    pub fn new() -> JoinPane<'a> {
+    pub fn new() -> Self {
         Default::default()
     }
 }
@@ -578,7 +578,9 @@ impl<'a> TmuxInterface<'a> {
         if page_up.unwrap_or(false) {
             args.push(u_KEY);
         }
-        target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::COPY_MODE, &args)?;
         Ok(output)
     }
@@ -599,18 +601,18 @@ impl<'a> TmuxInterface<'a> {
         if break_pane.print.unwrap_or(false) {
             args.push(P_KEY);
         }
-        break_pane
-            .format
-            .and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        break_pane
-            .window_name
-            .and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
-        break_pane
-            .src_pane
-            .and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        break_pane
-            .dst_window
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = break_pane.format {
+            args.extend_from_slice(&[F_KEY, &s])
+        }
+        if let Some(s) = break_pane.window_name {
+            args.extend_from_slice(&[n_KEY, &s])
+        }
+        if let Some(s) = break_pane.src_pane {
+            args.extend_from_slice(&[s_KEY, &s])
+        }
+        if let Some(s) = break_pane.dst_window {
+            args.extend_from_slice(&[t_KEY, &s]);
+        }
         let output = self.subcommand(TmuxInterface::BREAK_PANE, &args)?;
         Ok(output)
     }
@@ -647,15 +649,15 @@ impl<'a> TmuxInterface<'a> {
         if capture_pane.join.unwrap_or(false) {
             args.push(J_KEY);
         }
-        capture_pane
-            .buffer_name
-            .and_then(|s| Some(args.extend_from_slice(&[b_KEY, &s])));
-        capture_pane
-            .end_line
-            .and_then(|s| Some(args.extend_from_slice(&[E_KEY, &s])));
-        capture_pane
-            .start_line
-            .and_then(|s| Some(args.extend_from_slice(&[S_KEY, &s])));
+        if let Some(s) = capture_pane.buffer_name {
+            args.extend_from_slice(&[b_KEY, &s])
+        }
+        if let Some(s) = capture_pane.end_line {
+            args.extend_from_slice(&[E_KEY, &s])
+        }
+        if let Some(s) = capture_pane.start_line {
+            args.extend_from_slice(&[S_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::CAPTURE_PANE, &args)?;
         Ok(output)
     }
@@ -676,19 +678,21 @@ impl<'a> TmuxInterface<'a> {
         if choose_client.zoom.unwrap_or(false) {
             args.push(Z_KEY);
         }
-        choose_client
-            .format
-            .and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        choose_client
-            .filter
-            .and_then(|s| Some(args.extend_from_slice(&[f_KEY, &s])));
-        choose_client
-            .sort_order
-            .and_then(|s| Some(args.extend_from_slice(&[O_KEY, &s])));
-        choose_client
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        choose_client.template.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = choose_client.format {
+            args.extend_from_slice(&[F_KEY, &s])
+        }
+        if let Some(s) = choose_client.filter {
+            args.extend_from_slice(&[f_KEY, &s])
+        }
+        if let Some(s) = choose_client.sort_order {
+            args.extend_from_slice(&[O_KEY, &s])
+        }
+        if let Some(s) = choose_client.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = choose_client.template {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::CHOOSE_CLIENT, &args)?;
         Ok(output)
     }
@@ -719,19 +723,21 @@ impl<'a> TmuxInterface<'a> {
         if choose_tree.zoom.unwrap_or(false) {
             args.push(Z_KEY);
         }
-        choose_tree
-            .format
-            .and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        choose_tree
-            .filter
-            .and_then(|s| Some(args.extend_from_slice(&[f_KEY, &s])));
-        choose_tree
-            .sort_order
-            .and_then(|s| Some(args.extend_from_slice(&[O_KEY, &s])));
-        choose_tree
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        choose_tree.template.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = choose_tree.format {
+            args.extend_from_slice(&[F_KEY, &s])
+        }
+        if let Some(s) = choose_tree.filter {
+            args.extend_from_slice(&[f_KEY, &s])
+        }
+        if let Some(s) = choose_tree.sort_order {
+            args.extend_from_slice(&[O_KEY, &s])
+        }
+        if let Some(s) = choose_tree.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = choose_tree.template {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::CHOOSE_TREE, &args)?;
         Ok(output)
     }
@@ -754,9 +760,15 @@ impl<'a> TmuxInterface<'a> {
         if not_block.unwrap_or(false) {
             args.push(b_KEY);
         }
-        duration.and_then(|s| Some(args.extend_from_slice(&[d_KEY, &s])));
-        target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        template.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = duration {
+            args.extend_from_slice(&[d_KEY, &s])
+        }
+        if let Some(s) = target_client {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = template {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::DISPLAY_PANES, &args)?;
         Ok(output)
     }
@@ -784,9 +796,9 @@ impl<'a> TmuxInterface<'a> {
         if find_window.zoom.unwrap_or(false) {
             args.push(Z_KEY);
         }
-        find_window
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = find_window.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         args.push(find_window.match_string);
         let output = self.subcommand(TmuxInterface::FIND_WINDOW, &args)?;
         Ok(output)
@@ -825,12 +837,12 @@ impl<'a> TmuxInterface<'a> {
             p = percentage.to_string();
             args.extend_from_slice(&[p_KEY, &p]);
         }
-        join_pane
-            .src_pane
-            .and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        join_pane
-            .dst_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = join_pane.src_pane {
+            args.extend_from_slice(&[s_KEY, &s])
+        }
+        if let Some(s) = join_pane.dst_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::JOIN_PANE, &args)?;
         Ok(output)
     }
@@ -848,7 +860,9 @@ impl<'a> TmuxInterface<'a> {
         if all.unwrap_or(false) {
             args.push(a_KEY);
         }
-        target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::KILL_PANE, &args)?;
         Ok(output)
     }
@@ -871,7 +885,9 @@ impl<'a> TmuxInterface<'a> {
         if all.unwrap_or(false) {
             args.push(a_KEY);
         }
-        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::KILL_WINDOW, &args)?;
         Ok(output)
     }
@@ -897,7 +913,9 @@ impl<'a> TmuxInterface<'a> {
         if enable.unwrap_or(false) {
             args.push(e_KEY);
         }
-        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::LAST_PANE, &args)?;
         Ok(output)
     }
@@ -912,7 +930,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn last_window(&self, target_session: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::LAST_WINDOW, &args)?;
         Ok(output)
     }
@@ -936,12 +956,12 @@ impl<'a> TmuxInterface<'a> {
         if link_window.kill.unwrap_or(false) {
             args.push(k_KEY);
         }
-        link_window
-            .src_window
-            .and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        link_window
-            .dst_window
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = link_window.src_window {
+            args.extend_from_slice(&[s_KEY, &s])
+        }
+        if let Some(s) = link_window.dst_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::LINK_WINDOW, &args)?;
         Ok(output)
     }
@@ -969,8 +989,12 @@ impl<'a> TmuxInterface<'a> {
         if session {
             args.push(s_KEY);
         }
-        format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        target.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = format {
+            args.extend_from_slice(&[F_KEY, &s])
+        }
+        if let Some(s) = target {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::LIST_PANES, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         Ok(stdout.to_string())
@@ -995,8 +1019,12 @@ impl<'a> TmuxInterface<'a> {
         if all {
             args.push(a_KEY);
         }
-        format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, s])));
-        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
+        if let Some(s) = format {
+            args.extend_from_slice(&[F_KEY, s])
+        }
+        if let Some(s) = target_session {
+            args.extend_from_slice(&[t_KEY, s])
+        }
         let output = self.subcommand(TmuxInterface::LIST_WINDOWS, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         Ok(stdout.to_string())
@@ -1034,12 +1062,12 @@ impl<'a> TmuxInterface<'a> {
             p = percentage.to_string();
             args.extend_from_slice(&[p_KEY, &p]);
         }
-        move_pane
-            .src_pane
-            .and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        move_pane
-            .dst_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = move_pane.src_pane {
+            args.extend_from_slice(&[s_KEY, &s])
+        }
+        if let Some(s) = move_pane.dst_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::MOVE_PANE, &args)?;
         Ok(output)
     }
@@ -1066,12 +1094,12 @@ impl<'a> TmuxInterface<'a> {
         if move_window.kill.unwrap_or(false) {
             args.push(k_KEY);
         }
-        move_window
-            .src_window
-            .and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        move_window
-            .dst_window
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = move_window.src_window {
+            args.extend_from_slice(&[s_KEY, &s])
+        }
+        if let Some(s) = move_window.dst_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::MOVE_WINDOW, &args)?;
         Ok(output)
     }
@@ -1100,19 +1128,21 @@ impl<'a> TmuxInterface<'a> {
         if new_window.print.unwrap_or(false) {
             args.push(P_KEY);
         }
-        new_window
-            .cwd
-            .and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        new_window
-            .window_name
-            .and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
-        new_window
-            .format
-            .and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        new_window
-            .target_window
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        new_window.shell_command.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = new_window.cwd {
+            args.extend_from_slice(&[c_KEY, &s])
+        }
+        if let Some(s) = new_window.window_name {
+            args.extend_from_slice(&[n_KEY, &s])
+        }
+        if let Some(s) = new_window.format {
+            args.extend_from_slice(&[F_KEY, &s])
+        }
+        if let Some(s) = new_window.target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = new_window.shell_command {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::NEW_WINDOW, &args)?;
         if output.status.success() {
             let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
@@ -1133,7 +1163,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn next_layout(&self, target_window: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::NEXT_LAYOUT, &args)?;
         Ok(output)
     }
@@ -1153,7 +1185,9 @@ impl<'a> TmuxInterface<'a> {
         if alert.unwrap_or(false) {
             args.push(a_KEY);
         }
-        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::NEXT_WINDOW, &args)?;
         Ok(output)
     }
@@ -1177,10 +1211,12 @@ impl<'a> TmuxInterface<'a> {
         if pipe_pane.open.unwrap_or(false) {
             args.push(o_KEY);
         }
-        pipe_pane
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        pipe_pane.shell_command.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = pipe_pane.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = pipe_pane.shell_command {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::PIPE_PANE, &args)?;
         Ok(output)
     }
@@ -1195,7 +1231,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn previous_layout(&self, target_window: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::PREVIOUS_LAYOUT, &args)?;
         Ok(output)
     }
@@ -1217,7 +1255,9 @@ impl<'a> TmuxInterface<'a> {
         if alert.unwrap_or(false) {
             args.push(a_KEY);
         }
-        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::PREVIOUS_WINDOW, &args)?;
         Ok(output)
     }
@@ -1236,7 +1276,9 @@ impl<'a> TmuxInterface<'a> {
         new_name: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         args.push(new_name);
         let output = self.subcommand(TmuxInterface::RENAME_WINDOW, &args)?;
         Ok(output)
@@ -1270,9 +1312,9 @@ impl<'a> TmuxInterface<'a> {
         if resize_pane.zoom.unwrap_or(false) {
             args.push(Z_KEY);
         }
-        resize_pane
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = resize_pane.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let x;
         if let Some(width) = resize_pane.width {
             x = width.to_string();
@@ -1283,7 +1325,9 @@ impl<'a> TmuxInterface<'a> {
             y = height.to_string();
             args.extend_from_slice(&[y_KEY, &y]);
         }
-        resize_pane.adjustment.and_then(|s| Some(args.push(s)));
+        if let Some(s) = resize_pane.adjustment {
+            args.push(s)
+        }
         let output = self.subcommand(TmuxInterface::RESIZE_PANE, &args)?;
         Ok(output)
     }
@@ -1316,9 +1360,9 @@ impl<'a> TmuxInterface<'a> {
         if resize_window.up.unwrap_or(false) {
             args.push(U_KEY);
         }
-        resize_window
-            .target_window
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = resize_window.target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let x;
         if let Some(width) = resize_window.width {
             x = width.to_string();
@@ -1329,7 +1373,9 @@ impl<'a> TmuxInterface<'a> {
             y = height.to_string();
             args.extend_from_slice(&[y_KEY, &y]);
         }
-        resize_window.adjustment.and_then(|s| Some(args.push(s)));
+        if let Some(s) = resize_window.adjustment {
+            args.push(s)
+        }
         let output = self.subcommand(TmuxInterface::RESIZE_WINDOW, &args)?;
         Ok(output)
     }
@@ -1348,16 +1394,18 @@ impl<'a> TmuxInterface<'a> {
         if respawn_pane.kill.unwrap_or(false) {
             args.push(k_KEY);
         }
-        respawn_pane
-            .start_directory
-            .and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        respawn_pane
-            .environment
-            .and_then(|s| Some(args.extend_from_slice(&[e_KEY, &s])));
-        respawn_pane
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        respawn_pane.shell_command.and_then(|s| Some(args.push(s)));
+        if let Some(s) = respawn_pane.start_directory {
+            args.extend_from_slice(&[c_KEY, &s])
+        }
+        if let Some(s) = respawn_pane.environment {
+            args.extend_from_slice(&[e_KEY, &s])
+        }
+        if let Some(s) = respawn_pane.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = respawn_pane.shell_command {
+            args.push(s)
+        }
         let output = self.subcommand(TmuxInterface::RESPAWN_PANE, &args)?;
         Ok(output)
     }
@@ -1376,18 +1424,18 @@ impl<'a> TmuxInterface<'a> {
         if respawn_window.kill.unwrap_or(false) {
             args.push(k_KEY);
         }
-        respawn_window
-            .start_directory
-            .and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        respawn_window
-            .environment
-            .and_then(|s| Some(args.extend_from_slice(&[e_KEY, &s])));
-        respawn_window
-            .target_window
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        respawn_window
-            .shell_command
-            .and_then(|s| Some(args.push(s)));
+        if let Some(s) = respawn_window.start_directory {
+            args.extend_from_slice(&[c_KEY, &s])
+        }
+        if let Some(s) = respawn_window.environment {
+            args.extend_from_slice(&[e_KEY, &s])
+        }
+        if let Some(s) = respawn_window.target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = respawn_window.shell_command {
+            args.push(s)
+        }
         let output = self.subcommand(TmuxInterface::RESPAWN_WINDOW, &args)?;
         Ok(output)
     }
@@ -1413,7 +1461,9 @@ impl<'a> TmuxInterface<'a> {
         if up.unwrap_or(false) {
             args.push(U_KEY);
         }
-        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::ROTATE_WINDOW, &args)?;
         Ok(output)
     }
@@ -1440,10 +1490,12 @@ impl<'a> TmuxInterface<'a> {
         if select_layout.previous.unwrap_or(false) {
             args.push(p_KEY);
         }
-        select_layout
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        select_layout.layout_name.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = select_layout.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = select_layout.layout_name {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::SELECT_LAYOUT, &args)?;
         Ok(output)
     }
@@ -1488,15 +1540,15 @@ impl<'a> TmuxInterface<'a> {
         if select_pane.up.unwrap_or(false) {
             args.push(U_KEY);
         }
-        select_pane
-            .style
-            .and_then(|s| Some(args.extend_from_slice(&[P_KEY, s])));
-        select_pane
-            .title
-            .and_then(|s| Some(args.extend_from_slice(&[T_KEY, s])));
-        select_pane
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
+        if let Some(s) = select_pane.style {
+            args.extend_from_slice(&[P_KEY, s])
+        }
+        if let Some(s) = select_pane.title {
+            args.extend_from_slice(&[T_KEY, s])
+        }
+        if let Some(s) = select_pane.target_pane {
+            args.extend_from_slice(&[t_KEY, s])
+        }
         let output = self.subcommand(TmuxInterface::SELECT_PANE, &args)?;
         Ok(output)
     }
@@ -1523,9 +1575,9 @@ impl<'a> TmuxInterface<'a> {
         if select_window.switch.unwrap_or(false) {
             args.push(T_KEY);
         }
-        select_window
-            .target_window
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
+        if let Some(s) = select_window.target_window {
+            args.extend_from_slice(&[t_KEY, s])
+        }
         let output = self.subcommand(TmuxInterface::SELECT_WINDOW, &args)?;
         Ok(output)
     }
@@ -1559,9 +1611,9 @@ impl<'a> TmuxInterface<'a> {
         if split_window.print.unwrap_or(false) {
             args.push(P_KEY);
         }
-        split_window
-            .cwd
-            .and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
+        if let Some(s) = split_window.cwd {
+            args.extend_from_slice(&[c_KEY, &s]);
+        }
         let s;
         if let Some(size) = split_window.size {
             s = size.to_string();
@@ -1572,13 +1624,15 @@ impl<'a> TmuxInterface<'a> {
             p = percentage.to_string();
             args.extend_from_slice(&[p_KEY, &p]);
         }
-        split_window
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        split_window.shell_command.and_then(|s| Some(args.push(&s)));
-        split_window
-            .format
-            .and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        if let Some(s) = split_window.shell_command {
+            args.push(&s)
+        }
+        if let Some(s) = split_window.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = split_window.format {
+            args.extend_from_slice(&[F_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::SPLIT_WINDOW, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         Ok(stdout.to_string())
@@ -1603,12 +1657,12 @@ impl<'a> TmuxInterface<'a> {
         if swap_pane.detached.unwrap_or(false) {
             args.push(U_KEY);
         }
-        swap_pane
-            .src_pane
-            .and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        swap_pane
-            .dst_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = swap_pane.src_pane {
+            args.extend_from_slice(&[s_KEY, &s])
+        }
+        if let Some(s) = swap_pane.dst_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::SWAP_PANE, &args)?;
         Ok(output)
     }
@@ -1631,8 +1685,12 @@ impl<'a> TmuxInterface<'a> {
         if detached.unwrap_or(false) {
             args.push(d_KEY);
         }
-        src_window.and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        dst_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = src_window {
+            args.extend_from_slice(&[s_KEY, &s])
+        }
+        if let Some(s) = dst_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::SWAP_WINDOW, &args)?;
         Ok(output)
     }
@@ -1654,7 +1712,9 @@ impl<'a> TmuxInterface<'a> {
         if k.unwrap_or(false) {
             args.push(k_KEY);
         }
-        target_window.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_window {
+            args.extend_from_slice(&[t_KEY, &s]);
+        }
         let output = self.subcommand(TmuxInterface::UNLINK_WINDOW, &args)?;
         Ok(output)
     }

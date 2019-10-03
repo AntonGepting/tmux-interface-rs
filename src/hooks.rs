@@ -48,9 +48,9 @@ impl<'a> TmuxInterface<'a> {
         if set_hook.unset.unwrap_or(false) {
             args.push(u_KEY);
         }
-        set_hook
-            .target_session
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = set_hook.target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         args.push(set_hook.hook_name);
         args.push(set_hook.command);
         let output = self.subcommand(TmuxInterface::SET_HOOK, &args)?;
@@ -71,7 +71,9 @@ impl<'a> TmuxInterface<'a> {
         if global.unwrap_or(false) {
             args.push(g_KEY);
         }
-        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::SHOW_HOOK, &args)?;
         Ok(output)
     }

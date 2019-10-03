@@ -194,12 +194,12 @@ impl<'a> TmuxInterface<'a> {
         if attach_session.read_only.unwrap_or(false) {
             args.push(r_KEY);
         }
-        attach_session
-            .cwd
-            .and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        attach_session
-            .target_session
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = attach_session.cwd {
+            args.extend_from_slice(&[c_KEY, &s])
+        }
+        if let Some(s) = attach_session.target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::ATTACH_SESSION, &args)?;
         Ok(output)
     }
@@ -220,15 +220,15 @@ impl<'a> TmuxInterface<'a> {
         if detach_client.parent_sighup.unwrap_or(false) {
             args.push(P_KEY);
         }
-        detach_client
-            .shell_command
-            .and_then(|s| Some(args.extend_from_slice(&[E_KEY, &s])));
-        detach_client
-            .target_session
-            .and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        detach_client
-            .target_client
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = detach_client.shell_command {
+            args.extend_from_slice(&[E_KEY, &s])
+        }
+        if let Some(s) = detach_client.target_session {
+            args.extend_from_slice(&[s_KEY, &s])
+        }
+        if let Some(s) = detach_client.target_client {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::DETACH_CLIENT, &args)?;
         Ok(output)
     }
@@ -244,7 +244,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn has_session(&self, target_session: Option<&str>) -> Result<bool, Error> {
         let mut args: Vec<&str> = Vec::new();
-        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
+        if let Some(s) = target_session {
+            args.extend_from_slice(&[t_KEY, s])
+        }
         let output = self.subcommand(TmuxInterface::HAS_SESSION, &args)?;
         Ok(output.status.success())
     }
@@ -281,7 +283,9 @@ impl<'a> TmuxInterface<'a> {
         if clear_alerts.unwrap_or(false) {
             args.push(C_KEY);
         }
-        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::KILL_SESSION, &args)?;
         Ok(output)
     }
@@ -300,8 +304,12 @@ impl<'a> TmuxInterface<'a> {
         target_session: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = format {
+            args.extend_from_slice(&[F_KEY, &s])
+        }
+        if let Some(s) = target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::LIST_CLIENTS, &args)?;
         Ok(output)
     }
@@ -316,7 +324,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn list_commands(&self, format: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
+        if let Some(s) = format {
+            args.extend_from_slice(&[F_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::LIST_COMMANDS, &args)?;
         Ok(output)
     }
@@ -331,7 +341,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn list_sessions(&self, format: Option<&str>) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
-        format.and_then(|s| Some(args.extend_from_slice(&[F_KEY, s])));
+        if let Some(s) = format {
+            args.extend_from_slice(&[F_KEY, s])
+        }
         let output = self.subcommand(TmuxInterface::LIST_SESSIONS, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         Ok(stdout.to_string())
@@ -347,7 +359,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn lock_client(&self, target_client: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
+        if let Some(s) = target_client {
+            args.extend_from_slice(&[t_KEY, s])
+        }
         let output = self.subcommand(TmuxInterface::LOCK_CLIENT, &args)?;
         Ok(output)
     }
@@ -361,7 +375,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn lock_session(&self, target_session: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
+        if let Some(s) = target_session {
+            args.extend_from_slice(&[t_KEY, s])
+        }
         let output = self.subcommand(TmuxInterface::LOCK_SESSION, &[""])?;
         Ok(output)
     }
@@ -392,22 +408,22 @@ impl<'a> TmuxInterface<'a> {
         if new_session.print.unwrap_or(false) {
             args.push(P_KEY);
         }
-        new_session
-            .cwd
-            .and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        new_session
-            .format
-            .and_then(|s| Some(args.extend_from_slice(&[F_KEY, &s])));
-        new_session
-            .window_name
-            .and_then(|s| Some(args.extend_from_slice(&[n_KEY, &s])));
-        new_session
-            .session_name
-            .and_then(|s| Some(args.extend_from_slice(&[s_KEY, &s])));
-        new_session
-            .group_name
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        //new_session.width.and_then(|n| Some(args.extend_from_slice(&[x_KEY, &n.to_string()])));
+        if let Some(s) = new_session.cwd {
+            args.extend_from_slice(&[c_KEY, &s])
+        }
+        if let Some(s) = new_session.format {
+            args.extend_from_slice(&[F_KEY, &s])
+        }
+        if let Some(s) = new_session.window_name {
+            args.extend_from_slice(&[n_KEY, &s])
+        }
+        if let Some(s) = new_session.session_name {
+            args.extend_from_slice(&[s_KEY, &s])
+        }
+        if let Some(s) = new_session.group_name {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        //new_session.width.map(|n| args.extend_from_slice(&[x_KEY, &n.to_string()]));
         let x;
         if let Some(width) = new_session.width {
             x = width.to_string();
@@ -418,7 +434,9 @@ impl<'a> TmuxInterface<'a> {
             y = height.to_string();
             args.extend_from_slice(&[y_KEY, &y]);
         }
-        new_session.shell_command.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = new_session.shell_command {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::NEW_SESSION, &args)?;
         if output.status.success() {
             let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
@@ -462,9 +480,9 @@ impl<'a> TmuxInterface<'a> {
             s = format!("{},{}", size.0, size.1);
             args.extend_from_slice(&[C_KEY, &s]);
         }
-        refresh_client
-            .target_client
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = refresh_client.target_client {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let n;
         if let Some(adjustment) = refresh_client.adjustment {
             n = adjustment.to_string();
@@ -488,7 +506,9 @@ impl<'a> TmuxInterface<'a> {
         new_name: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         args.push(new_name);
         let output = self.subcommand(TmuxInterface::RENAME_SESSION, &args)?;
         Ok(output)
@@ -515,7 +535,9 @@ impl<'a> TmuxInterface<'a> {
         if terminal.unwrap_or(false) {
             args.push(T_KEY);
         }
-        target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_client {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::SHOW_MESSAGES, &args)?;
         Ok(output)
     }
@@ -561,7 +583,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn suspend_client(&self, target_client: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_client {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::SUSPEND_CLIENT, &args)?;
         Ok(output)
     }
@@ -591,15 +615,15 @@ impl<'a> TmuxInterface<'a> {
         if switch_client.read_only.unwrap_or(false) {
             args.push(r_KEY);
         }
-        switch_client
-            .target_client
-            .and_then(|s| Some(args.extend_from_slice(&[c_KEY, &s])));
-        switch_client
-            .target_session
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        switch_client
-            .key_table
-            .and_then(|s| Some(args.extend_from_slice(&[T_KEY, &s])));
+        if let Some(s) = switch_client.target_client {
+            args.extend_from_slice(&[c_KEY, &s])
+        }
+        if let Some(s) = switch_client.target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = switch_client.key_table {
+            args.extend_from_slice(&[T_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::SWITCH_CLIENT, &args)?;
         Ok(output)
     }

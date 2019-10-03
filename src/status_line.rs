@@ -42,16 +42,18 @@ impl<'a> TmuxInterface<'a> {
         if command_prompt.on_input_change.unwrap_or(false) {
             args.push(i_KEY);
         }
-        command_prompt
-            .inputs
-            .and_then(|s| Some(args.extend_from_slice(&[I_KEY, &s])));
-        command_prompt
-            .prompts
-            .and_then(|s| Some(args.extend_from_slice(&[p_KEY, &s])));
-        command_prompt
-            .target_client
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        command_prompt.template.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = command_prompt.inputs {
+            args.extend_from_slice(&[I_KEY, &s])
+        }
+        if let Some(s) = command_prompt.prompts {
+            args.extend_from_slice(&[p_KEY, &s])
+        }
+        if let Some(s) = command_prompt.target_client {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = command_prompt.template {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::COMMAND_PROMPT, &args)?;
         Ok(output)
     }
@@ -69,8 +71,12 @@ impl<'a> TmuxInterface<'a> {
         command: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        prompt.and_then(|s| Some(args.extend_from_slice(&[p_KEY, &s])));
-        target_client.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = prompt {
+            args.extend_from_slice(&[p_KEY, &s])
+        }
+        if let Some(s) = target_client {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         args.push(command);
         let output = self.subcommand(TmuxInterface::CONFIRM_BEFORE, &args)?;
         Ok(output)
@@ -93,9 +99,15 @@ impl<'a> TmuxInterface<'a> {
         if print.unwrap_or(false) {
             args.push(p_KEY);
         }
-        target_client.and_then(|s| Some(args.extend_from_slice(&[c_KEY, s])));
-        target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, s])));
-        message.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = target_client {
+            args.extend_from_slice(&[c_KEY, s])
+        }
+        if let Some(s) = target_pane {
+            args.extend_from_slice(&[t_KEY, s])
+        }
+        if let Some(s) = message {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::DISPLAY_MESSAGE, &args)?;
         Ok(output)
     }

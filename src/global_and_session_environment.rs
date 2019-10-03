@@ -46,11 +46,13 @@ impl<'a> TmuxInterface<'a> {
         if set_environment.unset.unwrap_or(false) {
             args.push(u_KEY);
         }
-        set_environment
-            .target_session
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = set_environment.target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         args.push(set_environment.name);
-        set_environment.value.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = set_environment.value {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::SET_ENVIRONMENT, &args)?;
         Ok(output)
     }
@@ -75,8 +77,12 @@ impl<'a> TmuxInterface<'a> {
         if shell_format.unwrap_or(false) {
             args.push(s_KEY);
         }
-        target_session.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
-        variable.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = target_session {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = variable {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::SHOW_ENVIRONMENT, &args)?;
         Ok(output)
     }

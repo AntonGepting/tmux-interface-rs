@@ -157,14 +157,18 @@ impl<'a> TmuxInterface<'a> {
         if self.verbose_logging.unwrap_or(false) {
             options.push(v_KEY)
         }
-        self.shell_cmd
-            .and_then(|s| Some(options.extend_from_slice(&[c_KEY, &s])));
-        self.file
-            .and_then(|s| Some(options.extend_from_slice(&[f_KEY, &s])));
-        self.socket_name
-            .and_then(|s| Some(options.extend_from_slice(&[L_KEY, &s])));
-        self.socket_path
-            .and_then(|s| Some(options.extend_from_slice(&[S_KEY, &s])));
+        if let Some(s) = self.shell_cmd {
+            options.extend_from_slice(&[c_KEY, &s])
+        }
+        if let Some(s) = self.file {
+            options.extend_from_slice(&[f_KEY, &s])
+        }
+        if let Some(s) = self.socket_name {
+            options.extend_from_slice(&[L_KEY, &s])
+        }
+        if let Some(s) = self.socket_path {
+            options.extend_from_slice(&[S_KEY, &s])
+        }
         cmd.args(options);
         let output = cmd.args(args).output()?;
         Ok(output)

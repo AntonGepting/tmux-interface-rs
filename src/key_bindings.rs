@@ -69,12 +69,14 @@ impl<'a> TmuxInterface<'a> {
         if bind_key.repeat.unwrap_or(false) {
             args.push(r_KEY);
         }
-        bind_key
-            .key_table
-            .and_then(|s| Some(args.extend_from_slice(&[T_KEY, &s])));
+        if let Some(s) = bind_key.key_table {
+            args.extend_from_slice(&[T_KEY, &s])
+        }
         args.push(bind_key.key);
         args.push(bind_key.command);
-        bind_key.arguments.and_then(|s| Some(args.push(&s)));
+        if let Some(s) = bind_key.arguments {
+            args.push(&s)
+        }
         let output = self.subcommand(TmuxInterface::BIND_KEY, &args)?;
         Ok(output)
     }
@@ -87,7 +89,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn list_keys(&self, key_table: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        key_table.and_then(|s| Some(args.extend_from_slice(&[T_KEY, &s])));
+        if let Some(s) = key_table {
+            args.extend_from_slice(&[T_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::LIST_KEYS, &args)?;
         Ok(output)
     }
@@ -113,15 +117,15 @@ impl<'a> TmuxInterface<'a> {
         if send_keys.reset.unwrap_or(false) {
             args.push(X_KEY);
         }
-        //send_keys.repeat_count.and_then(|s| Some(args.extend_from_slice(&[N_KEY, s])));
+        //send_keys.repeat_count.map(|s| Some(args.extend_from_slice(&[N_KEY, s])));
         let s;
         if let Some(repeat_count) = send_keys.repeat_count {
             s = repeat_count.to_string();
             args.extend_from_slice(&[N_KEY, &s]);
         }
-        send_keys
-            .target_pane
-            .and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = send_keys.target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         //args.extend_from_slice(send_keys.keys.as_slice());
         //args.extend_from_slice(send_keys.keys);
         args.append(&mut send_keys.key.clone());
@@ -144,7 +148,9 @@ impl<'a> TmuxInterface<'a> {
         if secondary.unwrap_or(false) {
             args.push(_2_KEY);
         }
-        target_pane.and_then(|s| Some(args.extend_from_slice(&[t_KEY, &s])));
+        if let Some(s) = target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
         let output = self.subcommand(TmuxInterface::SEND_PREFIX, &args)?;
         Ok(output)
     }
@@ -169,7 +175,9 @@ impl<'a> TmuxInterface<'a> {
         if root.unwrap_or(false) {
             args.push(n_KEY);
         }
-        key_table.and_then(|s| Some(args.extend_from_slice(&[T_KEY, &s])));
+        if let Some(s) = key_table {
+            args.extend_from_slice(&[T_KEY, &s])
+        }
         args.push(key);
         let output = self.subcommand(TmuxInterface::UNBIND_KEY, &args)?;
         Ok(output)
