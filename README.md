@@ -61,7 +61,7 @@ and testing purposes. Do not use them in your Projects.
         - [`error.rs`](src/error.rs) - error propagating functions
         - [`lib.rs`](src/lib.rs) - main library file
 
-    2. TMUX functions (structure like in TMUX manual):
+    2. TMUX functions (structure similar to TMUX manual):
 
         - [`clients_and_sessions.rs`](src/clients_and_sessions.rs)
         - [`windows_and_panes.rs`](src/windows_and_panes.rs)
