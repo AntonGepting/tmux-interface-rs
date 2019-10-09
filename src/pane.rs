@@ -1,46 +1,55 @@
 use crate::Error;
-use std::str::FromStr;
+use crate::PaneTabs;
 
 pub const PANE_VARS_SEPARATOR: &str = "'";
-// XXX: mb make all fields optional
 // FIXME: regex name can be anything, and other keys should be checked better
-pub const PANE_VARS_REGEX_VEC: [&str; 31] = [
-    "pane_active",
-    "pane_at_bottom",
-    "pane_at_left",
-    "pane_at_right",
-    "pane_at_top",
-    "pane_bottom",
-    "pane_current_command",
-    "pane_current_path",
-    "pane_dead",
-    "pane_dead_status",
-    "pane_format",
-    "pane_height",
-    "pane_id",
-    "pane_in_mode",
-    "pane_index",
-    "pane_input_off",
-    "pane_left",
-    "pane_marked",
-    "pane_marked_set",
-    "pane_mode",
-    "pane_pid",
-    "pane_pipe",
-    "pane_right",
-    "pane_search_string",
-    "pane_start_command",
-    "pane_synchronized",
-    "pane_tabs",
-    "pane_title",
-    "pane_top",
-    "pane_tty",
-    "pane_width",
+pub const PANE_VARS_REGEX_VEC: [(&str, usize); 31] = [
+    ("pane_active", Pane::PANE_ACTIVE),
+    ("pane_at_bottom", Pane::PANE_AT_BOTTOM),
+    ("pane_at_left", Pane::PANE_AT_LEFT),
+    ("pane_at_right", Pane::PANE_AT_RIGHT),
+    ("pane_at_top", Pane::PANE_AT_TOP),
+    ("pane_bottom", Pane::PANE_BOTTOM),
+    ("pane_current_command", Pane::PANE_CURRENT_COMMAND),
+    ("pane_current_path", Pane::PANE_CURRENT_PATH),
+    ("pane_dead", Pane::PANE_DEAD),
+    ("pane_dead_status", Pane::PANE_DEAD),
+    ("pane_format", Pane::PANE_FORMAT),
+    ("pane_height", Pane::PANE_HEIGHT),
+    ("pane_id", Pane::PANE_ID),
+    ("pane_in_mode", Pane::PANE_IN_MODE),
+    ("pane_index", Pane::PANE_INDEX),
+    ("pane_input_off", Pane::PANE_INPUT_OFF),
+    ("pane_left", Pane::PANE_LEFT),
+    ("pane_marked", Pane::PANE_MARKED),
+    ("pane_marked_set", Pane::PANE_MARKED_SET),
+    ("pane_mode", Pane::PANE_MODE),
+    ("pane_pid", Pane::PANE_PID),
+    ("pane_pipe", Pane::PANE_PIPE),
+    ("pane_right", Pane::PANE_RIGHT),
+    ("pane_search_string", Pane::PANE_SEARCH_STRING),
+    ("pane_start_command", Pane::PANE_START_COMMMAND),
+    ("pane_synchronized", Pane::PANE_SYNCHRONIZED),
+    ("pane_tabs", Pane::PANE_TABS),
+    ("pane_title", Pane::PANE_TITLE),
+    ("pane_top", Pane::PANE_TOP),
+    ("pane_tty", Pane::PANE_TTY),
+    ("pane_width", Pane::PANE_WIDTH),
 ];
+
+pub fn get_fmt_string(bitflags: usize) -> String {
+    let lsp_format = PANE_VARS_REGEX_VEC
+        .iter()
+        .filter(|t| bitflags & t.1 == t.1)
+        .map(|t| format!("#{{{}}}", t.0))
+        .collect::<Vec<String>>()
+        .join(PANE_VARS_SEPARATOR);
+    lsp_format
+}
 
 // accordingly to tmux.h: Formats
 // XXX: check all types
-#[derive(Default, Clone, Debug)]
+#[derive(Default, Clone, PartialEq, Debug)]
 pub struct Pane {
     /// 1 if active pane
     pub active: Option<bool>,
@@ -106,129 +115,139 @@ pub struct Pane {
     pub width: Option<usize>,
 }
 
-#[derive(Default, PartialEq, Clone, Debug)]
-pub struct PaneTabs(pub Vec<usize>);
-
-impl FromStr for PaneTabs {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        //let a: Vec<usize> = s.split(",").map(|c| c.parse::<usize>().unwrap()).collect();
-        let mut tabs = Vec::new();
-        for tab in s.split(',').collect::<Vec<&str>>() {
-            tabs.push(tab.parse()?);
-        }
-        Ok(Self(tabs))
-    }
-}
-
-impl FromStr for Pane {
-    type Err = Error;
-
-    // XXX: mb serde, deserialize?
-    fn from_str(pane_str: &str) -> Result<Pane, Error> {
-        let pv: Vec<&str> = pane_str.split(PANE_VARS_SEPARATOR).collect();
-        let mut p = Pane::new();
-        // XXX: optimize?
-        if !pv[0].is_empty() {
-            p.active = pv[0].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[1].is_empty() {
-            p.at_bottom = pv[1].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[2].is_empty() {
-            p.at_left = pv[2].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[3].is_empty() {
-            p.at_right = pv[3].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[4].is_empty() {
-            p.at_top = pv[4].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[5].is_empty() {
-            p.bottom = pv[5].parse().ok();
-        }
-        if !pv[6].is_empty() {
-            p.current_command = pv[6].parse().ok();
-        }
-        if !pv[7].is_empty() {
-            p.current_path = pv[7].parse().ok();
-        }
-        if !pv[8].is_empty() {
-            p.dead = pv[8].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[9].is_empty() {
-            p.dead_status = pv[9].parse().ok();
-        }
-        if !pv[10].is_empty() {
-            p.format = pv[10].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[11].is_empty() {
-            p.height = pv[11].parse().ok();
-        }
-        if !pv[12].is_empty() {
-            p.id = pv[12][1..].parse().ok();
-        } // skip '%' char
-        if !pv[13].is_empty() {
-            p.in_mode = pv[12].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[14].is_empty() {
-            p.index = pv[14].parse().ok();
-        }
-        if !pv[15].is_empty() {
-            p.input_off = pv[15].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[16].is_empty() {
-            p.left = pv[16].parse().ok();
-        }
-        if !pv[17].is_empty() {
-            p.marked = pv[17].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[18].is_empty() {
-            p.marked_set = pv[18].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[19].is_empty() {
-            p.mode = pv[19].parse().ok();
-        }
-        if !pv[20].is_empty() {
-            p.pid = pv[20].parse().ok();
-        }
-        if !pv[21].is_empty() {
-            p.pipe = pv[21].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[22].is_empty() {
-            p.right = pv[22].parse().ok();
-        }
-        if !pv[23].is_empty() {
-            p.search_string = pv[23].parse().ok();
-        }
-        if !pv[24].is_empty() {
-            p.start_command = pv[24].parse().ok();
-        }
-        if !pv[25].is_empty() {
-            p.synchronized = pv[25].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !pv[26].is_empty() {
-            p.tabs = pv[26].parse().ok();
-        }
-        if !pv[27].is_empty() {
-            p.title = pv[27].parse().ok();
-        }
-        if !pv[28].is_empty() {
-            p.top = pv[28].parse().ok();
-        }
-        if !pv[29].is_empty() {
-            p.tty = pv[29].parse().ok();
-        }
-        if !pv[30].is_empty() {
-            p.width = pv[30].parse().ok();
-        }
-        Ok(p)
-    }
-}
-
 impl Pane {
+    pub const PANE_ACTIVE: usize = 1 << 0;
+    pub const PANE_AT_BOTTOM: usize = 1 << 1;
+    pub const PANE_AT_LEFT: usize = 1 << 2;
+    pub const PANE_AT_RIGHT: usize = 1 << 3;
+    pub const PANE_AT_TOP: usize = 1 << 4;
+    pub const PANE_BOTTOM: usize = 1 << 5;
+    pub const PANE_CURRENT_COMMAND: usize = 1 << 6;
+    pub const PANE_CURRENT_PATH: usize = 1 << 7;
+    pub const PANE_DEAD: usize = 1 << 8;
+    pub const PANE_DEAD_STATUS: usize = 1 << 9;
+    pub const PANE_FORMAT: usize = 1 << 10;
+    pub const PANE_HEIGHT: usize = 1 << 11;
+    pub const PANE_ID: usize = 1 << 12;
+    pub const PANE_IN_MODE: usize = 1 << 13;
+    pub const PANE_INDEX: usize = 1 << 14;
+    pub const PANE_INPUT_OFF: usize = 1 << 15;
+    pub const PANE_LEFT: usize = 1 << 16;
+    pub const PANE_MARKED: usize = 1 << 17;
+    pub const PANE_MARKED_SET: usize = 1 << 18;
+    pub const PANE_MODE: usize = 1 << 19;
+    pub const PANE_PID: usize = 1 << 20;
+    pub const PANE_PIPE: usize = 1 << 21;
+    pub const PANE_RIGHT: usize = 1 << 22;
+    pub const PANE_SEARCH_STRING: usize = 1 << 23;
+    pub const PANE_START_COMMMAND: usize = 1 << 24;
+    pub const PANE_SYNCHRONIZED: usize = 1 << 25;
+    pub const PANE_TABS: usize = 1 << 26;
+    pub const PANE_TITLE: usize = 1 << 27;
+    pub const PANE_TOP: usize = 1 << 28;
+    pub const PANE_TTY: usize = 1 << 29;
+    pub const PANE_WIDTH: usize = 1 << 30;
+
+    pub const PANE_NONE: usize = 0;
+    pub const PANE_ALL: usize = Self::PANE_ACTIVE
+        | Self::PANE_AT_BOTTOM
+        | Self::PANE_AT_LEFT
+        | Self::PANE_AT_RIGHT
+        | Self::PANE_AT_TOP
+        | Self::PANE_BOTTOM
+        | Self::PANE_CURRENT_COMMAND
+        | Self::PANE_CURRENT_PATH
+        | Self::PANE_DEAD
+        | Self::PANE_DEAD_STATUS
+        | Self::PANE_FORMAT
+        | Self::PANE_HEIGHT
+        | Self::PANE_ID
+        | Self::PANE_IN_MODE
+        | Self::PANE_INDEX
+        | Self::PANE_INPUT_OFF
+        | Self::PANE_LEFT
+        | Self::PANE_MARKED
+        | Self::PANE_MARKED_SET
+        | Self::PANE_MODE
+        | Self::PANE_PID
+        | Self::PANE_PIPE
+        | Self::PANE_RIGHT
+        | Self::PANE_SEARCH_STRING
+        | Self::PANE_START_COMMMAND
+        | Self::PANE_SYNCHRONIZED
+        | Self::PANE_TABS
+        | Self::PANE_TITLE
+        | Self::PANE_TOP
+        | Self::PANE_TTY
+        | Self::PANE_WIDTH;
+
     pub fn new() -> Self {
         Default::default()
+    }
+
+    pub fn from_str(pane_str: &str, bitflags: usize) -> Result<Self, Error> {
+        let panes_str: Vec<&str> = pane_str.split(PANE_VARS_SEPARATOR).collect();
+        let mut p = Pane::new();
+        for (i, format_variable) in PANE_VARS_REGEX_VEC.iter().enumerate() {
+            if !panes_str[i].is_empty() {
+                match bitflags & format_variable.1 {
+                    Pane::PANE_ACTIVE => {
+                        p.active = panes_str[i].parse::<usize>().map(|b| b == 1).ok()
+                    }
+                    Pane::PANE_AT_BOTTOM => {
+                        p.at_bottom = panes_str[i].parse::<usize>().map(|b| b == 1).ok()
+                    }
+                    Pane::PANE_AT_LEFT => {
+                        p.at_left = panes_str[i].parse::<usize>().map(|b| b == 1).ok()
+                    }
+                    Pane::PANE_AT_RIGHT => {
+                        p.at_right = panes_str[i].parse::<usize>().map(|b| b == 1).ok()
+                    }
+                    Pane::PANE_AT_TOP => {
+                        p.at_top = panes_str[i].parse::<usize>().map(|b| b == 1).ok()
+                    }
+                    Pane::PANE_BOTTOM => p.bottom = panes_str[i].parse().ok(),
+                    Pane::PANE_CURRENT_COMMAND => p.current_command = panes_str[i].parse().ok(),
+                    Pane::PANE_CURRENT_PATH => p.current_path = panes_str[i].parse().ok(),
+                    Pane::PANE_DEAD => p.dead = panes_str[i].parse::<usize>().map(|b| b == 1).ok(),
+                    Pane::PANE_DEAD_STATUS => p.dead_status = panes_str[i].parse().ok(),
+                    Pane::PANE_FORMAT => {
+                        p.format = panes_str[i].parse::<usize>().map(|b| b == 1).ok()
+                    }
+                    Pane::PANE_HEIGHT => p.height = panes_str[i].parse().ok(),
+                    Pane::PANE_ID => p.id = panes_str[i][1..].parse().ok(), // skip '%' char
+                    Pane::PANE_IN_MODE => {
+                        p.in_mode = panes_str[i].parse::<usize>().map(|b| b == 1).ok()
+                    }
+                    Pane::PANE_INDEX => p.index = panes_str[i].parse().ok(),
+                    Pane::PANE_INPUT_OFF => {
+                        p.input_off = panes_str[i].parse::<usize>().map(|b| b == 1).ok()
+                    }
+                    Pane::PANE_LEFT => p.left = panes_str[i].parse().ok(),
+                    Pane::PANE_MARKED => {
+                        p.marked = panes_str[i].parse::<usize>().map(|b| b == 1).ok()
+                    }
+                    Pane::PANE_MARKED_SET => {
+                        p.marked_set = panes_str[i].parse::<usize>().map(|b| b == 1).ok()
+                    }
+                    Pane::PANE_MODE => p.mode = panes_str[i].parse().ok(),
+                    Pane::PANE_PID => p.pid = panes_str[i].parse().ok(),
+                    Pane::PANE_PIPE => p.pipe = panes_str[i].parse::<usize>().map(|b| b == 1).ok(),
+                    Pane::PANE_RIGHT => p.right = panes_str[i].parse().ok(),
+                    Pane::PANE_SEARCH_STRING => p.search_string = panes_str[i].parse().ok(),
+                    Pane::PANE_START_COMMMAND => p.start_command = panes_str[i].parse().ok(),
+                    Pane::PANE_SYNCHRONIZED => {
+                        p.synchronized = panes_str[i].parse::<usize>().map(|b| b == 1).ok()
+                    }
+                    Pane::PANE_TABS => p.tabs = panes_str[i].parse().ok(),
+                    Pane::PANE_TITLE => p.title = panes_str[i].parse().ok(),
+                    Pane::PANE_TOP => p.top = panes_str[i].parse().ok(),
+                    Pane::PANE_TTY => p.tty = panes_str[i].parse().ok(),
+                    Pane::PANE_WIDTH => p.width = panes_str[i].parse().ok(),
+                    _ => (),
+                }
+            }
+        }
+        Ok(p)
     }
 }

@@ -6,22 +6,22 @@ pub const SESSION_VARS_SEPARATOR: &str = ":";
 // XXX: mb make all fields optional
 // FIXME: regex name can be anything, and other keys should be checked better
 // NOTE: no colons or periods (ref: int session_check_name(const char *name))
-pub const SESSION_VARS_REGEX_VEC: [&str; 15] = [
-    "session_activity",
-    "session_alerts",
-    "session_attached",
-    "session_created",
-    "session_format",
-    "session_group",
-    "session_group_list",
-    "session_group_size",
-    "session_grouped",
-    "session_id",
-    "session_last_attached",
-    "session_many_attached",
-    "session_name",
-    "session_stack",
-    "session_windows",
+pub const SESSION_VARS_REGEX_VEC: [(&str, usize); 15] = [
+    ("session_activity", Session::SESSION_ACTIVITY),
+    ("session_alerts", Session::SESSION_ALERTS),
+    ("session_attached", Session::SESSION_ATTACHED),
+    ("session_created", Session::SESSION_CREATED),
+    ("session_format", Session::SESSION_FORMAT),
+    ("session_group", Session::SESSION_GROUP),
+    ("session_group_list", Session::SESSION_GROUP_LIST),
+    ("session_group_size", Session::SESSION_GROUP_SIZE),
+    ("session_grouped", Session::SESSION_GROUPED),
+    ("session_id", Session::SESSION_ID),
+    ("session_last_attached", Session::SESSION_LAST_ATTACHED),
+    ("session_many_attached", Session::SESSION_MANY_ATTACHED),
+    ("session_name", Session::SESSION_NAME),
+    ("session_stack", Session::SESSION_STACK),
+    ("session_windows", Session::SESSION_WINDOWS),
 ];
 
 #[derive(Default, PartialEq, Clone, Debug)]
@@ -76,66 +76,82 @@ pub struct Session {
     pub windows: Option<usize>,
 }
 
-impl FromStr for Session {
-    type Err = Error;
+impl Session {
+    pub const SESSION_ACTIVITY: usize = 1 << 0;
+    pub const SESSION_ALERTS: usize = 1 << 1;
+    pub const SESSION_ATTACHED: usize = 1 << 2;
+    pub const SESSION_CREATED: usize = 1 << 3;
+    pub const SESSION_FORMAT: usize = 1 << 4;
+    pub const SESSION_GROUP: usize = 1 << 5;
+    pub const SESSION_GROUP_LIST: usize = 1 << 6;
+    pub const SESSION_GROUP_SIZE: usize = 1 << 7;
+    pub const SESSION_GROUPED: usize = 1 << 8;
+    pub const SESSION_ID: usize = 1 << 9;
+    pub const SESSION_LAST_ATTACHED: usize = 1 << 10;
+    pub const SESSION_MANY_ATTACHED: usize = 1 << 11;
+    pub const SESSION_NAME: usize = 1 << 12;
+    pub const SESSION_STACK: usize = 1 << 13;
+    pub const SESSION_WINDOWS: usize = 1 << 14;
+
+    pub const SESSION_NONE: usize = 0;
+    pub const SESSION_ALL: usize = Self::SESSION_ACTIVITY
+        | Self::SESSION_ATTACHED
+        | Self::SESSION_CREATED
+        | Self::SESSION_FORMAT
+        | Self::SESSION_GROUP
+        | Self::SESSION_GROUP_LIST
+        | Self::SESSION_GROUP_SIZE
+        | Self::SESSION_GROUPED
+        | Self::SESSION_ID
+        | Self::SESSION_LAST_ATTACHED
+        | Self::SESSION_MANY_ATTACHED
+        | Self::SESSION_NAME
+        | Self::SESSION_STACK
+        | Self::SESSION_WINDOWS;
+
+    pub fn new() -> Self {
+        Default::default()
+    }
 
     // XXX: mb deserialize?
     // XXX: mb callback
     // XXX: optimize?
-    fn from_str(s: &str) -> Result<Session, Error> {
+    pub fn from_str(s: &str, bitflags: usize) -> Result<Self, Error> {
         let sv: Vec<&str> = s.split(SESSION_VARS_SEPARATOR).collect();
+        // XXX: optimize?
         let mut s = Session::new();
-        if !sv[0].is_empty() {
-            s.activity = sv[0].parse().ok().map(Duration::from_millis);
-        }
-        if !sv[1].is_empty() {
-            s.alerts = sv[1].parse().ok();
-        }
-        if !sv[2].is_empty() {
-            s.attached = sv[2].parse().ok();
-        }
-        if !sv[3].is_empty() {
-            s.created = sv[3].parse().ok().map(Duration::from_millis);
-        }
-        if !sv[4].is_empty() {
-            s.format = sv[4].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !sv[5].is_empty() {
-            s.group = sv[5].parse().ok();
-        }
-        if !sv[6].is_empty() {
-            s.group_list = sv[6].parse().ok();
-        }
-        if !sv[7].is_empty() {
-            s.group_size = sv[7].parse().ok();
-        }
-        if !sv[8].is_empty() {
-            s.grouped = sv[8].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !sv[9].is_empty() {
-            s.id = sv[9][1..].parse().ok();
-        } // skip '$' char
-        if !sv[10].is_empty() {
-            s.last_attached = sv[10].parse().ok().map(Duration::from_millis);
-        }
-        if !sv[11].is_empty() {
-            s.many_attached = sv[11].parse::<usize>().map(|i| i == 1).ok();
-        }
-        if !sv[12].is_empty() {
-            s.name = sv[12].parse().ok();
-        }
-        if !sv[13].is_empty() {
-            s.stack = sv[13].parse().ok();
-        }
-        if !sv[14].is_empty() {
-            s.windows = sv[14].parse().ok();
+        for (i, format_variable) in SESSION_VARS_REGEX_VEC.iter().enumerate() {
+            if !sv[i].is_empty() {
+                match bitflags & format_variable.1 {
+                    Self::SESSION_ACTIVITY => {
+                        s.activity = sv[0].parse().ok().map(Duration::from_millis)
+                    }
+                    Self::SESSION_ALERTS => s.alerts = sv[1].parse().ok(),
+                    Self::SESSION_ATTACHED => s.attached = sv[2].parse().ok(),
+                    Self::SESSION_CREATED => {
+                        s.created = sv[3].parse().ok().map(Duration::from_millis)
+                    }
+                    Self::SESSION_FORMAT => s.format = sv[4].parse::<usize>().map(|i| i == 1).ok(),
+                    Self::SESSION_GROUP => s.group = sv[5].parse().ok(),
+                    Self::SESSION_GROUP_LIST => s.group_list = sv[6].parse().ok(),
+                    Self::SESSION_GROUP_SIZE => s.group_size = sv[7].parse().ok(),
+                    Self::SESSION_GROUPED => {
+                        s.grouped = sv[8].parse::<usize>().map(|i| i == 1).ok()
+                    }
+                    Self::SESSION_ID => s.id = sv[9][1..].parse().ok(), // skip '$' char
+                    Self::SESSION_LAST_ATTACHED => {
+                        s.last_attached = sv[10].parse().ok().map(Duration::from_millis)
+                    }
+                    Self::SESSION_MANY_ATTACHED => {
+                        s.many_attached = sv[11].parse::<usize>().map(|i| i == 1).ok()
+                    }
+                    Self::SESSION_NAME => s.name = sv[12].parse().ok(),
+                    Self::SESSION_STACK => s.stack = sv[13].parse().ok(),
+                    Self::SESSION_WINDOWS => s.windows = sv[14].parse().ok(),
+                    _ => (),
+                }
+            }
         }
         Ok(s)
-    }
-}
-
-impl Session {
-    pub fn new() -> Self {
-        Default::default()
     }
 }

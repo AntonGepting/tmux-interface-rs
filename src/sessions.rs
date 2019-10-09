@@ -3,21 +3,8 @@ use crate::Error;
 use crate::Session;
 use crate::TmuxInterface;
 use std::ops::Index;
-use std::str::FromStr;
 
 pub struct Sessions(Vec<Session>);
-
-impl FromStr for Sessions {
-    type Err = Error;
-
-    fn from_str(sessions_str: &str) -> Result<Self, Self::Err> {
-        let mut sessions: Vec<Session> = Vec::new();
-        for line in sessions_str.lines() {
-            sessions.push(line.parse()?);
-        }
-        Ok(Self(sessions))
-    }
-}
 
 impl IntoIterator for Sessions {
     type Item = Session;
@@ -37,14 +24,22 @@ impl Index<usize> for Sessions {
 }
 
 impl Sessions {
-    pub fn get() -> Result<Self, Error> {
+    pub fn get(bitflags: usize) -> Result<Self, Error> {
         let tmux = TmuxInterface::new();
         let ls_format = SESSION_VARS_REGEX_VEC
             .iter()
-            .map(|t| format!("#{{{}}}", t))
+            .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(SESSION_VARS_SEPARATOR);
         let sessions_str = tmux.list_sessions(Some(&ls_format))?;
-        sessions_str.parse()
+        Sessions::from_str(&sessions_str, bitflags)
+    }
+
+    pub fn from_str(sessions_str: &str, bitflags: usize) -> Result<Self, Error> {
+        let mut sessions: Vec<Session> = Vec::new();
+        for line in sessions_str.lines() {
+            sessions.push(Session::from_str(line, bitflags)?);
+        }
+        Ok(Self(sessions))
     }
 }

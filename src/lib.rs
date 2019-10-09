@@ -73,10 +73,11 @@
 //!
 //! ```
 //! use crate::tmux_interface::Sessions;
+//! use crate::tmux_interface::Session;
 //!
 //!
 //! fn main() {
-//!     let sessions = Sessions::get().unwrap();
+//!     let sessions = Sessions::get(Session::SESSION_ALL).unwrap();
 //! }
 //! ```
 
@@ -92,6 +93,7 @@ pub mod layout_checksum;
 pub mod miscellaneous;
 pub mod options;
 pub mod pane;
+pub mod pane_tabs;
 pub mod panes;
 pub mod session;
 pub mod sessions;
@@ -100,6 +102,7 @@ pub mod tmux_interface;
 pub mod tmux_option;
 pub mod version;
 pub mod window;
+pub mod window_flag;
 pub mod windows;
 pub mod windows_and_panes;
 
@@ -142,22 +145,26 @@ pub use self::layout_cell::LayoutCell;
 pub use self::layout_cell::LayoutType;
 pub use self::layout_checksum::LayoutChecksum;
 pub use self::pane::Pane;
+pub use self::pane_tabs::PaneTabs;
 pub use self::panes::Panes;
 pub use self::session::Session;
 pub use self::session::SessionStack;
 pub use self::sessions::Sessions;
 pub use self::version::Version;
 pub use self::window::Window;
+pub use self::window_flag::WindowFlag;
 pub use self::windows::Windows;
 
 pub use self::error::Error;
 
+//mod pane_tabs_tests;
 mod pane_tests;
 mod panes_tests;
 mod session_tests;
 mod sessions_tests;
 #[cfg(test)]
 mod tmux_interface_tests;
+//mod window_flag_tests;
 mod window_tests;
 mod windows_tests;
 //mod options_tests;

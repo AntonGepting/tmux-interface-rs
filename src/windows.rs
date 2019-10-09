@@ -3,21 +3,8 @@ use crate::Error;
 use crate::TmuxInterface;
 use crate::Window;
 use std::ops::Index;
-use std::str::FromStr;
 
 pub struct Windows(Vec<Window>);
-
-impl FromStr for Windows {
-    type Err = Error;
-
-    fn from_str(windows_str: &str) -> Result<Self, Self::Err> {
-        let mut windows: Vec<Window> = Vec::new();
-        for line in windows_str.lines() {
-            windows.push(line.parse()?);
-        }
-        Ok(Self(windows))
-    }
-}
 
 impl IntoIterator for Windows {
     type Item = Window;
@@ -37,14 +24,22 @@ impl Index<usize> for Windows {
 }
 
 impl Windows {
-    pub fn get(target_session: &str) -> Result<Self, Error> {
+    pub fn get(target_session: &str, bitflags: usize) -> Result<Self, Error> {
         let tmux = TmuxInterface::new();
         let lsw_format = WINDOW_VARS_REGEX_VEC
             .iter()
-            .map(|t| format!("#{{{}}}", t))
+            .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(WINDOW_VARS_SEPARATOR);
         let windows_str = tmux.list_windows(false, Some(&lsw_format), Some(target_session))?;
-        windows_str.parse()
+        Windows::from_str(&windows_str, bitflags)
+    }
+
+    pub fn from_str(windows_str: &str, bitflags: usize) -> Result<Self, Error> {
+        let mut windows: Vec<Window> = Vec::new();
+        for line in windows_str.lines() {
+            windows.push(Window::from_str(line, bitflags)?);
+        }
+        Ok(Self(windows))
     }
 }
