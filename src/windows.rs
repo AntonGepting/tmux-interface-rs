@@ -28,6 +28,7 @@ impl Windows {
         let tmux = TmuxInterface::new();
         let lsw_format = WINDOW_VARS_REGEX_VEC
             .iter()
+            .filter(|t| bitflags & t.1 == t.1)
             .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(WINDOW_VARS_SEPARATOR);

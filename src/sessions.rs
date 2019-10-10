@@ -28,6 +28,7 @@ impl Sessions {
         let tmux = TmuxInterface::new();
         let ls_format = SESSION_VARS_REGEX_VEC
             .iter()
+            .filter(|t| bitflags & t.1 == t.1)
             .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(SESSION_VARS_SEPARATOR);

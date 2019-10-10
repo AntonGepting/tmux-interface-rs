@@ -27,12 +27,12 @@ fn bitflags() {
     assert!(d & c != c);
 }
 
-#[test]
-fn make_fmt_string() {
-    use crate::pane::get_fmt_string;
-    use crate::Pane;
-    let a = get_fmt_string(Pane::PANE_ACTIVE | Pane::PANE_AT_LEFT);
-}
+//#[test]
+//fn make_fmt_string() {
+//use crate::pane::get_fmt_string;
+//use crate::Pane;
+//let _a = get_fmt_string(Pane::PANE_ACTIVE | Pane::PANE_AT_LEFT);
+//}
 
 #[test]
 fn parse2() {

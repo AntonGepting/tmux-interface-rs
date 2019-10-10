@@ -1,6 +1,6 @@
 #[test]
 fn parse() {
-    use crate::session::SessionStack;
+    use crate::session_stack::SessionStack;
     use crate::Session;
     use std::time::Duration;
 

@@ -28,6 +28,7 @@ impl Panes {
         let tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS_REGEX_VEC
             .iter()
+            .filter(|t| bitflags & t.1 == t.1)
             .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(PANE_VARS_SEPARATOR);

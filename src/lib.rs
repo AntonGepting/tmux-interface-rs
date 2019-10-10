@@ -44,8 +44,7 @@
 //! # Examples
 //!
 //! ```
-//! use crate::tmux_interface::TmuxInterface;
-//! use crate::tmux_interface::NewSession;
+//! use crate::tmux_interface::{TmuxInterface, NewSession};
 //!
 //!
 //! fn main() {
@@ -72,12 +71,12 @@
 //! # Examples
 //!
 //! ```
-//! use crate::tmux_interface::Sessions;
-//! use crate::tmux_interface::Session;
-//!
+//! use crate::tmux_interface::{Sessions, Session, Windows, Window, Pane, Panes};
 //!
 //! fn main() {
 //!     let sessions = Sessions::get(Session::SESSION_ALL).unwrap();
+//!     let windows = Windows::get("0", Window::WINDOW_ALL).unwrap();
+//!     let panes = Panes::get("0:1", Pane::PANE_ALL).unwrap();
 //! }
 //! ```
 
@@ -96,6 +95,7 @@ pub mod pane;
 pub mod pane_tabs;
 pub mod panes;
 pub mod session;
+pub mod session_stack;
 pub mod sessions;
 pub mod status_line;
 pub mod tmux_interface;
@@ -148,7 +148,7 @@ pub use self::pane::Pane;
 pub use self::pane_tabs::PaneTabs;
 pub use self::panes::Panes;
 pub use self::session::Session;
-pub use self::session::SessionStack;
+pub use self::session_stack::SessionStack;
 pub use self::sessions::Sessions;
 pub use self::version::Version;
 pub use self::window::Window;
@@ -160,6 +160,7 @@ pub use self::error::Error;
 //mod pane_tabs_tests;
 mod pane_tests;
 mod panes_tests;
+//mod session_stack_tests;
 mod session_tests;
 mod sessions_tests;
 #[cfg(test)]

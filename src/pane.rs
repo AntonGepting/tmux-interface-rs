@@ -37,15 +37,15 @@ pub const PANE_VARS_REGEX_VEC: [(&str, usize); 31] = [
     ("pane_width", Pane::PANE_WIDTH),
 ];
 
-pub fn get_fmt_string(bitflags: usize) -> String {
-    let lsp_format = PANE_VARS_REGEX_VEC
-        .iter()
-        .filter(|t| bitflags & t.1 == t.1)
-        .map(|t| format!("#{{{}}}", t.0))
-        .collect::<Vec<String>>()
-        .join(PANE_VARS_SEPARATOR);
-    lsp_format
-}
+//pub fn get_fmt_string(bitflags: usize) -> String {
+//let lsp_format = PANE_VARS_REGEX_VEC
+//.iter()
+//.filter(|t| bitflags & t.1 == t.1)
+//.map(|t| format!("#{{{}}}", t.0))
+//.collect::<Vec<String>>()
+//.join(PANE_VARS_SEPARATOR);
+//lsp_format
+//}
 
 // accordingly to tmux.h: Formats
 // XXX: check all types
