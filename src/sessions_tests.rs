@@ -1,5 +1,5 @@
 #[test]
-fn sessions_parse() {
+fn parse() {
     use crate::Session;
     use crate::Sessions;
 
@@ -15,7 +15,7 @@ fn sessions_parse() {
 }
 
 #[test]
-fn sessions_get() {
+fn get() {
     use crate::Session;
     use crate::Sessions;
 

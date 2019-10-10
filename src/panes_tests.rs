@@ -1,5 +1,5 @@
 #[test]
-fn panes_parse() {
+fn parse() {
     use crate::Pane;
     use crate::Panes;
 
@@ -14,7 +14,7 @@ fn panes_parse() {
 }
 
 #[test]
-fn panes_get() {
+fn get() {
     use crate::Pane;
     use crate::Panes;
 

@@ -1,5 +1,5 @@
 #[test]
-fn windows_parse() {
+fn parse() {
     use crate::Window;
     use crate::Windows;
 
@@ -27,7 +27,7 @@ fn windows_parse() {
 }
 
 #[test]
-fn windows_get() {
+fn get() {
     use crate::Window;
     use crate::Windows;
 
