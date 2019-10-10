@@ -145,52 +145,70 @@ impl Window {
     // XXX: mb deserialize like serde something?
     pub fn from_str(s: &str, bitflags: usize) -> Result<Self, Error> {
         let wv: Vec<&str> = s.split(WINDOW_VARS_SEPARATOR).collect();
-        let mut w = Window::new();
+        let mut wv = wv.iter();
         // XXX: optimize?
-        for (i, format_variable) in WINDOW_VARS_REGEX_VEC.iter().enumerate() {
-            if !wv[i].is_empty() {
-                match bitflags & format_variable.1 {
-                    Self::WINDOW_ACTIVE => w.active = wv[0].parse::<usize>().map(|i| i == 1).ok(),
-                    Self::WINDOW_ACTIVITY => {
-                        w.activity = wv[1].parse().ok().map(Duration::from_millis)
+        let mut w = Window::new();
+        // for all bitflags
+        for var in WINDOW_VARS_REGEX_VEC.iter() {
+            // is current bitflag given?
+            if bitflags & var.1 == var.1 {
+                // does vector element exit?
+                if let Some(part) = wv.next() {
+                    // is verctor element not empty
+                    if !part.is_empty() {
+                        // decode it and save as struct field
+                        match bitflags & var.1 {
+                            Self::WINDOW_ACTIVE => {
+                                w.active = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::WINDOW_ACTIVITY => {
+                                w.activity = part.parse().ok().map(Duration::from_millis)
+                            }
+                            Self::WINDOW_ACTIVITY_FLAG => {
+                                w.activity_flag = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::WINDOW_BELL_FLAG => {
+                                w.bell_flag = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::WINDOW_BIGGER => {
+                                w.bigger = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::WINDOW_END_FLAG => {
+                                w.end_flag = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::WINDOW_FLAGS => w.flags = part.parse().ok(),
+                            Self::WINDOW_FORMAT => {
+                                w.format = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::WINDOW_HEIGHT => w.height = part.parse().ok(),
+                            Self::WINDOW_ID => w.id = part[1..].parse().ok(),
+                            Self::WINDOW_INDEX => w.index = part.parse().ok(),
+                            Self::WINDOW_LAST_FLAG => {
+                                w.last_flag = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::WINDOW_LAYOUT => w.layout = part.parse().ok(),
+                            Self::WINDOW_LINKED => {
+                                w.linked = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::WINDOW_NAME => w.name = part.parse().ok(),
+                            Self::WINDOW_OFFSET_X => w.offset_x = part.parse().ok(),
+                            Self::WINDOW_OFFSET_Y => w.offset_y = part.parse().ok(),
+                            Self::WINDOW_PANES => w.panes = part.parse().ok(),
+                            Self::WINDOW_SILENCE_FLAG => {
+                                w.silence_flag = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::WINDOW_STACK_INDEX => w.stack_index = part.parse().ok(),
+                            Self::WINDOW_START_FLAG => {
+                                w.start_flag = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::WINDOW_VISIBLE_LAYOUT => w.visible_layout = part.parse().ok(),
+                            Self::WINDOW_WIDTH => w.width = part.parse().ok(),
+                            Self::WINDOW_ZOOMED_FLAG => {
+                                w.zoomed_flag = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            _ => (),
+                        }
                     }
-                    Self::WINDOW_ACTIVITY_FLAG => {
-                        w.activity_flag = wv[2].parse::<usize>().map(|i| i == 1).ok()
-                    }
-                    Self::WINDOW_BELL_FLAG => {
-                        w.bell_flag = wv[3].parse::<usize>().map(|i| i == 1).ok()
-                    }
-                    Self::WINDOW_BIGGER => w.bigger = wv[4].parse::<usize>().map(|i| i == 1).ok(),
-                    Self::WINDOW_END_FLAG => {
-                        w.end_flag = wv[5].parse::<usize>().map(|i| i == 1).ok()
-                    }
-                    Self::WINDOW_FLAGS => w.flags = wv[6].parse().ok(),
-                    Self::WINDOW_FORMAT => w.format = wv[7].parse::<usize>().map(|i| i == 1).ok(),
-                    Self::WINDOW_HEIGHT => w.height = wv[8].parse().ok(),
-                    Self::WINDOW_ID => w.id = wv[9][1..].parse().ok(),
-                    Self::WINDOW_INDEX => w.index = wv[10].parse().ok(),
-                    Self::WINDOW_LAST_FLAG => {
-                        w.last_flag = wv[11].parse::<usize>().map(|i| i == 1).ok()
-                    }
-                    Self::WINDOW_LAYOUT => w.layout = wv[12].parse().ok(),
-                    Self::WINDOW_LINKED => w.linked = wv[13].parse::<usize>().map(|i| i == 1).ok(),
-                    Self::WINDOW_NAME => w.name = wv[14].parse().ok(),
-                    Self::WINDOW_OFFSET_X => w.offset_x = wv[15].parse().ok(),
-                    Self::WINDOW_OFFSET_Y => w.offset_y = wv[16].parse().ok(),
-                    Self::WINDOW_PANES => w.panes = wv[17].parse().ok(),
-                    Self::WINDOW_SILENCE_FLAG => {
-                        w.silence_flag = wv[18].parse::<usize>().map(|i| i == 1).ok()
-                    }
-                    Self::WINDOW_STACK_INDEX => w.stack_index = wv[19].parse().ok(),
-                    Self::WINDOW_START_FLAG => {
-                        w.start_flag = wv[20].parse::<usize>().map(|i| i == 1).ok()
-                    }
-                    Self::WINDOW_VISIBLE_LAYOUT => w.visible_layout = wv[21].parse().ok(),
-                    Self::WINDOW_WIDTH => w.width = wv[22].parse().ok(),
-                    Self::WINDOW_ZOOMED_FLAG => {
-                        w.zoomed_flag = wv[23].parse::<usize>().map(|i| i == 1).ok()
-                    }
-                    _ => (),
                 }
             }
         }

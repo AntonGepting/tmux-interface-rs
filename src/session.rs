@@ -99,37 +99,50 @@ impl Session {
 
     pub fn from_str(s: &str, bitflags: usize) -> Result<Self, Error> {
         let sv: Vec<&str> = s.split(SESSION_VARS_SEPARATOR).collect();
+        let mut sv = sv.iter();
         // XXX: optimize?
         let mut s = Session::new();
-        for (i, format_variable) in SESSION_VARS_REGEX_VEC.iter().enumerate() {
-            if !sv[i].is_empty() {
-                match bitflags & format_variable.1 {
-                    Self::SESSION_ACTIVITY => {
-                        s.activity = sv[0].parse().ok().map(Duration::from_millis)
+        // for all bitflags
+        for var in SESSION_VARS_REGEX_VEC.iter() {
+            // is current bitflag given?
+            if bitflags & var.1 == var.1 {
+                // does vector element exit?
+                if let Some(part) = sv.next() {
+                    // is verctor element not empty
+                    if !part.is_empty() {
+                        // decode it and save as struct field
+                        match bitflags & var.1 {
+                            Self::SESSION_ACTIVITY => {
+                                s.activity = part.parse().ok().map(Duration::from_millis)
+                            }
+                            Self::SESSION_ALERTS => s.alerts = part.parse().ok(),
+                            Self::SESSION_ATTACHED => s.attached = part.parse().ok(),
+                            Self::SESSION_CREATED => {
+                                s.created = part.parse().ok().map(Duration::from_millis)
+                            }
+                            Self::SESSION_FORMAT => {
+                                s.format = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::SESSION_GROUP => s.group = part.parse().ok(),
+                            Self::SESSION_GROUP_LIST => s.group_list = part.parse().ok(),
+                            Self::SESSION_GROUP_SIZE => s.group_size = part.parse().ok(),
+                            Self::SESSION_GROUPED => {
+                                s.grouped = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::SESSION_ID => s.id = part[1..].parse().ok(), // skip '$' char
+                            Self::SESSION_LAST_ATTACHED => {
+                                s.last_attached = part.parse().ok().map(Duration::from_millis)
+                            }
+                            Self::SESSION_MANY_ATTACHED => {
+                                s.many_attached = part.parse::<usize>().map(|i| i == 1).ok()
+                            }
+                            Self::SESSION_NAME => s.name = part.parse().ok(),
+                            Self::SESSION_STACK => s.stack = part.parse().ok(),
+                            Self::SESSION_WINDOWS => s.windows = part.parse().ok(),
+                            // else?
+                            _ => (),
+                        }
                     }
-                    Self::SESSION_ALERTS => s.alerts = sv[1].parse().ok(),
-                    Self::SESSION_ATTACHED => s.attached = sv[2].parse().ok(),
-                    Self::SESSION_CREATED => {
-                        s.created = sv[3].parse().ok().map(Duration::from_millis)
-                    }
-                    Self::SESSION_FORMAT => s.format = sv[4].parse::<usize>().map(|i| i == 1).ok(),
-                    Self::SESSION_GROUP => s.group = sv[5].parse().ok(),
-                    Self::SESSION_GROUP_LIST => s.group_list = sv[6].parse().ok(),
-                    Self::SESSION_GROUP_SIZE => s.group_size = sv[7].parse().ok(),
-                    Self::SESSION_GROUPED => {
-                        s.grouped = sv[8].parse::<usize>().map(|i| i == 1).ok()
-                    }
-                    Self::SESSION_ID => s.id = sv[9][1..].parse().ok(), // skip '$' char
-                    Self::SESSION_LAST_ATTACHED => {
-                        s.last_attached = sv[10].parse().ok().map(Duration::from_millis)
-                    }
-                    Self::SESSION_MANY_ATTACHED => {
-                        s.many_attached = sv[11].parse::<usize>().map(|i| i == 1).ok()
-                    }
-                    Self::SESSION_NAME => s.name = sv[12].parse().ok(),
-                    Self::SESSION_STACK => s.stack = sv[13].parse().ok(),
-                    Self::SESSION_WINDOWS => s.windows = sv[14].parse().ok(),
-                    _ => (),
                 }
             }
         }

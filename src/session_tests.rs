@@ -25,3 +25,35 @@ fn parse() {
     };
     assert_eq!(session, session_sample);
 }
+
+#[test]
+fn parse2() {
+    use crate::session_stack::SessionStack;
+    use crate::Session;
+    use std::time::Duration;
+
+    let session_str = "1557947146:1557947146:1557947146";
+    let session = Session::from_str(
+        session_str,
+        Session::SESSION_ACTIVITY | Session::SESSION_CREATED | Session::SESSION_LAST_ATTACHED,
+    )
+    .unwrap();
+    let origin = Session {
+        activity: Some(Duration::from_millis(1557947146)),
+        alerts: None,
+        attached: None,
+        created: Some(Duration::from_millis(1557947146)),
+        format: None,
+        group: None,
+        group_list: None,
+        group_size: None,
+        grouped: None,
+        id: None,
+        last_attached: Some(Duration::from_millis(1557947146)),
+        many_attached: None,
+        name: None,
+        stack: None,
+        windows: None,
+    };
+    assert_eq!(session, origin);
+}
