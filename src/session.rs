@@ -1,9 +1,8 @@
 use crate::Error;
-use std::str::FromStr;
+use crate::SessionStack;
 use std::time::Duration;
 
 pub const SESSION_VARS_SEPARATOR: &str = ":";
-// XXX: mb make all fields optional
 // FIXME: regex name can be anything, and other keys should be checked better
 // NOTE: no colons or periods (ref: int session_check_name(const char *name))
 pub const SESSION_VARS_REGEX_VEC: [(&str, usize); 15] = [
@@ -23,22 +22,6 @@ pub const SESSION_VARS_REGEX_VEC: [(&str, usize); 15] = [
     ("session_stack", Session::SESSION_STACK),
     ("session_windows", Session::SESSION_WINDOWS),
 ];
-
-#[derive(Default, PartialEq, Clone, Debug)]
-pub struct SessionStack(pub Vec<usize>);
-
-impl FromStr for SessionStack {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        //let a: Vec<usize> = s.split(",").map(|c| c.parse::<usize>().unwrap()).collect();
-        let mut sv = Vec::new();
-        for id in s.split(',').collect::<Vec<&str>>() {
-            sv.push(id.parse()?);
-        }
-        Ok(Self(sv))
-    }
-}
 
 // accordingly to tmux.h: Formats
 // XXX: check all types
@@ -96,6 +79,7 @@ impl Session {
     pub const SESSION_NONE: usize = 0;
     pub const SESSION_ALL: usize = Self::SESSION_ACTIVITY
         | Self::SESSION_ATTACHED
+        | Self::SESSION_ALERTS
         | Self::SESSION_CREATED
         | Self::SESSION_FORMAT
         | Self::SESSION_GROUP
@@ -113,9 +97,6 @@ impl Session {
         Default::default()
     }
 
-    // XXX: mb deserialize?
-    // XXX: mb callback
-    // XXX: optimize?
     pub fn from_str(s: &str, bitflags: usize) -> Result<Self, Error> {
         let sv: Vec<&str> = s.split(SESSION_VARS_SEPARATOR).collect();
         // XXX: optimize?
