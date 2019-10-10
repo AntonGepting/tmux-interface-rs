@@ -6,7 +6,7 @@
 
 ## Description
 
-tmux_interface is a rust language library for communication with TMUX via CLI.
+tmux_interface is a [Rust language](https://www.rust-lang.org/) library for communication with [TMUX](https://github.com/tmux/tmux) via CLI.
 
 
 ## Usage
@@ -46,6 +46,10 @@ and testing purposes. Do not use them in your Projects.
 
 - Tested on: tmux 2.8
 
+<!--- Structure field names can be chnaged-->
+
+<!--- TmuxInterface::new() required everytime for new commands?-->
+
 <!---
 ## Project Structure
 -->
@@ -81,10 +85,13 @@ and testing purposes. Do not use them in your Projects.
 
         - [`sessions.rs`](src/sessions.rs) - parse a session list
         - [`session.rs`](src/session.rs) - parse a session
+        - [`session_stack.rs`](src/session_stack.rs) - session stack
         - [`windows.rs`](src/windows.rs) - parse a windows list
         - [`window.rs`](src/window.rs) - parse a window
+        - [`window_flag.rs`](src/window_flag.rs) - window flag
         - [`panes.rs`](src/panes.rs) - parse a panes list
         - [`pane.rs`](src/pane.rs) - parse a pane
+        - [`pane_tabs.rs`](src/pane_tabs.rs) - pane tabs
         - [`tmux_option.rs`](src/tmux_option.rs) - parse an option
         - [`version.rs`](src/version.rs) - parse version response
         - [`layout_cell.rs`](src/layout_cell.rs) - parse layout cell string
