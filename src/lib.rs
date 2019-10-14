@@ -72,11 +72,14 @@
 //!
 //! ```
 //! use crate::tmux_interface::{Sessions, Session, Windows, Window, Pane, Panes};
+//! use crate::tmux_interface::session::SESSION_ALL;
+//! use crate::tmux_interface::window::WINDOW_ALL;
+//! use crate::tmux_interface::pane::PANE_ALL;
 //!
 //! fn main() {
-//!     let sessions = Sessions::get(Session::SESSION_ALL).unwrap();
-//!     let windows = Windows::get("0", Window::WINDOW_ALL).unwrap();
-//!     let panes = Panes::get("0:1", Pane::PANE_ALL).unwrap();
+//!     let sessions = Sessions::get(SESSION_ALL).unwrap();
+//!     let windows = Windows::get("0", WINDOW_ALL).unwrap();
+//!     let panes = Panes::get("0:1", PANE_ALL).unwrap();
 //! }
 //! ```
 

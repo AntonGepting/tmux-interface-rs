@@ -32,9 +32,7 @@ impl Sessions {
             .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(SESSION_VARS_SEPARATOR);
-        dbg!(&ls_format);
         let sessions_str = tmux.list_sessions(Some(&ls_format))?;
-        dbg!(&sessions_str);
         Sessions::from_str(&sessions_str, bitflags)
     }
 

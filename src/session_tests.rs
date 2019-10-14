@@ -1,11 +1,12 @@
 #[test]
 fn parse() {
+    use crate::session::Session;
+    use crate::session::SESSION_ALL;
     use crate::session_stack::SessionStack;
-    use crate::Session;
     use std::time::Duration;
 
     let session_str = "1557947146::1:1557947146:1::::0:$0:1557947146:0:0:3,2,1:3";
-    let session = Session::from_str(session_str, Session::SESSION_ALL).unwrap();
+    let session = Session::from_str(session_str, SESSION_ALL).unwrap();
     let session_sample = Session {
         activity: Some(Duration::from_millis(1557947146)),
         alerts: None,
@@ -28,14 +29,14 @@ fn parse() {
 
 #[test]
 fn parse2() {
-    use crate::session_stack::SessionStack;
-    use crate::Session;
+    use crate::session::Session;
+    use crate::session::{SESSION_ACTIVITY, SESSION_CREATED, SESSION_LAST_ATTACHED};
     use std::time::Duration;
 
     let session_str = "1557947146:1557947146:1557947146";
     let session = Session::from_str(
         session_str,
-        Session::SESSION_ACTIVITY | Session::SESSION_CREATED | Session::SESSION_LAST_ATTACHED,
+        SESSION_ACTIVITY | SESSION_CREATED | SESSION_LAST_ATTACHED,
     )
     .unwrap();
     let origin = Session {
