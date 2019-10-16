@@ -22,7 +22,7 @@ fn has_session() {
         session_name: Some("test_has_session"),
         ..Default::default()
     };
-    tmux.new_session(&new_session).unwrap();
+    tmux.new_session(Some(&new_session)).unwrap();
     assert_eq!(tmux.has_session(Some("test_has_session")).unwrap(), true);
     tmux.kill_session(None, None, Some("test_has_session"))
         .unwrap();
@@ -43,7 +43,7 @@ fn kill_session() {
         session_name: Some("test_kill_session"),
         ..Default::default()
     };
-    tmux.new_session(&new_session).unwrap();
+    tmux.new_session(Some(&new_session)).unwrap();
     tmux.kill_session(None, None, Some("test_kill_session"))
         .unwrap();
 }
@@ -68,7 +68,7 @@ fn list_sessions() {
         session_name: Some("test_list_sessions"),
         ..Default::default()
     };
-    tmux.new_session(&new_session).unwrap();
+    tmux.new_session(Some(&new_session)).unwrap();
     tmux.list_sessions(None).unwrap();
     tmux.kill_session(None, None, Some("test_list_session"))
         .unwrap();
@@ -94,7 +94,7 @@ fn new_session() {
         session_name: Some("test_new_session"),
         ..Default::default()
     };
-    tmux.new_session(&new_session).unwrap();
+    tmux.new_session(Some(&new_session)).unwrap();
     tmux.kill_session(None, None, Some("test_new_session"))
         .unwrap();
 }
@@ -114,7 +114,7 @@ fn rename_session() {
         session_name: Some("test_rename_session"),
         ..Default::default()
     };
-    tmux.new_session(&new_session).unwrap();
+    tmux.new_session(Some(&new_session)).unwrap();
     tmux.rename_session(Some("test_rename_session"), "rename_test_session")
         .unwrap();
     assert_eq!(tmux.has_session(Some("rename_test_session")).unwrap(), true);
@@ -157,7 +157,7 @@ fn send_keys() {
         session_name: Some("test_send_keys"),
         ..Default::default()
     };
-    tmux.new_session(&new_session).unwrap();
+    tmux.new_session(Some(&new_session)).unwrap();
 
     let send_keys = SendKeys {
         target_pane: Some("test_send_keys:^.0"),
