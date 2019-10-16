@@ -16,6 +16,7 @@ fn has_session() {
     use crate::tmux_interface::NewSession;
 
     let tmux = TmuxInterface::new();
+    //tmux.tmux = Some("./tests/tmux_mock.sh");
     let new_session = NewSession {
         detached: Some(true),
         session_name: Some("test_has_session"),
