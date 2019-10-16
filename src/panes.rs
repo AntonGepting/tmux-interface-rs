@@ -4,7 +4,7 @@ use crate::Pane;
 use crate::TmuxInterface;
 use std::ops::Index;
 
-pub struct Panes(Vec<Pane>);
+pub struct Panes(pub Vec<Pane>);
 
 impl IntoIterator for Panes {
     type Item = Pane;
@@ -23,6 +23,7 @@ impl Index<usize> for Panes {
     }
 }
 
+// TODO: Option as Result
 impl Panes {
     pub fn get(target_window: &str, bitflags: usize) -> Result<Self, Error> {
         let tmux = TmuxInterface::new();

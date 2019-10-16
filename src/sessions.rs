@@ -4,7 +4,7 @@ use crate::Session;
 use crate::TmuxInterface;
 use std::ops::Index;
 
-pub struct Sessions(Vec<Session>);
+pub struct Sessions(pub Vec<Session>);
 
 impl IntoIterator for Sessions {
     type Item = Session;

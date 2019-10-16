@@ -4,7 +4,7 @@ use crate::TmuxInterface;
 use crate::Window;
 use std::ops::Index;
 
-pub struct Windows(Vec<Window>);
+pub struct Windows(pub Vec<Window>);
 
 impl IntoIterator for Windows {
     type Item = Window;
