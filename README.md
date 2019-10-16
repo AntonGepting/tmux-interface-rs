@@ -32,7 +32,7 @@ tmux_interface is a [Rust language](https://www.rust-lang.org/) library for comm
         session_name: Some("session_name"),
         ..Default::default()
     };
-    tmux.new_session(&new_session).unwrap();
+    tmux.new_session(Some(&new_session)).unwrap();
     tmux.kill_session(None, None, Some("session_name")).unwrap();
     ```
 
