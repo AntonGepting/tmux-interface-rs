@@ -178,31 +178,33 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-options [-gHqsvw] [-t target-session | target-window] [option]
     /// (alias: show)
     /// ```
-    pub fn show_options(&self, show_options: &ShowOptions) -> Result<String, Error> {
+    pub fn show_options(&self, show_options: Option<&ShowOptions>) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if show_options.global_options.unwrap_or(false) {
-            args.push(g_KEY);
-        }
-        if show_options.hooks.unwrap_or(false) {
-            args.push(H_KEY);
-        }
-        if show_options.quiet.unwrap_or(false) {
-            args.push(q_KEY);
-        }
-        if show_options.server_options.unwrap_or(false) {
-            args.push(s_KEY);
-        }
-        if show_options.option_value.unwrap_or(false) {
-            args.push(v_KEY);
-        }
-        if show_options.window_options.unwrap_or(false) {
-            args.push(w_KEY);
-        }
-        if let Some(s) = show_options.target {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        if let Some(s) = show_options.option {
-            args.push(&s)
+        if let Some(show_options) = show_options {
+            if show_options.global_options.unwrap_or(false) {
+                args.push(g_KEY);
+            }
+            if show_options.hooks.unwrap_or(false) {
+                args.push(H_KEY);
+            }
+            if show_options.quiet.unwrap_or(false) {
+                args.push(q_KEY);
+            }
+            if show_options.server_options.unwrap_or(false) {
+                args.push(s_KEY);
+            }
+            if show_options.option_value.unwrap_or(false) {
+                args.push(v_KEY);
+            }
+            if show_options.window_options.unwrap_or(false) {
+                args.push(w_KEY);
+            }
+            if let Some(s) = show_options.target {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
+            if let Some(s) = show_options.option {
+                args.push(&s)
+            }
         }
         let output = self.subcommand(TmuxInterface::SHOW_OPTIONS, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());

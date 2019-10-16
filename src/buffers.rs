@@ -64,28 +64,30 @@ impl<'a> TmuxInterface<'a> {
     /// tmux choose-buffer [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane]
     /// [template]
     /// ```
-    pub fn choose_buffer(&self, choose_buffer: &ChooseBuffer) -> Result<Output, Error> {
+    pub fn choose_buffer(&self, choose_buffer: Option<&ChooseBuffer>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if choose_buffer.no_preview.unwrap_or(false) {
-            args.push(N_KEY);
-        }
-        if choose_buffer.zoom.unwrap_or(false) {
-            args.push(Z_KEY);
-        }
-        if let Some(s) = choose_buffer.format {
-            args.extend_from_slice(&[F_KEY, &s])
-        }
-        if let Some(s) = choose_buffer.filter {
-            args.extend_from_slice(&[f_KEY, &s])
-        }
-        if let Some(s) = choose_buffer.sort_order {
-            args.extend_from_slice(&[O_KEY, &s])
-        }
-        if let Some(s) = choose_buffer.target_pane {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        if let Some(s) = choose_buffer.template {
-            args.push(&s)
+        if let Some(choose_buffer) = choose_buffer {
+            if choose_buffer.no_preview.unwrap_or(false) {
+                args.push(N_KEY);
+            }
+            if choose_buffer.zoom.unwrap_or(false) {
+                args.push(Z_KEY);
+            }
+            if let Some(s) = choose_buffer.format {
+                args.extend_from_slice(&[F_KEY, &s])
+            }
+            if let Some(s) = choose_buffer.filter {
+                args.extend_from_slice(&[f_KEY, &s])
+            }
+            if let Some(s) = choose_buffer.sort_order {
+                args.extend_from_slice(&[O_KEY, &s])
+            }
+            if let Some(s) = choose_buffer.target_pane {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
+            if let Some(s) = choose_buffer.template {
+                args.push(&s)
+            }
         }
         let output = self.subcommand(TmuxInterface::CHOOSE_BUFFER, &args)?;
         Ok(output)
@@ -158,25 +160,27 @@ impl<'a> TmuxInterface<'a> {
     /// tmux paste-buffer [-dpr] [-b buffer-name] [-s separator] [-t target-pane]
     /// (alias: pasteb)
     /// ```
-    pub fn paste_buffer(&self, paste_buffer: &PasteBuffer) -> Result<Output, Error> {
+    pub fn paste_buffer(&self, paste_buffer: Option<&PasteBuffer>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if paste_buffer.delete.unwrap_or(false) {
-            args.push(d_KEY);
-        }
-        if paste_buffer.bracket_codes.unwrap_or(false) {
-            args.push(p_KEY);
-        }
-        if paste_buffer.no_replacement.unwrap_or(false) {
-            args.push(r_KEY);
-        }
-        if let Some(s) = paste_buffer.buffer_name {
-            args.extend_from_slice(&[b_KEY, &s])
-        }
-        if let Some(s) = paste_buffer.separator {
-            args.extend_from_slice(&[s_KEY, &s])
-        }
-        if let Some(s) = paste_buffer.target_pane {
-            args.extend_from_slice(&[t_KEY, &s])
+        if let Some(paste_buffer) = paste_buffer {
+            if paste_buffer.delete.unwrap_or(false) {
+                args.push(d_KEY);
+            }
+            if paste_buffer.bracket_codes.unwrap_or(false) {
+                args.push(p_KEY);
+            }
+            if paste_buffer.no_replacement.unwrap_or(false) {
+                args.push(r_KEY);
+            }
+            if let Some(s) = paste_buffer.buffer_name {
+                args.extend_from_slice(&[b_KEY, &s])
+            }
+            if let Some(s) = paste_buffer.separator {
+                args.extend_from_slice(&[s_KEY, &s])
+            }
+            if let Some(s) = paste_buffer.target_pane {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
         }
         let output = self.subcommand(TmuxInterface::PASTE_BUFFER, &args)?;
         Ok(output)

@@ -13,7 +13,7 @@ impl TmuxOption {
             option: Some(option_name),
             ..Default::default()
         };
-        let value = tmux.show_options(&show_options)?;
+        let value = tmux.show_options(Some(&show_options))?;
         let value_parts: Vec<&str> = value.split('\n').collect();
         let int = value_parts[0][0..].parse::<usize>()?;
         Ok(int)

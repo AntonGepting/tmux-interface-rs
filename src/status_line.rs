@@ -34,25 +34,27 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
     /// ```
-    pub fn command_prompt(&self, command_prompt: &CommandPrompt) -> Result<Output, Error> {
+    pub fn command_prompt(&self, command_prompt: Option<&CommandPrompt>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if command_prompt.one_keypress.unwrap_or(false) {
-            args.push(_1_KEY);
-        }
-        if command_prompt.on_input_change.unwrap_or(false) {
-            args.push(i_KEY);
-        }
-        if let Some(s) = command_prompt.inputs {
-            args.extend_from_slice(&[I_KEY, &s])
-        }
-        if let Some(s) = command_prompt.prompts {
-            args.extend_from_slice(&[p_KEY, &s])
-        }
-        if let Some(s) = command_prompt.target_client {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        if let Some(s) = command_prompt.template {
-            args.push(&s)
+        if let Some(command_prompt) = command_prompt {
+            if command_prompt.one_keypress.unwrap_or(false) {
+                args.push(_1_KEY);
+            }
+            if command_prompt.on_input_change.unwrap_or(false) {
+                args.push(i_KEY);
+            }
+            if let Some(s) = command_prompt.inputs {
+                args.extend_from_slice(&[I_KEY, &s])
+            }
+            if let Some(s) = command_prompt.prompts {
+                args.extend_from_slice(&[p_KEY, &s])
+            }
+            if let Some(s) = command_prompt.target_client {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
+            if let Some(s) = command_prompt.template {
+                args.push(&s)
+            }
         }
         let output = self.subcommand(TmuxInterface::COMMAND_PROMPT, &args)?;
         Ok(output)
