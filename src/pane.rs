@@ -47,6 +47,7 @@ pub const PANE_VARS_REGEX_VEC: [(&str, usize); 31] = [
 //lsp_format
 //}
 
+// XXX: mb macro with custom struct fields
 // accordingly to tmux.h: Formats
 // XXX: check all types
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -149,6 +150,7 @@ pub const PANE_TTY: usize = 1 << 29;
 pub const PANE_WIDTH: usize = 1 << 30;
 
 pub const PANE_NONE: usize = 0;
+//pub const PANE_DEFAULT: usize = PANE_ID | PANE_TITLE;
 pub const PANE_ALL: usize = PANE_ACTIVE
     | PANE_AT_BOTTOM
     | PANE_AT_LEFT

@@ -77,6 +77,7 @@ pub const SESSION_STACK: usize = 1 << 13;
 pub const SESSION_WINDOWS: usize = 1 << 14;
 
 pub const SESSION_NONE: usize = 0;
+//pub const SESSION_DEFAULT: usize = SESSION_ID | SESSION_NAME;
 pub const SESSION_ALL: usize = SESSION_ACTIVITY
     | SESSION_ATTACHED
     | SESSION_ALERTS

@@ -113,6 +113,7 @@ pub const WINDOW_WIDTH: usize = 1 << 22;
 pub const WINDOW_ZOOMED_FLAG: usize = 1 << 23;
 
 pub const WINDOW_NONE: usize = 0;
+//pub const WINDOW_DEFAULT: usize = WINDOW_ID | WINDOW_NAME;
 pub const WINDOW_ALL: usize = WINDOW_ACTIVE
     | WINDOW_ACTIVITY
     | WINDOW_ACTIVITY_FLAG
