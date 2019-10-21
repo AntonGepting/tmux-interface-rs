@@ -195,14 +195,15 @@ impl Pane {
         let mut p = Pane::new();
         // for all bitflags
         for var in PANE_VARS_REGEX_VEC.iter() {
+            let bitflag = bitflags & var.1;
             // is current bitflag given?
-            if bitflags & var.1 == var.1 {
+            if bitflag == var.1 {
                 // does vector element exist?
                 if let Some(part) = pv.next() {
                     // is vector element not empty
                     if !part.is_empty() {
                         // decode it and save as struct field
-                        match bitflags & var.1 {
+                        match bitflag {
                             PANE_ACTIVE => p.active = part.parse::<usize>().map(|b| b == 1).ok(),
                             PANE_AT_BOTTOM => {
                                 p.at_bottom = part.parse::<usize>().map(|b| b == 1).ok()

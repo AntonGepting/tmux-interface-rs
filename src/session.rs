@@ -93,6 +93,7 @@ pub const SESSION_ALL: usize = SESSION_ACTIVITY
     | SESSION_NAME
     | SESSION_STACK
     | SESSION_WINDOWS;
+
 impl Session {
     pub fn new() -> Self {
         Default::default()
@@ -105,14 +106,15 @@ impl Session {
         let mut s = Session::new();
         // for all bitflags
         for var in SESSION_VARS_REGEX_VEC.iter() {
+            let bitflag = bitflags & var.1;
             // is current bitflag given?
-            if bitflags & var.1 == var.1 {
+            if bitflag == var.1 {
                 // does vector element exist?
                 if let Some(part) = sv.next() {
                     // is vector element not empty
                     if !part.is_empty() {
                         // decode it and save as struct field
-                        match bitflags & var.1 {
+                        match bitflag {
                             SESSION_ACTIVITY => {
                                 s.activity = part.parse().ok().map(Duration::from_millis)
                             }

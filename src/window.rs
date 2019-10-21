@@ -152,14 +152,15 @@ impl Window {
         let mut w = Window::new();
         // for all bitflags
         for var in WINDOW_VARS_REGEX_VEC.iter() {
+            let bitflag = bitflags & var.1;
             // is current bitflag given?
-            if bitflags & var.1 == var.1 {
+            if bitflag == var.1 {
                 // does vector element exist?
                 if let Some(part) = wv.next() {
                     // is vector element not empty
                     if !part.is_empty() {
                         // decode it and save as struct field
-                        match bitflags & var.1 {
+                        match bitflag {
                             WINDOW_ACTIVE => w.active = part.parse::<usize>().map(|i| i == 1).ok(),
                             WINDOW_ACTIVITY => {
                                 w.activity = part.parse().ok().map(Duration::from_millis)
