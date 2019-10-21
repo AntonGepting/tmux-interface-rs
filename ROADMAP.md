@@ -250,6 +250,32 @@ Parsing objects and supported tmux variables:
 # Wishlist
 - mb function parameter names from tmux source?
 - mb tmux plugin for more options?
+    - no, standalone lib
 - mb folder structure, separate tmux functions from parse functions
 - does `Option<bool>` as function arguments and structure fields make sense
 - mb store `PathBuf` or other type for paths in parsed structures?
+- all optional arguments if they are more than 1 wrap in struct, all required arguments
+    directly
+- callback hooks smtg like in Jezza's fork []()
+
+
+# Strategy
+
+- tmux subcommands have optional boolean keys, wrapping method?
+    - `Option<bool>` (current decision)
+        reason: "mapping" of CLI syntax characters ("12.1 Utility Argument Syntax"
+        [IEEE Std 1003.1-2017](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html))
+        `tmux lsp [-a] [-t target]`
+    - `bool`
+        reason: it's simple, for all not boolean keys `Option<T>`
+
+- tmux subcommands have many keys?
+    - less than 4 keys - as arguments, more - structure (current)
+    - all optional keys (if more than 1, 2, 3?) - as structure, all required keys as arguments
+    - all keys as function arguments
+
+- tmux subcommnads have many optional keys in some structure?
+    - `Option<&TmuxSubcommandParameters>` (current decision)
+        reason: if all structure fields are `None`, structure itself does not
+        to be needed
+    - `&TmuxSubcommandParameters`
