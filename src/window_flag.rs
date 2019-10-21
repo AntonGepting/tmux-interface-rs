@@ -10,7 +10,7 @@ const WINDOW_FLAG_SILENCED: usize = 0b0001_0000;
 const WINDOW_FLAG_MARKED: usize = 0b0010_0000;
 const WINDOW_FLAG_ZOOMED: usize = 0b0100_0000;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct WindowFlag(usize);
 
 impl Default for WindowFlag {

@@ -989,16 +989,16 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn list_panes(
         &self,
-        all: bool,
-        session: bool,
+        all: Option<bool>,
+        session: Option<bool>,
         format: Option<&str>,
         target: Option<&str>,
     ) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if all {
+        if all.unwrap_or(false) {
             args.push(a_KEY);
         }
-        if session {
+        if session.unwrap_or(false) {
             args.push(s_KEY);
         }
         if let Some(s) = format {
@@ -1023,12 +1023,12 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn list_windows(
         &self,
-        all: bool,
+        all: Option<bool>,
         format: Option<&str>,
         target_session: Option<&str>,
     ) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if all {
+        if all.unwrap_or(false) {
             args.push(a_KEY);
         }
         if let Some(s) = format {

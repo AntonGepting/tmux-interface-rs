@@ -4,6 +4,7 @@ use crate::Pane;
 use crate::TmuxInterface;
 use std::ops::Index;
 
+#[derive(Default, Clone, PartialEq, Debug)]
 pub struct Panes(pub Vec<Pane>);
 
 impl IntoIterator for Panes {
@@ -33,7 +34,20 @@ impl Panes {
             .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(PANE_VARS_SEPARATOR);
-        let panes_str = tmux.list_panes(false, false, Some(&lsp_format), Some(target_window))?;
+        let panes_str = tmux.list_panes(None, None, Some(&lsp_format), Some(target_window))?;
+        Panes::from_str(&panes_str, bitflags)
+    }
+
+    pub fn get_all(target_session: &str, bitflags: usize) -> Result<Self, Error> {
+        let tmux = TmuxInterface::new();
+        let lsp_format = PANE_VARS_REGEX_VEC
+            .iter()
+            .filter(|t| bitflags & t.1 == t.1)
+            .map(|t| format!("#{{{}}}", t.0))
+            .collect::<Vec<String>>()
+            .join(PANE_VARS_SEPARATOR);
+        let panes_str =
+            tmux.list_panes(Some(true), None, Some(&lsp_format), Some(target_session))?;
         Panes::from_str(&panes_str, bitflags)
     }
 

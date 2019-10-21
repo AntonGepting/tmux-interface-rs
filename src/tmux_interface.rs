@@ -1,6 +1,5 @@
 #![allow(non_upper_case_globals)]
 
-
 use crate::Error;
 use crate::Version;
 use std::process::{Command, Output};
@@ -67,6 +66,7 @@ pub const Z_KEY: &str = "-Z";
 
 pub const CC_KEY: &str = "-CC";
 
+// XXX: callback hooks, before, after execution of the command thx for an idea to Jezza [Jezza's Fork](https://github.com/Jezza/tmux-interface-rs)
 // XXX: mb also add_env, clear_env, remove_env for std::process::Command?
 /// This structure is used to store execution parameters of `tmux`, including binary
 /// name. Full description of fields can be found using `man tmux`.

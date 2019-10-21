@@ -4,6 +4,7 @@ use crate::TmuxInterface;
 use crate::Window;
 use std::ops::Index;
 
+#[derive(Default, Clone, PartialEq, Debug)]
 pub struct Windows(pub Vec<Window>);
 
 impl IntoIterator for Windows {
@@ -32,7 +33,7 @@ impl Windows {
             .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(WINDOW_VARS_SEPARATOR);
-        let windows_str = tmux.list_windows(false, Some(&lsw_format), Some(target_session))?;
+        let windows_str = tmux.list_windows(None, Some(&lsw_format), Some(target_session))?;
         Windows::from_str(&windows_str, bitflags)
     }
 

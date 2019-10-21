@@ -34,7 +34,7 @@ pub const WINDOW_VARS_REGEX_VEC: [(&str, usize); 24] = [
 
 // accordingly to tmux.h: Formats
 // XXX: check all types, optionality
-#[derive(Default, Clone, Debug)]
+#[derive(Default, Clone, PartialEq, Debug)]
 pub struct Window {
     /// 1 if window active
     pub active: Option<bool>,

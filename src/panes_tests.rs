@@ -18,5 +18,6 @@ fn get() {
     use crate::pane::PANE_ALL;
     use crate::Panes;
 
-    let _panes = Panes::get("0:1", PANE_ALL).unwrap();
+    let _panes = Panes::get("0:2", PANE_ALL).unwrap();
+    dbg!(_panes);
 }
