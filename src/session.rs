@@ -107,9 +107,9 @@ impl Session {
         for var in SESSION_VARS_REGEX_VEC.iter() {
             // is current bitflag given?
             if bitflags & var.1 == var.1 {
-                // does vector element exit?
+                // does vector element exist?
                 if let Some(part) = sv.next() {
-                    // is verctor element not empty
+                    // is vector element not empty
                     if !part.is_empty() {
                         // decode it and save as struct field
                         match bitflags & var.1 {
