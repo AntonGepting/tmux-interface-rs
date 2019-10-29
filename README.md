@@ -46,6 +46,8 @@ and testing purposes. Do not use them in your Projects.
 
 - Tested on: tmux 2.8
 
+- Tested on: Debian "bullseye", x64
+
 <!--- Structure field names can be chnaged-->
 
 <!--- TmuxInterface::new() required everytime for new commands?-->

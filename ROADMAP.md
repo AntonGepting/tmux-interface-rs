@@ -248,26 +248,32 @@ Parsing objects and supported tmux variables:
 
 
 # Wishlist
+
 - mb function parameter names from tmux source?
-- mb tmux plugin for more options?
-    - no, standalone lib
 - mb folder structure, separate tmux functions from parse functions
 - does `Option<bool>` as function arguments and structure fields make sense
 - mb store `PathBuf` or other type for paths in parsed structures?
 - all optional arguments if they are more than 1 wrap in struct, all required arguments
     directly
-- callback hooks smtg like in Jezza's fork []()
+- callbacks or hooks or smtg like in [Jezza's fork](https://github.com/Jezza/tmux-interface-rs/)
+- mb FFI as a C lib?
+- mb enum for things like `[-l size | -p percentage]`
 
 
 # Strategy
+
+- additional tmux plugin?
+    - no, standalone library (current decision)
+        reason: trying to follow UNIX-way, KISS
+    - yes, more options and features possible
 
 - tmux subcommands have optional boolean keys, wrapping method?
     - `Option<bool>` (current decision)
         reason: "mapping" of CLI syntax characters ("12.1 Utility Argument Syntax"
         [IEEE Std 1003.1-2017](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html))
         `tmux lsp [-a] [-t target]`
-    - `bool`
-        reason: it's simple, for all not boolean keys `Option<T>`
+    - `bool` directly
+        reason: it's simple, for all not boolean keys it's still `Option<T>`
 
 - tmux subcommands have many keys?
     - less than 4 keys - as arguments, more - structure (current)
