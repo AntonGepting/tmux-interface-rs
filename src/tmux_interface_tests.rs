@@ -19,13 +19,13 @@ fn exec_io_error() {
 
 #[test]
 fn subcommand() {
-    let tmux = TmuxInterface::new();
+    let mut tmux = TmuxInterface::new();
     tmux.subcommand("has", &["-t", "session_name"]).unwrap();
 }
 
 #[test]
 fn version() {
-    let tmux = TmuxInterface::new();
+    let mut tmux = TmuxInterface::new();
     let version = tmux.version().unwrap();
     assert_eq!(version.prog_name, "tmux");
     assert!(version.major >= 1);

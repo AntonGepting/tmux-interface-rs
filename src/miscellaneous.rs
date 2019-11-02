@@ -37,7 +37,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux clock-mode [-t target-pane]
     /// ```
-    pub fn clock_mode(&self, target_pane: Option<&str>) -> Result<Output, Error> {
+    pub fn clock_mode(&mut self, target_pane: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(s) = target_pane {
             args.extend_from_slice(&[t_KEY, &s])
@@ -52,7 +52,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux if-shell [-bF] [-t target-pane] shell-command command [command]
     /// (alias: if)
     /// ```
-    pub fn if_shell(&self, if_shell: &IfShell) -> Result<Output, Error> {
+    pub fn if_shell(&mut self, if_shell: &IfShell) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if if_shell.backgroud.unwrap_or(false) {
             args.push(b_KEY);
@@ -78,7 +78,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux lock-server
     /// (alias: lock)
     /// ```
-    pub fn lock_server(&self) -> Result<Output, Error> {
+    pub fn lock_server(&mut self) -> Result<Output, Error> {
         let output = self.subcommand(TmuxInterface::LOCK_SERVER, &[])?;
         Ok(output)
     }
@@ -90,7 +90,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: run)
     /// ```
     pub fn run_shell(
-        &self,
+        &mut self,
         backgroud: Option<bool>,
         target_pane: Option<&str>,
         shell_command: &str,
@@ -114,7 +114,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: wait)
     /// ```
     pub fn wait_for(
-        &self,
+        &mut self,
         lock: Option<bool>,
         prevent_exit: Option<bool>,
         unlock: Option<bool>,

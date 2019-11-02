@@ -34,7 +34,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux set-hook [-agRu] [-t target-session] hook-name command
     /// ```
-    pub fn set_hook(&self, set_hook: &SetHook) -> Result<Output, Error> {
+    pub fn set_hook(&mut self, set_hook: &SetHook) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if set_hook.append.unwrap_or(false) {
             args.push(a_KEY);
@@ -63,7 +63,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-hooks [-g] [-t target-session]
     /// ```
     pub fn show_hooks(
-        &self,
+        &mut self,
         global: Option<bool>,
         target_session: Option<&str>,
     ) -> Result<Output, Error> {

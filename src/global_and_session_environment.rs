@@ -35,7 +35,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-environment [-gru] [-t target-session] name [value]
     /// (alias: setenv)
     /// ```
-    pub fn set_environment(&self, set_environment: &SetEnvironment) -> Result<Output, Error> {
+    pub fn set_environment(&mut self, set_environment: &SetEnvironment) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if set_environment.global.unwrap_or(false) {
             args.push(g_KEY);
@@ -64,7 +64,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: showenv)
     /// ```
     pub fn show_environment(
-        &self,
+        &mut self,
         global: Option<bool>,
         shell_format: Option<bool>,
         target_session: Option<&str>,

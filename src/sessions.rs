@@ -26,7 +26,7 @@ impl Index<usize> for Sessions {
 
 impl Sessions {
     pub fn get(bitflags: usize) -> Result<Self, Error> {
-        let tmux = TmuxInterface::new();
+        let mut tmux = TmuxInterface::new();
         let ls_format = SESSION_VARS_REGEX_VEC
             .iter()
             .filter(|t| bitflags & t.1 == t.1)

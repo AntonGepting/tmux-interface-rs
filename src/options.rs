@@ -101,7 +101,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-option [-aFgoqsuw] [-t target-session | target-window] option value
     /// (alias: set)
     /// ```
-    pub fn set_option(&self, set_option: &SetOption) -> Result<Output, Error> {
+    pub fn set_option(&mut self, set_option: &SetOption) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if set_option.append.unwrap_or(false) {
             args.push(a_KEY);
@@ -142,7 +142,10 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-window-option [-aFgoqu] [-t target-window] option value
     /// (alias: setw)
     /// ```
-    pub fn set_window_option(&self, set_window_option: &SetWindowOption) -> Result<Output, Error> {
+    pub fn set_window_option(
+        &mut self,
+        set_window_option: &SetWindowOption,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if set_window_option.append.unwrap_or(false) {
             args.push(a_KEY);
@@ -178,7 +181,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-options [-gHqsvw] [-t target-session | target-window] [option]
     /// (alias: show)
     /// ```
-    pub fn show_options(&self, show_options: Option<&ShowOptions>) -> Result<String, Error> {
+    pub fn show_options(&mut self, show_options: Option<&ShowOptions>) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(show_options) = show_options {
             if show_options.global_options.unwrap_or(false) {
@@ -218,7 +221,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: showw)
     /// ```
     pub fn show_window_options(
-        &self,
+        &mut self,
         global: Option<bool>,
         only_value: Option<bool>,
         target_window: Option<&str>,

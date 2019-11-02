@@ -26,7 +26,7 @@ impl Index<usize> for Windows {
 
 impl Windows {
     pub fn get(target_session: &str, bitflags: usize) -> Result<Self, Error> {
-        let tmux = TmuxInterface::new();
+        let mut tmux = TmuxInterface::new();
         let lsw_format = WINDOW_VARS_REGEX_VEC
             .iter()
             .filter(|t| bitflags & t.1 == t.1)

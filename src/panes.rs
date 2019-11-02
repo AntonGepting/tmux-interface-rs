@@ -27,7 +27,7 @@ impl Index<usize> for Panes {
 // TODO: Option as Result
 impl Panes {
     pub fn get(target_window: &str, bitflags: usize) -> Result<Self, Error> {
-        let tmux = TmuxInterface::new();
+        let mut tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS_REGEX_VEC
             .iter()
             .filter(|t| bitflags & t.1 == t.1)
@@ -39,7 +39,7 @@ impl Panes {
     }
 
     pub fn get_all(target_session: &str, bitflags: usize) -> Result<Self, Error> {
-        let tmux = TmuxInterface::new();
+        let mut tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS_REGEX_VEC
             .iter()
             .filter(|t| bitflags & t.1 == t.1)

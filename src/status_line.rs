@@ -34,7 +34,10 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
     /// ```
-    pub fn command_prompt(&self, command_prompt: Option<&CommandPrompt>) -> Result<Output, Error> {
+    pub fn command_prompt(
+        &mut self,
+        command_prompt: Option<&CommandPrompt>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(command_prompt) = command_prompt {
             if command_prompt.one_keypress.unwrap_or(false) {
@@ -67,7 +70,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: confirm)
     /// ```
     pub fn confirm_before(
-        &self,
+        &mut self,
         prompt: Option<&str>,
         target_client: Option<&str>,
         command: &str,
@@ -91,7 +94,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: display)
     /// ```
     pub fn display_message(
-        &self,
+        &mut self,
         print: Option<bool>,
         target_client: Option<&str>,
         target_pane: Option<&str>,

@@ -99,6 +99,8 @@ pub struct TmuxInterface<'a> {
     pub verbose_logging: Option<bool>, // -v
     /// Report the tmux version
     pub version: Option<bool>, // -V
+    //
+    pub pre_hook: Option<Box<dyn FnMut(&mut String, &Vec<&str>, &Vec<&str>) -> Result<(), Error>>>,
 }
 
 /// Common `TmuxInterface` functions
@@ -124,19 +126,19 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     /// use crate::tmux_interface::TmuxInterface;
     ///
-    /// let tmux = TmuxInterface::new();
+    /// let mut tmux = TmuxInterface::new();
     /// tmux.subcommand("has-session", &["-t", "session_name"]).unwrap();
     /// ```
-    pub fn subcommand(&self, subcmd: &str, args: &[&str]) -> Result<Output, Error> {
+    pub fn subcommand(&mut self, subcmd: &str, args: &[&str]) -> Result<Output, Error> {
         let mut options: Vec<&str> = Vec::new();
         options.push(subcmd);
         options.extend_from_slice(args);
-        self.exec(&options)
+        self.exec(&mut options)
     }
 
-    pub fn exec(&self, args: &[&str]) -> Result<Output, Error> {
+    pub fn exec(&mut self, mut args: &Vec<&str>) -> Result<Output, Error> {
         let mut options: Vec<&str> = Vec::new();
-        let mut cmd = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
+        let mut bin = self.tmux.unwrap_or(TmuxInterface::TMUX).to_string();
         // XXX: using environment vars
         //self.environment.and_then(|s| Some(envs.push(s)));
         if self.colours256.unwrap_or(false) {
@@ -169,6 +171,14 @@ impl<'a> TmuxInterface<'a> {
         if let Some(s) = self.socket_path {
             options.extend_from_slice(&[S_KEY, &s])
         }
+
+        // pre hook callback
+        // XXX: check argumets, mb separate subcmd too
+        if let Some(callback) = self.pre_hook.as_mut() {
+            callback(&mut bin, &mut options, &mut args)?;
+        }
+
+        let mut cmd = Command::new(&bin);
         cmd.args(options);
         let output = cmd.args(args).output()?;
         Ok(output)
@@ -180,9 +190,10 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux -V
     /// ```
-    pub fn version(&self) -> Result<Version, Error> {
-        let mut tmux = Command::new(self.tmux.unwrap_or(TmuxInterface::TMUX));
-        let output = tmux.arg(V_KEY).output()?;
+    pub fn version(&mut self) -> Result<Version, Error> {
+        let mut args: Vec<&str> = Vec::new();
+        args.push(V_KEY);
+        let output = self.exec(&args)?;
         let version_str = String::from_utf8_lossy(&output.stdout).to_string();
         let version = version_str.parse()?;
         Ok(version)

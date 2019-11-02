@@ -6,7 +6,7 @@ pub struct TmuxOption;
 
 impl TmuxOption {
     pub fn get_int(option_name: &str) -> Result<usize, Error> {
-        let tmux = TmuxInterface::new();
+        let mut tmux = TmuxInterface::new();
         let show_options = ShowOptions {
             global_options: Some(true),
             option_value: Some(true),

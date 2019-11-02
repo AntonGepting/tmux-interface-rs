@@ -61,7 +61,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux bind-key [-nr] [-T key-table] key command [arguments]
     /// (alias: bind)
     /// ```
-    pub fn bind_key(&self, bind_key: &BindKey) -> Result<Output, Error> {
+    pub fn bind_key(&mut self, bind_key: &BindKey) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if bind_key.root.unwrap_or(false) {
             args.push(n_KEY);
@@ -87,7 +87,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux list-keys [-T key-table]
     /// (alias: lsk)
     /// ```
-    pub fn list_keys(&self, key_table: Option<&str>) -> Result<Output, Error> {
+    pub fn list_keys(&mut self, key_table: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(s) = key_table {
             args.extend_from_slice(&[T_KEY, &s])
@@ -103,7 +103,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux send-keys [-lMRX] [-N repeat-count] [-t target-pane] key ...
     /// (alias: send)
     /// ```
-    pub fn send_keys(&self, send_keys: &SendKeys) -> Result<Output, Error> {
+    pub fn send_keys(&mut self, send_keys: &SendKeys) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if send_keys.disable_lookup.unwrap_or(false) {
             args.push(l_KEY);
@@ -140,7 +140,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux send-prefix [-2] [-t target-pane]
     /// ```
     pub fn send_prefix(
-        &self,
+        &mut self,
         secondary: Option<bool>,
         target_pane: Option<&str>,
     ) -> Result<Output, Error> {
@@ -162,7 +162,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: unbind)
     /// ```
     pub fn unbind_key(
-        &self,
+        &mut self,
         all: Option<bool>,
         root: Option<bool>,
         key_table: Option<&str>,

@@ -15,7 +15,7 @@ use crate::tmux_interface::TmuxInterface;
 fn has_session() {
     use crate::tmux_interface::NewSession;
 
-    let tmux = TmuxInterface::new();
+    let mut tmux = TmuxInterface::new();
     //tmux.tmux = Some("./tests/tmux_mock.sh");
     let new_session = NewSession {
         detached: Some(true),
@@ -37,12 +37,35 @@ fn has_session() {
 fn kill_session() {
     use crate::tmux_interface::NewSession;
 
-    let tmux = TmuxInterface::new();
+    let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
         session_name: Some("test_kill_session"),
         ..Default::default()
     };
+    tmux.new_session(Some(&new_session)).unwrap();
+    tmux.kill_session(None, None, Some("test_kill_session"))
+        .unwrap();
+}
+
+#[test]
+fn callback() {
+    use crate::tmux_interface::NewSession;
+
+    let mut tmux = TmuxInterface::new();
+    let new_session = NewSession {
+        detached: Some(true),
+        session_name: Some("test_kill_session"),
+        ..Default::default()
+    };
+
+    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        *bin = "./tests/tmux_test.sh".to_string();
+        println!("prehook: {:?} {:?} {:?}", bin, options, subcmd);
+        //Err(Error::new("hook"))
+        Ok(())
+    }));
+
     tmux.new_session(Some(&new_session)).unwrap();
     tmux.kill_session(None, None, Some("test_kill_session"))
         .unwrap();
@@ -62,7 +85,7 @@ fn kill_session() {
 fn list_sessions() {
     use crate::tmux_interface::NewSession;
 
-    let tmux = TmuxInterface::new();
+    let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
         session_name: Some("test_list_sessions"),
@@ -88,7 +111,7 @@ fn list_sessions() {
 fn new_session() {
     use crate::tmux_interface::NewSession;
 
-    let tmux = TmuxInterface::new();
+    let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
         session_name: Some("test_new_session"),
@@ -108,7 +131,7 @@ fn new_session() {
 fn rename_session() {
     use crate::tmux_interface::NewSession;
 
-    let tmux = TmuxInterface::new();
+    let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
         session_name: Some("test_rename_session"),
@@ -151,7 +174,7 @@ fn rename_session() {
 fn send_keys() {
     use crate::tmux_interface::{NewSession, SendKeys};
 
-    let tmux = TmuxInterface::new();
+    let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
         session_name: Some("test_send_keys"),

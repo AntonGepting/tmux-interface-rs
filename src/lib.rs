@@ -48,7 +48,7 @@
 //!
 //!
 //! fn main() {
-//!     let tmux = TmuxInterface::new();
+//!     let mut tmux = TmuxInterface::new();
 //!
 //!     let new_session = NewSession {
 //!         detached: Some(true),
@@ -80,6 +80,31 @@
 //!     let sessions = Sessions::get(SESSION_ALL).unwrap();
 //!     let windows = Windows::get("0", WINDOW_ALL).unwrap();
 //!     let panes = Panes::get("0:1", PANE_ALL).unwrap();
+//! }
+//! ```
+//!
+//! # Examples
+//!
+//! ```
+//! use crate::tmux_interface::{TmuxInterface, NewSession};
+//!
+//! fn main() {
+//!     let mut tmux = TmuxInterface::new();
+//!     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+//!         *bin = "./tests/tmux_test.sh".to_string();
+//!         println!("pre hook: {:?} {:?} {:?}", bin, options, subcmd);
+//!         //Err(Error::new("pre hook error"))
+//!         Ok(())
+//!     }));
+//!
+//!     let new_session = NewSession {
+//!         detached: Some(true),
+//!         session_name: Some("test_session_name1"),
+//!         ..Default::default()
+//!     };
+//!     tmux.new_session(Some(&new_session)).unwrap();
+//!     tmux.pre_hook = None;
+//!     tmux.kill_session(None, None, Some("test_session_name1")).unwrap();
 //! }
 //! ```
 

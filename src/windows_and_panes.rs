@@ -562,7 +562,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux copy-mode [-Meu] [-t target-pane]
     /// ```
     pub fn copy_mode(
-        &self,
+        &mut self,
         mouse_drag: Option<bool>,
         bottom_exit: Option<bool>,
         page_up: Option<bool>,
@@ -593,7 +593,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
     /// (alias: breakp)
     /// ```
-    pub fn break_pane(&self, break_pane: Option<&BreakPane>) -> Result<Output, Error> {
+    pub fn break_pane(&mut self, break_pane: Option<&BreakPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(break_pane) = break_pane {
             if break_pane.detached.unwrap_or(false) {
@@ -628,7 +628,7 @@ impl<'a> TmuxInterface<'a> {
     /// [-t target-pane]
     /// (alias: capturep)
     /// ```
-    pub fn capture_pane(&self, capture_pane: Option<&CapturePane>) -> Result<Output, Error> {
+    pub fn capture_pane(&mut self, capture_pane: Option<&CapturePane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(capture_pane) = capture_pane {
             if capture_pane.alternate_screen.unwrap_or(false) {
@@ -674,7 +674,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane]
     /// [template]
     /// ```
-    pub fn choose_client(&self, choose_client: Option<&ChooseClient>) -> Result<Output, Error> {
+    pub fn choose_client(&mut self, choose_client: Option<&ChooseClient>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(choose_client) = choose_client {
             if choose_client.without_preview.unwrap_or(false) {
@@ -712,7 +712,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane]
     /// [template]
     /// ```
-    pub fn choose_tree(&self, choose_tree: Option<&ChooseTree>) -> Result<Output, Error> {
+    pub fn choose_tree(&mut self, choose_tree: Option<&ChooseTree>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(choose_tree) = choose_tree {
             if choose_tree.all.unwrap_or(false) {
@@ -758,7 +758,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux display-panes [-b] [-d duration] [-t target-client] [template] (alias: displayp)
     /// ```
     pub fn display_panes(
-        &self,
+        &mut self,
         not_block: Option<bool>,
         duration: Option<&str>,
         target_client: Option<&str>,
@@ -790,7 +790,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux find-window [-CNTZ] [-t target-pane] match-string
     /// (alias: findw)
     /// ```
-    pub fn find_window(&self, find_window: &FindWindow) -> Result<Output, Error> {
+    pub fn find_window(&mut self, find_window: &FindWindow) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if find_window.only_visible.unwrap_or(false) {
             args.push(C_KEY);
@@ -821,7 +821,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: joinp)
     /// ```
-    pub fn join_pane(&self, join_pane: Option<&JoinPane>) -> Result<Output, Error> {
+    pub fn join_pane(&mut self, join_pane: Option<&JoinPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
         let p;
@@ -865,7 +865,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux kill-pane [-a] [-t target-pane]
     /// (alias: killp)
     /// ```
-    pub fn kill_pane(&self, all: Option<bool>, target_pane: Option<&str>) -> Result<Output, Error> {
+    pub fn kill_pane(
+        &mut self,
+        all: Option<bool>,
+        target_pane: Option<&str>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if all.unwrap_or(false) {
             args.push(a_KEY);
@@ -887,7 +891,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: killw)
     /// ```
     pub fn kill_window(
-        &self,
+        &mut self,
         all: Option<bool>,
         target_window: Option<&str>,
     ) -> Result<Output, Error> {
@@ -911,7 +915,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: lastp)
     /// ```
     pub fn last_pane(
-        &self,
+        &mut self,
         disable: Option<bool>,
         enable: Option<bool>,
         target_window: Option<&str>,
@@ -938,7 +942,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux last-window [-t target-session]
     /// (alias: last)
     /// ```
-    pub fn last_window(&self, target_session: Option<&str>) -> Result<Output, Error> {
+    pub fn last_window(&mut self, target_session: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(s) = target_session {
             args.extend_from_slice(&[t_KEY, &s])
@@ -955,7 +959,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux link-window [-adk] [-s src-window] [-t dst-window]
     /// (alias: linkw)
     /// ```
-    pub fn link_window(&self, link_window: Option<&LinkWindow>) -> Result<Output, Error> {
+    pub fn link_window(&mut self, link_window: Option<&LinkWindow>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(link_window) = link_window {
             if link_window.add.unwrap_or(false) {
@@ -988,7 +992,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: lsp)
     /// ```
     pub fn list_panes(
-        &self,
+        &mut self,
         all: Option<bool>,
         session: Option<bool>,
         format: Option<&str>,
@@ -1022,7 +1026,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: lsw)
     /// ```
     pub fn list_windows(
-        &self,
+        &mut self,
         all: Option<bool>,
         format: Option<&str>,
         target_session: Option<&str>,
@@ -1050,7 +1054,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: movep)
     /// ```
-    pub fn move_pane(&self, move_pane: Option<&MovePane>) -> Result<Output, Error> {
+    pub fn move_pane(&mut self, move_pane: Option<&MovePane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
         let p;
@@ -1094,7 +1098,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux move-window [-ardk] [-s src-window] [-t dst-window]
     /// (alias: movew)
     /// ```
-    pub fn move_window(&self, move_window: Option<&MoveWindow>) -> Result<Output, Error> {
+    pub fn move_window(&mut self, move_window: Option<&MoveWindow>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(move_window) = move_window {
             if move_window.add.unwrap_or(false) {
@@ -1130,7 +1134,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: neww)
     /// ```
     // TODO: target_window exitst error
-    pub fn new_window(&self, new_window: Option<&NewWindow>) -> Result<String, Error> {
+    pub fn new_window(&mut self, new_window: Option<&NewWindow>) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(new_window) = new_window {
             if new_window.add.unwrap_or(false) {
@@ -1179,7 +1183,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux next-layout [-t target-window]
     /// (alias: nextl)
     /// ```
-    pub fn next_layout(&self, target_window: Option<&str>) -> Result<Output, Error> {
+    pub fn next_layout(&mut self, target_window: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(s) = target_window {
             args.extend_from_slice(&[t_KEY, &s])
@@ -1195,7 +1199,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux next-window [-a] [-t target-session]
     /// (alias: next)
     pub fn next_window(
-        &self,
+        &mut self,
         alert: Option<bool>,
         target_session: Option<&str>,
     ) -> Result<Output, Error> {
@@ -1218,7 +1222,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
     /// (alias: pipep)
     /// ```
-    pub fn pipe_pane(&self, pipe_pane: Option<&PipePane>) -> Result<Output, Error> {
+    pub fn pipe_pane(&mut self, pipe_pane: Option<&PipePane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(pipe_pane) = pipe_pane {
             if pipe_pane.stdout.unwrap_or(false) {
@@ -1249,7 +1253,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux previous-layout [-t target-window]
     /// (alias: prevl)
     /// ```
-    pub fn previous_layout(&self, target_window: Option<&str>) -> Result<Output, Error> {
+    pub fn previous_layout(&mut self, target_window: Option<&str>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(s) = target_window {
             args.extend_from_slice(&[t_KEY, &s])
@@ -1267,7 +1271,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: prev)
     /// ```
     pub fn previous_window(
-        &self,
+        &mut self,
         alert: Option<bool>,
         target_session: Option<&str>,
     ) -> Result<Output, Error> {
@@ -1291,7 +1295,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: renamew)
     /// ```
     pub fn rename_window(
-        &self,
+        &mut self,
         target_window: Option<&str>,
         new_name: &str,
     ) -> Result<Output, Error> {
@@ -1312,7 +1316,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
     /// (alias: resizep)
     /// ```
-    pub fn resize_pane(&self, resize_pane: Option<&ResizePane>) -> Result<Output, Error> {
+    pub fn resize_pane(&mut self, resize_pane: Option<&ResizePane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let x;
         let y;
@@ -1362,7 +1366,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
     /// (alias: resizew)
     /// ```
-    pub fn resize_window(&self, resize_window: Option<&ResizeWindow>) -> Result<Output, Error> {
+    pub fn resize_window(&mut self, resize_window: Option<&ResizeWindow>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let x;
         let y;
@@ -1413,7 +1417,7 @@ impl<'a> TmuxInterface<'a> {
     /// [shell-command]
     /// (alias: respawnp)
     /// ```
-    pub fn respawn_pane(&self, respawn_pane: Option<&RespawnPane>) -> Result<Output, Error> {
+    pub fn respawn_pane(&mut self, respawn_pane: Option<&RespawnPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(respawn_pane) = respawn_pane {
             if respawn_pane.kill.unwrap_or(false) {
@@ -1445,7 +1449,10 @@ impl<'a> TmuxInterface<'a> {
     /// [shell-command]
     /// (alias: respawnw)
     /// ```
-    pub fn respawn_window(&self, respawn_window: Option<&RespawnWindow>) -> Result<Output, Error> {
+    pub fn respawn_window(
+        &mut self,
+        respawn_window: Option<&RespawnWindow>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(respawn_window) = respawn_window {
             if respawn_window.kill.unwrap_or(false) {
@@ -1477,7 +1484,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: rotatew)
     /// ```
     pub fn rotate_window(
-        &self,
+        &mut self,
         down: Option<bool>,
         up: Option<bool>,
         target_window: Option<&str>,
@@ -1504,7 +1511,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-layout [-Enop] [-t target-pane] [layout-name]
     /// (alias: selectl)
     /// ```
-    pub fn select_layout(&self, select_layout: Option<&SelectLayot>) -> Result<Output, Error> {
+    pub fn select_layout(&mut self, select_layout: Option<&SelectLayot>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(select_layout) = select_layout {
             if select_layout.spread.unwrap_or(false) {
@@ -1538,7 +1545,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-pane [-DdegLlMmRU] [-P style] [-T title] [-t target-pane]
     /// (alias: selectp)
     /// ```
-    pub fn select_pane(&self, select_pane: Option<&SelectPane>) -> Result<Output, Error> {
+    pub fn select_pane(&mut self, select_pane: Option<&SelectPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(select_pane) = select_pane {
             if select_pane.down.unwrap_or(false) {
@@ -1593,7 +1600,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-window [-lnpT] [-t target-window]
     /// (alias: selectw)
     /// ```
-    pub fn select_window(&self, select_window: Option<&SelectWindow>) -> Result<Output, Error> {
+    pub fn select_window(&mut self, select_window: Option<&SelectWindow>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(select_window) = select_window {
             if select_window.last.unwrap_or(false) {
@@ -1625,7 +1632,7 @@ impl<'a> TmuxInterface<'a> {
     /// [-t target-pane] [shell-command] [-F format]
     /// (alias: splitw)
     /// ```
-    pub fn split_window(&self, split_window: Option<&SplitWindow>) -> Result<String, Error> {
+    pub fn split_window(&mut self, split_window: Option<&SplitWindow>) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         let p;
         let s;
@@ -1682,7 +1689,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
     /// (alias: swapp)
     /// ```
-    pub fn swap_pane(&self, swap_pane: Option<&SwapPane>) -> Result<Output, Error> {
+    pub fn swap_pane(&mut self, swap_pane: Option<&SwapPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(swap_pane) = swap_pane {
             if swap_pane.detached.unwrap_or(false) {
@@ -1714,7 +1721,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: swapw)
     /// ```
     pub fn swap_window(
-        &self,
+        &mut self,
         detached: Option<bool>,
         src_window: Option<&str>,
         dst_window: Option<&str>,
@@ -1742,7 +1749,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: unlinkw)
     /// ```
     pub fn unlink_window(
-        &self,
+        &mut self,
         k: Option<bool>,
         target_window: Option<&str>,
     ) -> Result<Output, Error> {

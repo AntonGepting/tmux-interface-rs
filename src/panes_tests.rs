@@ -19,5 +19,5 @@ fn get() {
     use crate::Panes;
 
     let _panes = Panes::get("0:2", PANE_ALL).unwrap();
-    dbg!(_panes);
+    //dbg!(_panes);
 }
