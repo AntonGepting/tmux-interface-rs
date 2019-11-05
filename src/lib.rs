@@ -91,7 +91,10 @@
 //! fn main() {
 //!     let mut tmux = TmuxInterface::new();
 //!     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-//!         *bin = "./tests/tmux_test.sh".to_string();
+//!         // changing of binary name, its arguments, subcommand and its parameters are allowed
+//!         // inside callback function
+//!         *bin = "tmux".to_string();
+//!         // display newly set variables
 //!         println!("pre hook: {:?} {:?} {:?}", bin, options, subcmd);
 //!         //Err(Error::new("pre hook error"))
 //!         Ok(())
