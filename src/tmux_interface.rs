@@ -73,10 +73,9 @@ pub const CC_KEY: &str = "-CC";
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#DESCRIPTION)
 #[derive(Default)]
 pub struct TmuxInterface<'a> {
-    /// Environment variables for tmux
-    pub environment: Option<&'a str>, //
-    /// Tmux binary name (default: `tmux`, can be set as `tmux_mock.sh` for "sniffing")
-    pub tmux: Option<&'a str>, // tmux (or tmux_mock.sh)
+    /// Tmux options fields
+    ///
+    // XXX: combine into a struct and separate from other options?
     /// Force tmux to assume the terminal supports 256 colours
     pub colours256: Option<bool>, // -2
     /// Start in control mode
@@ -99,8 +98,26 @@ pub struct TmuxInterface<'a> {
     pub verbose_logging: Option<bool>, // -v
     /// Report the tmux version
     pub version: Option<bool>, // -V
-    //
+
+    /// non tmux options fields
+    ///
+    /// Tmux binary name (default: `tmux`, can be set as `tmux_mock.sh` for "sniffing")
+    pub tmux: Option<&'a str>, // tmux (or tmux_mock.sh)
+
+    /// Environment variables for tmux (currently not used)
+    pub environment: Option<&'a str>, //
+
+    /// define a callback function for displaying or editing all command's arguments:
+    /// callback(bin: &mut String, options: &Vec<&str>, subcmd_with_args: &Vec<&str>) -> Result
+    /// this function will be called before command.output();
+    // XXX: return?
     pub pre_hook: Option<Box<dyn FnMut(&mut String, &Vec<&str>, &Vec<&str>) -> Result<(), Error>>>,
+
+    /// define a callback function for displaying or editing command's output
+    /// callback(output: &mut Output) -> Result
+    /// this function will be called after command.output();
+    // XXX: return?
+    pub post_hook: Option<Box<dyn FnMut(&mut Output) -> Result<(), Error>>>,
 }
 
 /// Common `TmuxInterface` functions
@@ -129,6 +146,7 @@ impl<'a> TmuxInterface<'a> {
     /// let mut tmux = TmuxInterface::new();
     /// tmux.subcommand("has-session", &["-t", "session_name"]).unwrap();
     /// ```
+    // XXX: rename to command?
     pub fn subcommand(&mut self, subcmd: &str, args: &[&str]) -> Result<Output, Error> {
         let mut options: Vec<&str> = Vec::new();
         options.push(subcmd);
@@ -174,13 +192,19 @@ impl<'a> TmuxInterface<'a> {
 
         // pre hook callback
         // XXX: check argumets, mb separate subcmd too
-        if let Some(callback) = self.pre_hook.as_mut() {
-            callback(&mut bin, &mut options, &mut args)?;
+        if let Some(pre_hook) = self.pre_hook.as_mut() {
+            pre_hook(&mut bin, &mut options, &mut args)?;
         }
 
         let mut cmd = Command::new(&bin);
         cmd.args(options);
-        let output = cmd.args(args).output()?;
+        let mut output = cmd.args(args).output()?;
+
+        // post hook callback
+        if let Some(post_hook) = self.post_hook.as_mut() {
+            post_hook(&mut output)?;
+        }
+
         Ok(output)
     }
 
