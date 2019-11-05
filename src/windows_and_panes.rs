@@ -132,6 +132,12 @@ impl<'a> FindWindow<'a> {
     }
 }
 
+#[derive(Debug)]
+pub enum PaneSize {
+    Size(usize),
+    Percentage(usize),
+}
+
 /// Like split-window, but instead of splitting `dst-pane` and creating a new pane, split it
 /// and move `src-pane` into the space
 ///
@@ -147,8 +153,7 @@ pub struct JoinPane<'a> {
     pub detached: Option<bool>,    // [-d]
     pub horizontal: Option<bool>,  // [-h]
     pub vertical: Option<bool>,    // [-v]
-    pub size: Option<usize>,       // [-l size]
-    pub percentage: Option<usize>, // [-p percentage]
+    pub size: Option<PaneSize>,    // [-l size | -p percentage]
     pub src_pane: Option<&'a str>, // [-s src-pane]
     pub dst_pane: Option<&'a str>, // [-t dst-pane]
 }
@@ -196,8 +201,7 @@ pub struct MovePane<'a> {
     pub detached: Option<bool>,    // [-d]
     pub horizontal: Option<bool>,  // [-h]
     pub vertical: Option<bool>,    // [-v]
-    pub size: Option<usize>,       // [-l size]
-    pub percentage: Option<usize>, // [-p percentage]
+    pub size: Option<PaneSize>,    // [-l size | -p percentage]
     pub src_pane: Option<&'a str>, // [-s src-pane]
     pub dst_pane: Option<&'a str>, // [-t dst-pane]
 }
@@ -478,8 +482,7 @@ pub struct SplitWindow<'a> {
     pub vertical: Option<bool>,         // [-v]
     pub print: Option<bool>,            // [-P]
     pub cwd: Option<&'a str>,           // [-c start-directory]
-    pub size: Option<usize>,            // [-l size]
-    pub percentage: Option<usize>,      // [-p percentage]
+    pub size: Option<PaneSize>,         // [-l size | -p percentage]
     pub target_pane: Option<&'a str>,   // [-t target-pane]
     pub shell_command: Option<&'a str>, // [shell-command]
     pub format: Option<&'a str>,        // [-F format]
@@ -838,13 +841,17 @@ impl<'a> TmuxInterface<'a> {
             if join_pane.vertical.unwrap_or(false) {
                 args.push(v_KEY);
             }
-            if let Some(size) = join_pane.size {
-                s = size.to_string();
-                args.extend_from_slice(&[l_KEY, &s]);
-            }
-            if let Some(percentage) = join_pane.percentage {
-                p = percentage.to_string();
-                args.extend_from_slice(&[p_KEY, &p]);
+            if let Some(size) = &join_pane.size {
+                match size {
+                    PaneSize::Size(size) => {
+                        s = size.to_string();
+                        args.extend_from_slice(&[l_KEY, &s]);
+                    }
+                    PaneSize::Percentage(percentage) => {
+                        p = percentage.to_string();
+                        args.extend_from_slice(&[p_KEY, &p]);
+                    }
+                };
             }
             if let Some(s) = join_pane.src_pane {
                 args.extend_from_slice(&[s_KEY, &s])
@@ -1071,13 +1078,17 @@ impl<'a> TmuxInterface<'a> {
             if move_pane.vertical.unwrap_or(false) {
                 args.push(v_KEY);
             }
-            if let Some(size) = move_pane.size {
-                s = size.to_string();
-                args.extend_from_slice(&[l_KEY, &s]);
-            }
-            if let Some(percentage) = move_pane.percentage {
-                p = percentage.to_string();
-                args.extend_from_slice(&[p_KEY, &p]);
+            if let Some(size) = &move_pane.size {
+                match size {
+                    PaneSize::Size(size) => {
+                        s = size.to_string();
+                        args.extend_from_slice(&[l_KEY, &s]);
+                    }
+                    PaneSize::Percentage(percentage) => {
+                        p = percentage.to_string();
+                        args.extend_from_slice(&[p_KEY, &p]);
+                    }
+                };
             }
             if let Some(s) = move_pane.src_pane {
                 args.extend_from_slice(&[s_KEY, &s])
@@ -1658,13 +1669,17 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = split_window.cwd {
                 args.extend_from_slice(&[c_KEY, &s]);
             }
-            if let Some(size) = split_window.size {
-                s = size.to_string();
-                args.extend_from_slice(&[l_KEY, &s]);
-            }
-            if let Some(percentage) = split_window.percentage {
-                p = percentage.to_string();
-                args.extend_from_slice(&[p_KEY, &p]);
+            if let Some(size) = &split_window.size {
+                match size {
+                    PaneSize::Size(size) => {
+                        s = size.to_string();
+                        args.extend_from_slice(&[l_KEY, &s]);
+                    }
+                    PaneSize::Percentage(percentage) => {
+                        p = percentage.to_string();
+                        args.extend_from_slice(&[p_KEY, &p]);
+                    }
+                };
             }
             if let Some(s) = split_window.shell_command {
                 args.push(&s)

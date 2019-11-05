@@ -134,6 +134,7 @@ pub mod window_flag;
 pub mod windows;
 pub mod windows_and_panes;
 
+// structs
 pub use self::clients_and_sessions::AttachSession;
 pub use self::clients_and_sessions::DetachClient;
 pub use self::clients_and_sessions::NewSession;
@@ -141,6 +142,9 @@ pub use self::clients_and_sessions::RefreshClient;
 pub use self::clients_and_sessions::SwitchClient;
 pub use self::tmux_interface::TmuxInterface;
 
+// enums
+pub use self::windows_and_panes::PaneSize;
+// structs
 pub use self::windows_and_panes::BreakPane;
 pub use self::windows_and_panes::CapturePane;
 pub use self::windows_and_panes::ChooseClient;
@@ -162,15 +166,19 @@ pub use self::windows_and_panes::SelectWindow;
 pub use self::windows_and_panes::SplitWindow;
 pub use self::windows_and_panes::SwapPane;
 
+// structs
 pub use self::key_bindings::BindKey;
 pub use self::key_bindings::SendKeys;
 
+// structs
 pub use self::options::ShowOptions;
 pub use self::tmux_option::TmuxOption;
 
+// enums
+pub use self::layout_cell::LayoutType;
+// structs
 pub use self::layout::Layout;
 pub use self::layout_cell::LayoutCell;
-pub use self::layout_cell::LayoutType;
 pub use self::layout_checksum::LayoutChecksum;
 pub use self::pane::Pane;
 pub use self::pane_tabs::PaneTabs;
@@ -183,6 +191,7 @@ pub use self::window::Window;
 pub use self::window_flag::WindowFlag;
 pub use self::windows::Windows;
 
+// structs
 pub use self::error::Error;
 
 //mod pane_tabs_tests;

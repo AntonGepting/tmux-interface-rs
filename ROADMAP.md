@@ -257,7 +257,8 @@ Parsing objects and supported tmux variables:
     directly
 - callbacks or hooks or smtg like in [Jezza's fork](https://github.com/Jezza/tmux-interface-rs/)
 - mb FFI as a C lib?
-- mb enum for things like `[-l size | -p percentage]`
+- [x] enum for pane size specification `[-l size | -p percentage]`
+- [ ] mb enum for things like `[size | percentage]` in options?
 
 
 # Strategy
