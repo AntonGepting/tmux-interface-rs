@@ -9,13 +9,13 @@ use std::process::Output;
 /// ```
 #[derive(Default, Clone, Debug)]
 pub struct SetHook<'a> {
-    pub append: Option<bool>,            // [-a]
-    pub global: Option<bool>,            // [-g]
-    pub run: Option<bool>,               // [-R]
-    pub unset: Option<bool>,             // [-u]
+    pub append: Option<bool>, // [-a]
+    pub global: Option<bool>, // [-g]
+    pub run: Option<bool>,    // [-R]
+    pub unset: Option<bool>,  // [-u]
     pub target_session: Option<&'a str>, // [-t target-session]
-    pub hook_name: &'a str,              // hook-name
-    pub command: &'a str,                // command
+                              //pub hook_name: &'a str,              // hook-name
+                              //pub command: &'a str,                // command
 }
 
 impl<'a> SetHook<'a> {
@@ -34,25 +34,32 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux set-hook [-agRu] [-t target-session] hook-name command
     /// ```
-    pub fn set_hook(&mut self, set_hook: &SetHook) -> Result<Output, Error> {
+    pub fn set_hook(
+        &mut self,
+        set_hook: Option<&SetHook>,
+        hook_name: &str,
+        command: &str,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if set_hook.append.unwrap_or(false) {
-            args.push(a_KEY);
+        if let Some(set_hook) = set_hook {
+            if set_hook.append.unwrap_or(false) {
+                args.push(a_KEY);
+            }
+            if set_hook.global.unwrap_or(false) {
+                args.push(g_KEY);
+            }
+            if set_hook.run.unwrap_or(false) {
+                args.push(R_KEY);
+            }
+            if set_hook.unset.unwrap_or(false) {
+                args.push(u_KEY);
+            }
+            if let Some(s) = set_hook.target_session {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
         }
-        if set_hook.global.unwrap_or(false) {
-            args.push(g_KEY);
-        }
-        if set_hook.run.unwrap_or(false) {
-            args.push(R_KEY);
-        }
-        if set_hook.unset.unwrap_or(false) {
-            args.push(u_KEY);
-        }
-        if let Some(s) = set_hook.target_session {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        args.push(set_hook.hook_name);
-        args.push(set_hook.command);
+        args.push(hook_name);
+        args.push(command);
         let output = self.subcommand(TmuxInterface::SET_HOOK, &args)?;
         Ok(output)
     }

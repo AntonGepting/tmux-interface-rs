@@ -118,12 +118,12 @@ impl<'a> ChooseTree<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct FindWindow<'a> {
-    pub only_visible: Option<bool>,   // [-C]
-    pub only_name: Option<bool>,      // [-N]
-    pub only_title: Option<bool>,     // [-T]
-    pub zoom: Option<bool>,           // [-Z]
+    pub only_visible: Option<bool>, // [-C]
+    pub only_name: Option<bool>,    // [-N]
+    pub only_title: Option<bool>,   // [-T]
+    pub zoom: Option<bool>,         // [-Z]
     pub target_pane: Option<&'a str>, // [-t target-pane]
-    pub match_string: &'a str,        // match-string
+                                    //pub match_string: &'a str,        // match-string
 }
 
 impl<'a> FindWindow<'a> {
@@ -793,24 +793,30 @@ impl<'a> TmuxInterface<'a> {
     /// tmux find-window [-CNTZ] [-t target-pane] match-string
     /// (alias: findw)
     /// ```
-    pub fn find_window(&mut self, find_window: &FindWindow) -> Result<Output, Error> {
+    pub fn find_window(
+        &mut self,
+        find_window: Option<&FindWindow>,
+        match_string: &str,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if find_window.only_visible.unwrap_or(false) {
-            args.push(C_KEY);
+        if let Some(find_window) = find_window {
+            if find_window.only_visible.unwrap_or(false) {
+                args.push(C_KEY);
+            }
+            if find_window.only_name.unwrap_or(false) {
+                args.push(N_KEY);
+            }
+            if find_window.only_title.unwrap_or(false) {
+                args.push(T_KEY);
+            }
+            if find_window.zoom.unwrap_or(false) {
+                args.push(Z_KEY);
+            }
+            if let Some(s) = find_window.target_pane {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
         }
-        if find_window.only_name.unwrap_or(false) {
-            args.push(N_KEY);
-        }
-        if find_window.only_title.unwrap_or(false) {
-            args.push(T_KEY);
-        }
-        if find_window.zoom.unwrap_or(false) {
-            args.push(Z_KEY);
-        }
-        if let Some(s) = find_window.target_pane {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        args.push(find_window.match_string);
+        args.push(match_string);
         let output = self.subcommand(TmuxInterface::FIND_WINDOW, &args)?;
         Ok(output)
     }

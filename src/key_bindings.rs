@@ -13,8 +13,8 @@ pub struct BindKey<'a> {
     pub root: Option<bool>,         // [-n]
     pub repeat: Option<bool>,       // [-r]
     pub key_table: Option<&'a str>, // [-T key-table]
-    pub key: &'a str,               // key
-    pub command: &'a str,           // command
+    //pub key: &'a str,               // key
+    //pub command: &'a str,           // command
     pub arguments: Option<&'a str>, // [arguments]
 }
 
@@ -38,7 +38,7 @@ pub struct SendKeys<'a> {
     pub reset: Option<bool>,          // [-X]
     pub repeat_count: Option<usize>,  // [-N repeat-count]
     pub target_pane: Option<&'a str>, // [-t target-pane]
-    pub key: Vec<&'a str>,            // key
+                                      //pub key: Vec<&'a str>,            // key
 }
 
 impl<'a> SendKeys<'a> {
@@ -61,21 +61,30 @@ impl<'a> TmuxInterface<'a> {
     /// tmux bind-key [-nr] [-T key-table] key command [arguments]
     /// (alias: bind)
     /// ```
-    pub fn bind_key(&mut self, bind_key: &BindKey) -> Result<Output, Error> {
+    pub fn bind_key(
+        &mut self,
+        bind_key: Option<&BindKey>,
+        key: &str,
+        command: &str,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if bind_key.root.unwrap_or(false) {
-            args.push(n_KEY);
+        if let Some(bind_key) = bind_key {
+            if bind_key.root.unwrap_or(false) {
+                args.push(n_KEY);
+            }
+            if bind_key.repeat.unwrap_or(false) {
+                args.push(r_KEY);
+            }
+            if let Some(s) = bind_key.key_table {
+                args.extend_from_slice(&[T_KEY, &s])
+            }
         }
-        if bind_key.repeat.unwrap_or(false) {
-            args.push(r_KEY);
-        }
-        if let Some(s) = bind_key.key_table {
-            args.extend_from_slice(&[T_KEY, &s])
-        }
-        args.push(bind_key.key);
-        args.push(bind_key.command);
-        if let Some(s) = bind_key.arguments {
-            args.push(&s)
+        args.push(key);
+        args.push(command);
+        if let Some(bind_key) = bind_key {
+            if let Some(s) = bind_key.arguments {
+                args.push(&s)
+            }
         }
         let output = self.subcommand(TmuxInterface::BIND_KEY, &args)?;
         Ok(output)
@@ -103,32 +112,38 @@ impl<'a> TmuxInterface<'a> {
     /// tmux send-keys [-lMRX] [-N repeat-count] [-t target-pane] key ...
     /// (alias: send)
     /// ```
-    pub fn send_keys(&mut self, send_keys: &SendKeys) -> Result<Output, Error> {
+    pub fn send_keys(
+        &mut self,
+        send_keys: Option<&SendKeys>,
+        key: &Vec<&str>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if send_keys.disable_lookup.unwrap_or(false) {
-            args.push(l_KEY);
-        }
-        if send_keys.mouse_event.unwrap_or(false) {
-            args.push(M_KEY);
-        }
-        if send_keys.copy_mode.unwrap_or(false) {
-            args.push(R_KEY);
-        }
-        if send_keys.reset.unwrap_or(false) {
-            args.push(X_KEY);
-        }
-        //send_keys.repeat_count.map(|s| Some(args.extend_from_slice(&[N_KEY, s])));
         let s;
-        if let Some(repeat_count) = send_keys.repeat_count {
-            s = repeat_count.to_string();
-            args.extend_from_slice(&[N_KEY, &s]);
-        }
-        if let Some(s) = send_keys.target_pane {
-            args.extend_from_slice(&[t_KEY, &s])
+        if let Some(send_keys) = send_keys {
+            if send_keys.disable_lookup.unwrap_or(false) {
+                args.push(l_KEY);
+            }
+            if send_keys.mouse_event.unwrap_or(false) {
+                args.push(M_KEY);
+            }
+            if send_keys.copy_mode.unwrap_or(false) {
+                args.push(R_KEY);
+            }
+            if send_keys.reset.unwrap_or(false) {
+                args.push(X_KEY);
+            }
+            //send_keys.repeat_count.map(|s| Some(args.extend_from_slice(&[N_KEY, s])));
+            if let Some(repeat_count) = send_keys.repeat_count {
+                s = repeat_count.to_string();
+                args.extend_from_slice(&[N_KEY, &s]);
+            }
+            if let Some(s) = send_keys.target_pane {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
         }
         //args.extend_from_slice(send_keys.keys.as_slice());
         //args.extend_from_slice(send_keys.keys);
-        args.append(&mut send_keys.key.clone());
+        args.append(&mut key.clone());
         //args.push("C-m");
         let output = self.subcommand(TmuxInterface::SEND_KEYS, &args)?;
         Ok(output)

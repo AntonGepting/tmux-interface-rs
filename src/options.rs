@@ -19,8 +19,8 @@ pub struct SetOption<'a> {
     pub unset: Option<bool>,         // [-u]
     pub window: Option<bool>,        // [-w]
     pub target: Option<&'a str>,     // [-t target-session | target-window]
-    pub option: &'a str,             // option
-    pub value: &'a str,              // value
+                                     //pub option: &'a str,             // option
+                                     //pub value: &'a str,              // value
 }
 
 impl<'a> SetOption<'a> {
@@ -37,15 +37,15 @@ impl<'a> SetOption<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct SetWindowOption<'a> {
-    pub append: Option<bool>,           // [-a]
-    pub format: Option<bool>,           // [-F]
-    pub global: Option<bool>,           // [-g]
-    pub not_overwrite: Option<bool>,    // [-o]
-    pub quiet: Option<bool>,            // [-q]
-    pub unset: Option<bool>,            // [-u]
+    pub append: Option<bool>,        // [-a]
+    pub format: Option<bool>,        // [-F]
+    pub global: Option<bool>,        // [-g]
+    pub not_overwrite: Option<bool>, // [-o]
+    pub quiet: Option<bool>,         // [-q]
+    pub unset: Option<bool>,         // [-u]
     pub target_window: Option<&'a str>, // [-t target-window]
-    pub option: &'a str,                // option
-    pub value: &'a str,                 // value
+                                     //pub option: &'a str,                // option
+                                     //pub value: &'a str,                 // value
 }
 
 impl<'a> SetWindowOption<'a> {
@@ -101,37 +101,44 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-option [-aFgoqsuw] [-t target-session | target-window] option value
     /// (alias: set)
     /// ```
-    pub fn set_option(&mut self, set_option: &SetOption) -> Result<Output, Error> {
+    pub fn set_option(
+        &mut self,
+        set_option: Option<&SetOption>,
+        option: &str,
+        value: &str,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if set_option.append.unwrap_or(false) {
-            args.push(a_KEY);
+        if let Some(set_option) = set_option {
+            if set_option.append.unwrap_or(false) {
+                args.push(a_KEY);
+            }
+            if set_option.format.unwrap_or(false) {
+                args.push(F_KEY);
+            }
+            if set_option.global.unwrap_or(false) {
+                args.push(g_KEY);
+            }
+            if set_option.not_overwrite.unwrap_or(false) {
+                args.push(o_KEY);
+            }
+            if set_option.quiet.unwrap_or(false) {
+                args.push(q_KEY);
+            }
+            if set_option.server.unwrap_or(false) {
+                args.push(s_KEY);
+            }
+            if set_option.unset.unwrap_or(false) {
+                args.push(u_KEY);
+            }
+            if set_option.window.unwrap_or(false) {
+                args.push(w_KEY);
+            }
+            if let Some(s) = set_option.target {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
         }
-        if set_option.format.unwrap_or(false) {
-            args.push(F_KEY);
-        }
-        if set_option.global.unwrap_or(false) {
-            args.push(g_KEY);
-        }
-        if set_option.not_overwrite.unwrap_or(false) {
-            args.push(o_KEY);
-        }
-        if set_option.quiet.unwrap_or(false) {
-            args.push(q_KEY);
-        }
-        if set_option.server.unwrap_or(false) {
-            args.push(s_KEY);
-        }
-        if set_option.unset.unwrap_or(false) {
-            args.push(u_KEY);
-        }
-        if set_option.window.unwrap_or(false) {
-            args.push(w_KEY);
-        }
-        if let Some(s) = set_option.target {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        args.push(set_option.option);
-        args.push(set_option.value);
+        args.push(option);
+        args.push(value);
         let output = self.subcommand(TmuxInterface::SET_OPTION, &args)?;
         Ok(output)
     }
@@ -144,32 +151,36 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn set_window_option(
         &mut self,
-        set_window_option: &SetWindowOption,
+        set_window_option: Option<&SetWindowOption>,
+        option: &str,
+        value: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if set_window_option.append.unwrap_or(false) {
-            args.push(a_KEY);
+        if let Some(set_window_option) = set_window_option {
+            if set_window_option.append.unwrap_or(false) {
+                args.push(a_KEY);
+            }
+            if set_window_option.format.unwrap_or(false) {
+                args.push(F_KEY);
+            }
+            if set_window_option.global.unwrap_or(false) {
+                args.push(g_KEY);
+            }
+            if set_window_option.not_overwrite.unwrap_or(false) {
+                args.push(o_KEY);
+            }
+            if set_window_option.quiet.unwrap_or(false) {
+                args.push(q_KEY);
+            }
+            if set_window_option.unset.unwrap_or(false) {
+                args.push(u_KEY);
+            }
+            if let Some(s) = set_window_option.target_window {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
         }
-        if set_window_option.format.unwrap_or(false) {
-            args.push(F_KEY);
-        }
-        if set_window_option.global.unwrap_or(false) {
-            args.push(g_KEY);
-        }
-        if set_window_option.not_overwrite.unwrap_or(false) {
-            args.push(o_KEY);
-        }
-        if set_window_option.quiet.unwrap_or(false) {
-            args.push(q_KEY);
-        }
-        if set_window_option.unset.unwrap_or(false) {
-            args.push(u_KEY);
-        }
-        if let Some(s) = set_window_option.target_window {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        args.push(set_window_option.option);
-        args.push(set_window_option.value);
+        args.push(option);
+        args.push(value);
         let output = self.subcommand(TmuxInterface::SET_WINDOW_OPTION, &args)?;
         Ok(output)
     }

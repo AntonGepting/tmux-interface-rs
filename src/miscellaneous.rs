@@ -10,11 +10,11 @@ use std::process::Output;
 /// ```
 #[derive(Default, Debug)]
 pub struct IfShell<'a> {
-    pub backgroud: Option<bool>,         // [-b]
-    pub not_execute: Option<bool>,       // [-F]
-    pub target_pane: Option<&'a str>,    // [-t target-pane]
-    pub shell_command: &'a str,          // shell-command
-    pub first_command: &'a str,          // command
+    pub backgroud: Option<bool>,      // [-b]
+    pub not_execute: Option<bool>,    // [-F]
+    pub target_pane: Option<&'a str>, // [-t target-pane]
+    //pub shell_command: &'a str,          // shell-command
+    //pub command: &'a str,          // command
     pub second_command: Option<&'a str>, // [command]
 }
 
@@ -52,21 +52,30 @@ impl<'a> TmuxInterface<'a> {
     /// tmux if-shell [-bF] [-t target-pane] shell-command command [command]
     /// (alias: if)
     /// ```
-    pub fn if_shell(&mut self, if_shell: &IfShell) -> Result<Output, Error> {
+    pub fn if_shell(
+        &mut self,
+        if_shell: Option<&IfShell>,
+        shell_command: &str,
+        command: &str,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if if_shell.backgroud.unwrap_or(false) {
-            args.push(b_KEY);
+        if let Some(if_shell) = if_shell {
+            if if_shell.backgroud.unwrap_or(false) {
+                args.push(b_KEY);
+            }
+            if if_shell.not_execute.unwrap_or(false) {
+                args.push(F_KEY);
+            }
+            if let Some(s) = if_shell.target_pane {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
         }
-        if if_shell.not_execute.unwrap_or(false) {
-            args.push(F_KEY);
-        }
-        if let Some(s) = if_shell.target_pane {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        args.push(if_shell.shell_command);
-        args.push(if_shell.first_command);
-        if let Some(s) = if_shell.second_command {
-            args.push(&s)
+        args.push(shell_command);
+        args.push(command);
+        if let Some(if_shell) = if_shell {
+            if let Some(s) = if_shell.second_command {
+                args.push(&s)
+            }
         }
         let output = self.subcommand(TmuxInterface::IF_SHELL, &args)?;
         Ok(output)

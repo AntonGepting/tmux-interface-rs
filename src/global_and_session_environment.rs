@@ -14,8 +14,8 @@ pub struct SetEnvironment<'a> {
     pub remove: Option<bool>,            // [-r]
     pub unset: Option<bool>,             // [-u]
     pub target_session: Option<&'a str>, // [-t target-session]
-    pub name: &'a str,                   // option
-    pub value: Option<&'a str>,          // [value]
+    //pub name: &'a str,                   // name
+    pub value: Option<&'a str>, // [value]
 }
 
 impl<'a> SetEnvironment<'a> {
@@ -35,23 +35,31 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-environment [-gru] [-t target-session] name [value]
     /// (alias: setenv)
     /// ```
-    pub fn set_environment(&mut self, set_environment: &SetEnvironment) -> Result<Output, Error> {
+    pub fn set_environment(
+        &mut self,
+        set_environment: Option<&SetEnvironment>,
+        name: &str,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if set_environment.global.unwrap_or(false) {
-            args.push(g_KEY);
+        if let Some(set_environment) = set_environment {
+            if set_environment.global.unwrap_or(false) {
+                args.push(g_KEY);
+            }
+            if set_environment.remove.unwrap_or(false) {
+                args.push(r_KEY);
+            }
+            if set_environment.unset.unwrap_or(false) {
+                args.push(u_KEY);
+            }
+            if let Some(s) = set_environment.target_session {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
         }
-        if set_environment.remove.unwrap_or(false) {
-            args.push(r_KEY);
-        }
-        if set_environment.unset.unwrap_or(false) {
-            args.push(u_KEY);
-        }
-        if let Some(s) = set_environment.target_session {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        args.push(set_environment.name);
-        if let Some(s) = set_environment.value {
-            args.push(&s)
+        args.push(name);
+        if let Some(set_environment) = set_environment {
+            if let Some(s) = set_environment.value {
+                args.push(&s)
+            }
         }
         let output = self.subcommand(TmuxInterface::SET_ENVIRONMENT, &args)?;
         Ok(output)
