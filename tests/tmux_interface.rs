@@ -184,11 +184,10 @@ fn send_keys() {
 
     let send_keys = SendKeys {
         target_pane: Some("test_send_keys:^.0"),
-        key: vec!["top", "C-m"],
         ..Default::default()
     };
-    tmux.send_keys(&send_keys).unwrap();
-
+    tmux.send_keys(Some(&send_keys), &vec!["top", "C-m"])
+        .unwrap();
     tmux.kill_session(None, None, Some("test_send_keys"))
         .unwrap();
 }
