@@ -13,6 +13,7 @@ if any feature is missing or if you have a request, an improvment, an idea etc.
     - [x] Windows and Panes
     - [x] Key Bindings
     - [x] Options
+    - [ ] Support all tmux options
     - [x] Hooks
     - [x] Global and Session Environments
     - [x] Status Line
@@ -23,6 +24,7 @@ if any feature is missing or if you have a request, an improvment, an idea etc.
     - [ ] Windows and Panes
     - [ ] Key Bindings
     - [ ] Options
+    - [ ] Support all tmux options
     - [ ] Hooks
     - [ ] Global and Session Environments
     - [ ] Status Line
@@ -33,6 +35,7 @@ if any feature is missing or if you have a request, an improvment, an idea etc.
     - [ ] Windows and Panes
     - [ ] Key Bindings
     - [ ] Options
+    - [ ] Support all tmux options
     - [ ] Hooks
     - [ ] Global and Session Environments
     - [ ] Status Line
@@ -43,6 +46,7 @@ if any feature is missing or if you have a request, an improvment, an idea etc.
     - [ ] Windows and Panes
     - [ ] Key Bindings
     - [ ] Options
+    - [ ] Support all tmux options
     - [ ] Hooks
     - [ ] Global and Session Environments
     - [ ] Status Line
@@ -63,6 +67,7 @@ if any feature is missing or if you have a request, an improvment, an idea etc.
     - [ ] Window
     - [ ] Pane
     - [ ] Layout
+    - [ ] Options
 
 Parsing objects and supported tmux variables:
 
@@ -253,12 +258,13 @@ Parsing objects and supported tmux variables:
 - mb folder structure, separate tmux functions from parse functions
 - does `Option<bool>` as function arguments and structure fields make sense
 - mb store `PathBuf` or other type for paths in parsed structures?
-- all optional arguments if they are more than 1 wrap in struct, all required arguments
-    directly
+- optional arguments if they are more than 1 wrap in struct?
+- [x] all required (non-optional) arguments move out from struct, use them directly
 - callbacks or hooks or smtg like in [Jezza's fork](https://github.com/Jezza/tmux-interface-rs/)
 - mb FFI as a C lib?
 - [x] enum for pane size specification `[-l size | -p percentage]`
 - [ ] mb enum for things like `[size | percentage]` in options?
+- mb default most needed struct fields initialized with `new()`?
 
 
 # Strategy
@@ -277,9 +283,14 @@ Parsing objects and supported tmux variables:
         reason: it's simple, for all not boolean keys it's still `Option<T>`
 
 - tmux subcommands have many keys?
-    - less than 4 keys - as arguments, more - structure (current)
-    - all optional keys (if more than 1, 2, 3?) - as structure, all required keys as arguments
-    - all keys as function arguments
+    - pass all keys as function arguments
+    - less than 4 keys - as arguments, more - structure
+    - optional keys (> 4) as structure, all required keys as function arguments directly
+        (current decision)
+        reason: simple function call by default if no args needed
+    - all optional keys (> 1) - as structure, all required keys as arguments?
+    - group optional keys in struct by usage (for example: target as direct
+        argument)?
 
 - tmux subcommnads have many optional keys in some structure?
     - `Option<&TmuxSubcommandParameters>` (current decision)
