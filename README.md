@@ -67,7 +67,7 @@ and testing purposes. Do not use them in your Projects.
         - [`error.rs`](src/error.rs) - error propagating functions
         - [`lib.rs`](src/lib.rs) - main library file
 
-    2. TMUX functions (structure similar to TMUX manual):
+    2. TMUX functions (structure similar to [TMUX manual](http://man7.org/linux/man-pages/man1/tmux.1.html)):
 
         - [`clients_and_sessions.rs`](src/clients_and_sessions.rs)
         - [`windows_and_panes.rs`](src/windows_and_panes.rs)
@@ -122,13 +122,16 @@ and testing purposes. Do not use them in your Projects.
         (sniffing) intercommmunication between library functions and tmux
     - [`tmux_test.sh`](tests/tmux_test.sh) - bash script for output testing of tmux functions
 
-- `README.md` - common information (this file)
+- [`README.md`](README.md) - common information (this file)
 - [`LICENSE.md`](LICENSE.md) - license text
 - [`ROADMAP.md`](ROADMAP.md) - future goals, wishlist, ideas
 - [`CHANGELOG.md`](CHANGELOG.md) - version history
 - [`Cargo.toml`](Cargo.toml) - crate configuration ([File Format](https://doc.rust-lang.org/cargo/reference/manifest.html))
 - [`.travis.yml`](.travis.yml) - travis CI configuration ([File Format](https://docs.travis-ci.com/user/tutorial/))
 - [`.editorconfig`](.editorconfig) - consistent coding style configuration ([File Format](https://editorconfig.org/#file-format-details))
+- [`rustfmt.toml`](rustfmt.toml) - rustfmt configuration file ([rustfmt](https://github.com/rust-lang/rustfmt#configuring-rustfmt))
+- [`clippy.toml`](clippy.toml) - Clippy configuration file ([Clippy](https://github.com/rust-lang/rust-clippy#configuration))
+- [`rust-toolchain`](rust-toolchain) - rustup toolchain configuration file ([rustup](https://github.com/rust-lang/rustup.rs#the-toolchain-file))
 
 
 ## License
