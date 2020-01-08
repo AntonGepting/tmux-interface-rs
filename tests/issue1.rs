@@ -64,6 +64,9 @@ fn issue1() {
     };
     tmux.new_session(Some(&new_session)).unwrap();
 
+    // do not wait for user input, because test is running on Travis CI
+    tmux.send_keys(None, &vec!["exit", "C-m"]);
+
     let attach = AttachSession {
         target_session: Some("test_ti"),
         ..Default::default()
