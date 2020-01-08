@@ -2,7 +2,7 @@
 
 use crate::Error;
 use crate::Version;
-use std::process::{Command, Output};
+use std::process::{Command, Output, Stdio};
 use std::str;
 
 pub const _1_KEY: &str = "-1";
@@ -197,6 +197,8 @@ impl<'a> TmuxInterface<'a> {
         }
 
         let mut cmd = Command::new(&bin);
+        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
+        cmd.stdin(Stdio::inherit());
         cmd.args(options);
         let mut output = cmd.args(args).output()?;
 
