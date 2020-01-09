@@ -7,7 +7,7 @@ use std::process::Output;
 /// # Manual
 ///
 /// ```text
-/// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
+/// tmux attach-session [-dErx] [-c working-directory] [-t target-session]
 /// (alias: attach)
 /// ```
 #[derive(Default, Debug)]
@@ -18,6 +18,8 @@ pub struct AttachSession<'a> {
     pub not_update_env: Option<bool>, // [-E]
     /// signifies the client is read-only
     pub read_only: Option<bool>, // [-r]
+    /// send SIGHUP to the parent process, detaching the client
+    pub parent_sighup: Option<bool>, // [-x]
     /// specify starting directory
     pub cwd: Option<&'a str>, // [-c working-directory]
     /// specify target session name
@@ -58,7 +60,7 @@ impl<'a> DetachClient<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux new-session [-AdDEP] [-c start-directory] [-F format] [-n window-name]
+/// tmux new-session [-AdDEPX] [-c start-directory] [-F format] [-n window-name]
 /// [-s session-name] [-t group-name] [-x width] [-y height]
 /// [shell-command]
 /// (alias: new)
@@ -75,6 +77,8 @@ pub struct NewSession<'a> {
     pub not_update_env: Option<bool>, // [-E]
     /// print information about the new session after it has been created
     pub print: Option<bool>, // [-P]
+    /// send SIGHUP to the parent process, detaching the client
+    pub parent_sighup: Option<bool>, // [-X]
     /// specify starting directory
     pub cwd: Option<&'a str>, // [-c start-directory]
     /// specify different format
@@ -104,7 +108,8 @@ impl<'a> NewSession<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux refresh-client [-cDlLRSU] [-C width,height] [-t target-client] [adjustment]
+/// tmux refresh-client [-cDlLRSU] [-C XxY] [-F flags] [-t target-client]
+/// [adjustment]
 /// (alias: refresh)
 /// ```
 #[derive(Default, Debug)]
@@ -116,7 +121,8 @@ pub struct RefreshClient<'a> {
     pub right: Option<bool>,             // [-R]
     pub status_line: Option<bool>,       // [-S]
     pub up: Option<bool>,                // [-U]
-    pub size: Option<(usize, usize)>,    // [-C width,height]
+    pub size: Option<(usize, usize)>,    // [-C XxY]
+    pub flags: Option<&'a str>,          // [-F flags]
     pub target_client: Option<&'a str>,  // [-t target-client]
     pub adjustment: Option<usize>,       // [adjustment]
 }
@@ -132,7 +138,7 @@ impl<'a> RefreshClient<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
+/// tmux switch-client [-ElnprZ] [-c target-client] [-t target-session] [-T key-table]
 /// (alias: switchc)
 /// ```
 #[derive(Default, Debug)]
@@ -142,6 +148,7 @@ pub struct SwitchClient<'a> {
     pub next: Option<bool>,              // [-n]
     pub previous: Option<bool>,          // [-p]
     pub read_only: Option<bool>,         // [-r]
+    pub keep_zoomed: Option<bool>,       // [-Z]
     pub target_client: Option<&'a str>,  // [-c target-client]
     pub target_session: Option<&'a str>, // [-t target-session]
     pub key_table: Option<&'a str>,      // [-T key-table]
@@ -180,7 +187,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
+    /// tmux attach-session [-dErx] [-c working-directory] [-t target-session]
     /// (alias: attach)
     /// ```
     pub fn attach_session(
@@ -197,6 +204,9 @@ impl<'a> TmuxInterface<'a> {
             }
             if attach_session.read_only.unwrap_or(false) {
                 args.push(r_KEY);
+            }
+            if attach_session.parent_sighup.unwrap_or(false) {
+                args.push(x_KEY);
             }
             if let Some(s) = attach_session.cwd {
                 args.extend_from_slice(&[c_KEY, &s])
@@ -394,7 +404,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux new-session [-AdDEP] [-c start-directory] [-F format] [-n window-name]
+    /// tmux new-session [-AdDEPX] [-c start-directory] [-F format] [-n window-name]
     /// [-s session-name] [-t group-name] [-x width] [-y height] [shell-command]
     /// (alias: new)
     /// ```
@@ -417,6 +427,9 @@ impl<'a> TmuxInterface<'a> {
             }
             if new_session.print.unwrap_or(false) {
                 args.push(P_KEY);
+            }
+            if new_session.parent_sighup.unwrap_or(false) {
+                args.push(X_KEY);
             }
             if let Some(s) = new_session.cwd {
                 args.extend_from_slice(&[c_KEY, &s])
@@ -461,7 +474,8 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux refresh-client [-cDlLRSU] [-C width,height] [-t target-client] [adjustment]
+    /// tmux refresh-client [-cDlLRSU] [-C XxY] [-F flags] [-t target-client]
+    /// [adjustment]
     /// (alias: refresh)
     /// ```
     pub fn refresh_client(
@@ -491,8 +505,11 @@ impl<'a> TmuxInterface<'a> {
                 args.push(S_KEY);
             }
             if let Some(size) = refresh_client.size {
-                s = format!("{},{}", size.0, size.1);
+                s = format!("{}x{}", size.0, size.1);
                 args.extend_from_slice(&[C_KEY, &s]);
+            }
+            if let Some(s) = refresh_client.flags {
+                args.extend_from_slice(&[F_KEY, &s])
             }
             if let Some(s) = refresh_client.target_client {
                 args.extend_from_slice(&[t_KEY, &s])
@@ -561,13 +578,25 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux source-file [-q] path
+    /// tmux source-file [-nqv] path
     /// (alias: source)
     /// ```
-    pub fn source_file(&mut self, quite: Option<bool>, path: &str) -> Result<Output, Error> {
+    pub fn source_file(
+        &mut self,
+        not_execute: Option<bool>,
+        quite: Option<bool>,
+        show_parsed: Option<bool>,
+        path: &str,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        if not_execute.unwrap_or(false) {
+            args.push(n_KEY);
+        }
         if quite.unwrap_or(false) {
             args.push(q_KEY);
+        }
+        if show_parsed.unwrap_or(false) {
+            args.push(v_KEY);
         }
         args.push(path);
         let output = self.subcommand(TmuxInterface::SOURCE_FILE, &args)?;
@@ -609,7 +638,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
+    /// tmux switch-client [-ElnprZ] [-c target-client] [-t target-session] [-T key-table]
     /// (alias: switchc)
     /// ```
     pub fn switch_client(&mut self, switch_client: Option<&SwitchClient>) -> Result<Output, Error> {
@@ -629,6 +658,9 @@ impl<'a> TmuxInterface<'a> {
             }
             if switch_client.read_only.unwrap_or(false) {
                 args.push(r_KEY);
+            }
+            if switch_client.keep_zoomed.unwrap_or(false) {
+                args.push(Z_KEY);
             }
             if let Some(s) = switch_client.target_client {
                 args.extend_from_slice(&[c_KEY, &s])

@@ -5,17 +5,18 @@ use std::process::Output;
 /// # Manual
 ///
 /// ```text
-/// tmux choose-buffer [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+/// tmux choose-buffer [-NZr] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 #[derive(Default, Debug)]
 pub struct ChooseBuffer<'a> {
-    pub no_preview: Option<bool>,     // [-N]
-    pub zoom: Option<bool>,           // [-Z]
-    pub format: Option<&'a str>,      // [-F]
-    pub filter: Option<&'a str>,      // [-f filter]
-    pub sort_order: Option<&'a str>,  // [-O sort-order]
-    pub target_pane: Option<&'a str>, // [-t target-pane]
-    pub template: Option<&'a str>,    // [template]
+    pub no_preview: Option<bool>,         // [-N]
+    pub zoom: Option<bool>,               // [-Z]
+    pub reverse_sort_order: Option<bool>, // [-r]
+    pub format: Option<&'a str>,          // [-F]
+    pub filter: Option<&'a str>,          // [-f filter]
+    pub sort_order: Option<&'a str>,      // [-O sort-order]
+    pub target_pane: Option<&'a str>,     // [-t target-pane]
+    pub template: Option<&'a str>,        // [template]
 }
 
 impl<'a> ChooseBuffer<'a> {
@@ -61,8 +62,8 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux choose-buffer [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane]
-    /// [template]
+    /// tmux choose-buffer [-NZr] [-F format] [-f filter] [-O sort-order]
+    /// [-t target-pane] [template]
     /// ```
     pub fn choose_buffer(&mut self, choose_buffer: Option<&ChooseBuffer>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
@@ -72,6 +73,9 @@ impl<'a> TmuxInterface<'a> {
             }
             if choose_buffer.zoom.unwrap_or(false) {
                 args.push(Z_KEY);
+            }
+            if choose_buffer.reverse_sort_order.unwrap_or(false) {
+                args.push(N_KEY);
             }
             if let Some(s) = choose_buffer.format {
                 args.extend_from_slice(&[F_KEY, &s])

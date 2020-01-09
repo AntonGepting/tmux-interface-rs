@@ -27,11 +27,13 @@ impl<'a> BindKey<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux send-keys [-lMRX] [-N repeat-count] [-t target-pane] key ...
+/// tmux send-keys [-FHlMRX] [-N repeat-count] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 #[derive(Default, Clone, Debug)]
 pub struct SendKeys<'a> {
+    pub expand_formats: Option<bool>, // [-F]
+    pub hex: Option<bool>,            // [-H]
     pub disable_lookup: Option<bool>, // [-l]
     pub mouse_event: Option<bool>,    // [-M]
     pub copy_mode: Option<bool>,      // [-R]
@@ -109,7 +111,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux send-keys [-lMRX] [-N repeat-count] [-t target-pane] key ...
+    /// tmux send-keys [-FHlMRX] [-N repeat-count] [-t target-pane] key ...
     /// (alias: send)
     /// ```
     pub fn send_keys(
@@ -120,6 +122,12 @@ impl<'a> TmuxInterface<'a> {
         let mut args: Vec<&str> = Vec::new();
         let s;
         if let Some(send_keys) = send_keys {
+            if send_keys.expand_formats.unwrap_or(false) {
+                args.push(F_KEY);
+            }
+            if send_keys.hex.unwrap_or(false) {
+                args.push(H_KEY);
+            }
             if send_keys.disable_lookup.unwrap_or(false) {
                 args.push(l_KEY);
             }

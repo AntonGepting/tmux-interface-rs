@@ -71,6 +71,13 @@ pub const CC_KEY: &str = "-CC";
 /// This structure is used to store execution parameters of `tmux`, including binary
 /// name. Full description of fields can be found using `man tmux`.
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#DESCRIPTION)
+///
+/// # Manual
+///
+/// ```text
+/// tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name]
+/// [-S socket-path] [command [flags]]
+/// ```
 #[derive(Default)]
 pub struct TmuxInterface<'a> {
     /// Tmux options fields
@@ -80,24 +87,24 @@ pub struct TmuxInterface<'a> {
     pub colours256: Option<bool>, // -2
     /// Start in control mode
     pub control_mode: Option<bool>, // -C
-    /// Disables echo
-    pub disable_echo: Option<bool>, // -CC
-    /// Execute shell-command using the default shell
-    pub shell_cmd: Option<&'a str>, // -c shell-command
-    /// Specify an alternative configuration file
-    pub file: Option<&'a str>, // -f file
-    /// Allows a different socket name to be specified
-    pub socket_name: Option<&'a str>, // -L socket-name
     /// Behave as a login shell
     pub login_shell: Option<bool>, // -l
-    /// Specify a full alternative path to the server socket
-    pub socket_path: Option<&'a str>, // -S socket-path
     /// Write UTF-8 output to the terminal
     pub force_utf8: Option<bool>, // -u
     /// Request verbose logging
     pub verbose_logging: Option<bool>, // -v
     /// Report the tmux version
     pub version: Option<bool>, // -V
+    /// Execute shell-command using the default shell
+    pub shell_cmd: Option<&'a str>, // -c shell-command
+    /// Specify an alternative configuration file
+    pub file: Option<&'a str>, // -f file
+    /// Allows a different socket name to be specified
+    pub socket_name: Option<&'a str>, // -L socket-name
+    /// Specify a full alternative path to the server socket
+    pub socket_path: Option<&'a str>, // -S socket-path
+    /// Disables echo
+    pub disable_echo: Option<bool>, // -CC
 
     /// non tmux options fields
     ///

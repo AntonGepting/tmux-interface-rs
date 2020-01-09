@@ -31,7 +31,7 @@ impl<'a> BreakPane<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line]
+/// tmux capture-pane [-aepPqCJN] [-b buffer-name] [-E end-line] [-S start-line]
 /// [-t target-pane]
 /// (alias: capturep)
 /// ```
@@ -44,6 +44,7 @@ pub struct CapturePane<'a> {
     pub quite: Option<bool>,                // [-q]
     pub escape_non_printable: Option<bool>, // [-C]
     pub join: Option<bool>,                 // [-J]
+    pub trailing_spaces: Option<bool>,      // [-N]
     pub buffer_name: Option<&'a str>,       // [-b buffen_name]
     pub end_line: Option<&'a str>,          // [-E end_line]
     pub start_line: Option<&'a str>,        // [-S start_line]
@@ -60,17 +61,18 @@ impl<'a> CapturePane<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+/// tmux choose-client [-NrZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 #[derive(Default, Debug)]
 pub struct ChooseClient<'a> {
-    pub without_preview: Option<bool>, // [-N]
-    pub zoom: Option<bool>,            // [-Z]
-    pub format: Option<&'a str>,       // [-F format]
-    pub filter: Option<&'a str>,       // [-f filter]
-    pub sort_order: Option<&'a str>,   // [-O sort-order]
-    pub target_pane: Option<&'a str>,  // [-t target-pane]
-    pub template: Option<&'a str>,     // [template]
+    pub without_preview: Option<bool>,    // [-N]
+    pub reverse_sort_order: Option<bool>, // [-r]
+    pub zoom: Option<bool>,               // [-Z]
+    pub format: Option<&'a str>,          // [-F format]
+    pub filter: Option<&'a str>,          // [-f filter]
+    pub sort_order: Option<&'a str>,      // [-O sort-order]
+    pub target_pane: Option<&'a str>,     // [-t target-pane]
+    pub template: Option<&'a str>,        // [template]
 }
 
 impl<'a> ChooseClient<'a> {
@@ -85,12 +87,13 @@ impl<'a> ChooseClient<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+/// tmux choose-tree [-GNrswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 #[derive(Default, Debug)]
 pub struct ChooseTree<'a> {
     pub all: Option<bool>,                // [-G]
     pub without_preview: Option<bool>,    // [-N]
+    pub reverse_sort_order: Option<bool>, // [-r]
     pub collapsed_sessions: Option<bool>, // [-s]
     pub collapsed_windows: Option<bool>,  // [-w]
     pub zoom: Option<bool>,               // [-Z]
@@ -113,11 +116,12 @@ impl<'a> ChooseTree<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux find-window [-CNTZ] [-t target-pane] match-string
+/// tmux find-window [-rCNTZ] [-t target-pane] match-string
 /// (alias: findw)
 /// ```
 #[derive(Default, Debug)]
 pub struct FindWindow<'a> {
+    pub regex: Option<bool>,        // [-r]
     pub only_visible: Option<bool>, // [-C]
     pub only_name: Option<bool>,    // [-N]
     pub only_title: Option<bool>,   // [-T]
@@ -144,16 +148,17 @@ pub enum PaneSize {
 /// # Manual
 ///
 /// ```text
-/// tmux join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+/// tmux join-pane [-bdfhv] [-l size] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
 #[derive(Default, Debug)]
 pub struct JoinPane<'a> {
     pub left_above: Option<bool>,  // [-b]
     pub detached: Option<bool>,    // [-d]
+    pub full_size: Option<bool>,   // [-f]
     pub horizontal: Option<bool>,  // [-h]
     pub vertical: Option<bool>,    // [-v]
-    pub size: Option<PaneSize>,    // [-l size | -p percentage]
+    pub size: Option<PaneSize>,    // [-l size]
     pub src_pane: Option<&'a str>, // [-s src-pane]
     pub dst_pane: Option<&'a str>, // [-t dst-pane]
 }
@@ -192,7 +197,7 @@ impl<'a> LinkWindow<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+/// tmux move-pane [-bdhv] [-l size] [-s src-pane] [-t dst-pane]
 /// (alias: movep)
 /// ```
 #[derive(Default, Debug)]
@@ -201,7 +206,7 @@ pub struct MovePane<'a> {
     pub detached: Option<bool>,    // [-d]
     pub horizontal: Option<bool>,  // [-h]
     pub vertical: Option<bool>,    // [-v]
-    pub size: Option<PaneSize>,    // [-l size | -p percentage]
+    pub size: Option<PaneSize>,    // [-l size]
     pub src_pane: Option<&'a str>, // [-s src-pane]
     pub dst_pane: Option<&'a str>, // [-t dst-pane]
 }
@@ -241,8 +246,8 @@ impl<'a> MoveWindow<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux new-window [-adkP] [-c start-directory] [-F format] [-n window-name] [-t target-window]
-/// [shell-command]
+/// tmux new-window [-adkP] [-c start-directory] [-e environment] [-F format]
+/// [-n window-name] [-t target-window] [shell-command]
 /// (alias: neww)
 /// ```
 #[derive(Default, Debug)]
@@ -252,6 +257,7 @@ pub struct NewWindow<'a> {
     pub kill: Option<bool>,             // [-k]
     pub print: Option<bool>,            // [-P]
     pub cwd: Option<&'a str>,           // [-c start-directory]
+    pub environment: Option<&'a str>,   // [-e start-directory]
     pub format: Option<&'a str>,        // [-F format]
     pub window_name: Option<&'a str>,   // [-n window-name]
     pub target_window: Option<&'a str>, // [-t target-window]
@@ -260,6 +266,29 @@ pub struct NewWindow<'a> {
 
 impl<'a> NewWindow<'a> {
     pub fn new() -> NewWindow<'a> {
+        Default::default()
+    }
+}
+
+/// Pipe output sent by the program in target-pane to a shell command or vice versa
+///
+/// # Manual
+///
+/// ```text
+/// tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
+/// (alias: pipep)
+/// ```
+#[derive(Default, Debug)]
+pub struct PipePane<'a> {
+    pub stdout: Option<bool>,           // [-I]
+    pub stdin: Option<bool>,            // [-O]
+    pub open: Option<bool>,             // [-o]
+    pub target_pane: Option<&'a str>,   // [-t target-pane]
+    pub shell_command: Option<&'a str>, // [shell-command]
+}
+
+impl<'a> PipePane<'a> {
+    pub fn new() -> PipePane<'a> {
         Default::default()
     }
 }
@@ -367,29 +396,6 @@ impl<'a> RespawnWindow<'a> {
     }
 }
 
-/// Pipe output sent by the program in target-pane to a shell command or vice versa
-///
-/// # Manual
-///
-/// ```text
-/// tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
-/// (alias: pipep)
-/// ```
-#[derive(Default, Debug)]
-pub struct PipePane<'a> {
-    pub stdout: Option<bool>,           // [-I]
-    pub stdin: Option<bool>,            // [-O]
-    pub open: Option<bool>,             // [-o]
-    pub target_pane: Option<&'a str>,   // [-t target-pane]
-    pub shell_command: Option<&'a str>, // [shell-command]
-}
-
-impl<'a> PipePane<'a> {
-    pub fn new() -> PipePane<'a> {
-        Default::default()
-    }
-}
-
 /// Choose a specific layout for a window
 ///
 /// # Manual
@@ -418,7 +424,7 @@ impl<'a> SelectLayot<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux select-pane [-DdegLlMmRU] [-P style] [-T title] [-t target-pane]
+/// tmux select-pane [-DdeLlMmRUZ] [-T title] [-t target-pane]
 /// (alias: selectp)
 /// ```
 #[derive(Default, Debug)]
@@ -426,14 +432,13 @@ pub struct SelectPane<'a> {
     pub down: Option<bool>,           // [-D]
     pub disable: Option<bool>,        // [-d]
     pub enable: Option<bool>,         // [-e]
-    pub show_style: Option<bool>,     // [-g]
     pub left: Option<bool>,           // [-L]
     pub last: Option<bool>,           // [-l]
     pub set_marked: Option<bool>,     // [-M]
     pub clear_marked: Option<bool>,   // [-m]
     pub right: Option<bool>,          // [-R]
     pub up: Option<bool>,             // [-U]
-    pub style: Option<&'a str>,       // [-P style]
+    pub keep_zoomed: Option<bool>,    // [-Z]
     pub title: Option<&'a str>,       // [-T title]
     pub target_pane: Option<&'a str>, // [-t target-pane]
 }
@@ -469,7 +474,7 @@ impl<'a> SelectWindow<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux split-window [-bdfhIvP] [-c start-directory] [-e environment] [-l size | -p percentage]
+/// tmux split-window [-bdfhIvP] [-c start-directory] [-e environment] [-l size]
 /// [-t target-pane] [shell-command] [-F format]
 /// (alias: splitw)
 /// ```
@@ -479,10 +484,12 @@ pub struct SplitWindow<'a> {
     pub detached: Option<bool>,         // [-d]
     pub full: Option<bool>,             // [-f]
     pub horizontal: Option<bool>,       // [-h]
+    pub stdin_forward: Option<bool>,    // [-I]
     pub vertical: Option<bool>,         // [-v]
     pub print: Option<bool>,            // [-P]
     pub cwd: Option<&'a str>,           // [-c start-directory]
-    pub size: Option<PaneSize>,         // [-l size | -p percentage]
+    pub environment: Option<&'a str>,   // [-e start-directory]
+    pub size: Option<PaneSize>,         // [-l size]
     pub target_pane: Option<&'a str>,   // [-t target-pane]
     pub shell_command: Option<&'a str>, // [shell-command]
     pub format: Option<&'a str>,        // [-F format]
@@ -499,7 +506,7 @@ impl<'a> SplitWindow<'a> {
 /// # Manual
 ///
 /// ```text
-/// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
+/// tmux swap-pane [-dDUZ] [-s src-pane] [-t dst-pane]
 /// (alias: swapp)
 /// ```
 #[derive(Default, Debug)]
@@ -507,6 +514,7 @@ pub struct SwapPane<'a> {
     pub detached: Option<bool>,    // [-d]
     pub previous: Option<&'a str>, // [-D]
     pub next: Option<&'a str>,     // [-U]
+    pub keep_zoomed: Option<bool>, // [-Z]
     pub src_pane: Option<&'a str>, // [-s src-pane]
     pub dst_pane: Option<&'a str>, // [-t dst-pane]
 }
@@ -627,7 +635,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line]
+    /// tmux capture-pane [-aepPqCJN] [-b buffer-name] [-E end-line] [-S start-line]
     /// [-t target-pane]
     /// (alias: capturep)
     /// ```
@@ -655,6 +663,9 @@ impl<'a> TmuxInterface<'a> {
             if capture_pane.join.unwrap_or(false) {
                 args.push(J_KEY);
             }
+            if capture_pane.trailing_spaces.unwrap_or(false) {
+                args.push(N_KEY);
+            }
             if let Some(s) = capture_pane.buffer_name {
                 args.extend_from_slice(&[b_KEY, &s])
             }
@@ -674,7 +685,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane]
+    /// tmux choose-client [-NrZ] [-F format] [-f filter] [-O sort-order] [-t target-pane]
     /// [template]
     /// ```
     pub fn choose_client(&mut self, choose_client: Option<&ChooseClient>) -> Result<Output, Error> {
@@ -682,6 +693,9 @@ impl<'a> TmuxInterface<'a> {
         if let Some(choose_client) = choose_client {
             if choose_client.without_preview.unwrap_or(false) {
                 args.push(N_KEY);
+            }
+            if choose_client.reverse_sort_order.unwrap_or(false) {
+                args.push(r_KEY);
             }
             if choose_client.zoom.unwrap_or(false) {
                 args.push(Z_KEY);
@@ -712,7 +726,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane]
+    /// tmux choose-tree [-GNrswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane]
     /// [template]
     /// ```
     pub fn choose_tree(&mut self, choose_tree: Option<&ChooseTree>) -> Result<Output, Error> {
@@ -723,6 +737,9 @@ impl<'a> TmuxInterface<'a> {
             }
             if choose_tree.without_preview.unwrap_or(false) {
                 args.push(N_KEY);
+            }
+            if choose_tree.reverse_sort_order.unwrap_or(false) {
+                args.push(r_KEY);
             }
             if choose_tree.collapsed_sessions.unwrap_or(false) {
                 args.push(s_KEY);
@@ -790,7 +807,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux find-window [-CNTZ] [-t target-pane] match-string
+    /// tmux find-window [-rCNTZ] [-t target-pane] match-string
     /// (alias: findw)
     /// ```
     pub fn find_window(
@@ -800,6 +817,9 @@ impl<'a> TmuxInterface<'a> {
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(find_window) = find_window {
+            if find_window.regex.unwrap_or(false) {
+                args.push(r_KEY);
+            }
             if find_window.only_visible.unwrap_or(false) {
                 args.push(C_KEY);
             }
@@ -827,19 +847,21 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+    /// tmux join-pane [-bdfhv] [-l size] [-s src-pane] [-t dst-pane]
     /// (alias: joinp)
     /// ```
     pub fn join_pane(&mut self, join_pane: Option<&JoinPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
-        let p;
         if let Some(join_pane) = join_pane {
             if join_pane.left_above.unwrap_or(false) {
                 args.push(b_KEY);
             }
             if join_pane.detached.unwrap_or(false) {
                 args.push(d_KEY);
+            }
+            if join_pane.full_size.unwrap_or(false) {
+                args.push(f_KEY);
             }
             if join_pane.horizontal.unwrap_or(false) {
                 args.push(h_KEY);
@@ -849,15 +871,10 @@ impl<'a> TmuxInterface<'a> {
             }
             if let Some(size) = &join_pane.size {
                 match size {
-                    PaneSize::Size(size) => {
-                        s = size.to_string();
-                        args.extend_from_slice(&[l_KEY, &s]);
-                    }
-                    PaneSize::Percentage(percentage) => {
-                        p = percentage.to_string();
-                        args.extend_from_slice(&[p_KEY, &p]);
-                    }
+                    PaneSize::Size(size) => s = size.to_string(),
+                    PaneSize::Percentage(size) => s = format!("{}%", size),
                 };
+                args.extend_from_slice(&[l_KEY, &s]);
             }
             if let Some(s) = join_pane.src_pane {
                 args.extend_from_slice(&[s_KEY, &s])
@@ -924,13 +941,14 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux last-pane [-de] [-t target-window]
+    /// tmux last-pane [-deZ] [-t target-window]
     /// (alias: lastp)
     /// ```
     pub fn last_pane(
         &mut self,
         disable: Option<bool>,
         enable: Option<bool>,
+        keep_zoomed: Option<bool>,
         target_window: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
@@ -938,6 +956,9 @@ impl<'a> TmuxInterface<'a> {
             args.push(d_KEY);
         }
         if enable.unwrap_or(false) {
+            args.push(e_KEY);
+        }
+        if keep_zoomed.unwrap_or(false) {
             args.push(e_KEY);
         }
         if let Some(s) = target_window {
@@ -1064,13 +1085,12 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+    /// tmux move-pane [-bdhv] [-l size] [-s src-pane] [-t dst-pane]
     /// (alias: movep)
     /// ```
     pub fn move_pane(&mut self, move_pane: Option<&MovePane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
-        let p;
         if let Some(move_pane) = move_pane {
             if move_pane.left_above.unwrap_or(false) {
                 args.push(b_KEY);
@@ -1086,15 +1106,10 @@ impl<'a> TmuxInterface<'a> {
             }
             if let Some(size) = &move_pane.size {
                 match size {
-                    PaneSize::Size(size) => {
-                        s = size.to_string();
-                        args.extend_from_slice(&[l_KEY, &s]);
-                    }
-                    PaneSize::Percentage(percentage) => {
-                        p = percentage.to_string();
-                        args.extend_from_slice(&[p_KEY, &p]);
-                    }
+                    PaneSize::Size(size) => s = size.to_string(),
+                    PaneSize::Percentage(size) => s = format!("{}%", size),
                 };
+                args.extend_from_slice(&[l_KEY, &s]);
             }
             if let Some(s) = move_pane.src_pane {
                 args.extend_from_slice(&[s_KEY, &s])
@@ -1146,7 +1161,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux new-window [-adkP] [-c start-directory] [-F format] [-n window-name]
+    /// tmux new-window [-adkP] [-c start-directory] [-e environment] [-F format] [-n window-name]
     /// [-t target-window] [shell-command]
     /// (alias: neww)
     /// ```
@@ -1168,6 +1183,9 @@ impl<'a> TmuxInterface<'a> {
             }
             if let Some(s) = new_window.cwd {
                 args.extend_from_slice(&[c_KEY, &s])
+            }
+            if let Some(s) = new_window.environment {
+                args.extend_from_slice(&[e_KEY, &s])
             }
             if let Some(s) = new_window.window_name {
                 args.extend_from_slice(&[n_KEY, &s])
@@ -1497,13 +1515,14 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux rotate-window [-DU] [-t target-window]
+    /// tmux rotate-window [-DUZ] [-t target-window]
     /// (alias: rotatew)
     /// ```
     pub fn rotate_window(
         &mut self,
         down: Option<bool>,
         up: Option<bool>,
+        keep_zoomed: Option<bool>,
         target_window: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
@@ -1512,6 +1531,9 @@ impl<'a> TmuxInterface<'a> {
         }
         if up.unwrap_or(false) {
             args.push(U_KEY);
+        }
+        if keep_zoomed.unwrap_or(false) {
+            args.push(Z_KEY);
         }
         if let Some(s) = target_window {
             args.extend_from_slice(&[t_KEY, &s])
@@ -1559,7 +1581,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux select-pane [-DdegLlMmRU] [-P style] [-T title] [-t target-pane]
+    /// tmux select-pane [-DdeLlMmRUZ] [-T title] [-t target-pane]
     /// (alias: selectp)
     /// ```
     pub fn select_pane(&mut self, select_pane: Option<&SelectPane>) -> Result<Output, Error> {
@@ -1573,9 +1595,6 @@ impl<'a> TmuxInterface<'a> {
             }
             if select_pane.enable.unwrap_or(false) {
                 args.push(e_KEY);
-            }
-            if select_pane.show_style.unwrap_or(false) {
-                args.push(g_KEY);
             }
             if select_pane.left.unwrap_or(false) {
                 args.push(L_KEY);
@@ -1595,8 +1614,8 @@ impl<'a> TmuxInterface<'a> {
             if select_pane.up.unwrap_or(false) {
                 args.push(U_KEY);
             }
-            if let Some(s) = select_pane.style {
-                args.extend_from_slice(&[P_KEY, s])
+            if select_pane.keep_zoomed.unwrap_or(false) {
+                args.push(U_KEY);
             }
             if let Some(s) = select_pane.title {
                 args.extend_from_slice(&[T_KEY, s])
@@ -1645,13 +1664,12 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux split-window [-bdfhvP] [-c start-directory] [-l size | -p percentage]
+    /// tmux split-window [-bdfhIvP] [-c start-directory] [-e environment] [-l size]
     /// [-t target-pane] [shell-command] [-F format]
     /// (alias: splitw)
     /// ```
     pub fn split_window(&mut self, split_window: Option<&SplitWindow>) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let p;
         let s;
         if let Some(split_window) = split_window {
             if split_window.before.unwrap_or(false) {
@@ -1666,6 +1684,9 @@ impl<'a> TmuxInterface<'a> {
             if split_window.horizontal.unwrap_or(false) {
                 args.push(h_KEY);
             }
+            if split_window.stdin_forward.unwrap_or(false) {
+                args.push(I_KEY);
+            }
             if split_window.vertical.unwrap_or(false) {
                 args.push(v_KEY);
             }
@@ -1675,17 +1696,15 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = split_window.cwd {
                 args.extend_from_slice(&[c_KEY, &s]);
             }
+            if let Some(s) = split_window.environment {
+                args.extend_from_slice(&[e_KEY, &s]);
+            }
             if let Some(size) = &split_window.size {
                 match size {
-                    PaneSize::Size(size) => {
-                        s = size.to_string();
-                        args.extend_from_slice(&[l_KEY, &s]);
-                    }
-                    PaneSize::Percentage(percentage) => {
-                        p = percentage.to_string();
-                        args.extend_from_slice(&[p_KEY, &p]);
-                    }
+                    PaneSize::Size(size) => s = size.to_string(),
+                    PaneSize::Percentage(size) => s = format!("{}%", size),
                 };
+                args.extend_from_slice(&[l_KEY, &s]);
             }
             if let Some(s) = split_window.shell_command {
                 args.push(&s)
@@ -1707,7 +1726,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
-    /// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
+    /// tmux swap-pane [-dDUZ] [-s src-pane] [-t dst-pane]
     /// (alias: swapp)
     /// ```
     pub fn swap_pane(&mut self, swap_pane: Option<&SwapPane>) -> Result<Output, Error> {
@@ -1721,6 +1740,9 @@ impl<'a> TmuxInterface<'a> {
             }
             if swap_pane.detached.unwrap_or(false) {
                 args.push(U_KEY);
+            }
+            if swap_pane.keep_zoomed.unwrap_or(false) {
+                args.push(Z_KEY);
             }
             if let Some(s) = swap_pane.src_pane {
                 args.extend_from_slice(&[s_KEY, &s])
