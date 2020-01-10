@@ -228,13 +228,14 @@ Parsing objects and supported tmux variables:
 - [ ] Function results and errors
 
 
-**tmux interface v0.0.5**
+**tmux interface v0.0.6**
 
 - [ ] Documentation for all existing functionality and items
 - [ ] All tmux functions output return in right way
 - [ ] No panics, no unwrap in lib functions
 - [ ] Error reporting information num, enum, string like in std
 - [ ] Better names for tmux subcommands wrapper function arguments
+- [x] Check new `tmux` version (`tmux 3.0a`) for significant changes
 
 
 **tmux interface v0.0.1**
@@ -255,6 +256,7 @@ Parsing objects and supported tmux variables:
 # Wishlist
 
 - mb function parameter names from tmux source?
+- mb better struct fields names
 - mb folder structure, separate tmux functions from parse functions
 - does `Option<bool>` as function arguments and structure fields make sense
 - mb store `PathBuf` or other type for paths in parsed structures?
@@ -270,30 +272,30 @@ Parsing objects and supported tmux variables:
 # Strategy
 
 - additional tmux plugin?
-    - no, standalone library (current decision)
+    - [x] no, standalone library (current decision)
         reason: trying to follow UNIX-way, KISS
-    - yes, more options and features possible
+    - [ ] yes, more options and features possible
 
 - tmux subcommands have optional boolean keys, wrapping method?
-    - `Option<bool>` (current decision)
+    - [x] `Option<bool>` (current decision)
         reason: "mapping" of CLI syntax characters ("12.1 Utility Argument Syntax"
         [IEEE Std 1003.1-2017](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html))
         `tmux lsp [-a] [-t target]`
-    - `bool` directly
+    - [ ] `bool` directly
         reason: it's simple, for all not boolean keys it's still `Option<T>`
 
 - tmux subcommands have many keys?
-    - pass all keys as function arguments
-    - less than 4 keys - as arguments, more - structure
-    - optional keys (> 4) as structure, all required keys as function arguments directly
+    - [ ] pass all keys as function arguments
+    - [ ] less than 4 keys - as arguments, more - structure
+    - [x] optional keys (> 4) as structure, all required keys as function arguments directly
         (current decision)
         reason: simple function call by default if no args needed
-    - all optional keys (> 1) - as structure, all required keys as arguments?
-    - group optional keys in struct by usage (for example: target as direct
+    - [ ] all optional keys (> 1) - as structure, all required keys as arguments?
+    - [ ] group optional keys in struct by usage (for example: target as direct
         argument)?
 
 - tmux subcommnads have many optional keys in some structure?
-    - `Option<&TmuxSubcommandParameters>` (current decision)
+    - [x] `Option<&TmuxSubcommandParameters>` (current decision)
         reason: if all structure fields are `None`, structure itself does not
         to be needed
-    - `&TmuxSubcommandParameters`
+    - [ ] `&TmuxSubcommandParameters`
