@@ -134,6 +134,24 @@ and testing purposes. Do not use them in your Projects.
 - [`rust-toolchain`](rust-toolchain) - rustup toolchain configuration file ([rustup](https://github.com/rust-lang/rustup.rs#the-toolchain-file))
 
 
+## Contributing
+
+If you are interested in this project and you have:
+
+- a bug report
+- any feature suggestion
+- nice code contribution
+- an improvment idea
+- ...
+
+You are allways welcome, please feel free to use following links to contact me
+and/or to contribute to the project:
+
+- [E-Mail](mailto:anton.gepting@gmail.com)
+- [Open issue](https://github.com/AntonGepting/tmux-interface-rs/issues/new)
+- [Send pull request](https://github.com/AntonGepting/tmux-interface-rs/pulls)
+
+
 ## License
 
 tmux_interface is licensed under the MIT license. Please read the license
