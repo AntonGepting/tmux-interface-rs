@@ -2,6 +2,8 @@ use super::error::Error;
 use super::tmux_interface::*;
 use std::process::Output;
 
+/// Structure for conditional commands executing
+///
 /// # Manual
 ///
 /// ```text
@@ -10,12 +12,18 @@ use std::process::Output;
 /// ```
 #[derive(Default, Debug)]
 pub struct IfShell<'a> {
-    pub backgroud: Option<bool>,      // [-b]
-    pub not_execute: Option<bool>,    // [-F]
-    pub target_pane: Option<&'a str>, // [-t target-pane]
-    //pub shell_command: &'a str,          // shell-command
-    //pub command: &'a str,          // command
-    pub second_command: Option<&'a str>, // [command]
+    /// [-b] - run in the background
+    pub backgroud: Option<bool>,
+    /// [-F -] not execute but considered success if neither empty nor zero
+    pub not_execute: Option<bool>,
+    /// [-t target-pane -] specify the target-pane
+    pub target_pane: Option<&'a str>,
+    // shell-command
+    //pub shell_command: &'a str,
+    // command
+    //pub command: &'a str,
+    /// [command] - specify the second command
+    pub second_command: Option<&'a str>,
 }
 
 impl<'a> IfShell<'a> {
@@ -24,7 +32,8 @@ impl<'a> IfShell<'a> {
     }
 }
 
-/// Miscellaneous
+/// All functions from man tmux "Miscellaneous" listed below
+/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#MISCELLANEOUS)
 impl<'a> TmuxInterface<'a> {
     const CLOCK_MODE: &'static str = "clock-mode";
     const IF_SHELL: &'static str = "if-shell";

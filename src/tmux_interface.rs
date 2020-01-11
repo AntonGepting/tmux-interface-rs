@@ -99,11 +99,11 @@ pub struct TmuxInterface<'a> {
     pub shell_cmd: Option<&'a str>, // -c shell-command
     /// Specify an alternative configuration file
     pub file: Option<&'a str>, // -f file
-    /// Allows a different socket name to be specified
+    /// Allow a different socket name to be specified
     pub socket_name: Option<&'a str>, // -L socket-name
     /// Specify a full alternative path to the server socket
     pub socket_path: Option<&'a str>, // -S socket-path
-    /// Disables echo
+    /// Disable echo
     pub disable_echo: Option<bool>, // -CC
 
     /// non tmux options fields
@@ -216,6 +216,10 @@ impl<'a> TmuxInterface<'a> {
 
         Ok(output)
     }
+
+    // XXX: allow custom function
+    // pub fn custom_subcommand() -> Result<(), ()> {
+    // }
 
     // XXX: refactor: move
     /// # Manual

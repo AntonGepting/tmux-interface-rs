@@ -2,7 +2,7 @@ use super::error::Error;
 use super::tmux_interface::*;
 use std::process::Output;
 
-/// Session for attaching client to already existing session
+/// Structure for attaching client to already existing session
 ///
 /// # Manual
 ///
@@ -12,18 +12,18 @@ use std::process::Output;
 /// ```
 #[derive(Default, Debug)]
 pub struct AttachSession<'a> {
-    /// any other clients attached to the session are detached
-    pub detach_other: Option<bool>, // [-d]
-    /// `update-environment` option will not be applied
-    pub not_update_env: Option<bool>, // [-E]
-    /// signifies the client is read-only
-    pub read_only: Option<bool>, // [-r]
-    /// send SIGHUP to the parent process, detaching the client
-    pub parent_sighup: Option<bool>, // [-x]
-    /// specify starting directory
-    pub cwd: Option<&'a str>, // [-c working-directory]
-    /// specify target session name
-    pub target_session: Option<&'a str>, // [-t target-session]
+    /// [-d] - any other clients attached to the session are detached
+    pub detach_other: Option<bool>,
+    /// [-E] - `update-environment` option will not be applied
+    pub not_update_env: Option<bool>,
+    /// [-r] - signifies the client is read-only
+    pub read_only: Option<bool>,
+    /// [-x] - send SIGHUP to the parent process, detaching the client
+    pub parent_sighup: Option<bool>,
+    /// [-c working-directory] - specify starting directory
+    pub cwd: Option<&'a str>,
+    /// [-t target-session] - specify target session name
+    pub target_session: Option<&'a str>,
 }
 
 impl<'a> AttachSession<'a> {
@@ -32,7 +32,7 @@ impl<'a> AttachSession<'a> {
     }
 }
 
-/// Detach the current client
+/// Structure for detaching the current client
 ///
 /// # Manual
 ///
@@ -42,11 +42,16 @@ impl<'a> AttachSession<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct DetachClient<'a> {
-    pub all: Option<bool>,               // [-a]
-    pub parent_sighup: Option<bool>,     // [-P]
-    pub shell_command: Option<&'a str>,  // [-E shell-command]
-    pub target_session: Option<&'a str>, // [-s target-session]
-    pub target_client: Option<&'a str>,  // [-t target-client]
+    /// [-a] - kill all but the client client given with `-t`
+    pub all: Option<bool>,
+    /// [-P] - send SIGHUP to the parent process of the client, typically causing it to exit
+    pub parent_sighup: Option<bool>,
+    /// [-E shell-command] - run shell-command to replace the client
+    pub shell_command: Option<&'a str>,
+    /// [-s target-session] - specify the session, all clients currently attached
+    pub target_session: Option<&'a str>,
+    /// [-t target-client] - specify the client
+    pub target_client: Option<&'a str>,
 }
 
 impl<'a> DetachClient<'a> {
@@ -67,34 +72,34 @@ impl<'a> DetachClient<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct NewSession<'a> {
-    /// behave like `attach-session` if `session-name` already exists
-    pub attach: Option<bool>, // [-A]
-    /// new session is not attached to the current terminal
-    pub detached: Option<bool>, // [-d]
-    /// any other clients attached to the session are detached
-    pub detach_other: Option<bool>, // [-D]
-    /// `update-environment` option will not be applied
-    pub not_update_env: Option<bool>, // [-E]
-    /// print information about the new session after it has been created
-    pub print: Option<bool>, // [-P]
-    /// send SIGHUP to the parent process, detaching the client
-    pub parent_sighup: Option<bool>, // [-X]
-    /// specify starting directory
-    pub cwd: Option<&'a str>, // [-c start-directory]
-    /// specify different format
-    pub format: Option<&'a str>, // [-F format]
-    /// window name of the initial window
-    pub window_name: Option<&'a str>, // [-n window-name]
-    /// specify a session name
-    pub session_name: Option<&'a str>, // [-s session-name]
-    /// specify a session group
-    pub group_name: Option<&'a str>, // [-t group-name]
-    /// specify a different width
-    pub width: Option<usize>, // [-x width]
-    /// specify a different height
-    pub height: Option<usize>, // [-y height]
-    /// shell command to execute in the initial window
-    pub shell_command: Option<&'a str>, // [shell-command]
+    /// [-A] - behave like `attach-session` if `session-name` already exists
+    pub attach: Option<bool>,
+    /// [-d] - new session is not attached to the current terminal
+    pub detached: Option<bool>,
+    /// [-D] - any other clients attached to the session are detached
+    pub detach_other: Option<bool>,
+    /// [-E] - `update-environment` option will not be applied
+    pub not_update_env: Option<bool>,
+    /// [-P] - print information about the new session after it has been created
+    pub print: Option<bool>,
+    /// [-X] - send SIGHUP to the parent process, detaching the client
+    pub parent_sighup: Option<bool>,
+    /// [-c start-directory] - specify starting directory
+    pub cwd: Option<&'a str>,
+    /// [-F format] - specify different format
+    pub format: Option<&'a str>,
+    /// [-n window-name] - window name of the initial window
+    pub window_name: Option<&'a str>,
+    /// [-s session-name] - specify a session name
+    pub session_name: Option<&'a str>,
+    /// [-t group-name] - specify a session group
+    pub group_name: Option<&'a str>,
+    /// [-x width] - specify a different width
+    pub width: Option<usize>,
+    /// [-y height] - specify a different height
+    pub height: Option<usize>,
+    /// [shell-command] - shell command to execute in the initial window
+    pub shell_command: Option<&'a str>,
 }
 
 impl<'a> NewSession<'a> {
@@ -103,7 +108,7 @@ impl<'a> NewSession<'a> {
     }
 }
 
-/// Refresh the current client
+/// Structure for refreshing the current client
 ///
 /// # Manual
 ///
@@ -114,17 +119,28 @@ impl<'a> NewSession<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct RefreshClient<'a> {
-    pub tracking_cursor: Option<bool>,   // [-c]
-    pub down: Option<bool>,              // [-D]
-    pub request_clipboard: Option<bool>, // [-l]
-    pub left: Option<bool>,              // [-L]
-    pub right: Option<bool>,             // [-R]
-    pub status_line: Option<bool>,       // [-S]
-    pub up: Option<bool>,                // [-U]
-    pub size: Option<(usize, usize)>,    // [-C XxY]
-    pub flags: Option<&'a str>,          // [-F flags]
-    pub target_client: Option<&'a str>,  // [-t target-client]
-    pub adjustment: Option<usize>,       // [adjustment]
+    /// [-c] - return to tracking the cursor automatically
+    pub tracking_cursor: Option<bool>,
+    /// [-D] - move the visible part of a window down by `adjustment` rows
+    pub down: Option<bool>,
+    /// [-l] - request the clipboard from the client using the xterm(1) escape sequence
+    pub request_clipboard: Option<bool>,
+    /// [-L] - move the visible part of a window left by `adjustment` columns
+    pub left: Option<bool>,
+    /// [-R] - move the visible part of a window right by `adjustment` columns
+    pub right: Option<bool>,
+    /// [-S] - only update the client's status line
+    pub status_line: Option<bool>,
+    /// [-U] - move the visible part of a window up by `adjustment` rows
+    pub up: Option<bool>,
+    /// [-C XxY] - set the width and height of a control client
+    pub size: Option<(usize, usize)>,
+    /// [-F flags] - set a comma-separated list of flags
+    pub flags: Option<&'a str>,
+    /// [-t target-client] - specify the client
+    pub target_client: Option<&'a str>,
+    /// [adjustment] - moves the visible part up/down left/right by adjustment rows/columns
+    pub adjustment: Option<usize>,
 }
 
 impl<'a> RefreshClient<'a> {
@@ -133,7 +149,7 @@ impl<'a> RefreshClient<'a> {
     }
 }
 
-/// Switch the current session for client `target-client` to `target-session`
+/// Structure to switch the current session for client `target-client` to `target-session`
 ///
 /// # Manual
 ///
@@ -143,15 +159,24 @@ impl<'a> RefreshClient<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct SwitchClient<'a> {
-    pub not_update_env: Option<bool>,    // [-E]
-    pub last: Option<bool>,              // [-l]
-    pub next: Option<bool>,              // [-n]
-    pub previous: Option<bool>,          // [-p]
-    pub read_only: Option<bool>,         // [-r]
-    pub keep_zoomed: Option<bool>,       // [-Z]
-    pub target_client: Option<&'a str>,  // [-c target-client]
-    pub target_session: Option<&'a str>, // [-t target-session]
-    pub key_table: Option<&'a str>,      // [-T key-table]
+    /// [-E] - update-environment option will not be applied
+    pub not_update_env: Option<bool>,
+    /// [-l] - move to the last session
+    pub last: Option<bool>,
+    /// [-n] - move to the next session
+    pub next: Option<bool>,
+    /// [-p] - move to the previous session
+    pub previous: Option<bool>,
+    /// [-r] - toggle whether a client is read-only
+    pub read_only: Option<bool>,
+    /// [-Z] - keep the window zoomed if it was zoomed
+    pub keep_zoomed: Option<bool>,
+    /// [-c target-client] - specify the target-client
+    pub target_client: Option<&'a str>,
+    /// [-t target-session] - specify the target session
+    pub target_session: Option<&'a str>,
+    /// [-T key-table] - set the client's key table
+    pub key_table: Option<&'a str>,
 }
 
 impl<'a> SwitchClient<'a> {

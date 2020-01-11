@@ -2,6 +2,8 @@ use super::error::Error;
 use super::tmux_interface::*;
 use std::process::Output;
 
+/// Structure for setting or unsetting hook `hook-name` to command.
+///
 /// # Manual
 ///
 /// ```text
@@ -9,13 +11,20 @@ use std::process::Output;
 /// ```
 #[derive(Default, Clone, Debug)]
 pub struct SetHook<'a> {
-    pub append: Option<bool>, // [-a]
-    pub global: Option<bool>, // [-g]
-    pub run: Option<bool>,    // [-R]
-    pub unset: Option<bool>,  // [-u]
-    pub target_session: Option<&'a str>, // [-t target-session]
-                              //pub hook_name: &'a str,              // hook-name
-                              //pub command: &'a str,                // command
+    /// [-a] - append to a hook
+    pub append: Option<bool>,
+    /// [-g] - add hook-name to the global list of hooks
+    pub global: Option<bool>,
+    /// [-R] - run hook-name immediately
+    pub run: Option<bool>,
+    /// [-u] - unset
+    pub unset: Option<bool>,
+    /// [-t target-session] - target-session
+    pub target_session: Option<&'a str>,
+    // hook-name
+    //pub hook_name: &'a str,
+    // command
+    //pub command: &'a str,
 }
 
 impl<'a> SetHook<'a> {
@@ -24,7 +33,8 @@ impl<'a> SetHook<'a> {
     }
 }
 
-/// Hooks
+/// All functions from man tmux "Hooks" listed below
+/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#HOOKS)
 impl<'a> TmuxInterface<'a> {
     const SET_HOOK: &'static str = "set-hook";
     const SHOW_HOOK: &'static str = "show-hook";

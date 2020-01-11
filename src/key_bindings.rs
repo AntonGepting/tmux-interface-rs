@@ -2,6 +2,8 @@ use super::error::Error;
 use super::tmux_interface::*;
 use std::process::Output;
 
+/// Structure binding key `key` to command
+///
 /// # Manual
 ///
 /// ```text
@@ -10,12 +12,18 @@ use std::process::Output;
 /// ```
 #[derive(Default, Clone, Debug)]
 pub struct BindKey<'a> {
-    pub root: Option<bool>,         // [-n]
-    pub repeat: Option<bool>,       // [-r]
-    pub key_table: Option<&'a str>, // [-T key-table]
-    //pub key: &'a str,               // key
-    //pub command: &'a str,           // command
-    pub arguments: Option<&'a str>, // [arguments]
+    /// [-n] - an alias for -T root
+    pub root: Option<bool>,
+    /// [-r] - this key may repeat
+    pub repeat: Option<bool>,
+    /// [-T key-table] - key-table
+    pub key_table: Option<&'a str>,
+    // key -
+    //pub key: &'a str,
+    // command
+    //pub command: &'a str,
+    /// [arguments] - arguments
+    pub arguments: Option<&'a str>,
 }
 
 impl<'a> BindKey<'a> {
@@ -24,6 +32,8 @@ impl<'a> BindKey<'a> {
     }
 }
 
+/// Structure
+///
 /// # Manual
 ///
 /// ```text
@@ -32,15 +42,24 @@ impl<'a> BindKey<'a> {
 /// ```
 #[derive(Default, Clone, Debug)]
 pub struct SendKeys<'a> {
-    pub expand_formats: Option<bool>, // [-F]
-    pub hex: Option<bool>,            // [-H]
-    pub disable_lookup: Option<bool>, // [-l]
-    pub mouse_event: Option<bool>,    // [-M]
-    pub copy_mode: Option<bool>,      // [-R]
-    pub reset: Option<bool>,          // [-X]
-    pub repeat_count: Option<usize>,  // [-N repeat-count]
-    pub target_pane: Option<&'a str>, // [-t target-pane]
-                                      //pub key: Vec<&'a str>,            // key
+    /// [-F] - expand formats in arguments where appropriate
+    pub expand_formats: Option<bool>,
+    /// [-H] - expect each key to be a hexadecimal number for an ASCII character
+    pub hex: Option<bool>,
+    /// [-l] - disable key name lookup and processes the keys as literal UTF-8 characters
+    pub disable_lookup: Option<bool>,
+    /// [-M] - pass through a mouse event
+    pub mouse_event: Option<bool>,
+    /// [-R] - cause the terminal state to be reset
+    pub copy_mode: Option<bool>,
+    /// [-X] - send a command into copy mode
+    pub reset: Option<bool>,
+    /// [-N repeat-count] - specify a repeat count
+    pub repeat_count: Option<usize>,
+    /// [-t target-pane] - specify the target pane
+    pub target_pane: Option<&'a str>,
+    // key
+    //pub key: Vec<&'a str>,
 }
 
 impl<'a> SendKeys<'a> {
@@ -49,7 +68,8 @@ impl<'a> SendKeys<'a> {
     }
 }
 
-/// Key bindings
+/// All functions from man tmux "Key Bindings" listed below
+/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#KEY_BINDINGS)
 impl<'a> TmuxInterface<'a> {
     const BIND_KEY: &'static str = "bind-key";
     const LIST_KEYS: &'static str = "list-keys";

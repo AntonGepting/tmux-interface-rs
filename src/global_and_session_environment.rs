@@ -2,6 +2,8 @@ use super::error::Error;
 use super::tmux_interface::*;
 use std::process::Output;
 
+/// Structure for setting or unsetting an environment variable
+///
 /// # Manual
 ///
 /// ```text
@@ -10,12 +12,18 @@ use std::process::Output;
 /// ```
 #[derive(Default, Debug)]
 pub struct SetEnvironment<'a> {
-    pub global: Option<bool>,            // [-g]
-    pub remove: Option<bool>,            // [-r]
-    pub unset: Option<bool>,             // [-u]
-    pub target_session: Option<&'a str>, // [-t target-session]
-    //pub name: &'a str,                   // name
-    pub value: Option<&'a str>, // [value]
+    /// [-g] - make change in the global environment
+    pub global: Option<bool>,
+    /// [-r] - remove the variable from the environment before starting a new process
+    pub remove: Option<bool>,
+    /// [-u] - unset a variable
+    pub unset: Option<bool>,
+    /// [-t target-session] - target-session
+    pub target_session: Option<&'a str>,
+    // name
+    //pub name: &'a str,
+    /// [value] - specify the value
+    pub value: Option<&'a str>,
 }
 
 impl<'a> SetEnvironment<'a> {
@@ -24,7 +32,8 @@ impl<'a> SetEnvironment<'a> {
     }
 }
 
-/// Global and session environment
+/// All functions from man tmux "Global and session environment" listed below
+/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#GLOBAL_AND_SESSION_ENVIRONMENT)
 impl<'a> TmuxInterface<'a> {
     const SET_ENVIRONMENT: &'static str = "set-environment";
     const SHOW_ENVIRONMENT: &'static str = "show-environment";

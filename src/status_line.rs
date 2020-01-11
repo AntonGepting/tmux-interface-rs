@@ -2,6 +2,8 @@ use super::error::Error;
 use super::tmux_interface::*;
 use std::process::Output;
 
+/// Structure for open the command prompt in a client
+///
 /// # Manual
 ///
 /// ```text
@@ -9,12 +11,18 @@ use std::process::Output;
 /// ```
 #[derive(Default, Debug)]
 pub struct CommandPrompt<'a> {
-    pub one_keypress: Option<bool>,     // [-1]
-    pub on_input_change: Option<bool>,  // [-i]
-    pub inputs: Option<&'a str>,        // [-I inputs]
-    pub prompts: Option<&'a str>,       // [-p prompts]
-    pub target_client: Option<&'a str>, // [-t target-client]
-    pub template: Option<&'a str>,      // [template]
+    /// [-1] makesthe prompt only accept one key press
+    pub one_keypress: Option<bool>,
+    /// [-i] execute the command every time the prompt input changes
+    pub on_input_change: Option<bool>,
+    /// [-I inputs] - comma-separated list of the initial text for each prompt
+    pub inputs: Option<&'a str>,
+    /// [-p prompts] - prompts is a comma-separated list of prompts which are displayed in order
+    pub prompts: Option<&'a str>,
+    /// [-t target-client] - target-client
+    pub target_client: Option<&'a str>,
+    /// [template] - template
+    pub template: Option<&'a str>,
 }
 
 impl<'a> CommandPrompt<'a> {
@@ -23,6 +31,8 @@ impl<'a> CommandPrompt<'a> {
     }
 }
 
+/// Structure for displaying a menu on target-client
+///
 /// # Manual
 ///
 /// ```text
@@ -31,14 +41,22 @@ impl<'a> CommandPrompt<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct DisplayMenu<'a> {
-    pub target_client: Option<&'a str>, // [-c target-client]
-    pub target_pane: Option<&'a str>,   // [-t target-pane]
-    pub title: Option<&'a str>,         // [-T title]
-    pub x: Option<usize>,               // [-x position]
-    pub y: Option<usize>,               // [-y position]
-    pub name: Option<&'a str>,          // name
-    pub key: Option<&'a str>,           // key
-    pub command: Option<&'a str>,       // command ...
+    /// [-c target-client] - target-client
+    pub target_client: Option<&'a str>,
+    /// [-t target-pane] - target-pane
+    pub target_pane: Option<&'a str>,
+    /// [-T title] - title
+    pub title: Option<&'a str>,
+    /// [-x position] - x position of the menu
+    pub x: Option<usize>,
+    /// [-y position] - y position of the menu
+    pub y: Option<usize>,
+    // name - name
+    //pub name: &'a str,
+    // key - key
+    //pub key: &'a str,
+    // command ... - command
+    //pub command: &'a str,
 }
 
 impl<'a> DisplayMenu<'a> {
@@ -47,6 +65,8 @@ impl<'a> DisplayMenu<'a> {
     }
 }
 
+/// Structure for displaying a message
+///
 /// # Manual
 ///
 /// ```text
@@ -55,13 +75,20 @@ impl<'a> DisplayMenu<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct DisplayMessage<'a> {
-    pub list_format_vars: Option<bool>, // [-a]
-    pub forward_stdin: Option<bool>,    // [-I]
-    pub print: Option<bool>,            // [-p]
-    pub verbose: Option<bool>,          // [-v]
+    /// [-a] - list the format variables and their values
+    pub list_format_vars: Option<bool>,
+    /// [-I] - forward any input read from stdin to the empty pane given by target-pane
+    pub forward_stdin: Option<bool>,
+    /// [-p] - the output is printed to stdout
+    pub print: Option<bool>,
+    /// [-v] - print verbose logging as the format is parsed
+    pub verbose: Option<bool>, // [-v]
+    /// [-c target-client] - target-client
     pub target_client: Option<&'a str>, // [-c target-client]
-    pub target_pane: Option<&'a str>,   // [-t target-pane]
-    pub message: Option<&'a str>,       // [message]
+    /// [-t target-pane] - target-pane
+    pub target_pane: Option<&'a str>, // [-t target-pane]
+    /// [message] - message
+    pub message: Option<&'a str>, // [message]
 }
 
 impl<'a> DisplayMessage<'a> {
@@ -70,7 +97,8 @@ impl<'a> DisplayMessage<'a> {
     }
 }
 
-/// Status line
+/// All functions from man tmux "Status line" listed below
+/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#STATUS_LINE)
 impl<'a> TmuxInterface<'a> {
     const COMMAND_PROMPT: &'static str = "command-prompt";
     const CONFIRM_BEFORE: &'static str = "confirm-before";

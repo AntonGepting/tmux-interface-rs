@@ -2,6 +2,8 @@ use super::error::Error;
 use super::tmux_interface::*;
 use std::process::Output;
 
+/// Stucture for putting a pane into buffer mode
+///
 /// # Manual
 ///
 /// ```text
@@ -9,14 +11,22 @@ use std::process::Output;
 /// ```
 #[derive(Default, Debug)]
 pub struct ChooseBuffer<'a> {
-    pub no_preview: Option<bool>,         // [-N]
-    pub zoom: Option<bool>,               // [-Z]
-    pub reverse_sort_order: Option<bool>, // [-r]
-    pub format: Option<&'a str>,          // [-F]
-    pub filter: Option<&'a str>,          // [-f filter]
-    pub sort_order: Option<&'a str>,      // [-O sort-order]
-    pub target_pane: Option<&'a str>,     // [-t target-pane]
-    pub template: Option<&'a str>,        // [template]
+    /// [-N] - start without the preview
+    pub no_preview: Option<bool>,
+    /// [-Z] - zoom the pane
+    pub zoom: Option<bool>,
+    /// [-r] - reverses the sort order
+    pub reverse_sort_order: Option<bool>,
+    /// [-F] - specify the format for each item in the list
+    pub format: Option<&'a str>,
+    /// [-f filter] - specify an initial filter
+    pub filter: Option<&'a str>,
+    /// [-O sort-order] - specifies the initial sort field
+    pub sort_order: Option<&'a str>,
+    /// [-t target-pane] - specify the target pane
+    pub target_pane: Option<&'a str>,
+    /// [template] - specify the template
+    pub template: Option<&'a str>,
 }
 
 impl<'a> ChooseBuffer<'a> {
@@ -25,6 +35,8 @@ impl<'a> ChooseBuffer<'a> {
     }
 }
 
+/// Structure for inserting the contents of a paste buffer into the specified pane
+///
 /// # Manual
 ///
 /// ```text
@@ -33,12 +45,18 @@ impl<'a> ChooseBuffer<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct PasteBuffer<'a> {
-    pub delete: Option<bool>,         // [-d]
-    pub bracket_codes: Option<bool>,  // [-p]
-    pub no_replacement: Option<bool>, // [-r]
-    pub buffer_name: Option<&'a str>, // [-b buffer-name]
-    pub separator: Option<&'a str>,   // [-s separator]
-    pub target_pane: Option<&'a str>, // [-t target-pane]
+    /// [-d] - delete the paste buffer
+    pub delete: Option<bool>,
+    /// [-p] - paste bracket control codes are inserted around the buffer
+    pub bracket_codes: Option<bool>,
+    /// [-r] - do no replacement (equivalent to a separator of LF)
+    pub no_replacement: Option<bool>,
+    /// [-b buffer-name] - specify the buffer mode
+    pub buffer_name: Option<&'a str>,
+    /// [-s separator] - specify a separator
+    pub separator: Option<&'a str>,
+    /// [-t target-pane] - specify the target pane
+    pub target_pane: Option<&'a str>,
 }
 
 impl<'a> PasteBuffer<'a> {
@@ -47,7 +65,8 @@ impl<'a> PasteBuffer<'a> {
     }
 }
 
-/// Buffers
+/// All functions from man tmux "Buffers" listed below
+/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#BUFFERS)
 impl<'a> TmuxInterface<'a> {
     const CHOOSE_BUFFER: &'static str = "choose-buffer";
     const CLEAR_HISTORY: &'static str = "clear-buffer";
@@ -59,6 +78,8 @@ impl<'a> TmuxInterface<'a> {
     const SET_BUFFER: &'static str = "set-buffer";
     const SHOW_BUFFER: &'static str = "show-buffer";
 
+    /// Put a pane into buffer mode, where a buffer may be chosen interactively from a list.
+    ///
     /// # Manual
     ///
     /// ```text
@@ -97,6 +118,8 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
+    /// Remove and free the history for the specified pane.
+    ///
     /// # Manual
     ///
     /// ```text
@@ -112,6 +135,9 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
+    /// Delete the buffer named buffer-name, or the most recently added automatically named buffer
+    /// if not specified.
+    ///
     /// # Manual
     ///
     /// ```text
@@ -127,6 +153,8 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
+    /// List the global buffers.
+    ///
     /// # Manual
     ///
     /// ```text
@@ -142,6 +170,8 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
+    /// Load the contents of the specified paste buffer from path.
+    ///
     /// # Manual
     ///
     /// ```text
@@ -158,6 +188,8 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
+    /// Insert the contents of a paste buffer into the specified pane.
+    ///
     /// # Manual
     ///
     /// ```text
@@ -190,6 +222,8 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
+    /// Save the contents of the specified paste buffer to path.
+    ///
     /// # Manual
     ///
     /// ```text
@@ -214,6 +248,8 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
+    /// Set the contents of the specified buffer to data.
+    ///
     /// # Manual
     ///
     /// ```text
@@ -242,6 +278,8 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
+    /// Display the contents of the specified buffer.
+    ///
     /// # Manual
     ///
     /// ```text

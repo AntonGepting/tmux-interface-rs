@@ -44,7 +44,7 @@
 //! # Examples
 //!
 //! ```
-//! use crate::tmux_interface::{TmuxInterface, NewSession};
+//! use crate::tmux_interface::{TmuxInterface, AttachSession, NewSession};
 //!
 //!
 //! fn main() {
@@ -56,6 +56,11 @@
 //!         ..Default::default()
 //!     };
 //!     tmux.new_session(Some(&new_session)).unwrap();
+//!        let attach_session = AttachSession {
+//!        target_session: Some("test_session_name1"),
+//!        ..Default::default()
+//!     };
+//!     tmux.attach_session(Some(&attach_session)).unwrap();
 //!     tmux.kill_session(None, None, Some("test_session_name1")).unwrap();
 //!
 //!     // or alternatively
@@ -63,6 +68,8 @@
 //!     new_session.detached = Some(true);
 //!     new_session.session_name = Some("test_session_name2");
 //!     tmux.new_session(Some(&new_session)).unwrap();
+//!     let mut attach_session = AttachSession::new();
+//!     attach_session.target_session = Some("test_session_name2");
 //!     tmux.kill_session(None, None, Some("test_session_name2")).unwrap();
 //! }
 //! ```

@@ -12,12 +12,18 @@ use std::process::Output;
 /// ```
 #[derive(Default, Debug)]
 pub struct BreakPane<'a> {
-    pub detached: Option<bool>,       // [-d]
-    pub print: Option<bool>,          // [-P]
-    pub format: Option<&'a str>,      // [-F format]
-    pub window_name: Option<&'a str>, // [-n window-name]
-    pub src_pane: Option<&'a str>,    // [-s src-pane]
-    pub dst_window: Option<&'a str>,  // [-t dst-window]
+    /// [-d] - the new window does not become the current window
+    pub detached: Option<bool>,
+    /// [-P] - option prints information about the new window after it has been created
+    pub print: Option<bool>,
+    /// [-F format] - specify format
+    pub format: Option<&'a str>,
+    /// [-n] - window-name
+    pub window_name: Option<&'a str>,
+    /// [-s src-pane] - src-pane
+    pub src_pane: Option<&'a str>,
+    /// [-t dst-window] - dst-window
+    pub dst_window: Option<&'a str>,
 }
 
 impl<'a> BreakPane<'a> {
@@ -37,17 +43,29 @@ impl<'a> BreakPane<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct CapturePane<'a> {
-    pub alternate_screen: Option<bool>,     // [-a]
-    pub escape_sequences: Option<bool>,     // [-e]
-    pub stdout: Option<bool>,               // [-p]
-    pub pane: Option<bool>,                 // [-P]
-    pub quite: Option<bool>,                // [-q]
-    pub escape_non_printable: Option<bool>, // [-C]
-    pub join: Option<bool>,                 // [-J]
-    pub trailing_spaces: Option<bool>,      // [-N]
-    pub buffer_name: Option<&'a str>,       // [-b buffen_name]
-    pub end_line: Option<&'a str>,          // [-E end_line]
-    pub start_line: Option<&'a str>,        // [-S start_line]
+    /// [-a] - the alternate screen is used, and the history is not accessible
+    pub alternate_screen: Option<bool>,
+    /// [-e] - the output includes escape sequences for text and background attributes
+    pub escape_sequences: Option<bool>,
+    /// [-p] - the output goes to stdout
+    pub stdout: Option<bool>,
+    /// [-P] - capture only any output that the pane has received that is the beginning of an
+    /// as-yet incomplete escape sequence
+    pub pane: Option<bool>,
+    /// [-q] - quite
+    pub quite: Option<bool>,
+    /// [-C] - escape non-printable characters as octal \xxx
+    pub escape_non_printable: Option<bool>,
+    /// [-J] - preserve trailing spaces and joins any wrapped lines
+    pub join: Option<bool>,
+    /// [-N] - preserves trailing spaces at each line's end
+    pub trailing_spaces: Option<bool>,
+    /// [-b buffer-name] - buffer-name
+    pub buffer_name: Option<&'a str>,
+    /// [-E end-line] - specify the ending line number
+    pub end_line: Option<&'a str>,
+    /// [-S start-line] - specify the starting line number
+    pub start_line: Option<&'a str>,
 }
 
 impl<'a> CapturePane<'a> {
@@ -65,14 +83,22 @@ impl<'a> CapturePane<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct ChooseClient<'a> {
-    pub without_preview: Option<bool>,    // [-N]
-    pub reverse_sort_order: Option<bool>, // [-r]
-    pub zoom: Option<bool>,               // [-Z]
-    pub format: Option<&'a str>,          // [-F format]
-    pub filter: Option<&'a str>,          // [-f filter]
-    pub sort_order: Option<&'a str>,      // [-O sort-order]
-    pub target_pane: Option<&'a str>,     // [-t target-pane]
-    pub template: Option<&'a str>,        // [template]
+    /// [-N] - start without the preview
+    pub without_preview: Option<bool>,
+    /// [-r] - reverse the sort order
+    pub reverse_sort_order: Option<bool>,
+    /// [-Z] - zoom the pane
+    pub zoom: Option<bool>,
+    /// [-F format] - format
+    pub format: Option<&'a str>,
+    /// [-f filter] - specify an initial filter
+    pub filter: Option<&'a str>,
+    /// [-O sort-order] - specify the initial sort field
+    pub sort_order: Option<&'a str>,
+    /// [-t target-pane] - target-pane
+    pub target_pane: Option<&'a str>,
+    /// [template] - template
+    pub template: Option<&'a str>,
 }
 
 impl<'a> ChooseClient<'a> {
@@ -91,17 +117,28 @@ impl<'a> ChooseClient<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct ChooseTree<'a> {
-    pub all: Option<bool>,                // [-G]
-    pub without_preview: Option<bool>,    // [-N]
-    pub reverse_sort_order: Option<bool>, // [-r]
-    pub collapsed_sessions: Option<bool>, // [-s]
-    pub collapsed_windows: Option<bool>,  // [-w]
-    pub zoom: Option<bool>,               // [-Z]
-    pub format: Option<&'a str>,          // [-F format]
-    pub filter: Option<&'a str>,          // [-f filter]
-    pub sort_order: Option<&'a str>,      // [-O sort-order]
-    pub target_pane: Option<&'a str>,     // [-t target-pane]
-    pub template: Option<&'a str>,        // [template]
+    /// [-G] - include all sessions in any session groups in the tree rather than only the first
+    pub all: Option<bool>,
+    /// [-N] - start without the preview
+    pub without_preview: Option<bool>,
+    /// [-r] - reverses the sort order
+    pub reverse_sort_order: Option<bool>,
+    /// [-s] - start with collapsed sessions
+    pub collapsed_sessions: Option<bool>,
+    /// [-w] - start with collapsed windows
+    pub collapsed_windows: Option<bool>,
+    /// [-Z] - zoom the pane
+    pub zoom: Option<bool>,
+    /// [-F format] - format
+    pub format: Option<&'a str>,
+    /// [-f filter] - filter
+    pub filter: Option<&'a str>,
+    /// [-O sort-order] - specifies the initial sort field
+    pub sort_order: Option<&'a str>,
+    /// [-t target-pane] - target-pane
+    pub target_pane: Option<&'a str>,
+    /// [template] - template
+    pub template: Option<&'a str>,
 }
 
 impl<'a> ChooseTree<'a> {
@@ -121,13 +158,20 @@ impl<'a> ChooseTree<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct FindWindow<'a> {
-    pub regex: Option<bool>,        // [-r]
-    pub only_visible: Option<bool>, // [-C]
-    pub only_name: Option<bool>,    // [-N]
-    pub only_title: Option<bool>,   // [-T]
-    pub zoom: Option<bool>,         // [-Z]
-    pub target_pane: Option<&'a str>, // [-t target-pane]
-                                    //pub match_string: &'a str,        // match-string
+    /// [-r] - regular expression
+    pub regex: Option<bool>,
+    /// [-C] - match only visible window contents
+    pub only_visible: Option<bool>,
+    /// [-N] - match only the window name
+    pub only_name: Option<bool>,
+    /// [-T] - match only the window title
+    pub only_title: Option<bool>,
+    /// [-Z] - zoom the pane
+    pub zoom: Option<bool>,
+    /// [-t target-pane] - target-pane
+    pub target_pane: Option<&'a str>,
+    // match-string
+    //pub match_string: &'a str,
 }
 
 impl<'a> FindWindow<'a> {
@@ -153,14 +197,22 @@ pub enum PaneSize {
 /// ```
 #[derive(Default, Debug)]
 pub struct JoinPane<'a> {
-    pub left_above: Option<bool>,  // [-b]
-    pub detached: Option<bool>,    // [-d]
-    pub full_size: Option<bool>,   // [-f]
-    pub horizontal: Option<bool>,  // [-h]
-    pub vertical: Option<bool>,    // [-v]
-    pub size: Option<PaneSize>,    // [-l size]
-    pub src_pane: Option<&'a str>, // [-s src-pane]
-    pub dst_pane: Option<&'a str>, // [-t dst-pane]
+    /// [-b] - cause src-pane to be joined to left of or above dst-pane
+    pub left_above: Option<bool>,
+    /// [-d] -
+    pub detached: Option<bool>,
+    /// [-f] - creates a new pane spanning the full window height/width
+    pub full_size: Option<bool>,
+    /// [-h] - full height
+    pub horizontal: Option<bool>,
+    /// [-v] - full width
+    pub vertical: Option<bool>,
+    /// [-l size] - specify the size of the new pane in lines/columns
+    pub size: Option<PaneSize>,
+    /// [-s src-pane] - src-pane
+    pub src_pane: Option<&'a str>,
+    /// [-t dst-pane] - dst-pane
+    pub dst_pane: Option<&'a str>,
 }
 
 impl<'a> JoinPane<'a> {
@@ -179,11 +231,16 @@ impl<'a> JoinPane<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct LinkWindow<'a> {
-    pub add: Option<bool>,           // [-a]
-    pub detached: Option<bool>,      // [-d]
-    pub kill: Option<bool>,          // [-k]
-    pub src_window: Option<&'a str>, // [-t target-window]
-    pub dst_window: Option<&'a str>, // [shell-command]
+    /// [-a] - the window is moved to the next index up
+    pub add: Option<bool>,
+    /// [-d] - the newly linked window is not selected
+    pub detached: Option<bool>,
+    /// [-k] - if dst-window exists, it is killed, otherwise an error is generated
+    pub kill: Option<bool>,
+    /// [-s src-window] - src-window
+    pub src_window: Option<&'a str>,
+    /// [-t dst-window] - dst-window
+    pub dst_window: Option<&'a str>,
 }
 
 impl<'a> LinkWindow<'a> {
@@ -202,13 +259,20 @@ impl<'a> LinkWindow<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct MovePane<'a> {
-    pub left_above: Option<bool>,  // [-b]
-    pub detached: Option<bool>,    // [-d]
-    pub horizontal: Option<bool>,  // [-h]
-    pub vertical: Option<bool>,    // [-v]
-    pub size: Option<PaneSize>,    // [-l size]
-    pub src_pane: Option<&'a str>, // [-s src-pane]
-    pub dst_pane: Option<&'a str>, // [-t dst-pane]
+    /// [-b] - cause src-pane to be joined to left of or above dst-pane
+    pub left_above: Option<bool>,
+    /// [-d] -
+    pub detached: Option<bool>,
+    /// [-h] - full height
+    pub horizontal: Option<bool>,
+    /// [-v] - full width
+    pub vertical: Option<bool>,
+    /// [-l size] - specify the size of the new pane in lines/columns
+    pub size: Option<PaneSize>,
+    /// [-s src-pane] - src-pane
+    pub src_pane: Option<&'a str>,
+    /// [-t dst-pane] - dst-pane
+    pub dst_pane: Option<&'a str>,
 }
 
 impl<'a> MovePane<'a> {
@@ -227,12 +291,18 @@ impl<'a> MovePane<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct MoveWindow<'a> {
-    pub add: Option<bool>,           // [-a]
-    pub renumber: Option<bool>,      // [-r]
-    pub detached: Option<bool>,      // [-d]
-    pub kill: Option<bool>,          // [-k]
-    pub src_window: Option<&'a str>, // [-s src-window]
-    pub dst_window: Option<&'a str>, // [-t dst-window]
+    /// [-a] - the window is moved to the next index up
+    pub add: Option<bool>,
+    /// [-r] - all windows in the session are renumbered in sequential order
+    pub renumber: Option<bool>,
+    /// [-d] - the newly linked window is not selected
+    pub detached: Option<bool>,
+    /// [-k] - if dst-window exists, it is killed, otherwise an error is generated
+    pub kill: Option<bool>,
+    /// [-s src-window] - src-window
+    pub src_window: Option<&'a str>,
+    /// [-t dst-window] - dst-window
+    pub dst_window: Option<&'a str>,
 }
 
 impl<'a> MoveWindow<'a> {
@@ -252,16 +322,26 @@ impl<'a> MoveWindow<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct NewWindow<'a> {
-    pub add: Option<bool>,              // [-a]
-    pub detached: Option<bool>,         // [-d]
-    pub kill: Option<bool>,             // [-k]
-    pub print: Option<bool>,            // [-P]
-    pub cwd: Option<&'a str>,           // [-c start-directory]
-    pub environment: Option<&'a str>,   // [-e start-directory]
-    pub format: Option<&'a str>,        // [-F format]
-    pub window_name: Option<&'a str>,   // [-n window-name]
-    pub target_window: Option<&'a str>, // [-t target-window]
-    pub shell_command: Option<&'a str>, // [shell-command]
+    /// [-a] - new window is inserted at the next index up from the specified target-window
+    pub add: Option<bool>,
+    /// [-d] - the session does not make the new window the current window
+    pub detached: Option<bool>,
+    /// [-k] - destroy if already exists
+    pub kill: Option<bool>,
+    /// [-P] - print information about the new window after it has been created
+    pub print: Option<bool>,
+    /// [-c start-directory] - start-directory
+    pub cwd: Option<&'a str>,
+    /// [-e environment] - environment
+    pub environment: Option<&'a str>,
+    /// [-F format] - format
+    pub format: Option<&'a str>,
+    /// [-n window-name] - window-name
+    pub window_name: Option<&'a str>,
+    /// [-t target-window] - target-window
+    pub target_window: Option<&'a str>,
+    /// [shell-command] - shell-command
+    pub shell_command: Option<&'a str>,
 }
 
 impl<'a> NewWindow<'a> {
@@ -280,11 +360,16 @@ impl<'a> NewWindow<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct PipePane<'a> {
-    pub stdout: Option<bool>,           // [-I]
-    pub stdin: Option<bool>,            // [-O]
-    pub open: Option<bool>,             // [-o]
-    pub target_pane: Option<&'a str>,   // [-t target-pane]
-    pub shell_command: Option<&'a str>, // [shell-command]
+    /// [-I] - stdin is connected
+    pub stdout: Option<bool>,
+    /// [-O] - stdout is connected
+    pub stdin: Option<bool>,
+    /// [-o] - only open a new pipe if no previous pipe exists
+    pub open: Option<bool>,
+    /// [-t target-pane] - target-pane
+    pub target_pane: Option<&'a str>,
+    /// [shell-command] - shell-command
+    pub shell_command: Option<&'a str>,
 }
 
 impl<'a> PipePane<'a> {
@@ -303,16 +388,26 @@ impl<'a> PipePane<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct ResizePane<'a> {
-    pub down: Option<bool>,           // [-D]
-    pub left: Option<bool>,           // [-L]
-    pub mouse: Option<bool>,          // [-M]
-    pub right: Option<bool>,          // [-R]
-    pub up: Option<bool>,             // [-U]
-    pub zoom: Option<bool>,           // [-Z]
-    pub target_pane: Option<&'a str>, // [-t target-pane]
-    pub width: Option<usize>,         // [-x width]
-    pub height: Option<usize>,        // [-y height]
-    pub adjustment: Option<&'a str>,  // [adjustment]
+    /// [-D] - resize down by adjustment
+    pub down: Option<bool>,
+    /// [-L] - resize left by adjustment
+    pub left: Option<bool>,
+    /// [-M] - begin mouse resizing
+    pub mouse: Option<bool>,
+    /// [-R] - resize right by adjustment
+    pub right: Option<bool>,
+    /// [-U] - resize up by adjustment
+    pub up: Option<bool>,
+    /// [-Z] - the active pane is toggled between zoomed and unzoomed
+    pub zoom: Option<bool>,
+    /// [-t target-pane] - target-pane
+    pub target_pane: Option<&'a str>,
+    /// [-x width] - absolute size
+    pub width: Option<usize>,
+    /// [-y height] - absolute size
+    pub height: Option<usize>,
+    /// [adjustment] - adjustment
+    pub adjustment: Option<&'a str>,
 }
 
 impl<'a> ResizePane<'a> {
@@ -331,16 +426,26 @@ impl<'a> ResizePane<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct ResizeWindow<'a> {
-    pub smallest: Option<bool>,         // [-a]
-    pub largest: Option<bool>,          // [-A]
-    pub down: Option<bool>,             // [-D]
-    pub left: Option<bool>,             // [-L]
-    pub right: Option<bool>,            // [-R]
-    pub up: Option<bool>,               // [-U]
-    pub target_window: Option<&'a str>, // [-t target-window]
-    pub width: Option<usize>,           // [-x width]
-    pub height: Option<usize>,          // [-y height]
-    pub adjustment: Option<&'a str>,    // [adjustment]
+    /// [-a] - set the size of the smallest session containing the window
+    pub smallest: Option<bool>, // [-a]
+    /// [-A] - set the size of the largest session containing the window
+    pub largest: Option<bool>,
+    /// [-D] - resize down by adjustment
+    pub down: Option<bool>,
+    /// [-L] - resize left by adjustment
+    pub left: Option<bool>,
+    /// [-R] - resize right by adjustment
+    pub right: Option<bool>,
+    /// [-U] - resize up by adjustment
+    pub up: Option<bool>,
+    /// [-t target-window] - target-window
+    pub target_window: Option<&'a str>,
+    /// [-x width] - absolute size
+    pub width: Option<usize>,
+    /// [-y height] - absolute size
+    pub height: Option<usize>,
+    /// [adjustment] - adjustment
+    pub adjustment: Option<&'a str>,
 }
 
 impl<'a> ResizeWindow<'a> {
@@ -359,11 +464,16 @@ impl<'a> ResizeWindow<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct RespawnPane<'a> {
-    pub kill: Option<bool>,               // [-k]
-    pub start_directory: Option<&'a str>, // [-c start-directory]
-    pub environment: Option<&'a str>,     // [-e environment]
-    pub target_pane: Option<&'a str>,     // [-t target-pane]
-    pub shell_command: Option<&'a str>,   // [shell-command]
+    /// [-k] - any existing command is killed
+    pub kill: Option<bool>,
+    /// [-c start-directory] - start-directory
+    pub start_directory: Option<&'a str>,
+    /// [-e environment] - environment
+    pub environment: Option<&'a str>,
+    /// [-t target-pane] - target-pane
+    pub target_pane: Option<&'a str>,
+    /// [shell-command] - shell-command
+    pub shell_command: Option<&'a str>,
 }
 
 impl<'a> RespawnPane<'a> {
@@ -383,11 +493,16 @@ impl<'a> RespawnPane<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct RespawnWindow<'a> {
-    pub kill: Option<bool>,               // [-k]
-    pub start_directory: Option<&'a str>, // [-c start-directory]
-    pub environment: Option<&'a str>,     // [-e environment]
-    pub target_window: Option<&'a str>,   // [-t target-pane]
-    pub shell_command: Option<&'a str>,   // [shell-command]
+    /// [-k] - any existing command is killed
+    pub kill: Option<bool>,
+    /// [-c start-directory] - start-directory
+    pub start_directory: Option<&'a str>,
+    /// [-e environment] - environment
+    pub environment: Option<&'a str>,
+    /// [-t target-pane] - target-pane
+    pub target_window: Option<&'a str>,
+    /// [shell-command] - shell-command
+    pub shell_command: Option<&'a str>,
 }
 
 impl<'a> RespawnWindow<'a> {
@@ -406,12 +521,18 @@ impl<'a> RespawnWindow<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct SelectLayot<'a> {
-    pub spread: Option<bool>,         // [-E]
-    pub next: Option<bool>,           // [-n]
-    pub last: Option<bool>,           // [-o]
-    pub previous: Option<bool>,       // [-p]
-    pub target_pane: Option<&'a str>, // [-t target-pane]
-    pub layout_name: Option<&'a str>, // [layout-name]
+    /// [-E] - spread the current pane and any panes next to it out evenly
+    pub spread: Option<bool>,
+    /// [-n] - next-layout equivalent
+    pub next: Option<bool>,
+    /// [-o] - apply the last set layout if possible
+    pub last: Option<bool>,
+    /// [-p] - previous-layout equivalent
+    pub previous: Option<bool>,
+    /// [-t target-pane] - target-pane
+    pub target_pane: Option<&'a str>,
+    /// [layout-name] - layout-name
+    pub layout_name: Option<&'a str>,
 }
 
 impl<'a> SelectLayot<'a> {
@@ -420,6 +541,7 @@ impl<'a> SelectLayot<'a> {
     }
 }
 
+/// Make pane `target-pane` the active pane in window `target-window`
 ///
 /// # Manual
 ///
@@ -429,18 +551,30 @@ impl<'a> SelectLayot<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct SelectPane<'a> {
-    pub down: Option<bool>,           // [-D]
-    pub disable: Option<bool>,        // [-d]
-    pub enable: Option<bool>,         // [-e]
-    pub left: Option<bool>,           // [-L]
-    pub last: Option<bool>,           // [-l]
-    pub set_marked: Option<bool>,     // [-M]
-    pub clear_marked: Option<bool>,   // [-m]
-    pub right: Option<bool>,          // [-R]
-    pub up: Option<bool>,             // [-U]
-    pub keep_zoomed: Option<bool>,    // [-Z]
-    pub title: Option<&'a str>,       // [-T title]
-    pub target_pane: Option<&'a str>, // [-t target-pane]
+    /// [-D] - pane below
+    pub down: Option<bool>,
+    /// [-d] - disable input
+    pub disable: Option<bool>,
+    /// [-e] - enable input
+    pub enable: Option<bool>,
+    /// [-L] - pane left
+    pub left: Option<bool>,
+    /// [-l] - equivalent to last-pane command
+    pub last: Option<bool>,
+    /// [-M] - clear marked pane
+    pub set_marked: Option<bool>,
+    /// [-m] - set marked pane
+    pub clear_marked: Option<bool>,
+    /// [-R] - pane right
+    pub right: Option<bool>,
+    /// [-U] - pane above
+    pub up: Option<bool>,
+    /// [-Z] - keep the window zoomed if it was zoomed
+    pub keep_zoomed: Option<bool>,
+    /// [-T title] - title
+    pub title: Option<&'a str>,
+    /// [-t target-pane] - target-pane
+    pub target_pane: Option<&'a str>,
 }
 
 impl<'a> SelectPane<'a> {
@@ -449,6 +583,7 @@ impl<'a> SelectPane<'a> {
     }
 }
 
+/// Select the window at target-window.
 ///
 /// # Manual
 ///
@@ -458,11 +593,16 @@ impl<'a> SelectPane<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct SelectWindow<'a> {
-    pub last: Option<bool>,             // [-l]
-    pub next: Option<bool>,             // [-n]
-    pub previous: Option<bool>,         // [-p]
-    pub switch: Option<bool>,           // [-T]
-    pub target_window: Option<&'a str>, // [-t target-window]
+    /// [-l] - equivalent to last-window
+    pub last: Option<bool>,
+    /// [-n] - equivalent to next-window
+    pub next: Option<bool>,
+    /// [-p] - equivalent to previous-window
+    pub previous: Option<bool>,
+    /// [-T] - if the selected window is already the current window, behave like last-window
+    pub switch: Option<bool>,
+    /// [-t target-window] - target-window
+    pub target_window: Option<&'a str>,
 }
 
 impl<'a> SelectWindow<'a> {
@@ -471,6 +611,8 @@ impl<'a> SelectWindow<'a> {
     }
 }
 
+/// Create a new pane by splitting target-pane
+///
 /// # Manual
 ///
 /// ```text
@@ -480,19 +622,32 @@ impl<'a> SelectWindow<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct SplitWindow<'a> {
-    pub before: Option<bool>,           // [-b]
-    pub detached: Option<bool>,         // [-d]
-    pub full: Option<bool>,             // [-f]
-    pub horizontal: Option<bool>,       // [-h]
-    pub stdin_forward: Option<bool>,    // [-I]
-    pub vertical: Option<bool>,         // [-v]
-    pub print: Option<bool>,            // [-P]
-    pub cwd: Option<&'a str>,           // [-c start-directory]
-    pub environment: Option<&'a str>,   // [-e start-directory]
-    pub size: Option<PaneSize>,         // [-l size]
-    pub target_pane: Option<&'a str>,   // [-t target-pane]
-    pub shell_command: Option<&'a str>, // [shell-command]
-    pub format: Option<&'a str>,        // [-F format]
+    /// [-b] - cause the new pane to be created to the left of or above target-pane
+    pub before: Option<bool>,
+    /// [-d] - do not make the new window the current window
+    pub detached: Option<bool>,
+    /// [-f] - creates a new pane spanning the full window size (h, v)
+    pub full: Option<bool>,
+    /// [-h] - horizontal split
+    pub horizontal: Option<bool>,
+    /// [-I] - create an empty pane and forward any output from stdin to it
+    pub stdin_forward: Option<bool>,
+    /// [-v] - vertical split
+    pub vertical: Option<bool>,
+    /// [-P] - print information about the new window after it has been created
+    pub print: Option<bool>,
+    /// [-c start_directory] - start-directory
+    pub cwd: Option<&'a str>,
+    /// [-e environment] - environment
+    pub environment: Option<&'a str>,
+    /// [-l size] - specify the size of the new pane in lines
+    pub size: Option<PaneSize>,
+    /// [-t target-pane] -
+    pub target_pane: Option<&'a str>,
+    /// [shell-command] - shell-command
+    pub shell_command: Option<&'a str>,
+    /// [-F format] - format
+    pub format: Option<&'a str>,
 }
 
 impl<'a> SplitWindow<'a> {
@@ -511,12 +666,18 @@ impl<'a> SplitWindow<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct SwapPane<'a> {
-    pub detached: Option<bool>,    // [-d]
-    pub previous: Option<&'a str>, // [-D]
-    pub next: Option<&'a str>,     // [-U]
+    /// [-d] - instruct tmux not to change the active pane
+    pub detached: Option<bool>,
+    /// [-D] - swap with the next pane
+    pub previous: Option<&'a str>,
+    /// [-U] - swap with the previous pane
+    pub next: Option<&'a str>, // [-U]
+    /// [-Z] - keep the window zoomed if it was zoomed
     pub keep_zoomed: Option<bool>, // [-Z]
-    pub src_pane: Option<&'a str>, // [-s src-pane]
-    pub dst_pane: Option<&'a str>, // [-t dst-pane]
+    /// [-s src-pane] - src-pane
+    pub src_pane: Option<&'a str>,
+    /// [-t dst-pane] - dst-pane
+    pub dst_pane: Option<&'a str>,
 }
 
 impl<'a> SwapPane<'a> {

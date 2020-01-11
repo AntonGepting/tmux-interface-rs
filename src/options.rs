@@ -2,6 +2,8 @@ use super::error::Error;
 use super::tmux_interface::*;
 use std::process::Output;
 
+/// Structure for setting a pane/window/session/server option
+///
 /// # Manual
 ///
 /// ```text
@@ -10,18 +12,30 @@ use std::process::Output;
 /// ```
 #[derive(Default, Debug)]
 pub struct SetOption<'a> {
-    pub append: Option<bool>,        // [-a]
-    pub format: Option<bool>,        // [-F]
-    pub global: Option<bool>,        // [-g]
-    pub not_overwrite: Option<bool>, // [-o]
-    pub pane: Option<bool>,          // [-p]
-    pub quiet: Option<bool>,         // [-q]
-    pub server: Option<bool>,        // [-s]
-    pub unset: Option<bool>,         // [-u]
-    pub window: Option<bool>,        // [-w]
-    pub target: Option<&'a str>,     // [-t target-pane]
-                                     //pub option: &'a str,             // option
-                                     //pub value: &'a str,              // value
+    /// [-a] - value is appended to the existing setting, if the option expects a string or a style
+    pub append: Option<bool>,
+    /// [-F] - expand formats in the option value
+    pub format: Option<bool>,
+    /// [-g] - the global session or window option is set
+    pub global: Option<bool>,
+    /// [-o] - prevents setting an option that is already set
+    pub not_overwrite: Option<bool>,
+    /// [-p] - set a pane option
+    pub pane: Option<bool>,
+    /// [-q] - suppress errors about unknown or ambiguous options
+    pub quiet: Option<bool>,
+    /// [-s] - set a server option
+    pub server: Option<bool>,
+    /// [-u] - unset an option, so a session inherits the option from the global options
+    pub unset: Option<bool>,
+    /// [-w] - set a window option
+    pub window: Option<bool>,
+    /// [-t target-pane] - specify the target-pane
+    pub target: Option<&'a str>,
+    // option
+    //pub option: &'a str,
+    // value
+    //pub value: &'a str,
 }
 
 impl<'a> SetOption<'a> {
@@ -30,7 +44,7 @@ impl<'a> SetOption<'a> {
     }
 }
 
-/// Show options structure
+/// Structure for showing options
 ///
 /// # Manual
 ///
@@ -40,26 +54,26 @@ impl<'a> SetOption<'a> {
 /// ```
 #[derive(Default, Debug)]
 pub struct ShowOptions<'a> {
-    /// includes options inherited from a parent set of options
-    pub include_inherited: Option<bool>, // [-A]
-    /// global session or window options are listed
-    pub global_options: Option<bool>, // [-g]
-    /// includes hooks (omitted by default)
-    pub hooks: Option<bool>, // [-H]
-    /// show window options
-    pub pane: Option<bool>, // [-p]
-    /// no error will be returned if `option` is unset
-    pub quiet: Option<bool>, // [-q]
-    /// show the server options
-    pub server: Option<bool>, // [-s]
-    /// shows only the option value
-    pub option_value: Option<bool>, // [-v]
-    /// show the window options
-    pub window: Option<bool>, // [-w]
-    /// target session or window name
-    pub target: Option<&'a str>, // [-t target-pane]
-    /// option name
-    pub option: Option<&'a str>, // [option]
+    /// [-A] - includes options inherited from a parent set of options
+    pub include_inherited: Option<bool>,
+    /// [-g] - global session or window options are listed
+    pub global_options: Option<bool>,
+    /// [-H] - includes hooks (omitted by default)
+    pub hooks: Option<bool>,
+    /// [-p] - show window options
+    pub pane: Option<bool>,
+    /// [-q] - no error will be returned if `option` is unset
+    pub quiet: Option<bool>,
+    /// [-s] - show the server options
+    pub server: Option<bool>,
+    /// [-v] - shows only the option value
+    pub option_value: Option<bool>,
+    /// [-w] - show the window options
+    pub window: Option<bool>,
+    /// [-t target-pane] - target session or window name
+    pub target: Option<&'a str>,
+    /// [option] - specify option name
+    pub option: Option<&'a str>,
 }
 
 impl<'a> ShowOptions<'a> {
@@ -68,7 +82,8 @@ impl<'a> ShowOptions<'a> {
     }
 }
 
-/// Options
+/// All functions from man tmux "Options" listed below
+/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#OPTIONS)
 impl<'a> TmuxInterface<'a> {
     const SET_OPTION: &'static str = "set-option";
     const SHOW_OPTIONS: &'static str = "show-options";
