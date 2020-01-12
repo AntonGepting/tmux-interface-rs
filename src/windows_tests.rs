@@ -25,11 +25,3 @@ fn parse() {
     assert_eq!(windows[2].id, Some(2));
     assert_eq!(windows[3].id, Some(4));
 }
-
-#[test]
-fn get() {
-    use crate::window::WINDOW_ALL;
-    use crate::Windows;
-
-    let _windows = Windows::get("0", WINDOW_ALL).unwrap();
-}

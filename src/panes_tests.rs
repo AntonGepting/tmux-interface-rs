@@ -12,12 +12,3 @@ fn parse() {
     let panes = Panes::from_str(panes_str, PANE_ALL).unwrap();
     assert_eq!(panes[0].id, Some(0));
 }
-
-#[test]
-fn get() {
-    use crate::pane::PANE_ALL;
-    use crate::Panes;
-
-    let _panes = Panes::get("0:2", PANE_ALL).unwrap();
-    //dbg!(_panes);
-}

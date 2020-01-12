@@ -13,11 +13,3 @@ fn parse() {
     let sessions = Sessions::from_str(sessions_str, SESSION_ALL).unwrap();
     assert_eq!(sessions[1].id, Some(40));
 }
-
-#[test]
-fn get() {
-    use crate::session::SESSION_ALL;
-    use crate::Sessions;
-
-    let _sessions = Sessions::get(SESSION_ALL).unwrap();
-}
