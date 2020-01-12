@@ -118,13 +118,15 @@ pub struct TmuxInterface<'a> {
     /// callback(bin: &mut String, options: &Vec<&str>, subcmd_with_args: &Vec<&str>) -> Result
     /// this function will be called before command.output();
     // XXX: return?
-    pub pre_hook: Option<Box<dyn FnMut(&mut String, &Vec<&str>, &Vec<&str>) -> Result<(), Error>>>,
+    pub pre_hook: Option<
+        Box<dyn FnMut(&mut String, &Vec<&str>, &Vec<&str>) -> Result<Option<Output>, Error>>,
+    >,
 
     /// define a callback function for displaying or editing command's output
     /// callback(output: &mut Output) -> Result
     /// this function will be called after command.output();
     // XXX: return?
-    pub post_hook: Option<Box<dyn FnMut(&mut Output) -> Result<(), Error>>>,
+    pub post_hook: Option<Box<dyn FnMut(&mut Output) -> Result<Option<Output>, Error>>>,
 }
 
 /// Common `TmuxInterface` functions
@@ -200,7 +202,17 @@ impl<'a> TmuxInterface<'a> {
         // pre hook callback
         // XXX: check argumets, mb separate subcmd too
         if let Some(pre_hook) = self.pre_hook.as_mut() {
-            pre_hook(&mut bin, &mut options, &mut args)?;
+            let result = pre_hook(&mut bin, &mut options, &mut args)?;
+            if let Some(mut output) = result {
+                // post hook callback
+                if let Some(post_hook) = self.post_hook.as_mut() {
+                    let result = post_hook(&mut output)?;
+                    if let Some(output) = result {
+                        return Ok(output);
+                    }
+                }
+                return Ok(output);
+            }
         }
 
         let mut cmd = Command::new(&bin);
@@ -211,7 +223,10 @@ impl<'a> TmuxInterface<'a> {
 
         // post hook callback
         if let Some(post_hook) = self.post_hook.as_mut() {
-            post_hook(&mut output)?;
+            let result = post_hook(&mut output)?;
+            if let Some(output) = result {
+                return Ok(output);
+            }
         }
 
         Ok(output)

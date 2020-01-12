@@ -104,7 +104,7 @@
 //!         // display newly set variables
 //!         println!("pre hook: {:?} {:?} {:?}", bin, options, subcmd);
 //!         //Err(Error::new("pre hook error"))
-//!         Ok(())
+//!         Ok(None)
 //!     }));
 //!
 //!     let new_session = NewSession {

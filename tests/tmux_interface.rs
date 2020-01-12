@@ -63,7 +63,7 @@ fn callback() {
         *bin = "./tests/tmux_test.sh".to_string();
         println!("prehook: {:?} {:?} {:?}", bin, options, subcmd);
         //Err(Error::new("hook"))
-        Ok(())
+        Ok(None)
     }));
 
     tmux.new_session(Some(&new_session)).unwrap();
