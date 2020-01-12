@@ -236,6 +236,7 @@ Parsing objects and supported tmux variables:
 - [ ] Error reporting information num, enum, string like in std
 - [ ] Better names for tmux subcommands wrapper function arguments
 - [x] Check new `tmux` version (`tmux 3.0a`) for significant changes
+- [ ] Documnetation all structures and fields
 
 
 **tmux interface v0.0.1**
@@ -267,6 +268,8 @@ Parsing objects and supported tmux variables:
 - [x] enum for pane size specification `[-l size | -p percentage]`
 - [ ] mb enum for things like `[size | percentage]` in options?
 - mb default most needed struct fields initialized with `new()`?
+- [ ] rename subcommand to command function
+- [ ] add custom command function
 
 
 # Strategy
