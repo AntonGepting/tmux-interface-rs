@@ -3,6 +3,11 @@ os:
   - linux
   - osx
 
+addons:
+  homebrew:
+    packages:
+    - tmux
+
 rust:
   - stable
   - beta
