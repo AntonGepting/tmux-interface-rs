@@ -51,9 +51,22 @@ and testing purposes. Do not use them in your Projects.
 
 - Used in mosaic - tmux manager
 
-- Tested on: tmux 2.8
+## Testing
 
-- Tested on: Debian "bullseye", x64
+The library was tested under following conditions.
+
+Tmux:
+- tmux 3.0a
+
+Rust:
+- stable (manually, Travis CI)
+- beta (Travis CI)
+- nightly (Travis CI)
+
+OS:
+- Debian 11 Bullseye, x64 (manually)
+- Ubuntu 16.04 Xenial Xerus, x64 (Travis CI)
+- MacOS 10.13.6 High Sierra, x64 (Travis CI)
 
 <!--- Structure field names can be chnaged-->
 
@@ -123,22 +136,26 @@ and testing purposes. Do not use them in your Projects.
 
 - [`tests/`](tests/) - crate integration tests (multiple functions):
 
+    - [`issue1.rs`](tests/issue1.rs) - issue #1 tests
+    - [`sessions_tests.rs`](tests/sessions_tests.rs) - sessions tests
+    - [`windows_tests.rs`](tests/windows_tests.rs) - windows tests
+    - [`panes_tests.rs`](tests/panes_tests.rs) - panes tests
     - [`tmux_error_mock.sh`](tests/tmux_error_mock.sh) - bash script for testing of tmux error handling functions
     - [`tmux_interface.rs`](tests/tmux_interface.rs)
     - [`tmux_mock.sh`](tests/tmux_mock.sh) - bash script can be used instead of tmux binary, for simple logging
         (sniffing) intercommmunication between library functions and tmux
     - [`tmux_test.sh`](tests/tmux_test.sh) - bash script for output testing of tmux functions
 
-- [`README.md`](README.md) - common information (this file)
-- [`LICENSE.md`](LICENSE.md) - license text
-- [`ROADMAP.md`](ROADMAP.md) - future goals, wishlist, ideas
-- [`CHANGELOG.md`](CHANGELOG.md) - version history
 - [`Cargo.toml`](Cargo.toml) - crate configuration ([File Format](https://doc.rust-lang.org/cargo/reference/manifest.html))
-- [`.travis.yml`](.travis.yml) - travis CI configuration ([File Format](https://docs.travis-ci.com/user/tutorial/))
-- [`.editorconfig`](.editorconfig) - consistent coding style configuration ([File Format](https://editorconfig.org/#file-format-details))
-- [`rustfmt.toml`](rustfmt.toml) - rustfmt configuration file ([rustfmt](https://github.com/rust-lang/rustfmt#configuring-rustfmt))
+- [`CHANGELOG.md`](CHANGELOG.md) - version history
 - [`clippy.toml`](clippy.toml) - Clippy configuration file ([Clippy](https://github.com/rust-lang/rust-clippy#configuration))
+- [`.editorconfig`](.editorconfig) - consistent coding style configuration ([File Format](https://editorconfig.org/#file-format-details))
+- [`LICENSE.md`](LICENSE.md) - license text
+- [`README.md`](README.md) - common information (this file)
+- [`ROADMAP.md`](ROADMAP.md) - future goals, wishlist, ideas
+- [`rustfmt.toml`](rustfmt.toml) - rustfmt configuration file ([rustfmt](https://github.com/rust-lang/rustfmt#configuring-rustfmt))
 - [`rust-toolchain`](rust-toolchain) - rustup toolchain configuration file ([rustup](https://github.com/rust-lang/rustup.rs#the-toolchain-file))
+- [`.travis.yml`](.travis.yml) - travis CI configuration ([File Format](https://docs.travis-ci.com/user/tutorial/))
 
 
 ## Contributing
@@ -154,7 +171,7 @@ If you are interested in this project and you have:
 You are allways welcome, please feel free to use following links to contact me
 and/or to contribute to the project:
 
-- [E-Mail](mailto:anton.gepting@gmail.com)
+- [Write E-Mail](mailto:anton.gepting@gmail.com)
 - [Open issue](https://github.com/AntonGepting/tmux-interface-rs/issues/new)
 - [Send pull request](https://github.com/AntonGepting/tmux-interface-rs/pulls)
 
