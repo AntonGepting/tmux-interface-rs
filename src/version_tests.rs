@@ -3,6 +3,7 @@ fn from_str() {
     use crate::Version;
 
     let examples = &[
+        "tmux 3.0a",
         "tmux 3.0",
         "tmux 2.9a",
         "tmux 2.9",

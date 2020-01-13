@@ -210,7 +210,6 @@ mod panes_tests;
 //mod session_stack_tests;
 mod session_tests;
 mod sessions_tests;
-#[cfg(test)]
 mod tmux_interface_tests;
 //mod window_flag_tests;
 mod window_tests;
@@ -221,3 +220,5 @@ mod layout_checksum_tests;
 mod layout_tests;
 mod tmux_option_tests;
 mod version_tests;
+
+mod windows_and_panes_tests;

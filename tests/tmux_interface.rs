@@ -61,7 +61,7 @@ fn callback() {
 
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
         *bin = "./tests/tmux_test.sh".to_string();
-        println!("prehook: {:?} {:?} {:?}", bin, options, subcmd);
+        println!("callback() prehook: {:?} {:?} {:?}", bin, options, subcmd);
         //Err(Error::new("hook"))
         Ok(None)
     }));
