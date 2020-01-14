@@ -118,70 +118,78 @@
 //! }
 //! ```
 
-pub mod buffers;
-pub mod clients_and_sessions;
 pub mod error;
-pub mod global_and_session_environment;
-pub mod hooks;
-pub mod key_bindings;
+
+pub mod request;
+
 pub mod layout;
 pub mod layout_cell;
 pub mod layout_checksum;
-pub mod miscellaneous;
-pub mod options;
 pub mod pane;
 pub mod pane_tabs;
 pub mod panes;
 pub mod session;
 pub mod session_stack;
 pub mod sessions;
-pub mod status_line;
 pub mod tmux_interface;
 pub mod tmux_option;
 pub mod version;
 pub mod window;
 pub mod window_flag;
 pub mod windows;
-pub mod windows_and_panes;
 
-// structs
-pub use self::clients_and_sessions::AttachSession;
-pub use self::clients_and_sessions::DetachClient;
-pub use self::clients_and_sessions::NewSession;
-pub use self::clients_and_sessions::RefreshClient;
-pub use self::clients_and_sessions::SwitchClient;
 pub use self::tmux_interface::TmuxInterface;
 
+// buffers
+pub use self::request::buffers::choose_buffer::ChooseBuffer;
+pub use self::request::buffers::paste_buffer::PasteBuffer;
+// clients and sessions
+pub use self::request::clients_and_sessions::attach_session::AttachSession;
+pub use self::request::clients_and_sessions::detach_client::DetachClient;
+pub use self::request::clients_and_sessions::new_session::NewSession;
+pub use self::request::clients_and_sessions::refresh_client::RefreshClient;
+pub use self::request::clients_and_sessions::switch_client::SwitchClient;
+// global and session environment
+pub use self::request::global_and_session_environment::set_environment::SetEnvironment;
+// hooks
+pub use self::request::hooks::set_hook::SetHook;
+// key bindings
+pub use self::request::key_bindings::send_keys::SendKeys;
+pub use crate::request::key_bindings::bind_key::BindKey;
+// miscellaneous
+pub use crate::request::miscellaneous::if_shell::IfShell;
+// options
+pub use self::request::options::show_options::ShowOptions;
+// status line
+pub use self::request::status_line::command_prompt::CommandPrompt;
+pub use self::request::status_line::display_menu::DisplayMenu;
+pub use self::request::status_line::display_message::DisplayMessage;
+// windows and panes
+pub use self::request::windows_and_panes::break_pane::BreakPane;
+pub use self::request::windows_and_panes::capture_pane::CapturePane;
+pub use self::request::windows_and_panes::choose_client::ChooseClient;
+pub use self::request::windows_and_panes::choose_tree::ChooseTree;
+pub use self::request::windows_and_panes::find_window::FindWindow;
+pub use self::request::windows_and_panes::join_pane::JoinPane;
+pub use self::request::windows_and_panes::link_window::LinkWindow;
+pub use self::request::windows_and_panes::move_pane::MovePane;
+pub use self::request::windows_and_panes::move_window::MoveWindow;
+pub use self::request::windows_and_panes::new_window::NewWindow;
+pub use self::request::windows_and_panes::pipe_pane::PipePane;
+pub use self::request::windows_and_panes::resize_pane::ResizePane;
+pub use self::request::windows_and_panes::resize_window::ResizeWindow;
+pub use self::request::windows_and_panes::respawn_pane::RespawnPane;
+pub use self::request::windows_and_panes::respawn_window::RespawnWindow;
+pub use self::request::windows_and_panes::select_layout::SelectLayot;
+pub use self::request::windows_and_panes::select_pane::SelectPane;
+pub use self::request::windows_and_panes::select_window::SelectWindow;
+pub use self::request::windows_and_panes::split_window::SplitWindow;
+pub use self::request::windows_and_panes::swap_pane::SwapPane;
+
 // enums
-pub use self::windows_and_panes::PaneSize;
-// structs
-pub use self::windows_and_panes::BreakPane;
-pub use self::windows_and_panes::CapturePane;
-pub use self::windows_and_panes::ChooseClient;
-pub use self::windows_and_panes::ChooseTree;
-pub use self::windows_and_panes::FindWindow;
-pub use self::windows_and_panes::JoinPane;
-pub use self::windows_and_panes::LinkWindow;
-pub use self::windows_and_panes::MovePane;
-pub use self::windows_and_panes::MoveWindow;
-pub use self::windows_and_panes::NewWindow;
-pub use self::windows_and_panes::PipePane;
-pub use self::windows_and_panes::ResizePane;
-pub use self::windows_and_panes::ResizeWindow;
-pub use self::windows_and_panes::RespawnPane;
-pub use self::windows_and_panes::RespawnWindow;
-pub use self::windows_and_panes::SelectLayot;
-pub use self::windows_and_panes::SelectPane;
-pub use self::windows_and_panes::SelectWindow;
-pub use self::windows_and_panes::SplitWindow;
-pub use self::windows_and_panes::SwapPane;
+//pub use crate::windows_and_panes::PaneSize;
 
 // structs
-pub use self::key_bindings::BindKey;
-pub use self::key_bindings::SendKeys;
-
-// structs
-pub use self::options::ShowOptions;
 pub use self::tmux_option::TmuxOption;
 
 // enums

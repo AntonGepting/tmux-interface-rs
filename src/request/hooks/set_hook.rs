@@ -1,5 +1,5 @@
-use super::error::Error;
-use super::tmux_interface::*;
+use crate::error::Error;
+use crate::tmux_interface::*;
 use std::process::Output;
 
 /// Structure for setting or unsetting hook `hook-name` to command.
@@ -37,7 +37,6 @@ impl<'a> SetHook<'a> {
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#HOOKS)
 impl<'a> TmuxInterface<'a> {
     const SET_HOOK: &'static str = "set-hook";
-    const SHOW_HOOK: &'static str = "show-hook";
 
     /// # Manual
     ///
@@ -71,27 +70,6 @@ impl<'a> TmuxInterface<'a> {
         args.push(hook_name);
         args.push(command);
         let output = self.subcommand(TmuxInterface::SET_HOOK, &args)?;
-        Ok(output)
-    }
-
-    /// # Manual
-    ///
-    /// ```text
-    /// tmux show-hooks [-g] [-t target-session]
-    /// ```
-    pub fn show_hooks(
-        &mut self,
-        global: Option<bool>,
-        target_session: Option<&str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if global.unwrap_or(false) {
-            args.push(g_KEY);
-        }
-        if let Some(s) = target_session {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        let output = self.subcommand(TmuxInterface::SHOW_HOOK, &args)?;
         Ok(output)
     }
 }
