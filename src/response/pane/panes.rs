@@ -1,4 +1,4 @@
-use crate::pane::{PANE_VARS_REGEX_VEC, PANE_VARS_SEPARATOR};
+use crate::response::pane::pane::{PANE_VARS_REGEX_VEC, PANE_VARS_SEPARATOR};
 use crate::Error;
 use crate::Pane;
 use crate::TmuxInterface;

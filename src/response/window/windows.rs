@@ -1,4 +1,4 @@
-use crate::window::{WINDOW_VARS_REGEX_VEC, WINDOW_VARS_SEPARATOR};
+use crate::response::window::window::{WINDOW_VARS_REGEX_VEC, WINDOW_VARS_SEPARATOR};
 use crate::Error;
 use crate::TmuxInterface;
 use crate::Window;

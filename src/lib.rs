@@ -121,22 +121,11 @@
 pub mod error;
 
 pub mod request;
+pub mod response;
 
-pub mod layout;
-pub mod layout_cell;
-pub mod layout_checksum;
-pub mod pane;
-pub mod pane_tabs;
-pub mod panes;
-pub mod session;
-pub mod session_stack;
-pub mod sessions;
 pub mod tmux_interface;
 pub mod tmux_option;
 pub mod version;
-pub mod window;
-pub mod window_flag;
-pub mod windows;
 
 pub use self::tmux_interface::TmuxInterface;
 
@@ -193,40 +182,40 @@ pub use self::request::windows_and_panes::swap_pane::SwapPane;
 pub use self::tmux_option::TmuxOption;
 
 // enums
-pub use self::layout_cell::LayoutType;
+pub use self::response::layout::layout_cell::LayoutType;
 // structs
-pub use self::layout::Layout;
-pub use self::layout_cell::LayoutCell;
-pub use self::layout_checksum::LayoutChecksum;
-pub use self::pane::Pane;
-pub use self::pane_tabs::PaneTabs;
-pub use self::panes::Panes;
-pub use self::session::Session;
-pub use self::session_stack::SessionStack;
-pub use self::sessions::Sessions;
+pub use self::response::layout::layout::Layout;
+pub use self::response::layout::layout_cell::LayoutCell;
+pub use self::response::layout::layout_checksum::LayoutChecksum;
+pub use self::response::pane::pane::Pane;
+pub use self::response::pane::pane_tabs::PaneTabs;
+pub use self::response::pane::panes::Panes;
+pub use self::response::session::session::Session;
+pub use self::response::session::session_stack::SessionStack;
+pub use self::response::session::sessions::Sessions;
+pub use self::response::window::window::Window;
+pub use self::response::window::window_flag::WindowFlag;
+pub use self::response::window::windows::Windows;
 pub use self::version::Version;
-pub use self::window::Window;
-pub use self::window_flag::WindowFlag;
-pub use self::windows::Windows;
 
 // structs
 pub use self::error::Error;
 
 //mod pane_tabs_tests;
-mod pane_tests;
-mod panes_tests;
+//mod pane_tests;
+//mod panes_tests;
 //mod session_stack_tests;
-mod session_tests;
-mod sessions_tests;
+//mod session_tests;
+//mod sessions_tests;
 mod tmux_interface_tests;
 //mod window_flag_tests;
-mod window_tests;
-mod windows_tests;
+//mod window_tests;
+//mod windows_tests;
 //mod options_tests;
-mod layout_cell_tests;
-mod layout_checksum_tests;
-mod layout_tests;
+//mod layout_cell_tests;
+//mod layout_checksum_tests;
+//mod layout_tests;
 mod tmux_option_tests;
 mod version_tests;
 
-mod windows_and_panes_tests;
+//mod windows_and_panes_tests;
