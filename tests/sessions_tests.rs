@@ -1,6 +1,6 @@
 #[test]
 fn get_sessions() {
-    use tmux_interface::session::SESSION_ALL;
+    use tmux_interface::response::session::session::SESSION_ALL;
     use tmux_interface::NewSession;
     use tmux_interface::{Sessions, TmuxInterface};
 

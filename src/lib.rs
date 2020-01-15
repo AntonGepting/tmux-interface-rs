@@ -79,9 +79,9 @@
 //!
 //! ```
 //! use crate::tmux_interface::{Sessions, Session, Windows, Window, Pane, Panes};
-//! use crate::tmux_interface::session::SESSION_ALL;
-//! use crate::tmux_interface::window::WINDOW_ALL;
-//! use crate::tmux_interface::pane::PANE_ALL;
+//! use crate::tmux_interface::response::session::session::SESSION_ALL;
+//! use crate::tmux_interface::response::window::window::WINDOW_ALL;
+//! use crate::tmux_interface::response::pane::pane::PANE_ALL;
 //!
 //! fn main() {
 //!     let sessions = Sessions::get(SESSION_ALL).unwrap();

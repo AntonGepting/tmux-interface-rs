@@ -1,6 +1,6 @@
 #[test]
 fn get_panes() {
-    use tmux_interface::window::WINDOW_ALL;
+    use tmux_interface::response::window::window::WINDOW_ALL;
     use tmux_interface::Windows;
     use tmux_interface::{NewSession, TmuxInterface};
 
