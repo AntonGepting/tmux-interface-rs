@@ -1,6 +1,6 @@
 #[test]
 fn parse() {
-    use crate::pane::PANE_ALL;
+    use crate::response::pane::pane::PANE_ALL;
     use crate::Panes;
 
     let panes_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0'8,16,24,\

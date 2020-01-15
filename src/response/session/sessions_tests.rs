@@ -1,6 +1,6 @@
 #[test]
 fn parse() {
-    use crate::session::SESSION_ALL;
+    use crate::response::session::session::SESSION_ALL;
     use crate::Sessions;
 
     let sessions_str = "1557947146::1:1557947146:1::::0:$0:1557947146:0:0:3,2,1:3\n\

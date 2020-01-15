@@ -1,6 +1,6 @@
 #[test]
 fn parse() {
-    use crate::window::WINDOW_ALL;
+    use crate::response::window::window::WINDOW_ALL;
     use crate::Windows;
 
     let windows_str =

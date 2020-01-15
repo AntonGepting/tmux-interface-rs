@@ -1,6 +1,6 @@
 #[test]
 fn parse() {
-    use crate::window::WINDOW_ALL;
+    use crate::response::window::window::WINDOW_ALL;
     use crate::Window;
 
     let window_str = "1557947146'0'1'0'''*'1'64'@3'4'0'3484,177x64,0,0{88x64,0,0,3,88x64,89,0,18}'0'bash'''2'0'0''3484,177x64,0,0{88x64,0,0,3,88x64,89,0,18}'177'0";

@@ -1,8 +1,8 @@
 #[test]
 fn parse() {
-    use crate::session::Session;
-    use crate::session::SESSION_ALL;
-    use crate::session_stack::SessionStack;
+    use crate::response::session::session::Session;
+    use crate::response::session::session::SESSION_ALL;
+    use crate::response::session::session_stack::SessionStack;
     use std::time::Duration;
 
     let session_str = "1557947146::1:1557947146:1::::0:$0:1557947146:0:0:3,2,1:3";
@@ -29,8 +29,10 @@ fn parse() {
 
 #[test]
 fn parse2() {
-    use crate::session::Session;
-    use crate::session::{SESSION_ACTIVITY, SESSION_CREATED, SESSION_LAST_ATTACHED};
+    use crate::response::session::session::Session;
+    use crate::response::session::session::{
+        SESSION_ACTIVITY, SESSION_CREATED, SESSION_LAST_ATTACHED,
+    };
     use std::time::Duration;
 
     let session_str = "1557947146:1557947146:1557947146";
