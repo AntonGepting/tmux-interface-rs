@@ -136,6 +136,7 @@ pub use self::request::buffers::paste_buffer::PasteBuffer;
 pub use self::request::clients_and_sessions::attach_session::AttachSession;
 pub use self::request::clients_and_sessions::detach_client::DetachClient;
 pub use self::request::clients_and_sessions::new_session::NewSession;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::clients_and_sessions::refresh_client::RefreshClient;
 pub use self::request::clients_and_sessions::switch_client::SwitchClient;
 // global and session environment
@@ -151,7 +152,9 @@ pub use crate::request::miscellaneous::if_shell::IfShell;
 pub use self::request::options::show_options::ShowOptions;
 // status line
 pub use self::request::status_line::command_prompt::CommandPrompt;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::status_line::display_menu::DisplayMenu;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::status_line::display_message::DisplayMessage;
 // windows and panes
 pub use self::request::windows_and_panes::break_pane::BreakPane;
@@ -164,10 +167,13 @@ pub use self::request::windows_and_panes::link_window::LinkWindow;
 pub use self::request::windows_and_panes::move_pane::MovePane;
 pub use self::request::windows_and_panes::move_window::MoveWindow;
 pub use self::request::windows_and_panes::new_window::NewWindow;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::pipe_pane::PipePane;
 pub use self::request::windows_and_panes::resize_pane::ResizePane;
 pub use self::request::windows_and_panes::resize_window::ResizeWindow;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::respawn_pane::RespawnPane;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::respawn_window::RespawnWindow;
 pub use self::request::windows_and_panes::select_layout::SelectLayot;
 pub use self::request::windows_and_panes::select_pane::SelectPane;

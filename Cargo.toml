@@ -10,5 +10,18 @@ keywords = ["tmux", "cli", "interface"]
 categories = ["api-bindings", "command-line-utilities", "command-line-interface"]
 repository = "https://github.com/AntonGepting/tmux-interface-rs"
 
+[features]
+# current tmux
+tmux_X_X = []
+#tmux_3_0a = []
+# tmux 2.6 included in Ubuntu 18.04 LTS Bionic Beaver
+tmux_2_6 = []
+# tmux 2.1 included in Ubuntu 16.04 LTS Xenial Xerus
+#tmux_2_1 = []
+# tmux 1.8 included in Ubuntu 14.04 LTS Trusty Tahr
+#tmux_1_8 = []
+# tmux 1.6 included in Ubuntu 12.04 LTS Precise Pangolin
+#tmux_1_6 = []
+default = ["tmux_X_X"]
 
 [dependencies]

@@ -11,10 +11,18 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux X.X:
     /// ```text
     /// tmux rotate-window [-DUZ] [-t target-window]
     /// (alias: rotatew)
     /// ```
+    ///
+    /// tmux 2.6:
+    /// ```text
+    /// tmux rotate-window [-DU] [-t target-window]
+    /// (alias: rotatew)
+    /// ```
+    #[cfg(not(feature = "tmux_2_6"))]
     pub fn rotate_window(
         &mut self,
         down: Option<bool>,
@@ -31,6 +39,27 @@ impl<'a> TmuxInterface<'a> {
         }
         if keep_zoomed.unwrap_or(false) {
             args.push(Z_KEY);
+        }
+        if let Some(s) = target_window {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        let output = self.subcommand(TmuxInterface::ROTATE_WINDOW, &args)?;
+        Ok(output)
+    }
+
+    #[cfg(feature = "tmux_2_6")]
+    pub fn rotate_window(
+        &mut self,
+        down: Option<bool>,
+        up: Option<bool>,
+        target_window: Option<&str>,
+    ) -> Result<Output, Error> {
+        let mut args: Vec<&str> = Vec::new();
+        if down.unwrap_or(false) {
+            args.push(D_KEY);
+        }
+        if up.unwrap_or(false) {
+            args.push(U_KEY);
         }
         if let Some(s) = target_window {
             args.extend_from_slice(&[t_KEY, &s])

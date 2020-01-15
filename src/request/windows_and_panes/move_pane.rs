@@ -12,8 +12,15 @@ pub enum PaneSize {
 ///
 /// # Manual
 ///
+/// tmux X.X:
 /// ```text
 /// tmux move-pane [-bdhv] [-l size] [-s src-pane] [-t dst-pane]
+/// (alias: movep)
+/// ```
+///
+/// tmux 2.6:
+/// ```text
+/// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: movep)
 /// ```
 #[derive(Default, Debug)]
@@ -49,13 +56,21 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux X.X:
     /// ```text
     /// tmux move-pane [-bdhv] [-l size] [-s src-pane] [-t dst-pane]
+    /// (alias: movep)
+    /// ```
+    ///
+    /// tmux 2.6:
+    /// ```text
+    /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: movep)
     /// ```
     pub fn move_pane(&mut self, move_pane: Option<&MovePane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
+        let p;
         if let Some(move_pane) = move_pane {
             if move_pane.left_above.unwrap_or(false) {
                 args.push(b_KEY);
@@ -69,12 +84,28 @@ impl<'a> TmuxInterface<'a> {
             if move_pane.vertical.unwrap_or(false) {
                 args.push(v_KEY);
             }
-            if let Some(size) = &move_pane.size {
-                match size {
-                    PaneSize::Size(size) => s = size.to_string(),
-                    PaneSize::Percentage(size) => s = format!("{}%", size),
-                };
-                args.extend_from_slice(&[l_KEY, &s]);
+            if cfg!(not(feature = "tmux_2_6")) {
+                if let Some(size) = &move_pane.size {
+                    match size {
+                        PaneSize::Size(size) => s = size.to_string(),
+                        PaneSize::Percentage(size) => s = format!("{}%", size),
+                    };
+                    args.extend_from_slice(&[l_KEY, &s]);
+                }
+            }
+            if cfg!(feature = "tmux_2_6") {
+                if let Some(size) = &move_pane.size {
+                    match size {
+                        PaneSize::Size(size) => {
+                            p = size.to_string();
+                            args.extend_from_slice(&[l_KEY, &p]);
+                        }
+                        PaneSize::Percentage(size) => {
+                            p = size.to_string();
+                            args.extend_from_slice(&[p_KEY, &p]);
+                        }
+                    };
+                }
             }
             if let Some(s) = move_pane.src_pane {
                 args.extend_from_slice(&[s_KEY, &s])

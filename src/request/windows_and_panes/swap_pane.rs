@@ -6,10 +6,18 @@ use std::process::Output;
 ///
 /// # Manual
 ///
+/// tmux X.X
 /// ```text
 /// tmux swap-pane [-dDUZ] [-s src-pane] [-t dst-pane]
 /// (alias: swapp)
 /// ```
+///
+/// tmux 2.6
+/// ```text
+/// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
+/// (alias: swapp)
+/// ```
+#[cfg(not(feature = "tmux_2_6"))]
 #[derive(Default, Debug)]
 pub struct SwapPane<'a> {
     /// [-d] - instruct tmux not to change the active pane
@@ -17,9 +25,24 @@ pub struct SwapPane<'a> {
     /// [-D] - swap with the next pane
     pub previous: Option<&'a str>,
     /// [-U] - swap with the previous pane
-    pub next: Option<&'a str>, // [-U]
+    pub next: Option<&'a str>,
     /// [-Z] - keep the window zoomed if it was zoomed
-    pub keep_zoomed: Option<bool>, // [-Z]
+    pub keep_zoomed: Option<bool>,
+    /// [-s src-pane] - src-pane
+    pub src_pane: Option<&'a str>,
+    /// [-t dst-pane] - dst-pane
+    pub dst_pane: Option<&'a str>,
+}
+
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Debug)]
+pub struct SwapPane<'a> {
+    /// [-d] - instruct tmux not to change the active pane
+    pub detached: Option<bool>,
+    /// [-D] - swap with the next pane
+    pub previous: Option<&'a str>,
+    /// [-U] - swap with the previous pane
+    pub next: Option<&'a str>,
     /// [-s src-pane] - src-pane
     pub src_pane: Option<&'a str>,
     /// [-t dst-pane] - dst-pane
@@ -41,10 +64,18 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux X.X
     /// ```text
     /// tmux swap-pane [-dDUZ] [-s src-pane] [-t dst-pane]
     /// (alias: swapp)
     /// ```
+    ///
+    /// tmux 2.6
+    /// ```text
+    /// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
+    /// (alias: swapp)
+    /// ```
+    #[cfg(not(feature = "tmux_2_6"))]
     pub fn swap_pane(&mut self, swap_pane: Option<&SwapPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(swap_pane) = swap_pane {
@@ -59,6 +90,45 @@ impl<'a> TmuxInterface<'a> {
             }
             if swap_pane.keep_zoomed.unwrap_or(false) {
                 args.push(Z_KEY);
+            }
+            if let Some(s) = swap_pane.src_pane {
+                args.extend_from_slice(&[s_KEY, &s])
+            }
+            if let Some(s) = swap_pane.dst_pane {
+                args.extend_from_slice(&[t_KEY, &s])
+            }
+        }
+        let output = self.subcommand(TmuxInterface::SWAP_PANE, &args)?;
+        Ok(output)
+    }
+
+    /// Swap two panes
+    ///
+    /// # Manual
+    ///
+    /// tmux X.X
+    /// ```text
+    /// tmux swap-pane [-dDUZ] [-s src-pane] [-t dst-pane]
+    /// (alias: swapp)
+    /// ```
+    ///
+    /// tmux 2.6
+    /// ```text
+    /// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
+    /// (alias: swapp)
+    /// ```
+    #[cfg(feature = "tmux_2_6")]
+    pub fn swap_pane(&mut self, swap_pane: Option<&SwapPane>) -> Result<Output, Error> {
+        let mut args: Vec<&str> = Vec::new();
+        if let Some(swap_pane) = swap_pane {
+            if swap_pane.detached.unwrap_or(false) {
+                args.push(d_KEY);
+            }
+            if swap_pane.detached.unwrap_or(false) {
+                args.push(D_KEY);
+            }
+            if swap_pane.detached.unwrap_or(false) {
+                args.push(U_KEY);
             }
             if let Some(s) = swap_pane.src_pane {
                 args.extend_from_slice(&[s_KEY, &s])

@@ -6,10 +6,18 @@ use std::process::Output;
 ///
 /// # Manual
 ///
+/// tmux X.X:
 /// ```text
 /// tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
 /// (alias: pipep)
 /// ```
+///
+/// tmux 2.6:
+/// ```text
+/// tmux pipe-pane [-o] [-t target-pane] [shell-command]
+/// (alias: pipep)
+/// ```
+#[cfg(not(feature = "tmux_2_6"))]
 #[derive(Default, Debug)]
 pub struct PipePane<'a> {
     /// [-I] - stdin is connected
@@ -24,6 +32,7 @@ pub struct PipePane<'a> {
     pub shell_command: Option<&'a str>,
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
 impl<'a> PipePane<'a> {
     pub fn new() -> PipePane<'a> {
         Default::default()
@@ -39,10 +48,18 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux X.X:
     /// ```text
     /// tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
     /// (alias: pipep)
     /// ```
+    ///
+    /// tmux 2.6:
+    /// ```text
+    /// tmux pipe-pane [-o] [-t target-pane] [shell-command]
+    /// (alias: pipep)
+    /// ```
+    #[cfg(not(feature = "tmux_2_6"))]
     pub fn pipe_pane(&mut self, pipe_pane: Option<&PipePane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(pipe_pane) = pipe_pane {
@@ -61,6 +78,42 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = pipe_pane.shell_command {
                 args.push(&s)
             }
+        }
+        let output = self.subcommand(TmuxInterface::PIPE_PANE, &args)?;
+        Ok(output)
+    }
+
+    /// Pipe output sent by the program in target-pane to a shell command or vice versa
+    ///
+    /// # Manual
+    ///
+    /// tmux X.X:
+    /// ```text
+    /// tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
+    /// (alias: pipep)
+    /// ```
+    ///
+    /// tmux 2.6:
+    /// ```text
+    /// tmux pipe-pane [-o] [-t target-pane] [shell-command]
+    /// (alias: pipep)
+    /// ```
+    #[cfg(feature = "tmux_2_6")]
+    pub fn pipe_pane(
+        &mut self,
+        open: Option<bool>,
+        target_pane: Option<&'a str>,
+        shell_command: Option<&'a str>,
+    ) -> Result<Output, Error> {
+        let mut args: Vec<&str> = Vec::new();
+        if open.unwrap_or(false) {
+            args.push(o_KEY);
+        }
+        if let Some(s) = target_pane {
+            args.extend_from_slice(&[t_KEY, &s])
+        }
+        if let Some(s) = shell_command {
+            args.push(&s)
         }
         let output = self.subcommand(TmuxInterface::PIPE_PANE, &args)?;
         Ok(output)
