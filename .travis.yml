@@ -14,7 +14,7 @@ rust:
   - nightly
 
 script:
-  - cargo build
-  - cargo test
-  - cargo build --features tmux_2_6
-  - cargo test --features tmux_2_6
+  - cargo build --verbose
+  - cargo test --verbose
+  - cargo build --features tmux_2_6 --verbose
+  - cargo test --features tmux_2_6 --verbose
