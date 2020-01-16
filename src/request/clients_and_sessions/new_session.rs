@@ -103,7 +103,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     ///
     /// tmux 2.6:
-    /// ```
+    /// ```text
     /// tmux new-session [-AdDEP] [-c start-directory] [-F format] [-n window-name]
     /// [-s session-name] [-t group-name] [-x width] [-y height] [shell-command]
     /// (alias: new)
@@ -182,7 +182,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     ///
     /// tmux 2.6:
-    /// ```
+    /// ```text
     /// tmux new-session [-AdDEP] [-c start-directory] [-F format] [-n window-name]
     /// [-s session-name] [-t group-name] [-x width] [-y height] [shell-command]
     /// (alias: new)
