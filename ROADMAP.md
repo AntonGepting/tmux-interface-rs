@@ -270,6 +270,15 @@ Parsing objects and supported tmux variables:
 - mb default most needed struct fields initialized with `new()`?
 - [ ] rename subcommand to command function
 - [ ] add custom command function
+- mb macro for translate letter keys into structure field names
+- mb conditional compiling depending on tmux version (versions based on travis ci ubuntu packages)
+- mb split into 2 libs?
+- support older tmux versions:
+    - [x] tmux X.X
+    - [x] tmux 2.6
+    - [ ] tmux 2.1
+    - [ ] tmux 1.8
+    - [ ] tmux 1.6
 
 
 # Strategy
