@@ -12,3 +12,9 @@ rust:
   - stable
   - beta
   - nightly
+
+script:
+  - cargo build
+  - cargo test
+  - cargo build --features tmux_2_6
+  - cargo test --features tmux_2_6
