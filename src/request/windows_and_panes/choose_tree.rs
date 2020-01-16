@@ -70,8 +70,6 @@ impl<'a> ChooseTree<'a> {
     }
 }
 
-/// Windows and panes
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES)
 impl<'a> TmuxInterface<'a> {
     const CHOOSE_TREE: &'static str = "choose-tree";
 

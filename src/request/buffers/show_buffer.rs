@@ -2,8 +2,6 @@ use crate::error::Error;
 use crate::tmux_interface::*;
 use std::process::Output;
 
-/// All functions from man tmux "Buffers" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#BUFFERS)
 impl<'a> TmuxInterface<'a> {
     const SHOW_BUFFER: &'static str = "show-buffer";
 

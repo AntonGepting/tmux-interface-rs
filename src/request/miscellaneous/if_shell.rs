@@ -32,8 +32,6 @@ impl<'a> IfShell<'a> {
     }
 }
 
-/// All functions from man tmux "Miscellaneous" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#MISCELLANEOUS)
 impl<'a> TmuxInterface<'a> {
     const IF_SHELL: &'static str = "if-shell";
 

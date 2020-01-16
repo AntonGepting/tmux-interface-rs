@@ -2,8 +2,6 @@ use crate::error::Error;
 use crate::tmux_interface::*;
 use std::process::Output;
 
-/// All functions from man tmux "Clients and Sessions" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#CLIENTS_AND_SESSIONS)
 impl<'a> TmuxInterface<'a> {
     const SUSPEND_CLIENT: &'static str = "suspend-client";
 

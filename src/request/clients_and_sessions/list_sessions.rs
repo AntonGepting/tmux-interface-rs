@@ -1,8 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
 
-/// All functions from man tmux "Clients and Sessions" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#CLIENTS_AND_SESSIONS)
 impl<'a> TmuxInterface<'a> {
     const LIST_SESSIONS: &'static str = "list-sessions";
 

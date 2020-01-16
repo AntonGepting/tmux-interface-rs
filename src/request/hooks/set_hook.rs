@@ -54,8 +54,6 @@ impl<'a> SetHook<'a> {
     }
 }
 
-/// All functions from man tmux "Hooks" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#HOOKS)
 impl<'a> TmuxInterface<'a> {
     const SET_HOOK: &'static str = "set-hook";
 

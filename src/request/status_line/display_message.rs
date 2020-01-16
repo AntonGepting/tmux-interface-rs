@@ -43,8 +43,6 @@ impl<'a> DisplayMessage<'a> {
     }
 }
 
-/// All functions from man tmux "Status line" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#STATUS_LINE)
 impl<'a> TmuxInterface<'a> {
     const DISPLAY_MESSAGE: &'static str = "display-message";
 

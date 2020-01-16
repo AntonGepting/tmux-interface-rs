@@ -32,8 +32,6 @@ impl<'a> BindKey<'a> {
     }
 }
 
-/// All functions from man tmux "Key Bindings" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#KEY_BINDINGS)
 impl<'a> TmuxInterface<'a> {
     const BIND_KEY: &'static str = "bind-key";
 

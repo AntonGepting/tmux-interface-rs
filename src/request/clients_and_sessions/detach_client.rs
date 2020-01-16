@@ -30,8 +30,6 @@ impl<'a> DetachClient<'a> {
     }
 }
 
-/// All functions from man tmux "Clients and Sessions" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#CLIENTS_AND_SESSIONS)
 impl<'a> TmuxInterface<'a> {
     const DETACH_CLIENT: &'static str = "detach-client";
 

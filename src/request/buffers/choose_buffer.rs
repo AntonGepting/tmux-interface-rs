@@ -59,8 +59,6 @@ impl<'a> ChooseBuffer<'a> {
     }
 }
 
-/// All functions from man tmux "Buffers" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#BUFFERS)
 impl<'a> TmuxInterface<'a> {
     const CHOOSE_BUFFER: &'static str = "choose-buffer";
 

@@ -40,7 +40,6 @@ impl<'a> SetWindowOption<'a> {
     }
 }
 
-/// Options
 impl<'a> TmuxInterface<'a> {
     const SET_WINDOW_OPTION: &'static str = "set-window-option";
 

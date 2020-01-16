@@ -55,8 +55,6 @@ impl<'a> SelectLayot<'a> {
     }
 }
 
-/// Windows and panes
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES)
 impl<'a> TmuxInterface<'a> {
     const SELECT_LAYOUT: &'static str = "select-layout";
 
