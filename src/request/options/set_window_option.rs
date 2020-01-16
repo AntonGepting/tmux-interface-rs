@@ -5,7 +5,7 @@ use std::process::Output;
 /// # Manual
 ///
 /// tmux X.X:
-/// ```
+/// ```text
 /// (removed)
 /// ```
 ///
@@ -46,7 +46,7 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// tmux X.X:
-    /// ```
+    /// ```text
     /// (removed)
     /// ```
     ///
