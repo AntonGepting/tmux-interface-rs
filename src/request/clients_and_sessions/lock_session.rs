@@ -17,7 +17,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(s) = target_session {
             args.extend_from_slice(&[t_KEY, s])
         }
-        let output = self.subcommand(TmuxInterface::LOCK_SESSION, &[""])?;
+        let output = self.subcommand(TmuxInterface::LOCK_SESSION, &args)?;
         Ok(output)
     }
 }

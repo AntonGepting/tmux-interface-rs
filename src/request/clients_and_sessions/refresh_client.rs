@@ -97,6 +97,9 @@ impl<'a> TmuxInterface<'a> {
             if refresh_client.status_line.unwrap_or(false) {
                 args.push(S_KEY);
             }
+            if refresh_client.up.unwrap_or(false) {
+                args.push(U_KEY);
+            }
             if let Some(size) = refresh_client.size {
                 s = format!("{}x{}", size.0, size.1);
                 args.extend_from_slice(&[C_KEY, &s]);
