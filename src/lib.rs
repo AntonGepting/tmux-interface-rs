@@ -182,7 +182,7 @@ pub use self::request::windows_and_panes::split_window::SplitWindow;
 pub use self::request::windows_and_panes::swap_pane::SwapPane;
 
 // enums
-//pub use crate::windows_and_panes::PaneSize;
+pub use crate::request::PaneSize;
 
 // structs
 pub use self::tmux_option::TmuxOption;

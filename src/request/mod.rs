@@ -7,3 +7,10 @@ pub mod miscellaneous;
 pub mod options;
 pub mod status_line;
 pub mod windows_and_panes;
+
+// common for mod
+#[derive(Debug)]
+pub enum PaneSize {
+    Size(usize),
+    Percentage(usize),
+}

@@ -1,12 +1,7 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use crate::PaneSize;
 use std::process::Output;
-
-#[derive(Debug)]
-pub enum PaneSize {
-    Size(usize),
-    Percentage(usize),
-}
 
 /// Like join-pane, but `src-pane` and `dst-pane` may belong to the same window
 ///

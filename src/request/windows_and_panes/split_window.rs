@@ -1,11 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-
-#[derive(Debug)]
-pub enum PaneSize {
-    Size(usize),
-    Percentage(usize),
-}
+use crate::PaneSize;
 
 /// Create a new pane by splitting target-pane
 ///

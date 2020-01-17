@@ -1,12 +1,7 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use crate::PaneSize;
 use std::process::Output;
-
-#[derive(Debug)]
-pub enum PaneSize {
-    Size(usize),
-    Percentage(usize),
-}
 
 /// Like split-window, but instead of splitting `dst-pane` and creating a new pane, split it
 /// and move `src-pane` into the space
