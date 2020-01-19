@@ -149,6 +149,9 @@ pub use crate::request::key_bindings::bind_key::BindKey;
 // miscellaneous
 pub use crate::request::miscellaneous::if_shell::IfShell;
 // options
+pub use self::request::options::set_option::SetOption;
+#[cfg(feature = "tmux_2_6")]
+pub use self::request::options::set_window_option::SetWindowOption;
 pub use self::request::options::show_options::ShowOptions;
 // status line
 pub use self::request::status_line::command_prompt::CommandPrompt;
@@ -207,24 +210,10 @@ pub use self::version::Version;
 // structs
 pub use self::error::Error;
 
-//mod pane_tabs_tests;
-//mod pane_tests;
-//mod panes_tests;
-//mod session_stack_tests;
-//mod session_tests;
-//mod sessions_tests;
 mod tmux_interface_tests;
-//mod window_flag_tests;
-//mod window_tests;
-//mod windows_tests;
 //mod options_tests;
-//mod layout_cell_tests;
-//mod layout_checksum_tests;
-//mod layout_tests;
 mod tmux_option_tests;
 mod version_tests;
-
-//mod windows_and_panes_tests;
 
 // consts
 pub use crate::response::session::session::SESSION_ACTIVITY;
