@@ -5,3 +5,9 @@ pub mod list_keys;
 pub mod send_keys;
 pub mod send_prefix;
 pub mod unbind_key;
+
+pub mod bind_key_tests;
+pub mod list_keys_tests;
+pub mod send_keys_tests;
+pub mod send_prefix_tests;
+pub mod unbind_key_tests;

@@ -5,3 +5,9 @@ pub mod confirm_before;
 #[cfg(not(feature = "tmux_2_6"))]
 pub mod display_menu;
 pub mod display_message;
+
+pub mod command_prompt_tests;
+pub mod confirm_before_tests;
+#[cfg(not(feature = "tmux_2_6"))]
+pub mod display_menu_tests;
+pub mod display_message_tests;

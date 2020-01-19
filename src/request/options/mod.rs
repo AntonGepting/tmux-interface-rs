@@ -5,3 +5,9 @@ pub mod set_option;
 pub mod set_window_option;
 pub mod show_options;
 pub mod show_window_options;
+
+pub mod set_option_tests;
+#[cfg(feature = "tmux_2_6")]
+pub mod set_window_option_tests;
+pub mod show_options_tests;
+pub mod show_window_options_tests;
