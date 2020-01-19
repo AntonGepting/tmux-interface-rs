@@ -13,7 +13,7 @@ use std::process::Output;
 #[derive(Default, Debug)]
 pub struct ResizeWindow<'a> {
     /// [-a] - set the size of the smallest session containing the window
-    pub smallest: Option<bool>, // [-a]
+    pub smallest: Option<bool>,
     /// [-A] - set the size of the largest session containing the window
     pub largest: Option<bool>,
     /// [-D] - resize down by adjustment

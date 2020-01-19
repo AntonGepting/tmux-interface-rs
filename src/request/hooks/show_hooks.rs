@@ -3,7 +3,7 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
-    const SHOW_HOOK: &'static str = "show-hook";
+    const SHOW_HOOK: &'static str = "show-hooks";
     /// # Manual
     ///
     /// ```text

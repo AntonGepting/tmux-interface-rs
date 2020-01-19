@@ -67,8 +67,6 @@ pub struct SplitWindow<'a> {
     pub print: Option<bool>,
     /// [-c start_directory] - start-directory
     pub cwd: Option<&'a str>,
-    /// [-e environment] - environment
-    pub environment: Option<&'a str>,
     /// [-l size | -p percentage] - specify the size of the new pane in lines
     pub size: Option<PaneSize>,
     /// [-t target-pane] -
@@ -144,11 +142,11 @@ impl<'a> TmuxInterface<'a> {
                 };
                 args.extend_from_slice(&[l_KEY, &s]);
             }
-            if let Some(s) = split_window.shell_command {
-                args.push(&s)
-            }
             if let Some(s) = split_window.target_pane {
                 args.extend_from_slice(&[t_KEY, &s])
+            }
+            if let Some(s) = split_window.shell_command {
+                args.push(&s)
             }
             if let Some(s) = split_window.format {
                 args.extend_from_slice(&[F_KEY, &s])
@@ -194,9 +192,6 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = split_window.cwd {
                 args.extend_from_slice(&[c_KEY, &s]);
             }
-            if let Some(s) = split_window.environment {
-                args.extend_from_slice(&[e_KEY, &s]);
-            }
             if let Some(size) = &split_window.size {
                 match size {
                     PaneSize::Size(size) => {
@@ -209,11 +204,11 @@ impl<'a> TmuxInterface<'a> {
                     }
                 };
             }
-            if let Some(s) = split_window.shell_command {
-                args.push(&s)
-            }
             if let Some(s) = split_window.target_pane {
                 args.extend_from_slice(&[t_KEY, &s])
+            }
+            if let Some(s) = split_window.shell_command {
+                args.push(&s)
             }
             if let Some(s) = split_window.format {
                 args.extend_from_slice(&[F_KEY, &s])

@@ -5,6 +5,7 @@ use std::process::Output;
 impl<'a> TmuxInterface<'a> {
     const WAIT_FOR: &'static str = "wait-for";
 
+    // TODO: enum for arg
     /// # Manual
     ///
     /// ```text

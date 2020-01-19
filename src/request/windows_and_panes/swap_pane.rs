@@ -23,9 +23,9 @@ pub struct SwapPane<'a> {
     /// [-d] - instruct tmux not to change the active pane
     pub detached: Option<bool>,
     /// [-D] - swap with the next pane
-    pub previous: Option<&'a str>,
+    pub previous: Option<bool>,
     /// [-U] - swap with the previous pane
-    pub next: Option<&'a str>,
+    pub next: Option<bool>,
     /// [-Z] - keep the window zoomed if it was zoomed
     pub keep_zoomed: Option<bool>,
     /// [-s src-pane] - src-pane
@@ -40,9 +40,9 @@ pub struct SwapPane<'a> {
     /// [-d] - instruct tmux not to change the active pane
     pub detached: Option<bool>,
     /// [-D] - swap with the next pane
-    pub previous: Option<&'a str>,
+    pub previous: Option<bool>,
     /// [-U] - swap with the previous pane
-    pub next: Option<&'a str>,
+    pub next: Option<bool>,
     /// [-s src-pane] - src-pane
     pub src_pane: Option<&'a str>,
     /// [-t dst-pane] - dst-pane

@@ -43,10 +43,6 @@ pub struct SendKeys<'a> {
 #[cfg(feature = "tmux_2_6")]
 #[derive(Default, Clone, Debug)]
 pub struct SendKeys<'a> {
-    /// [-F] - expand formats in arguments where appropriate
-    pub expand_formats: Option<bool>,
-    /// [-H] - expect each key to be a hexadecimal number for an ASCII character
-    pub hex: Option<bool>,
     /// [-l] - disable key name lookup and processes the keys as literal UTF-8 characters
     pub disable_lookup: Option<bool>,
     /// [-M] - pass through a mouse event

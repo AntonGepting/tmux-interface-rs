@@ -115,11 +115,11 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = new_window.environment {
                 args.extend_from_slice(&[e_KEY, &s])
             }
-            if let Some(s) = new_window.window_name {
-                args.extend_from_slice(&[n_KEY, &s])
-            }
             if let Some(s) = new_window.format {
                 args.extend_from_slice(&[F_KEY, &s])
+            }
+            if let Some(s) = new_window.window_name {
+                args.extend_from_slice(&[n_KEY, &s])
             }
             if let Some(s) = new_window.target_window {
                 args.extend_from_slice(&[t_KEY, &s])
@@ -175,11 +175,11 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = new_window.cwd {
                 args.extend_from_slice(&[c_KEY, &s])
             }
-            if let Some(s) = new_window.window_name {
-                args.extend_from_slice(&[n_KEY, &s])
-            }
             if let Some(s) = new_window.format {
                 args.extend_from_slice(&[F_KEY, &s])
+            }
+            if let Some(s) = new_window.window_name {
+                args.extend_from_slice(&[n_KEY, &s])
             }
             if let Some(s) = new_window.target_window {
                 args.extend_from_slice(&[t_KEY, &s])

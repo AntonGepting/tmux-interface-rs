@@ -16,7 +16,7 @@ use std::process::Output;
 ///
 /// tmux 2.6:
 /// ```text
-/// tmux join-pane [-bdhv] [-l size] [-s src-pane] [-t dst-pane]
+/// tmux join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]
@@ -51,7 +51,7 @@ pub struct JoinPane<'a> {
     pub horizontal: Option<bool>,
     /// [-v] - full width
     pub vertical: Option<bool>,
-    /// [-l size] - specify the size of the new pane in lines/columns
+    /// [-l size | -p percentage] - specify the size of the new pane in lines/columns
     pub size: Option<PaneSize>,
     /// [-s src-pane] - src-pane
     pub src_pane: Option<&'a str>,
