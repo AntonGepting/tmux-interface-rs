@@ -30,7 +30,18 @@ if any feature is missing or if you have a request, an improvment, an idea etc.
     - [ ] Status Line
     - [ ] Buffers
     - [ ] Miscellaneous
-- [ ] Tests
+- [x] Unit-Tests
+    - [x] Clients and Sessions
+    - [x] Windows and Panes
+    - [x] Key Bindings
+    - [x] Options
+    - [ ] Support all tmux options
+    - [x] Hooks
+    - [x] Global and Session Environments
+    - [x] Status Line
+    - [x] Buffers
+    - [x] Miscellaneous
+- [ ] Integration-Tests
     - [ ] Clients and Sessions
     - [ ] Windows and Panes
     - [ ] Key Bindings
@@ -237,6 +248,7 @@ Parsing objects and supported tmux variables:
 - [ ] Better names for tmux subcommands wrapper function arguments
 - [x] Check new `tmux` version (`tmux 3.0a`) for significant changes
 - [ ] Documnetation all structures and fields
+- [ ] Documnetation all enums and fields
 
 
 **tmux interface v0.0.1**
@@ -274,11 +286,12 @@ Parsing objects and supported tmux variables:
 - mb conditional compiling depending on tmux version (versions based on travis ci ubuntu packages)
 - mb split into 2 libs?
 - support older tmux versions:
-    - [x] tmux X.X
+    - [x] tmux X.X latest
     - [x] tmux 2.6
     - [ ] tmux 2.1
     - [ ] tmux 1.8
     - [ ] tmux 1.6
+- mb merge flags? (`-A -B -C` = `-ABC`)
 
 
 # Strategy
