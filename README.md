@@ -4,6 +4,16 @@
 [![Crates.io](https://img.shields.io/crates/v/tmux_interface.svg)](https://crates.io/crates/tmux_interface)
 [![Documentation](https://docs.rs/tmux_interface/badge.svg)](https://docs.rs/tmux_interface)
 
+## Table of contents
+
+* [Description](#description)
+* [Usage](#usage)
+* [Testing](#testing)
+* [Directory structure](#directory-structure)
+* [Contributing](#contributing)
+* [License](#license)
+
+
 ## Description
 
 tmux_interface is a [Rust language](https://www.rust-lang.org/) library for communication with [TMUX](https://github.com/tmux/tmux) via CLI.
@@ -11,7 +21,9 @@ tmux_interface is a [Rust language](https://www.rust-lang.org/) library for comm
 
 ## Usage
 
-1. Add a dependency in your `Cargo.toml`
+1. Add a dependency in your `Cargo.toml`. Versions below `0.1.0` are
+   mostly for development and testing purposes (further versions may have
+   different ABI, use them in your projects on your own risk).
 
     ```
     [dependencies]
@@ -54,8 +66,7 @@ tmux_interface is a [Rust language](https://www.rust-lang.org/) library for comm
 <!--```-->
 
 
-2. Add extern crate and use in your source file
-
+2. Add extern crate and use in your source file.
     ```
     extern crate tmux_interface;
     ```
@@ -80,13 +91,6 @@ tmux_interface is a [Rust language](https://www.rust-lang.org/) library for comm
     ```
 
 
-## Misc
-
-- Versions below `0.1.0` are first public releases, mostly for development
-and testing purposes. Do not use them in your Projects.
-
-- Used in mosaic - tmux manager
-
 ## Testing
 
 The library was tested under following conditions.
@@ -110,7 +114,7 @@ OS:
 -->
 
 
-## Directory Structure
+## Directory structure
 
 - [`src/`](src/) - crate sources
 
