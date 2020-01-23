@@ -292,6 +292,7 @@ Parsing objects and supported tmux variables:
     - [ ] tmux 1.8
     - [ ] tmux 1.6
 - mb merge flags? (`-A -B -C` = `-ABC`)
+- mb impl builder pattern (how to combine TMUX + AttachSession in right way)
 
 
 # Strategy
