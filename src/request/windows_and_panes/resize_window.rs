@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 /// Resize a window, up, down, left or right
@@ -11,7 +12,7 @@ use std::process::Output;
 /// (alias: resizew)
 /// ```
 #[derive(Default, Debug)]
-pub struct ResizeWindow<'a> {
+pub struct ResizeWindow<'a, T: Display> {
     /// [-a] - set the size of the smallest session containing the window
     pub smallest: Option<bool>,
     /// [-A] - set the size of the largest session containing the window
@@ -25,7 +26,7 @@ pub struct ResizeWindow<'a> {
     /// [-U] - resize up by adjustment
     pub up: Option<bool>,
     /// [-t target-window] - target-window
-    pub target_window: Option<&'a str>,
+    pub target_window: Option<&'a T>,
     /// [-x width] - absolute size
     pub width: Option<usize>,
     /// [-y height] - absolute size
@@ -34,8 +35,8 @@ pub struct ResizeWindow<'a> {
     pub adjustment: Option<&'a str>,
 }
 
-impl<'a> ResizeWindow<'a> {
-    pub fn new() -> ResizeWindow<'a> {
+impl<'a, T: Display + Default> ResizeWindow<'a, T> {
+    pub fn new() -> ResizeWindow<'a, T> {
         Default::default()
     }
 }
@@ -51,10 +52,14 @@ impl<'a> TmuxInterface<'a> {
     /// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
     /// (alias: resizew)
     /// ```
-    pub fn resize_window(&mut self, resize_window: Option<&ResizeWindow>) -> Result<Output, Error> {
+    pub fn resize_window<T: Display>(
+        &mut self,
+        resize_window: Option<&ResizeWindow<T>>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let x;
         let y;
+        let s;
         if let Some(resize_window) = resize_window {
             if resize_window.smallest.unwrap_or(false) {
                 args.push(a_KEY);
@@ -74,7 +79,8 @@ impl<'a> TmuxInterface<'a> {
             if resize_window.up.unwrap_or(false) {
                 args.push(U_KEY);
             }
-            if let Some(s) = resize_window.target_window {
+            if let Some(target_window) = resize_window.target_window {
+                s = target_window.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
             if let Some(width) = resize_window.width {

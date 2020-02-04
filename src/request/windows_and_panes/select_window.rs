@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 /// Select the window at target-window.
@@ -11,7 +12,7 @@ use std::process::Output;
 /// (alias: selectw)
 /// ```
 #[derive(Default, Debug)]
-pub struct SelectWindow<'a> {
+pub struct SelectWindow<'a, T: Display> {
     /// [-l] - equivalent to last-window
     pub last: Option<bool>,
     /// [-n] - equivalent to next-window
@@ -21,11 +22,11 @@ pub struct SelectWindow<'a> {
     /// [-T] - if the selected window is already the current window, behave like last-window
     pub switch: Option<bool>,
     /// [-t target-window] - target-window
-    pub target_window: Option<&'a str>,
+    pub target_window: Option<&'a T>,
 }
 
-impl<'a> SelectWindow<'a> {
-    pub fn new() -> SelectWindow<'a> {
+impl<'a, T: Display + Default> SelectWindow<'a, T> {
+    pub fn new() -> SelectWindow<'a, T> {
         Default::default()
     }
 }
@@ -41,8 +42,12 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-window [-lnpT] [-t target-window]
     /// (alias: selectw)
     /// ```
-    pub fn select_window(&mut self, select_window: Option<&SelectWindow>) -> Result<Output, Error> {
+    pub fn select_window<T: Display>(
+        &mut self,
+        select_window: Option<&SelectWindow<T>>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(select_window) = select_window {
             if select_window.last.unwrap_or(false) {
                 args.push(l_KEY);
@@ -56,8 +61,9 @@ impl<'a> TmuxInterface<'a> {
             if select_window.switch.unwrap_or(false) {
                 args.push(T_KEY);
             }
-            if let Some(s) = select_window.target_window {
-                args.extend_from_slice(&[t_KEY, s])
+            if let Some(target_window) = select_window.target_window {
+                s = target_window.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
         }
         let output = self.subcommand(TmuxInterface::SELECT_WINDOW, &args)?;

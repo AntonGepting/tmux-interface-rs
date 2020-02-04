@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 /// Reactivate a window in which the command has exited
@@ -19,7 +20,7 @@ use std::process::Output;
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]
 #[derive(Default, Debug)]
-pub struct RespawnWindow<'a> {
+pub struct RespawnWindow<'a, T: Display> {
     /// [-k] - any existing command is killed
     pub kill: Option<bool>,
     /// [-c start-directory] - start-directory
@@ -27,14 +28,14 @@ pub struct RespawnWindow<'a> {
     /// [-e environment] - environment
     pub environment: Option<&'a str>,
     /// [-t target-pane] - target-pane
-    pub target_window: Option<&'a str>,
+    pub target_window: Option<&'a T>,
     /// [shell-command] - shell-command
     pub shell_command: Option<&'a str>,
 }
 
 #[cfg(not(feature = "tmux_2_6"))]
-impl<'a> RespawnWindow<'a> {
-    pub fn new() -> RespawnWindow<'a> {
+impl<'a, T: Display + Default> RespawnWindow<'a, T> {
+    pub fn new() -> RespawnWindow<'a, T> {
         Default::default()
     }
 }
@@ -58,11 +59,12 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: respawnw)
     /// ```
     #[cfg(not(feature = "tmux_2_6"))]
-    pub fn respawn_window(
+    pub fn respawn_window<T: Display>(
         &mut self,
-        respawn_window: Option<&RespawnWindow>,
+        respawn_window: Option<&RespawnWindow<T>>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(respawn_window) = respawn_window {
             if respawn_window.kill.unwrap_or(false) {
                 args.push(k_KEY);
@@ -73,7 +75,8 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = respawn_window.environment {
                 args.extend_from_slice(&[e_KEY, &s])
             }
-            if let Some(s) = respawn_window.target_window {
+            if let Some(target_window) = respawn_window.target_window {
+                s = target_window.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
             if let Some(s) = respawn_window.shell_command {

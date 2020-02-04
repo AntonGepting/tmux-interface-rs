@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
@@ -13,13 +14,15 @@ impl<'a> TmuxInterface<'a> {
     /// tmux rename-window [-t target-window] new-name
     /// (alias: renamew)
     /// ```
-    pub fn rename_window(
+    pub fn rename_window<T: Display>(
         &mut self,
         target_window: Option<&str>,
         new_name: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if let Some(s) = target_window {
+        let s;
+        if let Some(target_window) = target_window {
+            s = target_window.to_string();
             args.extend_from_slice(&[t_KEY, &s])
         }
         args.push(new_name);
