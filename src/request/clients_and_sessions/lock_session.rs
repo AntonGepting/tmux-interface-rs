@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use crate::TargetSession;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
@@ -12,10 +13,15 @@ impl<'a> TmuxInterface<'a> {
     /// tmux lock-session [-t target-session]
     /// (alias: locks)
     /// ```
-    pub fn lock_session(&mut self, target_session: Option<&str>) -> Result<Output, Error> {
+    pub fn lock_session(
+        &mut self,
+        target_session: Option<&'a TargetSession<'a>>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if let Some(s) = target_session {
-            args.extend_from_slice(&[t_KEY, s])
+        let s;
+        if let Some(target_session) = target_session {
+            s = target_session.to_string();
+            args.extend_from_slice(&[t_KEY, &s])
         }
         let output = self.subcommand(TmuxInterface::LOCK_SESSION, &args)?;
         Ok(output)

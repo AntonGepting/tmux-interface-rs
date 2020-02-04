@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use crate::TargetSession;
 use std::process::Output;
 
 /// Structure to switch the current session for client `target-client` to `target-session`
@@ -35,7 +36,7 @@ pub struct SwitchClient<'a> {
     /// [-c target-client] - specify the target-client
     pub target_client: Option<&'a str>,
     /// [-t target-session] - specify the target session
-    pub target_session: Option<&'a str>,
+    pub target_session: Option<&'a TargetSession<'a>>,
     /// [-T key-table] - set the client's key table
     pub key_table: Option<&'a str>,
 }
@@ -88,6 +89,7 @@ impl<'a> TmuxInterface<'a> {
     #[cfg(not(feature = "tmux_2_6"))]
     pub fn switch_client(&mut self, switch_client: Option<&SwitchClient>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(switch_client) = switch_client {
             if switch_client.not_update_env.unwrap_or(false) {
                 args.push(E_KEY);
@@ -110,7 +112,8 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = switch_client.target_client {
                 args.extend_from_slice(&[c_KEY, &s])
             }
-            if let Some(s) = switch_client.target_session {
+            if let Some(target_session) = switch_client.target_session {
+                s = target_session.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
             if let Some(s) = switch_client.key_table {

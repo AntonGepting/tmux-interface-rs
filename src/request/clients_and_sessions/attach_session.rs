@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use crate::TargetSession;
 use std::process::Output;
 
 /// Structure for attaching client to already existing session
@@ -31,7 +32,7 @@ pub struct AttachSession<'a> {
     /// [-c working-directory] - specify starting directory
     pub cwd: Option<&'a str>,
     /// [-t target-session] - specify target session name
-    pub target_session: Option<&'a str>,
+    pub target_session: Option<&'a TargetSession<'a>>,
 }
 
 #[cfg(feature = "tmux_2_6")]
@@ -79,6 +80,7 @@ impl<'a> TmuxInterface<'a> {
         attach_session: Option<&AttachSession>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(attach_session) = attach_session {
             if attach_session.detach_other.unwrap_or(false) {
                 args.push(d_KEY);
@@ -95,8 +97,9 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = attach_session.cwd {
                 args.extend_from_slice(&[c_KEY, &s])
             }
-            if let Some(s) = attach_session.target_session {
-                args.extend_from_slice(&[t_KEY, &s])
+            if let Some(ref target_session) = attach_session.target_session {
+                s = target_session.to_string();
+                args.extend_from_slice(&[t_KEY, &s]);
             }
         }
         let output = self.subcommand(TmuxInterface::ATTACH_SESSION, &args)?;

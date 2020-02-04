@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use crate::TargetSession;
 use std::process::Output;
 
 /// Structure for detaching the current client
@@ -19,7 +20,7 @@ pub struct DetachClient<'a> {
     /// [-E shell-command] - run shell-command to replace the client
     pub shell_command: Option<&'a str>,
     /// [-s target-session] - specify the session, all clients currently attached
-    pub target_session: Option<&'a str>,
+    pub target_session: Option<&'a TargetSession<'a>>,
     /// [-t target-client] - specify the client
     pub target_client: Option<&'a str>,
 }
@@ -43,6 +44,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn detach_client(&mut self, detach_client: Option<&DetachClient>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(detach_client) = detach_client {
             if detach_client.all.unwrap_or(false) {
                 args.push(a_KEY);
@@ -53,7 +55,8 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = detach_client.shell_command {
                 args.extend_from_slice(&[E_KEY, &s])
             }
-            if let Some(s) = detach_client.target_session {
+            if let Some(target_session) = detach_client.target_session {
+                s = target_session.to_string();
                 args.extend_from_slice(&[s_KEY, &s])
             }
             if let Some(s) = detach_client.target_client {
