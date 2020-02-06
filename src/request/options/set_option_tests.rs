@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn set_option() {
-    use crate::{Error, SetOption, TmuxInterface};
+    use crate::{Error, SetOption, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -23,7 +23,7 @@ fn set_option() {
         server: Some(true),
         unset: Some(true),
         window: Some(true),
-        target: Some("1"),
+        target: Some(&TargetPane::Raw("1")),
     };
     tmux.set_option(Some(&set_option), "2", "3").unwrap_err();
 }
@@ -31,7 +31,7 @@ fn set_option() {
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn set_option() {
-    use crate::{Error, SetOption, TmuxInterface};
+    use crate::{Error, SetOption, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -52,7 +52,7 @@ fn set_option() {
         server: Some(true),
         unset: Some(true),
         window: Some(true),
-        target: Some("1"),
+        target: Some(&TargetPane::Raw("1")),
     };
     tmux.set_option(Some(&set_option), "2", "3").unwrap_err();
 }

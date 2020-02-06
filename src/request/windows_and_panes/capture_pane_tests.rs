@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn capture_pane() {
-    use crate::{CapturePane, Error, TmuxInterface};
+    use crate::{CapturePane, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -25,7 +25,7 @@ fn capture_pane() {
         buffer_name: Some("1"),
         end_line: Some("2"),
         start_line: Some("3"),
-        target_pane: Some("4"),
+        target_pane: Some(&TargetPane::Raw("4")),
     };
     tmux.capture_pane(Some(&capture_pane)).unwrap_err();
 }
@@ -33,7 +33,7 @@ fn capture_pane() {
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn capture_pane() {
-    use crate::{CapturePane, Error, TmuxInterface};
+    use crate::{CapturePane, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -56,7 +56,7 @@ fn capture_pane() {
         buffer_name: Some("1"),
         end_line: Some("2"),
         start_line: Some("3"),
-        target_pane: Some("4"),
+        target_pane: Some(&TargetPane::Raw("4")),
     };
     tmux.capture_pane(Some(&capture_pane)).unwrap_err();
 }

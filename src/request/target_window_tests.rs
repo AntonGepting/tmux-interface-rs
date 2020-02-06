@@ -2,6 +2,10 @@
 fn target_window_ex() {
     use crate::request::target_window::{TargetWindow, TargetWindowEx, TargetWindowToken};
 
+    let _target_window = TargetWindowEx {
+        ..Default::default()
+    };
+
     let target_window = TargetWindowEx {
         session: None,
         window: Some(TargetWindow::Token(TargetWindowToken::Start)),
@@ -25,8 +29,8 @@ fn target_window() {
     assert_eq!(target_window, ":start_name");
     let target_window = TargetWindow::FnMatch("fn_match").to_string();
     assert_eq!(target_window, ":fn_match");
-    let target_window = TargetWindow::Raw("raw_str").to_string();
-    assert_eq!(target_window, ":raw_str");
+    let target_window = TargetWindow::Raw("raw").to_string();
+    assert_eq!(target_window, "raw");
 }
 
 #[test]

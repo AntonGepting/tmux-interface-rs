@@ -9,7 +9,7 @@ fn attach_session() {
         // (alias: attach)
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["attach-session", "-d", "-E", "-r", "-x", "-c", "1", "-t", "=2"]"#
+            r#""tmux" [] ["attach-session", "-d", "-E", "-r", "-x", "-c", "1", "-t", "2"]"#
         );
         Err(Error::new("hook"))
     }));
@@ -19,7 +19,7 @@ fn attach_session() {
         read_only: Some(true),
         parent_sighup: Some(true),
         cwd: Some("1"),
-        target_session: Some(TargetSession::exact_name("2")),
+        target_session: Some(&TargetSession::Raw("2")),
     };
     tmux.attach_session(Some(&attach_session)).unwrap_err();
 }
@@ -27,7 +27,7 @@ fn attach_session() {
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn attach_session() {
-    use crate::{AttachSession, Error, TmuxInterface};
+    use crate::{AttachSession, Error, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -44,7 +44,7 @@ fn attach_session() {
         not_update_env: Some(true),
         read_only: Some(true),
         cwd: Some("1"),
-        target_session: Some("2"),
+        target_session: Some(&TargetSession::Raw("2")),
     };
     tmux.attach_session(Some(&attach_session)).unwrap_err();
 }

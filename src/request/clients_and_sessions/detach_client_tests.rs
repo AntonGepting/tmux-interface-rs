@@ -1,6 +1,6 @@
 #[test]
 fn detach_client() {
-    use crate::{DetachClient, Error, TmuxInterface};
+    use crate::{DetachClient, Error, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -16,7 +16,7 @@ fn detach_client() {
         all: Some(true),
         parent_sighup: Some(true),
         shell_command: Some("1"),
-        target_session: Some("2"),
+        target_session: Some(&TargetSession::Raw("2")),
         target_client: Some("3"),
     };
     tmux.detach_client(Some(&detach_client)).unwrap_err();

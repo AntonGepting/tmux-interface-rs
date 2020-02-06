@@ -1,6 +1,6 @@
 #[test]
 fn kill_session() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -11,6 +11,6 @@ fn kill_session() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.kill_session(Some(true), Some(true), Some("1"))
+    tmux.kill_session(Some(true), Some(true), Some(&TargetSession::Raw("1")))
         .unwrap_err();
 }

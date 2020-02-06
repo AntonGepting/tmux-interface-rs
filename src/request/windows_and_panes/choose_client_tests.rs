@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn choose_client() {
-    use crate::{ChooseClient, Error, TmuxInterface};
+    use crate::{ChooseClient, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -19,7 +19,7 @@ fn choose_client() {
         format: Some("1"),
         filter: Some("2"),
         sort_order: Some("3"),
-        target_pane: Some("4"),
+        target_pane: Some(&TargetPane::Raw("4")),
         template: Some("5"),
     };
     tmux.choose_client(Some(&choose_client)).unwrap_err();
@@ -28,7 +28,7 @@ fn choose_client() {
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn choose_client() {
-    use crate::{ChooseClient, Error, TmuxInterface};
+    use crate::{ChooseClient, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -44,7 +44,7 @@ fn choose_client() {
         format: Some("1"),
         filter: Some("2"),
         sort_order: Some("3"),
-        target_pane: Some("4"),
+        target_pane: Some(&TargetPane::Raw("4")),
         template: Some("5"),
     };
     tmux.choose_client(Some(&choose_client)).unwrap_err();

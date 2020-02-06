@@ -1,6 +1,6 @@
 #[test]
 fn copy_mode() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -11,6 +11,11 @@ fn copy_mode() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.copy_mode(Some(true), Some(true), Some(true), Some("1"))
-        .unwrap_err();
+    tmux.copy_mode(
+        Some(true),
+        Some(true),
+        Some(true),
+        Some(&TargetPane::Raw("1")),
+    )
+    .unwrap_err();
 }

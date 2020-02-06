@@ -1,6 +1,6 @@
 #[test]
 fn list_clients() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,5 +12,6 @@ fn list_clients() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.list_clients(Some("1"), Some("2")).unwrap_err();
+    tmux.list_clients(Some("1"), Some(&TargetSession::Raw("2")))
+        .unwrap_err();
 }

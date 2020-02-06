@@ -1,6 +1,6 @@
 #[test]
 fn rename_session() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,5 +12,6 @@ fn rename_session() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.rename_session(Some("1"), "2").unwrap_err();
+    tmux.rename_session(Some(&TargetSession::Raw("1")), "2")
+        .unwrap_err();
 }

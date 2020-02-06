@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn pipe_pane() {
-    use crate::{Error, PipePane, TmuxInterface};
+    use crate::{Error, PipePane, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -17,7 +17,7 @@ fn pipe_pane() {
         stdout: Some(true),
         stdin: Some(true),
         open: Some(true),
-        target_pane: Some("1"),
+        target_pane: Some(&TargetPane::Raw("1")),
         shell_command: Some("2"),
     };
     tmux.pipe_pane(Some(&pipe_pane)).unwrap_err();
@@ -26,7 +26,7 @@ fn pipe_pane() {
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn pipe_pane() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -38,6 +38,6 @@ fn pipe_pane() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.pipe_pane(Some(true), Some("1"), Some("2"))
+    tmux.pipe_pane(Some(true), Some(&TargetPane::Raw("1")), Some("2"))
         .unwrap_err();
 }

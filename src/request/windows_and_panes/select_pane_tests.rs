@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn select_pane() {
-    use crate::{Error, SelectPane, TmuxInterface};
+    use crate::{Error, SelectPane, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -25,7 +25,7 @@ fn select_pane() {
         up: Some(true),
         keep_zoomed: Some(true),
         title: Some("1"),
-        target_pane: Some("2"),
+        target_pane: Some(&TargetPane::Raw("2")),
     };
     tmux.select_pane(Some(&select_pane)).unwrap_err();
 }
@@ -33,7 +33,7 @@ fn select_pane() {
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn select_pane() {
-    use crate::{Error, SelectPane, TmuxInterface};
+    use crate::{Error, SelectPane, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -58,7 +58,7 @@ fn select_pane() {
         up: Some(true),
         style: Some("1"),
         title: Some("2"),
-        target_pane: Some("3"),
+        target_pane: Some(&TargetPane::Raw("3")),
     };
     tmux.select_pane(Some(&select_pane)).unwrap_err();
 }

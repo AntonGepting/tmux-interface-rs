@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn rotate_window() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,14 +13,19 @@ fn rotate_window() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.rotate_window(Some(true), Some(true), Some(true), Some("1"))
-        .unwrap_err();
+    tmux.rotate_window(
+        Some(true),
+        Some(true),
+        Some(true),
+        Some(&TargetWindow::Raw("1")),
+    )
+    .unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn rotate_window() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -32,6 +37,6 @@ fn rotate_window() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.rotate_window(Some(true), Some(true), Some("1"))
+    tmux.rotate_window(Some(true), Some(true), Some(&TargetWindow::Raw("1")))
         .unwrap_err();
 }

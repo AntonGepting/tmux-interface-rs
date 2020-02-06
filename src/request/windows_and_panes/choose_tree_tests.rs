@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn choose_tree() {
-    use crate::{ChooseTree, Error, TmuxInterface};
+    use crate::{ChooseTree, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -22,7 +22,7 @@ fn choose_tree() {
         format: Some("1"),
         filter: Some("2"),
         sort_order: Some("3"),
-        target_pane: Some("4"),
+        target_pane: Some(&TargetPane::Raw("4")),
         template: Some("5"),
     };
     tmux.choose_tree(Some(&choose_tree)).unwrap_err();
@@ -31,7 +31,7 @@ fn choose_tree() {
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn choose_tree() {
-    use crate::{ChooseTree, Error, TmuxInterface};
+    use crate::{ChooseTree, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -49,7 +49,7 @@ fn choose_tree() {
         format: Some("1"),
         filter: Some("2"),
         sort_order: Some("3"),
-        target_pane: Some("4"),
+        target_pane: Some(&TargetPane::Raw("4")),
         template: Some("5"),
     };
     tmux.choose_tree(Some(&choose_tree)).unwrap_err();

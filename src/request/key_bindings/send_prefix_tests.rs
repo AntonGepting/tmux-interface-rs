@@ -1,6 +1,6 @@
 #[test]
 fn send_prefix() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,5 +12,6 @@ fn send_prefix() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.send_prefix(Some(true), Some("1")).unwrap_err();
+    tmux.send_prefix(Some(true), Some(&TargetPane::Raw("1")))
+        .unwrap_err();
 }

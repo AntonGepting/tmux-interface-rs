@@ -23,10 +23,10 @@ fn target_pane() {
     assert_eq!(target_pane.to_string(), ".=exact_name");
     let target_pane = TargetPane::StartName("start_name");
     assert_eq!(target_pane.to_string(), ".start_name");
-    let target_pane = TargetPane::StartName("fn_match");
+    let target_pane = TargetPane::FnMatch("fn_match");
     assert_eq!(target_pane.to_string(), ".fn_match");
-    let target_pane = TargetPane::StartName("raw_str");
-    assert_eq!(target_pane.to_string(), ".raw_str");
+    let target_pane = TargetPane::Raw("raw");
+    assert_eq!(target_pane.to_string(), "raw");
 }
 
 #[test]

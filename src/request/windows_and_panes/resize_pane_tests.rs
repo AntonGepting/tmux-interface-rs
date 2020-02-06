@@ -1,6 +1,6 @@
 #[test]
 fn resize_pane() {
-    use crate::{Error, ResizePane, TmuxInterface};
+    use crate::{Error, ResizePane, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -19,7 +19,7 @@ fn resize_pane() {
         right: Some(true),
         up: Some(true),
         zoom: Some(true),
-        target_pane: Some("1"),
+        target_pane: Some(&TargetPane::Raw("1")),
         width: Some(2),
         height: Some(3),
         adjustment: Some("4"),

@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn respawn_pane() {
-    use crate::{Error, RespawnPane, TmuxInterface};
+    use crate::{Error, RespawnPane, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -17,7 +17,7 @@ fn respawn_pane() {
         kill: Some(true),
         start_directory: Some("1"),
         environment: Some("2"),
-        target_pane: Some("3"),
+        target_pane: Some(&TargetPane::Raw("3")),
         shell_command: Some("4"),
     };
     tmux.respawn_pane(Some(&respawn_pane)).unwrap_err();
@@ -26,7 +26,7 @@ fn respawn_pane() {
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn respawn_pane() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -38,6 +38,11 @@ fn respawn_pane() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.respawn_pane(Some(true), Some("1"), Some("2"), Some("3"))
-        .unwrap_err();
+    tmux.respawn_pane(
+        Some(true),
+        Some("1"),
+        Some(&TargetPane::Raw("2")),
+        Some("3"),
+    )
+    .unwrap_err();
 }

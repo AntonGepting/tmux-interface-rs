@@ -1,6 +1,6 @@
 #[test]
 fn list_windows() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,6 +12,6 @@ fn list_windows() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.list_windows(Some(true), Some("1"), Some("2"))
+    tmux.list_windows(Some(true), Some("1"), Some(&TargetSession::Raw("2")))
         .unwrap_err();
 }

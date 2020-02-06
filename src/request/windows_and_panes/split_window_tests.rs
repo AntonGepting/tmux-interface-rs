@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn split_window() {
-    use crate::{Error, PaneSize, SplitWindow, TmuxInterface};
+    use crate::{Error, PaneSize, SplitWindow, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -25,7 +25,7 @@ fn split_window() {
         cwd: Some("1"),
         environment: Some("2"),
         size: Some(PaneSize::Size(3)),
-        target_pane: Some("4"),
+        target_pane: Some(&TargetPane::Raw("4")),
         shell_command: Some("5"),
         format: Some("6"),
     };
@@ -35,7 +35,7 @@ fn split_window() {
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn split_window() {
-    use crate::{Error, PaneSize, SplitWindow, TmuxInterface};
+    use crate::{Error, PaneSize, SplitWindow, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -57,7 +57,7 @@ fn split_window() {
         print: Some(true),
         cwd: Some("1"),
         size: Some(PaneSize::Size(2)),
-        target_pane: Some("3"),
+        target_pane: Some(&TargetPane::Raw("3")),
         shell_command: Some("4"),
         format: Some("5"),
     };

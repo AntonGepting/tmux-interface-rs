@@ -1,6 +1,6 @@
 #[test]
 fn lock_session() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,5 +12,6 @@ fn lock_session() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.lock_session(Some("1")).unwrap_err();
+    tmux.lock_session(Some(&TargetSession::Raw("1")))
+        .unwrap_err();
 }

@@ -1,6 +1,6 @@
 #[test]
 fn select_window() {
-    use crate::{Error, SelectWindow, TmuxInterface};
+    use crate::{Error, SelectWindow, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -17,7 +17,7 @@ fn select_window() {
         next: Some(true),
         previous: Some(true),
         switch: Some(true),
-        target_window: Some("1"),
+        target_window: Some(&TargetWindow::Raw("1")),
     };
     tmux.select_window(Some(&select_window)).unwrap_err();
 }

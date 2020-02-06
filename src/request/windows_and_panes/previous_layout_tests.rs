@@ -1,6 +1,6 @@
 #[test]
 fn previous_layout() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,5 +12,6 @@ fn previous_layout() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.previous_layout(Some("1")).unwrap_err();
+    tmux.previous_layout(Some(&TargetWindow::Raw("1")))
+        .unwrap_err();
 }

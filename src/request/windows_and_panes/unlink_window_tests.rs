@@ -1,6 +1,6 @@
 #[test]
 fn unlink_window() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,5 +12,6 @@ fn unlink_window() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.unlink_window(Some(true), Some("1")).unwrap_err();
+    tmux.unlink_window(Some(true), Some(&TargetWindow::Raw("1")))
+        .unwrap_err();
 }

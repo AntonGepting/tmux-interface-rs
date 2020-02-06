@@ -10,6 +10,6 @@ fn target_session() {
     assert_eq!(session_type.to_string(), "start_name");
     let session_type = TargetSession::StartName("fn_match");
     assert_eq!(session_type.to_string(), "fn_match");
-    let session_type = TargetSession::StartName("raw_str");
-    assert_eq!(session_type.to_string(), "raw_str");
+    let session_type = TargetSession::StartName("raw");
+    assert_eq!(session_type.to_string(), "raw");
 }

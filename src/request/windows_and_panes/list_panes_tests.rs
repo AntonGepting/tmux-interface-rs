@@ -1,6 +1,6 @@
 #[test]
 fn list_panes() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,6 +12,11 @@ fn list_panes() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.list_panes(Some(true), Some(true), Some("1"), Some("2"))
-        .unwrap_err();
+    tmux.list_panes(
+        Some(true),
+        Some(true),
+        Some("1"),
+        Some(&TargetWindow::Raw("2")),
+    )
+    .unwrap_err();
 }

@@ -44,7 +44,7 @@
 //! # Examples
 //!
 //! ```
-//! use crate::tmux_interface::{TmuxInterface, AttachSession, NewSession};
+//! use crate::tmux_interface::{TmuxInterface, AttachSession, NewSession, TargetSession};
 //!
 //!
 //! fn main() {
@@ -57,11 +57,11 @@
 //!     };
 //!     tmux.new_session(Some(&new_session)).unwrap();
 //!        let attach_session = AttachSession {
-//!        target_session: Some("test_session_name1"),
+//!        target_session: Some(&TargetSession::Raw("test_session_name1")),
 //!        ..Default::default()
 //!     };
 //!     tmux.attach_session(Some(&attach_session)).unwrap();
-//!     tmux.kill_session(None, None, Some("test_session_name1")).unwrap();
+//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name1"))).unwrap();
 //!
 //!     // or alternatively
 //!     let mut new_session = NewSession::new();
@@ -69,8 +69,8 @@
 //!     new_session.session_name = Some("test_session_name2");
 //!     tmux.new_session(Some(&new_session)).unwrap();
 //!     let mut attach_session = AttachSession::new();
-//!     attach_session.target_session = Some("test_session_name2");
-//!     tmux.kill_session(None, None, Some("test_session_name2")).unwrap();
+//!     attach_session.target_session = Some(&TargetSession::Raw("test_session_name2"));
+//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name2"))).unwrap();
 //! }
 //! ```
 //!
@@ -78,22 +78,23 @@
 //! # Examples
 //!
 //! ```
-//! use crate::tmux_interface::{Sessions, Session, Windows, Window, Pane, Panes};
+//! use crate::tmux_interface::{Sessions, Session, Windows, Window, Pane, Panes, TargetSession,
+//! TargetWindowEx};
 //! use crate::tmux_interface::response::session::session::SESSION_ALL;
 //! use crate::tmux_interface::response::window::window::WINDOW_ALL;
 //! use crate::tmux_interface::response::pane::pane::PANE_ALL;
 //!
 //! fn main() {
 //!     let sessions = Sessions::get(SESSION_ALL).unwrap();
-//!     let windows = Windows::get("0", WINDOW_ALL).unwrap();
-//!     let panes = Panes::get("0:1", PANE_ALL).unwrap();
+//!     let windows = Windows::get(&TargetSession::Raw("0"), WINDOW_ALL).unwrap();
+//!     let panes = Panes::get(&TargetWindowEx::raw("0:1"), PANE_ALL).unwrap();
 //! }
 //! ```
 //!
 //! # Examples
 //!
 //! ```
-//! use crate::tmux_interface::{TmuxInterface, NewSession};
+//! use crate::tmux_interface::{TmuxInterface, NewSession, TargetSession};
 //!
 //! fn main() {
 //!     let mut tmux = TmuxInterface::new();
@@ -114,7 +115,7 @@
 //!     };
 //!     tmux.new_session(Some(&new_session)).unwrap();
 //!     tmux.pre_hook = None;
-//!     tmux.kill_session(None, None, Some("test_session_name1")).unwrap();
+//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name1"))).unwrap();
 //! }
 //! ```
 

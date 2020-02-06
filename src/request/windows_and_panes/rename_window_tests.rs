@@ -1,6 +1,6 @@
 #[test]
 fn rename_window() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,5 +12,6 @@ fn rename_window() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.rename_window(Some("1"), "2").unwrap_err();
+    tmux.rename_window(Some(&TargetWindow::Raw("1")), "2")
+        .unwrap_err();
 }

@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn last_pane() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,14 +13,19 @@ fn last_pane() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.last_pane(Some(true), Some(true), Some(true), Some("1"))
-        .unwrap_err();
+    tmux.last_pane(
+        Some(true),
+        Some(true),
+        Some(true),
+        Some(&TargetWindow::Raw("1")),
+    )
+    .unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn last_pane() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -32,6 +37,6 @@ fn last_pane() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.last_pane(Some(true), Some(true), Some("1"))
+    tmux.last_pane(Some(true), Some(true), Some(&TargetWindow::Raw("1")))
         .unwrap_err();
 }

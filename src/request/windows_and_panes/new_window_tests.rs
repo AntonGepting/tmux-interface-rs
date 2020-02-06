@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn new_window() {
-    use crate::{Error, NewWindow, TmuxInterface};
+    use crate::{Error, NewWindow, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -23,7 +23,7 @@ fn new_window() {
         environment: Some("2"),
         format: Some("3"),
         window_name: Some("4"),
-        target_window: Some("5"),
+        target_window: Some(&TargetWindow::Raw("5")),
         shell_command: Some("6"),
     };
     tmux.new_window(Some(&new_window)).unwrap_err();
@@ -32,7 +32,7 @@ fn new_window() {
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn new_window() {
-    use crate::{Error, NewWindow, TmuxInterface};
+    use crate::{Error, NewWindow, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -53,7 +53,7 @@ fn new_window() {
         cwd: Some("1"),
         format: Some("2"),
         window_name: Some("3"),
-        target_window: Some("4"),
+        target_window: Some(&TargetWindow::Raw("4")),
         shell_command: Some("5"),
     };
     tmux.new_window(Some(&new_window)).unwrap_err();
