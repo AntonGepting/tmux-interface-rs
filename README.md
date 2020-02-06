@@ -75,19 +75,20 @@ tmux_interface is a [Rust language](https://www.rust-lang.org/) library for comm
     ```
     use tmux_interface::{AttachSession, NewSession, TmuxInterface};
 
+    let target_session = TargetSession::Raw("session_name");
     let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
         detached: Some(true),
-        session_name: Some("session_name"),
+        session_name: Some(&target_session),
         ..Default::default()
     };
     tmux.new_session(Some(&new_session)).unwrap();
     let attach_session = AttachSession {
-        target_session: Some("session_name"),
+        target_session: Some(&target_session),
         ..Default::default()
     };
     tmux.attach_session(Some(&attach)).unwrap();
-    tmux.kill_session(None, None, Some("session_name")).unwrap();
+    tmux.kill_session(None, None, Some(&target_session)).unwrap();
     ```
 
 
