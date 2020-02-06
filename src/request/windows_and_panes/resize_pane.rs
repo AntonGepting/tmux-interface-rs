@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 /// Resize a pane, up, down, left or right
@@ -11,7 +12,7 @@ use std::process::Output;
 /// (alias: resizep)
 /// ```
 #[derive(Default, Debug)]
-pub struct ResizePane<'a> {
+pub struct ResizePane<'a, T: Display> {
     /// [-D] - resize down by adjustment
     pub down: Option<bool>,
     /// [-L] - resize left by adjustment
@@ -25,7 +26,7 @@ pub struct ResizePane<'a> {
     /// [-Z] - the active pane is toggled between zoomed and unzoomed
     pub zoom: Option<bool>,
     /// [-t target-pane] - target-pane
-    pub target_pane: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
     /// [-x width] - absolute size
     pub width: Option<usize>,
     /// [-y height] - absolute size
@@ -34,8 +35,8 @@ pub struct ResizePane<'a> {
     pub adjustment: Option<&'a str>,
 }
 
-impl<'a> ResizePane<'a> {
-    pub fn new() -> ResizePane<'a> {
+impl<'a, T: Display + Default> ResizePane<'a, T> {
+    pub fn new() -> ResizePane<'a, T> {
         Default::default()
     }
 }
@@ -51,10 +52,14 @@ impl<'a> TmuxInterface<'a> {
     /// tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
     /// (alias: resizep)
     /// ```
-    pub fn resize_pane(&mut self, resize_pane: Option<&ResizePane>) -> Result<Output, Error> {
+    pub fn resize_pane<T: Display>(
+        &mut self,
+        resize_pane: Option<&ResizePane<T>>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let x;
         let y;
+        let s;
         if let Some(resize_pane) = resize_pane {
             if resize_pane.down.unwrap_or(false) {
                 args.push(D_KEY);
@@ -74,7 +79,8 @@ impl<'a> TmuxInterface<'a> {
             if resize_pane.zoom.unwrap_or(false) {
                 args.push(Z_KEY);
             }
-            if let Some(s) = resize_pane.target_pane {
+            if let Some(target_pane) = resize_pane.target_pane {
+                s = target_pane.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
             if let Some(width) = resize_pane.width {

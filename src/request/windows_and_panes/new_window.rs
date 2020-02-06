@@ -46,7 +46,7 @@ pub struct NewWindow<'a, T: Display> {
 
 #[cfg(feature = "tmux_2_6")]
 #[derive(Default, Debug)]
-pub struct NewWindow<'a> {
+pub struct NewWindow<'a, T: Display> {
     /// [-a] - new window is inserted at the next index up from the specified target-window
     pub add: Option<bool>,
     /// [-d] - the session does not make the new window the current window
@@ -62,13 +62,13 @@ pub struct NewWindow<'a> {
     /// [-n window-name] - window-name
     pub window_name: Option<&'a str>,
     /// [-t target-window] - target-window
-    pub target_window: Option<&'a str>,
+    pub target_window: Option<&'a T>,
     /// [shell-command] - shell-command
     pub shell_command: Option<&'a str>,
 }
 
 impl<'a, T: Default + Display> NewWindow<'a, T> {
-    pub fn new() -> NewWindow<'a, T> {
+    pub fn new() -> Self {
         Default::default()
     }
 }
@@ -163,8 +163,12 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     // TODO: target_window exitst error
     #[cfg(feature = "tmux_2_6")]
-    pub fn new_window(&mut self, new_window: Option<&NewWindow>) -> Result<String, Error> {
+    pub fn new_window<T: Display>(
+        &mut self,
+        new_window: Option<&NewWindow<T>>,
+    ) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(new_window) = new_window {
             if new_window.add.unwrap_or(false) {
                 args.push(a_KEY);
@@ -187,7 +191,8 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = new_window.window_name {
                 args.extend_from_slice(&[n_KEY, &s])
             }
-            if let Some(s) = new_window.target_window {
+            if let Some(target_window) = new_window.target_window {
+                s = target_window.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
             if let Some(s) = new_window.shell_command {

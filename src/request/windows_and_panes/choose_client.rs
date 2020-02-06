@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 /// Put a pane into client mode, allowing a client to be selected interactively from a list
@@ -19,7 +20,7 @@ use std::process::Output;
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]
 #[derive(Default, Debug)]
-pub struct ChooseClient<'a> {
+pub struct ChooseClient<'a, T: Display> {
     /// [-N] - start without the preview
     pub without_preview: Option<bool>,
     /// [-r] - reverse the sort order
@@ -33,14 +34,14 @@ pub struct ChooseClient<'a> {
     /// [-O sort-order] - specify the initial sort field
     pub sort_order: Option<&'a str>,
     /// [-t target-pane] - target-pane
-    pub target_pane: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
     /// [template] - template
     pub template: Option<&'a str>,
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[derive(Default, Debug)]
-pub struct ChooseClient<'a> {
+pub struct ChooseClient<'a, T: Display> {
     /// [-N] - start without the preview
     pub without_preview: Option<bool>,
     /// [-F format] - format
@@ -50,13 +51,13 @@ pub struct ChooseClient<'a> {
     /// [-O sort-order] - specify the initial sort field
     pub sort_order: Option<&'a str>,
     /// [-t target-pane] - target-pane
-    pub target_pane: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
     /// [template] - template
     pub template: Option<&'a str>,
 }
 
-impl<'a> ChooseClient<'a> {
-    pub fn new() -> ChooseClient<'a> {
+impl<'a, T: Display + Default> ChooseClient<'a, T> {
+    pub fn new() -> Self {
         Default::default()
     }
 }
@@ -80,8 +81,12 @@ impl<'a> TmuxInterface<'a> {
     /// [template]
     /// ```
     #[cfg(not(feature = "tmux_2_6"))]
-    pub fn choose_client(&mut self, choose_client: Option<&ChooseClient>) -> Result<Output, Error> {
+    pub fn choose_client<T: Display>(
+        &mut self,
+        choose_client: Option<&ChooseClient<T>>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(choose_client) = choose_client {
             if choose_client.without_preview.unwrap_or(false) {
                 args.push(N_KEY);
@@ -101,7 +106,8 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = choose_client.sort_order {
                 args.extend_from_slice(&[O_KEY, &s])
             }
-            if let Some(s) = choose_client.target_pane {
+            if let Some(target_pane) = choose_client.target_pane {
+                s = target_pane.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
             if let Some(s) = choose_client.template {
@@ -128,8 +134,12 @@ impl<'a> TmuxInterface<'a> {
     /// [template]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn choose_client(&mut self, choose_client: Option<&ChooseClient>) -> Result<Output, Error> {
+    pub fn choose_client<T: Display>(
+        &mut self,
+        choose_client: Option<&ChooseClient<T>>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(choose_client) = choose_client {
             if choose_client.without_preview.unwrap_or(false) {
                 args.push(N_KEY);
@@ -143,7 +153,8 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = choose_client.sort_order {
                 args.extend_from_slice(&[O_KEY, &s])
             }
-            if let Some(s) = choose_client.target_pane {
+            if let Some(target_pane) = choose_client.target_pane {
+                s = target_pane.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
             if let Some(s) = choose_client.template {

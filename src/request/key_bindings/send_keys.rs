@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 /// Structure
@@ -19,7 +20,7 @@ use std::process::Output;
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]
 #[derive(Default, Clone, Debug)]
-pub struct SendKeys<'a> {
+pub struct SendKeys<'a, T: Display> {
     /// [-F] - expand formats in arguments where appropriate
     pub expand_formats: Option<bool>,
     /// [-H] - expect each key to be a hexadecimal number for an ASCII character
@@ -35,14 +36,14 @@ pub struct SendKeys<'a> {
     /// [-N repeat-count] - specify a repeat count
     pub repeat_count: Option<usize>,
     /// [-t target-pane] - specify the target pane
-    pub target_pane: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
     // key
     //pub key: Vec<&'a str>,
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[derive(Default, Clone, Debug)]
-pub struct SendKeys<'a> {
+pub struct SendKeys<'a, T: Display> {
     /// [-l] - disable key name lookup and processes the keys as literal UTF-8 characters
     pub disable_lookup: Option<bool>,
     /// [-M] - pass through a mouse event
@@ -54,12 +55,12 @@ pub struct SendKeys<'a> {
     /// [-N repeat-count] - specify a repeat count
     pub repeat_count: Option<usize>,
     /// [-t target-pane] - specify the target pane
-    pub target_pane: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
     // key
     //pub key: Vec<&'a str>,
 }
 
-impl<'a> SendKeys<'a> {
+impl<'a, T: Display + Default> SendKeys<'a, T> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -83,13 +84,14 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: send)
     /// ```
     #[cfg(not(feature = "tmux_2_6"))]
-    pub fn send_keys(
+    pub fn send_keys<T: Display>(
         &mut self,
-        send_keys: Option<&SendKeys>,
+        send_keys: Option<&SendKeys<T>>,
         key: &Vec<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
+        let n;
         if let Some(send_keys) = send_keys {
             if send_keys.expand_formats.unwrap_or(false) {
                 args.push(F_KEY);
@@ -111,10 +113,11 @@ impl<'a> TmuxInterface<'a> {
             }
             //send_keys.repeat_count.map(|s| Some(args.extend_from_slice(&[N_KEY, s])));
             if let Some(repeat_count) = send_keys.repeat_count {
-                s = repeat_count.to_string();
-                args.extend_from_slice(&[N_KEY, &s]);
+                n = repeat_count.to_string();
+                args.extend_from_slice(&[N_KEY, &n]);
             }
-            if let Some(s) = send_keys.target_pane {
+            if let Some(target_pane) = send_keys.target_pane {
+                s = target_pane.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
         }
@@ -141,13 +144,14 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: send)
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn send_keys(
+    pub fn send_keys<T: Display>(
         &mut self,
-        send_keys: Option<&SendKeys>,
+        send_keys: Option<&SendKeys<T>>,
         key: &Vec<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
+        let n;
         if let Some(send_keys) = send_keys {
             if send_keys.disable_lookup.unwrap_or(false) {
                 args.push(l_KEY);
@@ -163,10 +167,11 @@ impl<'a> TmuxInterface<'a> {
             }
             //send_keys.repeat_count.map(|s| Some(args.extend_from_slice(&[N_KEY, s])));
             if let Some(repeat_count) = send_keys.repeat_count {
-                s = repeat_count.to_string();
-                args.extend_from_slice(&[N_KEY, &s]);
+                n = repeat_count.to_string();
+                args.extend_from_slice(&[N_KEY, &n]);
             }
-            if let Some(s) = send_keys.target_pane {
+            if let Some(target_pane) = send_keys.target_pane {
+                s = target_pane.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
         }

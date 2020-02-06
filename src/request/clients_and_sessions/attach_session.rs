@@ -47,7 +47,7 @@ pub struct AttachSession<'a> {
     /// [-c working-directory] - specify starting directory
     pub cwd: Option<&'a str>,
     /// [-t target-session] - specify target session name
-    pub target_session: Option<&'a str>,
+    pub target_session: Option<&'a TargetSession<'a>>,
 }
 
 impl<'a> AttachSession<'a> {
@@ -127,6 +127,7 @@ impl<'a> TmuxInterface<'a> {
         attach_session: Option<&AttachSession>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(attach_session) = attach_session {
             if attach_session.detach_other.unwrap_or(false) {
                 args.push(d_KEY);
@@ -140,7 +141,8 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = attach_session.cwd {
                 args.extend_from_slice(&[c_KEY, &s])
             }
-            if let Some(s) = attach_session.target_session {
+            if let Some(attach_session) = attach_session.target_session {
+                s = attach_session.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
         }

@@ -1,6 +1,7 @@
 use std::fmt;
 
 impl<'a> TargetSession<'a> {
+    /// simple initializing as start of a name
     pub fn new(target_name: &'a str) -> Self {
         TargetSession::StartName(target_name)
     }
@@ -17,29 +18,36 @@ impl<'a> TargetSession<'a> {
         TargetSession::FnMatch(name)
     }
 
+    // XXX: draft
     pub fn raw(name: &'a str) -> Self {
         TargetSession::Raw(name)
     }
 }
 
+/// Enum for possible `target-session` variants
 #[derive(Debug)]
 pub enum TargetSession<'a> {
+    /// id ($id) instead of name
     Id(usize),
+    /// exact name (=name)
     ExactName(&'a str),
+    /// start of a name
     StartName(&'a str),
+    /// fn_match
     FnMatch(&'a str),
+    // NOTE: not really needed, just to be analogous to `TargetWindow` `TargetPane`
+    /// manual define full name
     Raw(&'a str),
 }
 
 impl<'a> fmt::Display for TargetSession<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let s = match self {
-            TargetSession::Id(id) => format!("${}", id),
-            TargetSession::ExactName(name) => format!("={}", name),
-            TargetSession::StartName(name) => name.to_string(),
-            TargetSession::FnMatch(name) => name.to_string(),
-            TargetSession::Raw(name) => name.to_string(),
-        };
-        write!(f, "{}", s)
+        match self {
+            TargetSession::Id(id) => write!(f, "${}", id),
+            TargetSession::ExactName(name) => write!(f, "={}", name),
+            TargetSession::StartName(name) => f.write_str(name),
+            TargetSession::FnMatch(name) => f.write_str(name),
+            TargetSession::Raw(name) => f.write_str(name),
+        }
     }
 }

@@ -1,51 +1,60 @@
 use crate::request::target_window::TargetWindowEx;
 use std::fmt;
 
+/// Extended `target-pane` struct, includes `target-window` (may indirect include `target-session`)
+#[derive(Default)]
 pub struct TargetPaneEx<'a> {
-    pub target_window: Option<TargetWindowEx<'a>>,
+    /// `target-window`
+    pub target_window: Option<&'a TargetWindowEx<'a>>,
+    /// `target-pane`
     pub target_pane: Option<TargetPane<'a>>,
 }
 
 impl<'a> TargetPaneEx<'a> {
-    pub fn new(target_name: &'a str) -> Self {
-        TargetPaneEx::start_name(target_name)
-    }
-
-    pub fn token(token: TargetPaneToken) -> Self {
+    /// simple initializing as start of a name
+    pub fn new(target_pane: &'a str) -> Self {
         TargetPaneEx {
             target_window: None,
+            target_pane: Some(TargetPane::StartName(target_pane)),
+        }
+    }
+
+    pub fn token(target_window: Option<&'a TargetWindowEx>, token: TargetPaneToken) -> Self {
+        TargetPaneEx {
+            target_window: target_window,
             target_pane: Some(TargetPane::Token(token)),
         }
     }
 
-    pub fn id(id: usize) -> Self {
+    pub fn id(target_window: Option<&'a TargetWindowEx>, id: usize) -> Self {
         TargetPaneEx {
-            target_window: None,
+            target_window: target_window,
             target_pane: Some(TargetPane::Id(id)),
         }
     }
 
-    pub fn exact_name(name: &'a str) -> Self {
+    pub fn exact_name(target_window: Option<&'a TargetWindowEx>, name: &'a str) -> Self {
         TargetPaneEx {
-            target_window: None,
+            target_window: target_window,
             target_pane: Some(TargetPane::ExactName(name)),
         }
     }
 
-    pub fn start_name(name: &'a str) -> Self {
+    pub fn start_name(target_window: Option<&'a TargetWindowEx>, name: &'a str) -> Self {
         TargetPaneEx {
-            target_window: None,
+            target_window: target_window,
             target_pane: Some(TargetPane::StartName(name)),
         }
     }
 
-    pub fn fn_match(name: &'a str) -> Self {
+    pub fn fn_match(target_window: Option<&'a TargetWindowEx>, name: &'a str) -> Self {
         TargetPaneEx {
-            target_window: None,
+            target_window: target_window,
             target_pane: Some(TargetPane::FnMatch(name)),
         }
     }
 
+    // XXX: draft $1:@2.raw_name or .raw_name or raw_name:raw_name.raw_name?
     pub fn raw(name: &'a str) -> Self {
         TargetPaneEx {
             target_window: None,
@@ -68,31 +77,46 @@ impl<'a> fmt::Display for TargetPaneEx<'a> {
     }
 }
 
+/// Enum for possible `target-pane` variants
+//#[derive(Default)]
 pub enum TargetPane<'a> {
+    /// token (+, -, {...}) instead of name
     Token(TargetPaneToken),
+    /// index instead of name
     Index(usize),
+    /// id (%id) instead of name
     Id(usize),
+    /// exact name (=name)
     ExactName(&'a str),
+    /// start of a name
     StartName(&'a str),
+    /// fn_match
     FnMatch(&'a str),
+    /// manual define full name (no `.` will be added)
     Raw(&'a str),
+}
+
+impl<'a> Default for TargetPane<'a> {
+    fn default() -> Self {
+        TargetPane::Raw("")
+    }
 }
 
 impl<'a> fmt::Display for TargetPane<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let s = match self {
-            TargetPane::Token(token) => token.to_string(),
-            TargetPane::Index(i) => i.to_string(),
-            TargetPane::Id(id) => format!("%{}", id),
-            TargetPane::ExactName(name) => format!("={}", name),
-            TargetPane::StartName(name) => format!("{}", name),
-            TargetPane::FnMatch(name) => format!("{}", name),
-            TargetPane::Raw(raw_str) => format!("{}", raw_str),
-        };
-        write!(f, ".{}", s)
+        match self {
+            TargetPane::Token(token) => write!(f, ".{}", token),
+            TargetPane::Index(i) => write!(f, ".{}", i),
+            TargetPane::Id(id) => write!(f, ".%{}", id),
+            TargetPane::ExactName(name) => write!(f, ".={}", name),
+            TargetPane::StartName(name) => write!(f, ".{}", name),
+            TargetPane::FnMatch(name) => write!(f, ".{}", name),
+            TargetPane::Raw(raw_str) => write!(f, "{}", raw_str),
+        }
     }
 }
 
+/// Enum for `target-pane` tokens
 pub enum TargetPaneToken {
     /// {next} + The next pane by number
     Next(Option<usize>),

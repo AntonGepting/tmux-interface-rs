@@ -1,7 +1,5 @@
 use crate::response::window::window::{WINDOW_VARS_REGEX_VEC, WINDOW_VARS_SEPARATOR};
-use crate::Error;
-use crate::TmuxInterface;
-use crate::Window;
+use crate::{Error, TargetSession, TmuxInterface, Window};
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -25,7 +23,7 @@ impl Index<usize> for Windows {
 }
 
 impl Windows {
-    pub fn get(target_session: &str, bitflags: usize) -> Result<Self, Error> {
+    pub fn get(target_session: &TargetSession, bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let lsw_format = WINDOW_VARS_REGEX_VEC
             .iter()

@@ -103,21 +103,23 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: respawnw)
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn respawn_window(
+    pub fn respawn_window<T: Display>(
         &mut self,
         kill: Option<bool>,
         start_directory: Option<&'a str>,
-        target_window: Option<&'a str>,
+        target_window: Option<&'a T>,
         shell_command: Option<&'a str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if kill.unwrap_or(false) {
             args.push(k_KEY);
         }
         if let Some(s) = start_directory {
             args.extend_from_slice(&[c_KEY, &s])
         }
-        if let Some(s) = target_window {
+        if let Some(target_window) = target_window {
+            s = target_window.to_string();
             args.extend_from_slice(&[t_KEY, &s])
         }
         if let Some(s) = shell_command {

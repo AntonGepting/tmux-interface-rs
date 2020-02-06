@@ -49,20 +49,22 @@ impl<'a> TmuxInterface<'a> {
     }
 
     #[cfg(feature = "tmux_2_6")]
-    pub fn rotate_window(
+    pub fn rotate_window<T: Display>(
         &mut self,
         down: Option<bool>,
         up: Option<bool>,
-        target_window: Option<&str>,
+        target_window: Option<&T>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if down.unwrap_or(false) {
             args.push(D_KEY);
         }
         if up.unwrap_or(false) {
             args.push(U_KEY);
         }
-        if let Some(s) = target_window {
+        if let Some(target_window) = target_window {
+            s = target_window.to_string();
             args.extend_from_slice(&[t_KEY, &s])
         }
         let output = self.subcommand(TmuxInterface::ROTATE_WINDOW, &args)?;

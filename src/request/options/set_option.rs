@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 /// Structure for setting a pane/window/session/server option
@@ -19,7 +20,7 @@ use std::process::Output;
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]
 #[derive(Default, Debug)]
-pub struct SetOption<'a> {
+pub struct SetOption<'a, T: Display> {
     /// [-a] - value is appended to the existing setting, if the option expects a string or a style
     pub append: Option<bool>,
     /// [-F] - expand formats in the option value
@@ -39,7 +40,7 @@ pub struct SetOption<'a> {
     /// [-w] - set a window option
     pub window: Option<bool>,
     /// [-t target-pane] - specify the target-pane
-    pub target: Option<&'a str>,
+    pub target: Option<&'a T>,
     // option
     //pub option: &'a str,
     // value
@@ -48,7 +49,7 @@ pub struct SetOption<'a> {
 
 #[cfg(feature = "tmux_2_6")]
 #[derive(Default, Debug)]
-pub struct SetOption<'a> {
+pub struct SetOption<'a, T: Display> {
     /// [-a] - value is appended to the existing setting, if the option expects a string or a style
     pub append: Option<bool>,
     /// [-F] - expand formats in the option value
@@ -66,14 +67,14 @@ pub struct SetOption<'a> {
     /// [-w] - set a window option
     pub window: Option<bool>,
     /// [-t target-pane] - specify the target-pane
-    pub target: Option<&'a str>,
+    pub target: Option<&'a T>,
     // option
     //pub option: &'a str,
     // value
     //pub value: &'a str,
 }
 
-impl<'a> SetOption<'a> {
+impl<'a, T: Display + Default> SetOption<'a, T> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -96,13 +97,14 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: set)
     /// ```
     #[cfg(not(feature = "tmux_2_6"))]
-    pub fn set_option(
+    pub fn set_option<T: Display>(
         &mut self,
-        set_option: Option<&SetOption>,
+        set_option: Option<&SetOption<T>>,
         option: &str,
         value: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(set_option) = set_option {
             if set_option.append.unwrap_or(false) {
                 args.push(a_KEY);
@@ -131,7 +133,8 @@ impl<'a> TmuxInterface<'a> {
             if set_option.window.unwrap_or(false) {
                 args.push(w_KEY);
             }
-            if let Some(s) = set_option.target {
+            if let Some(target) = set_option.target {
+                s = target.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
         }
@@ -155,13 +158,14 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: set)
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn set_option(
+    pub fn set_option<T: Display>(
         &mut self,
-        set_option: Option<&SetOption>,
+        set_option: Option<&SetOption<T>>,
         option: &str,
         value: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(set_option) = set_option {
             if set_option.append.unwrap_or(false) {
                 args.push(a_KEY);
@@ -187,7 +191,8 @@ impl<'a> TmuxInterface<'a> {
             if set_option.window.unwrap_or(false) {
                 args.push(w_KEY);
             }
-            if let Some(s) = set_option.target {
+            if let Some(target) = set_option.target {
+                s = target.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
         }

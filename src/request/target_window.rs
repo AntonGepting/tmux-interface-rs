@@ -1,52 +1,68 @@
 use crate::request::target_session::TargetSession;
 use std::fmt;
 
-#[derive(Debug)]
+// XXX: borrowing/owning?
+/// Extended `target-window` struct, includes `target-session`
+#[derive(Debug, Default)]
 pub struct TargetWindowEx<'a> {
-    pub session: Option<TargetSession<'a>>,
-    pub window: Option<TargetWindow<'a>>,
+    /// `target-session`
+    pub session: Option<&'a TargetSession<'a>>,
+    /// `target-window`
+    pub window: Option<TargetWindow<'a>>, // bc. cant return value referencing local / temp value
 }
 
 impl<'a> TargetWindowEx<'a> {
-    pub fn new(target_name: &'a str) -> Self {
-        TargetWindowEx::start_name(target_name)
-    }
-
-    pub fn token(token: TargetWindowToken) -> Self {
+    /// simple initializing as start of a name
+    pub fn new(target_window: &'a str) -> Self {
         TargetWindowEx {
             session: None,
+            window: Some(TargetWindow::StartName(target_window)),
+        }
+    }
+
+    pub fn token(session: Option<&'a TargetSession<'a>>, token: TargetWindowToken) -> Self {
+        TargetWindowEx {
+            session: session,
             window: Some(TargetWindow::Token(token)),
         }
     }
 
-    pub fn id(id: usize) -> Self {
+    pub fn index(session: Option<&'a TargetSession<'a>>, i: usize) -> Self {
         TargetWindowEx {
-            session: None,
+            session: session,
+            window: Some(TargetWindow::Index(i)),
+        }
+    }
+
+    pub fn id(session: Option<&'a TargetSession<'a>>, id: usize) -> Self {
+        TargetWindowEx {
+            session: session,
             window: Some(TargetWindow::Id(id)),
         }
     }
 
-    pub fn exact_name(name: &'a str) -> Self {
+    pub fn exact_name(session: Option<&'a TargetSession<'a>>, name: &'a str) -> Self {
         TargetWindowEx {
-            session: None,
+            session: session,
             window: Some(TargetWindow::ExactName(name)),
         }
     }
 
-    pub fn start_name(name: &'a str) -> Self {
+    pub fn start_name(session: Option<&'a TargetSession<'a>>, name: &'a str) -> Self {
         TargetWindowEx {
-            session: None,
+            session: session,
             window: Some(TargetWindow::StartName(name)),
         }
     }
 
-    pub fn fn_match(name: &'a str) -> Self {
+    pub fn fn_match(session: Option<&'a TargetSession<'a>>, name: &'a str) -> Self {
         TargetWindowEx {
-            session: None,
+            session: session,
             window: Some(TargetWindow::FnMatch(name)),
         }
     }
 
+    // XXX: draft $1:@raw_name or .raw_name or raw_name:raw_name?
     pub fn raw(name: &'a str) -> Self {
         TargetWindowEx {
             session: None,
@@ -69,32 +85,47 @@ impl<'a> fmt::Display for TargetWindowEx<'a> {
     }
 }
 
+/// Enum for possible `target-window` variants
 #[derive(Debug)]
 pub enum TargetWindow<'a> {
+    /// token (^, $, !, +, -) instead of name
     Token(TargetWindowToken),
+    /// index instead of name
     Index(usize),
+    /// id (@id) instead of name
     Id(usize),
+    /// exact name (=name)
     ExactName(&'a str),
+    /// start of a name
     StartName(&'a str),
+    /// fn_match
     FnMatch(&'a str),
+    /// manual define full name (no `:` will be added)
     Raw(&'a str),
 }
 
-impl<'a> fmt::Display for TargetWindow<'a> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let s = match self {
-            TargetWindow::Token(token) => token.to_string(),
-            TargetWindow::Index(i) => i.to_string(),
-            TargetWindow::Id(id) => format!("@{}", id),
-            TargetWindow::ExactName(name) => format!("={}", name),
-            TargetWindow::StartName(name) => format!("{}", name),
-            TargetWindow::FnMatch(name) => format!("{}", name),
-            TargetWindow::Raw(raw_str) => format!("{}", raw_str),
-        };
-        write!(f, ":{}", s)
+impl<'a> Default for TargetWindow<'a> {
+    fn default() -> Self {
+        TargetWindow::Raw("")
     }
 }
 
+// TODO: extract simple name, simple parent name
+impl<'a> fmt::Display for TargetWindow<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            TargetWindow::Token(token) => write!(f, ":{}", token),
+            TargetWindow::Index(i) => write!(f, ":{}", i),
+            TargetWindow::Id(id) => write!(f, ":@{}", id),
+            TargetWindow::ExactName(name) => write!(f, ":={}", name),
+            TargetWindow::StartName(name) => write!(f, ":{}", name),
+            TargetWindow::FnMatch(name) => write!(f, ":{}", name),
+            TargetWindow::Raw(raw_str) => write!(f, "{}", raw_str),
+        }
+    }
+}
+
+/// Enum for `target-window` tokens
 #[derive(Debug)]
 pub enum TargetWindowToken {
     /// {start} ^ The lowest-numbered window

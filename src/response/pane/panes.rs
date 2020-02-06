@@ -1,7 +1,7 @@
 use crate::response::pane::pane::{PANE_VARS_REGEX_VEC, PANE_VARS_SEPARATOR};
 use crate::Error;
 use crate::Pane;
-use crate::TmuxInterface;
+use crate::{TargetWindowEx, TmuxInterface};
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -26,7 +26,7 @@ impl Index<usize> for Panes {
 
 // TODO: Option as Result
 impl Panes {
-    pub fn get(target_window: &str, bitflags: usize) -> Result<Self, Error> {
+    pub fn get(target_window: &TargetWindowEx, bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS_REGEX_VEC
             .iter()
@@ -34,11 +34,11 @@ impl Panes {
             .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(PANE_VARS_SEPARATOR);
-        let panes_str = tmux.list_panes(None, None, Some(&lsp_format), Some(target_window))?;
+        let panes_str = tmux.list_panes(None, None, Some(&lsp_format), Some(&target_window))?;
         Panes::from_str(&panes_str, bitflags)
     }
 
-    pub fn get_all(target_session: &str, bitflags: usize) -> Result<Self, Error> {
+    pub fn get_all(target_session: &TargetWindowEx, bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS_REGEX_VEC
             .iter()

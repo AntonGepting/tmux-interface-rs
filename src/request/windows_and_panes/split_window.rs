@@ -1,6 +1,7 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
 use crate::PaneSize;
+use std::fmt::Display;
 
 /// Create a new pane by splitting target-pane
 ///
@@ -21,7 +22,7 @@ use crate::PaneSize;
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]
 #[derive(Default, Debug)]
-pub struct SplitWindow<'a> {
+pub struct SplitWindow<'a, T: Display> {
     /// [-b] - cause the new pane to be created to the left of or above target-pane
     pub before: Option<bool>,
     /// [-d] - do not make the new window the current window
@@ -43,7 +44,7 @@ pub struct SplitWindow<'a> {
     /// [-l size] - specify the size of the new pane in lines
     pub size: Option<PaneSize>,
     /// [-t target-pane] -
-    pub target_pane: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
     /// [shell-command] - shell-command
     pub shell_command: Option<&'a str>,
     /// [-F format] - format
@@ -52,7 +53,7 @@ pub struct SplitWindow<'a> {
 
 #[cfg(feature = "tmux_2_6")]
 #[derive(Default, Debug)]
-pub struct SplitWindow<'a> {
+pub struct SplitWindow<'a, T: Display> {
     /// [-b] - cause the new pane to be created to the left of or above target-pane
     pub before: Option<bool>,
     /// [-d] - do not make the new window the current window
@@ -70,15 +71,15 @@ pub struct SplitWindow<'a> {
     /// [-l size | -p percentage] - specify the size of the new pane in lines
     pub size: Option<PaneSize>,
     /// [-t target-pane] -
-    pub target_pane: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
     /// [shell-command] - shell-command
     pub shell_command: Option<&'a str>,
     /// [-F format] - format
     pub format: Option<&'a str>,
 }
 
-impl<'a> SplitWindow<'a> {
-    pub fn new() -> SplitWindow<'a> {
+impl<'a, T: Display + Default> SplitWindow<'a, T> {
+    pub fn new() -> Self {
         Default::default()
     }
 }
@@ -104,9 +105,13 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: splitw)
     /// ```
     #[cfg(not(feature = "tmux_2_6"))]
-    pub fn split_window(&mut self, split_window: Option<&SplitWindow>) -> Result<String, Error> {
+    pub fn split_window<T: Display>(
+        &mut self,
+        split_window: Option<&SplitWindow<T>>,
+    ) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
+        let d;
         if let Some(split_window) = split_window {
             if split_window.before.unwrap_or(false) {
                 args.push(b_KEY);
@@ -137,12 +142,13 @@ impl<'a> TmuxInterface<'a> {
             }
             if let Some(size) = &split_window.size {
                 match size {
-                    PaneSize::Size(size) => s = size.to_string(),
-                    PaneSize::Percentage(size) => s = format!("{}%", size),
+                    PaneSize::Size(size) => d = size.to_string(),
+                    PaneSize::Percentage(size) => d = format!("{}%", size),
                 };
-                args.extend_from_slice(&[l_KEY, &s]);
+                args.extend_from_slice(&[l_KEY, &d]);
             }
-            if let Some(s) = split_window.target_pane {
+            if let Some(target_pane) = split_window.target_pane {
+                s = target_pane.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
             if let Some(s) = split_window.shell_command {
@@ -167,9 +173,13 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: splitw)
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn split_window(&mut self, split_window: Option<&SplitWindow>) -> Result<String, Error> {
+    pub fn split_window<T: Display>(
+        &mut self,
+        split_window: Option<&SplitWindow<T>>,
+    ) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
+        let d;
         if let Some(split_window) = split_window {
             if split_window.before.unwrap_or(false) {
                 args.push(b_KEY);
@@ -195,16 +205,17 @@ impl<'a> TmuxInterface<'a> {
             if let Some(size) = &split_window.size {
                 match size {
                     PaneSize::Size(size) => {
-                        s = size.to_string();
-                        args.extend_from_slice(&[l_KEY, &s]);
+                        d = size.to_string();
+                        args.extend_from_slice(&[l_KEY, &d]);
                     }
                     PaneSize::Percentage(size) => {
-                        s = size.to_string();
-                        args.extend_from_slice(&[p_KEY, &s]);
+                        d = size.to_string();
+                        args.extend_from_slice(&[p_KEY, &d]);
                     }
                 };
             }
-            if let Some(s) = split_window.target_pane {
+            if let Some(target_pane) = split_window.target_pane {
+                s = target_pane.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
             if let Some(s) = split_window.shell_command {

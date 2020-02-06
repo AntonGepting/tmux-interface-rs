@@ -64,20 +64,22 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: lastp)
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn last_pane(
+    pub fn last_pane<T: Display>(
         &mut self,
         disable: Option<bool>,
         enable: Option<bool>,
-        target_window: Option<&str>,
+        target_window: Option<&T>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if disable.unwrap_or(false) {
             args.push(d_KEY);
         }
         if enable.unwrap_or(false) {
             args.push(e_KEY);
         }
-        if let Some(s) = target_window {
+        if let Some(target_window) = target_window {
+            s = target_window.to_string();
             args.extend_from_slice(&[t_KEY, &s])
         }
         let output = self.subcommand(TmuxInterface::LAST_PANE, &args)?;

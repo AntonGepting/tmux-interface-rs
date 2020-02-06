@@ -16,7 +16,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn rename_window<T: Display>(
         &mut self,
-        target_window: Option<&str>,
+        target_window: Option<&T>,
         new_name: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
