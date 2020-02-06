@@ -2,12 +2,15 @@ use crate::request::target_session::TargetSession;
 use std::fmt;
 
 // XXX: borrowing/owning?
-/// Extended `target-window` struct, includes `target-session`
+/// Extended [`TargetWindow`] struct, includes [`TargetSession`]
+///
+/// [`TargetWindow`]: enum.TargetWindow.html
+/// [`TargetSession`]: enum.TargetSession.html
 #[derive(Debug, Default)]
 pub struct TargetWindowEx<'a> {
-    /// `target-session`
+    /// `TargetSession` (tmux analog: `target-session`)
     pub session: Option<&'a TargetSession<'a>>,
-    /// `target-window`
+    /// `TargetWindow`  (tmux analog: `target-window`)
     pub window: Option<TargetWindow<'a>>, // bc. cant return value referencing local / temp value
 }
 
@@ -20,6 +23,18 @@ impl<'a> TargetWindowEx<'a> {
         }
     }
 
+    /// Create [`TargetWindowEx`] structure using one of [`TargetWindowToken`]
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use crate::tmux_interface::{TargetWindowEx, TargetWindowToken};
+    ///
+    /// let target_window = TargetWindowEx::token(None, TargetWindowToken::Start);
+    /// ```
+    ///
+    /// [`TargetWindowEx`]: enum.TargetWindowEx.html
+    /// [`TargetWindowToken`]: enum.TargetWindowToken.html
     pub fn token(session: Option<&'a TargetSession<'a>>, token: TargetWindowToken) -> Self {
         TargetWindowEx {
             session: session,
@@ -85,7 +100,9 @@ impl<'a> fmt::Display for TargetWindowEx<'a> {
     }
 }
 
-/// Enum for possible `target-window` variants
+/// Enum for possible [`TargetWindow`] variants
+///
+/// [`TargetWindow`]: enum.TargetWindow.html
 #[derive(Debug)]
 pub enum TargetWindow<'a> {
     /// token (^, $, !, +, -) instead of name
@@ -128,15 +145,15 @@ impl<'a> fmt::Display for TargetWindow<'a> {
 /// Enum for `target-window` tokens
 #[derive(Debug)]
 pub enum TargetWindowToken {
-    /// {start} ^ The lowest-numbered window
+    /// `{start}` (alias: `^`) - The lowest-numbered window
     Start,
-    /// {end} $ The highest-numbered window
+    /// `{end}` (alias: `$`) - The highest-numbered window
     End,
-    /// {last} ! The last (previously current) window
+    /// `{last}` (alias: `!`) - The last (previously current) window
     Last,
-    /// {next} + The next window by number
+    /// `{next}` (alias: `+`) - The next window by number
     Next(Option<usize>),
-    /// {previous} - The previous window by number
+    /// `{previous}` (alias: `-`) - The previous window by number
     Previous(Option<usize>),
     //// {mouse} = most recent mouse event occured
     //Mouse,
