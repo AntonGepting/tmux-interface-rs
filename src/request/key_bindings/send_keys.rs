@@ -66,6 +66,142 @@ impl<'a, T: Display + Default> SendKeys<'a, T> {
     }
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Clone, Debug)]
+pub struct SendKeysBuilder<'a, T: Display> {
+    pub expand_formats: Option<bool>,
+    pub hex: Option<bool>,
+    pub disable_lookup: Option<bool>,
+    pub mouse_event: Option<bool>,
+    pub copy_mode: Option<bool>,
+    pub reset: Option<bool>,
+    pub repeat_count: Option<usize>,
+    pub target_pane: Option<&'a T>,
+    //pub key: Vec<&'a str>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a, T: Display + Default> SendKeysBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn expand_formats(&mut self) -> &mut Self {
+        self.expand_formats = Some(true);
+        self
+    }
+
+    pub fn hex(&mut self) -> &mut Self {
+        self.hex = Some(true);
+        self
+    }
+
+    pub fn disable_lookup(&mut self) -> &mut Self {
+        self.disable_lookup = Some(true);
+        self
+    }
+
+    pub fn mouse_event(&mut self) -> &mut Self {
+        self.mouse_event = Some(true);
+        self
+    }
+
+    pub fn copy_mode(&mut self) -> &mut Self {
+        self.copy_mode = Some(true);
+        self
+    }
+
+    pub fn reset(&mut self) -> &mut Self {
+        self.reset = Some(true);
+        self
+    }
+
+    pub fn repeat_count(&mut self, repeat_count: usize) -> &mut Self {
+        self.repeat_count = Some(repeat_count);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn build(&self) -> SendKeys<'a, T> {
+        SendKeys {
+            expand_formats: self.expand_formats,
+            hex: self.hex,
+            disable_lookup: self.disable_lookup,
+            mouse_event: self.mouse_event,
+            copy_mode: self.copy_mode,
+            reset: self.reset,
+            repeat_count: self.repeat_count,
+            target_pane: self.target_pane,
+            // key: Vec<&'a str>,
+        }
+    }
+}
+
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Clone, Debug)]
+pub struct SendKeysBuilder<'a, T: Display> {
+    pub disable_lookup: Option<bool>,
+    pub mouse_event: Option<bool>,
+    pub copy_mode: Option<bool>,
+    pub reset: Option<bool>,
+    pub repeat_count: Option<usize>,
+    pub target_pane: Option<&'a T>,
+    //pub key: Vec<&'a str>,
+}
+
+#[cfg(feature = "tmux_2_6")]
+impl<'a, T: Display + Default> SendKeysBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn disable_lookup(&mut self) -> &mut Self {
+        self.disable_lookup = Some(true);
+        self
+    }
+
+    pub fn mouse_event(&mut self) -> &mut Self {
+        self.mouse_event = Some(true);
+        self
+    }
+
+    pub fn copy_mode(&mut self) -> &mut Self {
+        self.copy_mode = Some(true);
+        self
+    }
+
+    pub fn reset(&mut self) -> &mut Self {
+        self.reset = Some(true);
+        self
+    }
+
+    pub fn repeat_count(&mut self, repeat_count: usize) -> &mut Self {
+        self.repeat_count = Some(repeat_count);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn build(&self) -> SendKeys<'a, T> {
+        SendKeys {
+            disable_lookup: self.disable_lookup,
+            mouse_event: self.mouse_event,
+            copy_mode: self.copy_mode,
+            reset: self.reset,
+            repeat_count: self.repeat_count,
+            target_pane: self.target_pane,
+            // key: Vec<&'a str>,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const SEND_KEYS: &'static str = "send-keys";
 

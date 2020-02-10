@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn send_keys() {
-    use crate::{Error, SendKeys, TargetPaneEx, TmuxInterface};
+    use crate::{Error, SendKeys, SendKeysBuilder, TargetPaneEx, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,6 +13,7 @@ fn send_keys() {
         );
         Err(Error::new("hook"))
     }));
+
     let target_pane = TargetPaneEx::raw("2");
     let send_keys = SendKeys {
         expand_formats: Some(true),
@@ -26,12 +27,24 @@ fn send_keys() {
     };
     tmux.send_keys(Some(&send_keys), &vec!["3"]).unwrap_err();
     //tmux.send_keys(None, &vec!["3"]);
+
+    let send_keys = SendKeysBuilder::new()
+        .expand_formats()
+        .hex()
+        .disable_lookup()
+        .mouse_event()
+        .copy_mode()
+        .reset()
+        .repeat_count(1)
+        .target_pane(&target_pane)
+        .build();
+    tmux.send_keys(Some(&send_keys), &vec!["3"]).unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn send_keys() {
-    use crate::{Error, SendKeys, TargetPaneEx, TmuxInterface};
+    use crate::{Error, SendKeys, SendKeysBuilder, TargetPaneEx, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -52,5 +65,15 @@ fn send_keys() {
         repeat_count: Some(1),
         target_pane: Some(&target_pane),
     };
+    tmux.send_keys(Some(&send_keys), &vec!["3"]).unwrap_err();
+
+    let send_keys = SendKeysBuilder::new()
+        .disable_lookup()
+        .mouse_event()
+        .copy_mode()
+        .reset()
+        .repeat_count(1)
+        .target_pane(&target_pane)
+        .build();
     tmux.send_keys(Some(&send_keys), &vec!["3"]).unwrap_err();
 }

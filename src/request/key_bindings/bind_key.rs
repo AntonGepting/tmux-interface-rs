@@ -32,6 +32,51 @@ impl<'a> BindKey<'a> {
     }
 }
 
+#[derive(Default, Clone, Debug)]
+pub struct BindKeyBuilder<'a> {
+    pub root: Option<bool>,
+    pub repeat: Option<bool>,
+    pub key_table: Option<&'a str>,
+    //pub key: &'a str,
+    //pub command: &'a str,
+    pub arguments: Option<&'a str>,
+}
+
+impl<'a> BindKeyBuilder<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn root(&mut self) -> &mut Self {
+        self.root = Some(true);
+        self
+    }
+
+    pub fn repeat(&mut self) -> &mut Self {
+        self.repeat = Some(true);
+        self
+    }
+
+    pub fn key_table(&mut self, key_table: &'a str) -> &mut Self {
+        self.key_table = Some(key_table);
+        self
+    }
+
+    pub fn arguments(&mut self, arguments: &'a str) -> &mut Self {
+        self.arguments = Some(arguments);
+        self
+    }
+
+    pub fn build(&self) -> BindKey<'a> {
+        BindKey {
+            root: self.root,
+            repeat: self.repeat,
+            key_table: self.key_table,
+            arguments: self.arguments,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const BIND_KEY: &'static str = "bind-key";
 
