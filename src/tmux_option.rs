@@ -1,13 +1,14 @@
 use super::error::Error;
 use super::ShowOptions;
 use super::TmuxInterface;
+use crate::TargetPane;
 
 pub struct TmuxOption;
 
 impl TmuxOption {
     pub fn get_int(option_name: &str) -> Result<usize, Error> {
         let mut tmux = TmuxInterface::new();
-        let show_options = ShowOptions {
+        let show_options = ShowOptions::<TargetPane> {
             global_options: Some(true),
             option_value: Some(true),
             option: Some(option_name),
