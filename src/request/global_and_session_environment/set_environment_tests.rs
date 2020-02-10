@@ -1,6 +1,6 @@
 #[test]
 fn set_environment() {
-    use crate::{Error, SetEnvironment, TmuxInterface};
+    use crate::{Error, SetEnvironment, SetEnvironmentBuilder, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -16,9 +16,19 @@ fn set_environment() {
         global: Some(true),
         remove: Some(true),
         unset: Some(true),
-        target_session: Some("1"),
+        target_session: Some(&TargetSession::Raw("1")),
         value: Some("3"),
     };
+    tmux.set_environment(Some(&set_environment), "2")
+        .unwrap_err();
+
+    let set_environment = SetEnvironmentBuilder::new()
+        .global()
+        .remove()
+        .unset()
+        .target_session(&TargetSession::Raw("1"))
+        .value("3")
+        .build();
     tmux.set_environment(Some(&set_environment), "2")
         .unwrap_err();
 }
