@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn display_message() {
-    use crate::{DisplayMessage, Error, TmuxInterface};
+    use crate::{DisplayMessage, DisplayMessageBuilder, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,22 +13,34 @@ fn display_message() {
         );
         Err(Error::new("hook"))
     }));
+
     let display_message = DisplayMessage {
         list_format_vars: Some(true),
         forward_stdin: Some(true),
         print: Some(true),
         verbose: Some(true),
         target_client: Some("1"),
-        target_pane: Some("2"),
+        target_pane: Some(&TargetPane::Raw("2")),
         message: Some("3"),
     };
+    tmux.display_message(Some(&display_message)).unwrap_err();
+
+    let display_message = DisplayMessageBuilder::new()
+        .list_format_vars()
+        .forward_stdin()
+        .print()
+        .verbose()
+        .target_client("1")
+        .target_pane(&TargetPane::Raw("2"))
+        .message("3")
+        .build();
     tmux.display_message(Some(&display_message)).unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn display_message() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -40,6 +52,11 @@ fn display_message() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.display_message(Some(true), Some("1"), Some("2"), Some("3"))
-        .unwrap_err();
+    tmux.display_message(
+        Some(true),
+        Some("1"),
+        Some(&TargetPane::Raw("2")),
+        Some("3"),
+    )
+    .unwrap_err();
 }

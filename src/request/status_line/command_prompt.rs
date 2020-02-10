@@ -31,6 +31,63 @@ impl<'a> CommandPrompt<'a> {
     }
 }
 
+#[derive(Default, Debug)]
+pub struct CommandPromptBuilder<'a> {
+    pub one_keypress: Option<bool>,
+    pub on_input_change: Option<bool>,
+    pub inputs: Option<&'a str>,
+    pub prompts: Option<&'a str>,
+    pub target_client: Option<&'a str>,
+    pub template: Option<&'a str>,
+}
+
+impl<'a> CommandPromptBuilder<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn one_keypress(&mut self) -> &mut Self {
+        self.one_keypress = Some(true);
+        self
+    }
+
+    pub fn on_input_change(&mut self) -> &mut Self {
+        self.on_input_change = Some(true);
+        self
+    }
+
+    pub fn inputs(&mut self, inputs: &'a str) -> &mut Self {
+        self.inputs = Some(inputs);
+        self
+    }
+
+    pub fn prompts(&mut self, prompts: &'a str) -> &mut Self {
+        self.prompts = Some(prompts);
+        self
+    }
+
+    pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
+        self.target_client = Some(target_client);
+        self
+    }
+
+    pub fn template(&mut self, template: &'a str) -> &mut Self {
+        self.template = Some(template);
+        self
+    }
+
+    pub fn build(&self) -> CommandPrompt<'a> {
+        CommandPrompt {
+            one_keypress: self.one_keypress,
+            on_input_change: self.on_input_change,
+            inputs: self.inputs,
+            prompts: self.prompts,
+            target_client: self.target_client,
+            template: self.template,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const COMMAND_PROMPT: &'static str = "command-prompt";
 

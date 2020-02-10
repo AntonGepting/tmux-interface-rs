@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 /// Structure for displaying a message
@@ -19,7 +20,7 @@ use std::process::Output;
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]
 #[derive(Default, Debug)]
-pub struct DisplayMessage<'a> {
+pub struct DisplayMessage<'a, T: Display> {
     /// [-a] - list the format variables and their values
     pub list_format_vars: Option<bool>,
     /// [-I] - forward any input read from stdin to the empty pane given by target-pane
@@ -31,15 +32,81 @@ pub struct DisplayMessage<'a> {
     /// [-c target-client] - target-client
     pub target_client: Option<&'a str>,
     /// [-t target-pane] - target-pane
-    pub target_pane: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
     /// [message] - message
     pub message: Option<&'a str>,
 }
 
 #[cfg(not(feature = "tmux_2_6"))]
-impl<'a> DisplayMessage<'a> {
+impl<'a, T: Display + Default> DisplayMessage<'a, T> {
     pub fn new() -> Self {
         Default::default()
+    }
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct DisplayMessageBuilder<'a, T> {
+    pub list_format_vars: Option<bool>,
+    pub forward_stdin: Option<bool>,
+    pub print: Option<bool>,
+    pub verbose: Option<bool>,
+    pub target_client: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
+    pub message: Option<&'a str>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a, T: Display + Default> DisplayMessageBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn list_format_vars(&mut self) -> &mut Self {
+        self.list_format_vars = Some(true);
+        self
+    }
+
+    pub fn forward_stdin(&mut self) -> &mut Self {
+        self.forward_stdin = Some(true);
+        self
+    }
+
+    pub fn print(&mut self) -> &mut Self {
+        self.print = Some(true);
+        self
+    }
+
+    pub fn verbose(&mut self) -> &mut Self {
+        self.verbose = Some(true);
+        self
+    }
+
+    pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
+        self.target_client = Some(target_client);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn message(&mut self, message: &'a str) -> &mut Self {
+        self.message = Some(message);
+        self
+    }
+
+    pub fn build(&self) -> DisplayMessage<'a, T> {
+        DisplayMessage {
+            list_format_vars: self.list_format_vars,
+            forward_stdin: self.forward_stdin,
+            print: self.print,
+            verbose: self.verbose,
+            target_client: self.target_client,
+            target_pane: self.target_pane,
+            message: self.message,
+        }
     }
 }
 
@@ -62,11 +129,12 @@ impl<'a> TmuxInterface<'a> {
     ///  (alias: display)
     /// ```
     #[cfg(not(feature = "tmux_2_6"))]
-    pub fn display_message(
+    pub fn display_message<T: Display>(
         &mut self,
-        display_message: Option<&DisplayMessage>,
+        display_message: Option<&DisplayMessage<T>>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(display_message) = display_message {
             if display_message.list_format_vars.unwrap_or(false) {
                 args.push(a_KEY);
@@ -81,10 +149,11 @@ impl<'a> TmuxInterface<'a> {
                 args.push(v_KEY);
             }
             if let Some(s) = display_message.target_client {
-                args.extend_from_slice(&[c_KEY, s])
+                args.extend_from_slice(&[c_KEY, &s])
             }
-            if let Some(s) = display_message.target_pane {
-                args.extend_from_slice(&[t_KEY, s])
+            if let Some(target_pane) = display_message.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             if let Some(s) = display_message.message {
                 args.push(&s)
@@ -110,22 +179,24 @@ impl<'a> TmuxInterface<'a> {
     ///  (alias: display)
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn display_message(
+    pub fn display_message<T: Display>(
         &mut self,
         print: Option<bool>,
         target_client: Option<&'a str>,
-        target_pane: Option<&'a str>,
+        target_pane: Option<&'a T>,
         message: Option<&'a str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if print.unwrap_or(false) {
             args.push(p_KEY);
         }
         if let Some(s) = target_client {
-            args.extend_from_slice(&[c_KEY, s])
+            args.extend_from_slice(&[c_KEY, &s])
         }
-        if let Some(s) = target_pane {
-            args.extend_from_slice(&[t_KEY, s])
+        if let Some(target_pane) = target_pane {
+            s = target_pane.to_string();
+            args.extend_from_slice(&[t_KEY, &s])
         }
         if let Some(s) = message {
             args.push(&s)

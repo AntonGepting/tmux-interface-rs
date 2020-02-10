@@ -1,6 +1,6 @@
 #[test]
 fn display_menu() {
-    use crate::{DisplayMenu, Error, TmuxInterface};
+    use crate::{DisplayMenu, DisplayMenuBuilder, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,13 +12,24 @@ fn display_menu() {
         );
         Err(Error::new("hook"))
     }));
+
     let display_menu = DisplayMenu {
         target_client: Some("1"),
-        target_pane: Some("2"),
+        target_pane: Some(&TargetPane::Raw("2")),
         title: Some("3"),
         x: Some(4),
         y: Some(5),
     };
+    tmux.display_menu(Some(&display_menu), "6", "7", "8")
+        .unwrap_err();
+
+    let display_menu = DisplayMenuBuilder::new()
+        .target_client("1")
+        .target_pane(&TargetPane::Raw("2"))
+        .title("3")
+        .x(4)
+        .y(5)
+        .build();
     tmux.display_menu(Some(&display_menu), "6", "7", "8")
         .unwrap_err();
 }

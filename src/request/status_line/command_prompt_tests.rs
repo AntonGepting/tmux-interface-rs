@@ -1,6 +1,6 @@
 #[test]
 fn command_prompt() {
-    use crate::{CommandPrompt, Error, TmuxInterface};
+    use crate::{CommandPrompt, CommandPromptBuilder, Error, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,6 +12,7 @@ fn command_prompt() {
         );
         Err(Error::new("hook"))
     }));
+
     let command_prompt = CommandPrompt {
         one_keypress: Some(true),
         on_input_change: Some(true),
@@ -20,6 +21,15 @@ fn command_prompt() {
         target_client: Some("3"),
         template: Some("4"),
     };
+    tmux.command_prompt(Some(&command_prompt)).unwrap_err();
 
+    let command_prompt = CommandPromptBuilder::new()
+        .one_keypress()
+        .on_input_change()
+        .inputs("1")
+        .prompts("2")
+        .target_client("3")
+        .template("4")
+        .build();
     tmux.command_prompt(Some(&command_prompt)).unwrap_err();
 }
