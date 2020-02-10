@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn set_option() {
-    use crate::{Error, SetOption, TargetPane, TmuxInterface};
+    use crate::{Error, SetOption, SetOptionBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,6 +13,7 @@ fn set_option() {
         );
         Err(Error::new("hook"))
     }));
+
     let set_option = SetOption {
         append: Some(true),
         format: Some(true),
@@ -26,12 +27,26 @@ fn set_option() {
         target: Some(&TargetPane::Raw("1")),
     };
     tmux.set_option(Some(&set_option), "2", "3").unwrap_err();
+
+    let set_option = SetOptionBuilder::new()
+        .append()
+        .format()
+        .global()
+        .not_overwrite()
+        .pane()
+        .quiet()
+        .server()
+        .unset()
+        .window()
+        .target(&TargetPane::Raw("1"))
+        .build();
+    tmux.set_option(Some(&set_option), "2", "3").unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn set_option() {
-    use crate::{Error, SetOption, TargetPane, TmuxInterface};
+    use crate::{Error, SetOption, SetOptionBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -43,6 +58,7 @@ fn set_option() {
         );
         Err(Error::new("hook"))
     }));
+
     let set_option = SetOption {
         append: Some(true),
         format: Some(true),
@@ -54,5 +70,18 @@ fn set_option() {
         window: Some(true),
         target: Some(&TargetPane::Raw("1")),
     };
+    tmux.set_option(Some(&set_option), "2", "3").unwrap_err();
+
+    let set_option = SetOptionBuilder::new()
+        .append()
+        .format()
+        .global()
+        .not_overwrite()
+        .quiet()
+        .server()
+        .unset()
+        .window()
+        .target(&TargetPane::Raw("1"))
+        .build();
     tmux.set_option(Some(&set_option), "2", "3").unwrap_err();
 }

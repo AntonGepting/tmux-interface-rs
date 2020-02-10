@@ -80,6 +80,177 @@ impl<'a, T: Display + Default> SetOption<'a, T> {
     }
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct SetOptionBuilder<'a, T: Display> {
+    pub append: Option<bool>,
+    pub format: Option<bool>,
+    pub global: Option<bool>,
+    pub not_overwrite: Option<bool>,
+    pub pane: Option<bool>,
+    pub quiet: Option<bool>,
+    pub server: Option<bool>,
+    pub unset: Option<bool>,
+    pub window: Option<bool>,
+    pub target: Option<&'a T>,
+    //pub option: &'a str,
+    //pub value: &'a str,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a, T: Display + Default> SetOptionBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn append(&mut self) -> &mut Self {
+        self.append = Some(true);
+        self
+    }
+
+    pub fn format(&mut self) -> &mut Self {
+        self.format = Some(true);
+        self
+    }
+
+    pub fn global(&mut self) -> &mut Self {
+        self.global = Some(true);
+        self
+    }
+
+    pub fn not_overwrite(&mut self) -> &mut Self {
+        self.not_overwrite = Some(true);
+        self
+    }
+
+    pub fn pane(&mut self) -> &mut Self {
+        self.pane = Some(true);
+        self
+    }
+
+    pub fn quiet(&mut self) -> &mut Self {
+        self.quiet = Some(true);
+        self
+    }
+
+    pub fn server(&mut self) -> &mut Self {
+        self.server = Some(true);
+        self
+    }
+
+    pub fn unset(&mut self) -> &mut Self {
+        self.unset = Some(true);
+        self
+    }
+
+    pub fn window(&mut self) -> &mut Self {
+        self.window = Some(true);
+        self
+    }
+
+    pub fn target(&mut self, target: &'a T) -> &mut Self {
+        self.target = Some(target);
+        self
+    }
+
+    pub fn build(&self) -> SetOption<'a, T> {
+        SetOption {
+            append: self.append,
+            format: self.format,
+            global: self.global,
+            not_overwrite: self.not_overwrite,
+            pane: self.pane,
+            quiet: self.quiet,
+            server: self.server,
+            unset: self.unset,
+            window: self.window,
+            target: self.target,
+        }
+    }
+}
+
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Debug)]
+pub struct SetOptionBuilder<'a, T: Display> {
+    pub append: Option<bool>,
+    pub format: Option<bool>,
+    pub global: Option<bool>,
+    pub not_overwrite: Option<bool>,
+    pub quiet: Option<bool>,
+    pub server: Option<bool>,
+    pub unset: Option<bool>,
+    pub window: Option<bool>,
+    pub target: Option<&'a T>,
+    //pub option: &'a str,
+    //pub value: &'a str,
+}
+
+#[cfg(feature = "tmux_2_6")]
+impl<'a, T: Display + Default> SetOptionBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn append(&mut self) -> &mut Self {
+        self.append = Some(true);
+        self
+    }
+
+    pub fn format(&mut self) -> &mut Self {
+        self.format = Some(true);
+        self
+    }
+
+    pub fn global(&mut self) -> &mut Self {
+        self.global = Some(true);
+        self
+    }
+
+    pub fn not_overwrite(&mut self) -> &mut Self {
+        self.not_overwrite = Some(true);
+        self
+    }
+
+    pub fn quiet(&mut self) -> &mut Self {
+        self.quiet = Some(true);
+        self
+    }
+
+    pub fn server(&mut self) -> &mut Self {
+        self.server = Some(true);
+        self
+    }
+
+    pub fn unset(&mut self) -> &mut Self {
+        self.unset = Some(true);
+        self
+    }
+
+    pub fn window(&mut self) -> &mut Self {
+        self.window = Some(true);
+        self
+    }
+
+    pub fn target(&mut self, target: &'a T) -> &mut Self {
+        self.target = Some(target);
+        self
+    }
+
+    pub fn build(&self) -> SetOption<'a, T> {
+        SetOption {
+            append: self.append,
+            format: self.format,
+            global: self.global,
+            not_overwrite: self.not_overwrite,
+            quiet: self.quiet,
+            server: self.server,
+            unset: self.unset,
+            window: self.window,
+            target: self.target,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const SET_OPTION: &'static str = "set-option";
 

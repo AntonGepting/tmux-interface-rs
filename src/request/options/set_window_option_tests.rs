@@ -1,6 +1,6 @@
 #[test]
 fn set_window_option() {
-    use crate::{Error, SetWindowOption, TmuxInterface};
+    use crate::{Error, SetWindowOption, SetWindowOptionBuilder, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,6 +12,8 @@ fn set_window_option() {
         );
         Err(Error::new("hook"))
     }));
+
+    let target_window = TargetWindow::Raw("1");
     let set_window_option = SetWindowOption {
         append: Some(true),
         format: Some(true),
@@ -19,8 +21,20 @@ fn set_window_option() {
         not_overwrite: Some(true),
         quiet: Some(true),
         unset: Some(true),
-        target_window: Some("1"),
+        target_window: Some(&target_window),
     };
+    tmux.set_window_option(Some(&set_window_option), "2", "3")
+        .unwrap_err();
+
+    let set_window_option = SetWindowOptionBuilder::new()
+        .append()
+        .format()
+        .global()
+        .not_overwrite()
+        .quiet()
+        .unset()
+        .target_window(&target_window)
+        .build();
     tmux.set_window_option(Some(&set_window_option), "2", "3")
         .unwrap_err();
 }

@@ -1,6 +1,6 @@
 #[test]
 fn show_window_options() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,6 +12,11 @@ fn show_window_options() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.show_window_options(Some(true), Some(true), Some("1"), Some("2"))
-        .unwrap_err();
+    tmux.show_window_options(
+        Some(true),
+        Some(true),
+        Some(&TargetWindow::Raw("1")),
+        Some("2"),
+    )
+    .unwrap_err();
 }
