@@ -132,51 +132,90 @@ pub use self::tmux_interface::TmuxInterface;
 
 // buffers
 pub use self::request::buffers::choose_buffer::ChooseBuffer;
+pub use self::request::buffers::choose_buffer::ChooseBufferBuilder;
 pub use self::request::buffers::paste_buffer::PasteBuffer;
+pub use self::request::buffers::paste_buffer::PasteBufferBuilder;
 // clients and sessions
 pub use self::request::clients_and_sessions::attach_session::AttachSession;
+pub use self::request::clients_and_sessions::attach_session::AttachSessionBuilder;
 pub use self::request::clients_and_sessions::detach_client::DetachClient;
+pub use self::request::clients_and_sessions::detach_client::DetachClientBuilder;
 pub use self::request::clients_and_sessions::new_session::NewSession;
+pub use self::request::clients_and_sessions::new_session::NewSessionBuilder;
+// not structure, pass as arguments
 #[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::clients_and_sessions::refresh_client::RefreshClient;
+// not structure, pass as arguments
+#[cfg(not(feature = "tmux_2_6"))]
+pub use self::request::clients_and_sessions::refresh_client::RefreshClientBuilder;
 pub use self::request::clients_and_sessions::switch_client::SwitchClient;
+pub use self::request::clients_and_sessions::switch_client::SwitchClientBuilder;
 // global and session environment
 pub use self::request::global_and_session_environment::set_environment::SetEnvironment;
+pub use self::request::global_and_session_environment::set_environment::SetEnvironmentBuilder;
 // hooks
 pub use self::request::hooks::set_hook::SetHook;
+pub use self::request::hooks::set_hook::SetHookBuilder;
 // key bindings
 pub use self::request::key_bindings::send_keys::SendKeys;
+pub use self::request::key_bindings::send_keys::SendKeysBuilder;
 pub use crate::request::key_bindings::bind_key::BindKey;
+pub use crate::request::key_bindings::bind_key::BindKeyBuilder;
 // miscellaneous
 pub use crate::request::miscellaneous::if_shell::IfShell;
+pub use crate::request::miscellaneous::if_shell::IfShellBuilder;
 // options
 pub use self::request::options::set_option::SetOption;
+pub use self::request::options::set_option::SetOptionBuilder;
 #[cfg(feature = "tmux_2_6")]
 pub use self::request::options::set_window_option::SetWindowOption;
+#[cfg(feature = "tmux_2_6")]
+pub use self::request::options::set_window_option::SetWindowOptionBuilder;
 pub use self::request::options::show_options::ShowOptions;
+pub use self::request::options::show_options::ShowOptionsBuilder;
 // status line
 pub use self::request::status_line::command_prompt::CommandPrompt;
+pub use self::request::status_line::command_prompt::CommandPromptBuilder;
+// not structure, pass as arguments
 #[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::status_line::display_menu::DisplayMenu;
 #[cfg(not(feature = "tmux_2_6"))]
+pub use self::request::status_line::display_menu::DisplayMenuBuilder;
+// not structure, pass as arguments
+#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::status_line::display_message::DisplayMessage;
+#[cfg(not(feature = "tmux_2_6"))]
+pub use self::request::status_line::display_message::DisplayMessageBuilder;
 // windows and panes
 pub use self::request::windows_and_panes::break_pane::BreakPane;
+//pub use self::request::windows_and_panes::break_pane::BreakPaneBuilder;
 pub use self::request::windows_and_panes::capture_pane::CapturePane;
+//pub use self::request::windows_and_panes::capture_pane::CapturePaneBuilder;
 pub use self::request::windows_and_panes::choose_client::ChooseClient;
+//pub use self::request::windows_and_panes::choose_client::ChooseClientBuilder;
 pub use self::request::windows_and_panes::choose_tree::ChooseTree;
+//pub use self::request::windows_and_panes::choose_tree::ChooseTreeBuilder;
 pub use self::request::windows_and_panes::find_window::FindWindow;
+//pub use self::request::windows_and_panes::find_window::FindWindowBuilder;
 pub use self::request::windows_and_panes::join_pane::JoinPane;
+//pub use self::request::windows_and_panes::join_pane::JoinPaneBuilder;
 pub use self::request::windows_and_panes::link_window::LinkWindow;
+//pub use self::request::windows_and_panes::link_window::LinkWindowBuilder;
 pub use self::request::windows_and_panes::move_pane::MovePane;
+//pub use self::request::windows_and_panes::move_pane::MovePaneBuilder;
 pub use self::request::windows_and_panes::move_window::MoveWindow;
+//pub use self::request::windows_and_panes::move_window::MoveWindowBuilder;
 pub use self::request::windows_and_panes::new_window::NewWindow;
+//pub use self::request::windows_and_panes::new_window::NewWindowBuilder;
+// not structure, pass as arguments
 #[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::pipe_pane::PipePane;
 pub use self::request::windows_and_panes::resize_pane::ResizePane;
 pub use self::request::windows_and_panes::resize_window::ResizeWindow;
+// not structure, pass as arguments
 #[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::respawn_pane::RespawnPane;
+// not structure, pass as arguments
 #[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::respawn_window::RespawnWindow;
 pub use self::request::windows_and_panes::select_layout::SelectLayot;
