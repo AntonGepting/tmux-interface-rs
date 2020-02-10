@@ -83,28 +83,28 @@ pub struct TmuxInterface<'a> {
     /// Tmux options fields
     ///
     // XXX: combine into a struct and separate from other options?
-    /// Force tmux to assume the terminal supports 256 colours
-    pub colours256: Option<bool>, // -2
-    /// Start in control mode
-    pub control_mode: Option<bool>, // -C
-    /// Behave as a login shell
-    pub login_shell: Option<bool>, // -l
-    /// Write UTF-8 output to the terminal
-    pub force_utf8: Option<bool>, // -u
-    /// Request verbose logging
-    pub verbose_logging: Option<bool>, // -v
-    /// Report the tmux version
-    pub version: Option<bool>, // -V
-    /// Execute shell-command using the default shell
-    pub shell_cmd: Option<&'a str>, // -c shell-command
-    /// Specify an alternative configuration file
-    pub file: Option<&'a str>, // -f file
-    /// Allow a different socket name to be specified
-    pub socket_name: Option<&'a str>, // -L socket-name
-    /// Specify a full alternative path to the server socket
-    pub socket_path: Option<&'a str>, // -S socket-path
-    /// Disable echo
-    pub disable_echo: Option<bool>, // -CC
+    /// [-2] - Force tmux to assume the terminal supports 256 colours
+    pub colours256: Option<bool>,
+    /// [-C] - Start in control mode
+    pub control_mode: Option<bool>,
+    /// [-l] - Behave as a login shell
+    pub login_shell: Option<bool>,
+    /// [-u] - Write UTF-8 output to the terminal
+    pub force_utf8: Option<bool>,
+    /// [-v] - Request verbose logging
+    pub verbose_logging: Option<bool>,
+    /// [-V] - Report the tmux version
+    pub version: Option<bool>,
+    /// [-c shell-command] - Execute shell-command using the default shell
+    pub shell_cmd: Option<&'a str>,
+    /// [-f file] - Specify an alternative configuration file
+    pub file: Option<&'a str>,
+    /// [-L socket-name] - Allow a different socket name to be specified
+    pub socket_name: Option<&'a str>,
+    /// [-S socket-path] - Specify a full alternative path to the server socket
+    pub socket_path: Option<&'a str>,
+    /// [-CC] - Disable echo
+    pub disable_echo: Option<bool>,
 
     /// non tmux options fields
     ///
@@ -127,6 +127,136 @@ pub struct TmuxInterface<'a> {
     /// this function will be called after command.output();
     // XXX: return?
     pub post_hook: Option<Box<dyn FnMut(&mut Output) -> Result<Option<Output>, Error>>>,
+}
+
+#[derive(Default)]
+pub struct TmuxInterfaceBuilder<'a> {
+    pub colours256: Option<bool>,
+    pub control_mode: Option<bool>,
+    pub login_shell: Option<bool>,
+    pub force_utf8: Option<bool>,
+    pub verbose_logging: Option<bool>,
+    pub version: Option<bool>,
+    pub shell_cmd: Option<&'a str>,
+    pub file: Option<&'a str>,
+    pub socket_name: Option<&'a str>,
+    pub socket_path: Option<&'a str>,
+    pub disable_echo: Option<bool>,
+
+    pub tmux: Option<&'a str>,
+    pub environment: Option<&'a str>,
+
+    pub pre_hook: Option<
+        Box<dyn FnMut(&mut String, &Vec<&str>, &Vec<&str>) -> Result<Option<Output>, Error>>,
+    >,
+    pub post_hook: Option<Box<dyn FnMut(&mut Output) -> Result<Option<Output>, Error>>>,
+}
+
+impl<'a> TmuxInterfaceBuilder<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn colours256(&mut self) -> &mut Self {
+        self.colours256 = Some(true);
+        self
+    }
+    pub fn control_mode(&mut self) -> &mut Self {
+        self.control_mode = Some(true);
+        self
+    }
+    pub fn login_shell(&mut self) -> &mut Self {
+        self.login_shell = Some(true);
+        self
+    }
+    pub fn force_utf8(&mut self) -> &mut Self {
+        self.force_utf8 = Some(true);
+        self
+    }
+    pub fn verbose_logging(&mut self) -> &mut Self {
+        self.verbose_logging = Some(true);
+        self
+    }
+
+    pub fn version(&mut self) -> &mut Self {
+        self.verbose_logging = Some(true);
+        self
+    }
+
+    pub fn shell_cmd(&mut self) -> &mut Self {
+        self.verbose_logging = Some(true);
+        self
+    }
+
+    pub fn file(&mut self, file: &'a str) -> &mut Self {
+        self.file = Some(file);
+        self
+    }
+
+    pub fn socket_name(&mut self, socket_name: &'a str) -> &mut Self {
+        self.socket_name = Some(socket_name);
+        self
+    }
+
+    pub fn socket_path(&mut self, socket_path: &'a str) -> &mut Self {
+        self.socket_path = Some(socket_path);
+        self
+    }
+
+    pub fn disable_echo(&mut self) -> &mut Self {
+        self.disable_echo = Some(true);
+        self
+    }
+
+    pub fn tmux(&mut self, tmux: &'a str) -> &mut Self {
+        self.tmux = Some(tmux);
+        self
+    }
+
+    pub fn environment(&mut self, environment: &'a str) -> &mut Self {
+        self.environment = Some(environment);
+        self
+    }
+
+    pub fn pre_hook(
+        &mut self,
+        pre_hook: Box<
+            dyn FnMut(&mut String, &Vec<&str>, &Vec<&str>) -> Result<Option<Output>, Error>,
+        >,
+    ) -> &mut Self {
+        self.pre_hook = Some(pre_hook);
+        self
+    }
+
+    pub fn post_hook(
+        &mut self,
+        post_hook: Box<dyn FnMut(&mut Output) -> Result<Option<Output>, Error>>,
+    ) -> &mut Self {
+        self.post_hook = Some(post_hook);
+        self
+    }
+
+    pub fn build(&self) -> TmuxInterface<'a> {
+        unimplemented!();
+        //TmuxInterface {
+        //colours256: self.colours256,
+        //control_mode: self.control_mode,
+        //login_shell: self.login_shell,
+        //force_utf8: self.force_utf8,
+        //verbose_logging: self.verbose_logging,
+        //version: self.version,
+        //shell_cmd: self.shell_cmd,
+        //file: self.file,
+        //socket_name: self.socket_name,
+        //socket_path: self.socket_path,
+        //disable_echo: self.disable_echo,
+        //tmux: self.tmux,
+        //environment: self.environment,
+        //// TODO: fix errors
+        //pre_hook: None,
+        //post_hook: None,
+        //}
+    }
 }
 
 /// Common `TmuxInterface` functions
