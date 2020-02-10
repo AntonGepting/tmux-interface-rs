@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 /// Structure for inserting the contents of a paste buffer into the specified pane
@@ -11,7 +12,7 @@ use std::process::Output;
 /// (alias: pasteb)
 /// ```
 #[derive(Default, Debug)]
-pub struct PasteBuffer<'a> {
+pub struct PasteBuffer<'a, T: Display> {
     /// [-d] - delete the paste buffer
     pub delete: Option<bool>,
     /// [-p] - paste bracket control codes are inserted around the buffer
@@ -23,12 +24,69 @@ pub struct PasteBuffer<'a> {
     /// [-s separator] - specify a separator
     pub separator: Option<&'a str>,
     /// [-t target-pane] - specify the target pane
-    pub target_pane: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
 }
 
-impl<'a> PasteBuffer<'a> {
+impl<'a, T: Display + Default> PasteBuffer<'a, T> {
     pub fn new() -> Self {
         Default::default()
+    }
+}
+
+#[derive(Default, Debug)]
+pub struct PasteBufferBuilder<'a, T: Display> {
+    pub delete: Option<bool>,
+    pub bracket_codes: Option<bool>,
+    pub no_replacement: Option<bool>,
+    pub buffer_name: Option<&'a str>,
+    pub separator: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
+}
+
+impl<'a, T: Display + Default> PasteBufferBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn delete(&mut self) -> &mut Self {
+        self.delete = Some(true);
+        self
+    }
+
+    pub fn bracket_codes(&mut self) -> &mut Self {
+        self.bracket_codes = Some(true);
+        self
+    }
+
+    pub fn no_replacement(&mut self) -> &mut Self {
+        self.no_replacement = Some(true);
+        self
+    }
+
+    pub fn buffer_name(&mut self, buffer_name: &'a str) -> &mut Self {
+        self.buffer_name = Some(buffer_name);
+        self
+    }
+
+    pub fn separator(&mut self, separator: &'a str) -> &mut Self {
+        self.separator = Some(separator);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn build(&self) -> PasteBuffer<'a, T> {
+        PasteBuffer {
+            delete: self.delete,
+            bracket_codes: self.bracket_codes,
+            no_replacement: self.no_replacement,
+            buffer_name: self.buffer_name,
+            separator: self.separator,
+            target_pane: self.target_pane,
+        }
     }
 }
 
@@ -43,8 +101,12 @@ impl<'a> TmuxInterface<'a> {
     /// tmux paste-buffer [-dpr] [-b buffer-name] [-s separator] [-t target-pane]
     /// (alias: pasteb)
     /// ```
-    pub fn paste_buffer(&mut self, paste_buffer: Option<&PasteBuffer>) -> Result<Output, Error> {
+    pub fn paste_buffer<T: Display>(
+        &mut self,
+        paste_buffer: Option<&PasteBuffer<T>>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(paste_buffer) = paste_buffer {
             if paste_buffer.delete.unwrap_or(false) {
                 args.push(d_KEY);
@@ -61,7 +123,8 @@ impl<'a> TmuxInterface<'a> {
             if let Some(s) = paste_buffer.separator {
                 args.extend_from_slice(&[s_KEY, &s])
             }
-            if let Some(s) = paste_buffer.target_pane {
+            if let Some(target_pane) = paste_buffer.target_pane {
+                s = target_pane.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
         }

@@ -1,6 +1,6 @@
 #[test]
 fn clear_history() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,5 +12,6 @@ fn clear_history() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.clear_history(Some("1")).unwrap_err();
+    tmux.clear_history(Some(&TargetSession::Raw("1")))
+        .unwrap_err();
 }

@@ -1,6 +1,6 @@
 #[test]
 fn paste_buffer() {
-    use crate::{Error, PasteBuffer, TmuxInterface};
+    use crate::{Error, PasteBuffer, PasteBufferBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,13 +12,24 @@ fn paste_buffer() {
         );
         Err(Error::new("hook"))
     }));
+
     let paste_buffer = PasteBuffer {
         delete: Some(true),
         bracket_codes: Some(true),
         no_replacement: Some(true),
         buffer_name: Some("1"),
         separator: Some("2"),
-        target_pane: Some("3"),
+        target_pane: Some(&TargetPane::Raw("3")),
     };
+    tmux.paste_buffer(Some(&paste_buffer)).unwrap_err();
+
+    let paste_buffer = PasteBufferBuilder::new()
+        .delete()
+        .bracket_codes()
+        .no_replacement()
+        .buffer_name("1")
+        .separator("2")
+        .target_pane(&TargetPane::Raw("3"))
+        .build();
     tmux.paste_buffer(Some(&paste_buffer)).unwrap_err();
 }
