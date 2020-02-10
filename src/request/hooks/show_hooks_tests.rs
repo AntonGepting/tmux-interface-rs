@@ -1,6 +1,6 @@
 #[test]
 fn show_hooks() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,5 +12,6 @@ fn show_hooks() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.show_hooks(Some(true), Some("1")).unwrap_err();
+    tmux.show_hooks(Some(true), Some(&TargetSession::Raw("1")))
+        .unwrap_err();
 }

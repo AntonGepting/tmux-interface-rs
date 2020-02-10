@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn set_hook() {
-    use crate::{Error, SetHook, TmuxInterface};
+    use crate::{Error, SetHook, SetHookBuilder, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -17,15 +17,24 @@ fn set_hook() {
         global: Some(true),
         run: Some(true),
         unset: Some(true),
-        target_session: Some("1"),
+        target_session: Some(&TargetSession::Raw("1")),
     };
+    tmux.set_hook(Some(&set_hook), "2", "3").unwrap_err();
+
+    let set_hook = SetHookBuilder::new()
+        .append()
+        .global()
+        .run()
+        .unset()
+        .target_session(&TargetSession::Raw("1"))
+        .build();
     tmux.set_hook(Some(&set_hook), "2", "3").unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn set_hook() {
-    use crate::{Error, SetHook, TmuxInterface};
+    use crate::{Error, SetHook, SetHookBuilder, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -36,10 +45,18 @@ fn set_hook() {
         );
         Err(Error::new("hook"))
     }));
+
     let set_hook = SetHook {
         global: Some(true),
         unset: Some(true),
-        target_session: Some("1"),
+        target_session: Some(&TargetSession::Raw("1")),
     };
+    tmux.set_hook(Some(&set_hook), "2", "3").unwrap_err();
+
+    let set_hook = SetHookBuilder::new()
+        .global()
+        .unset()
+        .target_session(&TargetSession::Raw("1"))
+        .build();
     tmux.set_hook(Some(&set_hook), "2", "3").unwrap_err();
 }
