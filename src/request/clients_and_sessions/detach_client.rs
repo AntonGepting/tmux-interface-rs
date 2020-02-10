@@ -31,6 +31,56 @@ impl<'a> DetachClient<'a> {
     }
 }
 
+#[derive(Default, Debug)]
+pub struct DetachClientBuilder<'a> {
+    pub all: Option<bool>,
+    pub parent_sighup: Option<bool>,
+    pub shell_command: Option<&'a str>,
+    pub target_session: Option<&'a TargetSession<'a>>,
+    pub target_client: Option<&'a str>,
+}
+
+impl<'a> DetachClientBuilder<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn all(&mut self) -> &mut Self {
+        self.all = Some(true);
+        self
+    }
+
+    pub fn parent_sighup(&mut self) -> &mut Self {
+        self.parent_sighup = Some(true);
+        self
+    }
+
+    pub fn shell_command(&mut self, shell_command: &'a str) -> &mut Self {
+        self.shell_command = Some(shell_command);
+        self
+    }
+
+    pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
+        self.target_session = Some(target_session);
+        self
+    }
+
+    pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
+        self.target_client = Some(target_client);
+        self
+    }
+
+    pub fn build(&self) -> DetachClient<'a> {
+        DetachClient {
+            all: self.all,
+            parent_sighup: self.parent_sighup,
+            shell_command: self.shell_command,
+            target_session: self.target_session,
+            target_client: self.target_client,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const DETACH_CLIENT: &'static str = "detach-client";
 

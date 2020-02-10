@@ -52,6 +52,100 @@ impl<'a> RefreshClient<'a> {
     }
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct RefreshClientBuilder<'a> {
+    pub tracking_cursor: Option<bool>,
+    pub down: Option<bool>,
+    pub request_clipboard: Option<bool>,
+    pub left: Option<bool>,
+    pub right: Option<bool>,
+    pub status_line: Option<bool>,
+    pub up: Option<bool>,
+    pub size: Option<(usize, usize)>,
+    pub flags: Option<&'a str>,
+    pub target_client: Option<&'a str>,
+    pub adjustment: Option<usize>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a> RefreshClientBuilder<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn tracking_cursor(&mut self) -> &mut Self {
+        self.tracking_cursor = Some(true);
+        self
+    }
+
+    pub fn down(&mut self) -> &mut Self {
+        self.down = Some(true);
+        self
+    }
+
+    pub fn request_clipboard(&mut self) -> &mut Self {
+        self.request_clipboard = Some(true);
+        self
+    }
+
+    pub fn left(&mut self) -> &mut Self {
+        self.left = Some(true);
+        self
+    }
+
+    pub fn right(&mut self) -> &mut Self {
+        self.right = Some(true);
+        self
+    }
+
+    pub fn status_line(&mut self) -> &mut Self {
+        self.status_line = Some(true);
+        self
+    }
+
+    pub fn up(&mut self) -> &mut Self {
+        self.up = Some(true);
+        self
+    }
+
+    pub fn size(&mut self, size: (usize, usize)) -> &mut Self {
+        self.size = Some(size);
+        self
+    }
+
+    pub fn flags(&mut self, flags: &'a str) -> &mut Self {
+        self.flags = Some(flags);
+        self
+    }
+
+    pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
+        self.target_client = Some(target_client);
+        self
+    }
+
+    pub fn adjustment(&mut self, adjustment: usize) -> &mut Self {
+        self.adjustment = Some(adjustment);
+        self
+    }
+
+    pub fn build(&self) -> RefreshClient<'a> {
+        RefreshClient {
+            tracking_cursor: self.tracking_cursor,
+            down: self.down,
+            request_clipboard: self.request_clipboard,
+            left: self.left,
+            right: self.right,
+            status_line: self.status_line,
+            up: self.up,
+            size: self.size,
+            flags: self.flags,
+            target_client: self.target_client,
+            adjustment: self.adjustment,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const REFRESH_CLIENT: &'static str = "refresh-client";
     /// Refresh the current client

@@ -35,6 +35,71 @@ pub struct AttachSession<'a> {
     pub target_session: Option<&'a TargetSession<'a>>,
 }
 
+impl<'a> AttachSession<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct AttachSessionBuilder<'a> {
+    pub detach_other: Option<bool>,
+    pub not_update_env: Option<bool>,
+    pub read_only: Option<bool>,
+    pub parent_sighup: Option<bool>,
+    pub cwd: Option<&'a str>,
+    pub target_session: Option<&'a TargetSession<'a>>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a> AttachSessionBuilder<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn detach_other(&mut self) -> &mut Self {
+        self.detach_other = Some(true);
+        self
+    }
+
+    pub fn not_update_env(&mut self) -> &mut Self {
+        self.not_update_env = Some(true);
+        self
+    }
+
+    pub fn read_only(&mut self) -> &mut Self {
+        self.read_only = Some(true);
+        self
+    }
+
+    pub fn parent_sighup(&mut self) -> &mut Self {
+        self.parent_sighup = Some(true);
+        self
+    }
+
+    pub fn cwd(&mut self, cwd: &'a str) -> &mut Self {
+        self.cwd = Some(cwd);
+        self
+    }
+
+    pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
+        self.target_session = Some(&target_session);
+        self
+    }
+
+    pub fn build(&self) -> AttachSession<'a> {
+        AttachSession {
+            detach_other: self.detach_other,
+            not_update_env: self.not_update_env,
+            read_only: self.read_only,
+            parent_sighup: self.parent_sighup,
+            cwd: self.cwd,
+            target_session: self.target_session,
+        }
+    }
+}
+
 #[cfg(feature = "tmux_2_6")]
 #[derive(Default, Debug)]
 pub struct AttachSession<'a> {
@@ -50,9 +115,55 @@ pub struct AttachSession<'a> {
     pub target_session: Option<&'a TargetSession<'a>>,
 }
 
-impl<'a> AttachSession<'a> {
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Debug)]
+pub struct AttachSessionBuilder<'a> {
+    pub detach_other: Option<bool>,
+    pub not_update_env: Option<bool>,
+    pub read_only: Option<bool>,
+    pub cwd: Option<&'a str>,
+    pub target_session: Option<&'a TargetSession<'a>>,
+}
+
+#[cfg(feature = "tmux_2_6")]
+impl<'a> AttachSessionBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    pub fn detach_other(&mut self) -> &mut Self {
+        self.detach_other = Some(true);
+        self
+    }
+
+    pub fn not_update_env(&mut self) -> &mut Self {
+        self.not_update_env = Some(true);
+        self
+    }
+
+    pub fn read_only(&mut self) -> &mut Self {
+        self.read_only = Some(true);
+        self
+    }
+
+    pub fn cwd(&mut self, cwd: &'a str) -> &mut Self {
+        self.cwd = Some(cwd);
+        self
+    }
+
+    pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
+        self.target_session = Some(&target_session);
+        self
+    }
+
+    pub fn build(&self) -> AttachSession<'a> {
+        AttachSession {
+            detach_other: self.detach_other,
+            not_update_env: self.not_update_env,
+            read_only: self.read_only,
+            cwd: self.cwd,
+            target_session: self.target_session,
+        }
     }
 }
 

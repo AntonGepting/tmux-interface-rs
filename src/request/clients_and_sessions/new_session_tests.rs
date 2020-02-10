@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn new_session() {
-    use crate::{Error, NewSession, TmuxInterface};
+    use crate::{Error, NewSession, NewSessionBuilder, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -31,12 +31,30 @@ fn new_session() {
         shell_command: Some("8"),
     };
     tmux.new_session(Some(&new_session)).unwrap_err();
+
+    let new_session = NewSessionBuilder::new()
+        .attach()
+        .detached()
+        .detach_other()
+        .not_update_env()
+        .print()
+        .parent_sighup()
+        .cwd("1")
+        .format("2")
+        .window_name("3")
+        .session_name("4")
+        .group_name("5")
+        .width(6)
+        .height(7)
+        .shell_command("8")
+        .build();
+    tmux.new_session(Some(&new_session)).unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn new_session() {
-    use crate::{Error, NewSession, TmuxInterface};
+    use crate::{Error, NewSession, NewSessionBuilder, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -49,6 +67,7 @@ fn new_session() {
         );
         Err(Error::new("hook"))
     }));
+
     let new_session = NewSession {
         attach: Some(true),
         detached: Some(true),
@@ -64,5 +83,22 @@ fn new_session() {
         height: Some(7),
         shell_command: Some("8"),
     };
+    tmux.new_session(Some(&new_session)).unwrap_err();
+
+    let new_session = NewSessionBuilder::new()
+        .attach()
+        .detached()
+        .detach_other()
+        .not_update_env()
+        .print()
+        .cwd("1")
+        .format("2")
+        .window_name("3")
+        .session_name("4")
+        .group_name("5")
+        .width(6)
+        .height(7)
+        .shell_command("8")
+        .build();
     tmux.new_session(Some(&new_session)).unwrap_err();
 }

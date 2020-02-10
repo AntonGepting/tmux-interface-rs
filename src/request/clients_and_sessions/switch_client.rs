@@ -41,6 +41,86 @@ pub struct SwitchClient<'a> {
     pub key_table: Option<&'a str>,
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct SwitchClientBuilder<'a> {
+    pub not_update_env: Option<bool>,
+    pub last: Option<bool>,
+    pub next: Option<bool>,
+    pub previous: Option<bool>,
+    pub read_only: Option<bool>,
+    pub keep_zoomed: Option<bool>,
+    pub target_client: Option<&'a str>,
+    pub target_session: Option<&'a TargetSession<'a>>,
+    pub key_table: Option<&'a str>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a> SwitchClientBuilder<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn not_update_env(&mut self) -> &mut Self {
+        self.not_update_env = Some(true);
+        self
+    }
+
+    pub fn last(&mut self) -> &mut Self {
+        self.last = Some(true);
+        self
+    }
+
+    pub fn next(&mut self) -> &mut Self {
+        self.next = Some(true);
+        self
+    }
+
+    pub fn previous(&mut self) -> &mut Self {
+        self.previous = Some(true);
+        self
+    }
+
+    pub fn read_only(&mut self) -> &mut Self {
+        self.read_only = Some(true);
+        self
+    }
+
+    pub fn keep_zoomed(&mut self) -> &mut Self {
+        self.keep_zoomed = Some(true);
+        self
+    }
+
+    pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
+        self.target_client = Some(target_client);
+        self
+    }
+
+    pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
+        self.target_session = Some(target_session);
+        self
+    }
+
+    pub fn key_table(&mut self, key_table: &'a str) -> &mut Self {
+        self.key_table = Some(key_table);
+        self
+    }
+
+    pub fn build(&self) -> SwitchClient<'a> {
+        SwitchClient {
+            not_update_env: self.not_update_env,
+            last: self.last,
+            next: self.next,
+            previous: self.previous,
+            read_only: self.read_only,
+            keep_zoomed: self.keep_zoomed,
+            target_client: self.target_client,
+            target_session: self.target_session,
+            key_table: self.key_table,
+        }
+    }
+}
+
 #[cfg(feature = "tmux_2_6")]
 #[derive(Default, Debug)]
 pub struct SwitchClient<'a> {
@@ -65,6 +145,79 @@ pub struct SwitchClient<'a> {
 impl<'a> SwitchClient<'a> {
     pub fn new() -> Self {
         Default::default()
+    }
+}
+
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Debug)]
+pub struct SwitchClientBuilder<'a> {
+    pub not_update_env: Option<bool>,
+    pub last: Option<bool>,
+    pub next: Option<bool>,
+    pub previous: Option<bool>,
+    pub read_only: Option<bool>,
+    pub target_client: Option<&'a str>,
+    pub target_session: Option<&'a TargetSession<'a>>,
+    pub key_table: Option<&'a str>,
+}
+
+#[cfg(feature = "tmux_2_6")]
+impl<'a> SwitchClientBuilder<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn not_update_env(&mut self) -> &mut Self {
+        self.not_update_env = Some(true);
+        self
+    }
+
+    pub fn last(&mut self) -> &mut Self {
+        self.last = Some(true);
+        self
+    }
+
+    pub fn next(&mut self) -> &mut Self {
+        self.next = Some(true);
+        self
+    }
+
+    pub fn previous(&mut self) -> &mut Self {
+        self.previous = Some(true);
+        self
+    }
+
+    pub fn read_only(&mut self) -> &mut Self {
+        self.read_only = Some(true);
+        self
+    }
+
+    pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
+        self.target_client = Some(target_client);
+        self
+    }
+
+    pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
+        self.target_session = Some(target_session);
+        self
+    }
+
+    pub fn key_table(&mut self, key_table: &'a str) -> &mut Self {
+        self.key_table = Some(key_table);
+        self
+    }
+
+    pub fn build(&self) -> SwitchClient<'a> {
+        SwitchClient {
+            not_update_env: self.not_update_env,
+            last: self.last,
+            next: self.next,
+            previous: self.previous,
+            read_only: self.read_only,
+            target_client: self.target_client,
+            target_session: self.target_session,
+            key_table: self.key_table,
+        }
     }
 }
 

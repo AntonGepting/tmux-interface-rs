@@ -51,6 +51,121 @@ pub struct NewSession<'a> {
     pub shell_command: Option<&'a str>,
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct NewSessionBuilder<'a> {
+    pub attach: Option<bool>,
+    pub detached: Option<bool>,
+    pub detach_other: Option<bool>,
+    pub not_update_env: Option<bool>,
+    pub print: Option<bool>,
+    pub parent_sighup: Option<bool>,
+    pub cwd: Option<&'a str>,
+    pub format: Option<&'a str>,
+    pub window_name: Option<&'a str>,
+    pub session_name: Option<&'a str>,
+    pub group_name: Option<&'a str>,
+    pub width: Option<usize>,
+    pub height: Option<usize>,
+    pub shell_command: Option<&'a str>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a> NewSessionBuilder<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn attach(&mut self) -> &mut Self {
+        self.attach = Some(true);
+        self
+    }
+
+    pub fn detached(&mut self) -> &mut Self {
+        self.detached = Some(true);
+        self
+    }
+
+    pub fn detach_other(&mut self) -> &mut Self {
+        self.detach_other = Some(true);
+        self
+    }
+
+    pub fn not_update_env(&mut self) -> &mut Self {
+        self.not_update_env = Some(true);
+        self
+    }
+
+    pub fn print(&mut self) -> &mut Self {
+        self.print = Some(true);
+        self
+    }
+
+    pub fn parent_sighup(&mut self) -> &mut Self {
+        self.parent_sighup = Some(true);
+        self
+    }
+
+    pub fn cwd(&mut self, cwd: &'a str) -> &mut Self {
+        self.cwd = Some(cwd);
+        self
+    }
+
+    pub fn format(&mut self, format: &'a str) -> &mut Self {
+        self.format = Some(format);
+        self
+    }
+
+    pub fn window_name(&mut self, window_name: &'a str) -> &mut Self {
+        self.window_name = Some(window_name);
+        self
+    }
+
+    pub fn session_name(&mut self, session_name: &'a str) -> &mut Self {
+        self.session_name = Some(session_name);
+        self
+    }
+
+    pub fn group_name(&mut self, group_name: &'a str) -> &mut Self {
+        self.group_name = Some(group_name);
+        self
+    }
+
+    pub fn width(&mut self, width: usize) -> &mut Self {
+        self.width = Some(width);
+        self
+    }
+
+    pub fn height(&mut self, height: usize) -> &mut Self {
+        self.height = Some(height);
+        self
+    }
+
+    pub fn shell_command(&mut self, shell_command: &'a str) -> &mut Self {
+        self.shell_command = Some(shell_command);
+        self
+    }
+
+    pub fn build(&self) -> NewSession<'a> {
+        NewSession {
+            attach: self.attach,
+            detached: self.detached,
+            detach_other: self.detach_other,
+            not_update_env: self.not_update_env,
+            print: self.print,
+            parent_sighup: self.parent_sighup,
+            cwd: self.cwd,
+            format: self.format,
+            window_name: self.window_name,
+            session_name: self.session_name,
+            group_name: self.group_name,
+            width: self.width,
+            height: self.height,
+            shell_command: self.shell_command,
+        }
+    }
+}
+
 #[cfg(feature = "tmux_2_6")]
 #[derive(Default, Debug)]
 pub struct NewSession<'a> {
@@ -85,6 +200,114 @@ pub struct NewSession<'a> {
 impl<'a> NewSession<'a> {
     pub fn new() -> Self {
         Default::default()
+    }
+}
+
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Debug)]
+pub struct NewSessionBuilder<'a> {
+    pub attach: Option<bool>,
+    pub detached: Option<bool>,
+    pub detach_other: Option<bool>,
+    pub not_update_env: Option<bool>,
+    pub print: Option<bool>,
+    pub cwd: Option<&'a str>,
+    pub format: Option<&'a str>,
+    pub window_name: Option<&'a str>,
+    pub session_name: Option<&'a str>,
+    pub group_name: Option<&'a str>,
+    pub width: Option<usize>,
+    pub height: Option<usize>,
+    pub shell_command: Option<&'a str>,
+}
+
+#[cfg(feature = "tmux_2_6")]
+impl<'a> NewSessionBuilder<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn attach(&mut self) -> &mut Self {
+        self.attach = Some(true);
+        self
+    }
+
+    pub fn detached(&mut self) -> &mut Self {
+        self.detached = Some(true);
+        self
+    }
+
+    pub fn detach_other(&mut self) -> &mut Self {
+        self.detach_other = Some(true);
+        self
+    }
+
+    pub fn not_update_env(&mut self) -> &mut Self {
+        self.not_update_env = Some(true);
+        self
+    }
+
+    pub fn print(&mut self) -> &mut Self {
+        self.print = Some(true);
+        self
+    }
+
+    pub fn cwd(&mut self, cwd: &'a str) -> &mut Self {
+        self.cwd = Some(cwd);
+        self
+    }
+
+    pub fn format(&mut self, format: &'a str) -> &mut Self {
+        self.format = Some(format);
+        self
+    }
+
+    pub fn window_name(&mut self, window_name: &'a str) -> &mut Self {
+        self.window_name = Some(window_name);
+        self
+    }
+
+    pub fn session_name(&mut self, session_name: &'a str) -> &mut Self {
+        self.session_name = Some(session_name);
+        self
+    }
+
+    pub fn group_name(&mut self, group_name: &'a str) -> &mut Self {
+        self.group_name = Some(group_name);
+        self
+    }
+
+    pub fn width(&mut self, width: usize) -> &mut Self {
+        self.width = Some(width);
+        self
+    }
+
+    pub fn height(&mut self, height: usize) -> &mut Self {
+        self.height = Some(height);
+        self
+    }
+
+    pub fn shell_command(&mut self, shell_command: &'a str) -> &mut Self {
+        self.shell_command = Some(shell_command);
+        self
+    }
+
+    pub fn build(&self) -> NewSession<'a> {
+        NewSession {
+            attach: self.attach,
+            detached: self.detached,
+            detach_other: self.detach_other,
+            not_update_env: self.not_update_env,
+            print: self.print,
+            cwd: self.cwd,
+            format: self.format,
+            window_name: self.window_name,
+            session_name: self.session_name,
+            group_name: self.group_name,
+            width: self.width,
+            height: self.height,
+            shell_command: self.shell_command,
+        }
     }
 }
 

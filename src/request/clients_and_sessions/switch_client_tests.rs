@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn attach_session() {
-    use crate::{Error, SwitchClient, TargetSession, TmuxInterface};
+    use crate::{Error, SwitchClient, SwitchClientBuilder, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -25,12 +25,25 @@ fn attach_session() {
         key_table: Some("3"),
     };
     tmux.switch_client(Some(&switch_client)).unwrap_err();
+
+    let switch_client = SwitchClientBuilder::new()
+        .not_update_env()
+        .last()
+        .next()
+        .previous()
+        .read_only()
+        .keep_zoomed()
+        .target_client("1")
+        .target_session(&TargetSession::Raw("2"))
+        .key_table("3")
+        .build();
+    tmux.switch_client(Some(&switch_client)).unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn attach_session() {
-    use crate::{Error, SwitchClient, TargetSession, TmuxInterface};
+    use crate::{Error, SwitchClient, SwitchClientBuilder, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -42,6 +55,7 @@ fn attach_session() {
         );
         Err(Error::new("hook"))
     }));
+
     let switch_client = SwitchClient {
         not_update_env: Some(true),
         last: Some(true),
@@ -52,5 +66,17 @@ fn attach_session() {
         target_session: Some(&TargetSession::Raw("2")),
         key_table: Some("3"),
     };
+    tmux.switch_client(Some(&switch_client)).unwrap_err();
+
+    let switch_client = SwitchClientBuilder::new()
+        .not_update_env()
+        .last()
+        .next()
+        .previous()
+        .read_only()
+        .target_client("1")
+        .target_session(&TargetSession::Raw("2"))
+        .key_table("3")
+        .build();
     tmux.switch_client(Some(&switch_client)).unwrap_err();
 }

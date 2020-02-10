@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn attach_session() {
-    use crate::{AttachSession, Error, TargetSession, TmuxInterface};
+    use crate::{AttachSession, AttachSessionBuilder, Error, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,6 +13,7 @@ fn attach_session() {
         );
         Err(Error::new("hook"))
     }));
+
     let attach_session = AttachSession {
         detach_other: Some(true),
         not_update_env: Some(true),
@@ -22,12 +23,22 @@ fn attach_session() {
         target_session: Some(&TargetSession::Raw("2")),
     };
     tmux.attach_session(Some(&attach_session)).unwrap_err();
+
+    let attach_session = AttachSessionBuilder::new()
+        .detach_other()
+        .not_update_env()
+        .read_only()
+        .parent_sighup()
+        .cwd("1")
+        .target_session(&TargetSession::Raw("2"))
+        .build();
+    tmux.attach_session(Some(&attach_session)).unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn attach_session() {
-    use crate::{AttachSession, Error, TargetSession, TmuxInterface};
+    use crate::{AttachSession, AttachSessionBuilder, Error, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -39,6 +50,7 @@ fn attach_session() {
         );
         Err(Error::new("hook"))
     }));
+
     let attach_session = AttachSession {
         detach_other: Some(true),
         not_update_env: Some(true),
@@ -46,5 +58,14 @@ fn attach_session() {
         cwd: Some("1"),
         target_session: Some(&TargetSession::Raw("2")),
     };
+    tmux.attach_session(Some(&attach_session)).unwrap_err();
+
+    let attach_session = AttachSessionBuilder::new()
+        .detach_other()
+        .not_update_env()
+        .read_only()
+        .cwd("1")
+        .target_session(&TargetSession::Raw("2"))
+        .build();
     tmux.attach_session(Some(&attach_session)).unwrap_err();
 }
