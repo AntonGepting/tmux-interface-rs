@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
@@ -10,9 +11,11 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux clock-mode [-t target-pane]
     /// ```
-    pub fn clock_mode(&mut self, target_pane: Option<&str>) -> Result<Output, Error> {
+    pub fn clock_mode<T: Display>(&mut self, target_pane: Option<&'a T>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if let Some(s) = target_pane {
+        let s;
+        if let Some(target_pane) = target_pane {
+            s = target_pane.to_string();
             args.extend_from_slice(&[t_KEY, &s])
         }
         let output = self.subcommand(TmuxInterface::CLOCK_MODE, &args)?;

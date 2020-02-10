@@ -1,6 +1,6 @@
 #[test]
 fn run_shell() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,5 +12,6 @@ fn run_shell() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.run_shell(Some(true), Some("1"), "2").unwrap_err();
+    tmux.run_shell(Some(true), Some(&TargetPane::Raw("1")), "2")
+        .unwrap_err();
 }

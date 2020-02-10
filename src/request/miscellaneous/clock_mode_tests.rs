@@ -1,6 +1,6 @@
 #[test]
 fn clock_mode() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -11,5 +11,5 @@ fn clock_mode() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.clock_mode(Some("1")).unwrap_err();
+    tmux.clock_mode(Some(&TargetPane::Raw("1"))).unwrap_err();
 }
