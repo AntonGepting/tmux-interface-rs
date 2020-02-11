@@ -26,6 +26,13 @@ impl<'a> TargetPaneEx<'a> {
         }
     }
 
+    pub fn index(target_window: Option<&'a TargetWindowEx>, index: usize) -> Self {
+        TargetPaneEx {
+            target_window: target_window,
+            target_pane: Some(TargetPane::Index(index)),
+        }
+    }
+
     pub fn id(target_window: Option<&'a TargetWindowEx>, id: usize) -> Self {
         TargetPaneEx {
             target_window: target_window,
