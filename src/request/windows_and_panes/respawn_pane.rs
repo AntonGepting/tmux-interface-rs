@@ -40,6 +40,58 @@ impl<'a, T: Display + Default> RespawnPane<'a, T> {
     }
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct RespawnPaneBuilder<'a, T: Display> {
+    pub kill: Option<bool>,
+    pub start_directory: Option<&'a str>,
+    pub environment: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
+    pub shell_command: Option<&'a str>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a, T: Display + Default> RespawnPaneBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn kill(&mut self) -> &mut Self {
+        self.kill = Some(true);
+        self
+    }
+
+    pub fn start_directory(&mut self, start_directory: &'a str) -> &mut Self {
+        self.start_directory = Some(start_directory);
+        self
+    }
+
+    pub fn environment(&mut self, environment: &'a str) -> &mut Self {
+        self.environment = Some(environment);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn shell_command(&mut self, shell_command: &'a str) -> &mut Self {
+        self.shell_command = Some(shell_command);
+        self
+    }
+
+    pub fn build(&self) -> RespawnPane<'a, T> {
+        RespawnPane {
+            kill: self.kill,
+            start_directory: self.start_directory,
+            environment: self.environment,
+            target_pane: self.target_pane,
+            shell_command: self.shell_command,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const RESPAWN_PANE: &'static str = "respawn-pane";
 

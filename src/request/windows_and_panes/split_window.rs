@@ -42,7 +42,7 @@ pub struct SplitWindow<'a, T: Display> {
     /// [-e environment] - environment
     pub environment: Option<&'a str>,
     /// [-l size] - specify the size of the new pane in lines
-    pub size: Option<PaneSize>,
+    pub size: Option<&'a PaneSize>,
     /// [-t target-pane] -
     pub target_pane: Option<&'a T>,
     /// [shell-command] - shell-command
@@ -69,7 +69,7 @@ pub struct SplitWindow<'a, T: Display> {
     /// [-c start_directory] - start-directory
     pub cwd: Option<&'a str>,
     /// [-l size | -p percentage] - specify the size of the new pane in lines
-    pub size: Option<PaneSize>,
+    pub size: Option<&'a PaneSize>,
     /// [-t target-pane] -
     pub target_pane: Option<&'a T>,
     /// [shell-command] - shell-command
@@ -81,6 +81,208 @@ pub struct SplitWindow<'a, T: Display> {
 impl<'a, T: Display + Default> SplitWindow<'a, T> {
     pub fn new() -> Self {
         Default::default()
+    }
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct SplitWindowBuilder<'a, T: Display> {
+    pub before: Option<bool>,
+    pub detached: Option<bool>,
+    pub full: Option<bool>,
+    pub horizontal: Option<bool>,
+    pub stdin_forward: Option<bool>,
+    pub vertical: Option<bool>,
+    pub print: Option<bool>,
+    pub cwd: Option<&'a str>,
+    pub environment: Option<&'a str>,
+    pub size: Option<&'a PaneSize>,
+    pub target_pane: Option<&'a T>,
+    pub shell_command: Option<&'a str>,
+    pub format: Option<&'a str>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a, T: Display + Default> SplitWindowBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn before(&mut self) -> &mut Self {
+        self.before = Some(true);
+        self
+    }
+
+    pub fn detached(&mut self) -> &mut Self {
+        self.detached = Some(true);
+        self
+    }
+
+    pub fn full(&mut self) -> &mut Self {
+        self.full = Some(true);
+        self
+    }
+
+    pub fn horizontal(&mut self) -> &mut Self {
+        self.horizontal = Some(true);
+        self
+    }
+
+    pub fn stdin_forward(&mut self) -> &mut Self {
+        self.stdin_forward = Some(true);
+        self
+    }
+
+    pub fn vertical(&mut self) -> &mut Self {
+        self.vertical = Some(true);
+        self
+    }
+
+    pub fn print(&mut self) -> &mut Self {
+        self.print = Some(true);
+        self
+    }
+
+    pub fn cwd(&mut self, cwd: &'a str) -> &mut Self {
+        self.cwd = Some(cwd);
+        self
+    }
+
+    pub fn environment(&mut self, environment: &'a str) -> &mut Self {
+        self.environment = Some(environment);
+        self
+    }
+
+    pub fn size(&mut self, size: &'a PaneSize) -> &mut Self {
+        self.size = Some(size);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn shell_command(&mut self, shell_command: &'a str) -> &mut Self {
+        self.shell_command = Some(shell_command);
+        self
+    }
+
+    pub fn format(&mut self, format: &'a str) -> &mut Self {
+        self.format = Some(format);
+        self
+    }
+
+    pub fn build(&self) -> SplitWindow<'a, T> {
+        SplitWindow {
+            before: self.before,
+            detached: self.detached,
+            full: self.full,
+            horizontal: self.horizontal,
+            stdin_forward: self.stdin_forward,
+            vertical: self.vertical,
+            print: self.print,
+            cwd: self.cwd,
+            environment: self.environment,
+            size: self.size,
+            target_pane: self.target_pane,
+            shell_command: self.shell_command,
+            format: self.format,
+        }
+    }
+}
+
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Debug)]
+pub struct SplitWindowBuilder<'a, T: Display> {
+    pub before: Option<bool>,
+    pub detached: Option<bool>,
+    pub full: Option<bool>,
+    pub horizontal: Option<bool>,
+    pub vertical: Option<bool>,
+    pub print: Option<bool>,
+    pub cwd: Option<&'a str>,
+    pub size: Option<&'a PaneSize>,
+    pub target_pane: Option<&'a T>,
+    pub shell_command: Option<&'a str>,
+    pub format: Option<&'a str>,
+}
+
+#[cfg(feature = "tmux_2_6")]
+impl<'a, T: Display + Default> SplitWindowBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn before(&mut self) -> &mut Self {
+        self.before = Some(true);
+        self
+    }
+
+    pub fn detached(&mut self) -> &mut Self {
+        self.detached = Some(true);
+        self
+    }
+
+    pub fn full(&mut self) -> &mut Self {
+        self.full = Some(true);
+        self
+    }
+
+    pub fn horizontal(&mut self) -> &mut Self {
+        self.horizontal = Some(true);
+        self
+    }
+
+    pub fn vertical(&mut self) -> &mut Self {
+        self.vertical = Some(true);
+        self
+    }
+
+    pub fn print(&mut self) -> &mut Self {
+        self.print = Some(true);
+        self
+    }
+
+    pub fn cwd(&mut self, cwd: &'a str) -> &mut Self {
+        self.cwd = Some(cwd);
+        self
+    }
+
+    pub fn size(&mut self, size: &'a PaneSize) -> &mut Self {
+        self.size = Some(size);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn shell_command(&mut self, shell_command: &'a str) -> &mut Self {
+        self.shell_command = Some(shell_command);
+        self
+    }
+
+    pub fn format(&mut self, format: &'a str) -> &mut Self {
+        self.format = Some(format);
+        self
+    }
+
+    pub fn build(&self) -> SplitWindow<'a, T> {
+        SplitWindow {
+            before: self.before,
+            detached: self.detached,
+            full: self.full,
+            horizontal: self.horizontal,
+            vertical: self.vertical,
+            print: self.print,
+            cwd: self.cwd,
+            size: self.size,
+            target_pane: self.target_pane,
+            shell_command: self.shell_command,
+            format: self.format,
+        }
     }
 }
 

@@ -188,41 +188,54 @@ pub use self::request::status_line::display_message::DisplayMessage;
 pub use self::request::status_line::display_message::DisplayMessageBuilder;
 // windows and panes
 pub use self::request::windows_and_panes::break_pane::BreakPane;
-//pub use self::request::windows_and_panes::break_pane::BreakPaneBuilder;
+pub use self::request::windows_and_panes::break_pane::BreakPaneBuilder;
 pub use self::request::windows_and_panes::capture_pane::CapturePane;
-//pub use self::request::windows_and_panes::capture_pane::CapturePaneBuilder;
+pub use self::request::windows_and_panes::capture_pane::CapturePaneBuilder;
 pub use self::request::windows_and_panes::choose_client::ChooseClient;
-//pub use self::request::windows_and_panes::choose_client::ChooseClientBuilder;
+pub use self::request::windows_and_panes::choose_client::ChooseClientBuilder;
 pub use self::request::windows_and_panes::choose_tree::ChooseTree;
-//pub use self::request::windows_and_panes::choose_tree::ChooseTreeBuilder;
+pub use self::request::windows_and_panes::choose_tree::ChooseTreeBuilder;
 pub use self::request::windows_and_panes::find_window::FindWindow;
-//pub use self::request::windows_and_panes::find_window::FindWindowBuilder;
+pub use self::request::windows_and_panes::find_window::FindWindowBuilder;
 pub use self::request::windows_and_panes::join_pane::JoinPane;
-//pub use self::request::windows_and_panes::join_pane::JoinPaneBuilder;
+pub use self::request::windows_and_panes::join_pane::JoinPaneBuilder;
 pub use self::request::windows_and_panes::link_window::LinkWindow;
-//pub use self::request::windows_and_panes::link_window::LinkWindowBuilder;
+pub use self::request::windows_and_panes::link_window::LinkWindowBuilder;
 pub use self::request::windows_and_panes::move_pane::MovePane;
-//pub use self::request::windows_and_panes::move_pane::MovePaneBuilder;
+pub use self::request::windows_and_panes::move_pane::MovePaneBuilder;
 pub use self::request::windows_and_panes::move_window::MoveWindow;
-//pub use self::request::windows_and_panes::move_window::MoveWindowBuilder;
+pub use self::request::windows_and_panes::move_window::MoveWindowBuilder;
 pub use self::request::windows_and_panes::new_window::NewWindow;
-//pub use self::request::windows_and_panes::new_window::NewWindowBuilder;
+pub use self::request::windows_and_panes::new_window::NewWindowBuilder;
 // not structure, pass as arguments
 #[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::pipe_pane::PipePane;
+#[cfg(not(feature = "tmux_2_6"))]
+pub use self::request::windows_and_panes::pipe_pane::PipePaneBuilder;
 pub use self::request::windows_and_panes::resize_pane::ResizePane;
+pub use self::request::windows_and_panes::resize_pane::ResizePaneBuilder;
 pub use self::request::windows_and_panes::resize_window::ResizeWindow;
+pub use self::request::windows_and_panes::resize_window::ResizeWindowBuilder;
 // not structure, pass as arguments
 #[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::respawn_pane::RespawnPane;
+#[cfg(not(feature = "tmux_2_6"))]
+pub use self::request::windows_and_panes::respawn_pane::RespawnPaneBuilder;
 // not structure, pass as arguments
 #[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::respawn_window::RespawnWindow;
+#[cfg(not(feature = "tmux_2_6"))]
+pub use self::request::windows_and_panes::respawn_window::RespawnWindowBuilder;
 pub use self::request::windows_and_panes::select_layout::SelectLayot;
+pub use self::request::windows_and_panes::select_layout::SelectLayotBuilder;
 pub use self::request::windows_and_panes::select_pane::SelectPane;
+pub use self::request::windows_and_panes::select_pane::SelectPaneBuilder;
 pub use self::request::windows_and_panes::select_window::SelectWindow;
+pub use self::request::windows_and_panes::select_window::SelectWindowBuilder;
 pub use self::request::windows_and_panes::split_window::SplitWindow;
+pub use self::request::windows_and_panes::split_window::SplitWindowBuilder;
 pub use self::request::windows_and_panes::swap_pane::SwapPane;
+pub use self::request::windows_and_panes::swap_pane::SwapPaneBuilder;
 
 // enums
 pub use crate::request::PaneSize;

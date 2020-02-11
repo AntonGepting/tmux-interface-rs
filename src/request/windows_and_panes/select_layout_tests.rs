@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn select_layout() {
-    use crate::{Error, SelectLayot, TmuxInterface};
+    use crate::{Error, SelectLayot, SelectLayotBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,21 +13,32 @@ fn select_layout() {
         );
         Err(Error::new("hook"))
     }));
+
     let select_layout = SelectLayot {
         spread: Some(true),
         next: Some(true),
         last: Some(true),
         previous: Some(true),
-        target_pane: Some("1"),
+        target_pane: Some(&TargetPane::Raw("1")),
         layout_name: Some("2"),
     };
+    tmux.select_layout(Some(&select_layout)).unwrap_err();
+
+    let select_layout = SelectLayotBuilder::new()
+        .spread()
+        .next()
+        .last()
+        .previous()
+        .target_pane(&TargetPane::Raw("1"))
+        .layout_name("2")
+        .build();
     tmux.select_layout(Some(&select_layout)).unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn select_layout() {
-    use crate::{Error, SelectLayot, TmuxInterface};
+    use crate::{Error, SelectLayot, SelectLayotBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -39,12 +50,22 @@ fn select_layout() {
         );
         Err(Error::new("hook"))
     }));
+
     let select_layout = SelectLayot {
         next: Some(true),
         last: Some(true),
         previous: Some(true),
-        target_pane: Some("1"),
+        target_pane: Some(&TargetPane::Raw("1")),
         layout_name: Some("2"),
     };
+    tmux.select_layout(Some(&select_layout)).unwrap_err();
+
+    let select_layout = SelectLayotBuilder::new()
+        .next()
+        .last()
+        .previous()
+        .target_pane(&TargetPane::Raw("1"))
+        .layout_name("2")
+        .build();
     tmux.select_layout(Some(&select_layout)).unwrap_err();
 }

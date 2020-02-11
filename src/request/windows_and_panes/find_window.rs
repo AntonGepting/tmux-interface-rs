@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 /// Search for the fnmatch(3) pattern `match-string` in window names,
@@ -19,9 +20,8 @@ use std::process::Output;
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]
 #[derive(Default, Debug)]
-pub struct FindWindow<'a> {
+pub struct FindWindow<'a, T: Display> {
     /// [-r] - regular expression
-    #[cfg(not(feature = "tmux_2_6"))]
     pub regex: Option<bool>,
     /// [-C] - match only visible window contents
     pub only_visible: Option<bool>,
@@ -30,17 +30,16 @@ pub struct FindWindow<'a> {
     /// [-T] - match only the window title
     pub only_title: Option<bool>,
     /// [-Z] - zoom the pane
-    #[cfg(not(feature = "tmux_2_6"))]
     pub zoom: Option<bool>,
     /// [-t target-pane] - target-pane
-    pub target_pane: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
     // match-string
     //pub match_string: &'a str,
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[derive(Default, Debug)]
-pub struct FindWindow<'a> {
+pub struct FindWindow<'a, T: Display> {
     /// [-C] - match only visible window contents
     pub only_visible: Option<bool>,
     /// [-N] - match only the window name
@@ -48,17 +47,122 @@ pub struct FindWindow<'a> {
     /// [-T] - match only the window title
     pub only_title: Option<bool>,
     /// [-t target-pane] - target-pane
-    pub target_pane: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
     // match-string
     //pub match_string: &'a str,
 }
 
-impl<'a> FindWindow<'a> {
-    pub fn new() -> FindWindow<'a> {
+impl<'a, T: Display + Default> FindWindow<'a, T> {
+    pub fn new() -> Self {
         Default::default()
     }
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct FindWindowBuilder<'a, T: Display> {
+    pub regex: Option<bool>,
+    pub only_visible: Option<bool>,
+    pub only_name: Option<bool>,
+    pub only_title: Option<bool>,
+    pub zoom: Option<bool>,
+    pub target_pane: Option<&'a T>,
+    //pub match_string: &'a str,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a, T: Display + Default> FindWindowBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn regex(&mut self) -> &mut Self {
+        self.regex = Some(true);
+        self
+    }
+
+    pub fn only_visible(&mut self) -> &mut Self {
+        self.only_visible = Some(true);
+        self
+    }
+
+    pub fn only_name(&mut self) -> &mut Self {
+        self.only_name = Some(true);
+        self
+    }
+
+    pub fn only_title(&mut self) -> &mut Self {
+        self.only_title = Some(true);
+        self
+    }
+
+    pub fn zoom(&mut self) -> &mut Self {
+        self.zoom = Some(true);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn build(&self) -> FindWindow<'a, T> {
+        FindWindow {
+            regex: self.regex,
+            only_visible: self.only_visible,
+            only_name: self.only_name,
+            only_title: self.only_title,
+            zoom: self.zoom,
+            target_pane: self.target_pane,
+        }
+    }
+}
+
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Debug)]
+pub struct FindWindowBuilder<'a, T: Display> {
+    pub only_visible: Option<bool>,
+    pub only_name: Option<bool>,
+    pub only_title: Option<bool>,
+    pub target_pane: Option<&'a T>,
+    //pub match_string: &'a str,
+}
+
+#[cfg(feature = "tmux_2_6")]
+impl<'a, T: Display + Default> FindWindowBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn only_visible(&mut self) -> &mut Self {
+        self.only_visible = Some(true);
+        self
+    }
+
+    pub fn only_name(&mut self) -> &mut Self {
+        self.only_name = Some(true);
+        self
+    }
+
+    pub fn only_title(&mut self) -> &mut Self {
+        self.only_title = Some(true);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn build(&self) -> FindWindow<'a, T> {
+        FindWindow {
+            only_visible: self.only_visible,
+            only_name: self.only_name,
+            only_title: self.only_title,
+            target_pane: self.target_pane,
+        }
+    }
+}
 impl<'a> TmuxInterface<'a> {
     const FIND_WINDOW: &'static str = "find-window";
 
@@ -78,12 +182,13 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: findw)
     /// ```
     #[cfg(not(feature = "tmux_2_6"))]
-    pub fn find_window(
+    pub fn find_window<T: Display>(
         &mut self,
-        find_window: Option<&FindWindow>,
+        find_window: Option<&FindWindow<T>>,
         match_string: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(find_window) = find_window {
             if find_window.regex.unwrap_or(false) {
                 args.push(r_KEY);
@@ -100,7 +205,8 @@ impl<'a> TmuxInterface<'a> {
             if find_window.zoom.unwrap_or(false) {
                 args.push(Z_KEY);
             }
-            if let Some(s) = find_window.target_pane {
+            if let Some(target_pane) = find_window.target_pane {
+                s = target_pane.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
         }
@@ -125,12 +231,13 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: findw)
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn find_window(
+    pub fn find_window<T: Display>(
         &mut self,
-        find_window: Option<&FindWindow>,
+        find_window: Option<&FindWindow<T>>,
         match_string: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
         if let Some(find_window) = find_window {
             if find_window.only_visible.unwrap_or(false) {
                 args.push(C_KEY);
@@ -141,7 +248,8 @@ impl<'a> TmuxInterface<'a> {
             if find_window.only_title.unwrap_or(false) {
                 args.push(T_KEY);
             }
-            if let Some(s) = find_window.target_pane {
+            if let Some(target_pane) = find_window.target_pane {
+                s = target_pane.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
         }

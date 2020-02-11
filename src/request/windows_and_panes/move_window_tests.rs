@@ -1,6 +1,6 @@
 #[test]
 fn move_window() {
-    use crate::{Error, MoveWindow, TmuxInterface};
+    use crate::{Error, MoveWindow, MoveWindowBuilder, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,13 +12,24 @@ fn move_window() {
         );
         Err(Error::new("hook"))
     }));
+
     let move_window = MoveWindow {
         add: Some(true),
         renumber: Some(true),
         detached: Some(true),
         kill: Some(true),
-        src_window: Some("1"),
-        dst_window: Some("2"),
+        src_window: Some(&TargetWindow::Raw("1")),
+        dst_window: Some(&TargetWindow::Raw("2")),
     };
+    tmux.move_window(Some(&move_window)).unwrap_err();
+
+    let move_window = MoveWindowBuilder::new()
+        .add()
+        .renumber()
+        .detached()
+        .kill()
+        .src_window(&TargetWindow::Raw("1"))
+        .dst_window(&TargetWindow::Raw("2"))
+        .build();
     tmux.move_window(Some(&move_window)).unwrap_err();
 }

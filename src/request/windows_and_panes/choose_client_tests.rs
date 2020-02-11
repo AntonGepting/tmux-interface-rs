@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn choose_client() {
-    use crate::{ChooseClient, Error, TargetPane, TmuxInterface};
+    use crate::{ChooseClient, ChooseClientBuilder, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,6 +12,7 @@ fn choose_client() {
         );
         Err(Error::new("hook"))
     }));
+
     let choose_client = ChooseClient {
         without_preview: Some(true),
         reverse_sort_order: Some(true),
@@ -23,12 +24,24 @@ fn choose_client() {
         template: Some("5"),
     };
     tmux.choose_client(Some(&choose_client)).unwrap_err();
+
+    let choose_client = ChooseClientBuilder::new()
+        .without_preview()
+        .reverse_sort_order()
+        .zoom()
+        .format("1")
+        .filter("2")
+        .sort_order("3")
+        .target_pane(&TargetPane::Raw("4"))
+        .template("5")
+        .build();
+    tmux.choose_client(Some(&choose_client)).unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn choose_client() {
-    use crate::{ChooseClient, Error, TargetPane, TmuxInterface};
+    use crate::{ChooseClient, ChooseClientBuilder, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -39,6 +52,7 @@ fn choose_client() {
         );
         Err(Error::new("hook"))
     }));
+
     let choose_client = ChooseClient {
         without_preview: Some(true),
         format: Some("1"),
@@ -47,5 +61,15 @@ fn choose_client() {
         target_pane: Some(&TargetPane::Raw("4")),
         template: Some("5"),
     };
+    tmux.choose_client(Some(&choose_client)).unwrap_err();
+
+    let choose_client = ChooseClientBuilder::new()
+        .without_preview()
+        .format("1")
+        .filter("2")
+        .sort_order("3")
+        .target_pane(&TargetPane::Raw("4"))
+        .template("5")
+        .build();
     tmux.choose_client(Some(&choose_client)).unwrap_err();
 }

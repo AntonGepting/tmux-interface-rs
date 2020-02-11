@@ -80,6 +80,201 @@ impl<'a, T: Display + Default> CapturePane<'a, T> {
     }
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct CapturePaneBuilder<'a, T: Display> {
+    pub alternate_screen: Option<bool>,
+    pub escape_sequences: Option<bool>,
+    pub stdout: Option<bool>,
+    pub pane: Option<bool>,
+    pub quite: Option<bool>,
+    pub escape_non_printable: Option<bool>,
+    pub join: Option<bool>,
+    pub trailing_spaces: Option<bool>,
+    pub buffer_name: Option<&'a str>,
+    pub end_line: Option<&'a str>,
+    pub start_line: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a, T: Display + Default> CapturePaneBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn alternate_screen(&mut self) -> &mut Self {
+        self.alternate_screen = Some(true);
+        self
+    }
+
+    pub fn escape_sequences(&mut self) -> &mut Self {
+        self.escape_sequences = Some(true);
+        self
+    }
+
+    pub fn stdout(&mut self) -> &mut Self {
+        self.stdout = Some(true);
+        self
+    }
+
+    pub fn pane(&mut self) -> &mut Self {
+        self.pane = Some(true);
+        self
+    }
+
+    pub fn quite(&mut self) -> &mut Self {
+        self.quite = Some(true);
+        self
+    }
+
+    pub fn escape_non_printable(&mut self) -> &mut Self {
+        self.escape_non_printable = Some(true);
+        self
+    }
+
+    pub fn join(&mut self) -> &mut Self {
+        self.join = Some(true);
+        self
+    }
+
+    pub fn trailing_spaces(&mut self) -> &mut Self {
+        self.trailing_spaces = Some(true);
+        self
+    }
+
+    pub fn buffer_name(&mut self, buffer_name: &'a str) -> &mut Self {
+        self.buffer_name = Some(buffer_name);
+        self
+    }
+
+    pub fn end_line(&mut self, end_line: &'a str) -> &mut Self {
+        self.end_line = Some(end_line);
+        self
+    }
+
+    pub fn start_line(&mut self, start_line: &'a str) -> &mut Self {
+        self.start_line = Some(start_line);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn build(&self) -> CapturePane<'a, T> {
+        CapturePane {
+            alternate_screen: self.alternate_screen,
+            escape_sequences: self.escape_sequences,
+            stdout: self.stdout,
+            pane: self.pane,
+            quite: self.quite,
+            escape_non_printable: self.escape_non_printable,
+            join: self.join,
+            trailing_spaces: self.trailing_spaces,
+            buffer_name: self.buffer_name,
+            end_line: self.end_line,
+            start_line: self.start_line,
+            target_pane: self.target_pane,
+        }
+    }
+}
+
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Debug)]
+pub struct CapturePaneBuilder<'a, T: Display> {
+    pub alternate_screen: Option<bool>,
+    pub escape_sequences: Option<bool>,
+    pub stdout: Option<bool>,
+    pub pane: Option<bool>,
+    pub quite: Option<bool>,
+    pub escape_non_printable: Option<bool>,
+    pub join: Option<bool>,
+    pub buffer_name: Option<&'a str>,
+    pub end_line: Option<&'a str>,
+    pub start_line: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
+}
+
+#[cfg(feature = "tmux_2_6")]
+impl<'a, T: Display + Default> CapturePaneBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn alternate_screen(&mut self) -> &mut Self {
+        self.alternate_screen = Some(true);
+        self
+    }
+
+    pub fn escape_sequences(&mut self) -> &mut Self {
+        self.escape_sequences = Some(true);
+        self
+    }
+
+    pub fn stdout(&mut self) -> &mut Self {
+        self.stdout = Some(true);
+        self
+    }
+
+    pub fn pane(&mut self) -> &mut Self {
+        self.pane = Some(true);
+        self
+    }
+
+    pub fn quite(&mut self) -> &mut Self {
+        self.quite = Some(true);
+        self
+    }
+
+    pub fn escape_non_printable(&mut self) -> &mut Self {
+        self.escape_non_printable = Some(true);
+        self
+    }
+
+    pub fn join(&mut self) -> &mut Self {
+        self.join = Some(true);
+        self
+    }
+
+    pub fn buffer_name(&mut self, buffer_name: &'a str) -> &mut Self {
+        self.buffer_name = Some(buffer_name);
+        self
+    }
+
+    pub fn end_line(&mut self, end_line: &'a str) -> &mut Self {
+        self.end_line = Some(end_line);
+        self
+    }
+
+    pub fn start_line(&mut self, start_line: &'a str) -> &mut Self {
+        self.start_line = Some(start_line);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn build(&self) -> CapturePane<'a, T> {
+        CapturePane {
+            alternate_screen: self.alternate_screen,
+            escape_sequences: self.escape_sequences,
+            stdout: self.stdout,
+            pane: self.pane,
+            quite: self.quite,
+            escape_non_printable: self.escape_non_printable,
+            join: self.join,
+            buffer_name: self.buffer_name,
+            end_line: self.end_line,
+            start_line: self.start_line,
+            target_pane: self.target_pane,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const CAPTURE_PANE: &'static str = "capture-pane";
 

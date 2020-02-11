@@ -1,6 +1,6 @@
 #[test]
 fn break_pane() {
-    use crate::{BreakPane, Error, TmuxInterface};
+    use crate::{BreakPane, BreakPaneBuilder, Error, TargetPane, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,13 +12,24 @@ fn break_pane() {
         );
         Err(Error::new("hook"))
     }));
+
     let break_pane = BreakPane {
         detached: Some(true),
         print: Some(true),
         format: Some("1"),
         window_name: Some("2"),
-        src_pane: Some("3"),
-        dst_window: Some("4"),
+        src_pane: Some(&TargetPane::Raw("3")),
+        dst_window: Some(&TargetWindow::Raw("4")),
     };
+    tmux.break_pane(Some(&break_pane)).unwrap_err();
+
+    let break_pane = BreakPaneBuilder::new()
+        .detached()
+        .print()
+        .format("1")
+        .window_name("2")
+        .src_pane(&TargetPane::Raw("3"))
+        .dst_window(&TargetWindow::Raw("4"))
+        .build();
     tmux.break_pane(Some(&break_pane)).unwrap_err();
 }

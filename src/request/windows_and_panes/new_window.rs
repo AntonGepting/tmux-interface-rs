@@ -73,6 +73,173 @@ impl<'a, T: Default + Display> NewWindow<'a, T> {
     }
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct NewWindowBuilder<'a, T: Display> {
+    pub add: Option<bool>,
+    pub detached: Option<bool>,
+    pub kill: Option<bool>,
+    pub print: Option<bool>,
+    pub cwd: Option<&'a str>,
+    pub environment: Option<&'a str>,
+    pub format: Option<&'a str>,
+    pub window_name: Option<&'a str>,
+    pub target_window: Option<&'a T>,
+    pub shell_command: Option<&'a str>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a, T: Display + Default> NewWindowBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn add(&mut self) -> &mut Self {
+        self.add = Some(true);
+        self
+    }
+
+    pub fn detached(&mut self) -> &mut Self {
+        self.detached = Some(true);
+        self
+    }
+
+    pub fn kill(&mut self) -> &mut Self {
+        self.kill = Some(true);
+        self
+    }
+
+    pub fn print(&mut self) -> &mut Self {
+        self.print = Some(true);
+        self
+    }
+
+    pub fn cwd(&mut self, cwd: &'a str) -> &mut Self {
+        self.cwd = Some(cwd);
+        self
+    }
+
+    pub fn environment(&mut self, environment: &'a str) -> &mut Self {
+        self.environment = Some(environment);
+        self
+    }
+
+    pub fn format(&mut self, format: &'a str) -> &mut Self {
+        self.format = Some(format);
+        self
+    }
+
+    pub fn window_name(&mut self, window_name: &'a str) -> &mut Self {
+        self.window_name = Some(window_name);
+        self
+    }
+
+    pub fn target_window(&mut self, target_window: &'a T) -> &mut Self {
+        self.target_window = Some(target_window);
+        self
+    }
+
+    pub fn shell_command(&mut self, shell_command: &'a str) -> &mut Self {
+        self.shell_command = Some(shell_command);
+        self
+    }
+
+    pub fn build(&self) -> NewWindow<'a, T> {
+        NewWindow {
+            add: self.add,
+            detached: self.detached,
+            kill: self.kill,
+            print: self.print,
+            cwd: self.cwd,
+            environment: self.environment,
+            format: self.format,
+            window_name: self.window_name,
+            target_window: self.target_window,
+            shell_command: self.shell_command,
+        }
+    }
+}
+
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Debug)]
+pub struct NewWindowBuilder<'a, T: Display> {
+    pub add: Option<bool>,
+    pub detached: Option<bool>,
+    pub kill: Option<bool>,
+    pub print: Option<bool>,
+    pub cwd: Option<&'a str>,
+    pub format: Option<&'a str>,
+    pub window_name: Option<&'a str>,
+    pub target_window: Option<&'a T>,
+    pub shell_command: Option<&'a str>,
+}
+
+#[cfg(feature = "tmux_2_6")]
+impl<'a, T: Display + Default> NewWindowBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn add(&mut self) -> &mut Self {
+        self.add = Some(true);
+        self
+    }
+
+    pub fn detached(&mut self) -> &mut Self {
+        self.detached = Some(true);
+        self
+    }
+
+    pub fn kill(&mut self) -> &mut Self {
+        self.kill = Some(true);
+        self
+    }
+
+    pub fn print(&mut self) -> &mut Self {
+        self.print = Some(true);
+        self
+    }
+
+    pub fn cwd(&mut self, cwd: &'a str) -> &mut Self {
+        self.cwd = Some(cwd);
+        self
+    }
+
+    pub fn format(&mut self, format: &'a str) -> &mut Self {
+        self.format = Some(format);
+        self
+    }
+
+    pub fn window_name(&mut self, window_name: &'a str) -> &mut Self {
+        self.window_name = Some(window_name);
+        self
+    }
+
+    pub fn target_window(&mut self, target_window: &'a T) -> &mut Self {
+        self.target_window = Some(target_window);
+        self
+    }
+
+    pub fn shell_command(&mut self, shell_command: &'a str) -> &mut Self {
+        self.shell_command = Some(shell_command);
+        self
+    }
+
+    pub fn build(&self) -> NewWindow<'a, T> {
+        NewWindow {
+            add: self.add,
+            detached: self.detached,
+            kill: self.kill,
+            print: self.print,
+            cwd: self.cwd,
+            format: self.format,
+            window_name: self.window_name,
+            target_window: self.target_window,
+            shell_command: self.shell_command,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const NEW_WINDOW: &'static str = "new-window";
 

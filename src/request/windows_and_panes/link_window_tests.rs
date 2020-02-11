@@ -1,6 +1,6 @@
 #[test]
 fn link_window() {
-    use crate::{Error, LinkWindow, TmuxInterface};
+    use crate::{Error, LinkWindow, LinkWindowBuilder, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,12 +12,22 @@ fn link_window() {
         );
         Err(Error::new("hook"))
     }));
+
     let link_window = LinkWindow {
         add: Some(true),
         detached: Some(true),
         kill: Some(true),
-        src_window: Some("1"),
-        dst_window: Some("2"),
+        src_window: Some(&TargetWindow::Raw("1")),
+        dst_window: Some(&TargetWindow::Raw("2")),
     };
+    tmux.link_window(Some(&link_window)).unwrap_err();
+
+    let link_window = LinkWindowBuilder::new()
+        .add()
+        .detached()
+        .kill()
+        .src_window(&TargetWindow::Raw("1"))
+        .dst_window(&TargetWindow::Raw("2"))
+        .build();
     tmux.link_window(Some(&link_window)).unwrap_err();
 }

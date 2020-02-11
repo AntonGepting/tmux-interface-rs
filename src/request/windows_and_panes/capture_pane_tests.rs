@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn capture_pane() {
-    use crate::{CapturePane, Error, TargetPane, TmuxInterface};
+    use crate::{CapturePane, CapturePaneBuilder, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,6 +13,7 @@ fn capture_pane() {
         );
         Err(Error::new("hook"))
     }));
+
     let capture_pane = CapturePane {
         alternate_screen: Some(true),
         escape_sequences: Some(true),
@@ -28,12 +29,28 @@ fn capture_pane() {
         target_pane: Some(&TargetPane::Raw("4")),
     };
     tmux.capture_pane(Some(&capture_pane)).unwrap_err();
+
+    let capture_pane = CapturePaneBuilder::new()
+        .alternate_screen()
+        .escape_sequences()
+        .stdout()
+        .pane()
+        .quite()
+        .escape_non_printable()
+        .join()
+        .trailing_spaces()
+        .buffer_name("1")
+        .end_line("2")
+        .start_line("3")
+        .target_pane(&TargetPane::Raw("4"))
+        .build();
+    tmux.capture_pane(Some(&capture_pane)).unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn capture_pane() {
-    use crate::{CapturePane, Error, TargetPane, TmuxInterface};
+    use crate::{CapturePane, CapturePaneBuilder, Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -45,6 +62,7 @@ fn capture_pane() {
         );
         Err(Error::new("hook"))
     }));
+
     let capture_pane = CapturePane {
         alternate_screen: Some(true),
         escape_sequences: Some(true),
@@ -58,5 +76,20 @@ fn capture_pane() {
         start_line: Some("3"),
         target_pane: Some(&TargetPane::Raw("4")),
     };
+    tmux.capture_pane(Some(&capture_pane)).unwrap_err();
+
+    let capture_pane = CapturePaneBuilder::new()
+        .alternate_screen()
+        .escape_sequences()
+        .stdout()
+        .pane()
+        .quite()
+        .escape_non_printable()
+        .join()
+        .buffer_name("1")
+        .end_line("2")
+        .start_line("3")
+        .target_pane(&TargetPane::Raw("4"))
+        .build();
     tmux.capture_pane(Some(&capture_pane)).unwrap_err();
 }

@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn pipe_pane() {
-    use crate::{Error, PipePane, TargetPane, TmuxInterface};
+    use crate::{Error, PipePane, PipePaneBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,6 +13,7 @@ fn pipe_pane() {
         );
         Err(Error::new("hook"))
     }));
+
     let pipe_pane = PipePane {
         stdout: Some(true),
         stdin: Some(true),
@@ -20,6 +21,15 @@ fn pipe_pane() {
         target_pane: Some(&TargetPane::Raw("1")),
         shell_command: Some("2"),
     };
+    tmux.pipe_pane(Some(&pipe_pane)).unwrap_err();
+
+    let pipe_pane = PipePaneBuilder::new()
+        .stdout()
+        .stdin()
+        .open()
+        .target_pane(&TargetPane::Raw("1"))
+        .shell_command("2")
+        .build();
     tmux.pipe_pane(Some(&pipe_pane)).unwrap_err();
 }
 

@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
+use std::fmt::Display;
 use std::process::Output;
 
 /// This is similar to link-window, except the window at `src-window` is moved to `dst-window`
@@ -11,7 +12,7 @@ use std::process::Output;
 /// (alias: movew)
 /// ```
 #[derive(Default, Debug)]
-pub struct MoveWindow<'a> {
+pub struct MoveWindow<'a, T: Display> {
     /// [-a] - the window is moved to the next index up
     pub add: Option<bool>,
     /// [-r] - all windows in the session are renumbered in sequential order
@@ -21,14 +22,71 @@ pub struct MoveWindow<'a> {
     /// [-k] - if dst-window exists, it is killed, otherwise an error is generated
     pub kill: Option<bool>,
     /// [-s src-window] - src-window
-    pub src_window: Option<&'a str>,
+    pub src_window: Option<&'a T>,
     /// [-t dst-window] - dst-window
-    pub dst_window: Option<&'a str>,
+    pub dst_window: Option<&'a T>,
 }
 
-impl<'a> MoveWindow<'a> {
-    pub fn new() -> MoveWindow<'a> {
+impl<'a, T: Display + Default> MoveWindow<'a, T> {
+    pub fn new() -> Self {
         Default::default()
+    }
+}
+
+#[derive(Default, Debug)]
+pub struct MoveWindowBuilder<'a, T: Display> {
+    pub add: Option<bool>,
+    pub renumber: Option<bool>,
+    pub detached: Option<bool>,
+    pub kill: Option<bool>,
+    pub src_window: Option<&'a T>,
+    pub dst_window: Option<&'a T>,
+}
+
+impl<'a, T: Display + Default> MoveWindowBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn add(&mut self) -> &mut Self {
+        self.add = Some(true);
+        self
+    }
+
+    pub fn renumber(&mut self) -> &mut Self {
+        self.renumber = Some(true);
+        self
+    }
+
+    pub fn detached(&mut self) -> &mut Self {
+        self.detached = Some(true);
+        self
+    }
+
+    pub fn kill(&mut self) -> &mut Self {
+        self.kill = Some(true);
+        self
+    }
+
+    pub fn src_window(&mut self, src_window: &'a T) -> &mut Self {
+        self.src_window = Some(src_window);
+        self
+    }
+
+    pub fn dst_window(&mut self, dst_window: &'a T) -> &mut Self {
+        self.dst_window = Some(dst_window);
+        self
+    }
+
+    pub fn build(&self) -> MoveWindow<'a, T> {
+        MoveWindow {
+            add: self.add,
+            renumber: self.renumber,
+            detached: self.detached,
+            kill: self.kill,
+            src_window: self.src_window,
+            dst_window: self.dst_window,
+        }
     }
 }
 
@@ -43,8 +101,13 @@ impl<'a> TmuxInterface<'a> {
     /// tmux move-window [-ardk] [-s src-window] [-t dst-window]
     /// (alias: movew)
     /// ```
-    pub fn move_window(&mut self, move_window: Option<&MoveWindow>) -> Result<Output, Error> {
+    pub fn move_window<T: Display>(
+        &mut self,
+        move_window: Option<&MoveWindow<T>>,
+    ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        let s;
+        let t;
         if let Some(move_window) = move_window {
             if move_window.add.unwrap_or(false) {
                 args.push(a_KEY);
@@ -58,11 +121,13 @@ impl<'a> TmuxInterface<'a> {
             if move_window.kill.unwrap_or(false) {
                 args.push(k_KEY);
             }
-            if let Some(s) = move_window.src_window {
+            if let Some(src_window) = move_window.src_window {
+                s = src_window.to_string();
                 args.extend_from_slice(&[s_KEY, &s])
             }
-            if let Some(s) = move_window.dst_window {
-                args.extend_from_slice(&[t_KEY, &s])
+            if let Some(dst_window) = move_window.dst_window {
+                t = dst_window.to_string();
+                args.extend_from_slice(&[t_KEY, &t])
             }
         }
         let output = self.subcommand(TmuxInterface::MOVE_WINDOW, &args)?;

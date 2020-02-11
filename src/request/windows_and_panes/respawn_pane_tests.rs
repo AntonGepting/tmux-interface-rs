@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn respawn_pane() {
-    use crate::{Error, RespawnPane, TargetPane, TmuxInterface};
+    use crate::{Error, RespawnPane, RespawnPaneBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,6 +13,7 @@ fn respawn_pane() {
         );
         Err(Error::new("hook"))
     }));
+
     let respawn_pane = RespawnPane {
         kill: Some(true),
         start_directory: Some("1"),
@@ -20,6 +21,15 @@ fn respawn_pane() {
         target_pane: Some(&TargetPane::Raw("3")),
         shell_command: Some("4"),
     };
+    tmux.respawn_pane(Some(&respawn_pane)).unwrap_err();
+
+    let respawn_pane = RespawnPaneBuilder::new()
+        .kill()
+        .start_directory("1")
+        .environment("2")
+        .target_pane(&TargetPane::Raw("3"))
+        .shell_command("4")
+        .build();
     tmux.respawn_pane(Some(&respawn_pane)).unwrap_err();
 }
 

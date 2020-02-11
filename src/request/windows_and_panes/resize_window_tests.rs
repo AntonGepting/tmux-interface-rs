@@ -1,6 +1,6 @@
 #[test]
 fn resize_window() {
-    use crate::{Error, ResizeWindow, TargetWindow, TmuxInterface};
+    use crate::{Error, ResizeWindow, ResizeWindowBuilder, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,6 +12,7 @@ fn resize_window() {
         );
         Err(Error::new("hook"))
     }));
+
     let resize_window = ResizeWindow {
         smallest: Some(true),
         largest: Some(true),
@@ -24,5 +25,19 @@ fn resize_window() {
         height: Some(3),
         adjustment: Some("4"),
     };
+    tmux.resize_window(Some(&resize_window)).unwrap_err();
+
+    let resize_window = ResizeWindowBuilder::new()
+        .smallest()
+        .largest()
+        .down()
+        .left()
+        .right()
+        .up()
+        .target_window(&TargetWindow::Raw("1"))
+        .width(2)
+        .height(3)
+        .adjustment("4")
+        .build();
     tmux.resize_window(Some(&resize_window)).unwrap_err();
 }

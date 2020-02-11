@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn select_pane() {
-    use crate::{Error, SelectPane, TargetPane, TmuxInterface};
+    use crate::{Error, SelectPane, SelectPaneBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,6 +13,7 @@ fn select_pane() {
         );
         Err(Error::new("hook"))
     }));
+
     let select_pane = SelectPane {
         down: Some(true),
         disable: Some(true),
@@ -28,12 +29,28 @@ fn select_pane() {
         target_pane: Some(&TargetPane::Raw("2")),
     };
     tmux.select_pane(Some(&select_pane)).unwrap_err();
+
+    let select_pane = SelectPaneBuilder::new()
+        .down()
+        .disable()
+        .enable()
+        .left()
+        .last()
+        .set_marked()
+        .clear_marked()
+        .right()
+        .up()
+        .keep_zoomed()
+        .title("1")
+        .target_pane(&TargetPane::Raw("2"))
+        .build();
+    tmux.select_pane(Some(&select_pane)).unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn select_pane() {
-    use crate::{Error, SelectPane, TargetPane, TmuxInterface};
+    use crate::{Error, SelectPane, SelectPaneBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -45,6 +62,7 @@ fn select_pane() {
         );
         Err(Error::new("hook"))
     }));
+
     let select_pane = SelectPane {
         down: Some(true),
         disable: Some(true),
@@ -60,5 +78,22 @@ fn select_pane() {
         title: Some("2"),
         target_pane: Some(&TargetPane::Raw("3")),
     };
+    tmux.select_pane(Some(&select_pane)).unwrap_err();
+
+    let select_pane = SelectPaneBuilder::new()
+        .down()
+        .disable()
+        .enable()
+        .show_style()
+        .left()
+        .last()
+        .set_marked()
+        .clear_marked()
+        .right()
+        .up()
+        .style("1")
+        .title("2")
+        .target_pane(&TargetPane::Raw("3"))
+        .build();
     tmux.select_pane(Some(&select_pane)).unwrap_err();
 }

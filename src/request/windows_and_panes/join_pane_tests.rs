@@ -2,7 +2,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn join_pane() {
-    use crate::{Error, JoinPane, PaneSize, TmuxInterface};
+    use crate::{Error, JoinPane, JoinPaneBuilder, PaneSize, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -14,16 +14,29 @@ fn join_pane() {
         );
         Err(Error::new("hook"))
     }));
+
     let join_pane = JoinPane {
         left_above: Some(true),
         detached: Some(true),
         full_size: Some(true),
         horizontal: Some(true),
         vertical: Some(true),
-        size: Some(PaneSize::Percentage(1)),
-        src_pane: Some("2"),
-        dst_pane: Some("3"),
+        size: Some(&PaneSize::Percentage(1)),
+        src_pane: Some(&TargetPane::Raw("2")),
+        dst_pane: Some(&TargetPane::Raw("3")),
     };
+    tmux.join_pane(Some(&join_pane)).unwrap_err();
+
+    let join_pane = JoinPaneBuilder::new()
+        .left_above()
+        .detached()
+        .full_size()
+        .horizontal()
+        .vertical()
+        .size(&PaneSize::Percentage(1))
+        .src_pane(&TargetPane::Raw("2"))
+        .dst_pane(&TargetPane::Raw("3"))
+        .build();
     tmux.join_pane(Some(&join_pane)).unwrap_err();
 }
 
@@ -31,7 +44,7 @@ fn join_pane() {
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn join_pane() {
-    use crate::{Error, JoinPane, PaneSize, TmuxInterface};
+    use crate::{Error, JoinPane, JoinPaneBuilder, PaneSize, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -43,14 +56,26 @@ fn join_pane() {
         );
         Err(Error::new("hook"))
     }));
+
     let join_pane = JoinPane {
         left_above: Some(true),
         detached: Some(true),
         horizontal: Some(true),
         vertical: Some(true),
-        size: Some(PaneSize::Percentage(1)),
-        src_pane: Some("2"),
-        dst_pane: Some("3"),
+        size: Some(&PaneSize::Percentage(1)),
+        src_pane: Some(&TargetPane::Raw("2")),
+        dst_pane: Some(&TargetPane::Raw("3")),
     };
+    tmux.join_pane(Some(&join_pane)).unwrap_err();
+
+    let join_pane = JoinPaneBuilder::new()
+        .left_above()
+        .detached()
+        .horizontal()
+        .vertical()
+        .size(&PaneSize::Percentage(1))
+        .src_pane(&TargetPane::Raw("2"))
+        .dst_pane(&TargetPane::Raw("3"))
+        .build();
     tmux.join_pane(Some(&join_pane)).unwrap_err();
 }

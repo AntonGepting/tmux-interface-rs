@@ -31,6 +31,56 @@ impl<'a, T: Display + Default> SelectWindow<'a, T> {
     }
 }
 
+#[derive(Default, Debug)]
+pub struct SelectWindowBuilder<'a, T: Display> {
+    pub last: Option<bool>,
+    pub next: Option<bool>,
+    pub previous: Option<bool>,
+    pub switch: Option<bool>,
+    pub target_window: Option<&'a T>,
+}
+
+impl<'a, T: Display + Default> SelectWindowBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn last(&mut self) -> &mut Self {
+        self.last = Some(true);
+        self
+    }
+
+    pub fn next(&mut self) -> &mut Self {
+        self.next = Some(true);
+        self
+    }
+
+    pub fn previous(&mut self) -> &mut Self {
+        self.previous = Some(true);
+        self
+    }
+
+    pub fn switch(&mut self) -> &mut Self {
+        self.switch = Some(true);
+        self
+    }
+
+    pub fn target_window(&mut self, target_window: &'a T) -> &mut Self {
+        self.target_window = Some(target_window);
+        self
+    }
+
+    pub fn build(&self) -> SelectWindow<'a, T> {
+        SelectWindow {
+            last: self.last,
+            next: self.next,
+            previous: self.previous,
+            switch: self.switch,
+            target_window: self.target_window,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const SELECT_WINDOW: &'static str = "select-window";
 

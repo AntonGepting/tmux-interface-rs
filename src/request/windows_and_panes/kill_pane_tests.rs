@@ -1,6 +1,6 @@
 #[test]
 fn kill_pane() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,5 +12,6 @@ fn kill_pane() {
         );
         Err(Error::new("hook"))
     }));
-    tmux.kill_pane(Some(true), Some("1")).unwrap_err();
+    tmux.kill_pane(Some(true), Some(&TargetPane::Raw("1")))
+        .unwrap_err();
 }

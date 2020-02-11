@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn swap_pane() {
-    use crate::{Error, SwapPane, TmuxInterface};
+    use crate::{Error, SwapPane, SwapPaneBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -13,21 +13,32 @@ fn swap_pane() {
         );
         Err(Error::new("hook"))
     }));
+
     let swap_pane = SwapPane {
         detached: Some(true),
         previous: Some(true),
         next: Some(true),
         keep_zoomed: Some(true),
-        src_pane: Some("1"),
-        dst_pane: Some("2"),
+        src_pane: Some(&TargetPane::Raw("1")),
+        dst_pane: Some(&TargetPane::Raw("2")),
     };
+    tmux.swap_pane(Some(&swap_pane)).unwrap_err();
+
+    let swap_pane = SwapPaneBuilder::new()
+        .detached()
+        .previous()
+        .next()
+        .keep_zoomed()
+        .src_pane(&TargetPane::Raw("1"))
+        .dst_pane(&TargetPane::Raw("2"))
+        .build();
     tmux.swap_pane(Some(&swap_pane)).unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn swap_pane() {
-    use crate::{Error, SwapPane, TmuxInterface};
+    use crate::{Error, SwapPane, SwapPaneBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -39,12 +50,22 @@ fn swap_pane() {
         );
         Err(Error::new("hook"))
     }));
+
     let swap_pane = SwapPane {
         detached: Some(true),
         previous: Some(true),
         next: Some(true),
-        src_pane: Some("1"),
-        dst_pane: Some("2"),
+        src_pane: Some(&TargetPane::Raw("1")),
+        dst_pane: Some(&TargetPane::Raw("2")),
     };
+    tmux.swap_pane(Some(&swap_pane)).unwrap_err();
+
+    let swap_pane = SwapPaneBuilder::new()
+        .detached()
+        .previous()
+        .next()
+        .src_pane(&TargetPane::Raw("1"))
+        .dst_pane(&TargetPane::Raw("2"))
+        .build();
     tmux.swap_pane(Some(&swap_pane)).unwrap_err();
 }

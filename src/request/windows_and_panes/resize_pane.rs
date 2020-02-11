@@ -41,6 +41,91 @@ impl<'a, T: Display + Default> ResizePane<'a, T> {
     }
 }
 
+#[derive(Default, Debug)]
+pub struct ResizePaneBuilder<'a, T: Display> {
+    pub down: Option<bool>,
+    pub left: Option<bool>,
+    pub mouse: Option<bool>,
+    pub right: Option<bool>,
+    pub up: Option<bool>,
+    pub zoom: Option<bool>,
+    pub target_pane: Option<&'a T>,
+    pub width: Option<usize>,
+    pub height: Option<usize>,
+    pub adjustment: Option<&'a str>,
+}
+
+impl<'a, T: Display + Default> ResizePaneBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn down(&mut self) -> &mut Self {
+        self.down = Some(true);
+        self
+    }
+
+    pub fn left(&mut self) -> &mut Self {
+        self.left = Some(true);
+        self
+    }
+
+    pub fn mouse(&mut self) -> &mut Self {
+        self.mouse = Some(true);
+        self
+    }
+
+    pub fn right(&mut self) -> &mut Self {
+        self.right = Some(true);
+        self
+    }
+
+    pub fn up(&mut self) -> &mut Self {
+        self.up = Some(true);
+        self
+    }
+
+    pub fn zoom(&mut self) -> &mut Self {
+        self.zoom = Some(true);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn width(&mut self, width: usize) -> &mut Self {
+        self.width = Some(width);
+        self
+    }
+
+    pub fn height(&mut self, height: usize) -> &mut Self {
+        self.height = Some(height);
+        self
+    }
+
+    pub fn adjustment(&mut self, adjustment: &'a str) -> &mut Self {
+        self.adjustment = Some(adjustment);
+        self
+    }
+
+    pub fn build(&self) -> ResizePane<'a, T> {
+        ResizePane {
+            down: self.down,
+            left: self.left,
+            mouse: self.mouse,
+            right: self.right,
+            up: self.up,
+            zoom: self.zoom,
+            target_pane: self.target_pane,
+            width: self.width,
+            height: self.height,
+            adjustment: self.adjustment,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const RESIZE_PANE: &'static str = "resize-pane";
 

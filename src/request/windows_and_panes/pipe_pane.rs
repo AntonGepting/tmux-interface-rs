@@ -40,6 +40,58 @@ impl<'a, T: Display + Default> PipePane<'a, T> {
     }
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct PipePaneBuilder<'a, T: Display> {
+    pub stdout: Option<bool>,
+    pub stdin: Option<bool>,
+    pub open: Option<bool>,
+    pub target_pane: Option<&'a T>,
+    pub shell_command: Option<&'a str>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a, T: Display + Default> PipePaneBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn stdout(&mut self) -> &mut Self {
+        self.stdout = Some(true);
+        self
+    }
+
+    pub fn stdin(&mut self) -> &mut Self {
+        self.stdin = Some(true);
+        self
+    }
+
+    pub fn open(&mut self) -> &mut Self {
+        self.open = Some(true);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn shell_command(&mut self, shell_command: &'a str) -> &mut Self {
+        self.shell_command = Some(shell_command);
+        self
+    }
+
+    pub fn build(&self) -> PipePane<'a, T> {
+        PipePane {
+            stdout: self.stdout,
+            stdin: self.stdin,
+            open: self.open,
+            target_pane: self.target_pane,
+            shell_command: self.shell_command,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const PIPE_PANE: &'static str = "pipe-pane";
 

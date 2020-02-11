@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn split_window() {
-    use crate::{Error, PaneSize, SplitWindow, TargetPane, TmuxInterface};
+    use crate::{Error, PaneSize, SplitWindow, SplitWindowBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -14,6 +14,7 @@ fn split_window() {
         );
         Err(Error::new("hook"))
     }));
+
     let split_window = SplitWindow {
         before: Some(true),
         detached: Some(true),
@@ -24,18 +25,35 @@ fn split_window() {
         print: Some(true),
         cwd: Some("1"),
         environment: Some("2"),
-        size: Some(PaneSize::Size(3)),
+        size: Some(&PaneSize::Size(3)),
         target_pane: Some(&TargetPane::Raw("4")),
         shell_command: Some("5"),
         format: Some("6"),
     };
+    tmux.split_window(Some(&split_window)).unwrap_err();
+
+    let split_window = SplitWindowBuilder::new()
+        .before()
+        .detached()
+        .full()
+        .horizontal()
+        .stdin_forward()
+        .vertical()
+        .print()
+        .cwd("1")
+        .environment("2")
+        .size(&PaneSize::Size(3))
+        .target_pane(&TargetPane::Raw("4"))
+        .shell_command("5")
+        .format("6")
+        .build();
     tmux.split_window(Some(&split_window)).unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn split_window() {
-    use crate::{Error, PaneSize, SplitWindow, TargetPane, TmuxInterface};
+    use crate::{Error, PaneSize, SplitWindow, SplitWindowBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -48,6 +66,7 @@ fn split_window() {
         );
         Err(Error::new("hook"))
     }));
+
     let split_window = SplitWindow {
         before: Some(true),
         detached: Some(true),
@@ -56,10 +75,25 @@ fn split_window() {
         vertical: Some(true),
         print: Some(true),
         cwd: Some("1"),
-        size: Some(PaneSize::Size(2)),
+        size: Some(&PaneSize::Size(2)),
         target_pane: Some(&TargetPane::Raw("3")),
         shell_command: Some("4"),
         format: Some("5"),
     };
+    tmux.split_window(Some(&split_window)).unwrap_err();
+
+    let split_window = SplitWindowBuilder::new()
+        .before()
+        .detached()
+        .full()
+        .horizontal()
+        .vertical()
+        .print()
+        .cwd("1")
+        .size(&PaneSize::Size(2))
+        .target_pane(&TargetPane::Raw("3"))
+        .shell_command("4")
+        .format("5")
+        .build();
     tmux.split_window(Some(&split_window)).unwrap_err();
 }

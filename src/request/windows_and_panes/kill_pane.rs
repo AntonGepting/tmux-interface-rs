@@ -17,7 +17,7 @@ impl<'a> TmuxInterface<'a> {
     pub fn kill_pane<T: Display>(
         &mut self,
         all: Option<bool>,
-        target_pane: Option<T>,
+        target_pane: Option<&T>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let target;

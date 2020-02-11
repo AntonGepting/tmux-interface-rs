@@ -1,7 +1,7 @@
 #[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn find_window() {
-    use crate::{Error, FindWindow, TmuxInterface};
+    use crate::{Error, FindWindow, FindWindowBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -12,21 +12,32 @@ fn find_window() {
         );
         Err(Error::new("hook"))
     }));
+
     let find_window = FindWindow {
         regex: Some(true),
         only_visible: Some(true),
         only_name: Some(true),
         only_title: Some(true),
         zoom: Some(true),
-        target_pane: Some("2"),
+        target_pane: Some(&TargetPane::Raw("2")),
     };
+    tmux.find_window(Some(&find_window), "3").unwrap_err();
+
+    let find_window = FindWindowBuilder::new()
+        .regex()
+        .only_visible()
+        .only_name()
+        .only_title()
+        .zoom()
+        .target_pane(&TargetPane::Raw("2"))
+        .build();
     tmux.find_window(Some(&find_window), "3").unwrap_err();
 }
 
 #[cfg(feature = "tmux_2_6")]
 #[test]
 fn find_window() {
-    use crate::{Error, FindWindow, TmuxInterface};
+    use crate::{Error, FindWindow, FindWindowBuilder, TargetPane, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -37,11 +48,20 @@ fn find_window() {
         );
         Err(Error::new("hook"))
     }));
+
     let find_window = FindWindow {
         only_visible: Some(true),
         only_name: Some(true),
         only_title: Some(true),
-        target_pane: Some("2"),
+        target_pane: Some(&TargetPane::Raw("2")),
     };
+    tmux.find_window(Some(&find_window), "3").unwrap_err();
+
+    let find_window = FindWindowBuilder::new()
+        .only_visible()
+        .only_name()
+        .only_title()
+        .target_pane(&TargetPane::Raw("2"))
+        .build();
     tmux.find_window(Some(&find_window), "3").unwrap_err();
 }

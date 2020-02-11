@@ -84,6 +84,215 @@ impl<'a, T: Display + Default> SelectPane<'a, T> {
     }
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct SelectPaneBuilder<'a, T: Display> {
+    pub down: Option<bool>,
+    pub disable: Option<bool>,
+    pub enable: Option<bool>,
+    pub left: Option<bool>,
+    pub last: Option<bool>,
+    pub set_marked: Option<bool>,
+    pub clear_marked: Option<bool>,
+    pub right: Option<bool>,
+    pub up: Option<bool>,
+    pub keep_zoomed: Option<bool>,
+    pub title: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a, T: Display + Default> SelectPaneBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn down(&mut self) -> &mut Self {
+        self.down = Some(true);
+        self
+    }
+
+    pub fn disable(&mut self) -> &mut Self {
+        self.disable = Some(true);
+        self
+    }
+
+    pub fn enable(&mut self) -> &mut Self {
+        self.enable = Some(true);
+        self
+    }
+
+    pub fn left(&mut self) -> &mut Self {
+        self.left = Some(true);
+        self
+    }
+
+    pub fn last(&mut self) -> &mut Self {
+        self.last = Some(true);
+        self
+    }
+
+    pub fn set_marked(&mut self) -> &mut Self {
+        self.set_marked = Some(true);
+        self
+    }
+
+    pub fn clear_marked(&mut self) -> &mut Self {
+        self.clear_marked = Some(true);
+        self
+    }
+
+    pub fn right(&mut self) -> &mut Self {
+        self.right = Some(true);
+        self
+    }
+
+    pub fn up(&mut self) -> &mut Self {
+        self.up = Some(true);
+        self
+    }
+
+    pub fn keep_zoomed(&mut self) -> &mut Self {
+        self.keep_zoomed = Some(true);
+        self
+    }
+
+    pub fn title(&mut self, title: &'a str) -> &mut Self {
+        self.title = Some(title);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn build(&self) -> SelectPane<'a, T> {
+        SelectPane {
+            down: self.down,
+            disable: self.disable,
+            enable: self.enable,
+            left: self.left,
+            last: self.last,
+            set_marked: self.set_marked,
+            clear_marked: self.clear_marked,
+            right: self.right,
+            up: self.up,
+            keep_zoomed: self.keep_zoomed,
+            title: self.title,
+            target_pane: self.target_pane,
+        }
+    }
+}
+
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Debug)]
+pub struct SelectPaneBuilder<'a, T: Display> {
+    pub down: Option<bool>,
+    pub disable: Option<bool>,
+    pub enable: Option<bool>,
+    pub show_style: Option<bool>,
+    pub left: Option<bool>,
+    pub last: Option<bool>,
+    pub set_marked: Option<bool>,
+    pub clear_marked: Option<bool>,
+    pub right: Option<bool>,
+    pub up: Option<bool>,
+    pub style: Option<&'a str>,
+    pub title: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
+}
+
+#[cfg(feature = "tmux_2_6")]
+impl<'a, T: Display + Default> SelectPaneBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn down(&mut self) -> &mut Self {
+        self.down = Some(true);
+        self
+    }
+
+    pub fn disable(&mut self) -> &mut Self {
+        self.disable = Some(true);
+        self
+    }
+
+    pub fn enable(&mut self) -> &mut Self {
+        self.enable = Some(true);
+        self
+    }
+
+    pub fn show_style(&mut self) -> &mut Self {
+        self.show_style = Some(true);
+        self
+    }
+
+    pub fn left(&mut self) -> &mut Self {
+        self.left = Some(true);
+        self
+    }
+
+    pub fn last(&mut self) -> &mut Self {
+        self.last = Some(true);
+        self
+    }
+
+    pub fn set_marked(&mut self) -> &mut Self {
+        self.set_marked = Some(true);
+        self
+    }
+
+    pub fn clear_marked(&mut self) -> &mut Self {
+        self.clear_marked = Some(true);
+        self
+    }
+
+    pub fn right(&mut self) -> &mut Self {
+        self.right = Some(true);
+        self
+    }
+
+    pub fn up(&mut self) -> &mut Self {
+        self.up = Some(true);
+        self
+    }
+
+    pub fn style(&mut self, style: &'a str) -> &mut Self {
+        self.style = Some(style);
+        self
+    }
+
+    pub fn title(&mut self, title: &'a str) -> &mut Self {
+        self.title = Some(title);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn build(&self) -> SelectPane<'a, T> {
+        SelectPane {
+            down: self.down,
+            disable: self.disable,
+            enable: self.enable,
+            show_style: self.show_style,
+            left: self.left,
+            last: self.last,
+            set_marked: self.set_marked,
+            clear_marked: self.clear_marked,
+            right: self.right,
+            up: self.up,
+            style: self.style,
+            title: self.title,
+            target_pane: self.target_pane,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const SELECT_PANE: &'static str = "select-pane";
 

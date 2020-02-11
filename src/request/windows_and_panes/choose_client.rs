@@ -62,6 +62,138 @@ impl<'a, T: Display + Default> ChooseClient<'a, T> {
     }
 }
 
+#[cfg(not(feature = "tmux_2_6"))]
+#[derive(Default, Debug)]
+pub struct ChooseClientBuilder<'a, T: Display> {
+    pub without_preview: Option<bool>,
+    pub reverse_sort_order: Option<bool>,
+    pub zoom: Option<bool>,
+    pub format: Option<&'a str>,
+    pub filter: Option<&'a str>,
+    pub sort_order: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
+    pub template: Option<&'a str>,
+}
+
+#[cfg(not(feature = "tmux_2_6"))]
+impl<'a, T: Display + Default> ChooseClientBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn without_preview(&mut self) -> &mut Self {
+        self.without_preview = Some(true);
+        self
+    }
+
+    pub fn reverse_sort_order(&mut self) -> &mut Self {
+        self.reverse_sort_order = Some(true);
+        self
+    }
+
+    pub fn zoom(&mut self) -> &mut Self {
+        self.zoom = Some(true);
+        self
+    }
+
+    pub fn format(&mut self, format: &'a str) -> &mut Self {
+        self.format = Some(format);
+        self
+    }
+
+    pub fn filter(&mut self, filter: &'a str) -> &mut Self {
+        self.filter = Some(filter);
+        self
+    }
+
+    pub fn sort_order(&mut self, sort_order: &'a str) -> &mut Self {
+        self.sort_order = Some(sort_order);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn template(&mut self, template: &'a str) -> &mut Self {
+        self.template = Some(template);
+        self
+    }
+
+    pub fn build(&self) -> ChooseClient<'a, T> {
+        ChooseClient {
+            without_preview: self.without_preview,
+            reverse_sort_order: self.reverse_sort_order,
+            zoom: self.zoom,
+            format: self.format,
+            filter: self.filter,
+            sort_order: self.sort_order,
+            target_pane: self.target_pane,
+            template: self.template,
+        }
+    }
+}
+
+#[cfg(feature = "tmux_2_6")]
+#[derive(Default, Debug)]
+pub struct ChooseClientBuilder<'a, T: Display> {
+    pub without_preview: Option<bool>,
+    pub format: Option<&'a str>,
+    pub filter: Option<&'a str>,
+    pub sort_order: Option<&'a str>,
+    pub target_pane: Option<&'a T>,
+    pub template: Option<&'a str>,
+}
+
+#[cfg(feature = "tmux_2_6")]
+impl<'a, T: Display + Default> ChooseClientBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn without_preview(&mut self) -> &mut Self {
+        self.without_preview = Some(true);
+        self
+    }
+
+    pub fn format(&mut self, format: &'a str) -> &mut Self {
+        self.format = Some(format);
+        self
+    }
+
+    pub fn filter(&mut self, filter: &'a str) -> &mut Self {
+        self.filter = Some(filter);
+        self
+    }
+
+    pub fn sort_order(&mut self, sort_order: &'a str) -> &mut Self {
+        self.sort_order = Some(sort_order);
+        self
+    }
+
+    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+
+    pub fn template(&mut self, template: &'a str) -> &mut Self {
+        self.template = Some(template);
+        self
+    }
+
+    pub fn build(&self) -> ChooseClient<'a, T> {
+        ChooseClient {
+            without_preview: self.without_preview,
+            format: self.format,
+            filter: self.filter,
+            sort_order: self.sort_order,
+            target_pane: self.target_pane,
+            template: self.template,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const CHOOSE_CLIENT: &'static str = "choose-client";
 

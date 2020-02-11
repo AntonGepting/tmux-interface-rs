@@ -41,6 +41,91 @@ impl<'a, T: Display + Default> ResizeWindow<'a, T> {
     }
 }
 
+#[derive(Default, Debug)]
+pub struct ResizeWindowBuilder<'a, T: Display> {
+    pub smallest: Option<bool>,
+    pub largest: Option<bool>,
+    pub down: Option<bool>,
+    pub left: Option<bool>,
+    pub right: Option<bool>,
+    pub up: Option<bool>,
+    pub target_window: Option<&'a T>,
+    pub width: Option<usize>,
+    pub height: Option<usize>,
+    pub adjustment: Option<&'a str>,
+}
+
+impl<'a, T: Display + Default> ResizeWindowBuilder<'a, T> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn smallest(&mut self) -> &mut Self {
+        self.smallest = Some(true);
+        self
+    }
+
+    pub fn largest(&mut self) -> &mut Self {
+        self.largest = Some(true);
+        self
+    }
+
+    pub fn down(&mut self) -> &mut Self {
+        self.down = Some(true);
+        self
+    }
+
+    pub fn left(&mut self) -> &mut Self {
+        self.left = Some(true);
+        self
+    }
+
+    pub fn right(&mut self) -> &mut Self {
+        self.right = Some(true);
+        self
+    }
+
+    pub fn up(&mut self) -> &mut Self {
+        self.up = Some(true);
+        self
+    }
+
+    pub fn target_window(&mut self, target_window: &'a T) -> &mut Self {
+        self.target_window = Some(target_window);
+        self
+    }
+
+    pub fn width(&mut self, width: usize) -> &mut Self {
+        self.width = Some(width);
+        self
+    }
+
+    pub fn height(&mut self, height: usize) -> &mut Self {
+        self.height = Some(height);
+        self
+    }
+
+    pub fn adjustment(&mut self, adjustment: &'a str) -> &mut Self {
+        self.adjustment = Some(adjustment);
+        self
+    }
+
+    pub fn build(&self) -> ResizeWindow<'a, T> {
+        ResizeWindow {
+            smallest: self.smallest,
+            largest: self.largest,
+            down: self.down,
+            left: self.left,
+            right: self.right,
+            up: self.up,
+            target_window: self.target_window,
+            width: self.width,
+            height: self.height,
+            adjustment: self.adjustment,
+        }
+    }
+}
+
 impl<'a> TmuxInterface<'a> {
     const RESIZE_WINDOW: &'static str = "resize-window";
 
