@@ -1,7 +1,7 @@
 # Changelog
 
 
-# tmux v0.0.6
+# tmux_interface v0.0.6
 - add `Layout` struct
 - add `from_str` functions for parsing
 - add `SessionStack` struct
@@ -16,12 +16,12 @@
 - add `tmux 3.0a` support
 
 
-# tmux v0.0.5
+# tmux_interface v0.0.5
 - remove `regex` dependency
 - add fsm for parsing
 
 
-# tmux v0.0.4
+# tmux_interface v0.0.4
 - add functions:
     - `show-options`
     - `exec`
@@ -66,13 +66,13 @@
 - add key bindings functions
 - support `rust 1.37`
 
-# tmux v0.0.3
+# tmux_interface v0.0.3
 - remove `serde_yaml` dependency
 
-# tmux v0.0.2
+# tmux_interface v0.0.2
 - fix `regex` dependency
 
-# tmux v0.0.1
+# tmux_interface v0.0.1
 - add basic `tmux` functionality:
     - buffers
     - hooks
