@@ -3,33 +3,132 @@ use crate::Layout;
 use crate::WindowFlag;
 use std::time::Duration;
 
+// NOTE: u32 mb not enough!
+pub const WINDOW_ACTIVE: usize = 1 << 0;
+pub const WINDOW_ACTIVITY: usize = 1 << 1;
+pub const WINDOW_ACTIVITY_FLAG: usize = 1 << 2;
+pub const WINDOW_BELL_FLAG: usize = 1 << 3;
+pub const WINDOW_BIGGER: usize = 1 << 4;
+pub const WINDOW_END_FLAG: usize = 1 << 5;
+pub const WINDOW_FLAGS: usize = 1 << 6;
+pub const WINDOW_FORMAT: usize = 1 << 7;
+pub const WINDOW_HEIGHT: usize = 1 << 8;
+pub const WINDOW_ID: usize = 1 << 9;
+pub const WINDOW_INDEX: usize = 1 << 10;
+pub const WINDOW_LAST_FLAG: usize = 1 << 11;
+pub const WINDOW_LAYOUT: usize = 1 << 12;
+pub const WINDOW_LINKED: usize = 1 << 13;
+pub const WINDOW_NAME: usize = 1 << 14;
+pub const WINDOW_OFFSET_X: usize = 1 << 15;
+pub const WINDOW_OFFSET_Y: usize = 1 << 16;
+pub const WINDOW_PANES: usize = 1 << 17;
+pub const WINDOW_SILENCE_FLAG: usize = 1 << 18;
+pub const WINDOW_STACK_INDEX: usize = 1 << 19;
+pub const WINDOW_START_FLAG: usize = 1 << 20;
+pub const WINDOW_VISIBLE_LAYOUT: usize = 1 << 21;
+pub const WINDOW_WIDTH: usize = 1 << 22;
+pub const WINDOW_ZOOMED_FLAG: usize = 1 << 23;
+
+pub const WINDOW_FLAGS_NUM: usize = 24;
+
+pub const WINDOW_NONE: usize = 0;
+//pub const WINDOW_DEFAULT: usize = WINDOW_ID | WINDOW_NAME;
+pub const WINDOW_ALL: usize = WINDOW_ACTIVE
+    | WINDOW_ACTIVITY
+    | WINDOW_ACTIVITY_FLAG
+    | WINDOW_BELL_FLAG
+    | WINDOW_BIGGER
+    | WINDOW_END_FLAG
+    | WINDOW_FLAGS
+    | WINDOW_FORMAT
+    | WINDOW_HEIGHT
+    | WINDOW_ID
+    | WINDOW_INDEX
+    | WINDOW_LAST_FLAG
+    | WINDOW_LAYOUT
+    | WINDOW_LINKED
+    | WINDOW_NAME
+    | WINDOW_OFFSET_X
+    | WINDOW_OFFSET_Y
+    | WINDOW_PANES
+    | WINDOW_SILENCE_FLAG
+    | WINDOW_STACK_INDEX
+    | WINDOW_START_FLAG
+    | WINDOW_VISIBLE_LAYOUT
+    | WINDOW_WIDTH
+    | WINDOW_ZOOMED_FLAG;
+
 pub const WINDOW_VARS_SEPARATOR: &str = "'";
 // FIXME: regex name can be anything, and other keys should be checked better
-pub const WINDOW_VARS_REGEX_VEC: [(&str, usize); 24] = [
-    ("window_active", WINDOW_ACTIVE),
-    ("window_activity", WINDOW_ACTIVITY),
-    ("window_activity_flag", WINDOW_ACTIVITY_FLAG),
-    ("window_bell_flag", WINDOW_BELL_FLAG),
-    ("window_bigger", WINDOW_BIGGER),
-    ("window_end_flag", WINDOW_END_FLAG),
-    ("window_flags", WINDOW_FLAGS),
-    ("window_format", WINDOW_FORMAT),
-    ("window_height", WINDOW_HEIGHT),
-    ("window_id", WINDOW_ID),
-    ("window_index", WINDOW_INDEX),
-    ("window_last_flag", WINDOW_LAST_FLAG),
-    ("window_layout", WINDOW_LAYOUT),
-    ("window_linked", WINDOW_LINKED),
-    ("window_name", WINDOW_NAME),
-    ("window_offset_x", WINDOW_OFFSET_X),
-    ("window_offset_y", WINDOW_OFFSET_Y),
-    ("window_panes", WINDOW_PANES),
-    ("window_silence_flag", WINDOW_SILENCE_FLAG),
-    ("window_stack_index", WINDOW_STACK_INDEX),
-    ("window_start_flag", WINDOW_START_FLAG),
-    ("window_visible_layout", WINDOW_VISIBLE_LAYOUT),
-    ("window_width", WINDOW_WIDTH),
-    ("window_zoomed_flag", WINDOW_ZOOMED_FLAG),
+pub const WINDOW_VARS: [(&str, usize, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_NUM] = [
+    ("window_active", WINDOW_ACTIVE, |w, p| {
+        w.active = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    ("window_activity", WINDOW_ACTIVITY, |w, p| {
+        w.activity = p.parse().ok().map(Duration::from_millis)
+    }),
+    ("window_activity_flag", WINDOW_ACTIVITY_FLAG, |w, p| {
+        w.activity_flag = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    ("window_bell_flag", WINDOW_BELL_FLAG, |w, p| {
+        w.bell_flag = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    ("window_bigger", WINDOW_BIGGER, |w, p| {
+        w.bigger = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    ("window_end_flag", WINDOW_END_FLAG, |w, p| {
+        w.end_flag = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    ("window_flags", WINDOW_FLAGS, |w, p| {
+        w.flags = p.parse().ok()
+    }),
+    ("window_format", WINDOW_FORMAT, |w, p| {
+        w.format = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    ("window_height", WINDOW_HEIGHT, |w, p| {
+        w.height = p.parse().ok()
+    }),
+    ("window_id", WINDOW_ID, |w, p| w.id = p[1..].parse().ok()), // skip `@` char
+    ("window_index", WINDOW_INDEX, |w, p| {
+        w.index = p.parse().ok()
+    }),
+    ("window_last_flag", WINDOW_LAST_FLAG, |w, p| {
+        w.last_flag = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    ("window_layout", WINDOW_LAYOUT, |w, p| {
+        w.layout = p.parse().ok()
+    }),
+    ("window_linked", WINDOW_LINKED, |w, p| {
+        w.linked = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    ("window_name", WINDOW_NAME, |w, p| w.name = p.parse().ok()),
+    ("window_offset_x", WINDOW_OFFSET_X, |w, p| {
+        w.offset_x = p.parse().ok()
+    }),
+    ("window_offset_y", WINDOW_OFFSET_Y, |w, p| {
+        w.offset_y = p.parse().ok()
+    }),
+    ("window_panes", WINDOW_PANES, |w, p| {
+        w.panes = p.parse().ok()
+    }),
+    ("window_silence_flag", WINDOW_SILENCE_FLAG, |w, p| {
+        w.silence_flag = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    ("window_stack_index", WINDOW_STACK_INDEX, |w, p| {
+        w.stack_index = p.parse().ok()
+    }),
+    ("window_start_flag", WINDOW_START_FLAG, |w, p| {
+        w.start_flag = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    ("window_visible_layout", WINDOW_VISIBLE_LAYOUT, |w, p| {
+        w.visible_layout = p.parse().ok()
+    }),
+    ("window_width", WINDOW_WIDTH, |w, p| {
+        w.width = p.parse().ok()
+    }),
+    ("window_zoomed_flag", WINDOW_ZOOMED_FLAG, |w, p| {
+        w.zoomed_flag = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
 ];
 
 // accordingly to tmux.h: Formats
@@ -86,59 +185,6 @@ pub struct Window {
     pub zoomed_flag: Option<bool>,
 }
 
-// NOTE: u32 mb not enough!
-pub const WINDOW_ACTIVE: usize = 1 << 0;
-pub const WINDOW_ACTIVITY: usize = 1 << 1;
-pub const WINDOW_ACTIVITY_FLAG: usize = 1 << 2;
-pub const WINDOW_BELL_FLAG: usize = 1 << 3;
-pub const WINDOW_BIGGER: usize = 1 << 4;
-pub const WINDOW_END_FLAG: usize = 1 << 5;
-pub const WINDOW_FLAGS: usize = 1 << 6;
-pub const WINDOW_FORMAT: usize = 1 << 7;
-pub const WINDOW_HEIGHT: usize = 1 << 8;
-pub const WINDOW_ID: usize = 1 << 9;
-pub const WINDOW_INDEX: usize = 1 << 10;
-pub const WINDOW_LAST_FLAG: usize = 1 << 11;
-pub const WINDOW_LAYOUT: usize = 1 << 12;
-pub const WINDOW_LINKED: usize = 1 << 13;
-pub const WINDOW_NAME: usize = 1 << 14;
-pub const WINDOW_OFFSET_X: usize = 1 << 15;
-pub const WINDOW_OFFSET_Y: usize = 1 << 16;
-pub const WINDOW_PANES: usize = 1 << 17;
-pub const WINDOW_SILENCE_FLAG: usize = 1 << 18;
-pub const WINDOW_STACK_INDEX: usize = 1 << 19;
-pub const WINDOW_START_FLAG: usize = 1 << 20;
-pub const WINDOW_VISIBLE_LAYOUT: usize = 1 << 21;
-pub const WINDOW_WIDTH: usize = 1 << 22;
-pub const WINDOW_ZOOMED_FLAG: usize = 1 << 23;
-
-pub const WINDOW_NONE: usize = 0;
-//pub const WINDOW_DEFAULT: usize = WINDOW_ID | WINDOW_NAME;
-pub const WINDOW_ALL: usize = WINDOW_ACTIVE
-    | WINDOW_ACTIVITY
-    | WINDOW_ACTIVITY_FLAG
-    | WINDOW_BELL_FLAG
-    | WINDOW_BIGGER
-    | WINDOW_END_FLAG
-    | WINDOW_FLAGS
-    | WINDOW_FORMAT
-    | WINDOW_HEIGHT
-    | WINDOW_ID
-    | WINDOW_INDEX
-    | WINDOW_LAST_FLAG
-    | WINDOW_LAYOUT
-    | WINDOW_LINKED
-    | WINDOW_NAME
-    | WINDOW_OFFSET_X
-    | WINDOW_OFFSET_Y
-    | WINDOW_PANES
-    | WINDOW_SILENCE_FLAG
-    | WINDOW_STACK_INDEX
-    | WINDOW_START_FLAG
-    | WINDOW_VISIBLE_LAYOUT
-    | WINDOW_WIDTH
-    | WINDOW_ZOOMED_FLAG;
-
 impl Window {
     pub fn new() -> Self {
         Default::default()
@@ -151,7 +197,7 @@ impl Window {
         // XXX: optimize?
         let mut w = Window::new();
         // for all bitflags
-        for var in WINDOW_VARS_REGEX_VEC.iter() {
+        for var in WINDOW_VARS.iter() {
             let bitflag = bitflags & var.1;
             // is current bitflag given?
             if bitflag == var.1 {
@@ -159,50 +205,8 @@ impl Window {
                 if let Some(part) = wv.next() {
                     // is vector element not empty
                     if !part.is_empty() {
-                        // decode it and save as struct field
-                        match bitflag {
-                            WINDOW_ACTIVE => w.active = part.parse::<usize>().map(|i| i == 1).ok(),
-                            WINDOW_ACTIVITY => {
-                                w.activity = part.parse().ok().map(Duration::from_millis)
-                            }
-                            WINDOW_ACTIVITY_FLAG => {
-                                w.activity_flag = part.parse::<usize>().map(|i| i == 1).ok()
-                            }
-                            WINDOW_BELL_FLAG => {
-                                w.bell_flag = part.parse::<usize>().map(|i| i == 1).ok()
-                            }
-                            WINDOW_BIGGER => w.bigger = part.parse::<usize>().map(|i| i == 1).ok(),
-                            WINDOW_END_FLAG => {
-                                w.end_flag = part.parse::<usize>().map(|i| i == 1).ok()
-                            }
-                            WINDOW_FLAGS => w.flags = part.parse().ok(),
-                            WINDOW_FORMAT => w.format = part.parse::<usize>().map(|i| i == 1).ok(),
-                            WINDOW_HEIGHT => w.height = part.parse().ok(),
-                            WINDOW_ID => w.id = part[1..].parse().ok(),
-                            WINDOW_INDEX => w.index = part.parse().ok(),
-                            WINDOW_LAST_FLAG => {
-                                w.last_flag = part.parse::<usize>().map(|i| i == 1).ok()
-                            }
-                            WINDOW_LAYOUT => w.layout = part.parse().ok(),
-                            WINDOW_LINKED => w.linked = part.parse::<usize>().map(|i| i == 1).ok(),
-                            WINDOW_NAME => w.name = part.parse().ok(),
-                            WINDOW_OFFSET_X => w.offset_x = part.parse().ok(),
-                            WINDOW_OFFSET_Y => w.offset_y = part.parse().ok(),
-                            WINDOW_PANES => w.panes = part.parse().ok(),
-                            WINDOW_SILENCE_FLAG => {
-                                w.silence_flag = part.parse::<usize>().map(|i| i == 1).ok()
-                            }
-                            WINDOW_STACK_INDEX => w.stack_index = part.parse().ok(),
-                            WINDOW_START_FLAG => {
-                                w.start_flag = part.parse::<usize>().map(|i| i == 1).ok()
-                            }
-                            WINDOW_VISIBLE_LAYOUT => w.visible_layout = part.parse().ok(),
-                            WINDOW_WIDTH => w.width = part.parse().ok(),
-                            WINDOW_ZOOMED_FLAG => {
-                                w.zoomed_flag = part.parse::<usize>().map(|i| i == 1).ok()
-                            }
-                            _ => (),
-                        }
+                        // call corresponding func from array
+                        var.2(&mut w, part);
                     }
                 }
             }

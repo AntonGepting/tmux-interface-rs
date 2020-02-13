@@ -1,4 +1,4 @@
-use crate::response::session::session::{SESSION_VARS_REGEX_VEC, SESSION_VARS_SEPARATOR};
+use crate::response::session::session::{SESSION_VARS, SESSION_VARS_SEPARATOR};
 use crate::Error;
 use crate::Session;
 use crate::TmuxInterface;
@@ -27,12 +27,13 @@ impl Index<usize> for Sessions {
 impl Sessions {
     pub fn get(bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
-        let ls_format = SESSION_VARS_REGEX_VEC
+        let ls_format = SESSION_VARS
             .iter()
             .filter(|t| bitflags & t.1 == t.1)
             .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(SESSION_VARS_SEPARATOR);
+        //let format = SessionFormat::create(bitflags);
         let sessions_str = tmux.list_sessions(Some(&ls_format))?;
         Sessions::from_str(&sessions_str, bitflags)
     }

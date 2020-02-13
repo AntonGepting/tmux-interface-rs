@@ -1,4 +1,4 @@
-use crate::response::pane::pane::{PANE_VARS_REGEX_VEC, PANE_VARS_SEPARATOR};
+use crate::response::pane::pane::{PANE_VARS, PANE_VARS_SEPARATOR};
 use crate::Error;
 use crate::Pane;
 use crate::{TargetWindowEx, TmuxInterface};
@@ -28,7 +28,7 @@ impl Index<usize> for Panes {
 impl Panes {
     pub fn get(target_window: &TargetWindowEx, bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
-        let lsp_format = PANE_VARS_REGEX_VEC
+        let lsp_format = PANE_VARS
             .iter()
             .filter(|t| bitflags & t.1 == t.1)
             .map(|t| format!("#{{{}}}", t.0))
@@ -40,7 +40,7 @@ impl Panes {
 
     pub fn get_all(target_session: &TargetWindowEx, bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
-        let lsp_format = PANE_VARS_REGEX_VEC
+        let lsp_format = PANE_VARS
             .iter()
             .filter(|t| bitflags & t.1 == t.1)
             .map(|t| format!("#{{{}}}", t.0))
