@@ -198,9 +198,8 @@ impl Window {
         let mut w = Window::new();
         // for all bitflags
         for var in WINDOW_VARS.iter() {
-            let bitflag = bitflags & var.1;
             // is current bitflag given?
-            if bitflag == var.1 {
+            if bitflags & var.1 == var.1 {
                 // does vector element exist?
                 if let Some(part) = wv.next() {
                     // is vector element not empty

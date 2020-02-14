@@ -136,9 +136,8 @@ impl Session {
         let mut s = Session::new();
         // for all bitflags
         for var in SESSION_VARS.iter() {
-            let bitflag = bitflags & var.1;
             // is current bitflag given?
-            if bitflag == var.1 {
+            if bitflags & var.1 == var.1 {
                 // does vector element exist?
                 if let Some(part) = sv.next() {
                     // is vector element not empty
