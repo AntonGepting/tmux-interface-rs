@@ -1,6 +1,18 @@
 # Changelog
 
 
+# tmux_interface vX.X.X
+
+
+# tmux_interface v0.0.7
+- implement builder pattern for structures of tmux subcommands
+- add cargo features `tmux_2_6`, `tmux_X_X` for multiple tmux versions support
+- add `TargetSession`, `TargetSessionEx`, `TargetWindow`, `TargetWindowEx`,
+    `TargetPane`, `TargetPaneEx` as an equivalent to `target-session`,
+    `target-window`, `target-pane`
+- restructuring of directories and files
+
+
 # tmux_interface v0.0.6
 - add `Layout` struct
 - add `from_str` functions for parsing
