@@ -254,7 +254,7 @@ impl<'a> TmuxInterface<'a> {
             if show_options.hooks.unwrap_or(false) {
                 args.push(H_KEY);
             }
-            if show_options.window.unwrap_or(false) {
+            if show_options.pane.unwrap_or(false) {
                 args.push(p_KEY);
             }
             if show_options.quiet.unwrap_or(false) {
