@@ -52,7 +52,7 @@ fn get_all() {
 fn get_single() {
     use crate::common::server_options::ESCAPE_TIME;
     use crate::ServerOptions;
-    let server_options = ServerOptions::get(ESCAPE_TIME).unwrap();
+    let _server_options = ServerOptions::get(ESCAPE_TIME).unwrap();
     //assert_eq!(server_options.escape_time, Some(500));
 }
 
