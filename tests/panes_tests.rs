@@ -1,17 +1,32 @@
 #[test]
 fn get_panes() {
     use tmux_interface::response::pane::pane::PANE_ALL;
-    use tmux_interface::{NewSession, Panes, TargetSession, TargetWindowEx, TmuxInterface};
+    use tmux_interface::{NewSessionBuilder, Panes, TargetSession, TargetWindowEx, TmuxInterface};
+    use tmux_interface::{SessionOptionsBuilder, BASE_INDEX};
+
+    const TARGET_SESSION: &str = "test_get_panes";
+    const WINDOW_INDEX: usize = 1;
+
+    let target_session = TargetSession::Raw(TARGET_SESSION);
+    let target_window = TargetWindowEx::id(Some(&target_session), WINDOW_INDEX);
 
     let mut tmux = TmuxInterface::new();
-    let new_session = NewSession {
-        detached: Some(true),
-        session_name: Some("test_get_panes"),
-        ..Default::default()
-    };
+
+    SessionOptionsBuilder::new()
+        .base_index(WINDOW_INDEX)
+        .build()
+        .set(BASE_INDEX)
+        .unwrap();
+
+    let new_session = NewSessionBuilder::new()
+        .detached()
+        .session_name(TARGET_SESSION)
+        .build();
     tmux.new_session(Some(&new_session)).unwrap();
-    let _panes = Panes::get(&TargetWindowEx::raw("0:1"), PANE_ALL).unwrap();
-    //assert_eq!(tmux.has_session(Some("test_has_session")).unwrap(), true);
-    tmux.kill_session(None, None, Some(&TargetSession::Raw("test_get_panes")))
+    assert_eq!(tmux.has_session(Some(&target_session)).unwrap(), true);
+
+    let _panes = Panes::get(&target_window, PANE_ALL).unwrap();
+
+    tmux.kill_session(None, None, Some(&target_session))
         .unwrap();
 }

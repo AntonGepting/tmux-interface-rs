@@ -1,17 +1,22 @@
 #[test]
-fn get_panes() {
+fn get_windows() {
     use tmux_interface::response::window::window::WINDOW_ALL;
-    use tmux_interface::{NewSession, TargetSession, TmuxInterface, Windows};
+    use tmux_interface::{NewSessionBuilder, TargetSession, TmuxInterface, Windows};
+
+    const TARGET_SESSION: &str = "test_get_windows";
+    let target_session = TargetSession::Raw(TARGET_SESSION);
 
     let mut tmux = TmuxInterface::new();
-    let new_session = NewSession {
-        detached: Some(true),
-        session_name: Some("test_get_windows"),
-        ..Default::default()
-    };
+
+    let new_session = NewSessionBuilder::new()
+        .detached()
+        .session_name(TARGET_SESSION)
+        .build();
     tmux.new_session(Some(&new_session)).unwrap();
-    let _windows = Windows::get(&TargetSession::Raw("0"), WINDOW_ALL).unwrap();
-    //assert_eq!(tmux.has_session(Some("test_has_session")).unwrap(), true);
-    tmux.kill_session(None, None, Some(&TargetSession::Raw("test_get_windows")))
+    assert_eq!(tmux.has_session(Some(&target_session)).unwrap(), true);
+
+    let _windows = Windows::get(&target_session, WINDOW_ALL).unwrap();
+
+    tmux.kill_session(None, None, Some(&target_session))
         .unwrap();
 }
