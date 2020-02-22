@@ -296,6 +296,7 @@ Parsing objects and supported tmux variables:
     - [ ] builder pattern
 - mb some loops into iterators
 - mb split tmux versions in different folders
+- mb split into different librarys (options, get, set objects)
 
 
 # Strategy
