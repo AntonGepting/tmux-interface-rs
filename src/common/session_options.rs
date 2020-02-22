@@ -686,6 +686,8 @@ impl SessionOptions {
         }
         Ok(())
     }
+
+    // XXX: single set get methods
 }
 
 impl FromStr for SessionOptions {
