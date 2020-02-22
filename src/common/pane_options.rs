@@ -9,6 +9,11 @@ pub const REMAIN_ON_EXIT: usize = 1 << 2;
 pub const WINDOW_ACTIVE_STYLE: usize = 1 << 3;
 pub const WINDOW_STYLE: usize = 1 << 4;
 
+pub const PANE_OPTIONS_NONE: usize = 0;
+////pub const PANE_OPTIONS_DEFAULT: usize = ;
+pub const PANE_OPTIONS_ALL: usize =
+    ALLOW_RENAME | ALTERNATE_SCREEN | REMAIN_ON_EXIT | WINDOW_ACTIVE_STYLE | WINDOW_STYLE;
+
 pub const PANE_OPTIONS_NUM: usize = 5;
 pub const PANE_OPTIONS: [(
     &str,
