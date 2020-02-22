@@ -121,6 +121,7 @@
 
 pub mod error;
 
+pub mod common;
 pub mod request;
 pub mod response;
 
@@ -129,6 +130,35 @@ pub mod tmux_option;
 pub mod version;
 
 pub use self::tmux_interface::TmuxInterface;
+
+// common options
+pub use crate::common::StatusKeys;
+pub use crate::common::Switch;
+
+// server options
+pub use crate::common::server_options::ServerOptions;
+pub use crate::common::server_options::ServerOptionsBuilder;
+pub use crate::common::server_options::SetClipboard;
+
+// session otions
+pub use crate::common::session_options::Action;
+pub use crate::common::session_options::Activity;
+pub use crate::common::session_options::SessionOptions;
+pub use crate::common::session_options::SessionOptionsBuilder;
+pub use crate::common::session_options::Status;
+pub use crate::common::session_options::StatusJustify;
+pub use crate::common::session_options::StatusPosition;
+
+// window options
+pub use crate::common::window_options::ClockModeStyle;
+pub use crate::common::window_options::PaneBorderStatus;
+pub use crate::common::window_options::WindowOptions;
+pub use crate::common::window_options::WindowOptionsBuilder;
+pub use crate::common::window_options::WindowSize;
+
+// pane options
+pub use crate::common::pane_options::PaneOptions;
+pub use crate::common::pane_options::PaneOptionsBuilder;
 
 // buffers
 pub use self::request::buffers::choose_buffer::ChooseBuffer;
