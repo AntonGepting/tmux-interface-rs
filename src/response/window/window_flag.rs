@@ -35,7 +35,7 @@ impl FromStr for WindowFlag {
                 'M' => wf.0 += WINDOW_FLAG_MARKED,
                 'Z' => wf.0 += WINDOW_FLAG_ZOOMED,
                 // XXX: Error description
-                _ => return Err(Error::new("Parse WindowFlag Error")),
+                _ => return Err(Error::ParseWindowFlag),
             }
         }
         Ok(wf)

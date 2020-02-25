@@ -22,7 +22,7 @@ impl FromStr for SetClipboard {
             ON => Ok(Self::On),
             OFF => Ok(Self::Off),
             EXTERNAL => Ok(Self::External),
-            _ => Err(Error::new("on/off/external parsing error")),
+            _ => Err(Error::ParseSetClipboard),
         }
     }
 }

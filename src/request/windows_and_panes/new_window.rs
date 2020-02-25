@@ -302,12 +302,11 @@ impl<'a> TmuxInterface<'a> {
             }
         }
         let output = self.subcommand(TmuxInterface::NEW_WINDOW, &args)?;
+        let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         if output.status.success() {
-            let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
             Ok(stdout.to_string())
         } else {
-            let stdout = String::from_utf8_lossy(&output.stderr.as_slice());
-            Err(Error::new(&stdout))
+            Err(Error::Tmux(stdout.to_string()))
         }
     }
 

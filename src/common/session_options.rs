@@ -19,7 +19,7 @@ impl FromStr for Activity {
             "on" => Ok(Self::On),
             "off" => Ok(Self::Off),
             "both" => Ok(Self::Both),
-            _ => Err(Error::new("on/off/both parsing error")),
+            _ => Err(Error::ParseActivity),
         }
     }
 }
@@ -54,7 +54,7 @@ impl FromStr for Action {
             "none" => Ok(Self::None),
             "current" => Ok(Self::Current),
             "other" => Ok(Self::Other),
-            _ => Err(Error::new("any/none/current/other parsing error")),
+            _ => Err(Error::ParseAction),
         }
     }
 }
@@ -92,7 +92,7 @@ impl FromStr for Status {
             "3" => Ok(Self::_3),
             "4" => Ok(Self::_4),
             "5" => Ok(Self::_5),
-            _ => Err(Error::new("on/off/2/3/4/5 parsing error")),
+            _ => Err(Error::ParseStatus),
         }
     }
 }
@@ -126,7 +126,7 @@ impl FromStr for StatusJustify {
             "left" => Ok(Self::Left),
             "centre" => Ok(Self::Centre),
             "right" => Ok(Self::Right),
-            _ => Err(Error::new("left/centre/right parsing error")),
+            _ => Err(Error::ParseStatusJustify),
         }
     }
 }
@@ -155,7 +155,7 @@ impl FromStr for StatusPosition {
         match s {
             "top" => Ok(Self::Top),
             "bottom" => Ok(Self::Bottom),
-            _ => Err(Error::new("top/bottom parsing error")),
+            _ => Err(Error::ParseStatusPosition),
         }
     }
 }

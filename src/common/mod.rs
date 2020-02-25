@@ -37,7 +37,7 @@ impl FromStr for StatusKeys {
         match s {
             "vi" => Ok(Self::Vi),
             "emacs" => Ok(Self::Emacs),
-            _ => Err(Error::new("vi/emacs parsing error")),
+            _ => Err(Error::ParseStatusKeys),
         }
     }
 }
@@ -64,7 +64,7 @@ impl FromStr for Switch {
         match s {
             "on" => Ok(Self::On),
             "off" => Ok(Self::Off),
-            _ => Err(Error::new("on/off parsing error")),
+            _ => Err(Error::ParseSwitch),
         }
     }
 }

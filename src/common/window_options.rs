@@ -17,7 +17,7 @@ impl FromStr for ClockModeStyle {
         match s {
             "12" => Ok(Self::_12),
             "24" => Ok(Self::_24),
-            _ => Err(Error::new("12/24 parsing error")),
+            _ => Err(Error::ParseClockModeStyle),
         }
     }
 }
@@ -47,7 +47,7 @@ impl FromStr for PaneBorderStatus {
             "off" => Ok(Self::Off),
             "top" => Ok(Self::Top),
             "bottom" => Ok(Self::Bottom),
-            _ => Err(Error::new("off/top/bottom parsing error")),
+            _ => Err(Error::ParsePaneBorderStatus),
         }
     }
 }
@@ -80,7 +80,7 @@ impl FromStr for WindowSize {
             "smallest" => Ok(Self::Smallest),
             "manual" => Ok(Self::Manual),
             "latest" => Ok(Self::Latest),
-            _ => Err(Error::new("larges/smallest/manual/latest parsing error")),
+            _ => Err(Error::ParseWindowSize),
         }
     }
 }
