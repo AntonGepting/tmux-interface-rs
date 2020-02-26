@@ -10,7 +10,7 @@ fn display_menu() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["display-menu", "-c", "1", "-t", "2", "-T", "3", "-x", "4", "-y", "5", "6", "7", "8"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let display_menu = DisplayMenu {

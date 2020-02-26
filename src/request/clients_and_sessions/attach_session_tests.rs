@@ -11,7 +11,7 @@ fn attach_session() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["attach-session", "-d", "-E", "-r", "-x", "-c", "1", "-t", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let attach_session = AttachSession {
@@ -48,7 +48,7 @@ fn attach_session() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["attach-session", "-d", "-E", "-r", "-c", "1", "-t", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let attach_session = AttachSession {

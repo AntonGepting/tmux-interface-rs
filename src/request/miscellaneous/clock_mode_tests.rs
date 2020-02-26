@@ -9,7 +9,7 @@ fn clock_mode() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["clock-mode", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.clock_mode(Some(&TargetPane::Raw("1"))).unwrap_err();
 }

@@ -12,7 +12,7 @@ fn split_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["split-window", "-b", "-d", "-f", "-h", "-I", "-v", "-P", "-c", "1", "-e", "2", "-l", "3", "-t", "4", "5", "-F", "6"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let split_window = SplitWindow {
@@ -64,7 +64,7 @@ fn split_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["split-window", "-b", "-d", "-f", "-h", "-v", "-P", "-c", "1", "-l", "2", "-t", "3", "4", "-F", "5"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let split_window = SplitWindow {

@@ -12,7 +12,7 @@ fn join_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["join-pane", "-b", "-d", "-f", "-h", "-v", "-l", "1%", "-s", "2", "-t", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let join_pane = JoinPane {
@@ -54,7 +54,7 @@ fn join_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["join-pane", "-b", "-d", "-h", "-v", "-p", "1", "-s", "2", "-t", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let join_pane = JoinPane {

@@ -10,7 +10,7 @@ fn break_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["break-pane", "-d", "-P", "-F", "1", "-n", "2", "-s", "3", "-t", "4"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let break_pane = BreakPane {

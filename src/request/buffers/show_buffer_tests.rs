@@ -10,7 +10,7 @@ fn show_buffer() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["show-buffer", "-b", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.show_buffer(Some("1")).unwrap_err();
 }

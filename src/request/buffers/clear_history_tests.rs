@@ -10,7 +10,7 @@ fn clear_history() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["clear-history", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.clear_history(Some(&TargetSession::Raw("1")))
         .unwrap_err();

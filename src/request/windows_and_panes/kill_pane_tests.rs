@@ -10,7 +10,7 @@ fn kill_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["kill-pane", "-a", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.kill_pane(Some(true), Some(&TargetPane::Raw("1")))
         .unwrap_err();

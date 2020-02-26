@@ -11,7 +11,7 @@ fn source_file() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["source-file", "-n", "-q", "-v", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.source_file(Some(true), Some(true), Some(true), "1")
         .unwrap_err();
@@ -30,7 +30,7 @@ fn source_file() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["source-file", "-q", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.source_file(Some(true), "1").unwrap_err();
 }

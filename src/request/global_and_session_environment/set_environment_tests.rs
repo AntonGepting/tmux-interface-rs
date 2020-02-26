@@ -10,7 +10,7 @@ fn set_environment() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["set-environment", "-g", "-r", "-u", "-t", "1", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     let set_environment = SetEnvironment {
         global: Some(true),

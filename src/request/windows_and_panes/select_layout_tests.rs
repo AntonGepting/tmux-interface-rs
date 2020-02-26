@@ -11,7 +11,7 @@ fn select_layout() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["select-layout", "-E", "-n", "-o", "-p", "-t", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let select_layout = SelectLayot {
@@ -48,7 +48,7 @@ fn select_layout() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["select-layout", "-n", "-o", "-p", "-t", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let select_layout = SelectLayot {

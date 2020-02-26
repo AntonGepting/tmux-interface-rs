@@ -11,7 +11,7 @@ fn show_options() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["show-options", "-A", "-g", "-H", "-p", "-q", "-s", "-v", "-w", "-t", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let show_options = ShowOptions {
@@ -56,7 +56,7 @@ fn show_options() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["show-options", "-g", "-q", "-s", "-v", "-w", "-t", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let show_options = ShowOptions {

@@ -10,7 +10,7 @@ fn if_shell() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["if-shell", "-b", "-F", "-t", "1", "2", "3", "4"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     let if_shell = IfShell {
         backgroud: Some(true),

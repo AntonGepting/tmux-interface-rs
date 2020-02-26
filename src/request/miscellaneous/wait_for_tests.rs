@@ -10,7 +10,7 @@ fn wait_for() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["wait-for", "-L", "-S", "-U", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.wait_for(Some(true), Some(true), Some(true), "1")
         .unwrap_err();

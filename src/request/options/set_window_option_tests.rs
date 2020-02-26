@@ -10,7 +10,7 @@ fn set_window_option() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["set-window-option", "-a", "-F", "-g", "-o", "-q", "-u", "-t", "1", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook))
     }));
 
     let target_window = TargetWindow::Raw("1");

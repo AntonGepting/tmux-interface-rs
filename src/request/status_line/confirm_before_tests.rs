@@ -10,7 +10,7 @@ fn confirm_before() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["confirm-before", "-p", "1", "-t", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.confirm_before(Some("1"), Some("2"), "3").unwrap_err();
 }

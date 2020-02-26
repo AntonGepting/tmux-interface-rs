@@ -10,7 +10,7 @@ fn resize_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["resize-window", "-a", "-A", "-D", "-L", "-R", "-U", "-t", "1", "-x", "2", "-y", "3", "4"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let resize_window = ResizeWindow {

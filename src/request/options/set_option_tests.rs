@@ -11,7 +11,7 @@ fn set_option() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["set-option", "-a", "-F", "-g", "-o", "-p", "-q", "-s", "-u", "-w", "-t", "1", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let set_option = SetOption {
@@ -56,7 +56,7 @@ fn set_option() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["set-option", "-a", "-F", "-g", "-o", "-q", "-s", "-u", "-w", "-t", "1", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let set_option = SetOption {

@@ -10,7 +10,7 @@ fn previous_layout() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["previous-layout", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.previous_layout(Some(&TargetWindow::Raw("1")))
         .unwrap_err();

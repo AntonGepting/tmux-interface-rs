@@ -11,7 +11,7 @@ fn send_keys() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["send-keys", "-F", "-H", "-l", "-M", "-R", "-X", "-N", "1", "-t", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let target_pane = TargetPaneEx::raw("2");
@@ -54,7 +54,7 @@ fn send_keys() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["send-keys", "-l", "-M", "-R", "-X", "-N", "1", "-t", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     let target_pane = TargetPaneEx::raw("2");
     let send_keys = SendKeys {

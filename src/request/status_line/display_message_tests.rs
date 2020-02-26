@@ -11,7 +11,7 @@ fn display_message() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["display-message", "-a", "-I", "-p", "-v", "-c", "1", "-t", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let display_message = DisplayMessage {
@@ -50,7 +50,7 @@ fn display_message() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["display-message", "-p", "-c", "1", "-t", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.display_message(
         Some(true),

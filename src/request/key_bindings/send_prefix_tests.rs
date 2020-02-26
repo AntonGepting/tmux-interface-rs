@@ -10,7 +10,7 @@ fn send_prefix() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["send-prefix", "-2", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.send_prefix(Some(true), Some(&TargetPane::Raw("1")))
         .unwrap_err();

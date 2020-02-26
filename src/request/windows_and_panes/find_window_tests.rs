@@ -10,7 +10,7 @@ fn find_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["find-window", "-r", "-C", "-N", "-T", "-Z", "-t", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let find_window = FindWindow {
@@ -46,7 +46,7 @@ fn find_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["find-window", "-C", "-N", "-T", "-t", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let find_window = FindWindow {

@@ -10,7 +10,7 @@ fn next_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["next-window", "-a", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.next_window(Some(true), Some("1")).unwrap_err();
 }

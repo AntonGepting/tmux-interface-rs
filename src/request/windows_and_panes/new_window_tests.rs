@@ -12,7 +12,7 @@ fn new_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["new-window", "-a", "-d", "-k", "-P", "-c", "1", "-e", "2", "-F", "3", "-n", "4", "-t", "5", "6"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     let new_window = NewWindow {
         add: Some(true),
@@ -43,7 +43,7 @@ fn new_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["new-window", "-a", "-d", "-k", "-P", "-c", "1", "-F", "2", "-n", "3", "-t", "4", "5"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     let new_window = NewWindow {
         add: Some(true),

@@ -9,7 +9,7 @@ fn copy_mode() {
             format!("{:?} {:?} {:?}", bin, options, subcmd),
             r#""tmux" [] ["copy-mode", "-M", "-e", "-u", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.copy_mode(
         Some(true),

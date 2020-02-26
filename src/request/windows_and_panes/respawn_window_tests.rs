@@ -12,7 +12,7 @@ fn respawn_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["respawn-window", "-k", "-c", "1", "-e", "2", "-t", "3", "4"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let respawn_window = RespawnWindow {
@@ -47,7 +47,7 @@ fn respawn_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["respawn-window", "-k", "-c", "1", "-t", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.respawn_window(
         Some(true),

@@ -11,7 +11,7 @@ fn refresh_client() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["refresh-client", "-c", "-D", "-l", "-L", "-R", "-S", "-U", "-C", "1x2", "-F", "3", "-t", "4", "5"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     let refresh_client = RefreshClient {
         tracking_cursor: Some(true),
@@ -42,7 +42,7 @@ fn refresh_client() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["refresh-client", "-C", "1,2", "-S", "-t", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.refresh_client(Some((1, 2)), Some(true), Some("3"))
         .unwrap_err();

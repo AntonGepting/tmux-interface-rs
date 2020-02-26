@@ -10,7 +10,7 @@ fn set_buffer() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["set-buffer", "-a", "-b", "1", "-n", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.set_buffer(Some(true), Some("1"), Some("2"), "3")
         .unwrap_err();

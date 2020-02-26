@@ -10,7 +10,7 @@ fn kill_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["kill-window", "-a", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.kill_window(Some(true), Some(&TargetWindow::Raw("1")))
         .unwrap_err();

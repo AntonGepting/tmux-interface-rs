@@ -11,7 +11,7 @@ fn attach_session() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["switch-client", "-E", "-l", "-n", "-p", "-r", "-Z", "-c", "1", "-t", "2", "-T", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     let switch_client = SwitchClient {
         not_update_env: Some(true),
@@ -53,7 +53,7 @@ fn attach_session() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["switch-client", "-E", "-l", "-n", "-p", "-r", "-c", "1", "-t", "2", "-T", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let switch_client = SwitchClient {

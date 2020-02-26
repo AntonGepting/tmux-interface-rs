@@ -10,7 +10,7 @@ fn command_prompt() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["command-prompt", "-1", "-i", "-I", "1", "-p", "2", "-t", "3", "4"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let command_prompt = CommandPrompt {

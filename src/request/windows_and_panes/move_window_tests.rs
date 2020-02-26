@@ -10,7 +10,7 @@ fn move_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["move-window", "-a", "-r", "-d", "-k", "-s", "1", "-t", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let move_window = MoveWindow {

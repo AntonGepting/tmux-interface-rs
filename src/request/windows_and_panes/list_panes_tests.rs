@@ -10,7 +10,7 @@ fn list_panes() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["list-panes", "-a", "-s", "-F", "1", "-t", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.list_panes(
         Some(true),

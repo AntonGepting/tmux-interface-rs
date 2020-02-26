@@ -10,7 +10,7 @@ fn run_shell() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["run-shell", "-b", "-t", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.run_shell(Some(true), Some(&TargetPane::Raw("1")), "2")
         .unwrap_err();
