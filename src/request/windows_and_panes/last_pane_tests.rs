@@ -11,7 +11,7 @@ fn last_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["last-pane", "-d", "-e", "-Z", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.last_pane(
         Some(true),
@@ -35,7 +35,7 @@ fn last_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["last-pane", "-d", "-e", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.last_pane(Some(true), Some(true), Some(&TargetWindow::Raw("1")))
         .unwrap_err();

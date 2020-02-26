@@ -10,7 +10,7 @@ fn display_panes() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["display-panes", "-b", "-d", "1", "-t", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     let _ = tmux.display_panes(Some(true), Some("1"), Some("2"), Some("3"));
 }
@@ -27,7 +27,7 @@ fn display_panes() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["display-panes", "-d", "1", "-t", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     let _ = tmux.display_panes(Some("1"), Some("2"), Some("3"));
 }

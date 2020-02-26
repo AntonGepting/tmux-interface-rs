@@ -10,7 +10,7 @@ fn paste_buffer() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["paste-buffer", "-d", "-p", "-r", "-b", "1", "-s", "2", "-t", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let paste_buffer = PasteBuffer {

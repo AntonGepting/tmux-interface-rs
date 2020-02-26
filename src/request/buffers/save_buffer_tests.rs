@@ -10,7 +10,7 @@ fn save_buffer() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["save-buffer", "-a", "-b", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.save_buffer(Some(true), Some("1"), "2").unwrap_err();
 }

@@ -1,5 +1,5 @@
 #[cfg(test)]
-use crate::TmuxInterface;
+use crate::{Error, TmuxInterface};
 
 #[test]
 fn new() {
@@ -15,7 +15,7 @@ fn exec_io_error() {
     let mut tmux = TmuxInterface::new();
     tmux.tmux = Some("nonexistent_binary");
     let err = tmux.version().unwrap_err();
-    assert_eq!(err.message, "io");
+    assert!(if let Error::IO(_) = err { true } else { false });
 }
 
 #[test]
@@ -37,7 +37,7 @@ fn version_io_error() {
     let mut tmux = TmuxInterface::new();
     tmux.tmux = Some("nonexistent_binary");
     let err = tmux.version().unwrap_err();
-    assert_eq!(err.message, "io");
+    assert!(if let Error::IO(_) = err { true } else { false });
 }
 
 #[test]
@@ -45,5 +45,9 @@ fn version_parse_error() {
     let mut tmux = TmuxInterface::new();
     tmux.tmux = Some("./tests/tmux_error_mock.sh");
     let err = tmux.version().unwrap_err();
-    assert_eq!(err.message, "parse num");
+    assert!(if let Error::ParseInt(_) = err {
+        true
+    } else {
+        false
+    });
 }

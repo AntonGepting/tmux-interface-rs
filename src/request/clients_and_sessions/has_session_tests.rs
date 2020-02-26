@@ -10,7 +10,7 @@ fn has_session() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["has-session", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.has_session(Some(&TargetSession::Raw("1")))
         .unwrap_err();

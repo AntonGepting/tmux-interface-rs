@@ -11,7 +11,7 @@ fn capture_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["capture-pane", "-a", "-e", "-p", "-P", "-q", "-C", "-J", "-N", "-b", "1", "-E", "2", "-S", "3", "-t", "4"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let capture_pane = CapturePane {
@@ -60,7 +60,7 @@ fn capture_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["capture-pane", "-a", "-e", "-p", "-P", "-q", "-C", "-J", "-b", "1", "-E", "2", "-S", "3", "-t", "4"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let capture_pane = CapturePane {

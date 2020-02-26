@@ -10,7 +10,7 @@ fn show_messages() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["show-messages", "-J", "-T", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.show_messages(Some(true), Some(true), Some("1"))
         .unwrap_err();

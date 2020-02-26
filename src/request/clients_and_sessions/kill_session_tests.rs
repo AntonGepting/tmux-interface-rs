@@ -9,7 +9,7 @@ fn kill_session() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["kill-session", "-a", "-C", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.kill_session(Some(true), Some(true), Some(&TargetSession::Raw("1")))
         .unwrap_err();

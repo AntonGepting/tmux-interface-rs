@@ -10,7 +10,7 @@ fn start_server() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["start-server", ""]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.start_server().unwrap_err();
 }

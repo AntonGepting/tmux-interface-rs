@@ -11,7 +11,7 @@ fn select_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["select-pane", "-D", "-d", "-e", "-L", "-l", "-M", "-m", "-R", "-U", "-Z", "-T", "1", "-t", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let select_pane = SelectPane {
@@ -60,7 +60,7 @@ fn select_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["select-pane", "-D", "-d", "-e", "-g", "-L", "-l", "-M", "-m", "-R", "-U", "-P", "1", "-T", "2", "-t", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let select_pane = SelectPane {

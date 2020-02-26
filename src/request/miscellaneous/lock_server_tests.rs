@@ -10,7 +10,7 @@ fn lock_server() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["lock-server"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.lock_server().unwrap_err();
 }

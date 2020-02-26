@@ -10,7 +10,7 @@ fn list_keys() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["list-keys", "-T", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.list_keys(Some("1")).unwrap_err();
 }

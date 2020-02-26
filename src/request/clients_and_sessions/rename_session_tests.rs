@@ -10,7 +10,7 @@ fn rename_session() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["rename-session", "-t", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.rename_session(Some(&TargetSession::Raw("1")), "2")
         .unwrap_err();

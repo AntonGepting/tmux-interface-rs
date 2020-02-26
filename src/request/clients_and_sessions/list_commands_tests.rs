@@ -10,7 +10,7 @@ fn list_commands() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["list-commands", "-F", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.list_commands(Some("1")).unwrap_err();
 }

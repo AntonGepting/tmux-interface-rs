@@ -10,7 +10,7 @@ fn lock_client() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["lock-client", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.lock_client(Some("1")).unwrap_err();
 }

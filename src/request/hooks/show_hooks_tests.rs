@@ -10,7 +10,7 @@ fn show_hooks() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["show-hooks", "-g", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.show_hooks(Some(true), Some(&TargetSession::Raw("1")))
         .unwrap_err();

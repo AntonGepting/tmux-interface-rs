@@ -10,7 +10,7 @@ fn last_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["last-window", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.last_window(Some("1")).unwrap_err();
 }

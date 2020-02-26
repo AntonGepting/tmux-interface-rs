@@ -10,7 +10,7 @@ fn detach_client() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["detach-client", "-a", "-P", "-E", "1", "-s", "2", "-t", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let detach_client = DetachClient {

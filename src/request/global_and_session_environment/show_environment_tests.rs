@@ -10,7 +10,7 @@ fn show_environment() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["show-environment", "-g", "-s", "-t", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.show_environment(
         Some(true),

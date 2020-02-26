@@ -10,7 +10,7 @@ fn set_hook() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["set-hook", "-a", "-g", "-R", "-u", "-t", "1", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     let set_hook = SetHook {
         append: Some(true),
@@ -43,7 +43,7 @@ fn set_hook() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["set-hook", "-g", "-u", "-t", "1", "2", "3"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let set_hook = SetHook {

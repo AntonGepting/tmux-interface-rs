@@ -10,7 +10,7 @@ fn show_window_options() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["show-window-options", "-g", "-v", "-t", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.show_window_options(
         Some(true),

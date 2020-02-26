@@ -12,7 +12,7 @@ fn new_session() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["new-session", "-A", "-d", "-D", "-E", "-P", "-X", "-c", "1", "-F", "2", "-n", "3", "-s", "4", "-t", "5", "-x", "6", "-y", "7", "8"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     let new_session = NewSession {
         attach: Some(true),
@@ -65,7 +65,7 @@ fn new_session() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["new-session", "-A", "-d", "-D", "-E", "-P", "-c", "1", "-F", "2", "-n", "3", "-s", "4", "-t", "5", "-x", "6", "-y", "7", "8"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let new_session = NewSession {

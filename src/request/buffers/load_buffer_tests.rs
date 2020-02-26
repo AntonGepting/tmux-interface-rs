@@ -10,7 +10,7 @@ fn load_buffer() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["load-buffer", "-b", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.load_buffer(Some("1"), "2").unwrap_err();
 }

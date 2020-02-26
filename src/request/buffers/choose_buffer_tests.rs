@@ -10,7 +10,7 @@ fn choose_buffer() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["choose-buffer", "-N", "-Z", "-r", "-F", "1", "-f", "2", "-O", "3", "-t", "4", "5"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let choose_buffer = ChooseBuffer {
@@ -50,7 +50,7 @@ fn choose_buffer() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["choose-buffer", "-N", "-F", "1", "-f", "2", "-O", "3", "-t", "4", "5"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let choose_buffer = ChooseBuffer {

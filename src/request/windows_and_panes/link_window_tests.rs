@@ -10,7 +10,7 @@ fn link_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["link-window", "-a", "-d", "-k", "-s", "1", "-t", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let link_window = LinkWindow {

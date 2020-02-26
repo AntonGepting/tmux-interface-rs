@@ -11,7 +11,7 @@ fn swap_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["swap-pane", "-d", "-D", "-U", "-Z", "-s", "1", "-t", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let swap_pane = SwapPane {
@@ -48,7 +48,7 @@ fn swap_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["swap-pane", "-d", "-D", "-U", "-s", "1", "-t", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let swap_pane = SwapPane {

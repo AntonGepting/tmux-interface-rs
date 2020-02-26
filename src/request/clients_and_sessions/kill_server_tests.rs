@@ -9,7 +9,7 @@ fn kill_server() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["kill-server", ""]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.kill_server().unwrap_err();
 }

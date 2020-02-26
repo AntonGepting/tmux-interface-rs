@@ -11,7 +11,7 @@ fn rotate_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["rotate-window", "-D", "-U", "-Z", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.rotate_window(
         Some(true),
@@ -35,7 +35,7 @@ fn rotate_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["rotate-window", "-D", "-U", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.rotate_window(Some(true), Some(true), Some(&TargetWindow::Raw("1")))
         .unwrap_err();

@@ -39,9 +39,12 @@ fn from_str() {
 
 #[test]
 fn from_str_error() {
-    use crate::Version;
-    assert_eq!(
-        "tmux a2.8a".parse::<Version>().unwrap_err().message,
-        "parse num"
-    );
+    use crate::{Error, Version};
+
+    let err = "tmux a2.8a".parse::<Version>().unwrap_err();
+    assert!(if let Error::ParseInt(_) = err {
+        true
+    } else {
+        false
+    })
 }

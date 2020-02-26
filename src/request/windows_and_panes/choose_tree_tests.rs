@@ -10,7 +10,7 @@ fn choose_tree() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["choose-tree", "-G", "-N", "-r", "-s", "-w", "-Z", "-F", "1", "-f", "2", "-O", "3", "-t", "4", "5"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let choose_tree = ChooseTree {
@@ -56,7 +56,7 @@ fn choose_tree() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["choose-tree", "-N", "-s", "-w", "-F", "1", "-f", "2", "-O", "3", "-t", "4", "5"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let choose_tree = ChooseTree {

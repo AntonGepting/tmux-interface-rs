@@ -10,7 +10,7 @@ fn list_sessions() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["list-sessions", "-F", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.list_sessions(Some("1")).unwrap_err();
 }

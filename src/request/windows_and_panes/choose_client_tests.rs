@@ -10,7 +10,7 @@ fn choose_client() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["choose-client", "-N", "-r", "-Z", "-F", "1", "-f", "2", "-O", "3", "-t", "4", "5"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let choose_client = ChooseClient {
@@ -50,7 +50,7 @@ fn choose_client() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["choose-client", "-N", "-F", "1", "-f", "2", "-O", "3", "-t", "4", "5"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let choose_client = ChooseClient {

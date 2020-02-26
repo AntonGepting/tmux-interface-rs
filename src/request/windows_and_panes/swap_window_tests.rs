@@ -10,7 +10,7 @@ fn swap_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["swap-window", "-d", "-s", "1", "-t", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.swap_window(
         Some(true),

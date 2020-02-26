@@ -10,7 +10,7 @@ fn select_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["select-window", "-l", "-n", "-p", "-T", "-t", "1"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let select_window = SelectWindow {

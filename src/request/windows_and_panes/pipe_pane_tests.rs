@@ -11,7 +11,7 @@ fn pipe_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["pipe-pane", "-I", "-O", "-o", "-t", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let pipe_pane = PipePane {
@@ -46,7 +46,7 @@ fn pipe_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["pipe-pane", "-o", "-t", "1", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.pipe_pane(Some(true), Some(&TargetPane::Raw("1")), Some("2"))
         .unwrap_err();

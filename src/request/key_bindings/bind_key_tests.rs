@@ -10,7 +10,7 @@ fn bind_key() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["bind-key", "-n", "-r", "-T", "1", "2", "3", "4"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
 
     let bind_key = BindKey {

@@ -10,7 +10,7 @@ fn list_windows() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["list-windows", "-a", "-F", "1", "-t", "2"]"#
         );
-        Err(Error::new("hook"))
+        Err(Error::Hook)
     }));
     tmux.list_windows(Some(true), Some("1"), Some(&TargetSession::Raw("2")))
         .unwrap_err();

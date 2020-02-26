@@ -5,6 +5,7 @@ use std::fmt;
 // XXX: mb separate errors by modules for eventual lib splitting
 #[derive(Debug)]
 pub enum Error {
+    Hook,
     // options parse errors
     ParseStatusKeys,
     ParseVersion,
