@@ -1,10 +1,13 @@
-//! **tmux_interface** as a Rust library provides functionality to communicate with TMUX via CLI.
+//! `tmux_interface` is a library for communication with [TMUX](https://github.com/tmux/tmux) via
+//! CLI.
 //!
 //! # Description
 //!
-//! Main purpose of the tmux_interface is to implement simple sending and recieving data mechanisms
-//! for some Rust application, using intercommunication with TMUX only via standard streams (stdin,
-//! stdout, stderr).
+//! Main purpose of the `tmux_interface` library is to implement simple sending and recieving data
+//! mechanisms for intercommunication with `TMUX` only via standard streams (`stdin`, `stdout`,
+//! `stderr`).
+//!
+//! # Project Structure
 //!
 //! This goal can be reached by splitting it into two separate tasks:
 //!
@@ -35,8 +38,9 @@
 //!     - ...
 //!     - [`TmuxOption`](crate::TmuxOption)
 //!
-//! # Library Functions
+//! # Conventions
 //!
+//! Library Functions:
 //! 1. Function names and their grouping are inherited from tmux manual
 //! 2. Function arguments and their optionality inherited from tmux manual
 //! 3. Functions can have max. 4 arguments, otherwise a structure will be used
@@ -118,6 +122,141 @@
 //!     tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name1"))).unwrap();
 //! }
 //! ```
+//!
+//! # New session
+//!
+//! ## Examples
+//! Create a new tmux session without any additional parameters (alternative to: `tmux new-session`)
+//! ```
+//! use crate::tmux_interface::TmuxInterface;
+//!
+//! fn main() {
+//!     let mut tmux = TmuxInterface::new();
+//!     tmux.new_session(None).unwrap();
+//! }
+//! ```
+//!
+//! ## Examples
+//!
+//! Create a new tmux session with some additional parameters (alternative to: `tmux new -d -s new_session`)
+//! using builder pattern:
+//!
+//! ```
+//! use crate::tmux_interface::{TmuxInterface, NewSessionBuilder};
+//!
+//! fn main() {
+//!     let mut tmux = TmuxInterface::new();
+//!     let new_session = NewSessionBuilder::new().detached().session_name("new_session").build();
+//!     tmux.new_session(Some(&new_session)).unwrap();
+//! }
+//! ```
+//!
+//! using `std::default::Default` trait:
+//! ```
+//! use crate::tmux_interface::{TmuxInterface, NewSession};
+//!
+//! fn main() {
+//!     let mut tmux = TmuxInterface::new();
+//!     let new_session = NewSession {
+//!         detached: Some(true),
+//!         session_name: Some("new_session"),
+//!         ..Default::default()
+//!     }
+//!     tmux.new_session(Some(&new_session)).unwrap();
+//! }
+//! ```
+//!
+//! using direct structure modification:
+//! ```
+//! use crate::tmux_interface::{TmuxInterface, NewSession};
+//!
+//! fn main() {
+//!     let mut tmux = TmuxInterface::new();
+//!     let mut new_session = NewSession::new();
+//!     new_session.detached = Some(true);
+//!     new_session.session_name = Some("new_session");
+//!     tmux.new_session(Some(&new_session)).unwrap();
+//! }
+//! ```
+//!
+//!
+//!
+//! ## Usage
+//!
+//! 1. Add a dependency in your `Cargo.toml`. Versions below `0.1.0` are
+//!    mostly for development and testing purposes (further versions may have
+//!    different ABI, use them in your projects on your own risk).
+//!
+//!     ```
+//!     [dependencies]
+//!     tmux_interface = "^0.1.0"
+//!     ```
+//!
+//!     You can also add `features` to your dependencies entry in `Cargo.toml`, if
+//!     you want to specify the version of tmux you want to use. Different tmux
+//!     versions may have incompatible CLI changes. Following `features` are currently
+//!     supported:
+//!
+//!     - `tmux_X_X` - tmux latest, default (based on tmux master branch)
+//!     - `tmux_2_6` - tmux 2.6 (included in Ubuntu 18.04 LTS Bionic Beaver)
+//!     <!--- `tmux_2_1` - tmux 2.1 (included in Ubuntu 16.04 LTS Xenial Xerus) -->
+//!     <!--- `tmux 1_8` - tmux 1.8 (included in Ubuntu 14.04 LTS Trusty Tahr) -->
+//!     <!--- `tmux_1_6` - tmux 1.6 (included in Ubuntu 12.04 LTS Precise Pangolin)-->
+//!
+//!     ```
+//!     [dependencies]
+//!     tmux_interface = { version = "^0.1.0", features = ["tmux_2_6"] }
+//!     ```
+//!
+//!     by default `tmux_X_X` is used. It can be removed with `--no-default-features`
+//!     cargo command line option or with `default-features = false` option in `Cargo.toml`
+//!
+//!     ```
+//!     [dependencies]
+//!     tmux_interface = { version = "^0.1.0", default-features = false, features = ["tmux_2_6"] }
+//!     ```
+//!
+//! <!--Add local repository-->
+//! <!--```-->
+//! <!--[dependencies]-->
+//! <!--tmux_interface = { version = "0.0.7", path = "../tmux-interface", features = ["tmux_2_6"] }-->
+//! <!--```-->
+//!
+//! <!--```-->
+//! <!--Add remote repository-->
+//! <!--tmux_interface = { git = "https://github.com/AntonGepting/tmux-interface-rs.git", branch = "dev" }-->
+//! <!--```-->
+//!
+//!
+//! 2. Add extern crate and use in your source file.
+//!     ```
+//!     extern crate tmux_interface;
+//!     ```
+//!
+//! 3. Use it's functions
+//!     ```
+//!     use tmux_interface::{AttachSession, NewSession, TargetPane, TargetSession, TmuxInterface};
+//!
+//!     let target_session = TargetSession::Raw("session_name");
+//!     let mut tmux = TmuxInterface::new();
+//!     let new_session = NewSession {
+//!         detached: Some(true),
+//!         session_name: Some("session_name"),
+//!         ..Default::default()
+//!     };
+//!     tmux.new_session(Some(&new_session)).unwrap();
+//!     let attach_session = AttachSession {
+//!         target_session: Some(&target_session),
+//!         ..Default::default()
+//!     };
+//!     tmux.send_keys::<TargetPane>(None, &vec!["exit", "C-m"])
+//!         .unwrap();
+//!     tmux.attach_session(Some(&attach_session)).unwrap();
+//!     tmux.kill_session(None, None, Some(&target_session))
+//!         .unwrap();
+//!     ```
+//!
+//!
 
 pub mod error;
 
