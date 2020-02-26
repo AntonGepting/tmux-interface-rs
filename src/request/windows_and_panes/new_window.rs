@@ -371,7 +371,7 @@ impl<'a> TmuxInterface<'a> {
             Ok(stdout.to_string())
         } else {
             let stdout = String::from_utf8_lossy(&output.stderr.as_slice());
-            Err(Error::new(&stdout))
+            Err(Error::Tmux(stdout.to_string()))
         }
     }
 }
