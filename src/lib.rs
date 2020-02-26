@@ -127,7 +127,8 @@
 //!
 //! ## Examples
 //! Create a new tmux session without any additional parameters (alternative to: `tmux new-session`)
-//! ```
+//!
+//! ```text
 //! use crate::tmux_interface::TmuxInterface;
 //!
 //! fn main() {
@@ -142,40 +143,43 @@
 //! using builder pattern:
 //!
 //! ```
-//! use crate::tmux_interface::{TmuxInterface, NewSessionBuilder};
+//! use crate::tmux_interface::{TmuxInterface, TargetSession, NewSessionBuilder};
 //!
 //! fn main() {
 //!     let mut tmux = TmuxInterface::new();
-//!     let new_session = NewSessionBuilder::new().detached().session_name("new_session").build();
+//!     let new_session = NewSessionBuilder::new().detached().session_name("new_session_builder").build();
 //!     tmux.new_session(Some(&new_session)).unwrap();
+//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("new_session_builder"))).unwrap();
 //! }
 //! ```
 //!
 //! using `std::default::Default` trait:
 //! ```
-//! use crate::tmux_interface::{TmuxInterface, NewSession};
+//! use crate::tmux_interface::{TmuxInterface, NewSession, TargetSession};
 //!
 //! fn main() {
 //!     let mut tmux = TmuxInterface::new();
 //!     let new_session = NewSession {
 //!         detached: Some(true),
-//!         session_name: Some("new_session"),
+//!         session_name: Some("new_session_default"),
 //!         ..Default::default()
-//!     }
+//!     };
 //!     tmux.new_session(Some(&new_session)).unwrap();
+//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("new_session_default"))).unwrap();
 //! }
 //! ```
 //!
 //! using direct structure modification:
 //! ```
-//! use crate::tmux_interface::{TmuxInterface, NewSession};
+//! use crate::tmux_interface::{TmuxInterface, NewSession, TargetSession};
 //!
 //! fn main() {
 //!     let mut tmux = TmuxInterface::new();
 //!     let mut new_session = NewSession::new();
 //!     new_session.detached = Some(true);
-//!     new_session.session_name = Some("new_session");
+//!     new_session.session_name = Some("new_session_direct");
 //!     tmux.new_session(Some(&new_session)).unwrap();
+//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("new_session_direct"))).unwrap();
 //! }
 //! ```
 //!
@@ -187,7 +191,7 @@
 //!    mostly for development and testing purposes (further versions may have
 //!    different ABI, use them in your projects on your own risk).
 //!
-//!     ```
+//!     ```text
 //!     [dependencies]
 //!     tmux_interface = "^0.1.0"
 //!     ```
@@ -203,7 +207,7 @@
 //!     <!--- `tmux 1_8` - tmux 1.8 (included in Ubuntu 14.04 LTS Trusty Tahr) -->
 //!     <!--- `tmux_1_6` - tmux 1.6 (included in Ubuntu 12.04 LTS Precise Pangolin)-->
 //!
-//!     ```
+//!     ```text
 //!     [dependencies]
 //!     tmux_interface = { version = "^0.1.0", features = ["tmux_2_6"] }
 //!     ```
@@ -211,7 +215,7 @@
 //!     by default `tmux_X_X` is used. It can be removed with `--no-default-features`
 //!     cargo command line option or with `default-features = false` option in `Cargo.toml`
 //!
-//!     ```
+//!     ```text
 //!     [dependencies]
 //!     tmux_interface = { version = "^0.1.0", default-features = false, features = ["tmux_2_6"] }
 //!     ```

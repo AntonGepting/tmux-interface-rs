@@ -14,6 +14,16 @@ fn example1() {
         .unwrap();
 }
 
+//#[test]
+//fn example3() {
+//use tmux_interface::{TargetSession, TmuxInterface};
+
+//let mut tmux = TmuxInterface::new();
+//let id = tmux.new_session(None).unwrap();
+//tmux.kill_session(None, None, Some(&TargetSession::Id(id)))
+//.unwrap();
+//}
+
 #[test]
 fn example2() {
     use tmux_interface::{
