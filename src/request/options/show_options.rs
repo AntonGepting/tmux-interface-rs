@@ -23,7 +23,7 @@ pub struct ShowOptions<'a, T: Display> {
     /// [-A] - includes options inherited from a parent set of options
     pub include_inherited: Option<bool>,
     /// [-g] - global session or window options are listed
-    pub global_options: Option<bool>,
+    pub global: Option<bool>,
     /// [-H] - includes hooks (omitted by default)
     pub hooks: Option<bool>,
     /// [-p] - show window options
@@ -33,7 +33,7 @@ pub struct ShowOptions<'a, T: Display> {
     /// [-s] - show the server options
     pub server: Option<bool>,
     /// [-v] - shows only the option value
-    pub option_value: Option<bool>,
+    pub value: Option<bool>,
     /// [-w] - show the window options
     pub window: Option<bool>,
     /// [-t target-pane] - target session or window name
@@ -46,13 +46,13 @@ pub struct ShowOptions<'a, T: Display> {
 #[derive(Default, Debug)]
 pub struct ShowOptions<'a, T: Display> {
     /// [-g] - global session or window options are listed
-    pub global_options: Option<bool>,
+    pub global: Option<bool>,
     /// [-q] - no error will be returned if `option` is unset
     pub quiet: Option<bool>,
     /// [-s] - show the server options
     pub server: Option<bool>,
     /// [-v] - shows only the option value
-    pub option_value: Option<bool>,
+    pub value: Option<bool>,
     /// [-w] - show the window options
     pub window: Option<bool>,
     /// [-t target-session | target-window] - target session or window name
@@ -71,12 +71,12 @@ impl<'a, T: Display + Default> ShowOptions<'a, T> {
 #[derive(Default, Debug)]
 pub struct ShowOptionsBuilder<'a, T: Display> {
     pub include_inherited: Option<bool>,
-    pub global_options: Option<bool>,
+    pub global: Option<bool>,
     pub hooks: Option<bool>,
     pub pane: Option<bool>,
     pub quiet: Option<bool>,
     pub server: Option<bool>,
-    pub option_value: Option<bool>,
+    pub value: Option<bool>,
     pub window: Option<bool>,
     pub target: Option<&'a T>,
     pub option: Option<&'a str>,
@@ -93,8 +93,8 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
         self
     }
 
-    pub fn global_options(&mut self) -> &mut Self {
-        self.global_options = Some(true);
+    pub fn global(&mut self) -> &mut Self {
+        self.global = Some(true);
         self
     }
 
@@ -118,8 +118,8 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
         self
     }
 
-    pub fn option_value(&mut self) -> &mut Self {
-        self.option_value = Some(true);
+    pub fn value(&mut self) -> &mut Self {
+        self.value = Some(true);
         self
     }
 
@@ -141,12 +141,12 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
     pub fn build(&self) -> ShowOptions<'a, T> {
         ShowOptions {
             include_inherited: self.include_inherited,
-            global_options: self.global_options,
+            global: self.global,
             hooks: self.hooks,
             pane: self.pane,
             quiet: self.quiet,
             server: self.server,
-            option_value: self.option_value,
+            value: self.value,
             window: self.window,
             target: self.target,
             option: self.option,
@@ -157,10 +157,10 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
 #[cfg(feature = "tmux_2_6")]
 #[derive(Default, Debug)]
 pub struct ShowOptionsBuilder<'a, T: Display> {
-    pub global_options: Option<bool>,
+    pub global: Option<bool>,
     pub quiet: Option<bool>,
     pub server: Option<bool>,
-    pub option_value: Option<bool>,
+    pub value: Option<bool>,
     pub window: Option<bool>,
     pub target: Option<&'a T>,
     pub option: Option<&'a str>,
@@ -172,8 +172,8 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
         Default::default()
     }
 
-    pub fn global_options(&mut self) -> &mut Self {
-        self.global_options = Some(true);
+    pub fn global(&mut self) -> &mut Self {
+        self.global = Some(true);
         self
     }
 
@@ -209,7 +209,7 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
 
     pub fn build(&self) -> ShowOptions<'a, T> {
         ShowOptions {
-            global_options: self.global_options,
+            global: self.global,
             quiet: self.quiet,
             server: self.server,
             option_value: self.option_value,
@@ -248,7 +248,7 @@ impl<'a> TmuxInterface<'a> {
             if show_options.include_inherited.unwrap_or(false) {
                 args.push(A_KEY);
             }
-            if show_options.global_options.unwrap_or(false) {
+            if show_options.global.unwrap_or(false) {
                 args.push(g_KEY);
             }
             if show_options.hooks.unwrap_or(false) {
@@ -263,7 +263,7 @@ impl<'a> TmuxInterface<'a> {
             if show_options.server.unwrap_or(false) {
                 args.push(s_KEY);
             }
-            if show_options.option_value.unwrap_or(false) {
+            if show_options.value.unwrap_or(false) {
                 args.push(v_KEY);
             }
             if show_options.window.unwrap_or(false) {
@@ -303,7 +303,7 @@ impl<'a> TmuxInterface<'a> {
         let mut args: Vec<&str> = Vec::new();
         let s;
         if let Some(show_options) = show_options {
-            if show_options.global_options.unwrap_or(false) {
+            if show_options.global.unwrap_or(false) {
                 args.push(g_KEY);
             }
             if show_options.quiet.unwrap_or(false) {

@@ -16,12 +16,12 @@ fn show_options() {
 
     let show_options = ShowOptions {
         include_inherited: Some(true),
-        global_options: Some(true),
+        global: Some(true),
         hooks: Some(true),
         pane: Some(true),
         quiet: Some(true),
         server: Some(true),
-        option_value: Some(true),
+        value: Some(true),
         window: Some(true),
         target: Some(&TargetPane::Raw("1")),
         option: Some("2"),
@@ -30,12 +30,12 @@ fn show_options() {
 
     let show_options = ShowOptionsBuilder::new()
         .include_inherited()
-        .global_options()
+        .global()
         .hooks()
         .pane()
         .quiet()
         .server()
-        .option_value()
+        .value()
         .window()
         .target(&TargetPane::Raw("1"))
         .option("2")
@@ -60,10 +60,10 @@ fn show_options() {
     }));
 
     let show_options = ShowOptions {
-        global_options: Some(true),
+        global: Some(true),
         quiet: Some(true),
         server: Some(true),
-        option_value: Some(true),
+        value: Some(true),
         window: Some(true),
         target: Some(&TargetPane::Raw("1")),
         option: Some("2"),
@@ -71,10 +71,10 @@ fn show_options() {
 
     tmux.show_options(Some(&show_options)).unwrap_err();
     let show_options = ShowOptionsBuilder::new()
-        .global_options()
+        .global()
         .quiet()
         .server()
-        .option_value()
+        .value()
         .window()
         .target(&TargetPane::Raw("1"))
         .option("2")

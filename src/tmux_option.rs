@@ -9,8 +9,8 @@ impl TmuxOption {
     pub fn get_int(option_name: &str) -> Result<usize, Error> {
         let mut tmux = TmuxInterface::new();
         let show_options = ShowOptions::<TargetPane> {
-            global_options: Some(true),
-            option_value: Some(true),
+            global: Some(true),
+            value: Some(true),
             option: Some(option_name),
             ..Default::default()
         };
