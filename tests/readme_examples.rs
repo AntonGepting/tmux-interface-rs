@@ -51,7 +51,7 @@ fn example2() {
     let attach_session = AttachSessionBuilder::new()
         .target_session(&target_session)
         .build();
-    tmux.send_keys::<TargetPane>(None, &vec!["exit", "C-m"])
+    tmux.send_keys::<TargetPane>(None, &vec!["sleep 1 && exit", "C-m"])
         .unwrap();
     tmux.attach_session(Some(&attach_session)).unwrap();
     tmux.kill_session(None, None, Some(&target_session))
