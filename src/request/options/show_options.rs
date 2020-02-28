@@ -187,8 +187,8 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
         self
     }
 
-    pub fn option_value(&mut self) -> &mut Self {
-        self.option_value = Some(true);
+    pub fn value(&mut self) -> &mut Self {
+        self.value = Some(true);
         self
     }
 
@@ -212,7 +212,7 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
             global: self.global,
             quiet: self.quiet,
             server: self.server,
-            option_value: self.option_value,
+            value: self.value,
             window: self.window,
             target: self.target,
             option: self.option,
@@ -312,7 +312,7 @@ impl<'a> TmuxInterface<'a> {
             if show_options.server.unwrap_or(false) {
                 args.push(s_KEY);
             }
-            if show_options.option_value.unwrap_or(false) {
+            if show_options.value.unwrap_or(false) {
                 args.push(v_KEY);
             }
             if show_options.window.unwrap_or(false) {
