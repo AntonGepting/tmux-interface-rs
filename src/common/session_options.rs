@@ -650,9 +650,7 @@ pub struct SessionOptions {
 impl SessionOptions {
     pub fn get_all() -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
-        let show_options = ShowOptionsBuilder::<TargetPane>::new()
-            .global_options()
-            .build();
+        let show_options = ShowOptionsBuilder::<TargetPane>::new().global().build();
         let s = tmux.show_options(Some(&show_options))?;
         s.parse()
     }
@@ -668,8 +666,23 @@ impl SessionOptions {
             .collect::<Vec<String>>()
             .join(" ");
         let show_options = ShowOptionsBuilder::<TargetPane>::new()
-            .server()
             .option(&selected_option)
+            .build();
+        let s = tmux.show_options(Some(&show_options))?;
+        s.parse()
+    }
+
+    pub fn get_global(bitflags: usize) -> Result<Self, Error> {
+        let mut tmux = TmuxInterface::new();
+        let selected_option = SESSION_OPTIONS
+            .iter()
+            .filter(|t| bitflags == t.3)
+            .map(|t| format!("{}", t.0))
+            .collect::<Vec<String>>()
+            .join(" ");
+        let show_options = ShowOptionsBuilder::<TargetPane>::new()
+            .option(&selected_option)
+            .global()
             .build();
         let s = tmux.show_options(Some(&show_options))?;
         s.parse()
@@ -680,7 +693,18 @@ impl SessionOptions {
         let mut tmux = TmuxInterface::new();
         for selected_option in SESSION_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
-                let set_option = SetOptionBuilder::<TargetPane>::new().server().build();
+                let set_option = SetOptionBuilder::<TargetPane>::new().build();
+                tmux.set_option(Some(&set_option), selected_option.0, &selected_value)?;
+            }
+        }
+        Ok(())
+    }
+
+    pub fn set_global(&self, bitflags: usize) -> Result<(), Error> {
+        let mut tmux = TmuxInterface::new();
+        for selected_option in SESSION_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
+            if let Some(selected_value) = selected_option.2(&self) {
+                let set_option = SetOptionBuilder::<TargetPane>::new().global().build();
                 tmux.set_option(Some(&set_option), selected_option.0, &selected_value)?;
             }
         }

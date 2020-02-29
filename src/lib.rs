@@ -395,15 +395,25 @@ pub use crate::common::window_options::WRAP_SEARCH;
 pub use crate::common::window_options::XTERM_KEYS;
 
 // pane options
+#[cfg(not(feature = "tmux_2_6"))]
 pub use crate::common::pane_options::PaneOptions;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use crate::common::pane_options::PaneOptionsBuilder;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use crate::common::pane_options::ALLOW_RENAME;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use crate::common::pane_options::ALTERNATE_SCREEN;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use crate::common::pane_options::PANE_OPTIONS;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use crate::common::pane_options::PANE_OPTIONS_ALL;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use crate::common::pane_options::PANE_OPTIONS_NONE;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use crate::common::pane_options::REMAIN_ON_EXIT;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use crate::common::pane_options::WINDOW_ACTIVE_STYLE;
+#[cfg(not(feature = "tmux_2_6"))]
 pub use crate::common::pane_options::WINDOW_STYLE;
 
 // buffers

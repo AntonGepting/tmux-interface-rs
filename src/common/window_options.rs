@@ -486,7 +486,7 @@ impl WindowOptions {
     pub fn get_all() -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let show_options = ShowOptionsBuilder::<TargetPane>::new()
-            .global_options()
+            .global()
             .window()
             .build();
         let s = tmux.show_options(Some(&show_options))?;
