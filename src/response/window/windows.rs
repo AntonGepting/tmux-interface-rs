@@ -23,6 +23,14 @@ impl Index<usize> for Windows {
 }
 
 impl Windows {
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+
+    pub fn push(&mut self, window: Window) {
+        self.0.push(window);
+    }
+
     pub fn get(target_session: &TargetSession, bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let lsw_format = WINDOW_VARS
@@ -36,10 +44,10 @@ impl Windows {
     }
 
     pub fn from_str(windows_str: &str, bitflags: usize) -> Result<Self, Error> {
-        let mut windows: Vec<Window> = Vec::new();
+        let mut windows = Windows::new();
         for line in windows_str.lines() {
             windows.push(Window::from_str(line, bitflags)?);
         }
-        Ok(Self(windows))
+        Ok(windows)
     }
 }

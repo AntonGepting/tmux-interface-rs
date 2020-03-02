@@ -26,6 +26,14 @@ impl Index<usize> for Panes {
 
 // TODO: Option as Result
 impl Panes {
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+
+    pub fn push(&mut self, pane: Pane) {
+        self.0.push(pane);
+    }
+
     pub fn get(target_window: &TargetWindowEx, bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS
@@ -52,11 +60,11 @@ impl Panes {
     }
 
     pub fn from_str(panes_str: &str, bitflags: usize) -> Result<Self, Error> {
-        let mut panes: Vec<Pane> = Vec::new();
+        let mut panes = Panes::new();
         for line in panes_str.lines() {
             panes.push(Pane::from_str(line, bitflags)?);
         }
-        Ok(Self(panes))
+        Ok(panes)
     }
 
     //pub fn find(&self, id: usize) -> Result<Pane, Error> {

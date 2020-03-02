@@ -25,6 +25,14 @@ impl Index<usize> for Sessions {
 }
 
 impl Sessions {
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+
+    pub fn push(&mut self, session: Session) {
+        self.0.push(session);
+    }
+
     pub fn get(bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let ls_format = SESSION_VARS
@@ -39,10 +47,10 @@ impl Sessions {
     }
 
     pub fn from_str(sessions_str: &str, bitflags: usize) -> Result<Self, Error> {
-        let mut sessions: Vec<Session> = Vec::new();
+        let mut sessions = Sessions::new();
         for line in sessions_str.lines() {
             sessions.push(Session::from_str(line, bitflags)?);
         }
-        Ok(Self(sessions))
+        Ok(sessions)
     }
 }
