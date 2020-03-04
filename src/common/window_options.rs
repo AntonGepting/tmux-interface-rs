@@ -164,6 +164,8 @@ pub const WINDOW_OPTIONS_ALL: usize = AGGRESIVE_RESIZE
     | XTERM_KEYS;
 
 pub const WINDOW_OPTIONS_NUM: usize = 31;
+
+// TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
 pub const WINDOW_OPTIONS: [(
     &str,
     fn(o: &mut WindowOptions, s: &str),

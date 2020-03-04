@@ -264,6 +264,8 @@ pub const SESSION_OPTIONS_ALL: usize = ACTIVITY_ACTION
     | WORD_SEPARATORS;
 
 pub const SESSION_OPTIONS_NUM: usize = 45;
+
+// TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
 pub const SESSION_OPTIONS: [(
     &str,
     fn(o: &mut SessionOptions, s: &str),
