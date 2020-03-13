@@ -24,6 +24,8 @@ impl<'a> TargetSession<'a> {
     }
 }
 
+// XXX: remove unnecessary fields
+// XXX: mb impl Into<String>, generics?
 /// Enum for possible `target-session` variants
 #[derive(Debug)]
 pub enum TargetSession<'a> {
