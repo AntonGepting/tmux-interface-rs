@@ -41,6 +41,7 @@ fn example2() {
     let new_session = NewSessionBuilder::new()
         .detached()
         .session_name("session_name2")
+        .shell_command("sleep 5 && exit")
         .build();
     tmux.new_session(Some(&new_session)).unwrap();
 
@@ -51,7 +52,6 @@ fn example2() {
     let attach_session = AttachSessionBuilder::new()
         .target_session(&target_session)
         .build();
-    tmux.send_keys::<TargetPane>(None, &vec!["sleep 5 && exit", "C-m"])
         .unwrap();
     tmux.attach_session(Some(&attach_session)).unwrap();
     tmux.kill_session(None, None, Some(&target_session))
