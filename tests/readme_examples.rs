@@ -52,7 +52,6 @@ fn example2() {
     let attach_session = AttachSessionBuilder::new()
         .target_session(&target_session)
         .build();
-        .unwrap();
     tmux.attach_session(Some(&attach_session)).unwrap();
     tmux.kill_session(None, None, Some(&target_session))
         .unwrap();
