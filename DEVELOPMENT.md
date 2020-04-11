@@ -36,6 +36,6 @@ tools and technologies used:
 
 
 ## Tools
-- VIM
-- grip
-- TMUX
+- VIM ()
+- grip ()
+- TMUX ()
