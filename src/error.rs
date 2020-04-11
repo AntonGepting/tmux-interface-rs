@@ -36,16 +36,6 @@ pub enum Error {
 //}
 
 impl std::error::Error for Error {
-    fn description(&self) -> &str {
-        match self {
-            Self::Tmux(ref msg) => msg,
-            Self::IO(ref err) => err.description(),
-            Self::ParseInt(ref err) => err.description(),
-            Self::Parse(ref err) => err.description(),
-            _ => "",
-        }
-    }
-
     fn cause(&self) -> Option<&dyn std::error::Error> {
         match *self {
             Self::IO(ref err) => Some(err),
