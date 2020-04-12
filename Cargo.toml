@@ -11,17 +11,50 @@ categories = ["api-bindings", "command-line-utilities", "command-line-interface"
 repository = "https://github.com/AntonGepting/tmux-interface-rs"
 
 [features]
-# current tmux
-tmux_X_X = []
-#tmux_3_0a = []
-# tmux 2.6 included in Ubuntu 18.04 LTS Bionic Beaver
-tmux_2_6 = []
-# tmux 2.1 included in Ubuntu 16.04 LTS Xenial Xerus
-#tmux_2_1 = []
-# tmux 1.8 included in Ubuntu 14.04 LTS Trusty Tahr
-#tmux_1_8 = []
+tmux_0_8 = []
+tmux_0_9 = ["tmux_0_8"]
+tmux_1_0 = ["tmux_0_9"]
+tmux_1_1 = ["tmux_1_0"]
+tmux_1_2 = ["tmux_1_1"]
+tmux_1_3 = ["tmux_1_2"]
+tmux_1_4 = ["tmux_1_3"]
+tmux_1_5 = ["tmux_1_4"]
 # tmux 1.6 included in Ubuntu 12.04 LTS Precise Pangolin
-#tmux_1_6 = []
-default = ["tmux_X_X"]
+# tmux 1.6 included in CentOS 6
+tmux_1_6 = ["tmux_1_5"]
+tmux_1_7 = ["tmux_1_6"]
+# tmux 1.8 included in Ubuntu 14.04 LTS Trusty Tahr
+# tmux 1.8 included in CentOS 7
+tmux_1_8 = ["tmux_1_7"]
+# tmux 1.9 included in Debian Jessie
+tmux_1_9 = ["tmux_1_8"]
+tmux_1_9a = ["tmux_1_9"]
+tmux_2_0 = ["tmux_1_9a"]
+# tmux 2.1 included in Ubuntu 16.04 LTS Xenial Xerus
+tmux_2_1 = ["tmux_2_0"]
+tmux_2_2 = ["tmux_2_1"]
+# tmux 2.3 included in Debian Stretch
+tmux_2_3 = ["tmux_2_2"]
+tmux_2_4 = ["tmux_2_3"]
+tmux_2_5 = ["tmux_2_4"]
+# tmux 2.6 included in Ubuntu 18.04 LTS Bionic Beaver
+tmux_2_6 = ["tmux_2_5"]
+# tmux 2.7 included in CentOS 8
+tmux_2_7 = ["tmux_2_6"]
+# tmux 2.8 included in Debian Buster
+tmux_2_8 = ["tmux_2_7"]
+tmux_2_9 = ["tmux_2_8"]
+tmux_2_9a = ["tmux_2_9"]
+tmux_3_0 = ["tmux_2_9a"]
+# tmux 3.0a included in Debian Bullseye
+tmux_3_0a = ["tmux_3_0"]
+# tmux 3.1 included in Debian experimental
+tmux_3_1 = ["tmux_3_0a"]
+# tmux current developing version
+tmux_X_X = ["tmux_3_1"]
+# tmux latest version
+tmux_latest = ["tmux_X_X"]
+# default tmux version for library
+#default = ["tmux_X_X"]
 
 [dependencies]
