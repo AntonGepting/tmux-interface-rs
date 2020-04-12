@@ -120,15 +120,27 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
-    /// tmux X.X:
+    /// tmux ^1.7:
     /// ```text
     /// tmux paste-buffer [-dpr] [-b buffer-name] [-s separator] [-t target-pane]
     /// (alias: pasteb)
     /// ```
     ///
-    /// tmux ^1.7:
+    /// tmux ^1.3:
     /// ```text
-    /// tmux paste-buffer [-dp] [-b buffer-name] [-s separator] [-t target-pane]
+    /// tmux paste-buffer [-dr] [-b buffer-index] [-s separator] [-t target-window]
+    /// (alias: pasteb)
+    /// ```
+    ///
+    /// tmux ^1.0:
+    /// ```text
+    /// tmux paste-buffer [-dr] [-b buffer-index] [-t target-window]
+    /// (alias: pasteb)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux paste-buffer [-d] [-b buffer-index] [-t target-window]
     /// (alias: pasteb)
     /// ```
     pub fn paste_buffer<T: Display>(

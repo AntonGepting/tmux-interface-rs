@@ -159,11 +159,6 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
-    /// tmux X.X:
-    /// ```text
-    /// tmux choose-buffer [-NZr] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
-    /// ```
-    ///
     /// tmux ^3.1:
     /// ```text
     /// tmux choose-buffer [-NZr] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
