@@ -10,8 +10,15 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.0:
     /// ```text
     /// tmux clear-history [-t target-pane]
+    /// (alias: clearhist)
+    /// ```
+    ///
+    /// tmux ^0.9:
+    /// ```text
+    /// tmux clear-history [-p pane-index] [-t target-window]
     /// (alias: clearhist)
     /// ```
     pub fn clear_history<T: Display>(&mut self, target_pane: Option<&T>) -> Result<Output, Error> {

@@ -7,8 +7,27 @@ use std::process::Output;
 ///
 /// # Manual
 ///
+/// tmux ^1.7:
 /// ```text
 /// tmux paste-buffer [-dpr] [-b buffer-name] [-s separator] [-t target-pane]
+/// (alias: pasteb)
+/// ```
+///
+/// tmux ^1.3:
+/// ```text
+/// tmux paste-buffer [-dr] [-b buffer-index] [-s separator] [-t target-window]
+/// (alias: pasteb)
+/// ```
+///
+/// tmux ^1.0:
+/// ```text
+/// tmux paste-buffer [-dr] [-b buffer-index] [-t target-window]
+/// (alias: pasteb)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux paste-buffer [-d] [-b buffer-index] [-t target-window]
 /// (alias: pasteb)
 /// ```
 #[derive(Default, Debug)]
@@ -16,6 +35,7 @@ pub struct PasteBuffer<'a, T: Display> {
     /// [-d] - delete the paste buffer
     pub delete: Option<bool>,
     /// [-p] - paste bracket control codes are inserted around the buffer
+    #[cfg(feature = "tmux_1_0")]
     pub bracket_codes: Option<bool>,
     /// [-r] - do no replacement (equivalent to a separator of LF)
     pub no_replacement: Option<bool>,
@@ -36,6 +56,7 @@ impl<'a, T: Display + Default> PasteBuffer<'a, T> {
 #[derive(Default, Debug)]
 pub struct PasteBufferBuilder<'a, T: Display> {
     pub delete: Option<bool>,
+    #[cfg(feature = "tmux_1_7")]
     pub bracket_codes: Option<bool>,
     pub no_replacement: Option<bool>,
     pub buffer_name: Option<&'a str>,
@@ -53,6 +74,7 @@ impl<'a, T: Display + Default> PasteBufferBuilder<'a, T> {
         self
     }
 
+    #[cfg(feature = "tmux_1_7")]
     pub fn bracket_codes(&mut self) -> &mut Self {
         self.bracket_codes = Some(true);
         self
@@ -81,6 +103,7 @@ impl<'a, T: Display + Default> PasteBufferBuilder<'a, T> {
     pub fn build(&self) -> PasteBuffer<'a, T> {
         PasteBuffer {
             delete: self.delete,
+            #[cfg(feature = "tmux_1_7")]
             bracket_codes: self.bracket_codes,
             no_replacement: self.no_replacement,
             buffer_name: self.buffer_name,
@@ -97,8 +120,15 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux X.X:
     /// ```text
     /// tmux paste-buffer [-dpr] [-b buffer-name] [-s separator] [-t target-pane]
+    /// (alias: pasteb)
+    /// ```
+    ///
+    /// tmux ^1.7:
+    /// ```text
+    /// tmux paste-buffer [-dp] [-b buffer-name] [-s separator] [-t target-pane]
     /// (alias: pasteb)
     /// ```
     pub fn paste_buffer<T: Display>(
@@ -111,8 +141,11 @@ impl<'a> TmuxInterface<'a> {
             if paste_buffer.delete.unwrap_or(false) {
                 args.push(d_KEY);
             }
-            if paste_buffer.bracket_codes.unwrap_or(false) {
-                args.push(p_KEY);
+            #[cfg(feature = "tmux_1_7")]
+            {
+                if paste_buffer.bracket_codes.unwrap_or(false) {
+                    args.push(p_KEY);
+                }
             }
             if paste_buffer.no_replacement.unwrap_or(false) {
                 args.push(r_KEY);

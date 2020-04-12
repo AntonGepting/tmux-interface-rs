@@ -9,8 +9,21 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^2.0:
     /// ```text
     /// tmux set-buffer [-a] [-b buffer-name] [-n new-buffer-name] data
+    /// (alias: setb)
+    /// ```
+    ///
+    /// tmux ^1.5:
+    /// ```text
+    /// tmux set-buffer [-b buffer-index] data
+    /// (alias: setb)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux set-buffer [-b buffer-index] [-t target-session] data
     /// (alias: setb)
     /// ```
     pub fn set_buffer(

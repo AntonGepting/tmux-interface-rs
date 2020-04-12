@@ -9,8 +9,21 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^2.0:
     /// ```text
     /// tmux load-buffer [-b buffer-name] path
+    /// (alias: loadb)
+    /// ```
+    ///
+    /// tmux ^1.5:
+    /// ```text
+    /// tmux load-buffer [-b buffer-index] path
+    /// (alias: loadb)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux load-buffer [-b buffer-index] [-t target-session] path
     /// (alias: loadb)
     /// ```
     pub fn load_buffer(&mut self, buffer_name: Option<&str>, path: &str) -> Result<Output, Error> {

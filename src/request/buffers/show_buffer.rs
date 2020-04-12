@@ -9,8 +9,15 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.5:
     /// ```text
     /// tmux show-buffer [-b buffer-name]
+    /// (alias: showb)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux show-buffer [-b buffer-index] [-t target-session]
     /// (alias: showb)
     /// ```
     pub fn show_buffer(&mut self, buffer_name: Option<&str>) -> Result<Output, Error> {

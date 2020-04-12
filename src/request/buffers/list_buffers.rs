@@ -8,8 +8,21 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.7:
     /// ```text
     /// tmux list-buffers [-F format]
+    /// (alias: lsb)
+    /// ```
+    ///
+    /// tmux ^1.5:
+    /// ```text
+    /// tmux list-buffers
+    /// (alias: lsb)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux list-buffers [-t target-session]
     /// (alias: lsb)
     /// ```
     pub fn list_buffers(&mut self, format: Option<&str>) -> Result<Output, Error> {

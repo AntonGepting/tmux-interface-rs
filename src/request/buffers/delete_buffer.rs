@@ -10,8 +10,21 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^2.0:
     /// ```text
     /// tmux delete-buffer [-b buffer-name]
+    /// (alias: deleteb)
+    /// ```
+    ///
+    /// tmux ^1.5:
+    /// ```text
+    /// tmux delete-buffer [-b buffer-index]
+    /// (alias: deleteb)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux delete-buffer [-b buffer-index] [-t target-session]
     /// (alias: deleteb)
     /// ```
     pub fn delete_buffer(&mut self, buffer_name: Option<&str>) -> Result<Output, Error> {
