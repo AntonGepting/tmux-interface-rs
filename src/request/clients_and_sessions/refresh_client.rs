@@ -6,19 +6,35 @@ use std::process::Output;
 ///
 /// # Manual
 ///
-/// tmux X.X:
+/// tmux 3.0a:
 /// ```text
-/// tmux refresh-client [-cDlLRSU] [-C XxY] [-F flags] [-t target-client]
-/// [adjustment]
+/// tmux refresh-client [-cDlLRSU] [-C XxY] [-F flags] [-t target-client] [adjustment]
 /// (alias: refresh)
 /// ```
 ///
-/// tmux 2.6:
+/// tmux 2.9a:
+/// ```text
+/// tmux refresh-client [-cDlLRSU] [-C width,height] [-F flags] [-t target-client] [adjustment]
+/// (alias: refresh)
+/// ```
+///
+/// tmux 2.4:
 /// ```text
 /// tmux refresh-client [-C width,height] [-S] [-t target-client]
 /// (alias: refresh)
 /// ```
-#[cfg(not(feature = "tmux_2_6"))]
+///
+/// tmux 1.6:
+/// ```text
+/// tmux refresh-client [-S] [-t target-client]
+/// (alias: refresh)
+/// ```
+///
+/// tmux 0.8:
+/// ```text
+/// tmux refresh-client [-t target-client]
+/// (alias: refresh)
+/// ```
 #[derive(Default, Debug)]
 pub struct RefreshClient<'a> {
     /// [-c] - return to tracking the cursor automatically
@@ -45,14 +61,12 @@ pub struct RefreshClient<'a> {
     pub adjustment: Option<usize>,
 }
 
-#[cfg(not(feature = "tmux_2_6"))]
 impl<'a> RefreshClient<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
-#[cfg(not(feature = "tmux_2_6"))]
 #[derive(Default, Debug)]
 pub struct RefreshClientBuilder<'a> {
     pub tracking_cursor: Option<bool>,
@@ -68,7 +82,6 @@ pub struct RefreshClientBuilder<'a> {
     pub adjustment: Option<usize>,
 }
 
-#[cfg(not(feature = "tmux_2_6"))]
 impl<'a> RefreshClientBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
@@ -164,7 +177,6 @@ impl<'a> TmuxInterface<'a> {
     /// tmux refresh-client [-C width,height] [-S] [-t target-client]
     /// (alias: refresh)
     /// ```
-    #[cfg(not(feature = "tmux_2_6"))]
     pub fn refresh_client(
         &mut self,
         refresh_client: Option<&RefreshClient>,
@@ -213,42 +225,25 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
-    /// Refresh the current client
-    ///
-    /// # Manual
-    ///
-    /// tmux X.X:
-    /// ```text
-    /// tmux refresh-client [-cDlLRSU] [-C XxY] [-F flags] [-t target-client]
-    /// [adjustment]
-    /// (alias: refresh)
-    /// ```
-    ///
-    /// tmux 2.6:
-    /// ```text
-    /// tmux refresh-client [-C width,height] [-S] [-t target-client]
-    /// (alias: refresh)
-    /// ```
-    #[cfg(feature = "tmux_2_6")]
-    pub fn refresh_client(
-        &mut self,
-        size: Option<(usize, usize)>,
-        status_line: Option<bool>,
-        target_client: Option<&'a str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        let s;
-        if let Some(size) = size {
-            s = format!("{},{}", size.0, size.1);
-            args.extend_from_slice(&[C_KEY, &s]);
-        }
-        if status_line.unwrap_or(false) {
-            args.push(S_KEY);
-        }
-        if let Some(s) = target_client {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        let output = self.subcommand(TmuxInterface::REFRESH_CLIENT, &args)?;
-        Ok(output)
-    }
+    //pub fn refresh_client(
+    //&mut self,
+    //size: Option<(usize, usize)>,
+    //status_line: Option<bool>,
+    //target_client: Option<&'a str>,
+    //) -> Result<Output, Error> {
+    //let mut args: Vec<&str> = Vec::new();
+    //let s;
+    //if let Some(size) = size {
+    //s = format!("{},{}", size.0, size.1);
+    //args.extend_from_slice(&[C_KEY, &s]);
+    //}
+    //if status_line.unwrap_or(false) {
+    //args.push(S_KEY);
+    //}
+    //if let Some(s) = target_client {
+    //args.extend_from_slice(&[t_KEY, &s])
+    //}
+    //let output = self.subcommand(TmuxInterface::REFRESH_CLIENT, &args)?;
+    //Ok(output)
+    //}
 }

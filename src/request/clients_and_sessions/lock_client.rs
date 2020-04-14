@@ -9,6 +9,7 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.1:
     /// ```text
     /// tmux lock-client [-t target-client]
     /// (alias: lockc)

@@ -8,8 +8,15 @@ impl<'a> TmuxInterface<'a> {
     /// List all sessions managed by the server
     /// # Manual
     ///
+    /// tmux ^1.6:
     /// ```text
     /// tmux list-sessions [-F format]
+    /// (alias: ls)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux list-sessions
     /// (alias: ls)
     /// ```
     pub fn list_sessions(&mut self, format: Option<&str>) -> Result<String, Error> {

@@ -9,8 +9,15 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^2.3:
     /// ```text
     /// tmux list-commands [-F format]
+    /// (alias: lscm)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux list-commands
     /// (alias: lscm)
     /// ```
     pub fn list_commands(&mut self, format: Option<&str>) -> Result<Output, Error> {

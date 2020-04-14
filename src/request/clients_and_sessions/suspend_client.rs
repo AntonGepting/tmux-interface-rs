@@ -9,8 +9,15 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.5:
     /// ```text
     /// tmux suspend-client [-t target-client]
+    /// (alias: suspendc)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux suspend-client [-c target-client]
     /// (alias: suspendc)
     /// ```
     pub fn suspend_client(&mut self, target_client: Option<&str>) -> Result<Output, Error> {

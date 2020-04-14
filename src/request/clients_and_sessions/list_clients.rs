@@ -10,8 +10,21 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.6:
     /// ```text
     /// tmux list-clients [-F format] [-t target-session]
+    /// (alias: lsc)
+    ///
+    /// ```
+    /// tmux ^1.5:
+    /// ```text
+    /// tmux list-clients [-t target-session]
+    /// (alias: lsc)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux list-clients
     /// (alias: lsc)
     /// ```
     pub fn list_clients(

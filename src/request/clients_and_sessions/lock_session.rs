@@ -9,6 +9,7 @@ impl<'a> TmuxInterface<'a> {
     /// Lock all clients attached to `target-session`
     /// # Manual
     ///
+    /// tmux ^1.1:
     /// ```text
     /// tmux lock-session [-t target-session]
     /// (alias: locks)

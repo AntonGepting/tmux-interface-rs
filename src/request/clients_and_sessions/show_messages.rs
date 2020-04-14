@@ -9,8 +9,21 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^2.2:
     /// ```text
     /// tmux show-messages [-JT] [-t target-client]
+    /// (alias: showmsgs)
+    /// ```
+    ///
+    /// tmux ^1.9:
+    /// ```text
+    /// tmux show-messages [-IJT] [-t target-client]
+    /// (alias: showmsgs)
+    /// ```
+    ///
+    /// tmux ^1.2:
+    /// ```text
+    /// tmux show-messages [-t target-client]
     /// (alias: showmsgs)
     /// ```
     pub fn show_messages(

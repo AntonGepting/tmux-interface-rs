@@ -10,6 +10,7 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^0.8:
     /// ```text
     /// tmux has-session [-t target-session]
     /// (alias: has)

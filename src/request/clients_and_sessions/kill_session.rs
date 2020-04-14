@@ -10,8 +10,19 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^2.2:
     /// ```text
     /// tmux kill-session [-aC] [-t target-session]
+    /// ```
+    ///
+    /// tmux ^1.7:
+    /// ```text
+    /// tmux kill-session [-a] [-t target-session]
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux kill-session [-t target-session]
     /// ```
     pub fn kill_session(
         &mut self,
