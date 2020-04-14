@@ -9,8 +9,15 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^0.9:
     /// ```text
     /// tmux previous-window [-a] [-t target-session]
+    /// (alias: prev)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux previous-window [-t target-session]
     /// (alias: prev)
     /// ```
     pub fn previous_window(

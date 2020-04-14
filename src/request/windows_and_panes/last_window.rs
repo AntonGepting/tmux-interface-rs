@@ -9,6 +9,7 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^0.8:
     /// ```text
     /// tmux last-window [-t target-session]
     /// (alias: last)

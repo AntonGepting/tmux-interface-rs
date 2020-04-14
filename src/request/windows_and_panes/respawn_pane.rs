@@ -7,15 +7,21 @@ use std::process::Output;
 ///
 /// # Manual
 ///
-/// tmux X.X
+/// tmux ^3.0:
 /// ```text
 /// tmux respawn-pane [-k] [-c start-directory] [-e environment] [-t target-pane] [shell-command]
 /// (alias: respawnp)
 /// ```
 ///
-/// tmux 2.6
+/// tmux ^2.6:
 /// ```text
 /// tmux respawn-pane [-k] [-c start-directory] [-t target-pane] [shell-command]
+/// (alias: respawnp)
+/// ```
+///
+/// tmux ^1.5:
+/// ```text
+/// tmux respawn-pane [-k] [-t target-pane] [shell-command]
 /// (alias: respawnp)
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]

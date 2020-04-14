@@ -10,15 +10,21 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
-    /// tmux X.X:
+    /// tmux ^3.1:
     /// ```text
     /// tmux last-pane [-deZ] [-t target-window]
     /// (alias: lastp)
     /// ```
     ///
-    /// tmux 2.6:
+    /// tmux ^2.0:
     /// ```text
     /// tmux last-pane [-de] [-t target-window]
+    /// (alias: lastp)
+    /// ```
+    ///
+    /// tmux ^1.4:
+    /// ```text
+    /// tmux last-pane [-t target-window]
     /// (alias: lastp)
     /// ```
     #[cfg(not(feature = "tmux_2_6"))]

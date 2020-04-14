@@ -7,8 +7,27 @@ use std::process::Output;
 ///
 /// # Manual
 ///
+/// tmux ^2.1:
 /// ```text
 /// tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+/// (alias: resizep)
+/// ```
+///
+/// tmux ^1.8:
+/// ```text
+/// tmux resize-pane [-DLRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+/// (alias: resizep)
+/// ```
+///
+/// tmux ^1.0:
+/// ```text
+/// tmux resize-pane [-DLRU] [-t target-pane] [adjustment]
+/// (alias: resizep)
+/// ```
+///
+/// tmux ^0.9:
+/// ```text
+/// tmux resize-pane [-DU] [-p pane-index] [-t target-pane] [adjustment]
 /// (alias: resizep)
 /// ```
 #[derive(Default, Debug)]

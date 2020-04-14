@@ -11,6 +11,13 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.7:
+    /// ```text
+    /// tmux kill-window [-a] [-t target-window]
+    /// (alias: killw)
+    /// ```
+    ///
+    /// tmux ^0.8:
     /// ```text
     /// tmux kill-window [-a] [-t target-window]
     /// (alias: killw)

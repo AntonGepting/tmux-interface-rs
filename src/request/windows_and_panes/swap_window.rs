@@ -10,6 +10,7 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^0.8:
     /// ```text
     /// tmux swap-window [-d] [-s src-window] [-t dst-window]
     /// (alias: swapw)

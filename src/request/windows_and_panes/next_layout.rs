@@ -10,6 +10,7 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^0.8:
     /// ```text
     /// tmux next-layout [-t target-window]
     /// (alias: nextl)

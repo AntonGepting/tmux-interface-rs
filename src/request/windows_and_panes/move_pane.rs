@@ -8,13 +8,13 @@ use std::process::Output;
 ///
 /// # Manual
 ///
-/// tmux X.X:
+/// tmux ^3.1:
 /// ```text
 /// tmux move-pane [-bdhv] [-l size] [-s src-pane] [-t dst-pane]
 /// (alias: movep)
 /// ```
 ///
-/// tmux 2.6:
+/// tmux ^1.7:
 /// ```text
 /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: movep)

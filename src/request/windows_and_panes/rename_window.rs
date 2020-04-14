@@ -10,6 +10,7 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^0.8:
     /// ```text
     /// tmux rename-window [-t target-window] new-name
     /// (alias: renamew)

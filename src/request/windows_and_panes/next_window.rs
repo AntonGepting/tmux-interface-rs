@@ -9,8 +9,17 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^0.9:
+    /// ```text
     /// tmux next-window [-a] [-t target-session]
     /// (alias: next)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux next-window [-t target-session]
+    /// (alias: next)
+    /// ```
     pub fn next_window(
         &mut self,
         alert: Option<bool>,

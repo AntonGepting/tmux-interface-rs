@@ -10,8 +10,21 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.1:
     /// ```text
     /// tmux kill-pane [-a] [-t target-pane]
+    /// (alias: killp)
+    /// ```
+    ///
+    /// tmux ^1.0:
+    /// ```text
+    /// tmux kill-pane [-t target-pane]
+    /// (alias: killp)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux kill-pane [-p pane-index] [-t target-window]
     /// (alias: killp)
     /// ```
     pub fn kill_pane<T: Display>(

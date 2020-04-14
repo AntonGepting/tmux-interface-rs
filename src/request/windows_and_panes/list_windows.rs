@@ -10,8 +10,21 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.6:
     /// ```text
     /// tmux list-windows [-a] [-F format] [-t target-session]
+    /// (alias: lsw)
+    /// ```
+    ///
+    /// tmux ^1.5:
+    /// ```text
+    /// tmux list-windows [-a] [-t target-session]
+    /// (alias: lsw)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux list-windows [-t target-session]
     /// (alias: lsw)
     /// ```
     pub fn list_windows(

@@ -11,8 +11,21 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.6:
     /// ```text
     /// tmux list-panes [-as] [-F format] [-t target]
+    /// (alias: lsp)
+    /// ```
+    ///
+    /// tmux ^1.5:
+    /// ```text
+    /// tmux list-panes [-as] [-t target]
+    /// (alias: lsp)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux list-panes [-t target]
     /// (alias: lsp)
     /// ```
     pub fn list_panes<T: Display>(

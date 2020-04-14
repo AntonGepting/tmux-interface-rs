@@ -10,8 +10,15 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.0:
     /// ```text
     /// tmux unlink-window [-k] [-t target-window]
+    /// (alias: unlinkw)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux unlink-window [-t target-window]
     /// (alias: unlinkw)
     /// ```
     pub fn unlink_window<T: Display>(

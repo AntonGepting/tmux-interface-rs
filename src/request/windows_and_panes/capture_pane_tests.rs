@@ -1,4 +1,3 @@
-#[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn capture_pane() {
     use crate::{CapturePane, CapturePaneBuilder, Error, TargetPane, TmuxInterface};
@@ -39,53 +38,6 @@ fn capture_pane() {
         .escape_non_printable()
         .join()
         .trailing_spaces()
-        .buffer_name("1")
-        .end_line("2")
-        .start_line("3")
-        .target_pane(&TargetPane::Raw("4"))
-        .build();
-    tmux.capture_pane(Some(&capture_pane)).unwrap_err();
-}
-
-#[cfg(feature = "tmux_2_6")]
-#[test]
-fn capture_pane() {
-    use crate::{CapturePane, CapturePaneBuilder, Error, TargetPane, TmuxInterface};
-
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
-        // (alias: capturep)
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["capture-pane", "-a", "-e", "-p", "-P", "-q", "-C", "-J", "-b", "1", "-E", "2", "-S", "3", "-t", "4"]"#
-        );
-        Err(Error::Hook)
-    }));
-
-    let capture_pane = CapturePane {
-        alternate_screen: Some(true),
-        escape_sequences: Some(true),
-        stdout: Some(true),
-        pane: Some(true),
-        quite: Some(true),
-        escape_non_printable: Some(true),
-        join: Some(true),
-        buffer_name: Some("1"),
-        end_line: Some("2"),
-        start_line: Some("3"),
-        target_pane: Some(&TargetPane::Raw("4")),
-    };
-    tmux.capture_pane(Some(&capture_pane)).unwrap_err();
-
-    let capture_pane = CapturePaneBuilder::new()
-        .alternate_screen()
-        .escape_sequences()
-        .stdout()
-        .pane()
-        .quite()
-        .escape_non_printable()
-        .join()
         .buffer_name("1")
         .end_line("2")
         .start_line("3")

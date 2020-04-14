@@ -7,15 +7,21 @@ use std::process::Output;
 ///
 /// # Manual
 ///
-/// tmux X.X
+/// tmux ^3.1:
 /// ```text
 /// tmux swap-pane [-dDUZ] [-s src-pane] [-t dst-pane]
 /// (alias: swapp)
 /// ```
 ///
-/// tmux 2.6
+/// tmux ^1.0:
 /// ```text
 /// tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
+/// (alias: swapp)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux swap-pane [-dDU] [-p src-index] [-t target-window] [-q dst-index]
 /// (alias: swapp)
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]

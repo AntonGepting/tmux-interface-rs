@@ -7,15 +7,51 @@ use std::process::Output;
 ///
 /// # Manual
 ///
-/// tmux X.X:
+/// tmux ^3.1:
 /// ```text
 /// tmux select-pane [-DdeLlMmRUZ] [-T title] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
-/// tmux 2.6
+/// tmux ^2.6:
 /// ```text
-/// tmux select-pane [-DdegLlMmRU] [-P style] [-T title] [-t target-pane]
+/// tmux select-pane [-DdeLlMmRU] [-T title] [-t target-pane]
+/// (alias: selectp)
+/// ```
+///
+/// tmux ^2.1:
+/// ```text
+/// tmux select-pane [-DdegLlMmRU] [-P style] [-t target-pane]
+/// (alias: selectp)
+/// ```
+///
+/// tmux ^2.0:
+/// ```text
+/// tmux select-pane [-DdeLlRU] [-t target-pane]
+/// (alias: selectp)
+/// ```
+///
+/// tmux ^1.5:
+/// ```text
+/// tmux select-pane [-DLlRU] [-t target-pane]
+/// (alias: selectp)
+/// ```
+///
+/// tmux ^1.3:
+/// ```text
+/// tmux select-pane [-DLRU] [-t target-pane]
+/// (alias: selectp)
+/// ```
+///
+/// tmux ^1.0:
+/// ```text
+/// tmux select-pane [-t target-pane]
+/// (alias: selectp)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux select-pane [-p pane-index] [-t target-window]
 /// (alias: selectp)
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]

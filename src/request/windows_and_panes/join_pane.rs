@@ -9,15 +9,21 @@ use std::process::Output;
 ///
 /// # Manual
 ///
-/// tmux X.X:
+/// tmux ^3.1:
 /// ```text
 /// tmux join-pane [-bdfhv] [-l size] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
 ///
-/// tmux 2.6:
+/// tmux ^1.7:
 /// ```text
 /// tmux join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+/// (alias: joinp)
+/// ```
+///
+/// tmux ^1.2:
+/// ```text
+/// tmux join-pane [-dhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
 #[cfg(not(feature = "tmux_2_6"))]

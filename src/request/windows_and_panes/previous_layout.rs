@@ -10,6 +10,7 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
+    /// tmux ^1.3:
     /// ```text
     /// tmux previous-layout [-t target-window]
     /// (alias: prevl)

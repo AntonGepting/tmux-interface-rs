@@ -10,13 +10,13 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
-    /// tmux X.X:
+    /// tmux ^3.1:
     /// ```text
     /// tmux rotate-window [-DUZ] [-t target-window]
     /// (alias: rotatew)
     /// ```
     ///
-    /// tmux 2.6:
+    /// tmux ^0.8:
     /// ```text
     /// tmux rotate-window [-DU] [-t target-window]
     /// (alias: rotatew)
