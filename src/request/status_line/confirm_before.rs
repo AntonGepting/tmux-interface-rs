@@ -7,8 +7,15 @@ impl<'a> TmuxInterface<'a> {
 
     /// # Manual
     ///
+    /// tmux ^1.5:
     /// ```text
     /// tmux confirm-before [-p prompt] [-t target-client] command
+    /// (alias: confirm)
+    /// ```
+    ///
+    /// tmux ^0.9:
+    /// ```text
+    /// tmux confirm-before [-t target-client] command
     /// (alias: confirm)
     /// ```
     pub fn confirm_before(

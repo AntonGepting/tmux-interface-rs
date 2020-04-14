@@ -7,6 +7,7 @@ use std::process::Output;
 ///
 /// # Manual
 ///
+/// tmux ^3.0a:
 /// ```text
 /// tmux display-menu [-c target-client] [-t target-pane] [-T title]
 /// [-x position] [-y position] name key command ...

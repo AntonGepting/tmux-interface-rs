@@ -6,8 +6,34 @@ use std::process::Output;
 ///
 /// # Manual
 ///
+/// tmux ^3.1:
+/// ```text
+/// tmux command-prompt [-1ikN] [-I inputs] [-p prompts] [-t target-client] [template]
+/// ```
+///
+/// tmux ^3.0a:
+/// ```text
+/// tmux command-prompt [-1Ni] [-I inputs] [-p prompts] [-t target-client] [template]
+/// ```
+///
+/// tmux ^2.4:
 /// ```text
 /// tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
+/// ```
+///
+/// tmux ^1.5:
+/// ```text
+/// tmux command-prompt [-I inputs] [-p prompts] [-t target-client] [template]
+/// ```
+///
+/// tmux ^1.0:
+/// ```text
+/// tmux command-prompt [-p prompts] [-t target-client] [template]
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux command-prompt [-t target-client] [template]
 /// ```
 #[derive(Default, Debug)]
 pub struct CommandPrompt<'a> {

@@ -1,4 +1,3 @@
-#[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn display_message() {
     use crate::{DisplayMessage, DisplayMessageBuilder, Error, TargetPane, TmuxInterface};
@@ -35,28 +34,4 @@ fn display_message() {
         .message("3")
         .build();
     tmux.display_message(Some(&display_message)).unwrap_err();
-}
-
-#[cfg(feature = "tmux_2_6")]
-#[test]
-fn display_message() {
-    use crate::{Error, TargetPane, TmuxInterface};
-
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux display-message [-p] [-c target-client] [-t target-pane] [message]
-        //  (alias: display)
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["display-message", "-p", "-c", "1", "-t", "2", "3"]"#
-        );
-        Err(Error::Hook)
-    }));
-    tmux.display_message(
-        Some(true),
-        Some("1"),
-        Some(&TargetPane::Raw("2")),
-        Some("3"),
-    )
-    .unwrap_err();
 }
