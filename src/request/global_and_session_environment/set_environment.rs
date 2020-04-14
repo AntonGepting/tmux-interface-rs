@@ -7,6 +7,7 @@ use std::process::Output;
 ///
 /// # Manual
 ///
+/// tmux ^1.0:
 /// ```text
 /// tmux set-environment [-gru] [-t target-session] name [value]
 /// (alias: setenv)

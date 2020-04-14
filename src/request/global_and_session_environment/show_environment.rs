@@ -8,8 +8,21 @@ impl<'a> TmuxInterface<'a> {
 
     /// # Manual
     ///
+    /// tmux ^2.1:
     /// ```text
     /// tmux show-environment [-gs] [-t target-session] [variable]
+    /// (alias: showenv)
+    /// ```
+    ///
+    /// tmux ^1.7:
+    /// ```text
+    /// tmux show-environment [-g] [-t target-session] [variable]
+    /// (alias: showenv)
+    /// ```
+    ///
+    /// tmux ^1.0:
+    /// ```text
+    /// tmux show-environment [-g] [-t target-session]
     /// (alias: showenv)
     /// ```
     pub fn show_environment(
