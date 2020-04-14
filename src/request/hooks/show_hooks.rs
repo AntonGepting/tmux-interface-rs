@@ -7,6 +7,7 @@ impl<'a> TmuxInterface<'a> {
     const SHOW_HOOK: &'static str = "show-hooks";
     /// # Manual
     ///
+    /// tmux ^2.2:
     /// ```text
     /// tmux show-hooks [-g] [-t target-session]
     /// ```
