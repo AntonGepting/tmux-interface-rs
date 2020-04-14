@@ -9,18 +9,29 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
-    /// tmux X.X:
+    /// tmux ^2.9:
     /// ```text
     /// tmux display-panes [-b] [-d duration] [-t target-client] [template]
     /// (alias: displayp)
     /// ```
     ///
-    /// tmux 2.6:
+    /// tmux ^2.6:
     /// ```text
     /// tmux display-panes [-d duration] [-t target-client] [template]
     /// (alias: displayp)
     /// ```
-    #[cfg(not(feature = "tmux_2_6"))]
+    ///
+    /// tmux ^2.3:
+    /// ```text
+    /// tmux display-panes [-t target-client] [template]
+    /// (alias: displayp)
+    /// ```
+    ///
+    /// tmux ^1.0:
+    /// ```text
+    /// tmux display-panes [-t target-client]
+    /// (alias: displayp)
+    /// ```
     pub fn display_panes(
         &mut self,
         not_block: Option<bool>,
@@ -29,45 +40,12 @@ impl<'a> TmuxInterface<'a> {
         template: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if not_block.unwrap_or(false) {
-            args.push(b_KEY);
+        #[cfg(any(feature = "tmux_2_9", feature = "tmux_X_X"))]
+        {
+            if not_block.unwrap_or(false) {
+                args.push(b_KEY);
+            }
         }
-        if let Some(s) = duration {
-            args.extend_from_slice(&[d_KEY, &s])
-        }
-        if let Some(s) = target_client {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        if let Some(s) = template {
-            args.push(&s)
-        }
-        let output = self.subcommand(TmuxInterface::DISPLAY_PANES, &args)?;
-        Ok(output)
-    }
-
-    /// Display a visible indicator of each pane shown by `target-client`
-    ///
-    /// # Manual
-    ///
-    /// tmux X.X:
-    /// ```text
-    /// tmux display-panes [-b] [-d duration] [-t target-client] [template]
-    /// (alias: displayp)
-    /// ```
-    ///
-    /// tmux 2.6:
-    /// ```text
-    /// tmux display-panes [-d duration] [-t target-client] [template]
-    /// (alias: displayp)
-    /// ```
-    #[cfg(feature = "tmux_2_6")]
-    pub fn display_panes(
-        &mut self,
-        duration: Option<&str>,
-        target_client: Option<&str>,
-        template: Option<&str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
         if let Some(s) = duration {
             args.extend_from_slice(&[d_KEY, &s])
         }
