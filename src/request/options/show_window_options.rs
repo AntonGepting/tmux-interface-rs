@@ -8,8 +8,32 @@ impl<'a> TmuxInterface<'a> {
 
     /// # Manual
     ///
+    /// tmux ^3.0:
+    /// ```text
+    /// (removed)
+    /// ```
+    ///
+    /// tmux ^1.8:
     /// ```text
     /// tmux show-window-options [-gv] [-t target-window] [option]
+    /// (alias: showw)
+    /// ```
+    ///
+    /// tmux ^1.7:
+    /// ```text
+    /// tmux show-window-options [-g] [-t target-window] [option]
+    /// (alias: showw)
+    /// ```
+    ///
+    /// tmux ^1.0:
+    /// ```text
+    /// tmux show-window-options [-g] [-t target-window]
+    /// (alias: showw)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux show-window-options [-t target-window] option value
     /// (alias: showw)
     /// ```
     pub fn show_window_options<T: Display>(
