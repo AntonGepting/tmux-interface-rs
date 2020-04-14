@@ -8,8 +8,14 @@ impl<'a> TmuxInterface<'a> {
 
     /// # Manual
     ///
+    /// tmux ^1.0:
     /// ```text
     /// tmux clock-mode [-t target-pane]
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux clock-mode [-t target-window]
     /// ```
     pub fn clock_mode<T: Display>(&mut self, target_pane: Option<&'a T>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();

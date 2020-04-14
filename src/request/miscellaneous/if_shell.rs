@@ -7,8 +7,27 @@ use std::process::Output;
 ///
 /// # Manual
 ///
+/// tmux ^2.0:
 /// ```text
 /// tmux if-shell [-bF] [-t target-pane] shell-command command [command]
+/// (alias: if)
+/// ```
+///
+/// tmux ^1.8:
+/// ```text
+/// tmux if-shell [-b] [-t target-pane] shell-command command [command]
+/// (alias: if)
+/// ```
+///
+/// tmux ^1.6:
+/// ```text
+/// tmux if-shell shell-command command [command]
+/// (alias: if)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux if-shell shell-command command
 /// (alias: if)
 /// ```
 #[derive(Default, Debug)]

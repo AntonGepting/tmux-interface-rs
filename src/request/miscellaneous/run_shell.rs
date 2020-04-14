@@ -8,8 +8,21 @@ impl<'a> TmuxInterface<'a> {
 
     /// # Manual
     ///
+    /// tmux ^1.8:
     /// ```text
     /// tmux run-shell [-b] [-t target-pane] shell-command
+    /// (alias: run)
+    /// ```
+    ///
+    /// tmux ^1.2:
+    /// ```text
+    /// tmux run-shell shell-command
+    /// (alias: run)
+    /// ```
+    ///
+    /// tmux ^1.1:
+    /// ```text
+    /// tmux run-shell command
     /// (alias: run)
     /// ```
     pub fn run_shell<T: Display>(
