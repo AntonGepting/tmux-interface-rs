@@ -8,8 +8,14 @@ impl<'a> TmuxInterface<'a> {
 
     /// # Manual
     ///
+    /// tmux ^1.6
     /// ```text
     /// tmux send-prefix [-2] [-t target-pane]
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux send-prefix [-t target-pane]
     /// ```
     pub fn send_prefix<T: Display>(
         &mut self,

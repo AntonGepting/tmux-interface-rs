@@ -8,7 +8,38 @@ impl<'a> TmuxInterface<'a> {
     /// # Manual
     ///
     /// ```text
+    /// tmux ^2.4:
     /// tmux unbind-key [-an] [-T key-table] key
+    /// (alias: unbind)
+    /// ```
+    ///
+    /// tmux ^2.1:
+    /// ```text
+    /// tmux unbind-key [-acn] [-t mode-table] [-T key-table] key
+    /// (alias: unbind)
+    /// ```
+    ///
+    /// tmux ^2.0:
+    /// ```text
+    /// tmux unbind-key [-acn] [-t mode-table] key
+    /// (alias: unbind)
+    /// ```
+    ///
+    /// tmux ^1.4:
+    /// ```text
+    /// tmux unbind-key [-acn] [-t key-table] key
+    /// (alias: unbind)
+    /// ```
+    ///
+    /// tmux ^1.0:
+    /// ```text
+    /// tmux unbind-key [-cn] [-t key-table] key
+    /// (alias: unbind)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux unbind-key key
     /// (alias: unbind)
     /// ```
     pub fn unbind_key(

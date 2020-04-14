@@ -7,50 +7,41 @@ impl<'a> TmuxInterface<'a> {
 
     /// # Manual
     ///
-    /// tmux X.X:
+    /// tmux ^3.1:
     /// ```text
-    /// tmux list-keys [-N] [-T key-table]
+    /// tmux list-keys [-1aN] [-P prefix-string -T key-table]
     /// (alias: lsk)
     /// ```
     ///
-    /// tmux 2.6:
+    /// tmux ^2.4:
     /// ```text
     /// tmux list-keys [-T key-table]
     /// (alias: lsk)
     /// ```
-    #[cfg(not(feature = "tmux_2_6"))]
+    ///
+    /// tmux ^2.1:
+    /// ```text
+    /// tmux list-keys [-t mode-table] [-T key-table]
+    /// (alias: lsk)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux list-keys [-t key-table]
+    /// (alias: lsk)
+    /// ```
     pub fn list_keys(
         &mut self,
         note: Option<bool>,
         key_table: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        if note.unwrap_or(false) {
-            args.push(N_KEY);
+        #[cfg(feature = "tmux_X_X")]
+        {
+            if note.unwrap_or(false) {
+                args.push(N_KEY);
+            }
         }
-        if let Some(s) = key_table {
-            args.extend_from_slice(&[T_KEY, &s])
-        }
-        let output = self.subcommand(TmuxInterface::LIST_KEYS, &args)?;
-        Ok(output)
-    }
-
-    /// # Manual
-    ///
-    /// tmux X.X:
-    /// ```text
-    /// tmux list-keys [-N] [-T key-table]
-    /// (alias: lsk)
-    /// ```
-    ///
-    /// tmux 2.6:
-    /// ```text
-    /// tmux list-keys [-T key-table]
-    /// (alias: lsk)
-    /// ```
-    #[cfg(feature = "tmux_2_6")]
-    pub fn list_keys(&mut self, key_table: Option<&str>) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
         if let Some(s) = key_table {
             args.extend_from_slice(&[T_KEY, &s])
         }
