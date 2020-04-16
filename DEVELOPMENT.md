@@ -20,6 +20,7 @@ tools and technologies used:
 - [Conventional Commits]()
 - [TOML]()
 - [Markdown]()
+- [Codetags]()
 
 
 ## Language Internals
@@ -33,6 +34,7 @@ tools and technologies used:
 - Bitmasks ()
 - OOP ()
 - Functional Programming ()
+- Conditional Compilation ()
 
 
 ## Tools
