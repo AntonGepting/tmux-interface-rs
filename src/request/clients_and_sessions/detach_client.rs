@@ -45,6 +45,7 @@ pub struct DetachClient<'a> {
     #[cfg(feature = "tmux_1_5")]
     pub target_session: Option<&'a TargetSession<'a>>,
     /// [-t target-client] - specify the client
+    #[cfg(feature = "tmux_0_8")]
     pub target_client: Option<&'a str>,
 }
 
@@ -64,6 +65,7 @@ pub struct DetachClientBuilder<'a> {
     pub shell_command: Option<&'a str>,
     #[cfg(feature = "tmux_1_5")]
     pub target_session: Option<&'a TargetSession<'a>>,
+    #[cfg(feature = "tmux_0_8")]
     pub target_client: Option<&'a str>,
 }
 
@@ -96,6 +98,7 @@ impl<'a> DetachClientBuilder<'a> {
         self
     }
 
+    #[cfg(feature = "tmux_0_8")]
     pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
         self.target_client = Some(target_client);
         self
@@ -111,6 +114,7 @@ impl<'a> DetachClientBuilder<'a> {
             shell_command: self.shell_command,
             #[cfg(feature = "tmux_1_5")]
             target_session: self.target_session,
+            #[cfg(feature = "tmux_0_8")]
             target_client: self.target_client,
         }
     }
@@ -148,7 +152,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn detach_client(&mut self, detach_client: Option<&DetachClient>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s: &str;
+        let s: String;
         if let Some(detach_client) = detach_client {
             #[cfg(feature = "tmux_2_2")]
             {
@@ -175,8 +179,11 @@ impl<'a> TmuxInterface<'a> {
                     args.extend_from_slice(&[s_KEY, &s])
                 }
             }
-            if let Some(s) = detach_client.target_client {
-                args.extend_from_slice(&[t_KEY, &s])
+            #[cfg(feature = "tmux_0_8")]
+            {
+                if let Some(s) = detach_client.target_client {
+                    args.extend_from_slice(&[t_KEY, &s])
+                }
             }
         }
         let output = self.subcommand(TmuxInterface::DETACH_CLIENT, &args)?;

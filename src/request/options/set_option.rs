@@ -7,7 +7,7 @@ use std::process::Output;
 ///
 /// # Manual
 ///
-/// tmux ^3.0a:
+/// tmux ^3.0:
 /// ```text
 /// tmux set-option [-aFgopqsuw] [-t target-pane] option value
 /// (alias: set)
@@ -51,25 +51,35 @@ use std::process::Output;
 #[derive(Default, Debug)]
 pub struct SetOption<'a, T: Display> {
     /// [-a] - value is appended to the existing setting, if the option expects a string or a style
+    #[cfg(feature = "tmux_1_0")]
     pub append: Option<bool>,
     /// [-F] - expand formats in the option value
+    #[cfg(feature = "tmux_2_6")]
     pub format: Option<bool>,
     /// [-g] - the global session or window option is set
+    #[cfg(feature = "tmux_0_8")]
     pub global: Option<bool>,
     /// [-o] - prevents setting an option that is already set
+    #[cfg(feature = "tmux_1_8")]
     pub not_overwrite: Option<bool>,
-    #[cfg(feature = "tmux_X_X")]
     /// [-p] - set a pane option
+    #[cfg(feature = "tmux_3_0")]
     pub pane: Option<bool>,
     /// [-q] - suppress errors about unknown or ambiguous options
+    #[cfg(feature = "tmux_1_7")]
     pub quiet: Option<bool>,
     /// [-s] - set a server option
+    #[cfg(feature = "tmux_1_2")]
     pub server: Option<bool>,
     /// [-u] - unset an option, so a session inherits the option from the global options
+    #[cfg(feature = "tmux_0_8")]
     pub unset: Option<bool>,
     /// [-w] - set a window option
+    #[cfg(feature = "tmux_1_2")]
     pub window: Option<bool>,
     /// [-t target-pane] - specify the target-pane
+    // FIXME: target, target-sesion, target-window
+    //#[cfg(feature = "tmux_3_0")]
     pub target: Option<&'a T>,
     // option
     //pub option: &'a str,
@@ -85,15 +95,23 @@ impl<'a, T: Display + Default> SetOption<'a, T> {
 
 #[derive(Default, Debug)]
 pub struct SetOptionBuilder<'a, T: Display> {
+    #[cfg(feature = "tmux_1_0")]
     pub append: Option<bool>,
+    #[cfg(feature = "tmux_2_6")]
     pub format: Option<bool>,
+    #[cfg(feature = "tmux_0_8")]
     pub global: Option<bool>,
+    #[cfg(feature = "tmux_1_8")]
     pub not_overwrite: Option<bool>,
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_0")]
     pub pane: Option<bool>,
+    #[cfg(feature = "tmux_1_7")]
     pub quiet: Option<bool>,
+    #[cfg(feature = "tmux_1_2")]
     pub server: Option<bool>,
+    #[cfg(feature = "tmux_0_8")]
     pub unset: Option<bool>,
+    #[cfg(feature = "tmux_1_2")]
     pub window: Option<bool>,
     pub target: Option<&'a T>,
     //pub option: &'a str,
@@ -105,47 +123,55 @@ impl<'a, T: Display + Default> SetOptionBuilder<'a, T> {
         Default::default()
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn append(&mut self) -> &mut Self {
         self.append = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_2_6")]
     pub fn format(&mut self) -> &mut Self {
         self.format = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_0_8")]
     pub fn global(&mut self) -> &mut Self {
         self.global = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_8")]
     pub fn not_overwrite(&mut self) -> &mut Self {
         self.not_overwrite = Some(true);
         self
     }
 
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_0")]
     pub fn pane(&mut self) -> &mut Self {
         self.pane = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_7")]
     pub fn quiet(&mut self) -> &mut Self {
         self.quiet = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_2")]
     pub fn server(&mut self) -> &mut Self {
         self.server = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_0_8")]
     pub fn unset(&mut self) -> &mut Self {
         self.unset = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_2")]
     pub fn window(&mut self) -> &mut Self {
         self.window = Some(true);
         self
@@ -158,15 +184,23 @@ impl<'a, T: Display + Default> SetOptionBuilder<'a, T> {
 
     pub fn build(&self) -> SetOption<'a, T> {
         SetOption {
+            #[cfg(feature = "tmux_1_0")]
             append: self.append,
+            #[cfg(feature = "tmux_2_6")]
             format: self.format,
+            #[cfg(feature = "tmux_0_8")]
             global: self.global,
+            #[cfg(feature = "tmux_1_8")]
             not_overwrite: self.not_overwrite,
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_0")]
             pane: self.pane,
+            #[cfg(feature = "tmux_1_7")]
             quiet: self.quiet,
+            #[cfg(feature = "tmux_1_2")]
             server: self.server,
+            #[cfg(feature = "tmux_0_8")]
             unset: self.unset,
+            #[cfg(feature = "tmux_1_2")]
             window: self.window,
             target: self.target,
         }
@@ -178,15 +212,45 @@ impl<'a> TmuxInterface<'a> {
 
     /// # Manual
     ///
-    /// tmux X.X:
+    /// tmux ^3.0:
     /// ```text
     /// tmux set-option [-aFgopqsuw] [-t target-pane] option value
     /// (alias: set)
     /// ```
     ///
-    /// tmux 2.6:
+    /// tmux ^2.6:
     /// ```text
     /// tmux set-option [-aFgoqsuw] [-t target-session | target-window] option value
+    /// (alias: set)
+    /// ```
+    ///
+    /// tmux ^1.8:
+    /// ```text
+    /// tmux set-option [-agoqsuw] [-t target-session | target-window] option value
+    /// (alias: set)
+    /// ```
+    ///
+    /// tmux ^1.7:
+    /// ```text
+    /// tmux set-option [-agqsuw] [-t target-session | target-window] option value
+    /// (alias: set)
+    /// ```
+    ///
+    /// tmux ^1.2:
+    /// ```text
+    /// tmux set-option [-agsuw] [-t target-session | target-window] option value
+    /// (alias: set)
+    /// ```
+    ///
+    /// tmux ^1.0:
+    /// ```text
+    /// tmux set-option [-agu] [-t target-session] option value
+    /// (alias: set)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux set-option [-gu] [-t target-session] option value
     /// (alias: set)
     /// ```
     pub fn set_option<T: Display>(
@@ -198,35 +262,59 @@ impl<'a> TmuxInterface<'a> {
         let mut args: Vec<&str> = Vec::new();
         let s;
         if let Some(set_option) = set_option {
-            if set_option.append.unwrap_or(false) {
-                args.push(a_KEY);
+            #[cfg(feature = "tmux_1_0")]
+            {
+                if set_option.append.unwrap_or(false) {
+                    args.push(a_KEY);
+                }
             }
-            if set_option.format.unwrap_or(false) {
-                args.push(F_KEY);
+            #[cfg(feature = "tmux_2_6")]
+            {
+                if set_option.format.unwrap_or(false) {
+                    args.push(F_KEY);
+                }
             }
-            if set_option.global.unwrap_or(false) {
-                args.push(g_KEY);
+            #[cfg(feature = "tmux_0_8")]
+            {
+                if set_option.global.unwrap_or(false) {
+                    args.push(g_KEY);
+                }
             }
-            if set_option.not_overwrite.unwrap_or(false) {
-                args.push(o_KEY);
+            #[cfg(feature = "tmux_1_8")]
+            {
+                if set_option.not_overwrite.unwrap_or(false) {
+                    args.push(o_KEY);
+                }
             }
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_0")]
             {
                 if set_option.pane.unwrap_or(false) {
                     args.push(p_KEY);
                 }
             }
-            if set_option.quiet.unwrap_or(false) {
-                args.push(q_KEY);
+            #[cfg(feature = "tmux_1_7")]
+            {
+                if set_option.quiet.unwrap_or(false) {
+                    args.push(q_KEY);
+                }
             }
-            if set_option.server.unwrap_or(false) {
-                args.push(s_KEY);
+            #[cfg(feature = "tmux_1_2")]
+            {
+                if set_option.server.unwrap_or(false) {
+                    args.push(s_KEY);
+                }
             }
-            if set_option.unset.unwrap_or(false) {
-                args.push(u_KEY);
+            #[cfg(feature = "tmux_0_8")]
+            {
+                if set_option.unset.unwrap_or(false) {
+                    args.push(u_KEY);
+                }
             }
-            if set_option.window.unwrap_or(false) {
-                args.push(w_KEY);
+            #[cfg(feature = "tmux_1_2")]
+            {
+                if set_option.window.unwrap_or(false) {
+                    args.push(w_KEY);
+                }
             }
             if let Some(target) = set_option.target {
                 s = target.to_string();

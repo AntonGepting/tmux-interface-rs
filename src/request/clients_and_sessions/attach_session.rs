@@ -7,7 +7,7 @@ use std::process::Output;
 ///
 /// # Manual
 ///
-/// tmux ^3.0a:
+/// tmux ^3.0:
 /// ```text
 /// tmux attach-session [-dErx] [-c working-directory] [-t target-session]
 /// (alias: attach)
@@ -39,6 +39,7 @@ use std::process::Output;
 #[derive(Default, Debug)]
 pub struct AttachSession<'a> {
     /// [-d] - any other clients attached to the session are detached
+    #[cfg(feature = "tmux_0_8")]
     pub detach_other: Option<bool>,
     /// [-E] - `update-environment` option will not be applied
     #[cfg(feature = "tmux_2_1")]
@@ -47,12 +48,13 @@ pub struct AttachSession<'a> {
     #[cfg(feature = "tmux_1_2")]
     pub read_only: Option<bool>,
     /// [-x] - send SIGHUP to the parent process, detaching the client
-    #[cfg(feature = "tmux_3_0a")]
+    #[cfg(feature = "tmux_3_0")]
     pub parent_sighup: Option<bool>,
     /// [-c working-directory] - specify starting directory
     #[cfg(feature = "tmux_1_9")]
     pub cwd: Option<&'a str>,
     /// [-t target-session] - specify target session name
+    #[cfg(feature = "tmux_0_8")]
     pub target_session: Option<&'a TargetSession<'a>>,
 }
 
@@ -64,15 +66,17 @@ impl<'a> AttachSession<'a> {
 
 #[derive(Default, Debug)]
 pub struct AttachSessionBuilder<'a> {
+    #[cfg(feature = "tmux_0_8")]
     pub detach_other: Option<bool>,
     #[cfg(feature = "tmux_2_1")]
     pub not_update_env: Option<bool>,
     #[cfg(feature = "tmux_1_2")]
     pub read_only: Option<bool>,
-    #[cfg(feature = "tmux_3_0a")]
+    #[cfg(feature = "tmux_3_0")]
     pub parent_sighup: Option<bool>,
     #[cfg(feature = "tmux_1_9")]
     pub cwd: Option<&'a str>,
+    #[cfg(feature = "tmux_0_8")]
     pub target_session: Option<&'a TargetSession<'a>>,
 }
 
@@ -81,6 +85,7 @@ impl<'a> AttachSessionBuilder<'a> {
         Default::default()
     }
 
+    #[cfg(feature = "tmux_0_8")]
     pub fn detach_other(&mut self) -> &mut Self {
         self.detach_other = Some(true);
         self
@@ -98,7 +103,7 @@ impl<'a> AttachSessionBuilder<'a> {
         self
     }
 
-    #[cfg(feature = "tmux_3_0a")]
+    #[cfg(feature = "tmux_3_0")]
     pub fn parent_sighup(&mut self) -> &mut Self {
         self.parent_sighup = Some(true);
         self
@@ -110,6 +115,7 @@ impl<'a> AttachSessionBuilder<'a> {
         self
     }
 
+    #[cfg(feature = "tmux_0_8")]
     pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
         self.target_session = Some(&target_session);
         self
@@ -117,15 +123,17 @@ impl<'a> AttachSessionBuilder<'a> {
 
     pub fn build(&self) -> AttachSession<'a> {
         AttachSession {
+            #[cfg(feature = "tmux_0_8")]
             detach_other: self.detach_other,
             #[cfg(feature = "tmux_2_1")]
             not_update_env: self.not_update_env,
             #[cfg(feature = "tmux_1_2")]
             read_only: self.read_only,
-            #[cfg(feature = "tmux_3_0a")]
+            #[cfg(feature = "tmux_3_0")]
             parent_sighup: self.parent_sighup,
             #[cfg(feature = "tmux_1_9")]
             cwd: self.cwd,
+            #[cfg(feature = "tmux_0_8")]
             target_session: self.target_session,
         }
     }
@@ -136,31 +144,31 @@ impl<'a> TmuxInterface<'a> {
 
     /// # Manual
     ///
-    /// tmux 3.0a:
+    /// tmux ^3.0:
     /// ```text
     /// tmux attach-session [-dErx] [-c working-directory] [-t target-session]
     /// (alias: attach)
     /// ```
     ///
-    /// tmux 2.1:
+    /// tmux ^2.1:
     /// ```text
     /// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
     /// (alias: attach)
     /// ```
     ///
-    /// tmux 1.9:
+    /// tmux ^1.9:
     /// ```text
     /// tmux attach-session [-dr] [-c working-directory] [-t target-session]
     /// (alias: attach)
     /// ```
     ///
-    /// tmux 1.2:
+    /// tmux ^1.2:
     /// ```text
     /// tmux attach-session [-dr] [-t target-session]
     /// (alias: attach)
     /// ```
     ///
-    /// tmux 0.8:
+    /// tmux ^0.8:
     /// ```text
     /// tmux attach-session [-d] [-t target-session]
     /// (alias: attach)
@@ -172,8 +180,11 @@ impl<'a> TmuxInterface<'a> {
         let mut args: Vec<&str> = Vec::new();
         let s;
         if let Some(attach_session) = attach_session {
-            if attach_session.detach_other.unwrap_or(false) {
-                args.push(d_KEY);
+            #[cfg(feature = "tmux_0_8")]
+            {
+                if attach_session.detach_other.unwrap_or(false) {
+                    args.push(d_KEY);
+                }
             }
             #[cfg(feature = "tmux_2_1")]
             {
@@ -187,7 +198,7 @@ impl<'a> TmuxInterface<'a> {
                     args.push(r_KEY);
                 }
             }
-            #[cfg(feature = "tmux_3_0a")]
+            #[cfg(feature = "tmux_3_0")]
             {
                 if attach_session.parent_sighup.unwrap_or(false) {
                     args.push(x_KEY);
@@ -199,9 +210,12 @@ impl<'a> TmuxInterface<'a> {
                     args.extend_from_slice(&[c_KEY, &s])
                 }
             }
-            if let Some(ref target_session) = attach_session.target_session {
-                s = target_session.to_string();
-                args.extend_from_slice(&[t_KEY, &s]);
+            #[cfg(feature = "tmux_0_8")]
+            {
+                if let Some(ref target_session) = attach_session.target_session {
+                    s = target_session.to_string();
+                    args.extend_from_slice(&[t_KEY, &s]);
+                }
             }
         }
         let output = self.subcommand(TmuxInterface::ATTACH_SESSION, &args)?;

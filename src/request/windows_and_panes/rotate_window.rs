@@ -21,7 +21,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux rotate-window [-DU] [-t target-window]
     /// (alias: rotatew)
     /// ```
-    #[cfg(not(feature = "tmux_2_6"))]
+    #[cfg(feature = "tmux_3_1")]
     pub fn rotate_window<T: Display>(
         &mut self,
         down: Option<bool>,
@@ -48,7 +48,7 @@ impl<'a> TmuxInterface<'a> {
         Ok(output)
     }
 
-    #[cfg(feature = "tmux_2_6")]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_1")))]
     pub fn rotate_window<T: Display>(
         &mut self,
         down: Option<bool>,

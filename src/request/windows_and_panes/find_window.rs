@@ -30,19 +30,23 @@ use std::process::Output;
 /// ```
 #[derive(Default, Debug)]
 pub struct FindWindow<'a, T: Display> {
-    #[cfg(feature = "tmux_3_0")]
     /// [-r] - regular expression
+    #[cfg(feature = "tmux_3_0")]
     pub regex: Option<bool>,
     /// [-C] - match only visible window contents
+    #[cfg(feature = "tmux_1_7")]
     pub only_visible: Option<bool>,
     /// [-N] - match only the window name
+    #[cfg(feature = "tmux_1_7")]
     pub only_name: Option<bool>,
     /// [-T] - match only the window title
+    #[cfg(feature = "tmux_1_7")]
     pub only_title: Option<bool>,
-    #[cfg(eature = "tmux_2_9")]
     /// [-Z] - zoom the pane
+    #[cfg(feature = "tmux_3_0")]
     pub zoom: Option<bool>,
     /// [-t target-pane] - target-pane
+    //#[cfg(eature = "tmux_2_6")]
     pub target_pane: Option<&'a T>,
     // match-string
     //pub match_string: &'a str,
@@ -58,11 +62,15 @@ impl<'a, T: Display + Default> FindWindow<'a, T> {
 pub struct FindWindowBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_3_0")]
     pub regex: Option<bool>,
+    #[cfg(feature = "tmux_1_7")]
     pub only_visible: Option<bool>,
+    #[cfg(feature = "tmux_1_7")]
     pub only_name: Option<bool>,
+    #[cfg(feature = "tmux_1_7")]
     pub only_title: Option<bool>,
-    #[cfg(feature = "tmux_2_9")]
+    #[cfg(feature = "tmux_3_0")]
     pub zoom: Option<bool>,
+    //#[cfg(feature = "tmux_2_6")]
     pub target_pane: Option<&'a T>,
     //pub match_string: &'a str,
 }
@@ -78,27 +86,31 @@ impl<'a, T: Display + Default> FindWindowBuilder<'a, T> {
         self
     }
 
+    #[cfg(feature = "tmux_1_7")]
     pub fn only_visible(&mut self) -> &mut Self {
         self.only_visible = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_7")]
     pub fn only_name(&mut self) -> &mut Self {
         self.only_name = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_7")]
     pub fn only_title(&mut self) -> &mut Self {
         self.only_title = Some(true);
         self
     }
 
-    #[cfg(feature = "tmux_2_9")]
+    #[cfg(feature = "tmux_3_0")]
     pub fn zoom(&mut self) -> &mut Self {
         self.zoom = Some(true);
         self
     }
 
+    //#[cfg(feature = "tmux_2_6")]
     pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
@@ -108,11 +120,15 @@ impl<'a, T: Display + Default> FindWindowBuilder<'a, T> {
         FindWindow {
             #[cfg(feature = "tmux_3_0")]
             regex: self.regex,
+            #[cfg(feature = "tmux_1_7")]
             only_visible: self.only_visible,
+            #[cfg(feature = "tmux_1_7")]
             only_name: self.only_name,
+            #[cfg(feature = "tmux_1_7")]
             only_title: self.only_title,
-            #[cfg(feature = "tmux_2_9")]
+            #[cfg(feature = "tmux_3_0")]
             zoom: self.zoom,
+            //#[cfg(eature = "tmux_2_6")]
             target_pane: self.target_pane,
         }
     }
@@ -126,14 +142,24 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
-    /// tmux X.X:
+    /// tmux ^3.0:
     /// ```text
     /// tmux find-window [-rCNTZ] [-t target-pane] match-string
     /// (alias: findw)
     ///
-    /// tmux 2.6:
+    /// tmux ^2.6:
     /// ```text
     /// tmux find-window [-CNT] [-t target-pane] match-string
+    /// (alias: findw)
+    ///
+    /// tmux ^1.7:
+    /// ```text
+    /// tmux find-window [-CNT] [-F format] [-t target-pane] match-string
+    /// (alias: findw)
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux find-window [-t target-pane] match-string
     /// (alias: findw)
     /// ```
     pub fn find_window<T: Display>(
@@ -150,21 +176,31 @@ impl<'a> TmuxInterface<'a> {
                     args.push(r_KEY);
                 }
             }
-            if find_window.only_visible.unwrap_or(false) {
-                args.push(C_KEY);
+            #[cfg(feature = "tmux_1_7")]
+            {
+                if find_window.only_visible.unwrap_or(false) {
+                    args.push(C_KEY);
+                }
             }
-            if find_window.only_name.unwrap_or(false) {
-                args.push(N_KEY);
+            #[cfg(feature = "tmux_1_7")]
+            {
+                if find_window.only_name.unwrap_or(false) {
+                    args.push(N_KEY);
+                }
             }
-            if find_window.only_title.unwrap_or(false) {
-                args.push(T_KEY);
+            #[cfg(feature = "tmux_1_7")]
+            {
+                if find_window.only_title.unwrap_or(false) {
+                    args.push(T_KEY);
+                }
             }
-            #[cfg(feature = "tmux_2_9")]
+            #[cfg(feature = "tmux_3_0")]
             {
                 if find_window.zoom.unwrap_or(false) {
                     args.push(Z_KEY);
                 }
             }
+            //#[cfg(feature = "tmux_2_6")]
             if let Some(target_pane) = find_window.target_pane {
                 s = target_pane.to_string();
                 args.extend_from_slice(&[t_KEY, &s])

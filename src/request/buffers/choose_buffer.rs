@@ -52,8 +52,10 @@ pub struct ChooseBuffer<'a, T: Display> {
     #[cfg(feature = "tmux_2_6")]
     pub sort_order: Option<&'a str>,
     /// [-t target-pane] - specify the target pane
+    #[cfg(feature = "tmux_1_7")]
     pub target_pane: Option<&'a T>,
     /// [template] - specify the template
+    #[cfg(feature = "tmux_1_3")]
     pub template: Option<&'a str>,
 }
 
@@ -77,7 +79,9 @@ pub struct ChooseBufferBuilder<'a, T: Display> {
     pub filter: Option<&'a str>,
     #[cfg(feature = "tmux_2_6")]
     pub sort_order: Option<&'a str>,
+    #[cfg(feature = "tmux_1_7")]
     pub target_pane: Option<&'a T>,
+    #[cfg(feature = "tmux_1_3")]
     pub template: Option<&'a str>,
 }
 
@@ -122,11 +126,13 @@ impl<'a, T: Display + Default> ChooseBufferBuilder<'a, T> {
         self
     }
 
+    #[cfg(feature = "tmux_1_7")]
     pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
 
+    #[cfg(feature = "tmux_1_3")]
     pub fn template(&mut self, template: &'a str) -> &mut Self {
         self.template = Some(template);
         self
@@ -146,7 +152,9 @@ impl<'a, T: Display + Default> ChooseBufferBuilder<'a, T> {
             filter: self.filter,
             #[cfg(feature = "tmux_2_6")]
             sort_order: self.sort_order,
+            #[cfg(feature = "tmux_1_7")]
             target_pane: self.target_pane,
+            #[cfg(feature = "tmux_1_3")]
             template: self.template,
         }
     }
@@ -226,12 +234,18 @@ impl<'a> TmuxInterface<'a> {
                     args.extend_from_slice(&[O_KEY, &s])
                 }
             }
-            if let Some(target_pane) = choose_buffer.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+            #[cfg(feature = "tmux_1_7")]
+            {
+                if let Some(target_pane) = choose_buffer.target_pane {
+                    s = target_pane.to_string();
+                    args.extend_from_slice(&[t_KEY, &s])
+                }
             }
-            if let Some(s) = choose_buffer.template {
-                args.push(&s)
+            #[cfg(feature = "tmux_1_3")]
+            {
+                if let Some(s) = choose_buffer.template {
+                    args.push(&s)
+                }
             }
         }
         let output = self.subcommand(TmuxInterface::CHOOSE_BUFFER, &args)?;

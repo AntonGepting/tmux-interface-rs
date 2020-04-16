@@ -36,11 +36,8 @@ impl<'a> TmuxInterface<'a> {
         key_table: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_X_X")]
-        {
-            if note.unwrap_or(false) {
-                args.push(N_KEY);
-            }
+        if note.unwrap_or(false) {
+            args.push(N_KEY);
         }
         if let Some(s) = key_table {
             args.extend_from_slice(&[T_KEY, &s])

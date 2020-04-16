@@ -40,11 +40,8 @@ impl<'a> TmuxInterface<'a> {
         template: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        #[cfg(any(feature = "tmux_2_9", feature = "tmux_X_X"))]
-        {
-            if not_block.unwrap_or(false) {
-                args.push(b_KEY);
-            }
+        if not_block.unwrap_or(false) {
+            args.push(b_KEY);
         }
         if let Some(s) = duration {
             args.extend_from_slice(&[d_KEY, &s])

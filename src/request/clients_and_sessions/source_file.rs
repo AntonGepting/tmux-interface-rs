@@ -9,7 +9,7 @@ impl<'a> TmuxInterface<'a> {
     ///
     /// # Manual
     ///
-    /// tmux ^3.0a:
+    /// tmux ^3.0:
     /// ```text
     /// tmux source-file [-nqv] path
     /// (alias: source)
@@ -34,20 +34,14 @@ impl<'a> TmuxInterface<'a> {
         path: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_3_0a")]
-        {
-            if not_execute.unwrap_or(false) {
-                args.push(n_KEY);
-            }
+        if not_execute.unwrap_or(false) {
+            args.push(n_KEY);
         }
         if quite.unwrap_or(false) {
             args.push(q_KEY);
         }
-        #[cfg(feature = "tmux_3_0a")]
-        {
-            if show_parsed.unwrap_or(false) {
-                args.push(v_KEY);
-            }
+        if show_parsed.unwrap_or(false) {
+            args.push(v_KEY);
         }
         args.push(path);
         let output = self.subcommand(TmuxInterface::SOURCE_FILE, &args)?;

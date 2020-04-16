@@ -428,11 +428,7 @@ pub use self::request::clients_and_sessions::detach_client::DetachClient;
 pub use self::request::clients_and_sessions::detach_client::DetachClientBuilder;
 pub use self::request::clients_and_sessions::new_session::NewSession;
 pub use self::request::clients_and_sessions::new_session::NewSessionBuilder;
-// not structure, pass as arguments
-#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::clients_and_sessions::refresh_client::RefreshClient;
-// not structure, pass as arguments
-#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::clients_and_sessions::refresh_client::RefreshClientBuilder;
 pub use self::request::clients_and_sessions::switch_client::SwitchClient;
 pub use self::request::clients_and_sessions::switch_client::SwitchClientBuilder;
@@ -468,9 +464,9 @@ pub use self::request::status_line::display_menu::DisplayMenu;
 #[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::status_line::display_menu::DisplayMenuBuilder;
 // not structure, pass as arguments
-#[cfg(not(feature = "tmux_2_6"))]
+#[cfg(feature = "tmux_2_6")]
 pub use self::request::status_line::display_message::DisplayMessage;
-#[cfg(not(feature = "tmux_2_6"))]
+#[cfg(feature = "tmux_2_6")]
 pub use self::request::status_line::display_message::DisplayMessageBuilder;
 // windows and panes
 pub use self::request::windows_and_panes::break_pane::BreakPane;
@@ -494,9 +490,9 @@ pub use self::request::windows_and_panes::move_window::MoveWindowBuilder;
 pub use self::request::windows_and_panes::new_window::NewWindow;
 pub use self::request::windows_and_panes::new_window::NewWindowBuilder;
 // not structure, pass as arguments
-#[cfg(not(feature = "tmux_2_6"))]
+#[cfg(feature = "tmux_2_6")]
 pub use self::request::windows_and_panes::pipe_pane::PipePane;
-#[cfg(not(feature = "tmux_2_6"))]
+#[cfg(feature = "tmux_2_6")]
 pub use self::request::windows_and_panes::pipe_pane::PipePaneBuilder;
 pub use self::request::windows_and_panes::resize_pane::ResizePane;
 pub use self::request::windows_and_panes::resize_pane::ResizePaneBuilder;

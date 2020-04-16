@@ -6,7 +6,7 @@ use std::fmt::Display;
 ///
 /// # Manual
 ///
-/// tmux ^3.0a:
+/// tmux ^3.0:
 /// ```text
 /// tmux show-options [-AgHpqsvw] [-t target-pane] [option]
 /// (alias: show)
@@ -43,28 +43,35 @@ use std::fmt::Display;
 /// ```
 #[derive(Default, Debug)]
 pub struct ShowOptions<'a, T: Display> {
-    #[cfg(feature = "tmux_X_X")]
     /// [-A] - includes options inherited from a parent set of options
+    #[cfg(feature = "tmux_3_0")]
     pub include_inherited: Option<bool>,
     /// [-g] - global session or window options are listed
+    #[cfg(feature = "tmux_1_2")]
     pub global: Option<bool>,
-    #[cfg(feature = "tmux_X_X")]
     /// [-H] - includes hooks (omitted by default)
+    #[cfg(feature = "tmux_3_0")]
     pub hooks: Option<bool>,
-    #[cfg(feature = "tmux_X_X")]
     /// [-p] - show window options
+    #[cfg(feature = "tmux_3_0")]
     pub pane: Option<bool>,
     /// [-q] - no error will be returned if `option` is unset
+    #[cfg(feature = "tmux_1_8")]
     pub quiet: Option<bool>,
     /// [-s] - show the server options
+    #[cfg(feature = "tmux_1_2")]
     pub server: Option<bool>,
     /// [-v] - shows only the option value
+    #[cfg(feature = "tmux_1_8")]
     pub value: Option<bool>,
     /// [-w] - show the window options
+    #[cfg(feature = "tmux_1_2")]
     pub window: Option<bool>,
     /// [-t target-pane] - target session or window name
+    //#[cfg(feature = "tmux_X_X")]
     pub target: Option<&'a T>,
     /// [option] - specify option name
+    #[cfg(feature = "tmux_1_7")]
     pub option: Option<&'a str>,
 }
 
@@ -76,18 +83,25 @@ impl<'a, T: Display + Default> ShowOptions<'a, T> {
 
 #[derive(Default, Debug)]
 pub struct ShowOptionsBuilder<'a, T: Display> {
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_0")]
     pub include_inherited: Option<bool>,
+    #[cfg(feature = "tmux_1_2")]
     pub global: Option<bool>,
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_0")]
     pub hooks: Option<bool>,
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_0")]
     pub pane: Option<bool>,
+    #[cfg(feature = "tmux_1_8")]
     pub quiet: Option<bool>,
+    #[cfg(feature = "tmux_1_2")]
     pub server: Option<bool>,
+    #[cfg(feature = "tmux_1_8")]
     pub value: Option<bool>,
+    #[cfg(feature = "tmux_1_2")]
     pub window: Option<bool>,
+    //#[cfg(feature = "tmux_X_X")]
     pub target: Option<&'a T>,
+    #[cfg(feature = "tmux_1_7")]
     pub option: Option<&'a str>,
 }
 
@@ -96,54 +110,61 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
         Default::default()
     }
 
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_0")]
     pub fn include_inherited(&mut self) -> &mut Self {
         self.include_inherited = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_2")]
     pub fn global(&mut self) -> &mut Self {
         self.global = Some(true);
         self
     }
 
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_0")]
     pub fn hooks(&mut self) -> &mut Self {
         self.hooks = Some(true);
         self
     }
 
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_0")]
     pub fn pane(&mut self) -> &mut Self {
         self.pane = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_8")]
     pub fn quiet(&mut self) -> &mut Self {
         self.quiet = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_2")]
     pub fn server(&mut self) -> &mut Self {
         self.server = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_8")]
     pub fn value(&mut self) -> &mut Self {
         self.value = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_2")]
     pub fn window(&mut self) -> &mut Self {
         self.window = Some(true);
         self
     }
 
+    //#[cfg(feature = "tmux_X_X")]
     pub fn target(&mut self, target: &'a T) -> &mut Self {
         self.target = Some(target);
         self
     }
 
+    #[cfg(feature = "tmux_1_7")]
     pub fn option(&mut self, option: &'a str) -> &mut Self {
         self.option = Some(option);
         self
@@ -151,18 +172,25 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
 
     pub fn build(&self) -> ShowOptions<'a, T> {
         ShowOptions {
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_0")]
             include_inherited: self.include_inherited,
+            #[cfg(feature = "tmux_1_2")]
             global: self.global,
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_0")]
             hooks: self.hooks,
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_0")]
             pane: self.pane,
+            #[cfg(feature = "tmux_1_8")]
             quiet: self.quiet,
+            #[cfg(feature = "tmux_1_2")]
             server: self.server,
+            #[cfg(feature = "tmux_1_8")]
             value: self.value,
+            #[cfg(feature = "tmux_1_2")]
             window: self.window,
+            //#[cfg(feature = "tmux_X_X")]
             target: self.target,
+            #[cfg(feature = "tmux_1_7")]
             option: self.option,
         }
     }
@@ -174,15 +202,39 @@ impl<'a> TmuxInterface<'a> {
     // XXX: better result type?
     /// # Manual
     ///
-    /// tmux X.X:
+    /// tmux ^3.0:
     /// ```text
     /// tmux show-options [-AgHpqsvw] [-t target-pane] [option]
     /// (alias: show)
     /// ```
     ///
-    /// tmux 2.6:
+    /// tmux ^1.8:
     /// ```text
     /// tmux show-options [-gqsvw] [-t target-session | target-window] [option]
+    /// (alias: show)
+    /// ```
+    ///
+    /// tmux ^1.7:
+    /// ```text
+    /// tmux show-options [-gsw] [-t target-session | target-window] [option]
+    /// (alias: show)
+    /// ```
+    ///
+    /// tmux ^1.2:
+    /// ```text
+    /// tmux show-options [-gsw] [-t target-session | target-window]
+    /// (alias: show)
+    /// ```
+    ///
+    /// tmux ^1.0:
+    /// ```text
+    /// tmux show-options [-t target-session]
+    /// (alias: show)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux show-options [-t target-session] option value
     /// (alias: show)
     /// ```
     pub fn show_options<T: Display>(
@@ -192,45 +244,64 @@ impl<'a> TmuxInterface<'a> {
         let mut args: Vec<&str> = Vec::new();
         let s;
         if let Some(show_options) = show_options {
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_0")]
             {
                 if show_options.include_inherited.unwrap_or(false) {
                     args.push(A_KEY);
                 }
             }
-            if show_options.global.unwrap_or(false) {
-                args.push(g_KEY);
+            #[cfg(feature = "tmux_1_2")]
+            {
+                if show_options.global.unwrap_or(false) {
+                    args.push(g_KEY);
+                }
             }
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_0")]
             {
                 if show_options.hooks.unwrap_or(false) {
                     args.push(H_KEY);
                 }
             }
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_0")]
             {
                 if show_options.pane.unwrap_or(false) {
                     args.push(p_KEY);
                 }
             }
-            if show_options.quiet.unwrap_or(false) {
-                args.push(q_KEY);
+            #[cfg(feature = "tmux_1_8")]
+            {
+                if show_options.quiet.unwrap_or(false) {
+                    args.push(q_KEY);
+                }
             }
-            if show_options.server.unwrap_or(false) {
-                args.push(s_KEY);
+            #[cfg(feature = "tmux_1_2")]
+            {
+                if show_options.server.unwrap_or(false) {
+                    args.push(s_KEY);
+                }
             }
-            if show_options.value.unwrap_or(false) {
-                args.push(v_KEY);
+            #[cfg(feature = "tmux_1_8")]
+            {
+                if show_options.value.unwrap_or(false) {
+                    args.push(v_KEY);
+                }
             }
-            if show_options.window.unwrap_or(false) {
-                args.push(w_KEY);
+            #[cfg(feature = "tmux_1_2")]
+            {
+                if show_options.window.unwrap_or(false) {
+                    args.push(w_KEY);
+                }
             }
+            //#[cfg(feature = "tmux_X_X")]
             if let Some(target) = show_options.target {
                 s = target.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
-            if let Some(s) = show_options.option {
-                args.push(&s)
+            #[cfg(feature = "tmux_1_7")]
+            {
+                if let Some(s) = show_options.option {
+                    args.push(&s)
+                }
             }
         }
         let output = self.subcommand(TmuxInterface::SHOW_OPTIONS, &args)?;

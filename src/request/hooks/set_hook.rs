@@ -7,7 +7,7 @@ use std::process::Output;
 ///
 /// # Manual
 ///
-/// tmux ^3.0a:
+/// tmux ^3.0:
 /// ```text
 /// tmux set-hook [-agRu] [-t target-session] hook-name command
 /// ```
@@ -28,17 +28,20 @@ use std::process::Output;
 /// ```
 #[derive(Default, Clone, Debug)]
 pub struct SetHook<'a> {
-    #[cfg(feature = "tmux_X_X")]
     /// [-a] - append to a hook
+    #[cfg(feature = "tmux_3_0")]
     pub append: Option<bool>,
     /// [-g] - add hook-name to the global list of hooks
+    #[cfg(feature = "tmux_2_2")]
     pub global: Option<bool>,
-    #[cfg(feature = "tmux_2_8")]
     /// [-R] - run hook-name immediately
+    #[cfg(feature = "tmux_2_8")]
     pub run: Option<bool>,
     /// [-u] - unset
+    #[cfg(feature = "tmux_2_4")]
     pub unset: Option<bool>,
     /// [-t target-session] - target-session
+    #[cfg(feature = "tmux_2_2")]
     pub target_session: Option<&'a TargetSession<'a>>,
     // hook-name
     //pub hook_name: &'a str,
@@ -54,12 +57,15 @@ impl<'a> SetHook<'a> {
 
 #[derive(Default, Clone, Debug)]
 pub struct SetHookBuilder<'a> {
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_0")]
     pub append: Option<bool>,
+    #[cfg(feature = "tmux_2_2")]
     pub global: Option<bool>,
     #[cfg(feature = "tmux_2_8")]
     pub run: Option<bool>,
+    #[cfg(feature = "tmux_2_4")]
     pub unset: Option<bool>,
+    #[cfg(feature = "tmux_2_2")]
     pub target_session: Option<&'a TargetSession<'a>>,
     //pub hook_name: &'a str,
     //pub command: &'a str,
@@ -70,12 +76,13 @@ impl<'a> SetHookBuilder<'a> {
         Default::default()
     }
 
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_0")]
     pub fn append(&mut self) -> &mut Self {
         self.append = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_2_2")]
     pub fn global(&mut self) -> &mut Self {
         self.global = Some(true);
         self
@@ -87,11 +94,13 @@ impl<'a> SetHookBuilder<'a> {
         self
     }
 
+    #[cfg(feature = "tmux_2_4")]
     pub fn unset(&mut self) -> &mut Self {
         self.unset = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_2_2")]
     pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
         self.target_session = Some(target_session);
         self
@@ -99,12 +108,15 @@ impl<'a> SetHookBuilder<'a> {
 
     pub fn build(&self) -> SetHook<'a> {
         SetHook {
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_0")]
             append: self.append,
+            #[cfg(feature = "tmux_2_2")]
             global: self.global,
             #[cfg(feature = "tmux_2_8")]
             run: self.run,
+            #[cfg(feature = "tmux_2_4")]
             unset: self.unset,
+            #[cfg(feature = "tmux_2_2")]
             target_session: self.target_session,
             //hook_name: &'a str,
             //command: &'a str,
@@ -117,19 +129,24 @@ impl<'a> TmuxInterface<'a> {
 
     /// # Manual
     ///
-    /// tmux X.X:
+    /// tmux ^3.0:
     /// ```text
     /// tmux set-hook [-agRu] [-t target-session] hook-name command
     /// ```
     ///
-    /// tmux 2.8:
+    /// tmux ^2.8:
     /// ```text
     /// tmux set-hook [-gRu] [-t target-session] hook-name command
     /// ```
     ///
-    /// tmux 2.6:
+    /// tmux ^2.4:
     /// ```text
     /// tmux set-hook [-gu] [-t target-session] hook-name command
+    /// ```
+    ///
+    /// tmux ^2.2:
+    /// ```text
+    /// tmux set-hook [-g] [-t target-session] hook-name command
     /// ```
     pub fn set_hook(
         &mut self,
@@ -140,14 +157,17 @@ impl<'a> TmuxInterface<'a> {
         let mut args: Vec<&str> = Vec::new();
         let s;
         if let Some(set_hook) = set_hook {
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_0")]
             {
                 if set_hook.append.unwrap_or(false) {
                     args.push(a_KEY);
                 }
             }
-            if set_hook.global.unwrap_or(false) {
-                args.push(g_KEY);
+            #[cfg(feature = "tmux_2_2")]
+            {
+                if set_hook.global.unwrap_or(false) {
+                    args.push(g_KEY);
+                }
             }
             #[cfg(feature = "tmux_2_8")]
             {
@@ -155,12 +175,18 @@ impl<'a> TmuxInterface<'a> {
                     args.push(R_KEY);
                 }
             }
-            if set_hook.unset.unwrap_or(false) {
-                args.push(u_KEY);
+            #[cfg(feature = "tmux_2_4")]
+            {
+                if set_hook.unset.unwrap_or(false) {
+                    args.push(u_KEY);
+                }
             }
-            if let Some(target_session) = set_hook.target_session {
-                s = target_session.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+            #[cfg(feature = "tmux_2_2")]
+            {
+                if let Some(target_session) = set_hook.target_session {
+                    s = target_session.to_string();
+                    args.extend_from_slice(&[t_KEY, &s])
+                }
             }
         }
         args.push(hook_name);
