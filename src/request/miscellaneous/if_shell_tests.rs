@@ -4,27 +4,65 @@ fn if_shell() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^2.0:
+        // ```text
         // tmux if-shell [-bF] [-t target-pane] shell-command command [command]
         // (alias: if)
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["if-shell", "-b", "-F", "-t", "1", "2", "3", "4"]"#
-        );
+        // ```
+        //
+        // tmux ^1.8:
+        // ```text
+        // tmux if-shell [-b] [-t target-pane] shell-command command [command]
+        // (alias: if)
+        // ```
+        //
+        // tmux ^1.6:
+        // ```text
+        // tmux if-shell shell-command command [command]
+        // (alias: if)
+        // ```
+        //
+        // tmux ^0.8:
+        // ```text
+        // tmux if-shell shell-command command
+        // (alias: if)
+        // ```
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        s.push("if-shell");
+        #[cfg(feature = "tmux_1_8")]
+        s.push("-b");
+        #[cfg(feature = "tmux_2_0")]
+        s.push("-F");
+        #[cfg(feature = "tmux_1_8")]
+        s.extend_from_slice(&["-t", "1"]);
+        s.push("2");
+        s.push("3");
+        s.push("4");
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     let if_shell = IfShell {
+        #[cfg(feature = "tmux_1_8")]
         backgroud: Some(true),
+        #[cfg(feature = "tmux_2_0")]
         not_execute: Some(true),
+        #[cfg(feature = "tmux_1_8")]
         target_pane: Some(&TargetPane::Raw("1")),
         second_command: Some("4"),
     };
     tmux.if_shell(Some(&if_shell), "2", "3").unwrap_err();
 
-    let if_shell = IfShellBuilder::new()
-        .backgroud()
-        .not_execute()
-        .target_pane(&TargetPane::Raw("1"))
-        .second_command("4")
-        .build();
+    let mut builder = IfShellBuilder::new();
+    #[cfg(feature = "tmux_1_8")]
+    builder.backgroud();
+    #[cfg(feature = "tmux_2_0")]
+    builder.not_execute();
+    #[cfg(feature = "tmux_1_8")]
+    builder.target_pane(&TargetPane::Raw("1"));
+    builder.second_command("4");
+    let if_shell = builder.build();
     tmux.if_shell(Some(&if_shell), "2", "3").unwrap_err();
 }

@@ -4,37 +4,109 @@ fn attach_session() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^3.1:
+        // ```text
         // tmux switch-client [-ElnprZ] [-c target-client] [-t target-session] [-T key-table]
         // (alias: switchc)
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["switch-client", "-E", "-l", "-n", "-p", "-r", "-Z", "-c", "1", "-t", "2", "-T", "3"]"#
-        );
+        // ```
+        //
+        // tmux ^2.1:
+        // ```text
+        // tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
+        // (alias: switchc)
+        // ```
+        //
+        // tmux ^1.6:
+        // ```text
+        // tmux switch-client [-lnpr] [-c target-client] [-t target-session]
+        // (alias: switchc)
+        // ```
+        //
+        // tmux ^1.4:
+        // ```text
+        // tmux switch-client [-lnp] [-c target-client] [-t target-session]
+        // (alias: switchc)
+        // ```
+        //
+        // tmux ^1.0:
+        // ```text
+        // tmux switch-client [-c target-client] [-t target-session]
+        // (alias: switchc)
+        // ```
+        //
+        // tmux ^0.8:
+        // ```text
+        // tmux switch-client [-c target-client -t target-session]
+        // (alias: switchc)
+        // ```
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        s.push("switch-client");
+        #[cfg(feature = "tmux_2_1")]
+        s.push("-E");
+        #[cfg(feature = "tmux_1_4")]
+        s.push("-l");
+        #[cfg(feature = "tmux_1_4")]
+        s.push("-n");
+        #[cfg(feature = "tmux_1_4")]
+        s.push("-p");
+        #[cfg(feature = "tmux_1_6")]
+        s.push("-r");
+        #[cfg(feature = "tmux_3_1")]
+        s.push("-Z");
+        #[cfg(feature = "tmux_1_0")]
+        s.extend_from_slice(&["-c", "1"]);
+        #[cfg(feature = "tmux_1_0")]
+        s.extend_from_slice(&["-t", "2"]);
+        #[cfg(feature = "tmux_2_1")]
+        s.extend_from_slice(&["-T", "3"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
+
     let switch_client = SwitchClient {
+        #[cfg(feature = "tmux_2_1")]
         not_update_env: Some(true),
+        #[cfg(feature = "tmux_1_4")]
         last: Some(true),
+        #[cfg(feature = "tmux_1_4")]
         next: Some(true),
+        #[cfg(feature = "tmux_1_4")]
         previous: Some(true),
+        #[cfg(feature = "tmux_1_6")]
         read_only: Some(true),
+        #[cfg(feature = "tmux_3_1")]
         keep_zoomed: Some(true),
+        #[cfg(feature = "tmux_1_0")]
         target_client: Some("1"),
+        #[cfg(feature = "tmux_1_0")]
         target_session: Some(&TargetSession::Raw("2")),
+        #[cfg(feature = "tmux_2_1")]
         key_table: Some("3"),
     };
     tmux.switch_client(Some(&switch_client)).unwrap_err();
 
-    let switch_client = SwitchClientBuilder::new()
-        .not_update_env()
-        .last()
-        .next()
-        .previous()
-        .read_only()
-        .keep_zoomed()
-        .target_client("1")
-        .target_session(&TargetSession::Raw("2"))
-        .key_table("3")
-        .build();
+    let mut builder = SwitchClientBuilder::new();
+    #[cfg(feature = "tmux_2_1")]
+    builder.not_update_env();
+    #[cfg(feature = "tmux_1_4")]
+    builder.last();
+    #[cfg(feature = "tmux_1_4")]
+    builder.next();
+    #[cfg(feature = "tmux_1_4")]
+    builder.previous();
+    #[cfg(feature = "tmux_1_6")]
+    builder.read_only();
+    #[cfg(feature = "tmux_3_1")]
+    builder.keep_zoomed();
+    #[cfg(feature = "tmux_1_0")]
+    builder.target_client("1");
+    #[cfg(feature = "tmux_1_0")]
+    builder.target_session(&TargetSession::Raw("2"));
+    #[cfg(feature = "tmux_2_1")]
+    builder.key_table("3");
+    let switch_client = builder.build();
     tmux.switch_client(Some(&switch_client)).unwrap_err();
 }

@@ -1,18 +1,42 @@
-#[cfg(not(feature = "tmux_2_6"))]
 #[test]
 fn rotate_window() {
     use crate::{Error, TargetWindow, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^3.1:
+        // ```text
         // tmux rotate-window [-DUZ] [-t target-window]
         // (alias: rotatew)
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["rotate-window", "-D", "-U", "-Z", "-t", "1"]"#
-        );
+        // ```
+        //
+        // tmux ^0.8:
+        // ```text
+        // tmux rotate-window [-DU] [-t target-window]
+        // (alias: rotatew)
+        // ```
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        s.push("rotate-window");
+        #[cfg(feature = "tmux_0_8")]
+        s.push("-D");
+        #[cfg(feature = "tmux_0_8")]
+        s.push("-U");
+        #[cfg(feature = "tmux_3_1")]
+        s.push("-Z");
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-t", "1"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_1")))]
+    tmux.rotate_window(Some(true), Some(true), Some(&TargetWindow::Raw("1")))
+        .unwrap_err();
+
+    #[cfg(feature = "tmux_3_1")]
     tmux.rotate_window(
         Some(true),
         Some(true),
@@ -20,23 +44,4 @@ fn rotate_window() {
         Some(&TargetWindow::Raw("1")),
     )
     .unwrap_err();
-}
-
-#[cfg(feature = "tmux_2_6")]
-#[test]
-fn rotate_window() {
-    use crate::{Error, TargetWindow, TmuxInterface};
-
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux rotate-window [-DU] [-t target-window]
-        // (alias: rotatew)
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["rotate-window", "-D", "-U", "-t", "1"]"#
-        );
-        Err(Error::Hook)
-    }));
-    tmux.rotate_window(Some(true), Some(true), Some(&TargetWindow::Raw("1")))
-        .unwrap_err();
 }
