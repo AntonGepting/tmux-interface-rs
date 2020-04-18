@@ -289,18 +289,18 @@ impl<'a> TmuxInterface<'a> {
                     args.push(U_KEY);
                 }
             }
-            // FIXME: multiple incompatible def's
             #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_0")))]
             {
                 if let Some(size) = refresh_client.size {
-                    s = format!("{}x{}", size.0, size.1);
+                    s = format!("{},{}", size.0, size.1);
                     args.extend_from_slice(&[C_KEY, &s]);
                 }
             }
+            // FIXME: multiple incompatible def's
             #[cfg(feature = "tmux_3_0")]
             {
                 if let Some(size) = refresh_client.size {
-                    s = format!("{},{}", size.0, size.1);
+                    s = format!("{}x{}", size.0, size.1);
                     args.extend_from_slice(&[C_KEY, &s]);
                 }
             }
