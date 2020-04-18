@@ -63,7 +63,6 @@ pub struct RespawnPaneBuilder<'a, T: Display> {
     pub shell_command: Option<&'a str>,
 }
 
-#[cfg(not(feature = "tmux_2_6"))]
 impl<'a, T: Display + Default> RespawnPaneBuilder<'a, T> {
     pub fn new() -> Self {
         Default::default()
