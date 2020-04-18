@@ -297,6 +297,7 @@ Parsing objects and supported tmux variables:
 - mb some loops into iterators
 - mb split tmux versions in different folders
 - mb split into different librarys (options, get, set objects)
+- mb all args as sructs because of versions diffs?
 
 
 # Strategy
@@ -329,3 +330,9 @@ Parsing objects and supported tmux variables:
         reason: if all structure fields are `None`, structure itself does not
         to be needed
     - [ ] `&TmuxSubcommandParameters`
+
+- multiple tmux versions?
+    - [x] conditional compilation depending on version needed, using `feature = tmux_X_X"`
+       (current decision)
+    - [ ] runtime version detecting and corresponding code execution. Library
+        size?
