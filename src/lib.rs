@@ -489,24 +489,15 @@ pub use self::request::windows_and_panes::move_window::MoveWindow;
 pub use self::request::windows_and_panes::move_window::MoveWindowBuilder;
 pub use self::request::windows_and_panes::new_window::NewWindow;
 pub use self::request::windows_and_panes::new_window::NewWindowBuilder;
-// not structure, pass as arguments
-#[cfg(feature = "tmux_2_6")]
 pub use self::request::windows_and_panes::pipe_pane::PipePane;
-#[cfg(feature = "tmux_2_6")]
 pub use self::request::windows_and_panes::pipe_pane::PipePaneBuilder;
 pub use self::request::windows_and_panes::resize_pane::ResizePane;
 pub use self::request::windows_and_panes::resize_pane::ResizePaneBuilder;
 pub use self::request::windows_and_panes::resize_window::ResizeWindow;
 pub use self::request::windows_and_panes::resize_window::ResizeWindowBuilder;
-// not structure, pass as arguments
-#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::respawn_pane::RespawnPane;
-#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::respawn_pane::RespawnPaneBuilder;
-// not structure, pass as arguments
-#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::respawn_window::RespawnWindow;
-#[cfg(not(feature = "tmux_2_6"))]
 pub use self::request::windows_and_panes::respawn_window::RespawnWindowBuilder;
 pub use self::request::windows_and_panes::select_layout::SelectLayot;
 pub use self::request::windows_and_panes::select_layout::SelectLayotBuilder;
