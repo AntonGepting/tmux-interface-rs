@@ -27,8 +27,8 @@ fn example1() {
 #[test]
 fn example2() {
     use tmux_interface::{
-        AttachSession, AttachSessionBuilder, NewSession, NewSessionBuilder, TargetPane,
-        TargetSession, TmuxInterface,
+        AttachSession, AttachSessionBuilder, NewSession, NewSessionBuilder, TargetSession,
+        TmuxInterface,
     };
 
     let target_session = TargetSession::Raw("session_name2");
