@@ -298,6 +298,7 @@ Parsing objects and supported tmux variables:
 - mb split tmux versions in different folders
 - mb split into different librarys (options, get, set objects)
 - mb all args as sructs because of versions diffs?
+- [ ] travis ci test all supported tmux versions
 
 
 # Strategy

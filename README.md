@@ -16,46 +16,65 @@ the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
 ## Usage
 
 1. Add a dependency in your `Cargo.toml`.
+
     ```
     [dependencies]
-    tmux_interface = "^0.0.1"
+    tmux_interface = "^0.1.0"
     ```
 
     You can also add `features` to your dependencies entry in `Cargo.toml`, if
     you want to specify the version of `tmux` you want to use (because
     different tmux versions may have incompatible CLI changes). Following
-    `features` are currently supported:
+    tmux versions as `features` are currently supported:
 
-    - `tmux_X_X` - tmux latest, default (based on tmux master branch)
-    - `tmux_2_6` - tmux 2.6 (included by default in Ubuntu 18.04 LTS Bionic Beaver)
-    <!--- `tmux_2_1` - tmux 2.1 (included by default in Ubuntu 16.04 LTS Xenial Xerus) -->
-    <!--- `tmux 1_8` - tmux 1.8 (included by default in Ubuntu 14.04 LTS Trusty Tahr) -->
-    <!--- `tmux_1_6` - tmux 1.6 (included by default in Ubuntu 12.04 LTS Precise Pangolin)-->
+    `tmux_0_8`, `tmux_0_9`, `tmux_1_0`, `tmux_1_1`, `tmux_1_2`, `tmux_1_3`,
+    `tmux_1_4`, `tmux_1_5`, `tmux_1_6`, `tmux_1_7`, `tmux_1_8`, `tmux_1_9`,
+    `tmux_1_9a`, `tmux_2_0`, `tmux_2_1`, `tmux_2_2`, `tmux_2_3`, `tmux_2_4`,
+    `tmux_2_5`, `tmux_2_6`, `tmux_2_7`, `tmux_2_8`, `tmux_2_9`, `tmux_2_9a`,
+    `tmux_3_0`, `tmux_3_0a`, `tmux_3_1`
 
+    Using custom version:
     ```
     [dependencies]
-    tmux_interface = { version = "^0.0.1", features = ["tmux_2_6"] }
+    tmux_interface = {
+        version = "^0.1.0",
+        features = ["tmux_2_8"]
+    }
     ```
 
-    by default `tmux_X_X` is used. It can be removed with
+    by default `tmux_2_6` is used. It can be removed with
     `--no-default-features` cargo command line option or with `default-features
     = false` option in `Cargo.toml`
 
+    Disable defaults, and use custom version:
     ```
     [dependencies]
-    tmux_interface = { version = "^0.0.1", default-features = false, features = ["tmux_2_6"] }
+    tmux_interface = {
+        version = "^0.1.0",
+        default-features = false,
+        features = ["tmux_1_9"]
+    }
     ```
 
-<!--Add local repository-->
-<!--```-->
-<!--[dependencies]-->
-<!--tmux_interface = { version = "0.0.7", path = "../tmux-interface", features = ["tmux_2_6"] }-->
-<!--```-->
+    From local repository:
+    ```
+    [dependencies]
+    tmux_interface = {
+        version = "^0.1.0",
+        path = "../tmux-interface",
+        features = ["tmux_2_6"]
+    }
+    ```
 
-<!--```-->
-<!--Add remote repository-->
-<!--tmux_interface = { git = "https://github.com/AntonGepting/tmux-interface-rs.git", branch = "dev" }-->
-<!--```-->
+    From remote repository:
+
+    ```
+    [dependencies]
+    tmux_interface = {
+        git = "https://github.com/AntonGepting/tmux-interface-rs.git", branch = "dev",
+        features = ["tmux_X_X"]
+    }
+    ```
 
 2. Use library functions in your source file.
 
