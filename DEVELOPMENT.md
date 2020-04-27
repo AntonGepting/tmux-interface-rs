@@ -27,6 +27,7 @@ tools and technologies used:
 <!--Path-->
 - Builder Pattern ()
 - Closures ()
+- Newtype Pattern ()
 
 
 ## Implementations
