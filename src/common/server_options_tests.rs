@@ -9,7 +9,21 @@ fn set_clipboard() {
 
 #[test]
 fn parse() {
-    use crate::ServerOptions;
+    use crate::{ServerOptions, ServerOptionsBuilder, SetClipboard, Switch};
+
+    let server_options_default = ServerOptionsBuilder::new()
+        .buffer_limit(50)
+        //.command_alias(vec![])
+        .default_terminal("\"screen-256color\"")
+        .escape_time(500)
+        .exit_empty(Switch::On)
+        .exit_unattached(Switch::Off)
+        .focus_events(Switch::Off)
+        .history_file("\"\"")
+        .message_limit(100)
+        .set_clipboard(SetClipboard::External)
+        //.terminal_overrides(vec![])
+        .build();
 
     let server_options_str = r#"
         buffer-limit 50
@@ -30,16 +44,16 @@ fn parse() {
         terminal-overrides[0] ""
         terminal-overrides[1] ""
     "#;
-    let _server_options = server_options_str.parse::<ServerOptions>().unwrap();
-    //dbg!(&server_options);
+    let server_options = server_options_str.parse::<ServerOptions>().unwrap();
+    assert_eq!(server_options_default, server_options);
 }
 
 #[test]
 fn to_string() {
     use crate::ServerOptionsBuilder;
 
-    let _server_options = ServerOptionsBuilder::new().buffer_limit(50).build();
-    //dbg!(&server_options.to_string());
+    let server_options = ServerOptionsBuilder::new().buffer_limit(50).build();
+    assert_eq!(server_options.to_string(), "buffer-limit 50\n");
 }
 
 #[test]

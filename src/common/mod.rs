@@ -2,29 +2,38 @@ use crate::Error;
 use std::fmt;
 use std::str::FromStr;
 
-#[cfg(not(feature = "tmux_2_6"))]
+#[cfg(feature = "tmux_3_1")]
 pub mod pane_options;
+#[cfg(feature = "tmux_1_2")]
 pub mod server_options;
+#[cfg(feature = "tmux_1_0")]
 pub mod session_options;
+#[cfg(feature = "tmux_1_2")]
 pub mod window_options;
 
-#[cfg(not(feature = "tmux_2_6"))]
+#[cfg(feature = "tmux_3_1")]
 pub mod pane_options_tests;
+#[cfg(feature = "tmux_1_2")]
 pub mod server_options_tests;
+#[cfg(feature = "tmux_1_0")]
 pub mod session_options_tests;
+#[cfg(feature = "tmux_1_2")]
 pub mod window_options_tests;
 
-#[cfg(not(feature = "tmux_2_6"))]
+#[cfg(feature = "tmux_3_1")]
 use crate::common::pane_options::PaneOptions;
+#[cfg(feature = "tmux_1_2")]
 use crate::common::server_options::ServerOptions;
+#[cfg(feature = "tmux_1_0")]
 use crate::common::session_options::SessionOptions;
+#[cfg(feature = "tmux_1_2")]
 use crate::common::window_options::WindowOptions;
 
 pub struct Options {
     pub server_options: ServerOptions,
     pub session_options: SessionOptions,
     pub window_options: WindowOptions,
-    #[cfg(not(feature = "tmux_2_6"))]
+    #[cfg(feature = "tmux_3_1")]
     pub pane_options: PaneOptions,
 }
 

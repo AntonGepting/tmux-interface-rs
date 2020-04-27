@@ -14,6 +14,7 @@ pub const PANE_OPTIONS_NONE: usize = 0;
 pub const PANE_OPTIONS_ALL: usize =
     ALLOW_RENAME | ALTERNATE_SCREEN | REMAIN_ON_EXIT | WINDOW_ACTIVE_STYLE | WINDOW_STYLE;
 
+#[cfg(all(feature = "tmux_3_0", not(feature = "tmux_X_X")))]
 pub const PANE_OPTIONS_NUM: usize = 5;
 
 // TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
@@ -23,24 +24,28 @@ pub const PANE_OPTIONS: [(
     fn(p: &PaneOptions) -> Option<String>,
     usize,
 ); PANE_OPTIONS_NUM] = [
+    #[cfg(feature = "tmux_3_0")]
     (
         "allow-rename",
         |p, s| p.allow_rename = s.parse().ok(),
         |p| p.allow_rename.as_ref().map(|v| v.to_string()),
         ALLOW_RENAME,
     ),
+    #[cfg(feature = "tmux_3_0")]
     (
         "alternate-screen",
         |p, s| p.alternate_screen = s.parse().ok(),
         |p| p.alternate_screen.as_ref().map(|v| v.to_string()),
         ALTERNATE_SCREEN,
     ),
+    #[cfg(feature = "tmux_3_0")]
     (
         "remain-on-exit",
         |p, s| p.remain_on_exit = s.parse().ok(),
         |p| p.remain_on_exit.as_ref().map(|v| v.to_string()),
         REMAIN_ON_EXIT,
     ),
+    #[cfg(feature = "tmux_3_0")]
     (
         "window-active-style",
         |p, s| p.window_active_style = Some(s.to_string()),
@@ -51,6 +56,7 @@ pub const PANE_OPTIONS: [(
         },
         WINDOW_ACTIVE_STYLE,
     ),
+    #[cfg(feature = "tmux_3_0")]
     (
         "window-style",
         |p, s| p.window_style = Some(s.to_string()),
@@ -68,14 +74,19 @@ pub const PANE_OPTIONS: [(
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct PaneOptions {
     //allow-rename [on | off]
+    #[cfg(feature = "tmux_3_0")]
     pub allow_rename: Option<Switch>,
     //alternate-screen [on | off]
+    #[cfg(feature = "tmux_3_0")]
     pub alternate_screen: Option<Switch>,
     //remain-on-exit [on | off]
+    #[cfg(feature = "tmux_3_0")]
     pub remain_on_exit: Option<Switch>,
     //window-active-style style
+    #[cfg(feature = "tmux_3_0")]
     pub window_active_style: Option<String>,
     //window-style style
+    #[cfg(feature = "tmux_3_0")]
     pub window_style: Option<String>,
 }
 
@@ -154,10 +165,15 @@ impl fmt::Display for PaneOptions {
 // XXX: mb &Switch
 #[derive(Default, Debug)]
 pub struct PaneOptionsBuilder<'a> {
+    #[cfg(feature = "tmux_3_0")]
     pub allow_rename: Option<Switch>,
+    #[cfg(feature = "tmux_3_0")]
     pub alternate_screen: Option<Switch>,
+    #[cfg(feature = "tmux_3_0")]
     pub remain_on_exit: Option<Switch>,
+    #[cfg(feature = "tmux_3_0")]
     pub window_active_style: Option<&'a str>,
+    #[cfg(feature = "tmux_3_0")]
     pub window_style: Option<&'a str>,
 }
 
@@ -166,26 +182,31 @@ impl<'a> PaneOptionsBuilder<'a> {
         Default::default()
     }
 
+    #[cfg(feature = "tmux_3_0")]
     pub fn allow_rename(&mut self, allow_rename: Switch) -> &mut Self {
         self.allow_rename = Some(allow_rename);
         self
     }
 
+    #[cfg(feature = "tmux_3_0")]
     pub fn alternate_screen(&mut self, alternate_screen: Switch) -> &mut Self {
         self.alternate_screen = Some(alternate_screen);
         self
     }
 
+    #[cfg(feature = "tmux_3_0")]
     pub fn remain_on_exit(&mut self, remain_on_exit: Switch) -> &mut Self {
         self.remain_on_exit = Some(remain_on_exit);
         self
     }
 
+    #[cfg(feature = "tmux_3_0")]
     pub fn window_active_style(&mut self, window_active_style: &'a str) -> &mut Self {
         self.window_active_style = Some(window_active_style);
         self
     }
 
+    #[cfg(feature = "tmux_3_0")]
     pub fn window_style(&mut self, window_style: &'a str) -> &mut Self {
         self.window_style = Some(window_style);
         self
@@ -194,10 +215,15 @@ impl<'a> PaneOptionsBuilder<'a> {
     // XXX: clone rly needed?
     pub fn build(&self) -> PaneOptions {
         PaneOptions {
+            #[cfg(feature = "tmux_3_0")]
             allow_rename: self.allow_rename.clone(),
+            #[cfg(feature = "tmux_3_0")]
             alternate_screen: self.alternate_screen.clone(),
+            #[cfg(feature = "tmux_3_0")]
             remain_on_exit: self.remain_on_exit.clone(),
+            #[cfg(feature = "tmux_3_0")]
             window_active_style: self.window_active_style.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_3_0")]
             window_style: self.window_style.map(|s| s.to_string()),
         }
     }

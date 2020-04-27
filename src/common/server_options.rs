@@ -11,6 +11,7 @@ const EXTERNAL: &str = "external";
 pub enum SetClipboard {
     On,
     Off,
+    #[cfg(feature = "tmux_2_6")]
     External,
 }
 
@@ -68,81 +69,141 @@ pub const SERVER_OPTIONS_ALL: usize = BACKSPACE
     | TERMINAL_OVERRIDES
     | USER_KEYS;
 
+#[cfg(all(feature = "tmux_0_1", not(feature = "tmux_1_2")))]
+pub const SERVER_OPTIONS_NUM: usize = 0;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_3")))]
+pub const SERVER_OPTIONS_NUM: usize = 2;
+#[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_5")))]
+pub const SERVER_OPTIONS_NUM: usize = 3;
+//#[cfg(all(feature = "tmux_1_4", not(feature = "tmux_1_5")))]
+//pub const SERVER_OPTIONS_NUM: usize = 3;
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_1_9")))]
+pub const SERVER_OPTIONS_NUM: usize = 5;
+//#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+//pub const SERVER_OPTIONS_NUM: usize = 5;
+//#[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_9")))]
+//pub const SERVER_OPTIONS_NUM: usize = 5;
+//#[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+//pub const SERVER_OPTIONS_NUM: usize = 5;
+#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+pub const SERVER_OPTIONS_NUM: usize = 6;
+#[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_1")))]
+pub const SERVER_OPTIONS_NUM: usize = 8;
+#[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_4")))]
+pub const SERVER_OPTIONS_NUM: usize = 9;
+//#[cfg(all(feature = "tmux_2_2", not(feature = "tmux_2_4")))]
+//pub const SERVER_OPTIONS_NUM: usize = 9;
+//#[cfg(all(feature = "tmux_2_3", not(feature = "tmux_2_4")))]
+//pub const SERVER_OPTIONS_NUM: usize = 9;
+#[cfg(all(feature = "tmux_2_4", not(feature = "tmux_2_7")))]
+pub const SERVER_OPTIONS_NUM: usize = 10;
+//#[cfg(all(feature = "tmux_2_5", not(feature = "tmux_2_7")))]
+//pub const SERVER_OPTIONS_NUM: usize = 10;
+//#[cfg(all(feature = "tmux_2_5", not(feature = "tmux_2_7")))]
+//pub const SERVER_OPTIONS_NUM: usize = 10;
+//#[cfg(all(feature = "tmux_2_6", not(feature = "tmux_2_7")))]
+//pub const SERVER_OPTIONS_NUM: usize = 10;
+#[cfg(all(feature = "tmux_2_7", not(feature = "tmux_3_0")))]
+pub const SERVER_OPTIONS_NUM: usize = 11;
+//#[cfg(all(feature = "tmux_2_8", not(feature = "tmux_2_9")))]
+//pub const SERVER_OPTIONS_NUM: usize = 11;
+//#[cfg(all(feature = "tmux_2_9", not(feature = "tmux_2_9a")))]
+//pub const SERVER_OPTIONS_NUM: usize = 11;
+//#[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_0")))]
+//pub const SERVER_OPTIONS_NUM: usize = 11;
+#[cfg(all(feature = "tmux_3_0", not(feature = "tmux_3_1")))]
+pub const SERVER_OPTIONS_NUM: usize = 12;
+//#[cfg(all(feature = "tmux_3_0a", not(feature = "tmux_3_1")))]
+//pub const SERVER_OPTIONS_NUM: usize = 12;
+#[cfg(all(feature = "tmux_3_1", not(feature = "tmux_X_X")))]
 pub const SERVER_OPTIONS_NUM: usize = 13;
 
 // array [0. tmux string, 1. parsing method, 2. string formatting method, 3. ID or bitmask]
+// TODO: array to Vec or again structure from_str
 pub const SERVER_OPTIONS: [(
     &str,
     fn(o: &mut ServerOptions, s: &str),
     fn(o: &ServerOptions) -> Option<String>,
     usize,
 ); SERVER_OPTIONS_NUM] = [
+    #[cfg(feature = "tmux_3_1")]
     (
         "backspace",
         |o, s| o.backspace = s.parse().ok(),
         |o| o.backspace.as_ref().map(|v| v.to_string()),
         BACKSPACE,
     ),
+    #[cfg(feature = "tmux_1_5")]
     (
         "buffer-limit",
         |o, s| o.buffer_limit = s.parse().ok(),
         |o| o.buffer_limit.as_ref().map(|v| v.to_string()),
         BUFFER_LIMIT,
     ),
+    #[cfg(feature = "tmux_2_4")]
     (
         "command-alias",
         |o, _s| o.command_alias = None,
         |o| o.command_alias.as_ref().map(|v| v.join(" ").to_string()),
         COMMAND_ALIAS,
     ),
+    #[cfg(feature = "tmux_2_0")]
     (
         "default-terminal",
         |o, s| o.default_terminal = s.parse().ok(),
         |o| o.default_terminal.as_ref().map(|v| v.to_string()),
         DEFAULT_TERMINAL,
     ),
+    #[cfg(feature = "tmux_1_2")]
     (
         "escape-time",
         |o, s| o.escape_time = s.parse().ok(),
         |o| o.escape_time.as_ref().map(|v| v.to_string()),
         ESCAPE_TIME,
     ),
+    #[cfg(feature = "tmux_2_7")]
     (
         "exit-empty",
         |o, s| o.exit_empty = s.parse().ok(),
         |o| o.exit_empty.as_ref().map(|v| v.to_string()),
         EXIT_EMPTY,
     ),
+    #[cfg(feature = "tmux_1_4")]
     (
         "exit-unattached",
         |o, s| o.exit_unattached = s.parse().ok(),
         |o| o.exit_unattached.as_ref().map(|v| v.to_string()),
         EXIT_UNATTACHED,
     ),
+    #[cfg(feature = "tmux_1_9")]
     (
         "focus-events",
         |o, s| o.focus_events = s.parse().ok(),
         |o| o.focus_events.as_ref().map(|v| v.to_string()),
         FOCUS_EVENTS,
     ),
+    #[cfg(feature = "tmux_2_1")]
     (
         "history-file",
         |o, s| o.history_file = s.parse().ok(),
         |o| o.history_file.as_ref().map(|v| v.to_string()),
         HISTORY_FILE,
     ),
+    #[cfg(feature = "tmux_2_0")]
     (
         "message-limit",
         |o, s| o.message_limit = s.parse().ok(),
         |o| o.message_limit.as_ref().map(|v| v.to_string()),
         MESSAGE_LIMIT,
     ),
+    #[cfg(feature = "tmux_1_5")]
     (
         "set-clipboard",
         |o, s| o.set_clipboard = s.parse().ok(),
         |o| o.set_clipboard.as_ref().map(|v| v.to_string()),
         SET_CLIPBOARD,
     ),
+    #[cfg(feature = "tmux_2_0")]
     (
         "terminal-overrides",
         |o, _s| o.terminal_overrides = None,
@@ -153,48 +214,87 @@ pub const SERVER_OPTIONS: [(
         },
         TERMINAL_OVERRIDES,
     ),
+    #[cfg(feature = "tmux_3_0")]
     (
         "user-keys",
         |o, _s| o.user_keys = None,
         |o| o.user_keys.as_ref().map(|v| v.join(" ").to_string()),
         USER_KEYS,
     ),
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+    (
+        "quiet",
+        |o, _s| o.quiet = None,
+        |o| o.quiet.as_ref().map(|v| v.join(" ").to_string()),
+        QUIET,
+    ),
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+    (
+        "detach-on-destroy",
+        |o, _s| o.detach_on_destroy = None,
+        |o| {
+            o.detach_on_destroy
+                .as_ref()
+                .map(|v| v.join(" ").to_string())
+        },
+        DETACH_ON_DESTROY,
+    ),
 ];
 
 // TODO: Vec variables solution
 // TODO: check types
-// 13 Available server options are:
+// TODO: command_alias and terminal_overrides both as String and as Vec<String> see tmux versions
+// 3-13 Available server options are:
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct ServerOptions {
     // backspace key
+    #[cfg(feature = "tmux_3_1")]
     pub backspace: Option<String>,
     // buffer-limit number
+    #[cfg(feature = "tmux_1_5")]
     pub buffer_limit: Option<usize>,
     // command-alias[] name=value
+    #[cfg(feature = "tmux_2_4")]
     pub command_alias: Option<Vec<String>>,
     // default-terminal terminal
+    #[cfg(feature = "tmux_2_0")]
     pub default_terminal: Option<String>,
     //escape-time time
+    #[cfg(feature = "tmux_1_2")]
     pub escape_time: Option<usize>,
     //exit-empty [on | off]
+    #[cfg(feature = "tmux_2_7")]
     pub exit_empty: Option<Switch>,
     //exit-unattached [on | off]
+    #[cfg(feature = "tmux_1_4")]
     pub exit_unattached: Option<Switch>,
     //focus-events [on | off]
+    #[cfg(feature = "tmux_1_9")]
     pub focus_events: Option<Switch>,
     //history-file path
+    #[cfg(feature = "tmux_2_1")]
     pub history_file: Option<String>,
     //message-limit number
+    #[cfg(feature = "tmux_2_0")]
     pub message_limit: Option<usize>,
     //set-clipboard [on | external | off]
+    #[cfg(feature = "tmux_1_5")]
     pub set_clipboard: Option<SetClipboard>,
     //terminal-overrides[] string
+    #[cfg(feature = "tmux_2_0")]
     pub terminal_overrides: Option<Vec<String>>,
     //user-keys[] key
+    #[cfg(feature = "tmux_3_0")]
     pub user_keys: Option<Vec<String>>,
+    // quiet ?
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+    pub quiet: Option<Switch>,
+    // detach-on-destroy ?
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+    pub detach_on_destroy: Option<Switch>,
 }
 
-impl ServerOptions {
+impl<'a> ServerOptions {
     // faster than SERVER_OPTIONS_ALL bitmask if will be implemented selective
     pub fn get_all() -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
@@ -283,19 +383,36 @@ impl fmt::Display for ServerOptions {
 
 #[derive(Default, Debug)]
 pub struct ServerOptionsBuilder<'a> {
+    #[cfg(feature = "tmux_3_1")]
     pub backspace: Option<&'a str>,
+    #[cfg(feature = "tmux_1_5")]
     pub buffer_limit: Option<usize>,
+    #[cfg(feature = "tmux_2_4")]
     pub command_alias: Option<Vec<String>>,
+    #[cfg(feature = "tmux_2_0")]
     pub default_terminal: Option<&'a str>,
+    #[cfg(feature = "tmux_1_2")]
     pub escape_time: Option<usize>,
+    #[cfg(feature = "tmux_2_7")]
     pub exit_empty: Option<Switch>,
+    #[cfg(feature = "tmux_1_4")]
     pub exit_unattached: Option<Switch>,
+    #[cfg(feature = "tmux_1_9")]
     pub focus_events: Option<Switch>,
+    #[cfg(feature = "tmux_2_1")]
     pub history_file: Option<&'a str>,
+    #[cfg(feature = "tmux_2_0")]
     pub message_limit: Option<usize>,
+    #[cfg(feature = "tmux_1_5")]
     pub set_clipboard: Option<SetClipboard>,
+    #[cfg(feature = "tmux_2_0")]
     pub terminal_overrides: Option<Vec<String>>,
+    #[cfg(feature = "tmux_3_0")]
     pub user_keys: Option<Vec<String>>,
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+    pub quiet: Option<Switch>,
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+    pub detach_on_destroy: Option<Switch>,
 }
 
 impl<'a> ServerOptionsBuilder<'a> {
@@ -303,66 +420,79 @@ impl<'a> ServerOptionsBuilder<'a> {
         Default::default()
     }
 
+    #[cfg(feature = "tmux_3_1")]
     pub fn backspace(&mut self, backspace: &'a str) -> &mut Self {
         self.backspace = Some(backspace);
         self
     }
 
+    #[cfg(feature = "tmux_1_5")]
     pub fn buffer_limit(&mut self, buffer_limit: usize) -> &mut Self {
         self.buffer_limit = Some(buffer_limit);
         self
     }
 
+    #[cfg(feature = "tmux_2_4")]
     pub fn command_alias(&mut self, command_alias: Vec<String>) -> &mut Self {
         self.command_alias = Some(command_alias);
         self
     }
 
+    #[cfg(feature = "tmux_2_0")]
     pub fn default_terminal(&mut self, default_terminal: &'a str) -> &mut Self {
         self.default_terminal = Some(default_terminal);
         self
     }
 
+    #[cfg(feature = "tmux_1_2")]
     pub fn escape_time(&mut self, escape_time: usize) -> &mut Self {
         self.escape_time = Some(escape_time);
         self
     }
 
+    #[cfg(feature = "tmux_2_7")]
     pub fn exit_empty(&mut self, exit_empty: Switch) -> &mut Self {
         self.exit_empty = Some(exit_empty);
         self
     }
 
+    #[cfg(feature = "tmux_1_4")]
     pub fn exit_unattached(&mut self, exit_unattached: Switch) -> &mut Self {
         self.exit_unattached = Some(exit_unattached);
         self
     }
 
+    #[cfg(feature = "tmux_1_9")]
     pub fn focus_events(&mut self, focus_events: Switch) -> &mut Self {
         self.focus_events = Some(focus_events);
         self
     }
 
+    #[cfg(feature = "tmux_2_1")]
     pub fn history_file(&mut self, history_file: &'a str) -> &mut Self {
         self.history_file = Some(history_file);
         self
     }
 
+    #[cfg(feature = "tmux_2_0")]
     pub fn message_limit(&mut self, message_limit: usize) -> &mut Self {
         self.message_limit = Some(message_limit);
         self
     }
 
+    #[cfg(feature = "tmux_1_5")]
     pub fn set_clipboard(&mut self, set_clipboard: SetClipboard) -> &mut Self {
         self.set_clipboard = Some(set_clipboard);
         self
     }
 
+    #[cfg(feature = "tmux_2_0")]
     pub fn terminal_overrides(&mut self, terminal_overrides: Vec<String>) -> &mut Self {
         self.terminal_overrides = Some(terminal_overrides);
         self
     }
 
+    #[cfg(feature = "tmux_3_0")]
     pub fn user_keys(&mut self, user_keys: Vec<String>) -> &mut Self {
         self.user_keys = Some(user_keys);
         self
@@ -371,19 +501,36 @@ impl<'a> ServerOptionsBuilder<'a> {
     // XXX: clone rly needed?
     pub fn build(&self) -> ServerOptions {
         ServerOptions {
+            #[cfg(feature = "tmux_3_1")]
             backspace: self.backspace.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_5")]
             buffer_limit: self.buffer_limit,
+            #[cfg(feature = "tmux_2_4")]
             command_alias: self.command_alias.clone(),
+            #[cfg(feature = "tmux_2_0")]
             default_terminal: self.default_terminal.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_2")]
             escape_time: self.escape_time,
+            #[cfg(feature = "tmux_2_7")]
             exit_empty: self.exit_empty.clone(),
+            #[cfg(feature = "tmux_1_4")]
             exit_unattached: self.exit_unattached.clone(),
+            #[cfg(feature = "tmux_1_9")]
             focus_events: self.focus_events.clone(),
+            #[cfg(feature = "tmux_2_1")]
             history_file: self.history_file.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_2_0")]
             message_limit: self.message_limit,
+            #[cfg(feature = "tmux_1_5")]
             set_clipboard: self.set_clipboard.clone(),
+            #[cfg(feature = "tmux_2_0")]
             terminal_overrides: self.terminal_overrides.clone(),
+            #[cfg(feature = "tmux_3_0")]
             user_keys: self.user_keys.clone(),
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+            quiet: self.quiet,
+            #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+            detach_on_destroy: self.quiet,
         }
     }
 }

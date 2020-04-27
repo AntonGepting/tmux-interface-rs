@@ -211,10 +211,11 @@ pub const STATUS_RIGHT_LENGTH: usize = 1 << 37;
 pub const STATUS_RIGHT_STYLE: usize = 1 << 38;
 pub const STATUS_STYLE: usize = 1 << 39;
 pub const UPDATE_ENVIRONMENT: usize = 1 << 40;
-pub const VISUAL_ACTIVITY: usize = 1 << 41;
-pub const VISUAL_BELL: usize = 1 << 42;
-pub const VISUAL_SILENCE: usize = 1 << 43;
-pub const WORD_SEPARATORS: usize = 1 << 44;
+pub const USER_KEYS: usize = 1 << 41;
+pub const VISUAL_ACTIVITY: usize = 1 << 42;
+pub const VISUAL_BELL: usize = 1 << 43;
+pub const VISUAL_SILENCE: usize = 1 << 44;
+pub const WORD_SEPARATORS: usize = 1 << 45;
 
 pub const SESSION_OPTIONS_NONE: usize = 0;
 //pub const SERVER_OPTIONS_DEFAULT: usize = ;
@@ -258,12 +259,65 @@ pub const SESSION_OPTIONS_ALL: usize = ACTIVITY_ACTION
     | STATUS_RIGHT_STYLE
     | STATUS_STYLE
     | UPDATE_ENVIRONMENT
+    | USER_KEYS
     | VISUAL_ACTIVITY
     | VISUAL_BELL
     | VISUAL_SILENCE
     | WORD_SEPARATORS;
 
+#[cfg(all(feature = "tmux_0_1", not(feature = "tmux_1_0")))]
+pub const SESSION_OPTIONS_NUM: usize = 0;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_1")))]
+pub const SESSION_OPTIONS_NUM: usize = 43;
+#[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
+pub const SESSION_OPTIONS_NUM: usize = 46;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_3")))]
+pub const SESSION_OPTIONS_NUM: usize = 52;
+#[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+pub const SESSION_OPTIONS_NUM: usize = 52;
+#[cfg(all(feature = "tmux_1_4", not(feature = "tmux_1_5")))]
+pub const SESSION_OPTIONS_NUM: usize = 55;
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_1_6")))]
+pub const SESSION_OPTIONS_NUM: usize = 58;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_7")))]
+pub const SESSION_OPTIONS_NUM: usize = 63;
+#[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
+pub const SESSION_OPTIONS_NUM: usize = 65;
+#[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+pub const SESSION_OPTIONS_NUM: usize = 66;
+#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+pub const SESSION_OPTIONS_NUM: usize = 53;
+#[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_1")))]
+pub const SESSION_OPTIONS_NUM: usize = 47;
+#[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+pub const SESSION_OPTIONS_NUM: usize = 46;
+#[cfg(all(feature = "tmux_2_2", not(feature = "tmux_2_3")))]
+pub const SESSION_OPTIONS_NUM: usize = 43;
+#[cfg(all(feature = "tmux_2_3", not(feature = "tmux_2_4")))]
+pub const SESSION_OPTIONS_NUM: usize = 43;
+#[cfg(all(feature = "tmux_2_4", not(feature = "tmux_2_5")))]
+pub const SESSION_OPTIONS_NUM: usize = 42;
+#[cfg(all(feature = "tmux_2_5", not(feature = "tmux_2_6")))]
+pub const SESSION_OPTIONS_NUM: usize = 42;
+#[cfg(all(feature = "tmux_2_6", not(feature = "tmux_2_7")))]
+pub const SESSION_OPTIONS_NUM: usize = 44;
+#[cfg(all(feature = "tmux_2_7", not(feature = "tmux_2_8")))]
+pub const SESSION_OPTIONS_NUM: usize = 44;
+#[cfg(all(feature = "tmux_2_8", not(feature = "tmux_2_9")))]
+pub const SESSION_OPTIONS_NUM: usize = 44;
+#[cfg(all(feature = "tmux_2_9", not(feature = "tmux_2_9a")))]
+pub const SESSION_OPTIONS_NUM: usize = 47;
+#[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_0")))]
+pub const SESSION_OPTIONS_NUM: usize = 48;
+#[cfg(all(feature = "tmux_3_0", not(feature = "tmux_3_0a")))]
 pub const SESSION_OPTIONS_NUM: usize = 45;
+#[cfg(all(feature = "tmux_3_0a", not(feature = "tmux_3_1")))]
+pub const SESSION_OPTIONS_NUM: usize = 45;
+#[cfg(all(feature = "tmux_3_1", not(feature = "tmux_X_X")))]
+pub const SESSION_OPTIONS_NUM: usize = 45;
+
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_X_X")))]
+//pub const SESSION_OPTIONS_NUM: usize = 45;
 
 // TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
 pub const SESSION_OPTIONS: [(
@@ -272,60 +326,76 @@ pub const SESSION_OPTIONS: [(
     fn(o: &SessionOptions) -> Option<String>,
     usize,
 ); SESSION_OPTIONS_NUM] = [
+    #[cfg(feature = "tmux_2_6")]
     (
         "activity-action",
         |o, s| o.activity_action = s.parse().ok(),
         |o| o.activity_action.as_ref().map(|v| v.to_string()),
         ACTIVITY_ACTION,
     ),
+    #[cfg(feature = "tmux_1_8")]
     (
         "assume-paste-time",
         |o, s| o.assume_paste_time = s.parse().ok(),
         |o| o.assume_paste_time.as_ref().map(|v| v.to_string()),
         ASSUME_PASTE_TIME,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "base-index",
         |o, s| o.base_index = s.parse().ok(),
         |o| o.base_index.as_ref().map(|v| v.to_string()),
         BASE_INDEX,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "bell-action",
         |o, s| o.bell_action = s.parse().ok(),
         |o| o.bell_action.as_ref().map(|v| v.to_string()),
         BELL_ACTION,
     ),
+    //#[cfg(feature = "tmux_1_0")]
+    //buffer-limit
+    #[cfg(feature = "tmux_1_0")]
     (
         "default-command",
         |o, s| o.default_command = s.parse().ok(),
         |o| o.default_command.as_ref().map(|v| v.to_string()),
         DEFAULT_COMMAND,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "default-shell",
         |o, s| o.default_shell = s.parse().ok(),
         |o| o.default_shell.as_ref().map(|v| v.to_string()),
         DEFAULT_SHELL,
     ),
+    //#[cfg(feature = "tmux_1_0")]
+    //default-path
+    //#[cfg(feature = "tmux_1_0")]
+    //default-terminal
+    #[cfg(feature = "tmux_2_9")]
     (
         "default-size",
         |o, _s| o.default_size = Some((0, 0)),
         |o| o.default_size.as_ref().map(|v| format!("{}x{}", v.0, v.1)),
         DEFAULT_SIZE,
     ),
+    #[cfg(feature = "tmux_1_4")]
     (
         "destroy-unattached",
         |o, s| o.destroy_unattached = s.parse().ok(),
         |o| o.destroy_unattached.as_ref().map(|v| v.to_string()),
         DESTROY_UNATTACHED,
     ),
+    #[cfg(feature = "tmux_1_4")]
     (
         "detach-on-destroy",
         |o, s| o.detach_on_destroy = s.parse().ok(),
         |o| o.detach_on_destroy.as_ref().map(|v| v.to_string()),
         DETACH_ON_DESTROY,
     ),
+    #[cfg(feature = "tmux_1_2")]
     (
         "display-panes-active-colour",
         |o, s| o.display_panes_active_colour = s.parse().ok(),
@@ -336,24 +406,28 @@ pub const SESSION_OPTIONS: [(
         },
         DISPLAY_PANES_ACTIVE_COLOUR,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "display-panes-colour",
         |o, s| o.display_panes_colour = s.parse().ok(),
         |o| o.display_panes_colour.as_ref().map(|v| v.to_string()),
         DISPLAY_PANES_COLOUR,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "display-panes-time",
         |o, s| o.display_panes_time = s.parse().ok(),
         |o| o.display_panes_time.as_ref().map(|v| v.to_string()),
         DISPLAY_PANES_TIME,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "display-time",
         |o, s| o.display_time = s.parse().ok(),
         |o| o.display_time.as_ref().map(|v| v.to_string()),
         DISPLAY_TIME,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "history-limit",
         |o, s| o.history_limit = s.parse().ok(),
@@ -366,156 +440,193 @@ pub const SESSION_OPTIONS: [(
         |o| o.key_table.as_ref().map(|v| v.to_string()),
         KEY_TABLE,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "lock-after-time",
         |o, s| o.lock_after_time = s.parse().ok(),
         |o| o.lock_after_time.as_ref().map(|v| v.to_string()),
         LOCK_AFTER_TIME,
     ),
+    #[cfg(feature = "tmux_1_1")]
     (
         "lock-command",
         |o, s| o.lock_command = s.parse().ok(),
         |o| o.lock_command.as_ref().map(|v| v.to_string()),
         LOCK_COMMAND,
     ),
+    //#[cfg(feature = "tmux_1_0")]
+    //message-attr
+    //message-bg
+    //message-fg
+    #[cfg(feature = "tmux_1_9")]
     (
         "message-command-style",
         |o, s| o.message_command_style = s.parse().ok(),
         |o| o.message_command_style.as_ref().map(|v| v.to_string()),
         MESSAGE_COMMAND_STYLE,
     ),
+    #[cfg(feature = "tmux_1_9")]
     (
         "message-style",
         |o, s| o.message_style = s.parse().ok(),
         |o| o.message_style.as_ref().map(|v| v.to_string()),
         MESSAGE_STYLE,
     ),
+    #[cfg(feature = "tmux_1_9")]
     (
         "mouse",
         |o, s| o.mouse = s.parse().ok(),
         |o| o.mouse.as_ref().map(|v| v.to_string()),
         MOUSE,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "prefix",
         |o, s| o.prefix = s.parse().ok(),
         |o| o.prefix.as_ref().map(|v| v.to_string()),
         PREFIX,
     ),
+    #[cfg(feature = "tmux_1_6")]
     (
         "prefix2",
         |o, s| o.prefix2 = s.parse().ok(),
         |o| o.prefix2.as_ref().map(|v| v.to_string()),
         PREFIX2,
     ),
+    #[cfg(feature = "tmux_1_7")]
     (
         "renumber-windows",
         |o, s| o.renumber_windows = s.parse().ok(),
         |o| o.renumber_windows.as_ref().map(|v| v.to_string()),
         RENUMBER_WINDOWS,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "repeat-time",
         |o, s| o.repeat_time = s.parse().ok(),
         |o| o.repeat_time.as_ref().map(|v| v.to_string()),
         REPEAT_TIME,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "set-titles",
         |o, s| o.set_titles = s.parse().ok(),
         |o| o.set_titles.as_ref().map(|v| v.to_string()),
         SET_TITLES,
     ),
+    //#[cfg(feature = "tmux_1_0")]
+    //set-remain-on-exit
+    #[cfg(feature = "tmux_1_0")]
     (
         "set-titles-string",
         |o, s| o.set_titles_string = s.parse().ok(),
         |o| o.set_titles_string.as_ref().map(|v| v.to_string()),
         SET_TITLES_STRING,
     ),
+    #[cfg(feature = "tmux_2_6")]
     (
         "silence-action",
         |o, s| o.silence_action = s.parse().ok(),
         |o| o.silence_action.as_ref().map(|v| v.to_string()),
         SILENCE_ACTION,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "status",
         |o, s| o.status = s.parse().ok(),
         |o| o.status.as_ref().map(|v| v.to_string()),
         STATUS,
     ),
+    //#[cfg(feature = "tmux_1_0")]
+    //status-attr
+    //status-bg
+    //status-fg
+    #[cfg(feature = "tmux_2_9")]
     (
         "status-format",
         |o, _s| o.status_format = None,
         |o| o.status_format.as_ref().map(|v| v.join(" ").to_string()),
         STATUS_FORMAT,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "status-interval",
         |o, s| o.status_interval = s.parse().ok(),
         |o| o.status_interval.as_ref().map(|v| v.to_string()),
         STATUS_INTERVAL,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "status-justify",
         |o, s| o.status_justify = s.parse().ok(),
         |o| o.status_justify.as_ref().map(|v| v.to_string()),
         STATUS_JUSTIFY,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "status-keys",
         |o, s| o.status_keys = s.parse().ok(),
         |o| o.status_keys.as_ref().map(|v| v.to_string()),
         STATUS_KEYS,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "status-left",
         |o, s| o.status_left = s.parse().ok(),
         |o| o.status_left.as_ref().map(|v| v.to_string()),
         STATUS_LEFT,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "status-left-length",
         |o, s| o.status_left_length = s.parse().ok(),
         |o| o.status_left_length.as_ref().map(|v| v.to_string()),
         STATUS_LEFT_LENGTH,
     ),
+    #[cfg(feature = "tmux_1_9")]
     (
         "status-left-style",
         |o, s| o.status_left_style = s.parse().ok(),
         |o| o.status_left_style.as_ref().map(|v| v.to_string()),
         STATUS_LEFT_STYLE,
     ),
+    #[cfg(feature = "tmux_1_7")]
     (
         "status-position",
         |o, s| o.status_position = s.parse().ok(),
         |o| o.status_position.as_ref().map(|v| v.to_string()),
         STATUS_POSITION,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "status-right",
         |o, s| o.status_right = s.parse().ok(),
         |o| o.status_right.as_ref().map(|v| v.to_string()),
         STATUS_RIGHT,
     ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "status-right-length",
         |o, s| o.status_right_length = s.parse().ok(),
         |o| o.status_right_length.as_ref().map(|v| v.to_string()),
         STATUS_RIGHT_LENGTH,
     ),
+    #[cfg(feature = "tmux_1_9")]
     (
         "status-right-style",
         |o, s| o.status_right_style = s.parse().ok(),
         |o| o.status_right_style.as_ref().map(|v| v.to_string()),
         STATUS_RIGHT_STYLE,
     ),
+    #[cfg(feature = "tmux_2_8")]
     (
         "status-style",
         |o, s| o.status_style = s.parse().ok(),
         |o| o.status_style.as_ref().map(|v| v.to_string()),
         STATUS_STYLE,
     ),
+    //terminal-terminal_overrides
+    #[cfg(feature = "tmux_1_0")]
     (
         "update-environment",
         |o, _s| o.update_environment = None,
@@ -526,24 +637,37 @@ pub const SESSION_OPTIONS: [(
         },
         UPDATE_ENVIRONMENT,
     ),
+    #[cfg(feature = "tmux_2_8")]
+    (
+        "user-keys",
+        |o, _s| o.user_keys = None,
+        |o| o.user_keys.as_ref().map(|v| v.join(" ").to_string()),
+        USER_KEYS,
+    ),
+    #[cfg(feature = "tmux_1_0")]
     (
         "visual-activity",
         |o, s| o.visual_activity = s.parse().ok(),
         |o| o.visual_activity.as_ref().map(|v| v.to_string()),
         VISUAL_ACTIVITY,
     ),
+    //#[cfg(feature = "tmux_1_0")]
+    //visual-content
+    #[cfg(feature = "tmux_1_0")]
     (
         "visual-bell",
         |o, s| o.visual_bell = s.parse().ok(),
         |o| o.visual_bell.as_ref().map(|v| v.to_string()),
         VISUAL_BELL,
     ),
+    #[cfg(feature = "tmux_1_4")]
     (
         "visual-silence",
         |o, s| o.visual_silence = s.parse().ok(),
         |o| o.visual_silence.as_ref().map(|v| v.to_string()),
         VISUAL_SILENCE,
     ),
+    #[cfg(feature = "tmux_1_4")]
     (
         "word-separators",
         |o, s| o.word_separators = s.parse().ok(),
@@ -558,94 +682,178 @@ pub const SESSION_OPTIONS: [(
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct SessionOptions {
     //activity-action [any | none | current | other]
+    #[cfg(feature = "tmux_2_6")]
     pub activity_action: Option<Activity>,
     //assume-paste-time milliseconds
+    #[cfg(feature = "tmux_1_8")]
     pub assume_paste_time: Option<usize>,
     //base-index index
+    #[cfg(feature = "tmux_1_0")]
     pub base_index: Option<usize>,
     //bell-action [any | none | current | other]
+    #[cfg(feature = "tmux_1_0")]
     pub bell_action: Option<Action>,
+    //#[cfg(feature = "tmux_1_0")]
+    //pub buffer_limit
     //default-command shell-command
+    #[cfg(feature = "tmux_1_0")]
     pub default_command: Option<String>,
     //default-shell path
+    #[cfg(feature = "tmux_1_0")]
     pub default_shell: Option<String>,
+    //#[cfg(feature = "tmux_1_0")]
+    //pub default_path
+    //#[cfg(feature = "tmux_1_0")]
+    //pub default_terminal
     //default-size XxY
+    #[cfg(feature = "tmux_2_9")]
     pub default_size: Option<(usize, usize)>,
     //destroy-unattached [on | off]
+    #[cfg(feature = "tmux_1_4")]
     pub destroy_unattached: Option<Switch>,
     //detach-on-destroy [on | off]
+    #[cfg(feature = "tmux_1_4")]
     pub detach_on_destroy: Option<Switch>,
     //display-panes-active-colour colour
+    #[cfg(feature = "tmux_1_2")]
     pub display_panes_active_colour: Option<String>,
     //display-panes-colour colour
+    #[cfg(feature = "tmux_1_0")]
     pub display_panes_colour: Option<String>,
     //display-panes-time time
+    #[cfg(feature = "tmux_1_0")]
     pub display_panes_time: Option<usize>,
     //display-time time
+    #[cfg(feature = "tmux_1_0")]
     pub display_time: Option<usize>,
     //history-limit lines
+    #[cfg(feature = "tmux_1_0")]
     pub history_limit: Option<usize>,
     //key-table key-table
     pub key_table: Option<String>,
     //lock-after-time number
+    #[cfg(feature = "tmux_1_0")]
     pub lock_after_time: Option<usize>,
     //lock-command shell-command
+    #[cfg(feature = "tmux_1_1")]
     pub lock_command: Option<String>,
+    //#[cfg(feature = "tmux_1_0")]
+    //pub message_attr
+    //#[cfg(feature = "tmux_1_0")]
+    //pub message_bg
+    //#[cfg(feature = "tmux_1_0")]
+    //pub message_fg
     //message-command-style style
+    #[cfg(feature = "tmux_1_9")]
     pub message_command_style: Option<String>,
     //message-style style
+    #[cfg(feature = "tmux_1_9")]
     pub message_style: Option<String>,
     //mouse [on | off]
+    #[cfg(feature = "tmux_1_9")]
     pub mouse: Option<Switch>,
     //prefix key
+    #[cfg(feature = "tmux_1_0")]
     pub prefix: Option<String>,
     //prefix2 key
+    #[cfg(feature = "tmux_1_6")]
     pub prefix2: Option<String>,
     //renumber-windows [on | off]
+    #[cfg(feature = "tmux_1_7")]
     pub renumber_windows: Option<Switch>,
     //repeat-time time
+    #[cfg(feature = "tmux_1_0")]
     pub repeat_time: Option<usize>,
+    //#[cfg(feature = "tmux_1_0")]
+    //pub set_remain_on_exit
     //set-titles [on | off]
+    #[cfg(feature = "tmux_1_0")]
     pub set_titles: Option<Switch>,
     //set-titles-string string
+    #[cfg(feature = "tmux_1_0")]
     pub set_titles_string: Option<String>,
     //silence-action [any | none | current | other]
+    #[cfg(feature = "tmux_2_6")]
     pub silence_action: Option<Action>,
     //status [off | on | 2 | 3 | 4 | 5]
+    #[cfg(feature = "tmux_1_0")]
     pub status: Option<Status>,
+    //#[cfg(feature = "tmux_1_0")]
+    //pub status_attr
+    //#[cfg(feature = "tmux_1_0")]
+    //pub status_bg
+    //#[cfg(feature = "tmux_1_0")]
+    //pub status_fg
     //status-format[] format
+    #[cfg(feature = "tmux_2_9")]
     pub status_format: Option<Vec<String>>,
     //status-interval interval
+    #[cfg(feature = "tmux_1_0")]
     pub status_interval: Option<usize>,
     //status-justify [left | centre | right]
+    #[cfg(feature = "tmux_1_0")]
     pub status_justify: Option<StatusJustify>,
     //status-keys [vi | emacs]
+    #[cfg(feature = "tmux_1_0")]
     pub status_keys: Option<StatusKeys>,
     //status-left string
+    #[cfg(feature = "tmux_1_0")]
     pub status_left: Option<String>,
+    //#[cfg(feature = "tmux_1_0")]
+    //pub status_left_attr
+    //#[cfg(feature = "tmux_1_0")]
+    //pub status_left_bg
+    //#[cfg(feature = "tmux_1_0")]
+    //pub status_left_fg
     //status-left-length length
+    #[cfg(feature = "tmux_1_0")]
     pub status_left_length: Option<usize>,
     //status-left-style style
+    #[cfg(feature = "tmux_1_9")]
     pub status_left_style: Option<String>,
     //status-position [top | bottom]
+    #[cfg(feature = "tmux_1_7")]
     pub status_position: Option<StatusPosition>,
     //status-right string
+    #[cfg(feature = "tmux_1_0")]
     pub status_right: Option<String>,
+    //#[cfg(feature = "tmux_1_0")]
+    //pub status_right_attr
+    //#[cfg(feature = "tmux_1_0")]
+    //pub status_right_bg
+    //#[cfg(feature = "tmux_1_0")]
+    //pub status_right_fg
     //status-right-length length
+    #[cfg(feature = "tmux_1_0")]
     pub status_right_length: Option<usize>,
+    //#[cfg(feature = "tmux_1_0")]
+    //pub status_utf8
+    //#[cfg(feature = "tmux_1_0")]
+    //pub terminal_overrides
     //status-right-style style
+    #[cfg(feature = "tmux_1_9")]
     pub status_right_style: Option<String>,
     //status-style style
+    #[cfg(feature = "tmux_2_8")]
     pub status_style: Option<String>,
     //update-environment[] variable
+    #[cfg(feature = "tmux_1_0")]
     pub update_environment: Option<Vec<String>>,
+    #[cfg(feature = "tmux_2_8")]
+    pub user_keys: Option<Vec<String>>,
     //visual-activity [on | off | both]
+    #[cfg(feature = "tmux_1_0")]
     pub visual_activity: Option<Activity>,
     //visual-bell [on | off | both]
+    #[cfg(feature = "tmux_1_0")]
     pub visual_bell: Option<Activity>,
+    //#[cfg(feature = "tmux_1_0")]
+    //pub visual_content
     //visual-silence [on | off | both]
+    #[cfg(feature = "tmux_1_4")]
     pub visual_silence: Option<Activity>,
     //word-separators string
+    #[cfg(feature = "tmux_1_4")]
     pub word_separators: Option<String>,
 }
 
@@ -1032,50 +1240,97 @@ impl<'a> SessionOptionsBuilder<'a> {
     // XXX: clone rly needed?
     pub fn build(&self) -> SessionOptions {
         SessionOptions {
+            #[cfg(feature = "tmux_2_6")]
             activity_action: self.activity_action.clone(),
+            #[cfg(feature = "tmux_1_8")]
             assume_paste_time: self.assume_paste_time,
+            #[cfg(feature = "tmux_1_0")]
             base_index: self.base_index,
+            #[cfg(feature = "tmux_1_0")]
             bell_action: self.bell_action.clone(),
+            #[cfg(feature = "tmux_1_0")]
             default_command: self.default_command.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_0")]
             default_shell: self.default_shell.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_2_9")]
             default_size: self.default_size,
+            #[cfg(feature = "tmux_1_4")]
             destroy_unattached: self.destroy_unattached.clone(),
+            #[cfg(feature = "tmux_1_4")]
             detach_on_destroy: self.detach_on_destroy.clone(),
+            #[cfg(feature = "tmux_1_2")]
             display_panes_active_colour: self.display_panes_active_colour.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_0")]
             display_panes_colour: self.display_panes_colour.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_0")]
             display_panes_time: self.display_panes_time,
+            #[cfg(feature = "tmux_1_0")]
             display_time: self.display_time,
+            #[cfg(feature = "tmux_1_0")]
             history_limit: self.history_limit,
+            #[cfg(feature = "tmux_1_0")]
             key_table: self.key_table.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_1")]
             lock_after_time: self.lock_after_time,
+            #[cfg(feature = "tmux_1_9")]
             lock_command: self.lock_command.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_9")]
             message_command_style: self.message_command_style.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_9")]
             message_style: self.message_style.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_0")]
             mouse: self.mouse.clone(),
+            #[cfg(feature = "tmux_1_6")]
             prefix: self.prefix.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_7")]
             prefix2: self.prefix2.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_0")]
             renumber_windows: self.renumber_windows.clone(),
+            #[cfg(feature = "tmux_1_0")]
             repeat_time: self.repeat_time,
+            #[cfg(feature = "tmux_1_0")]
             set_titles: self.set_titles.clone(),
+            #[cfg(feature = "tmux_2_6")]
             set_titles_string: self.set_titles_string.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_0")]
             silence_action: self.silence_action.clone(),
+            #[cfg(feature = "tmux_1_0")]
             status: self.status.clone(),
+            #[cfg(feature = "tmux_2_9")]
             status_format: None,
+            #[cfg(feature = "tmux_1_0")]
             status_interval: self.status_interval,
+            #[cfg(feature = "tmux_1_0")]
             status_justify: self.status_justify.clone(),
+            #[cfg(feature = "tmux_1_0")]
             status_keys: self.status_keys.clone(),
+            #[cfg(feature = "tmux_1_0")]
             status_left: self.status_left.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_0")]
             status_left_length: self.status_left_length,
+            #[cfg(feature = "tmux_1_9")]
             status_left_style: self.status_left_style.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_7")]
             status_position: self.status_position.clone(),
+            #[cfg(feature = "tmux_1_0")]
             status_right: self.status_right.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_0")]
             status_right_length: self.status_right_length,
+            #[cfg(feature = "tmux_1_9")]
             status_right_style: self.status_right_style.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_2_8")]
             status_style: self.status_style.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_0")]
             update_environment: None,
+            #[cfg(feature = "tmux_2_8")]
+            user_keys: None,
+            #[cfg(feature = "tmux_1_0")]
             visual_activity: self.visual_activity.clone(),
+            #[cfg(feature = "tmux_1_0")]
             visual_bell: self.visual_bell.clone(),
+            #[cfg(feature = "tmux_1_4")]
             visual_silence: self.visual_silence.clone(),
+            #[cfg(feature = "tmux_1_4")]
             word_separators: self.word_separators.map(|s| s.to_string()),
         }
     }
