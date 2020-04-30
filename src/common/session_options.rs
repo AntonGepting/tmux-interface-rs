@@ -931,6 +931,7 @@ impl SessionOptions {
 // command_alias[1] = "alias2" => command_alias["alias2"]
 // ...
 // command_alias[n] = "aliasN" => command_alias["aliasN"]
+// TODO: optimization, merge server, session, window, pane?
 impl FromStr for SessionOptions {
     type Err = Error;
 
@@ -939,13 +940,15 @@ impl FromStr for SessionOptions {
         let mut v: Vec<&str>;
         let mut arr: Vec<&str>;
         for option in options.lines() {
-            v = option.trim().split(' ').collect();
+            v = option.trim().splitn(2, ' ').collect();
             arr = v[0].split(|c| c == '[' || c == ']').collect();
             for session_var in SESSION_OPTIONS.iter() {
                 if session_var.0 == arr[0] {
-                    if let Some(i) = arr.get(1) {
-                        session_var.1(&mut session_options, i.parse::<usize>().ok(), v[1])
-                    }
+                    session_var.1(
+                        &mut session_options,
+                        arr.get(1).and_then(|i| i.parse::<usize>().ok()),
+                        v[1],
+                    )
                 }
             }
         }

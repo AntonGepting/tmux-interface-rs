@@ -359,6 +359,7 @@ impl ServerOptions {
 // command_alias[1] = "alias2" => command_alias["alias2"]
 // ...
 // command_alias[n] = "aliasN" => command_alias["aliasN"]
+// TODO: optimization, merge server, session, window, pane?
 impl FromStr for ServerOptions {
     type Err = Error;
 
@@ -367,13 +368,15 @@ impl FromStr for ServerOptions {
         let mut v: Vec<&str>;
         let mut arr: Vec<&str>;
         for option in options.lines() {
-            v = option.trim().split(' ').collect();
+            v = option.trim().splitn(2, ' ').collect();
             arr = v[0].split(|c| c == '[' || c == ']').collect();
             for server_var in SERVER_OPTIONS.iter() {
                 if server_var.0 == arr[0] {
-                    if let Some(i) = arr.get(1) {
-                        server_var.1(&mut server_options, i.parse::<usize>().ok(), v[1])
-                    }
+                    server_var.1(
+                        &mut server_options,
+                        arr.get(1).and_then(|i| i.parse::<usize>().ok()),
+                        v[1],
+                    )
                 }
             }
         }
@@ -446,8 +449,8 @@ impl<'a> ServerOptionsBuilder<'a> {
     }
 
     #[cfg(feature = "tmux_2_4")]
-    pub fn command_alias(&mut self, command_alias: Vec<String>) -> &mut Self {
-        self.command_alias = Some(command_alias);
+    pub fn command_alias(&mut self, command_alias: Vec<&str>) -> &mut Self {
+        self.command_alias = Some(command_alias.iter().map(|s| s.to_string()).collect());
         self
     }
 
@@ -500,8 +503,8 @@ impl<'a> ServerOptionsBuilder<'a> {
     }
 
     #[cfg(feature = "tmux_2_0")]
-    pub fn terminal_overrides(&mut self, terminal_overrides: Vec<String>) -> &mut Self {
-        self.terminal_overrides = Some(terminal_overrides);
+    pub fn terminal_overrides(&mut self, terminal_overrides: Vec<&str>) -> &mut Self {
+        self.terminal_overrides = Some(terminal_overrides.iter().map(|s| s.to_string()).collect());
         self
     }
 

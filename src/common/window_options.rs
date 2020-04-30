@@ -680,6 +680,7 @@ impl WindowOptions {
 // command_alias[1] = "alias2" => command_alias["alias2"]
 // ...
 // command_alias[n] = "aliasN" => command_alias["aliasN"]
+// TODO: optimization, merge server, session, window, pane?
 impl FromStr for WindowOptions {
     type Err = Error;
 
@@ -688,13 +689,15 @@ impl FromStr for WindowOptions {
         let mut v: Vec<&str>;
         let mut arr: Vec<&str>;
         for option in options.lines() {
-            v = option.trim().split(' ').collect();
+            v = option.trim().splitn(2, ' ').collect();
             arr = v[0].split(|c| c == '[' || c == ']').collect();
             for window_var in WINDOW_OPTIONS.iter() {
                 if window_var.0 == arr[0] {
-                    if let Some(i) = arr.get(1) {
-                        window_var.1(&mut window_options, i.parse::<usize>().ok(), v[1])
-                    }
+                    window_var.1(
+                        &mut window_options,
+                        arr.get(1).and_then(|i| i.parse::<usize>().ok()),
+                        v[1],
+                    )
                 }
             }
         }

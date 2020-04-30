@@ -13,7 +13,35 @@ fn parse() {
 
     let server_options_default = ServerOptionsBuilder::new()
         .buffer_limit(50)
-        //.command_alias(vec![])
+        .default_terminal("\"screen-256color\"")
+        .exit_empty(Switch::On)
+        .command_alias(vec![
+            "\"split-pane=split-window\"",
+            "\"splitp=split-window\"",
+        ])
+        .build();
+
+    // test int, string, enum, vec
+    let server_options_str = r#"
+        buffer-limit 50
+        default-terminal "screen-256color"
+        exit-empty on
+        command-alias[0] "split-pane=split-window"
+        command-alias[1] "splitp=split-window"
+    "#;
+    let server_options = server_options_str.parse::<ServerOptions>().unwrap();
+    assert_eq!(server_options_default, server_options);
+
+    let server_options_default = ServerOptionsBuilder::new()
+        .buffer_limit(50)
+        .command_alias(vec![
+            "\"split-pane=split-window\"",
+            "\"splitp=split-window\"",
+            "\"server-info=show-messages -JT\"",
+            "\"info=show-messages -JT\"",
+            "\"choose-window=choose-tree -w\"",
+            "\"choose-session=choose-tree -s\"",
+        ])
         .default_terminal("\"screen-256color\"")
         .escape_time(500)
         .exit_empty(Switch::On)
@@ -22,13 +50,9 @@ fn parse() {
         .history_file("\"\"")
         .message_limit(100)
         .set_clipboard(SetClipboard::External)
-        //.terminal_overrides(vec![])
+        .terminal_overrides(vec!["\"xterm*:XT:Ms=\\\\E]52;%p1%s;%p2%s\\\\007:Cs=\\\\E]12;%p1%s\\\\007:Cr=\\\\E]112\\\\007:Ss=\\\\E[%p1%d q:Se=\\\\E[2 q\"",
+        "\"screen*:XT\""])
         .build();
-
-    let server_options_default = ServerOptions {
-        history_file: Some("\"\"".into()),
-        ..Default::default()
-    };
 
     let server_options_str = r#"
         buffer-limit 50
@@ -49,6 +73,14 @@ fn parse() {
         terminal-overrides[0] "xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q"
         terminal-overrides[1] "screen*:XT"
     "#;
+    let server_options = server_options_str.parse::<ServerOptions>().unwrap();
+    assert_eq!(server_options_default, server_options);
+
+    let server_options_default = ServerOptions {
+        history_file: Some("\"\"".into()),
+        ..Default::default()
+    };
+    let server_options_str = "history-file \"\"";
     let server_options = server_options_str.parse::<ServerOptions>().unwrap();
     assert_eq!(server_options_default, server_options);
 }

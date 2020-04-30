@@ -136,6 +136,7 @@ impl PaneOptions {
 // command_alias[1] = "alias2" => command_alias["alias2"]
 // ...
 // command_alias[n] = "aliasN" => command_alias["aliasN"]
+// TODO: optimization, merge server, session, window, pane?
 impl FromStr for PaneOptions {
     type Err = Error;
 
@@ -144,13 +145,15 @@ impl FromStr for PaneOptions {
         let mut v: Vec<&str>;
         let mut arr: Vec<&str>;
         for option in options.lines() {
-            v = option.trim().split(' ').collect();
+            v = option.trim().splitn(2, ' ').collect();
             arr = v[0].split(|c| c == '[' || c == ']').collect();
             for pane_var in PANE_OPTIONS.iter() {
                 if pane_var.0 == arr[0] {
-                    if let Some(i) = arr.get(1) {
-                        pane_var.1(&mut pane_options, i.parse::<usize>().ok(), v[1])
-                    }
+                    pane_var.1(
+                        &mut pane_options,
+                        arr.get(1).and_then(|i| i.parse::<usize>().ok()),
+                        v[1],
+                    )
                 }
             }
         }
