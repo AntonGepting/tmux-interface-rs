@@ -17,64 +17,56 @@ the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
 
 1. Add a dependency in your `Cargo.toml`.
 
-    ```
-    [dependencies]
-    tmux_interface = "^0.1.0"
-    ```
+    - Using **defaults**
+        ```
+        [dependencies]
+        tmux_interface = "^0.1.0"
+        ```
 
-    You can also add `features` to your dependencies entry in `Cargo.toml`, if
-    you want to specify the version of `tmux` you want to use (because
-    different tmux versions may have incompatible CLI changes). Following
-    tmux versions as `features` are currently supported:
+    - Using **specified tmux version**:
 
-    `tmux_0_8`, `tmux_0_9`, `tmux_1_0`, `tmux_1_1`, `tmux_1_2`, `tmux_1_3`,
-    `tmux_1_4`, `tmux_1_5`, `tmux_1_6`, `tmux_1_7`, `tmux_1_8`, `tmux_1_9`,
-    `tmux_1_9a`, `tmux_2_0`, `tmux_2_1`, `tmux_2_2`, `tmux_2_3`, `tmux_2_4`,
-    `tmux_2_5`, `tmux_2_6`, `tmux_2_7`, `tmux_2_8`, `tmux_2_9`, `tmux_2_9a`,
-    `tmux_3_0`, `tmux_3_0a`, `tmux_3_1`
+        You can also add `features` to your dependencies entry in `Cargo.toml`, if
+        you want to specify the version of `tmux` you want to use (because
+        different tmux versions may have incompatible CLI changes). Following
+        tmux versions as `features` are currently supported:
 
-    Using custom version:
-    ```
-    [dependencies]
-    tmux_interface = {
-        version = "^0.1.0",
-        features = ["tmux_2_8"]
-    }
-    ```
+        `tmux_0_8`, `tmux_0_9`, `tmux_1_0`, `tmux_1_1`, `tmux_1_2`, `tmux_1_3`,
+        `tmux_1_4`, `tmux_1_5`, `tmux_1_6`, `tmux_1_7`, `tmux_1_8`, `tmux_1_9`,
+        `tmux_1_9a`, `tmux_2_0`, `tmux_2_1`, `tmux_2_2`, `tmux_2_3`, `tmux_2_4`,
+        `tmux_2_5`, `tmux_2_6`, `tmux_2_7`, `tmux_2_8`, `tmux_2_9`, `tmux_2_9a`,
+        `tmux_3_0`, `tmux_3_0a`, `tmux_3_1`
 
-    by default `tmux_2_6` is used. It can be removed with
-    `--no-default-features` cargo command line option or with `default-features
-    = false` option in `Cargo.toml`
+        ```
+        [dependencies]
+        tmux_interface = {
+            version = "^0.1.0",
+            features = ["tmux_2_6"]
+            default-features = false,
+        }
+        ```
 
-    Disable defaults, and use custom version:
-    ```
-    [dependencies]
-    tmux_interface = {
-        version = "^0.1.0",
-        default-features = false,
-        features = ["tmux_1_9"]
-    }
-    ```
+        by default `tmux_2_8` is used. It can be removed with
+        `--no-default-features` cargo command line option or with `default-features
+        = false` option in `Cargo.toml` in case of using different tmux version.
 
-    From local repository:
-    ```
-    [dependencies]
-    tmux_interface = {
-        version = "^0.1.0",
-        path = "../tmux-interface",
-        features = ["tmux_2_6"]
-    }
-    ```
+    - Using library from local repository:
+        ```
+        [dependencies]
+        tmux_interface = {
+            version = "^0.1.0",
+            path = "../tmux-interface",
+            features = ["tmux_X_X"]
+        }
+        ```
 
-    From remote repository:
-
-    ```
-    [dependencies]
-    tmux_interface = {
-        git = "https://github.com/AntonGepting/tmux-interface-rs.git", branch = "dev",
-        features = ["tmux_X_X"]
-    }
-    ```
+    - Using library from remote repository:
+        ```
+        [dependencies]
+        tmux_interface = {
+            git = "https://github.com/AntonGepting/tmux-interface-rs.git", branch = "dev",
+            features = ["tmux_X_X"]
+        }
+        ```
 
 2. Use library functions in your source file.
 
