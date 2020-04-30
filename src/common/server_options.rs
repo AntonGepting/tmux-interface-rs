@@ -1,3 +1,4 @@
+use super::create_insert_vec;
 use crate::{Error, SetOptionBuilder, ShowOptionsBuilder, Switch, TargetPane, TmuxInterface};
 use std::fmt;
 use std::str::FromStr;
@@ -122,91 +123,91 @@ pub const SERVER_OPTIONS_NUM: usize = 13;
 // TODO: array to Vec or again structure from_str
 pub const SERVER_OPTIONS: [(
     &str,
-    fn(o: &mut ServerOptions, s: &str),
+    fn(o: &mut ServerOptions, i: Option<usize>, s: &str),
     fn(o: &ServerOptions) -> Option<String>,
     usize,
 ); SERVER_OPTIONS_NUM] = [
     #[cfg(feature = "tmux_3_1")]
     (
         "backspace",
-        |o, s| o.backspace = s.parse().ok(),
+        |o, _, s| o.backspace = s.parse().ok(),
         |o| o.backspace.as_ref().map(|v| v.to_string()),
         BACKSPACE,
     ),
     #[cfg(feature = "tmux_1_5")]
     (
         "buffer-limit",
-        |o, s| o.buffer_limit = s.parse().ok(),
+        |o, _, s| o.buffer_limit = s.parse().ok(),
         |o| o.buffer_limit.as_ref().map(|v| v.to_string()),
         BUFFER_LIMIT,
     ),
     #[cfg(feature = "tmux_2_4")]
     (
         "command-alias",
-        |o, _s| o.command_alias = None,
+        |o, i, s| o.command_alias = create_insert_vec(o.command_alias.as_mut(), i, s),
         |o| o.command_alias.as_ref().map(|v| v.join(" ").to_string()),
         COMMAND_ALIAS,
     ),
     #[cfg(feature = "tmux_2_0")]
     (
         "default-terminal",
-        |o, s| o.default_terminal = s.parse().ok(),
+        |o, _, s| o.default_terminal = s.parse().ok(),
         |o| o.default_terminal.as_ref().map(|v| v.to_string()),
         DEFAULT_TERMINAL,
     ),
     #[cfg(feature = "tmux_1_2")]
     (
         "escape-time",
-        |o, s| o.escape_time = s.parse().ok(),
+        |o, _, s| o.escape_time = s.parse().ok(),
         |o| o.escape_time.as_ref().map(|v| v.to_string()),
         ESCAPE_TIME,
     ),
     #[cfg(feature = "tmux_2_7")]
     (
         "exit-empty",
-        |o, s| o.exit_empty = s.parse().ok(),
+        |o, _, s| o.exit_empty = s.parse().ok(),
         |o| o.exit_empty.as_ref().map(|v| v.to_string()),
         EXIT_EMPTY,
     ),
     #[cfg(feature = "tmux_1_4")]
     (
         "exit-unattached",
-        |o, s| o.exit_unattached = s.parse().ok(),
+        |o, _, s| o.exit_unattached = s.parse().ok(),
         |o| o.exit_unattached.as_ref().map(|v| v.to_string()),
         EXIT_UNATTACHED,
     ),
     #[cfg(feature = "tmux_1_9")]
     (
         "focus-events",
-        |o, s| o.focus_events = s.parse().ok(),
+        |o, _, s| o.focus_events = s.parse().ok(),
         |o| o.focus_events.as_ref().map(|v| v.to_string()),
         FOCUS_EVENTS,
     ),
     #[cfg(feature = "tmux_2_1")]
     (
         "history-file",
-        |o, s| o.history_file = s.parse().ok(),
+        |o, _, s| o.history_file = s.parse().ok(),
         |o| o.history_file.as_ref().map(|v| v.to_string()),
         HISTORY_FILE,
     ),
     #[cfg(feature = "tmux_2_0")]
     (
         "message-limit",
-        |o, s| o.message_limit = s.parse().ok(),
+        |o, _, s| o.message_limit = s.parse().ok(),
         |o| o.message_limit.as_ref().map(|v| v.to_string()),
         MESSAGE_LIMIT,
     ),
     #[cfg(feature = "tmux_1_5")]
     (
         "set-clipboard",
-        |o, s| o.set_clipboard = s.parse().ok(),
+        |o, _, s| o.set_clipboard = s.parse().ok(),
         |o| o.set_clipboard.as_ref().map(|v| v.to_string()),
         SET_CLIPBOARD,
     ),
     #[cfg(feature = "tmux_2_0")]
     (
         "terminal-overrides",
-        |o, _s| o.terminal_overrides = None,
+        |o, i, s| o.terminal_overrides = create_insert_vec(o.terminal_overrides.as_mut(), i, s),
         |o| {
             o.terminal_overrides
                 .as_ref()
@@ -217,21 +218,21 @@ pub const SERVER_OPTIONS: [(
     #[cfg(feature = "tmux_3_0")]
     (
         "user-keys",
-        |o, _s| o.user_keys = None,
+        |o, i, s| o.user_keys = create_insert_vec(o.user_keys.as_mut(), i, s),
         |o| o.user_keys.as_ref().map(|v| v.join(" ").to_string()),
         USER_KEYS,
     ),
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
     (
         "quiet",
-        |o, _s| o.quiet = None,
+        |o, _, s| o.quiet = s.parse().ok(),
         |o| o.quiet.as_ref().map(|v| v.join(" ").to_string()),
         QUIET,
     ),
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     (
         "detach-on-destroy",
-        |o, _s| o.detach_on_destroy = None,
+        |o, i, _s| o.detach_on_destroy = s.parse().ok(),
         |o| {
             o.detach_on_destroy
                 .as_ref()
@@ -241,7 +242,10 @@ pub const SERVER_OPTIONS: [(
     ),
 ];
 
-// TODO: Vec variables solution
+// XXX: ugly array implementation?
+// XXX: String vs &str, send/recieve like 2 structures
+// XXX: String vs &str optimization
+// TODO: Vec variables solution for arrays
 // TODO: check types
 // TODO: command_alias and terminal_overrides both as String and as Vec<String> see tmux versions
 // 3-13 Available server options are:
@@ -292,9 +296,10 @@ pub struct ServerOptions {
     // detach-on-destroy ?
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     pub detach_on_destroy: Option<Switch>,
+    //pub user_options: Option<HashMap<String, String>>
 }
 
-impl<'a> ServerOptions {
+impl ServerOptions {
     // faster than SERVER_OPTIONS_ALL bitmask if will be implemented selective
     pub fn get_all() -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
@@ -350,17 +355,25 @@ impl<'a> ServerOptions {
     // XXX: mb methods for all fields set get?
 }
 
+// command_alias[0] = "alias1" => command_alias["alias1"]
+// command_alias[1] = "alias2" => command_alias["alias2"]
+// ...
+// command_alias[n] = "aliasN" => command_alias["aliasN"]
 impl FromStr for ServerOptions {
     type Err = Error;
 
     fn from_str(options: &str) -> Result<Self, Self::Err> {
         let mut server_options: ServerOptions = Default::default();
         let mut v: Vec<&str>;
+        let mut arr: Vec<&str>;
         for option in options.lines() {
             v = option.trim().split(' ').collect();
+            arr = v[0].split(|c| c == '[' || c == ']').collect();
             for server_var in SERVER_OPTIONS.iter() {
-                if server_var.0 == v[0] {
-                    server_var.1(&mut server_options, v[1])
+                if server_var.0 == arr[0] {
+                    if let Some(i) = arr.get(1) {
+                        server_var.1(&mut server_options, i.parse::<usize>().ok(), v[1])
+                    }
                 }
             }
         }

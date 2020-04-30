@@ -1,3 +1,4 @@
+use super::create_insert_vec;
 use crate::common::StatusKeys;
 use crate::{Error, SetOptionBuilder, ShowOptionsBuilder, Switch, TargetPane, TmuxInterface};
 use std::fmt;
@@ -322,35 +323,35 @@ pub const SESSION_OPTIONS_NUM: usize = 45;
 // TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
 pub const SESSION_OPTIONS: [(
     &str,
-    fn(o: &mut SessionOptions, s: &str),
+    fn(o: &mut SessionOptions, i: Option<usize>, s: &str),
     fn(o: &SessionOptions) -> Option<String>,
     usize,
 ); SESSION_OPTIONS_NUM] = [
     #[cfg(feature = "tmux_2_6")]
     (
         "activity-action",
-        |o, s| o.activity_action = s.parse().ok(),
+        |o, _, s| o.activity_action = s.parse().ok(),
         |o| o.activity_action.as_ref().map(|v| v.to_string()),
         ACTIVITY_ACTION,
     ),
     #[cfg(feature = "tmux_1_8")]
     (
         "assume-paste-time",
-        |o, s| o.assume_paste_time = s.parse().ok(),
+        |o, _, s| o.assume_paste_time = s.parse().ok(),
         |o| o.assume_paste_time.as_ref().map(|v| v.to_string()),
         ASSUME_PASTE_TIME,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "base-index",
-        |o, s| o.base_index = s.parse().ok(),
+        |o, _, s| o.base_index = s.parse().ok(),
         |o| o.base_index.as_ref().map(|v| v.to_string()),
         BASE_INDEX,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "bell-action",
-        |o, s| o.bell_action = s.parse().ok(),
+        |o, _, s| o.bell_action = s.parse().ok(),
         |o| o.bell_action.as_ref().map(|v| v.to_string()),
         BELL_ACTION,
     ),
@@ -359,14 +360,14 @@ pub const SESSION_OPTIONS: [(
     #[cfg(feature = "tmux_1_0")]
     (
         "default-command",
-        |o, s| o.default_command = s.parse().ok(),
+        |o, _, s| o.default_command = s.parse().ok(),
         |o| o.default_command.as_ref().map(|v| v.to_string()),
         DEFAULT_COMMAND,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "default-shell",
-        |o, s| o.default_shell = s.parse().ok(),
+        |o, _, s| o.default_shell = s.parse().ok(),
         |o| o.default_shell.as_ref().map(|v| v.to_string()),
         DEFAULT_SHELL,
     ),
@@ -377,28 +378,28 @@ pub const SESSION_OPTIONS: [(
     #[cfg(feature = "tmux_2_9")]
     (
         "default-size",
-        |o, _s| o.default_size = Some((0, 0)),
+        |o, _, _s| o.default_size = Some((0, 0)),
         |o| o.default_size.as_ref().map(|v| format!("{}x{}", v.0, v.1)),
         DEFAULT_SIZE,
     ),
     #[cfg(feature = "tmux_1_4")]
     (
         "destroy-unattached",
-        |o, s| o.destroy_unattached = s.parse().ok(),
+        |o, _, s| o.destroy_unattached = s.parse().ok(),
         |o| o.destroy_unattached.as_ref().map(|v| v.to_string()),
         DESTROY_UNATTACHED,
     ),
     #[cfg(feature = "tmux_1_4")]
     (
         "detach-on-destroy",
-        |o, s| o.detach_on_destroy = s.parse().ok(),
+        |o, _, s| o.detach_on_destroy = s.parse().ok(),
         |o| o.detach_on_destroy.as_ref().map(|v| v.to_string()),
         DETACH_ON_DESTROY,
     ),
     #[cfg(feature = "tmux_1_2")]
     (
         "display-panes-active-colour",
-        |o, s| o.display_panes_active_colour = s.parse().ok(),
+        |o, _, s| o.display_panes_active_colour = s.parse().ok(),
         |o| {
             o.display_panes_active_colour
                 .as_ref()
@@ -409,48 +410,48 @@ pub const SESSION_OPTIONS: [(
     #[cfg(feature = "tmux_1_0")]
     (
         "display-panes-colour",
-        |o, s| o.display_panes_colour = s.parse().ok(),
+        |o, _, s| o.display_panes_colour = s.parse().ok(),
         |o| o.display_panes_colour.as_ref().map(|v| v.to_string()),
         DISPLAY_PANES_COLOUR,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "display-panes-time",
-        |o, s| o.display_panes_time = s.parse().ok(),
+        |o, _, s| o.display_panes_time = s.parse().ok(),
         |o| o.display_panes_time.as_ref().map(|v| v.to_string()),
         DISPLAY_PANES_TIME,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "display-time",
-        |o, s| o.display_time = s.parse().ok(),
+        |o, _, s| o.display_time = s.parse().ok(),
         |o| o.display_time.as_ref().map(|v| v.to_string()),
         DISPLAY_TIME,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "history-limit",
-        |o, s| o.history_limit = s.parse().ok(),
+        |o, _, s| o.history_limit = s.parse().ok(),
         |o| o.history_limit.as_ref().map(|v| v.to_string()),
         HISTORY_LIMIT,
     ),
     (
         "key-table",
-        |o, s| o.key_table = s.parse().ok(),
+        |o, _, s| o.key_table = s.parse().ok(),
         |o| o.key_table.as_ref().map(|v| v.to_string()),
         KEY_TABLE,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "lock-after-time",
-        |o, s| o.lock_after_time = s.parse().ok(),
+        |o, _, s| o.lock_after_time = s.parse().ok(),
         |o| o.lock_after_time.as_ref().map(|v| v.to_string()),
         LOCK_AFTER_TIME,
     ),
     #[cfg(feature = "tmux_1_1")]
     (
         "lock-command",
-        |o, s| o.lock_command = s.parse().ok(),
+        |o, _, s| o.lock_command = s.parse().ok(),
         |o| o.lock_command.as_ref().map(|v| v.to_string()),
         LOCK_COMMAND,
     ),
@@ -461,56 +462,56 @@ pub const SESSION_OPTIONS: [(
     #[cfg(feature = "tmux_1_9")]
     (
         "message-command-style",
-        |o, s| o.message_command_style = s.parse().ok(),
+        |o, _, s| o.message_command_style = s.parse().ok(),
         |o| o.message_command_style.as_ref().map(|v| v.to_string()),
         MESSAGE_COMMAND_STYLE,
     ),
     #[cfg(feature = "tmux_1_9")]
     (
         "message-style",
-        |o, s| o.message_style = s.parse().ok(),
+        |o, _, s| o.message_style = s.parse().ok(),
         |o| o.message_style.as_ref().map(|v| v.to_string()),
         MESSAGE_STYLE,
     ),
     #[cfg(feature = "tmux_1_9")]
     (
         "mouse",
-        |o, s| o.mouse = s.parse().ok(),
+        |o, _, s| o.mouse = s.parse().ok(),
         |o| o.mouse.as_ref().map(|v| v.to_string()),
         MOUSE,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "prefix",
-        |o, s| o.prefix = s.parse().ok(),
+        |o, _, s| o.prefix = s.parse().ok(),
         |o| o.prefix.as_ref().map(|v| v.to_string()),
         PREFIX,
     ),
     #[cfg(feature = "tmux_1_6")]
     (
         "prefix2",
-        |o, s| o.prefix2 = s.parse().ok(),
+        |o, _, s| o.prefix2 = s.parse().ok(),
         |o| o.prefix2.as_ref().map(|v| v.to_string()),
         PREFIX2,
     ),
     #[cfg(feature = "tmux_1_7")]
     (
         "renumber-windows",
-        |o, s| o.renumber_windows = s.parse().ok(),
+        |o, _, s| o.renumber_windows = s.parse().ok(),
         |o| o.renumber_windows.as_ref().map(|v| v.to_string()),
         RENUMBER_WINDOWS,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "repeat-time",
-        |o, s| o.repeat_time = s.parse().ok(),
+        |o, _, s| o.repeat_time = s.parse().ok(),
         |o| o.repeat_time.as_ref().map(|v| v.to_string()),
         REPEAT_TIME,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "set-titles",
-        |o, s| o.set_titles = s.parse().ok(),
+        |o, _, s| o.set_titles = s.parse().ok(),
         |o| o.set_titles.as_ref().map(|v| v.to_string()),
         SET_TITLES,
     ),
@@ -519,21 +520,21 @@ pub const SESSION_OPTIONS: [(
     #[cfg(feature = "tmux_1_0")]
     (
         "set-titles-string",
-        |o, s| o.set_titles_string = s.parse().ok(),
+        |o, _, s| o.set_titles_string = s.parse().ok(),
         |o| o.set_titles_string.as_ref().map(|v| v.to_string()),
         SET_TITLES_STRING,
     ),
     #[cfg(feature = "tmux_2_6")]
     (
         "silence-action",
-        |o, s| o.silence_action = s.parse().ok(),
+        |o, _, s| o.silence_action = s.parse().ok(),
         |o| o.silence_action.as_ref().map(|v| v.to_string()),
         SILENCE_ACTION,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "status",
-        |o, s| o.status = s.parse().ok(),
+        |o, _, s| o.status = s.parse().ok(),
         |o| o.status.as_ref().map(|v| v.to_string()),
         STATUS,
     ),
@@ -544,84 +545,84 @@ pub const SESSION_OPTIONS: [(
     #[cfg(feature = "tmux_2_9")]
     (
         "status-format",
-        |o, _s| o.status_format = None,
+        |o, i, s| o.status_format = create_insert_vec(o.status_format.as_mut(), i, s),
         |o| o.status_format.as_ref().map(|v| v.join(" ").to_string()),
         STATUS_FORMAT,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "status-interval",
-        |o, s| o.status_interval = s.parse().ok(),
+        |o, _, s| o.status_interval = s.parse().ok(),
         |o| o.status_interval.as_ref().map(|v| v.to_string()),
         STATUS_INTERVAL,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "status-justify",
-        |o, s| o.status_justify = s.parse().ok(),
+        |o, _, s| o.status_justify = s.parse().ok(),
         |o| o.status_justify.as_ref().map(|v| v.to_string()),
         STATUS_JUSTIFY,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "status-keys",
-        |o, s| o.status_keys = s.parse().ok(),
+        |o, _, s| o.status_keys = s.parse().ok(),
         |o| o.status_keys.as_ref().map(|v| v.to_string()),
         STATUS_KEYS,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "status-left",
-        |o, s| o.status_left = s.parse().ok(),
+        |o, _, s| o.status_left = s.parse().ok(),
         |o| o.status_left.as_ref().map(|v| v.to_string()),
         STATUS_LEFT,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "status-left-length",
-        |o, s| o.status_left_length = s.parse().ok(),
+        |o, _, s| o.status_left_length = s.parse().ok(),
         |o| o.status_left_length.as_ref().map(|v| v.to_string()),
         STATUS_LEFT_LENGTH,
     ),
     #[cfg(feature = "tmux_1_9")]
     (
         "status-left-style",
-        |o, s| o.status_left_style = s.parse().ok(),
+        |o, _, s| o.status_left_style = s.parse().ok(),
         |o| o.status_left_style.as_ref().map(|v| v.to_string()),
         STATUS_LEFT_STYLE,
     ),
     #[cfg(feature = "tmux_1_7")]
     (
         "status-position",
-        |o, s| o.status_position = s.parse().ok(),
+        |o, _, s| o.status_position = s.parse().ok(),
         |o| o.status_position.as_ref().map(|v| v.to_string()),
         STATUS_POSITION,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "status-right",
-        |o, s| o.status_right = s.parse().ok(),
+        |o, _, s| o.status_right = s.parse().ok(),
         |o| o.status_right.as_ref().map(|v| v.to_string()),
         STATUS_RIGHT,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "status-right-length",
-        |o, s| o.status_right_length = s.parse().ok(),
+        |o, _, s| o.status_right_length = s.parse().ok(),
         |o| o.status_right_length.as_ref().map(|v| v.to_string()),
         STATUS_RIGHT_LENGTH,
     ),
     #[cfg(feature = "tmux_1_9")]
     (
         "status-right-style",
-        |o, s| o.status_right_style = s.parse().ok(),
+        |o, _, s| o.status_right_style = s.parse().ok(),
         |o| o.status_right_style.as_ref().map(|v| v.to_string()),
         STATUS_RIGHT_STYLE,
     ),
     #[cfg(feature = "tmux_2_8")]
     (
         "status-style",
-        |o, s| o.status_style = s.parse().ok(),
+        |o, _, s| o.status_style = s.parse().ok(),
         |o| o.status_style.as_ref().map(|v| v.to_string()),
         STATUS_STYLE,
     ),
@@ -629,7 +630,7 @@ pub const SESSION_OPTIONS: [(
     #[cfg(feature = "tmux_1_0")]
     (
         "update-environment",
-        |o, _s| o.update_environment = None,
+        |o, i, s| o.update_environment = create_insert_vec(o.update_environment.as_mut(), i, s),
         |o| {
             o.update_environment
                 .as_ref()
@@ -640,14 +641,14 @@ pub const SESSION_OPTIONS: [(
     #[cfg(feature = "tmux_2_8")]
     (
         "user-keys",
-        |o, _s| o.user_keys = None,
+        |o, i, s| o.user_keys = create_insert_vec(o.user_keys.as_mut(), i, s),
         |o| o.user_keys.as_ref().map(|v| v.join(" ").to_string()),
         USER_KEYS,
     ),
     #[cfg(feature = "tmux_1_0")]
     (
         "visual-activity",
-        |o, s| o.visual_activity = s.parse().ok(),
+        |o, _, s| o.visual_activity = s.parse().ok(),
         |o| o.visual_activity.as_ref().map(|v| v.to_string()),
         VISUAL_ACTIVITY,
     ),
@@ -656,21 +657,21 @@ pub const SESSION_OPTIONS: [(
     #[cfg(feature = "tmux_1_0")]
     (
         "visual-bell",
-        |o, s| o.visual_bell = s.parse().ok(),
+        |o, _, s| o.visual_bell = s.parse().ok(),
         |o| o.visual_bell.as_ref().map(|v| v.to_string()),
         VISUAL_BELL,
     ),
     #[cfg(feature = "tmux_1_4")]
     (
         "visual-silence",
-        |o, s| o.visual_silence = s.parse().ok(),
+        |o, _, s| o.visual_silence = s.parse().ok(),
         |o| o.visual_silence.as_ref().map(|v| v.to_string()),
         VISUAL_SILENCE,
     ),
     #[cfg(feature = "tmux_1_4")]
     (
         "word-separators",
-        |o, s| o.word_separators = s.parse().ok(),
+        |o, _, s| o.word_separators = s.parse().ok(),
         |o| o.word_separators.as_ref().map(|v| v.to_string()),
         WORD_SEPARATORS,
     ),
@@ -730,6 +731,7 @@ pub struct SessionOptions {
     #[cfg(feature = "tmux_1_0")]
     pub history_limit: Option<usize>,
     //key-table key-table
+    #[cfg(feature = "tmux_2_2")]
     pub key_table: Option<String>,
     //lock-after-time number
     #[cfg(feature = "tmux_1_0")]
@@ -855,6 +857,7 @@ pub struct SessionOptions {
     //word-separators string
     #[cfg(feature = "tmux_1_4")]
     pub word_separators: Option<String>,
+    //pub user_options: Option<HashMap<String, String>>
 }
 
 impl SessionOptions {
@@ -924,17 +927,25 @@ impl SessionOptions {
     // XXX: single set get methods
 }
 
+// command_alias[0] = "alias1" => command_alias["alias1"]
+// command_alias[1] = "alias2" => command_alias["alias2"]
+// ...
+// command_alias[n] = "aliasN" => command_alias["aliasN"]
 impl FromStr for SessionOptions {
     type Err = Error;
 
     fn from_str(options: &str) -> Result<Self, Self::Err> {
         let mut session_options: SessionOptions = Default::default();
         let mut v: Vec<&str>;
+        let mut arr: Vec<&str>;
         for option in options.lines() {
             v = option.trim().split(' ').collect();
+            arr = v[0].split(|c| c == '[' || c == ']').collect();
             for session_var in SESSION_OPTIONS.iter() {
-                if session_var.0 == v[0] {
-                    session_var.1(&mut session_options, v[1])
+                if session_var.0 == arr[0] {
+                    if let Some(i) = arr.get(1) {
+                        session_var.1(&mut session_options, i.parse::<usize>().ok(), v[1])
+                    }
                 }
             }
         }
@@ -957,50 +968,95 @@ impl fmt::Display for SessionOptions {
 
 #[derive(Default, Debug)]
 pub struct SessionOptionsBuilder<'a> {
+    #[cfg(feature = "tmux_2_6")]
     pub activity_action: Option<Activity>,
+    #[cfg(feature = "tmux_1_8")]
     pub assume_paste_time: Option<usize>,
+    #[cfg(feature = "tmux_1_0")]
     pub base_index: Option<usize>,
+    #[cfg(feature = "tmux_1_0")]
     pub bell_action: Option<Action>,
+    #[cfg(feature = "tmux_1_0")]
     pub default_command: Option<&'a str>,
+    #[cfg(feature = "tmux_1_0")]
     pub default_shell: Option<&'a str>,
+    #[cfg(feature = "tmux_2_9")]
     pub default_size: Option<(usize, usize)>,
+    #[cfg(feature = "tmux_1_4")]
     pub destroy_unattached: Option<Switch>,
+    #[cfg(feature = "tmux_1_4")]
     pub detach_on_destroy: Option<Switch>,
+    #[cfg(feature = "tmux_1_2")]
     pub display_panes_active_colour: Option<&'a str>,
+    #[cfg(feature = "tmux_1_0")]
     pub display_panes_colour: Option<&'a str>,
+    #[cfg(feature = "tmux_1_0")]
     pub display_panes_time: Option<usize>,
+    #[cfg(feature = "tmux_1_0")]
     pub display_time: Option<usize>,
+    #[cfg(feature = "tmux_1_0")]
     pub history_limit: Option<usize>,
+    #[cfg(feature = "tmux_2_2")]
     pub key_table: Option<&'a str>,
+    #[cfg(feature = "tmux_1_0")]
     pub lock_after_time: Option<usize>,
+    #[cfg(feature = "tmux_1_1")]
     pub lock_command: Option<&'a str>,
+    #[cfg(feature = "tmux_1_9")]
     pub message_command_style: Option<&'a str>,
+    #[cfg(feature = "tmux_1_9")]
     pub message_style: Option<&'a str>,
+    #[cfg(feature = "tmux_1_9")]
     pub mouse: Option<Switch>,
+    #[cfg(feature = "tmux_1_0")]
     pub prefix: Option<&'a str>,
+    #[cfg(feature = "tmux_1_6")]
     pub prefix2: Option<&'a str>,
+    #[cfg(feature = "tmux_1_7")]
     pub renumber_windows: Option<Switch>,
+    #[cfg(feature = "tmux_1_0")]
     pub repeat_time: Option<usize>,
+    #[cfg(feature = "tmux_1_0")]
     pub set_titles: Option<Switch>,
+    #[cfg(feature = "tmux_1_0")]
     pub set_titles_string: Option<&'a str>,
+    #[cfg(feature = "tmux_2_6")]
     pub silence_action: Option<Action>,
+    #[cfg(feature = "tmux_1_0")]
     pub status: Option<Status>,
+    #[cfg(feature = "tmux_2_9")]
     pub status_format: Option<Vec<&'a str>>,
+    #[cfg(feature = "tmux_1_0")]
     pub status_interval: Option<usize>,
+    #[cfg(feature = "tmux_1_0")]
     pub status_justify: Option<StatusJustify>,
+    #[cfg(feature = "tmux_1_0")]
     pub status_keys: Option<StatusKeys>,
+    #[cfg(feature = "tmux_1_0")]
     pub status_left: Option<&'a str>,
+    #[cfg(feature = "tmux_1_0")]
     pub status_left_length: Option<usize>,
+    #[cfg(feature = "tmux_1_9")]
     pub status_left_style: Option<&'a str>,
+    #[cfg(feature = "tmux_1_7")]
     pub status_position: Option<StatusPosition>,
+    #[cfg(feature = "tmux_1_0")]
     pub status_right: Option<&'a str>,
+    #[cfg(feature = "tmux_1_0")]
     pub status_right_length: Option<usize>,
+    #[cfg(feature = "tmux_1_9")]
     pub status_right_style: Option<&'a str>,
+    #[cfg(feature = "tmux_2_8")]
     pub status_style: Option<&'a str>,
+    #[cfg(feature = "tmux_1_0")]
     pub update_environment: Option<Vec<&'a str>>,
+    #[cfg(feature = "tmux_1_0")]
     pub visual_activity: Option<Activity>,
+    #[cfg(feature = "tmux_1_0")]
     pub visual_bell: Option<Activity>,
+    #[cfg(feature = "tmux_1_4")]
     pub visual_silence: Option<Activity>,
+    #[cfg(feature = "tmux_1_4")]
     pub word_separators: Option<&'a str>,
 }
 
@@ -1009,51 +1065,61 @@ impl<'a> SessionOptionsBuilder<'a> {
         Default::default()
     }
 
+    #[cfg(feature = "tmux_2_6")]
     pub fn activity_action(&mut self, activity_action: Activity) -> &mut Self {
         self.activity_action = Some(activity_action);
         self
     }
 
+    #[cfg(feature = "tmux_1_8")]
     pub fn assume_paste_time(&mut self, assume_paste_time: usize) -> &mut Self {
         self.assume_paste_time = Some(assume_paste_time);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn base_index(&mut self, base_index: usize) -> &mut Self {
         self.base_index = Some(base_index);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn bell_action(&mut self, bell_action: Action) -> &mut Self {
         self.bell_action = Some(bell_action);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn default_command(&mut self, default_command: &'a str) -> &mut Self {
         self.default_command = Some(default_command);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn default_shell(&mut self, default_shell: &'a str) -> &mut Self {
         self.default_shell = Some(default_shell);
         self
     }
 
+    #[cfg(feature = "tmux_2_9")]
     pub fn default_size(&mut self, default_size: (usize, usize)) -> &mut Self {
         self.default_size = Some(default_size);
         self
     }
 
+    #[cfg(feature = "tmux_1_4")]
     pub fn destroy_unattached(&mut self, destroy_unattached: Switch) -> &mut Self {
         self.destroy_unattached = Some(destroy_unattached);
         self
     }
 
+    #[cfg(feature = "tmux_1_4")]
     pub fn detach_on_destroy(&mut self, detach_on_destroy: Switch) -> &mut Self {
         self.detach_on_destroy = Some(detach_on_destroy);
         self
     }
 
+    #[cfg(feature = "tmux_1_2")]
     pub fn display_panes_active_colour(
         &mut self,
         display_panes_active_colour: &'a str,
@@ -1062,176 +1128,211 @@ impl<'a> SessionOptionsBuilder<'a> {
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn display_panes_colour(&mut self, display_panes_colour: &'a str) -> &mut Self {
         self.display_panes_colour = Some(display_panes_colour);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn display_panes_time(&mut self, display_panes_time: usize) -> &mut Self {
         self.display_panes_time = Some(display_panes_time);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn display_time(&mut self, display_time: usize) -> &mut Self {
         self.display_time = Some(display_time);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn history_limit(&mut self, history_limit: usize) -> &mut Self {
         self.history_limit = Some(history_limit);
         self
     }
 
+    #[cfg(feature = "tmux_2_2")]
     pub fn key_table(&mut self, key_table: &'a str) -> &mut Self {
         self.key_table = Some(key_table);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn lock_after_time(&mut self, lock_after_time: usize) -> &mut Self {
         self.lock_after_time = Some(lock_after_time);
         self
     }
 
+    #[cfg(feature = "tmux_1_1")]
     pub fn lock_command(&mut self, lock_command: &'a str) -> &mut Self {
         self.lock_command = Some(lock_command);
         self
     }
 
+    #[cfg(feature = "tmux_1_9")]
     pub fn message_command_style(&mut self, message_command_style: &'a str) -> &mut Self {
         self.message_command_style = Some(message_command_style);
         self
     }
 
+    #[cfg(feature = "tmux_1_9")]
     pub fn message_style(&mut self, message_style: &'a str) -> &mut Self {
         self.message_style = Some(message_style);
         self
     }
 
+    #[cfg(feature = "tmux_1_9")]
     pub fn mouse(&mut self, mouse: Switch) -> &mut Self {
         self.mouse = Some(mouse);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn prefix(&mut self, prefix: &'a str) -> &mut Self {
         self.prefix = Some(prefix);
         self
     }
 
+    #[cfg(feature = "tmux_1_6")]
     pub fn prefix2(&mut self, prefix2: &'a str) -> &mut Self {
         self.prefix2 = Some(prefix2);
         self
     }
 
+    #[cfg(feature = "tmux_1_7")]
     pub fn renumber_windows(&mut self, renumber_windows: Switch) -> &mut Self {
         self.renumber_windows = Some(renumber_windows);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn repeat_time(&mut self, repeat_time: usize) -> &mut Self {
         self.repeat_time = Some(repeat_time);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn set_titles(&mut self, set_titles: Switch) -> &mut Self {
         self.set_titles = Some(set_titles);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn set_titles_string(&mut self, set_titles_string: &'a str) -> &mut Self {
         self.set_titles_string = Some(set_titles_string);
         self
     }
 
+    #[cfg(feature = "tmux_2_6")]
     pub fn silence_action(&mut self, silence_action: Action) -> &mut Self {
         self.silence_action = Some(silence_action);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn status(&mut self, status: Status) -> &mut Self {
         self.status = Some(status);
         self
     }
 
+    #[cfg(feature = "tmux_2_9")]
     pub fn status_format(&mut self, status_format: Vec<&'a str>) -> &mut Self {
         self.status_format = Some(status_format);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn status_interval(&mut self, status_interval: usize) -> &mut Self {
         self.status_interval = Some(status_interval);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn status_justify(&mut self, status_justify: StatusJustify) -> &mut Self {
         self.status_justify = Some(status_justify);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn status_keys(&mut self, status_keys: StatusKeys) -> &mut Self {
         self.status_keys = Some(status_keys);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn status_left(&mut self, status_left: &'a str) -> &mut Self {
         self.status_left = Some(status_left);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn status_left_length(&mut self, status_left_length: usize) -> &mut Self {
         self.status_left_length = Some(status_left_length);
         self
     }
 
+    #[cfg(feature = "tmux_1_9")]
     pub fn status_left_style(&mut self, status_left_style: &'a str) -> &mut Self {
         self.status_left_style = Some(status_left_style);
         self
     }
 
+    #[cfg(feature = "tmux_1_7")]
     pub fn status_position(&mut self, status_position: StatusPosition) -> &mut Self {
         self.status_position = Some(status_position);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn status_right(&mut self, status_right: &'a str) -> &mut Self {
         self.status_right = Some(status_right);
         self
     }
 
+    #[cfg(feature = "tmux_1_9")]
     pub fn status_right_length(&mut self, status_right_length: usize) -> &mut Self {
         self.status_right_length = Some(status_right_length);
         self
     }
 
+    #[cfg(feature = "tmux_1_9")]
     pub fn status_right_style(&mut self, status_right_style: &'a str) -> &mut Self {
         self.status_right_style = Some(status_right_style);
         self
     }
 
+    #[cfg(feature = "tmux_2_8")]
     pub fn status_style(&mut self, status_style: &'a str) -> &mut Self {
         self.status_style = Some(status_style);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn update_environment(&mut self, update_environment: Vec<&'a str>) -> &mut Self {
         self.update_environment = Some(update_environment);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn visual_activity(&mut self, visual_activity: Activity) -> &mut Self {
         self.visual_activity = Some(visual_activity);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn visual_bell(&mut self, visual_bell: Activity) -> &mut Self {
         self.visual_bell = Some(visual_bell);
         self
     }
 
+    #[cfg(feature = "tmux_1_4")]
     pub fn visual_silence(&mut self, visual_silence: Activity) -> &mut Self {
         self.visual_silence = Some(visual_silence);
         self
     }
 
+    #[cfg(feature = "tmux_1_4")]
     pub fn word_separators(&mut self, word_separators: &'a str) -> &mut Self {
         self.word_separators = Some(word_separators);
         self
@@ -1268,7 +1369,7 @@ impl<'a> SessionOptionsBuilder<'a> {
             display_time: self.display_time,
             #[cfg(feature = "tmux_1_0")]
             history_limit: self.history_limit,
-            #[cfg(feature = "tmux_1_0")]
+            #[cfg(feature = "tmux_2_2")]
             key_table: self.key_table.map(|s| s.to_string()),
             #[cfg(feature = "tmux_1_1")]
             lock_after_time: self.lock_after_time,

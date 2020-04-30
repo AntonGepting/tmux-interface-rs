@@ -20,35 +20,35 @@ pub const PANE_OPTIONS_NUM: usize = 5;
 // TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
 pub const PANE_OPTIONS: [(
     &str,
-    fn(p: &mut PaneOptions, s: &str),
+    fn(p: &mut PaneOptions, i: Option<usize>, s: &str),
     fn(p: &PaneOptions) -> Option<String>,
     usize,
 ); PANE_OPTIONS_NUM] = [
     #[cfg(feature = "tmux_3_0")]
     (
         "allow-rename",
-        |p, s| p.allow_rename = s.parse().ok(),
+        |p, _, s| p.allow_rename = s.parse().ok(),
         |p| p.allow_rename.as_ref().map(|v| v.to_string()),
         ALLOW_RENAME,
     ),
     #[cfg(feature = "tmux_3_0")]
     (
         "alternate-screen",
-        |p, s| p.alternate_screen = s.parse().ok(),
+        |p, _, s| p.alternate_screen = s.parse().ok(),
         |p| p.alternate_screen.as_ref().map(|v| v.to_string()),
         ALTERNATE_SCREEN,
     ),
     #[cfg(feature = "tmux_3_0")]
     (
         "remain-on-exit",
-        |p, s| p.remain_on_exit = s.parse().ok(),
+        |p, _, s| p.remain_on_exit = s.parse().ok(),
         |p| p.remain_on_exit.as_ref().map(|v| v.to_string()),
         REMAIN_ON_EXIT,
     ),
     #[cfg(feature = "tmux_3_0")]
     (
         "window-active-style",
-        |p, s| p.window_active_style = Some(s.to_string()),
+        |p, _, s| p.window_active_style = Some(s.to_string()),
         |p| {
             p.window_active_style
                 .as_ref()
@@ -59,7 +59,7 @@ pub const PANE_OPTIONS: [(
     #[cfg(feature = "tmux_3_0")]
     (
         "window-style",
-        |p, s| p.window_style = Some(s.to_string()),
+        |p, _, s| p.window_style = Some(s.to_string()),
         |p| {
             p.window_style
                 .as_ref()
@@ -88,6 +88,7 @@ pub struct PaneOptions {
     //window-style style
     #[cfg(feature = "tmux_3_0")]
     pub window_style: Option<String>,
+    //pub user_options: Option<HashMap<String, String>>
 }
 
 impl PaneOptions {
@@ -131,17 +132,25 @@ impl PaneOptions {
     }
 }
 
+// command_alias[0] = "alias1" => command_alias["alias1"]
+// command_alias[1] = "alias2" => command_alias["alias2"]
+// ...
+// command_alias[n] = "aliasN" => command_alias["aliasN"]
 impl FromStr for PaneOptions {
     type Err = Error;
 
     fn from_str(options: &str) -> Result<Self, Self::Err> {
         let mut pane_options: PaneOptions = Default::default();
         let mut v: Vec<&str>;
+        let mut arr: Vec<&str>;
         for option in options.lines() {
             v = option.trim().split(' ').collect();
+            arr = v[0].split(|c| c == '[' || c == ']').collect();
             for pane_var in PANE_OPTIONS.iter() {
-                if pane_var.0 == v[0] {
-                    pane_var.1(&mut pane_options, v[1])
+                if pane_var.0 == arr[0] {
+                    if let Some(i) = arr.get(1) {
+                        pane_var.1(&mut pane_options, i.parse::<usize>().ok(), v[1])
+                    }
                 }
             }
         }

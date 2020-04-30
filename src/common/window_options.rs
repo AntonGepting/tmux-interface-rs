@@ -219,28 +219,28 @@ pub const WINDOW_OPTIONS_NUM: usize = 31;
 // TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
 pub const WINDOW_OPTIONS: [(
     &str,
-    fn(o: &mut WindowOptions, s: &str),
+    fn(o: &mut WindowOptions, i: Option<usize>, s: &str),
     fn(o: &WindowOptions) -> Option<String>,
     usize,
 ); WINDOW_OPTIONS_NUM] = [
     #[cfg(feature = "tmux_1_2")]
     (
         "aggressive-resize",
-        |o, s| o.aggressive_resize = s.parse().ok(),
+        |o, _, s| o.aggressive_resize = s.parse().ok(),
         |o| o.aggressive_resize.as_ref().map(|v| v.to_string()),
         AGGRESIVE_RESIZE,
     ),
     #[cfg(feature = "tmux_1_2")]
     (
         "automatic-rename",
-        |o, s| o.automatic_rename = s.parse().ok(),
+        |o, _, s| o.automatic_rename = s.parse().ok(),
         |o| o.automatic_rename.as_ref().map(|v| v.to_string()),
         AUTOMATIC_RENAME,
     ),
     #[cfg(feature = "tmux_1_9")]
     (
         "automatic-rename-format",
-        |o, s| o.automatic_rename_format = Some(s.to_string()),
+        |o, _, s| o.automatic_rename_format = Some(s.to_string()),
         |o| {
             o.automatic_rename_format
                 .as_ref()
@@ -251,7 +251,7 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_2")]
     (
         "clock-mode-colour",
-        |o, s| o.clock_mode_colour = Some(s.to_string()),
+        |o, _, s| o.clock_mode_colour = Some(s.to_string()),
         |o| {
             o.clock_mode_colour
                 .as_ref()
@@ -262,35 +262,35 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_2")]
     (
         "clock-mode-style",
-        |o, s| o.clock_mode_style = s.parse().ok(),
+        |o, _, s| o.clock_mode_style = s.parse().ok(),
         |o| o.clock_mode_style.as_ref().map(|v| v.to_string()),
         CLOCK_MODE_STYLE,
     ),
     #[cfg(feature = "tmux_1_2")]
     (
         "main-pane-height",
-        |o, s| o.main_pane_height = s.parse().ok(),
+        |o, _, s| o.main_pane_height = s.parse().ok(),
         |o| o.main_pane_height.as_ref().map(|v| v.to_string()),
         MAIN_PANE_HEIGHT,
     ),
     #[cfg(feature = "tmux_1_2")]
     (
         "main-pane-width",
-        |o, s| o.main_pane_width = s.parse().ok(),
+        |o, _, s| o.main_pane_width = s.parse().ok(),
         |o| o.main_pane_width.as_ref().map(|v| v.to_string()),
         MAIN_PANE_WIDTH,
     ),
     #[cfg(feature = "tmux_1_2")]
     (
         "mode-keys",
-        |o, s| o.mode_keys = s.parse().ok(),
+        |o, _, s| o.mode_keys = s.parse().ok(),
         |o| o.mode_keys.as_ref().map(|v| v.to_string()),
         MODE_KEYS,
     ),
     #[cfg(feature = "tmux_1_9")]
     (
         "mode-style",
-        |o, s| o.mode_style = Some(s.to_string()),
+        |o, _, s| o.mode_style = Some(s.to_string()),
         |o| {
             o.mode_style
                 .as_ref()
@@ -301,42 +301,42 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_2")]
     (
         "monitor-activity",
-        |o, s| o.monitor_activity = s.parse().ok(),
+        |o, _, s| o.monitor_activity = s.parse().ok(),
         |o| o.monitor_activity.as_ref().map(|v| v.to_string()),
         MONITOR_ACTIVITY,
     ),
     #[cfg(feature = "tmux_2_6")]
     (
         "monitor-bell",
-        |o, s| o.monitor_bell = s.parse().ok(),
+        |o, _, s| o.monitor_bell = s.parse().ok(),
         |o| o.monitor_bell.as_ref().map(|v| v.to_string()),
         MONITOR_BELL,
     ),
     #[cfg(feature = "tmux_1_4")]
     (
         "monitor-silence",
-        |o, s| o.monitor_silence = s.parse().ok(),
+        |o, _, s| o.monitor_silence = s.parse().ok(),
         |o| o.monitor_silence.as_ref().map(|v| v.to_string()),
         MONITOR_SILENCE,
     ),
     #[cfg(feature = "tmux_1_4")]
     (
         "other-pane-height",
-        |o, s| o.other_pane_height = s.parse().ok(),
+        |o, _, s| o.other_pane_height = s.parse().ok(),
         |o| o.other_pane_height.as_ref().map(|v| v.to_string()),
         OTHER_PANE_HEIGHT,
     ),
     #[cfg(feature = "tmux_1_4")]
     (
         "other-pane-width",
-        |o, s| o.other_pane_width = s.parse().ok(),
+        |o, _, s| o.other_pane_width = s.parse().ok(),
         |o| o.other_pane_width.as_ref().map(|v| v.to_string()),
         OTHER_PANE_WIDTH,
     ),
     #[cfg(feature = "tmux_1_9")]
     (
         "pane-active-border-style",
-        |o, s| o.pane_active_border_style = Some(s.to_string()),
+        |o, _, s| o.pane_active_border_style = Some(s.to_string()),
         |o| {
             o.pane_active_border_style
                 .as_ref()
@@ -347,14 +347,14 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_6")]
     (
         "pane-base-index",
-        |o, s| o.pane_base_index = s.parse().ok(),
+        |o, _, s| o.pane_base_index = s.parse().ok(),
         |o| o.pane_base_index.as_ref().map(|v| v.to_string()),
         PANE_BASE_INDEX,
     ),
     #[cfg(feature = "tmux_2_3")]
     (
         "pane-border-format",
-        |o, s| o.pane_border_format = Some(s.to_string()),
+        |o, _, s| o.pane_border_format = Some(s.to_string()),
         |o| {
             o.pane_border_format
                 .as_ref()
@@ -365,14 +365,14 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_2_3")]
     (
         "pane-border-status",
-        |o, s| o.pane_border_status = s.parse().ok(),
+        |o, _, s| o.pane_border_status = s.parse().ok(),
         |o| o.pane_border_status.as_ref().map(|v| v.to_string()),
         PANE_BORDER_STATUS,
     ),
     #[cfg(feature = "tmux_1_9")]
     (
         "pane-border-style",
-        |o, s| o.pane_border_style = Some(s.to_string()),
+        |o, _, s| o.pane_border_style = Some(s.to_string()),
         |o| {
             o.pane_border_style
                 .as_ref()
@@ -383,14 +383,14 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_2")]
     (
         "synchronize-panes",
-        |o, s| o.synchronize_panes = s.parse().ok(),
+        |o, _, s| o.synchronize_panes = s.parse().ok(),
         |o| o.synchronize_panes.as_ref().map(|v| v.to_string()),
         SYNCHRONIZE_PANES,
     ),
     #[cfg(feature = "tmux_1_9")]
     (
         "window-status-activity-style",
-        |o, s| o.window_status_activity_style = Some(s.to_string()),
+        |o, _, s| o.window_status_activity_style = Some(s.to_string()),
         |o| {
             o.window_status_activity_style
                 .as_ref()
@@ -401,7 +401,7 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_9")]
     (
         "window-status-bell-style",
-        |o, s| o.window_status_bell_style = Some(s.to_string()),
+        |o, _, s| o.window_status_bell_style = Some(s.to_string()),
         |o| {
             o.window_status_bell_style
                 .as_ref()
@@ -412,7 +412,7 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_2")]
     (
         "window-status-current-format",
-        |o, s| o.window_status_current_format = Some(s.to_string()),
+        |o, _, s| o.window_status_current_format = Some(s.to_string()),
         |o| {
             o.window_status_current_format
                 .as_ref()
@@ -423,7 +423,7 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_9")]
     (
         "window-status-current-style",
-        |o, s| o.window_status_current_style = Some(s.to_string()),
+        |o, _, s| o.window_status_current_style = Some(s.to_string()),
         |o| {
             o.window_status_current_style
                 .as_ref()
@@ -434,7 +434,7 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_2")]
     (
         "window-status-format",
-        |o, s| o.window_status_format = Some(s.to_string()),
+        |o, _, s| o.window_status_format = Some(s.to_string()),
         |o| {
             o.window_status_format
                 .as_ref()
@@ -445,7 +445,7 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_9")]
     (
         "window-status-last-style",
-        |o, s| o.window_status_last_style = Some(s.to_string()),
+        |o, _, s| o.window_status_last_style = Some(s.to_string()),
         |o| {
             o.window_status_last_style
                 .as_ref()
@@ -456,7 +456,7 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_7")]
     (
         "window-status-separator",
-        |o, s| o.window_status_separator = Some(s.to_string()),
+        |o, _, s| o.window_status_separator = Some(s.to_string()),
         |o| {
             o.window_status_separator
                 .as_ref()
@@ -467,7 +467,7 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_1_9")]
     (
         "window-status-style",
-        |o, s| o.window_status_style = Some(s.to_string()),
+        |o, _, s| o.window_status_style = Some(s.to_string()),
         |o| {
             o.window_status_style
                 .as_ref()
@@ -478,21 +478,21 @@ pub const WINDOW_OPTIONS: [(
     #[cfg(feature = "tmux_2_9")]
     (
         "window-size",
-        |o, s| o.window_size = s.parse().ok(),
+        |o, _, s| o.window_size = s.parse().ok(),
         |o| o.window_size.as_ref().map(|v| v.to_string()),
         WINDOW_SIZE,
     ),
     #[cfg(feature = "tmux_1_7")]
     (
         "wrap-search",
-        |o, s| o.wrap_search = s.parse().ok(),
+        |o, _, s| o.wrap_search = s.parse().ok(),
         |o| o.wrap_search.as_ref().map(|v| v.to_string()),
         WRAP_SEARCH,
     ),
     #[cfg(feature = "tmux_1_2")]
     (
         "xterm-keys",
-        |o, s| o.xterm_keys = s.parse().ok(),
+        |o, _, s| o.xterm_keys = s.parse().ok(),
         |o| o.xterm_keys.as_ref().map(|v| v.to_string()),
         XTERM_KEYS,
     ),
@@ -631,6 +631,7 @@ pub struct WindowOptions {
     //pub alternate_screen
     //#[cfg(feature = "tmux_1_2")]
     //pub utf8
+    //pub user_options: Option<HashMap<String, String>>
 }
 
 impl WindowOptions {
@@ -675,17 +676,25 @@ impl WindowOptions {
     }
 }
 
+// command_alias[0] = "alias1" => command_alias["alias1"]
+// command_alias[1] = "alias2" => command_alias["alias2"]
+// ...
+// command_alias[n] = "aliasN" => command_alias["aliasN"]
 impl FromStr for WindowOptions {
     type Err = Error;
 
     fn from_str(options: &str) -> Result<Self, Self::Err> {
         let mut window_options: WindowOptions = Default::default();
         let mut v: Vec<&str>;
+        let mut arr: Vec<&str>;
         for option in options.lines() {
             v = option.trim().split(' ').collect();
+            arr = v[0].split(|c| c == '[' || c == ']').collect();
             for window_var in WINDOW_OPTIONS.iter() {
-                if window_var.0 == v[0] {
-                    window_var.1(&mut window_options, v[1])
+                if window_var.0 == arr[0] {
+                    if let Some(i) = arr.get(1) {
+                        window_var.1(&mut window_options, i.parse::<usize>().ok(), v[1])
+                    }
                 }
             }
         }

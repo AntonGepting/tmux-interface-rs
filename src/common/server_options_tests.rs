@@ -25,6 +25,11 @@ fn parse() {
         //.terminal_overrides(vec![])
         .build();
 
+    let server_options_default = ServerOptions {
+        history_file: Some("\"\"".into()),
+        ..Default::default()
+    };
+
     let server_options_str = r#"
         buffer-limit 50
         command-alias[0] "split-pane=split-window"
@@ -41,8 +46,8 @@ fn parse() {
         history-file ""
         message-limit 100
         set-clipboard external
-        terminal-overrides[0] ""
-        terminal-overrides[1] ""
+        terminal-overrides[0] "xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q"
+        terminal-overrides[1] "screen*:XT"
     "#;
     let server_options = server_options_str.parse::<ServerOptions>().unwrap();
     assert_eq!(server_options_default, server_options);
