@@ -28,6 +28,9 @@ tools and technologies used:
 - Builder Pattern ()
 - Closures ()
 - Newtype Pattern ()
+<!--- Parametric Polymorphism ()-->
+<!--- Polymorphism ()-->
+<!--- Smartpointer ()-->
 
 
 ## Implementations
