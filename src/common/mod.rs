@@ -90,3 +90,24 @@ impl fmt::Display for Switch {
         }
     }
 }
+
+// fn checks if vec already exists, if not creates it, and inserts an item at given index
+fn create_insert_vec(
+    v: Option<&mut Vec<String>>,
+    i: Option<usize>,
+    s: &str,
+) -> Option<Vec<String>> {
+    if let Some(v) = v {
+        if let Some(i) = i {
+            v.insert(i, s.to_string());
+            return Some(v.to_vec());
+        };
+    } else {
+        let mut v = Vec::new();
+        if let Some(i) = i {
+            v.insert(i, s.to_string());
+            return Some(v);
+        };
+    };
+    None
+}
