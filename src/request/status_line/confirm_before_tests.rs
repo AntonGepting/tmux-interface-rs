@@ -21,7 +21,7 @@ fn confirm_before() {
         );
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
-        s.push("confirm_before");
+        s.push("confirm-before");
         #[cfg(feature = "tmux_1_5")]
         s.extend_from_slice(&["-p", "1"]);
         #[cfg(feature = "tmux_0_9")]
