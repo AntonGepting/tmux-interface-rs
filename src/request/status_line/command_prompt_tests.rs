@@ -4,8 +4,35 @@ fn command_prompt() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^3.1:
+        // ```text
+        // tmux command-prompt [-1ikN] [-I inputs] [-p prompts] [-t target-client] [template]
+        // ```
+        //
+        // tmux ^3.0:
+        // ```text
+        // tmux command-prompt [-1Ni] [-I inputs] [-p prompts] [-t target-client] [template]
+        // ```
+        //
+        // tmux ^2.4:
+        // ```text
         // tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
-        // (alias: lockc)
+        // ```
+        //
+        // tmux ^1.5:
+        // ```text
+        // tmux command-prompt [-I inputs] [-p prompts] [-t target-client] [template]
+        // ```
+        //
+        // tmux ^1.0:
+        // ```text
+        // tmux command-prompt [-p prompts] [-t target-client] [template]
+        // ```
+        //
+        // tmux ^0.8:
+        // ```text
+        // tmux command-prompt [-t target-client] [template]
+        // ```
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["command-prompt", "-1", "-i", "-I", "1", "-p", "2", "-t", "3", "4"]"#
