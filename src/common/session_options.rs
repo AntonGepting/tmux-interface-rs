@@ -170,53 +170,74 @@ impl fmt::Display for StatusPosition {
     }
 }
 
-// NOTE: u32 not enough (x64 needed)!
+// NOTE: u64 not enough (u128 needed)!
 pub const ACTIVITY_ACTION: usize = 1 << 0;
 pub const ASSUME_PASTE_TIME: usize = 1 << 1;
 pub const BASE_INDEX: usize = 1 << 2;
 pub const BELL_ACTION: usize = 1 << 3;
-pub const DEFAULT_COMMAND: usize = 1 << 4;
-pub const DEFAULT_SHELL: usize = 1 << 5;
-pub const DEFAULT_SIZE: usize = 1 << 6;
-pub const DESTROY_UNATTACHED: usize = 1 << 7;
-pub const DETACH_ON_DESTROY: usize = 1 << 8;
-pub const DISPLAY_PANES_ACTIVE_COLOUR: usize = 1 << 9;
-pub const DISPLAY_PANES_COLOUR: usize = 1 << 10;
-pub const DISPLAY_PANES_TIME: usize = 1 << 11;
-pub const DISPLAY_TIME: usize = 1 << 12;
-pub const HISTORY_LIMIT: usize = 1 << 13;
-pub const KEY_TABLE: usize = 1 << 14;
-pub const LOCK_AFTER_TIME: usize = 1 << 15;
-pub const LOCK_COMMAND: usize = 1 << 16;
-pub const MESSAGE_COMMAND_STYLE: usize = 1 << 17;
-pub const MESSAGE_STYLE: usize = 1 << 18;
-pub const MOUSE: usize = 1 << 19;
-pub const PREFIX: usize = 1 << 20;
-pub const PREFIX2: usize = 1 << 21;
-pub const RENUMBER_WINDOWS: usize = 1 << 22;
-pub const REPEAT_TIME: usize = 1 << 23;
-pub const SET_TITLES: usize = 1 << 24;
-pub const SET_TITLES_STRING: usize = 1 << 25;
-pub const SILENCE_ACTION: usize = 1 << 26;
-pub const STATUS: usize = 1 << 27;
-pub const STATUS_FORMAT: usize = 1 << 28;
-pub const STATUS_INTERVAL: usize = 1 << 29;
-pub const STATUS_JUSTIFY: usize = 1 << 30;
-pub const STATUS_KEYS: usize = 1 << 31;
-pub const STATUS_LEFT: usize = 1 << 32;
-pub const STATUS_LEFT_LENGTH: usize = 1 << 33;
-pub const STATUS_LEFT_STYLE: usize = 1 << 34;
-pub const STATUS_POSITION: usize = 1 << 35;
-pub const STATUS_RIGHT: usize = 1 << 36;
-pub const STATUS_RIGHT_LENGTH: usize = 1 << 37;
-pub const STATUS_RIGHT_STYLE: usize = 1 << 38;
-pub const STATUS_STYLE: usize = 1 << 39;
-pub const UPDATE_ENVIRONMENT: usize = 1 << 40;
-pub const USER_KEYS: usize = 1 << 41;
-pub const VISUAL_ACTIVITY: usize = 1 << 42;
-pub const VISUAL_BELL: usize = 1 << 43;
-pub const VISUAL_SILENCE: usize = 1 << 44;
-pub const WORD_SEPARATORS: usize = 1 << 45;
+pub const BUFFER_LIMIT: usize = 1 << 4;
+pub const DEFAULT_COMMAND: usize = 1 << 5;
+pub const DEFAULT_SHELL: usize = 1 << 6;
+pub const DEFAULT_PATH: usize = 1 << 7;
+pub const DEFAULT_TERMINAL: usize = 1 << 8;
+pub const DEFAULT_SIZE: usize = 1 << 9;
+pub const DESTROY_UNATTACHED: usize = 1 << 10;
+pub const DETACH_ON_DESTROY: usize = 1 << 11;
+pub const DISPLAY_PANES_ACTIVE_COLOUR: usize = 1 << 12;
+pub const DISPLAY_PANES_COLOUR: usize = 1 << 13;
+pub const DISPLAY_PANES_TIME: usize = 1 << 14;
+pub const DISPLAY_TIME: usize = 1 << 15;
+pub const HISTORY_LIMIT: usize = 1 << 16;
+pub const KEY_TABLE: usize = 1 << 17;
+pub const LOCK_AFTER_TIME: usize = 1 << 18;
+pub const LOCK_COMMAND: usize = 1 << 19;
+pub const MESSAGE_ATTR: usize = 1 << 20;
+pub const MESSAGE_BG: usize = 1 << 21;
+pub const MESSAGE_FG: usize = 1 << 22;
+pub const MESSAGE_COMMAND_STYLE: usize = 1 << 23;
+pub const MESSAGE_STYLE: usize = 1 << 24;
+pub const MOUSE: usize = 1 << 25;
+pub const PREFIX: usize = 1 << 26;
+pub const PREFIX2: usize = 1 << 27;
+pub const RENUMBER_WINDOWS: usize = 1 << 28;
+pub const REPEAT_TIME: usize = 1 << 29;
+pub const SET_REMAIN_ON_EXIT: usize = 1 << 30;
+pub const SET_TITLES: usize = 1 << 31;
+pub const SET_TITLES_STRING: usize = 1 << 32;
+pub const SILENCE_ACTION: usize = 1 << 33;
+pub const STATUS: usize = 1 << 34;
+pub const STATUS_ATTR: usize = 1 << 35;
+pub const STATUS_BG: usize = 1 << 36;
+pub const STATUS_FG: usize = 0 << 37;
+pub const STATUS_FORMAT: usize = 1 << 38;
+pub const STATUS_INTERVAL: usize = 1 << 39;
+pub const STATUS_JUSTIFY: usize = 1 << 40;
+pub const STATUS_KEYS: usize = 1 << 41;
+pub const STATUS_LEFT: usize = 1 << 42;
+pub const STATUS_LEFT_ATTR: usize = 1 << 43;
+pub const STATUS_LEFT_BG: usize = 1 << 44;
+pub const STATUS_LEFT_FG: usize = 1 << 45;
+pub const STATUS_LEFT_LENGTH: usize = 1 << 46;
+pub const STATUS_LEFT_STYLE: usize = 1 << 47;
+pub const STATUS_POSITION: usize = 1 << 48;
+pub const STATUS_RIGHT: usize = 1 << 49;
+pub const STATUS_RIGHT_ATTR: usize = 1 << 50;
+pub const STATUS_RIGHT_BG: usize = 1 << 51;
+pub const STATUS_RIGHT_FG: usize = 1 << 52;
+pub const STATUS_RIGHT_LENGTH: usize = 1 << 53;
+pub const STATUS_UTF8: usize = 1 << 54;
+pub const TERMINAL_OVERRIDES: usize = 1 << 55;
+pub const STATUS_RIGHT_STYLE: usize = 1 << 56;
+pub const STATUS_STYLE: usize = 1 << 57;
+pub const UPDATE_ENVIRONMENT: usize = 1 << 58;
+pub const USER_KEYS: usize = 1 << 59;
+pub const VISUAL_ACTIVITY: usize = 1 << 60;
+pub const VISUAL_BELL: usize = 1 << 61;
+pub const VISUAL_CONTENT: usize = 1 << 62;
+pub const VISUAL_SILENCE: usize = 1 << 63;
+pub const WORD_SEPARATORS: usize = 1 << 64;
+//#[cfg(feature = "tmux_X_X")]
+//pub const USER_OPTIONS: usize = 1 << 65;
 
 pub const SESSION_OPTIONS_NONE: usize = 0;
 //pub const SERVER_OPTIONS_DEFAULT: usize = ;
@@ -224,18 +245,25 @@ pub const SESSION_OPTIONS_ALL: usize = ACTIVITY_ACTION
     | ASSUME_PASTE_TIME
     | BASE_INDEX
     | BELL_ACTION
+    | BUFFER_LIMIT
     | DEFAULT_COMMAND
     | DEFAULT_SHELL
+    | DEFAULT_PATH
+    | DEFAULT_TERMINAL
     | DEFAULT_SIZE
     | DESTROY_UNATTACHED
     | DETACH_ON_DESTROY
     | DISPLAY_PANES_ACTIVE_COLOUR
+    | DISPLAY_PANES_COLOUR
     | DISPLAY_PANES_TIME
     | DISPLAY_TIME
     | HISTORY_LIMIT
     | KEY_TABLE
     | LOCK_AFTER_TIME
     | LOCK_COMMAND
+    | MESSAGE_ATTR
+    | MESSAGE_BG
+    | MESSAGE_FG
     | MESSAGE_COMMAND_STYLE
     | MESSAGE_STYLE
     | MOUSE
@@ -243,28 +271,42 @@ pub const SESSION_OPTIONS_ALL: usize = ACTIVITY_ACTION
     | PREFIX2
     | RENUMBER_WINDOWS
     | REPEAT_TIME
+    | SET_REMAIN_ON_EXIT
     | SET_TITLES
     | SET_TITLES_STRING
     | SILENCE_ACTION
     | STATUS
+    | STATUS_ATTR
+    | STATUS_BG
+    | STATUS_FG
     | STATUS_FORMAT
     | STATUS_INTERVAL
     | STATUS_JUSTIFY
     | STATUS_KEYS
     | STATUS_LEFT
+    | STATUS_LEFT_ATTR
+    | STATUS_LEFT_BG
+    | STATUS_LEFT_FG
     | STATUS_LEFT_LENGTH
     | STATUS_LEFT_STYLE
     | STATUS_POSITION
     | STATUS_RIGHT
+    | STATUS_RIGHT_ATTR
+    | STATUS_RIGHT_BG
+    | STATUS_RIGHT_FG
     | STATUS_RIGHT_LENGTH
+    | STATUS_UTF8
+    | TERMINAL_OVERRIDES
     | STATUS_RIGHT_STYLE
     | STATUS_STYLE
     | UPDATE_ENVIRONMENT
     | USER_KEYS
     | VISUAL_ACTIVITY
     | VISUAL_BELL
+    | VISUAL_CONTENT
     | VISUAL_SILENCE
     | WORD_SEPARATORS;
+//| USER_OPTIONS;
 
 #[cfg(all(feature = "tmux_0_1", not(feature = "tmux_1_0")))]
 pub const SESSION_OPTIONS_NUM: usize = 0;
@@ -692,20 +734,23 @@ pub struct SessionOptions {
     #[cfg(feature = "tmux_1_0")]
     pub base_index: Option<usize>,
     //bell-action [any | none | current | other]
+    // tmux 1.0: bell-action [any | none | other]
     #[cfg(feature = "tmux_1_0")]
     pub bell_action: Option<Action>,
-    //#[cfg(feature = "tmux_1_0")]
-    //pub buffer_limit
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
+    pub buffer_limit: Option<usize>,
     //default-command shell-command
     #[cfg(feature = "tmux_1_0")]
     pub default_command: Option<String>,
     //default-shell path
     #[cfg(feature = "tmux_1_0")]
     pub default_shell: Option<String>,
-    //#[cfg(feature = "tmux_1_0")]
-    //pub default_path
-    //#[cfg(feature = "tmux_1_0")]
-    //pub default_terminal
+    //default-path path
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub default_path: Option<String>,
+    // default-terminal terminal
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+    pub default_terminal: Option<String>,
     //default-size XxY
     #[cfg(feature = "tmux_2_9")]
     pub default_size: Option<(usize, usize)>,
@@ -739,12 +784,15 @@ pub struct SessionOptions {
     //lock-command shell-command
     #[cfg(feature = "tmux_1_1")]
     pub lock_command: Option<String>,
-    //#[cfg(feature = "tmux_1_0")]
-    //pub message_attr
-    //#[cfg(feature = "tmux_1_0")]
-    //pub message_bg
-    //#[cfg(feature = "tmux_1_0")]
-    //pub message_fg
+    //message-attr attributes
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub message_attr: Option<String>,
+    //message-bg colour
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub message_bg: Option<String>,
+    //message-fg colour
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub message_fg: Option<String>,
     //message-command-style style
     #[cfg(feature = "tmux_1_9")]
     pub message_command_style: Option<String>,
@@ -766,8 +814,9 @@ pub struct SessionOptions {
     //repeat-time time
     #[cfg(feature = "tmux_1_0")]
     pub repeat_time: Option<usize>,
-    //#[cfg(feature = "tmux_1_0")]
-    //pub set_remain_on_exit
+    //set-remain-on-exit [on | off]
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
+    pub set_remain_on_exit: Option<Switch>,
     //set-titles [on | off]
     #[cfg(feature = "tmux_1_0")]
     pub set_titles: Option<Switch>,
@@ -778,14 +827,18 @@ pub struct SessionOptions {
     #[cfg(feature = "tmux_2_6")]
     pub silence_action: Option<Action>,
     //status [off | on | 2 | 3 | 4 | 5]
+    //tmux 1.0: status [off | on]
     #[cfg(feature = "tmux_1_0")]
     pub status: Option<Status>,
-    //#[cfg(feature = "tmux_1_0")]
-    //pub status_attr
-    //#[cfg(feature = "tmux_1_0")]
-    //pub status_bg
-    //#[cfg(feature = "tmux_1_0")]
-    //pub status_fg
+    //status-attr attributes
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub status_attr: Option<String>,
+    //status-bg colour
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub status_bg: Option<String>,
+    //status-fg colour
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub status_fg: Option<String>,
     //status-format[] format
     #[cfg(feature = "tmux_2_9")]
     pub status_format: Option<Vec<String>>,
@@ -801,12 +854,15 @@ pub struct SessionOptions {
     //status-left string
     #[cfg(feature = "tmux_1_0")]
     pub status_left: Option<String>,
-    //#[cfg(feature = "tmux_1_0")]
-    //pub status_left_attr
-    //#[cfg(feature = "tmux_1_0")]
-    //pub status_left_bg
-    //#[cfg(feature = "tmux_1_0")]
-    //pub status_left_fg
+    //status-left-attr attributes
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub status_left_attr: Option<String>,
+    //status-left-bg colour
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub status_left_bg: Option<String>,
+    //status-left-fg colour
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub status_left_fg: Option<String>,
     //status-left-length length
     #[cfg(feature = "tmux_1_0")]
     pub status_left_length: Option<usize>,
@@ -819,19 +875,24 @@ pub struct SessionOptions {
     //status-right string
     #[cfg(feature = "tmux_1_0")]
     pub status_right: Option<String>,
-    //#[cfg(feature = "tmux_1_0")]
-    //pub status_right_attr
-    //#[cfg(feature = "tmux_1_0")]
-    //pub status_right_bg
-    //#[cfg(feature = "tmux_1_0")]
-    //pub status_right_fg
+    //status-right-attr attributes
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub status_right_attr: Option<String>,
+    //status-right-bg colour
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub status_right_bg: Option<String>,
+    //status-right-fg colour
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub status_right_fg: Option<String>,
     //status-right-length length
     #[cfg(feature = "tmux_1_0")]
     pub status_right_length: Option<usize>,
-    //#[cfg(feature = "tmux_1_0")]
-    //pub status_utf8
-    //#[cfg(feature = "tmux_1_0")]
-    //pub terminal_overrides
+    //status-utf8 [on | off]
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
+    pub status_utf8: Option<Switch>,
+    //terminal-overrides string
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+    pub terminal_overrides: Option<String>,
     //status-right-style style
     #[cfg(feature = "tmux_1_9")]
     pub status_right_style: Option<String>,
@@ -844,13 +905,16 @@ pub struct SessionOptions {
     #[cfg(feature = "tmux_2_8")]
     pub user_keys: Option<Vec<String>>,
     //visual-activity [on | off | both]
+    //tmux 1.0: visual-activity [on | off]
     #[cfg(feature = "tmux_1_0")]
     pub visual_activity: Option<Activity>,
     //visual-bell [on | off | both]
+    //tmux 1.0: visual-bell [on | off]
     #[cfg(feature = "tmux_1_0")]
     pub visual_bell: Option<Activity>,
-    //#[cfg(feature = "tmux_1_0")]
-    //pub visual_content
+    //visual-content [on | off]
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+    pub visual_content: Option<Switch>,
     //visual-silence [on | off | both]
     #[cfg(feature = "tmux_1_4")]
     pub visual_silence: Option<Activity>,
