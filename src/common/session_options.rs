@@ -171,77 +171,76 @@ impl fmt::Display for StatusPosition {
 }
 
 // NOTE: u64 not enough (u128 needed)!
-pub const ACTIVITY_ACTION: usize = 1 << 0;
-pub const ASSUME_PASTE_TIME: usize = 1 << 1;
-pub const BASE_INDEX: usize = 1 << 2;
-pub const BELL_ACTION: usize = 1 << 3;
-pub const BUFFER_LIMIT: usize = 1 << 4;
-pub const DEFAULT_COMMAND: usize = 1 << 5;
-pub const DEFAULT_SHELL: usize = 1 << 6;
-pub const DEFAULT_PATH: usize = 1 << 7;
-pub const DEFAULT_TERMINAL: usize = 1 << 8;
-pub const DEFAULT_SIZE: usize = 1 << 9;
-pub const DESTROY_UNATTACHED: usize = 1 << 10;
-pub const DETACH_ON_DESTROY: usize = 1 << 11;
-pub const DISPLAY_PANES_ACTIVE_COLOUR: usize = 1 << 12;
-pub const DISPLAY_PANES_COLOUR: usize = 1 << 13;
-pub const DISPLAY_PANES_TIME: usize = 1 << 14;
-pub const DISPLAY_TIME: usize = 1 << 15;
-pub const HISTORY_LIMIT: usize = 1 << 16;
-pub const KEY_TABLE: usize = 1 << 17;
-pub const LOCK_AFTER_TIME: usize = 1 << 18;
-pub const LOCK_COMMAND: usize = 1 << 19;
-pub const MESSAGE_ATTR: usize = 1 << 20;
-pub const MESSAGE_BG: usize = 1 << 21;
-pub const MESSAGE_FG: usize = 1 << 22;
-pub const MESSAGE_COMMAND_STYLE: usize = 1 << 23;
-pub const MESSAGE_STYLE: usize = 1 << 24;
-pub const MOUSE: usize = 1 << 25;
-pub const PREFIX: usize = 1 << 26;
-pub const PREFIX2: usize = 1 << 27;
-pub const RENUMBER_WINDOWS: usize = 1 << 28;
-pub const REPEAT_TIME: usize = 1 << 29;
-pub const SET_REMAIN_ON_EXIT: usize = 1 << 30;
-pub const SET_TITLES: usize = 1 << 31;
-pub const SET_TITLES_STRING: usize = 1 << 32;
-pub const SILENCE_ACTION: usize = 1 << 33;
-pub const STATUS: usize = 1 << 34;
-pub const STATUS_ATTR: usize = 1 << 35;
-pub const STATUS_BG: usize = 1 << 36;
-pub const STATUS_FG: usize = 0 << 37;
-pub const STATUS_FORMAT: usize = 1 << 38;
-pub const STATUS_INTERVAL: usize = 1 << 39;
-pub const STATUS_JUSTIFY: usize = 1 << 40;
-pub const STATUS_KEYS: usize = 1 << 41;
-pub const STATUS_LEFT: usize = 1 << 42;
-pub const STATUS_LEFT_ATTR: usize = 1 << 43;
-pub const STATUS_LEFT_BG: usize = 1 << 44;
-pub const STATUS_LEFT_FG: usize = 1 << 45;
-pub const STATUS_LEFT_LENGTH: usize = 1 << 46;
-pub const STATUS_LEFT_STYLE: usize = 1 << 47;
-pub const STATUS_POSITION: usize = 1 << 48;
-pub const STATUS_RIGHT: usize = 1 << 49;
-pub const STATUS_RIGHT_ATTR: usize = 1 << 50;
-pub const STATUS_RIGHT_BG: usize = 1 << 51;
-pub const STATUS_RIGHT_FG: usize = 1 << 52;
-pub const STATUS_RIGHT_LENGTH: usize = 1 << 53;
-pub const STATUS_UTF8: usize = 1 << 54;
-pub const TERMINAL_OVERRIDES: usize = 1 << 55;
-pub const STATUS_RIGHT_STYLE: usize = 1 << 56;
-pub const STATUS_STYLE: usize = 1 << 57;
-pub const UPDATE_ENVIRONMENT: usize = 1 << 58;
-pub const USER_KEYS: usize = 1 << 59;
-pub const VISUAL_ACTIVITY: usize = 1 << 60;
-pub const VISUAL_BELL: usize = 1 << 61;
-pub const VISUAL_CONTENT: usize = 1 << 62;
-pub const VISUAL_SILENCE: usize = 1 << 63;
-pub const WORD_SEPARATORS: usize = 1 << 64;
-//#[cfg(feature = "tmux_X_X")]
-//pub const USER_OPTIONS: usize = 1 << 65;
+pub const ACTIVITY_ACTION: u128 = 1 << 0;
+pub const ASSUME_PASTE_TIME: u128 = 1 << 1;
+pub const BASE_INDEX: u128 = 1 << 2;
+pub const BELL_ACTION: u128 = 1 << 3;
+pub const BUFFER_LIMIT: u128 = 1 << 4;
+pub const DEFAULT_COMMAND: u128 = 1 << 5;
+pub const DEFAULT_SHELL: u128 = 1 << 6;
+pub const DEFAULT_PATH: u128 = 1 << 7;
+pub const DEFAULT_TERMINAL: u128 = 1 << 8;
+pub const DEFAULT_SIZE: u128 = 1 << 9;
+pub const DESTROY_UNATTACHED: u128 = 1 << 10;
+pub const DETACH_ON_DESTROY: u128 = 1 << 11;
+pub const DISPLAY_PANES_ACTIVE_COLOUR: u128 = 1 << 12;
+pub const DISPLAY_PANES_COLOUR: u128 = 1 << 13;
+pub const DISPLAY_PANES_TIME: u128 = 1 << 14;
+pub const DISPLAY_TIME: u128 = 1 << 15;
+pub const HISTORY_LIMIT: u128 = 1 << 16;
+pub const KEY_TABLE: u128 = 1 << 17;
+pub const LOCK_AFTER_TIME: u128 = 1 << 18;
+pub const LOCK_COMMAND: u128 = 1 << 19;
+pub const MESSAGE_ATTR: u128 = 1 << 20;
+pub const MESSAGE_BG: u128 = 1 << 21;
+pub const MESSAGE_FG: u128 = 1 << 22;
+pub const MESSAGE_COMMAND_STYLE: u128 = 1 << 23;
+pub const MESSAGE_STYLE: u128 = 1 << 24;
+pub const MOUSE: u128 = 1 << 25;
+pub const PREFIX: u128 = 1 << 26;
+pub const PREFIX2: u128 = 1 << 27;
+pub const RENUMBER_WINDOWS: u128 = 1 << 28;
+pub const REPEAT_TIME: u128 = 1 << 29;
+pub const SET_REMAIN_ON_EXIT: u128 = 1 << 30;
+pub const SET_TITLES: u128 = 1 << 31;
+pub const SET_TITLES_STRING: u128 = 1 << 32;
+pub const SILENCE_ACTION: u128 = 1 << 33;
+pub const STATUS: u128 = 1 << 34;
+pub const STATUS_ATTR: u128 = 1 << 35;
+pub const STATUS_BG: u128 = 1 << 36;
+pub const STATUS_FG: u128 = 0 << 37;
+pub const STATUS_FORMAT: u128 = 1 << 38;
+pub const STATUS_INTERVAL: u128 = 1 << 39;
+pub const STATUS_JUSTIFY: u128 = 1 << 40;
+pub const STATUS_KEYS: u128 = 1 << 41;
+pub const STATUS_LEFT: u128 = 1 << 42;
+pub const STATUS_LEFT_ATTR: u128 = 1 << 43;
+pub const STATUS_LEFT_BG: u128 = 1 << 44;
+pub const STATUS_LEFT_FG: u128 = 1 << 45;
+pub const STATUS_LEFT_LENGTH: u128 = 1 << 46;
+pub const STATUS_LEFT_STYLE: u128 = 1 << 47;
+pub const STATUS_POSITION: u128 = 1 << 48;
+pub const STATUS_RIGHT: u128 = 1 << 49;
+pub const STATUS_RIGHT_ATTR: u128 = 1 << 50;
+pub const STATUS_RIGHT_BG: u128 = 1 << 51;
+pub const STATUS_RIGHT_FG: u128 = 1 << 52;
+pub const STATUS_RIGHT_LENGTH: u128 = 1 << 53;
+pub const STATUS_UTF8: u128 = 1 << 54;
+pub const TERMINAL_OVERRIDES: u128 = 1 << 55;
+pub const STATUS_RIGHT_STYLE: u128 = 1 << 56;
+pub const STATUS_STYLE: u128 = 1 << 57;
+pub const UPDATE_ENVIRONMENT: u128 = 1 << 58;
+pub const USER_KEYS: u128 = 1 << 59;
+pub const VISUAL_ACTIVITY: u128 = 1 << 60;
+pub const VISUAL_BELL: u128 = 1 << 61;
+pub const VISUAL_CONTENT: u128 = 1 << 62;
+pub const VISUAL_SILENCE: u128 = 1 << 63;
+pub const WORD_SEPARATORS: u128 = 1 << 64;
+//pub const USER_OPTIONS: u128 = 1 << 65;
 
-pub const SESSION_OPTIONS_NONE: usize = 0;
-//pub const SERVER_OPTIONS_DEFAULT: usize = ;
-pub const SESSION_OPTIONS_ALL: usize = ACTIVITY_ACTION
+pub const SESSION_OPTIONS_NONE: u128 = 0;
+//pub const SERVER_OPTIONS_DEFAULT: u128 = ;
+pub const SESSION_OPTIONS_ALL: u128 = ACTIVITY_ACTION
     | ASSUME_PASTE_TIME
     | BASE_INDEX
     | BELL_ACTION
@@ -367,7 +366,7 @@ pub const SESSION_OPTIONS: [(
     &str,
     fn(o: &mut SessionOptions, i: Option<usize>, s: &str),
     fn(o: &SessionOptions) -> Option<String>,
-    usize,
+    u128,
 ); SESSION_OPTIONS_NUM] = [
     #[cfg(feature = "tmux_2_6")]
     (
@@ -934,7 +933,7 @@ impl SessionOptions {
 
     // XXX: bitmask is overkill now, mb later use for multiple select
     // NOTE: not allows selective get by bitmask
-    pub fn get(bitflags: usize) -> Result<Self, Error> {
+    pub fn get(bitflags: u128) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let selected_option = SESSION_OPTIONS
             .iter()
@@ -949,7 +948,7 @@ impl SessionOptions {
         s.parse()
     }
 
-    pub fn get_global(bitflags: usize) -> Result<Self, Error> {
+    pub fn get_global(bitflags: u128) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let selected_option = SESSION_OPTIONS
             .iter()
@@ -966,7 +965,7 @@ impl SessionOptions {
     }
 
     // allows selective set by bitmask
-    pub fn set(&self, bitflags: usize) -> Result<(), Error> {
+    pub fn set(&self, bitflags: u128) -> Result<(), Error> {
         let mut tmux = TmuxInterface::new();
         for selected_option in SESSION_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
@@ -977,7 +976,7 @@ impl SessionOptions {
         Ok(())
     }
 
-    pub fn set_global(&self, bitflags: usize) -> Result<(), Error> {
+    pub fn set_global(&self, bitflags: u128) -> Result<(), Error> {
         let mut tmux = TmuxInterface::new();
         for selected_option in SESSION_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
