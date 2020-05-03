@@ -278,19 +278,21 @@ Parsing objects and supported tmux variables:
 - callbacks or hooks or smtg like in [Jezza's fork](https://github.com/Jezza/tmux-interface-rs/)
 - mb FFI as a C lib?
 - [x] enum for pane size specification `[-l size | -p percentage]`
-- [ ] mb enum for things like `[size | percentage]` in options?
+- [x] mb enum for things like `[size | percentage]` in options?
 - mb default most needed struct fields initialized with `new()`?
 - [ ] rename subcommand to command function
 - [ ] add custom command function
 - mb macro for translate letter keys into structure field names
 - mb conditional compiling depending on tmux version (versions based on travis ci ubuntu packages)
-- mb split into 2 libs?
+- mb split into 3 libs? (recv, send, options)
 - support older tmux versions:
     - [x] tmux X.X latest
     - [x] tmux 2.6
     - [ ] tmux 2.1
     - [ ] tmux 1.8
     - [ ] tmux 1.6
+    - [ ] commands
+    - [ ] options
 - mb merge flags? (`-A -B -C` = `-ABC`)
 - mb impl builder pattern (how to combine TMUX + AttachSession in right way)
     - [ ] builder pattern
