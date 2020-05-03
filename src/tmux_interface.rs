@@ -74,9 +74,44 @@ pub const CC_KEY: &str = "-CC";
 ///
 /// # Manual
 ///
+/// tmux ^2.1:
 /// ```text
-/// tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name]
-/// [-S socket-path] [command [flags]]
+/// tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+/// ```
+///
+/// tmux ^1.9:
+/// ```text
+/// tmux [-2lCquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+/// ```
+///
+/// tmux ^1.8:
+/// ```text
+/// tmux [-28lCquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]
+/// ```
+///
+/// tmux ^1.4:
+/// ```text
+/// tmux [-28lquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+/// ```
+///
+/// tmux ^1.1:
+/// ```text
+/// tmux [-28lquv] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+/// ```
+///
+/// tmux ^1.0:
+/// ```text
+/// tmux [-28dlqUuv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+/// ```
+///
+/// tmux ^0.9:
+/// ```text
+/// tmux [-28dqUuv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux [-28dqUuVv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 #[derive(Default)]
 pub struct TmuxInterface<'a> {
@@ -84,28 +119,52 @@ pub struct TmuxInterface<'a> {
     ///
     // XXX: combine into a struct and separate from other options?
     /// [-2] - Force tmux to assume the terminal supports 256 colours
+    #[cfg(feature = "tmux_0_8")]
     pub colours256: Option<bool>,
+    /// [-8] - indicates that tmux supports 88 colours
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    pub colours88: Option<bool>,
+    /// [-d] - indicates that tmux supports defaults colours
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    pub default_colours: Option<bool>,
+    /// [-q] - prevent the server sending various information messages
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
+    pub prevent_msg: Option<bool>,
     /// [-C] - Start in control mode
+    #[cfg(feature = "tmux_1_8")]
     pub control_mode: Option<bool>,
     /// [-l] - Behave as a login shell
+    #[cfg(feature = "tmux_1_0")]
     pub login_shell: Option<bool>,
+    /// [-U] - Unlock the server
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    pub unlock: Option<bool>,
     /// [-u] - Write UTF-8 output to the terminal
+    #[cfg(feature = "tmux_0_8")]
     pub force_utf8: Option<bool>,
     /// [-v] - Request verbose logging
+    #[cfg(feature = "tmux_0_8")]
     pub verbose_logging: Option<bool>,
     /// [-V] - Report the tmux version
+    #[cfg(feature = "tmux_1_4")]
     pub version: Option<bool>,
     /// [-c shell-command] - Execute shell-command using the default shell
+    #[cfg(feature = "tmux_1_1")]
     pub shell_cmd: Option<&'a str>,
     /// [-f file] - Specify an alternative configuration file
+    #[cfg(feature = "tmux_0_8")]
     pub file: Option<&'a str>,
     /// [-L socket-name] - Allow a different socket name to be specified
+    #[cfg(feature = "tmux_0_8")]
     pub socket_name: Option<&'a str>,
     /// [-S socket-path] - Specify a full alternative path to the server socket
+    #[cfg(feature = "tmux_0_8")]
     pub socket_path: Option<&'a str>,
     /// [-CC] - Disable echo
     pub disable_echo: Option<bool>,
-
+    ///// [command [flags]]
+    //#[cfg(feature = "tmux_0_8")]
+    //pub command
     /// non tmux options fields
     ///
     /// Tmux binary name (default: `tmux`, can be set as `tmux_mock.sh` for "sniffing")
@@ -131,15 +190,33 @@ pub struct TmuxInterface<'a> {
 
 #[derive(Default)]
 pub struct TmuxInterfaceBuilder<'a> {
+    #[cfg(feature = "tmux_0_8")]
     pub colours256: Option<bool>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    pub colours88: Option<bool>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    pub default_colours: Option<bool>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
+    pub prevent_msg: Option<bool>,
+    #[cfg(feature = "tmux_1_8")]
     pub control_mode: Option<bool>,
+    #[cfg(feature = "tmux_1_0")]
     pub login_shell: Option<bool>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    pub unlock: Option<bool>,
+    #[cfg(feature = "tmux_0_8")]
     pub force_utf8: Option<bool>,
+    #[cfg(feature = "tmux_0_8")]
     pub verbose_logging: Option<bool>,
+    #[cfg(feature = "tmux_1_4")]
     pub version: Option<bool>,
+    #[cfg(feature = "tmux_1_1")]
     pub shell_cmd: Option<&'a str>,
+    #[cfg(feature = "tmux_0_8")]
     pub file: Option<&'a str>,
+    #[cfg(feature = "tmux_0_8")]
     pub socket_name: Option<&'a str>,
+    #[cfg(feature = "tmux_0_8")]
     pub socket_path: Option<&'a str>,
     pub disable_echo: Option<bool>,
 
