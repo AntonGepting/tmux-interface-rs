@@ -39,6 +39,7 @@ tools and technologies used:
 - OOP ()
 - Functional Programming ()
 - Conditional Compilation ()
+- Type hinting (`None::<SomeType>`)
 
 
 ## Tools
