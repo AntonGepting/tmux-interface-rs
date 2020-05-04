@@ -50,32 +50,29 @@
 //! ```
 //! use crate::tmux_interface::{TmuxInterface, AttachSession, NewSession, TargetSession};
 //!
+//! let mut tmux = TmuxInterface::new();
 //!
-//! fn main() {
-//!     let mut tmux = TmuxInterface::new();
+//! let new_session = NewSession {
+//!     detached: Some(true),
+//!     session_name: Some("test_session_name1"),
+//!     ..Default::default()
+//! };
+//! tmux.new_session(Some(&new_session)).unwrap();
+//!    let attach_session = AttachSession {
+//!    target_session: Some(&TargetSession::Raw("test_session_name1")),
+//!    ..Default::default()
+//! };
+//! tmux.attach_session(Some(&attach_session)).unwrap();
+//! tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name1"))).unwrap();
 //!
-//!     let new_session = NewSession {
-//!         detached: Some(true),
-//!         session_name: Some("test_session_name1"),
-//!         ..Default::default()
-//!     };
-//!     tmux.new_session(Some(&new_session)).unwrap();
-//!        let attach_session = AttachSession {
-//!        target_session: Some(&TargetSession::Raw("test_session_name1")),
-//!        ..Default::default()
-//!     };
-//!     tmux.attach_session(Some(&attach_session)).unwrap();
-//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name1"))).unwrap();
-//!
-//!     // or alternatively
-//!     let mut new_session = NewSession::new();
-//!     new_session.detached = Some(true);
-//!     new_session.session_name = Some("test_session_name2");
-//!     tmux.new_session(Some(&new_session)).unwrap();
-//!     let mut attach_session = AttachSession::new();
-//!     attach_session.target_session = Some(&TargetSession::Raw("test_session_name2"));
-//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name2"))).unwrap();
-//! }
+//! // or alternatively
+//! let mut new_session = NewSession::new();
+//! new_session.detached = Some(true);
+//! new_session.session_name = Some("test_session_name2");
+//! tmux.new_session(Some(&new_session)).unwrap();
+//! let mut attach_session = AttachSession::new();
+//! attach_session.target_session = Some(&TargetSession::Raw("test_session_name2"));
+//! tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name2"))).unwrap();
 //! ```
 //!
 //!
@@ -88,11 +85,9 @@
 //! use crate::tmux_interface::response::window::window::WINDOW_ALL;
 //! use crate::tmux_interface::response::pane::pane::PANE_ALL;
 //!
-//! fn main() {
-//!     let sessions = Sessions::get(SESSION_ALL).unwrap();
-//!     let windows = Windows::get(&TargetSession::Raw("0"), WINDOW_ALL).unwrap();
-//!     let panes = Panes::get(&TargetWindowEx::raw("0:1"), PANE_ALL).unwrap();
-//! }
+//! let sessions = Sessions::get(SESSION_ALL).unwrap();
+//! let windows = Windows::get(&TargetSession::Raw("0"), WINDOW_ALL).unwrap();
+//! let panes = Panes::get(&TargetWindowEx::raw("0:1"), PANE_ALL).unwrap();
 //! ```
 //!
 //! # Examples
@@ -100,27 +95,25 @@
 //! ```
 //! use crate::tmux_interface::{TmuxInterface, NewSession, TargetSession};
 //!
-//! fn main() {
-//!     let mut tmux = TmuxInterface::new();
-//!     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-//!         // changing of binary name, its arguments, subcommand and its parameters are allowed
-//!         // inside callback function
-//!         *bin = "tmux".to_string();
-//!         // display newly set variables
-//!         println!("pre hook: {:?} {:?} {:?}", bin, options, subcmd);
-//!         //Err(Error::new("pre hook error"))
-//!         Ok(None)
-//!     }));
+//! let mut tmux = TmuxInterface::new();
+//! tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+//!     // changing of binary name, its arguments, subcommand and its parameters are allowed
+//!     // inside callback function
+//!     *bin = "tmux".to_string();
+//!     // display newly set variables
+//!     println!("pre hook: {:?} {:?} {:?}", bin, options, subcmd);
+//!     //Err(Error::new("pre hook error"))
+//!     Ok(None)
+//! }));
 //!
-//!     let new_session = NewSession {
-//!         detached: Some(true),
-//!         session_name: Some("test_session_name1"),
-//!         ..Default::default()
-//!     };
-//!     tmux.new_session(Some(&new_session)).unwrap();
-//!     tmux.pre_hook = None;
-//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name1"))).unwrap();
-//! }
+//! let new_session = NewSession {
+//!     detached: Some(true),
+//!     session_name: Some("test_session_name1"),
+//!     ..Default::default()
+//! };
+//! tmux.new_session(Some(&new_session)).unwrap();
+//! tmux.pre_hook = None;
+//! tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name1"))).unwrap();
 //! ```
 //!
 //! # New session
@@ -131,10 +124,8 @@
 //! ```text
 //! use crate::tmux_interface::TmuxInterface;
 //!
-//! fn main() {
-//!     let mut tmux = TmuxInterface::new();
-//!     tmux.new_session(None).unwrap();
-//! }
+//! let mut tmux = TmuxInterface::new();
+//! tmux.new_session(None).unwrap();
 //! ```
 //!
 //! ## Examples
@@ -145,42 +136,36 @@
 //! ```
 //! use crate::tmux_interface::{TmuxInterface, TargetSession, NewSessionBuilder};
 //!
-//! fn main() {
-//!     let mut tmux = TmuxInterface::new();
-//!     let new_session = NewSessionBuilder::new().detached().session_name("new_session_builder").build();
-//!     tmux.new_session(Some(&new_session)).unwrap();
-//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("new_session_builder"))).unwrap();
-//! }
+//! let mut tmux = TmuxInterface::new();
+//! let new_session = NewSessionBuilder::new().detached().session_name("new_session_builder").build();
+//! tmux.new_session(Some(&new_session)).unwrap();
+//! tmux.kill_session(None, None, Some(&TargetSession::Raw("new_session_builder"))).unwrap();
 //! ```
 //!
 //! using `std::default::Default` trait:
 //! ```
 //! use crate::tmux_interface::{TmuxInterface, NewSession, TargetSession};
 //!
-//! fn main() {
-//!     let mut tmux = TmuxInterface::new();
-//!     let new_session = NewSession {
-//!         detached: Some(true),
-//!         session_name: Some("new_session_default"),
-//!         ..Default::default()
-//!     };
-//!     tmux.new_session(Some(&new_session)).unwrap();
-//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("new_session_default"))).unwrap();
-//! }
+//! let mut tmux = TmuxInterface::new();
+//! let new_session = NewSession {
+//!     detached: Some(true),
+//!     session_name: Some("new_session_default"),
+//!     ..Default::default()
+//! };
+//! tmux.new_session(Some(&new_session)).unwrap();
+//! tmux.kill_session(None, None, Some(&TargetSession::Raw("new_session_default"))).unwrap();
 //! ```
 //!
 //! using direct structure modification:
 //! ```
 //! use crate::tmux_interface::{TmuxInterface, NewSession, TargetSession};
 //!
-//! fn main() {
-//!     let mut tmux = TmuxInterface::new();
-//!     let mut new_session = NewSession::new();
-//!     new_session.detached = Some(true);
-//!     new_session.session_name = Some("new_session_direct");
-//!     tmux.new_session(Some(&new_session)).unwrap();
-//!     tmux.kill_session(None, None, Some(&TargetSession::Raw("new_session_direct"))).unwrap();
-//! }
+//! let mut tmux = TmuxInterface::new();
+//! let mut new_session = NewSession::new();
+//! new_session.detached = Some(true);
+//! new_session.session_name = Some("new_session_direct");
+//! tmux.new_session(Some(&new_session)).unwrap();
+//! tmux.kill_session(None, None, Some(&TargetSession::Raw("new_session_direct"))).unwrap();
 //! ```
 //!
 //!
