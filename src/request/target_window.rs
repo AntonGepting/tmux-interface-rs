@@ -37,42 +37,42 @@ impl<'a> TargetWindowEx<'a> {
     /// [`TargetWindowToken`]: enum.TargetWindowToken.html
     pub fn token(session: Option<&'a TargetSession<'a>>, token: TargetWindowToken) -> Self {
         TargetWindowEx {
-            session: session,
+            session,
             window: Some(TargetWindow::Token(token)),
         }
     }
 
     pub fn index(session: Option<&'a TargetSession<'a>>, i: usize) -> Self {
         TargetWindowEx {
-            session: session,
+            session,
             window: Some(TargetWindow::Index(i)),
         }
     }
 
     pub fn id(session: Option<&'a TargetSession<'a>>, id: usize) -> Self {
         TargetWindowEx {
-            session: session,
+            session,
             window: Some(TargetWindow::Id(id)),
         }
     }
 
     pub fn exact_name(session: Option<&'a TargetSession<'a>>, name: &'a str) -> Self {
         TargetWindowEx {
-            session: session,
+            session,
             window: Some(TargetWindow::ExactName(name)),
         }
     }
 
     pub fn start_name(session: Option<&'a TargetSession<'a>>, name: &'a str) -> Self {
         TargetWindowEx {
-            session: session,
+            session,
             window: Some(TargetWindow::StartName(name)),
         }
     }
 
     pub fn fn_match(session: Option<&'a TargetSession<'a>>, name: &'a str) -> Self {
         TargetWindowEx {
-            session: session,
+            session,
             window: Some(TargetWindow::FnMatch(name)),
         }
     }
@@ -159,11 +159,11 @@ pub enum TargetWindowToken {
     //Mouse,
 }
 
-const TARGET_WINDOW_TOKEN_START: &'static str = "^"; // {start}
-const TARGET_WINDOW_TOKEN_END: &'static str = "$"; // {end}
-const TARGET_WINDOW_TOKEN_LAST: &'static str = "!"; // {last}
-const TARGET_WINDOW_TOKEN_NEXT: &'static str = "+"; // {next}
-const TARGET_WINDOW_TOKEN_PREVIOUS: &'static str = "-"; // {previous}
+const TARGET_WINDOW_TOKEN_START: &str = "^"; // {start}
+const TARGET_WINDOW_TOKEN_END: &str = "$"; // {end}
+const TARGET_WINDOW_TOKEN_LAST: &str = "!"; // {last}
+const TARGET_WINDOW_TOKEN_NEXT: &str = "+"; // {next}
+const TARGET_WINDOW_TOKEN_PREVIOUS: &str = "-"; // {previous}
 
 impl fmt::Display for TargetWindowToken {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

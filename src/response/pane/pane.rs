@@ -2,7 +2,7 @@ use crate::Error;
 use crate::PaneTabs;
 
 // NOTE: u32 mb not enough!
-pub const PANE_ACTIVE: usize = 1 << 0;
+pub const PANE_ACTIVE: usize = 1;
 pub const PANE_AT_BOTTOM: usize = 1 << 1;
 pub const PANE_AT_LEFT: usize = 1 << 2;
 pub const PANE_AT_RIGHT: usize = 1 << 3;

@@ -171,7 +171,7 @@ impl fmt::Display for StatusPosition {
 }
 
 // NOTE: u64 not enough (u128 needed)!
-pub const ACTIVITY_ACTION: u128 = 1 << 0;
+pub const ACTIVITY_ACTION: u128 = 1;
 pub const ASSUME_PASTE_TIME: u128 = 1 << 1;
 pub const BASE_INDEX: u128 = 1 << 2;
 pub const BELL_ACTION: u128 = 1 << 3;
@@ -672,18 +672,14 @@ pub const SESSION_OPTIONS: [(
     (
         "update-environment",
         |o, i, s| o.update_environment = create_insert_vec(o.update_environment.as_mut(), i, s),
-        |o| {
-            o.update_environment
-                .as_ref()
-                .map(|v| v.join(" ").to_string())
-        },
+        |o| o.update_environment.as_ref().map(|v| v.join(" ")),
         UPDATE_ENVIRONMENT,
     ),
     #[cfg(feature = "tmux_2_8")]
     (
         "user-keys",
         |o, i, s| o.user_keys = create_insert_vec(o.user_keys.as_mut(), i, s),
-        |o| o.user_keys.as_ref().map(|v| v.join(" ").to_string()),
+        |o| o.user_keys.as_ref().map(|v| v.join(" ")),
         USER_KEYS,
     ),
     #[cfg(feature = "tmux_1_0")]
@@ -938,7 +934,7 @@ impl SessionOptions {
         let selected_option = SESSION_OPTIONS
             .iter()
             .filter(|t| bitflags == t.3)
-            .map(|t| format!("{}", t.0))
+            .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
         let show_options = ShowOptionsBuilder::<TargetPane>::new()
@@ -953,7 +949,7 @@ impl SessionOptions {
         let selected_option = SESSION_OPTIONS
             .iter()
             .filter(|t| bitflags == t.3)
-            .map(|t| format!("{}", t.0))
+            .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
         let show_options = ShowOptionsBuilder::<TargetPane>::new()
@@ -1025,7 +1021,7 @@ impl fmt::Display for SessionOptions {
         for var in SESSION_OPTIONS.iter() {
             // if is set some - extract
             if let Some(ref v) = var.2(self) {
-                write!(f, "{} {}\n", var.0, v)?;
+                writeln!(f, "{} {}", var.0, v)?;
             }
         }
         write!(f, "{}", "")

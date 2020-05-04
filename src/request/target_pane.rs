@@ -21,42 +21,42 @@ impl<'a> TargetPaneEx<'a> {
 
     pub fn token(target_window: Option<&'a TargetWindowEx>, token: TargetPaneToken) -> Self {
         TargetPaneEx {
-            target_window: target_window,
+            target_window,
             target_pane: Some(TargetPane::Token(token)),
         }
     }
 
     pub fn index(target_window: Option<&'a TargetWindowEx>, index: usize) -> Self {
         TargetPaneEx {
-            target_window: target_window,
+            target_window,
             target_pane: Some(TargetPane::Index(index)),
         }
     }
 
     pub fn id(target_window: Option<&'a TargetWindowEx>, id: usize) -> Self {
         TargetPaneEx {
-            target_window: target_window,
+            target_window,
             target_pane: Some(TargetPane::Id(id)),
         }
     }
 
     pub fn exact_name(target_window: Option<&'a TargetWindowEx>, name: &'a str) -> Self {
         TargetPaneEx {
-            target_window: target_window,
+            target_window,
             target_pane: Some(TargetPane::ExactName(name)),
         }
     }
 
     pub fn start_name(target_window: Option<&'a TargetWindowEx>, name: &'a str) -> Self {
         TargetPaneEx {
-            target_window: target_window,
+            target_window,
             target_pane: Some(TargetPane::StartName(name)),
         }
     }
 
     pub fn fn_match(target_window: Option<&'a TargetWindowEx>, name: &'a str) -> Self {
         TargetPaneEx {
-            target_window: target_window,
+            target_window,
             target_pane: Some(TargetPane::FnMatch(name)),
         }
     }
@@ -157,20 +157,20 @@ pub enum TargetPaneToken {
     //Mouse,{last}            !    The last (previously active) pane
 }
 
-const TARGET_PANE_TOKEN_NEXT: &'static str = "+"; // {next}
-const TARGET_PANE_TOKEN_PREVIOUS: &'static str = "-"; // {previous}
-const TARGET_PANE_TOKEN_TOP: &'static str = "{top}"; // {top}
-const TARGET_PANE_TOKEN_BOTTOM: &'static str = "{bottom}"; // {bottom}
-const TARGET_PANE_TOKEN_LEFT: &'static str = "{left}"; // {left}
-const TARGET_PANE_TOKEN_RIGHT: &'static str = "{right}"; // {right}
-const TARGET_PANE_TOKEN_TOP_LEFT: &'static str = "{top-left}"; // {top-left}
-const TARGET_PANE_TOKEN_TOP_RIGHT: &'static str = "{top-right}"; // {top-right}
-const TARGET_PANE_TOKEN_BOTTOM_LEFT: &'static str = "{bottom-left}"; // {bottom-left}
-const TARGET_PANE_TOKEN_BOTTOM_RIGHT: &'static str = "{bottom-right}"; // {bottom-right}
-const TARGET_PANE_TOKEN_UP_OF: &'static str = "{up-of}"; // {up-of}
-const TARGET_PANE_TOKEN_DOWN_OF: &'static str = "{down-of}"; // {down-of}
-const TARGET_PANE_TOKEN_LEFT_OF: &'static str = "{left-of}"; // {left-of}
-const TARGET_PANE_TOKEN_RIGHT_OF: &'static str = "{right-of}"; // {right-of}
+const TARGET_PANE_TOKEN_NEXT: &str = "+"; // {next}
+const TARGET_PANE_TOKEN_PREVIOUS: &str = "-"; // {previous}
+const TARGET_PANE_TOKEN_TOP: &str = "{top}"; // {top}
+const TARGET_PANE_TOKEN_BOTTOM: &str = "{bottom}"; // {bottom}
+const TARGET_PANE_TOKEN_LEFT: &str = "{left}"; // {left}
+const TARGET_PANE_TOKEN_RIGHT: &str = "{right}"; // {right}
+const TARGET_PANE_TOKEN_TOP_LEFT: &str = "{top-left}"; // {top-left}
+const TARGET_PANE_TOKEN_TOP_RIGHT: &str = "{top-right}"; // {top-right}
+const TARGET_PANE_TOKEN_BOTTOM_LEFT: &str = "{bottom-left}"; // {bottom-left}
+const TARGET_PANE_TOKEN_BOTTOM_RIGHT: &str = "{bottom-right}"; // {bottom-right}
+const TARGET_PANE_TOKEN_UP_OF: &str = "{up-of}"; // {up-of}
+const TARGET_PANE_TOKEN_DOWN_OF: &str = "{down-of}"; // {down-of}
+const TARGET_PANE_TOKEN_LEFT_OF: &str = "{left-of}"; // {left-of}
+const TARGET_PANE_TOKEN_RIGHT_OF: &str = "{right-of}"; // {right-of}
 
 impl fmt::Display for TargetPaneToken {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

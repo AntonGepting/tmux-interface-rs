@@ -40,7 +40,7 @@ impl fmt::Display for SetClipboard {
     }
 }
 
-pub const BACKSPACE: usize = 1 << 0;
+pub const BACKSPACE: usize = 1;
 pub const BUFFER_LIMIT: usize = 1 << 1;
 pub const COMMAND_ALIAS: usize = 1 << 2;
 pub const DEFAULT_TERMINAL: usize = 1 << 3;
@@ -145,7 +145,7 @@ pub const SERVER_OPTIONS: [(
     (
         "command-alias",
         |o, i, s| o.command_alias = create_insert_vec(o.command_alias.as_mut(), i, s),
-        |o| o.command_alias.as_ref().map(|v| v.join(" ").to_string()),
+        |o| o.command_alias.as_ref().map(|v| v.join(" ")),
         COMMAND_ALIAS,
     ),
     #[cfg(feature = "tmux_2_0")]
@@ -208,11 +208,7 @@ pub const SERVER_OPTIONS: [(
     (
         "terminal-overrides",
         |o, i, s| o.terminal_overrides = create_insert_vec(o.terminal_overrides.as_mut(), i, s),
-        |o| {
-            o.terminal_overrides
-                .as_ref()
-                .map(|v| v.join(" ").to_string())
-        },
+        |o| o.terminal_overrides.as_ref().map(|v| v.join(" ")),
         TERMINAL_OVERRIDES,
     ),
     #[cfg(feature = "tmux_3_0")]
@@ -315,7 +311,7 @@ impl ServerOptions {
         let selected_option = SERVER_OPTIONS
             .iter()
             .filter(|t| bitflags == t.3)
-            .map(|t| format!("{}", t.0))
+            .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
         let show_options = ShowOptionsBuilder::<TargetPane>::new()
@@ -390,7 +386,7 @@ impl fmt::Display for ServerOptions {
         for var in SERVER_OPTIONS.iter() {
             // if is set some - extract
             if let Some(ref v) = var.2(self) {
-                write!(f, "{} {}\n", var.0, v)?;
+                writeln!(f, "{} {}", var.0, v)?;
             }
         }
         write!(f, "{}", "")
@@ -450,7 +446,7 @@ impl<'a> ServerOptionsBuilder<'a> {
 
     #[cfg(feature = "tmux_2_4")]
     pub fn command_alias(&mut self, command_alias: Vec<&str>) -> &mut Self {
-        self.command_alias = Some(command_alias.iter().map(|s| s.to_string()).collect());
+        self.command_alias = Some(command_alias.iter().map(|s| (*s).to_string()).collect());
         self
     }
 
@@ -504,7 +500,12 @@ impl<'a> ServerOptionsBuilder<'a> {
 
     #[cfg(feature = "tmux_2_0")]
     pub fn terminal_overrides(&mut self, terminal_overrides: Vec<&str>) -> &mut Self {
-        self.terminal_overrides = Some(terminal_overrides.iter().map(|s| s.to_string()).collect());
+        self.terminal_overrides = Some(
+            terminal_overrides
+                .iter()
+                .map(|s| (*s).to_string())
+                .collect(),
+        );
         self
     }
 

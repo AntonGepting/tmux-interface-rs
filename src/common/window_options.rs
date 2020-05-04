@@ -97,7 +97,7 @@ impl fmt::Display for WindowSize {
 }
 
 // NOTE: u32 mb not enough!
-pub const AGGRESIVE_RESIZE: usize = 1 << 0;
+pub const AGGRESIVE_RESIZE: usize = 1;
 pub const AUTOMATIC_RENAME: usize = 1 << 1;
 pub const AUTOMATIC_RENAME_FORMAT: usize = 1 << 2;
 pub const CLOCK_MODE_COLOUR: usize = 1 << 3;
@@ -652,7 +652,7 @@ impl WindowOptions {
         let selected_option = WINDOW_OPTIONS
             .iter()
             .filter(|t| bitflags == t.3)
-            .map(|t| format!("{}", t.0))
+            .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
         let show_options = ShowOptionsBuilder::<TargetPane>::new()
@@ -711,7 +711,7 @@ impl fmt::Display for WindowOptions {
         for var in WINDOW_OPTIONS.iter() {
             // if is set some - extract
             if let Some(ref v) = var.2(self) {
-                write!(f, "{} {}\n", var.0, v)?;
+                writeln!(f, "{} {}", var.0, v)?;
             }
         }
         write!(f, "{}", "")

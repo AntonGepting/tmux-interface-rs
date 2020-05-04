@@ -3,7 +3,7 @@ use crate::SessionStack;
 use std::time::Duration;
 
 // NOTE: u16 mb not enough!
-pub const SESSION_ACTIVITY: usize = 1 << 0;
+pub const SESSION_ACTIVITY: usize = 1;
 pub const SESSION_ALERTS: usize = 1 << 1;
 pub const SESSION_ATTACHED: usize = 1 << 2;
 pub const SESSION_CREATED: usize = 1 << 3;

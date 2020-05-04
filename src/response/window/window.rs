@@ -4,7 +4,7 @@ use crate::WindowFlag;
 use std::time::Duration;
 
 // NOTE: u32 mb not enough!
-pub const WINDOW_ACTIVE: usize = 1 << 0;
+pub const WINDOW_ACTIVE: usize = 1;
 pub const WINDOW_ACTIVITY: usize = 1 << 1;
 pub const WINDOW_ACTIVITY_FLAG: usize = 1 << 2;
 pub const WINDOW_BELL_FLAG: usize = 1 << 3;
