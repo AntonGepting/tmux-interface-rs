@@ -46,9 +46,9 @@ fn swap_pane() {
         #[cfg(feature = "tmux_0_8")]
         detached: Some(true),
         #[cfg(feature = "tmux_0_8")]
-        previous: Some(true),
+        previous_pane: Some(true),
         #[cfg(feature = "tmux_0_8")]
-        next: Some(true),
+        next_pane: Some(true),
         #[cfg(feature = "tmux_3_1")]
         keep_zoomed: Some(true),
         #[cfg(feature = "tmux_1_0")]
@@ -62,9 +62,9 @@ fn swap_pane() {
     #[cfg(feature = "tmux_0_8")]
     builder.detached();
     #[cfg(feature = "tmux_0_8")]
-    builder.previous();
+    builder.previous_pane();
     #[cfg(feature = "tmux_0_8")]
-    builder.next();
+    builder.next_pane();
     #[cfg(feature = "tmux_3_1")]
     builder.keep_zoomed();
     #[cfg(feature = "tmux_1_0")]

@@ -43,13 +43,13 @@ pub struct SelectLayot<'a, T> {
     pub spread: Option<bool>,
     /// [-n] - next-layout equivalent
     #[cfg(feature = "tmux_1_5")]
-    pub next: Option<bool>,
+    pub next_layout: Option<bool>,
     /// [-o] - apply the last set layout if possible
     #[cfg(feature = "tmux_2_1")]
-    pub last: Option<bool>,
+    pub last_layout: Option<bool>,
     /// [-p] - previous-layout equivalent
     #[cfg(feature = "tmux_1_5")]
-    pub previous: Option<bool>,
+    pub previous_layout: Option<bool>,
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_0_9")]
     pub target_pane: Option<&'a T>,
@@ -69,11 +69,11 @@ pub struct SelectLayotBuilder<'a, T> {
     #[cfg(feature = "tmux_2_7")]
     pub spread: Option<bool>,
     #[cfg(feature = "tmux_1_5")]
-    pub next: Option<bool>,
+    pub next_layout: Option<bool>,
     #[cfg(feature = "tmux_2_1")]
-    pub last: Option<bool>,
+    pub last_layout: Option<bool>,
     #[cfg(feature = "tmux_1_5")]
-    pub previous: Option<bool>,
+    pub previous_layout: Option<bool>,
     #[cfg(feature = "tmux_0_9")]
     pub target_pane: Option<&'a T>,
     #[cfg(feature = "tmux_1_0")]
@@ -91,20 +91,20 @@ impl<'a, T: Display + Default> SelectLayotBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_5")]
-    pub fn next(&mut self) -> &mut Self {
-        self.next = Some(true);
+    pub fn next_layout(&mut self) -> &mut Self {
+        self.next_layout = Some(true);
         self
     }
 
     #[cfg(feature = "tmux_2_1")]
-    pub fn last(&mut self) -> &mut Self {
-        self.last = Some(true);
+    pub fn last_layout(&mut self) -> &mut Self {
+        self.last_layout = Some(true);
         self
     }
 
     #[cfg(feature = "tmux_1_5")]
-    pub fn previous(&mut self) -> &mut Self {
-        self.previous = Some(true);
+    pub fn previous_layout(&mut self) -> &mut Self {
+        self.previous_layout = Some(true);
         self
     }
 
@@ -125,11 +125,11 @@ impl<'a, T: Display + Default> SelectLayotBuilder<'a, T> {
             #[cfg(feature = "tmux_2_7")]
             spread: self.spread,
             #[cfg(feature = "tmux_1_5")]
-            next: self.next,
+            next_layout: self.next_layout,
             #[cfg(feature = "tmux_2_1")]
-            last: self.last,
+            last_layout: self.last_layout,
             #[cfg(feature = "tmux_1_5")]
-            previous: self.previous,
+            previous_layout: self.previous_layout,
             #[cfg(feature = "tmux_0_9")]
             target_pane: self.target_pane,
             #[cfg(feature = "tmux_1_0")]
@@ -189,19 +189,19 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_1_5")]
             {
-                if select_layout.next.unwrap_or(false) {
+                if select_layout.next_layout.unwrap_or(false) {
                     args.push(n_KEY);
                 }
             }
             #[cfg(feature = "tmux_2_1")]
             {
-                if select_layout.last.unwrap_or(false) {
+                if select_layout.last_layout.unwrap_or(false) {
                     args.push(o_KEY);
                 }
             }
             #[cfg(feature = "tmux_1_5")]
             {
-                if select_layout.previous.unwrap_or(false) {
+                if select_layout.previous_layout.unwrap_or(false) {
                     args.push(p_KEY);
                 }
             }

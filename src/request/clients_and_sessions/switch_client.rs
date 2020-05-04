@@ -49,13 +49,13 @@ pub struct SwitchClient<'a> {
     pub not_update_env: Option<bool>,
     /// [-l] - move to the last session
     #[cfg(feature = "tmux_1_4")]
-    pub last: Option<bool>,
+    pub last_session: Option<bool>,
     /// [-n] - move to the next session
     #[cfg(feature = "tmux_1_4")]
-    pub next: Option<bool>,
+    pub next_session: Option<bool>,
     /// [-p] - move to the previous session
     #[cfg(feature = "tmux_1_4")]
-    pub previous: Option<bool>,
+    pub previous_session: Option<bool>,
     /// [-r] - toggle whether a client is read-only
     #[cfg(feature = "tmux_1_6")]
     pub read_only: Option<bool>,
@@ -78,11 +78,11 @@ pub struct SwitchClientBuilder<'a> {
     #[cfg(feature = "tmux_2_1")]
     pub not_update_env: Option<bool>,
     #[cfg(feature = "tmux_1_4")]
-    pub last: Option<bool>,
+    pub last_session: Option<bool>,
     #[cfg(feature = "tmux_1_4")]
-    pub next: Option<bool>,
+    pub next_session: Option<bool>,
     #[cfg(feature = "tmux_1_4")]
-    pub previous: Option<bool>,
+    pub previous_session: Option<bool>,
     #[cfg(feature = "tmux_1_6")]
     pub read_only: Option<bool>,
     #[cfg(feature = "tmux_3_1")]
@@ -107,20 +107,20 @@ impl<'a> SwitchClientBuilder<'a> {
     }
 
     #[cfg(feature = "tmux_1_4")]
-    pub fn last(&mut self) -> &mut Self {
-        self.last = Some(true);
+    pub fn last_session(&mut self) -> &mut Self {
+        self.last_session = Some(true);
         self
     }
 
     #[cfg(feature = "tmux_1_4")]
-    pub fn next(&mut self) -> &mut Self {
-        self.next = Some(true);
+    pub fn next_session(&mut self) -> &mut Self {
+        self.next_session = Some(true);
         self
     }
 
     #[cfg(feature = "tmux_1_4")]
-    pub fn previous(&mut self) -> &mut Self {
-        self.previous = Some(true);
+    pub fn previous_session(&mut self) -> &mut Self {
+        self.previous_session = Some(true);
         self
     }
 
@@ -159,11 +159,11 @@ impl<'a> SwitchClientBuilder<'a> {
             #[cfg(feature = "tmux_2_1")]
             not_update_env: self.not_update_env,
             #[cfg(feature = "tmux_1_4")]
-            last: self.last,
+            last_session: self.last_session,
             #[cfg(feature = "tmux_1_4")]
-            next: self.next,
+            next_session: self.next_session,
             #[cfg(feature = "tmux_1_4")]
-            previous: self.previous,
+            previous_session: self.previous_session,
             #[cfg(feature = "tmux_1_6")]
             read_only: self.read_only,
             #[cfg(feature = "tmux_3_1")]
@@ -232,19 +232,19 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_1_4")]
             {
-                if switch_client.last.unwrap_or(false) {
+                if switch_client.last_session.unwrap_or(false) {
                     args.push(l_KEY);
                 }
             }
             #[cfg(feature = "tmux_1_4")]
             {
-                if switch_client.next.unwrap_or(false) {
+                if switch_client.next_session.unwrap_or(false) {
                     args.push(n_KEY);
                 }
             }
             #[cfg(feature = "tmux_1_4")]
             {
-                if switch_client.previous.unwrap_or(false) {
+                if switch_client.previous_session.unwrap_or(false) {
                     args.push(p_KEY);
                 }
             }

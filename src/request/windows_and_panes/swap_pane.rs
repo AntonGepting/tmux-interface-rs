@@ -31,10 +31,10 @@ pub struct SwapPane<'a, T: Display> {
     pub detached: Option<bool>,
     /// [-D] - swap with the next pane
     #[cfg(feature = "tmux_0_8")]
-    pub previous: Option<bool>,
+    pub previous_pane: Option<bool>,
     /// [-U] - swap with the previous pane
     #[cfg(feature = "tmux_0_8")]
-    pub next: Option<bool>,
+    pub next_pane: Option<bool>,
     /// [-Z] - keep the window zoomed if it was zoomed
     #[cfg(feature = "tmux_3_1")]
     pub keep_zoomed: Option<bool>,
@@ -57,9 +57,9 @@ pub struct SwapPaneBuilder<'a, T> {
     #[cfg(feature = "tmux_0_8")]
     pub detached: Option<bool>,
     #[cfg(feature = "tmux_0_8")]
-    pub previous: Option<bool>,
+    pub previous_pane: Option<bool>,
     #[cfg(feature = "tmux_0_8")]
-    pub next: Option<bool>,
+    pub next_pane: Option<bool>,
     #[cfg(feature = "tmux_3_1")]
     pub keep_zoomed: Option<bool>,
     #[cfg(feature = "tmux_1_0")]
@@ -80,14 +80,14 @@ impl<'a, T: Display + Default> SwapPaneBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn previous(&mut self) -> &mut Self {
-        self.previous = Some(true);
+    pub fn previous_pane(&mut self) -> &mut Self {
+        self.previous_pane = Some(true);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn next(&mut self) -> &mut Self {
-        self.next = Some(true);
+    pub fn next_pane(&mut self) -> &mut Self {
+        self.next_pane = Some(true);
         self
     }
 
@@ -114,9 +114,9 @@ impl<'a, T: Display + Default> SwapPaneBuilder<'a, T> {
             #[cfg(feature = "tmux_0_8")]
             detached: self.detached,
             #[cfg(feature = "tmux_0_8")]
-            previous: self.previous,
+            previous_pane: self.previous_pane,
             #[cfg(feature = "tmux_0_8")]
-            next: self.next,
+            next_pane: self.next_pane,
             #[cfg(feature = "tmux_3_1")]
             keep_zoomed: self.keep_zoomed,
             #[cfg(feature = "tmux_1_0")]
@@ -167,13 +167,13 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_0_8")]
             {
-                if swap_pane.detached.unwrap_or(false) {
+                if swap_pane.previous_pane.unwrap_or(false) {
                     args.push(D_KEY);
                 }
             }
             #[cfg(feature = "tmux_0_8")]
             {
-                if swap_pane.detached.unwrap_or(false) {
+                if swap_pane.next_pane.unwrap_or(false) {
                     args.push(U_KEY);
                 }
             }

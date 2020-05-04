@@ -70,11 +70,11 @@ fn attach_session() {
         #[cfg(feature = "tmux_2_1")]
         not_update_env: Some(true),
         #[cfg(feature = "tmux_1_4")]
-        last: Some(true),
+        last_session: Some(true),
         #[cfg(feature = "tmux_1_4")]
-        next: Some(true),
+        next_session: Some(true),
         #[cfg(feature = "tmux_1_4")]
-        previous: Some(true),
+        previous_session: Some(true),
         #[cfg(feature = "tmux_1_6")]
         read_only: Some(true),
         #[cfg(feature = "tmux_3_1")]
@@ -92,11 +92,11 @@ fn attach_session() {
     #[cfg(feature = "tmux_2_1")]
     builder.not_update_env();
     #[cfg(feature = "tmux_1_4")]
-    builder.last();
+    builder.last_session();
     #[cfg(feature = "tmux_1_4")]
-    builder.next();
+    builder.next_session();
     #[cfg(feature = "tmux_1_4")]
-    builder.previous();
+    builder.previous_session();
     #[cfg(feature = "tmux_1_6")]
     builder.read_only();
     #[cfg(feature = "tmux_3_1")]
