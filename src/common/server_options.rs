@@ -389,7 +389,7 @@ impl fmt::Display for ServerOptions {
                 writeln!(f, "{} {}", var.0, v)?;
             }
         }
-        write!(f, "{}", "")
+        Ok(())
     }
 }
 

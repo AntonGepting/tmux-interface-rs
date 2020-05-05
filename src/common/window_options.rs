@@ -714,7 +714,7 @@ impl fmt::Display for WindowOptions {
                 writeln!(f, "{} {}", var.0, v)?;
             }
         }
-        write!(f, "{}", "")
+        Ok(())
     }
 }
 

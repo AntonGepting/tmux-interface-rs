@@ -1024,7 +1024,7 @@ impl fmt::Display for SessionOptions {
                 writeln!(f, "{} {}", var.0, v)?;
             }
         }
-        write!(f, "{}", "")
+        Ok(())
     }
 }
 

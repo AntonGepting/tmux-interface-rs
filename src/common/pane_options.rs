@@ -170,7 +170,7 @@ impl fmt::Display for PaneOptions {
                 write!(f, "{} {}\n", var.0, v)?;
             }
         }
-        write!(f, "{}", "")
+        Ok(())
     }
 }
 
