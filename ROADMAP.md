@@ -304,6 +304,14 @@ Parsing objects and supported tmux variables:
 
 
 # Strategy
+strategy and decision making
+
+- tmux versions support (decision, not current state)
+    - [ ] all
+    - [x] `^0.8` man of the first version found in repo (not full support)
+    - [x] `^1.0` structure of commands stabilization? (not full support)
+    - [x] `^2.6` make full support
+    - [x] `^3.1` make full support
 
 - additional tmux plugin?
     - [x] no, standalone library (current decision)
@@ -339,3 +347,53 @@ Parsing objects and supported tmux variables:
        (current decision)
     - [ ] runtime version detecting and corresponding code execution. Library
         size?
+
+- API calling concept?
+    - [x] "Conventional"? (current decision)
+        ```
+        let tmux = TmuxInterface::new();
+        tmux.env = "abc";
+        let attach_session = AttachSession {
+            ..Default::default()
+        };
+        tmux.attach_session(&attach_session);
+        ```
+    - [ ] "Chaining"? Better ergonomics? Allow disallow arguments for commands?
+        need to be analyzed, switch looks nice and reasonable
+        ```
+        TmuxInterfaceBuilder::new().env("abc").attach_session().target().run().bool_result();
+        ```
+        or smthg like:
+        ```
+        let tmux = TmuxInterfaceBuilder::new().env().build();
+        let cmd = TmuxCommandBuilder::new(&tmux).attach_session().target().run();
+        let result = TmuxOutput::new(&cmd).bool_result();
+        ```
+        ```
+        ::new() -> TmuxInterfaceBuilder
+        .build() -> TmuxInterface
+        .attach_session(self: TmuxInterface) -> AttachSessionBuilder
+        .run(self: AttachSessionBuilder) -> TmuxOutput or bool
+        .bool_result() -> merge previous
+        ```
+    - [ ] both
+        ```
+        TmuxInterfaceBuilder::new() -> TmuxInterfaceBuilder
+        .env(self: TmuxInterfaceBuilder, str) -> TmuxInterfaceBuilder
+        .attach_session(self: TmuxInterfaceBuilder) -> AttachSessionBuilder
+        .cmd(self: AttachSessionBuilder) -> TmuxInterface
+        .run(self: TmuxInterface) -> TmuxOutput
+        .bool_result(self: TmuxInterface) -> bool
+        ```
+
+- `target_*` `AsRef<>`, `Into<>`?
+    - [x]  using raw enum field, ugly
+        ```
+        .kill_pane(..., TargetPane::Raw("$1:@2.3"))
+        .kill_pane(..., TargetPane::Id(3))
+        ```
+    - [ ] using generic implements ...
+        ```
+        .kill_pane(..., "$1:@2.3")`
+        .kill_pane(..., TargetPane::Id(3))
+        ```
