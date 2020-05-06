@@ -160,42 +160,30 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(swap_pane) = swap_pane {
             #[cfg(feature = "tmux_0_8")]
-            {
-                if swap_pane.detached.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if swap_pane.detached.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if swap_pane.previous_pane.unwrap_or(false) {
-                    args.push(D_KEY);
-                }
+            if swap_pane.previous_pane.unwrap_or(false) {
+                args.push(D_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if swap_pane.next_pane.unwrap_or(false) {
-                    args.push(U_KEY);
-                }
+            if swap_pane.next_pane.unwrap_or(false) {
+                args.push(U_KEY);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if swap_pane.keep_zoomed.unwrap_or(false) {
-                    args.push(Z_KEY);
-                }
+            if swap_pane.keep_zoomed.unwrap_or(false) {
+                args.push(Z_KEY);
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(src_pane) = swap_pane.src_pane {
-                    s = src_pane.to_string();
-                    args.extend_from_slice(&[s_KEY, &s])
-                }
+            if let Some(src_pane) = swap_pane.src_pane {
+                s = src_pane.to_string();
+                args.extend_from_slice(&[s_KEY, &s])
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(dst_pane) = swap_pane.dst_pane {
-                    t = dst_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &t])
-                }
+            if let Some(dst_pane) = swap_pane.dst_pane {
+                t = dst_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &t])
             }
         }
         let output = self.subcommand(TmuxInterface::SWAP_PANE, &args)?;

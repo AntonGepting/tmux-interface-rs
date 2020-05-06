@@ -155,35 +155,25 @@ impl<'a> TmuxInterface<'a> {
         let s: String;
         if let Some(detach_client) = detach_client {
             #[cfg(feature = "tmux_2_2")]
-            {
-                if detach_client.all.unwrap_or(false) {
-                    args.push(a_KEY);
-                }
+            if detach_client.all.unwrap_or(false) {
+                args.push(a_KEY);
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if detach_client.parent_sighup.unwrap_or(false) {
-                    args.push(P_KEY);
-                }
+            if detach_client.parent_sighup.unwrap_or(false) {
+                args.push(P_KEY);
             }
             #[cfg(feature = "tmux_2_4")]
-            {
-                if let Some(s) = detach_client.shell_command {
-                    args.extend_from_slice(&[E_KEY, &s])
-                }
+            if let Some(s) = detach_client.shell_command {
+                args.extend_from_slice(&[E_KEY, &s])
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if let Some(target_session) = detach_client.target_session {
-                    s = target_session.to_string();
-                    args.extend_from_slice(&[s_KEY, &s])
-                }
+            if let Some(target_session) = detach_client.target_session {
+                s = target_session.to_string();
+                args.extend_from_slice(&[s_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(s) = detach_client.target_client {
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(s) = detach_client.target_client {
+                args.extend_from_slice(&[t_KEY, &s])
             }
         }
         let output = self.subcommand(TmuxInterface::DETACH_CLIENT, &args)?;

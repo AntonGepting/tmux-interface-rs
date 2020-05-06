@@ -199,53 +199,37 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(choose_buffer) = choose_buffer {
             #[cfg(feature = "tmux_2_6")]
-            {
-                if choose_buffer.no_preview.unwrap_or(false) {
-                    args.push(N_KEY);
-                }
+            if choose_buffer.no_preview.unwrap_or(false) {
+                args.push(N_KEY);
             }
             #[cfg(feature = "tmux_2_7")]
-            {
-                if choose_buffer.zoom.unwrap_or(false) {
-                    args.push(Z_KEY);
-                }
+            if choose_buffer.zoom.unwrap_or(false) {
+                args.push(Z_KEY);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if choose_buffer.reverse_sort_order.unwrap_or(false) {
-                    args.push(r_KEY);
-                }
+            if choose_buffer.reverse_sort_order.unwrap_or(false) {
+                args.push(r_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(s) = choose_buffer.format {
-                    args.extend_from_slice(&[F_KEY, &s])
-                }
+            if let Some(s) = choose_buffer.format {
+                args.extend_from_slice(&[F_KEY, &s])
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(s) = choose_buffer.filter {
-                    args.extend_from_slice(&[f_KEY, &s])
-                }
+            if let Some(s) = choose_buffer.filter {
+                args.extend_from_slice(&[f_KEY, &s])
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(s) = choose_buffer.sort_order {
-                    args.extend_from_slice(&[O_KEY, &s])
-                }
+            if let Some(s) = choose_buffer.sort_order {
+                args.extend_from_slice(&[O_KEY, &s])
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(target_pane) = choose_buffer.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = choose_buffer.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_1_3")]
-            {
-                if let Some(s) = choose_buffer.template {
-                    args.push(&s)
-                }
+            if let Some(s) = choose_buffer.template {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::CHOOSE_BUFFER, &args)?;

@@ -126,38 +126,28 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(set_environment) = set_environment {
             #[cfg(feature = "tmux_1_0")]
-            {
-                if set_environment.global.unwrap_or(false) {
-                    args.push(g_KEY);
-                }
+            if set_environment.global.unwrap_or(false) {
+                args.push(g_KEY);
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if set_environment.remove.unwrap_or(false) {
-                    args.push(r_KEY);
-                }
+            if set_environment.remove.unwrap_or(false) {
+                args.push(r_KEY);
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if set_environment.unset.unwrap_or(false) {
-                    args.push(u_KEY);
-                }
+            if set_environment.unset.unwrap_or(false) {
+                args.push(u_KEY);
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(target_session) = set_environment.target_session {
-                    s = target_session.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_session) = set_environment.target_session {
+                s = target_session.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
         }
         args.push(name);
         if let Some(set_environment) = set_environment {
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(s) = set_environment.value {
-                    args.push(&s)
-                }
+            if let Some(s) = set_environment.value {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::SET_ENVIRONMENT, &args)?;

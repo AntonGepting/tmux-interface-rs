@@ -196,47 +196,33 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(display_message) = display_message {
             #[cfg(feature = "tmux_2_9a")]
-            {
-                if display_message.list_format_vars.unwrap_or(false) {
-                    args.push(a_KEY);
-                }
+            if display_message.list_format_vars.unwrap_or(false) {
+                args.push(a_KEY);
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if display_message.forward_stdin.unwrap_or(false) {
-                    args.push(I_KEY);
-                }
+            if display_message.forward_stdin.unwrap_or(false) {
+                args.push(I_KEY);
             }
             #[cfg(feature = "tmux_2_9a")]
-            {
-                if display_message.print.unwrap_or(false) {
-                    args.push(p_KEY);
-                }
+            if display_message.print.unwrap_or(false) {
+                args.push(p_KEY);
             }
             #[cfg(feature = "tmux_2_9a")]
-            {
-                if display_message.verbose.unwrap_or(false) {
-                    args.push(v_KEY);
-                }
+            if display_message.verbose.unwrap_or(false) {
+                args.push(v_KEY);
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(s) = display_message.target_client {
-                    args.extend_from_slice(&[c_KEY, &s])
-                }
+            if let Some(s) = display_message.target_client {
+                args.extend_from_slice(&[c_KEY, &s])
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if let Some(target_pane) = display_message.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = display_message.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(s) = display_message.message {
-                    args.push(&s)
-                }
+            if let Some(s) = display_message.message {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::DISPLAY_MESSAGE, &args)?;

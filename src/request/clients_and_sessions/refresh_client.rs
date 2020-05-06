@@ -248,80 +248,56 @@ impl<'a> TmuxInterface<'a> {
         let n: String;
         if let Some(refresh_client) = refresh_client {
             #[cfg(feature = "tmux_2_9a")]
-            {
-                if refresh_client.tracking_cursor.unwrap_or(false) {
-                    args.push(c_KEY);
-                }
+            if refresh_client.tracking_cursor.unwrap_or(false) {
+                args.push(c_KEY);
             }
             #[cfg(feature = "tmux_2_9a")]
-            {
-                if refresh_client.down.unwrap_or(false) {
-                    args.push(D_KEY);
-                }
+            if refresh_client.down.unwrap_or(false) {
+                args.push(D_KEY);
             }
             #[cfg(feature = "tmux_2_9a")]
-            {
-                if refresh_client.request_clipboard.unwrap_or(false) {
-                    args.push(l_KEY);
-                }
+            if refresh_client.request_clipboard.unwrap_or(false) {
+                args.push(l_KEY);
             }
             #[cfg(feature = "tmux_2_9a")]
-            {
-                if refresh_client.left.unwrap_or(false) {
-                    args.push(L_KEY);
-                }
+            if refresh_client.left.unwrap_or(false) {
+                args.push(L_KEY);
             }
             #[cfg(feature = "tmux_2_9a")]
-            {
-                if refresh_client.right.unwrap_or(false) {
-                    args.push(R_KEY);
-                }
+            if refresh_client.right.unwrap_or(false) {
+                args.push(R_KEY);
             }
             #[cfg(feature = "tmux_1_6")]
-            {
-                if refresh_client.status_line.unwrap_or(false) {
-                    args.push(S_KEY);
-                }
+            if refresh_client.status_line.unwrap_or(false) {
+                args.push(S_KEY);
             }
             #[cfg(feature = "tmux_2_9a")]
-            {
-                if refresh_client.up.unwrap_or(false) {
-                    args.push(U_KEY);
-                }
+            if refresh_client.up.unwrap_or(false) {
+                args.push(U_KEY);
             }
             #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_0")))]
-            {
-                if let Some(size) = refresh_client.size {
-                    s = format!("{},{}", size.0, size.1);
-                    args.extend_from_slice(&[C_KEY, &s]);
-                }
+            if let Some(size) = refresh_client.size {
+                s = format!("{},{}", size.0, size.1);
+                args.extend_from_slice(&[C_KEY, &s]);
             }
             // FIXME: multiple incompatible def's
             #[cfg(feature = "tmux_3_0")]
-            {
-                if let Some(size) = refresh_client.size {
-                    s = format!("{}x{}", size.0, size.1);
-                    args.extend_from_slice(&[C_KEY, &s]);
-                }
+            if let Some(size) = refresh_client.size {
+                s = format!("{}x{}", size.0, size.1);
+                args.extend_from_slice(&[C_KEY, &s]);
             }
             #[cfg(feature = "tmux_2_9a")]
-            {
-                if let Some(s) = refresh_client.flags {
-                    args.extend_from_slice(&[F_KEY, &s])
-                }
+            if let Some(s) = refresh_client.flags {
+                args.extend_from_slice(&[F_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(s) = refresh_client.target_client {
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(s) = refresh_client.target_client {
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_2_9a")]
-            {
-                if let Some(adjustment) = refresh_client.adjustment {
-                    n = adjustment.to_string();
-                    args.push(&n);
-                }
+            if let Some(adjustment) = refresh_client.adjustment {
+                n = adjustment.to_string();
+                args.push(&n);
             }
         }
         let output = self.subcommand(TmuxInterface::REFRESH_CLIENT, &args)?;

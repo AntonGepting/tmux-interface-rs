@@ -196,42 +196,30 @@ impl<'a> TmuxInterface<'a> {
         let t;
         if let Some(break_pane) = break_pane {
             #[cfg(feature = "tmux_0_8")]
-            {
-                if break_pane.detached.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if break_pane.detached.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if break_pane.print.unwrap_or(false) {
-                    args.push(P_KEY);
-                }
+            if break_pane.print.unwrap_or(false) {
+                args.push(P_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(s) = break_pane.format {
-                    args.extend_from_slice(&[F_KEY, &s])
-                }
+            if let Some(s) = break_pane.format {
+                args.extend_from_slice(&[F_KEY, &s])
             }
             #[cfg(feature = "tmux_2_4")]
-            {
-                if let Some(s) = break_pane.window_name {
-                    args.extend_from_slice(&[n_KEY, &s])
-                }
+            if let Some(s) = break_pane.window_name {
+                args.extend_from_slice(&[n_KEY, &s])
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if let Some(src_pane) = break_pane.src_pane {
-                    s = src_pane.to_string();
-                    args.extend_from_slice(&[s_KEY, &s])
-                }
+            if let Some(src_pane) = break_pane.src_pane {
+                s = src_pane.to_string();
+                args.extend_from_slice(&[s_KEY, &s])
             }
             #[cfg(feature = "tmux_2_2")]
-            {
-                if let Some(dst_window) = break_pane.dst_window {
-                    t = dst_window.to_string();
-                    args.extend_from_slice(&[t_KEY, &t]);
-                }
+            if let Some(dst_window) = break_pane.dst_window {
+                t = dst_window.to_string();
+                args.extend_from_slice(&[t_KEY, &t]);
             }
         }
         let output = self.subcommand(TmuxInterface::BREAK_PANE, &args)?;

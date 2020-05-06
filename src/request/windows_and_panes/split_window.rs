@@ -335,102 +335,74 @@ impl<'a> TmuxInterface<'a> {
 
         if let Some(split_window) = split_window {
             #[cfg(feature = "tmux_2_4")]
-            {
-                if split_window.before.unwrap_or(false) {
-                    args.push(b_KEY);
-                }
+            if split_window.before.unwrap_or(false) {
+                args.push(b_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if split_window.detached.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if split_window.detached.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_2_4")]
-            {
-                if split_window.full.unwrap_or(false) {
-                    args.push(f_KEY);
-                }
+            if split_window.full.unwrap_or(false) {
+                args.push(f_KEY);
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if split_window.horizontal.unwrap_or(false) {
-                    args.push(h_KEY);
-                }
+            if split_window.horizontal.unwrap_or(false) {
+                args.push(h_KEY);
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if split_window.stdin_forward.unwrap_or(false) {
-                    args.push(I_KEY);
-                }
+            if split_window.stdin_forward.unwrap_or(false) {
+                args.push(I_KEY);
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if split_window.vertical.unwrap_or(false) {
-                    args.push(v_KEY);
-                }
+            if split_window.vertical.unwrap_or(false) {
+                args.push(v_KEY);
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if split_window.print.unwrap_or(false) {
-                    args.push(P_KEY);
-                }
+            if split_window.print.unwrap_or(false) {
+                args.push(P_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(s) = split_window.cwd {
-                    args.extend_from_slice(&[c_KEY, &s]);
-                }
+            if let Some(s) = split_window.cwd {
+                args.extend_from_slice(&[c_KEY, &s]);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if let Some(s) = split_window.environment {
-                    args.extend_from_slice(&[e_KEY, &s]);
-                }
+            if let Some(s) = split_window.environment {
+                args.extend_from_slice(&[e_KEY, &s]);
             }
             #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_1")))]
-            {
-                if let Some(size) = &split_window.size {
-                    match size {
-                        PaneSize::Size(size) => d = size.to_string(),
-                        PaneSize::Percentage(size) => d = format!("{}%", size),
-                    };
-                    args.extend_from_slice(&[l_KEY, &d]);
-                }
+            if let Some(size) = &split_window.size {
+                match size {
+                    PaneSize::Size(size) => d = size.to_string(),
+                    PaneSize::Percentage(size) => d = format!("{}%", size),
+                };
+                args.extend_from_slice(&[l_KEY, &d]);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if let Some(size) = &split_window.size {
-                    match size {
-                        PaneSize::Size(size) => {
-                            d = size.to_string();
-                            args.extend_from_slice(&[l_KEY, &d]);
-                        }
-                        PaneSize::Percentage(size) => {
-                            d = size.to_string();
-                            args.extend_from_slice(&[p_KEY, &d]);
-                        }
-                    };
-                }
+            if let Some(size) = &split_window.size {
+                match size {
+                    PaneSize::Size(size) => {
+                        d = size.to_string();
+                        args.extend_from_slice(&[l_KEY, &d]);
+                    }
+                    PaneSize::Percentage(size) => {
+                        d = size.to_string();
+                        args.extend_from_slice(&[p_KEY, &d]);
+                    }
+                };
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if let Some(target_pane) = split_window.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = split_window.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if let Some(s) = split_window.shell_command {
-                    args.push(&s)
-                }
+            if let Some(s) = split_window.shell_command {
+                args.push(&s)
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(s) = split_window.format {
-                    args.extend_from_slice(&[F_KEY, &s])
-                }
+            if let Some(s) = split_window.format {
+                args.extend_from_slice(&[F_KEY, &s])
             }
         }
         let output = self.subcommand(TmuxInterface::SPLIT_WINDOW, &args)?;

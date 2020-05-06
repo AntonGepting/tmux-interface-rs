@@ -172,42 +172,30 @@ impl<'a> TmuxInterface<'a> {
         let t;
         if let Some(move_window) = move_window {
             #[cfg(feature = "tmux_2_1")]
-            {
-                if move_window.add.unwrap_or(false) {
-                    args.push(a_KEY);
-                }
+            if move_window.add.unwrap_or(false) {
+                args.push(a_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if move_window.renumber.unwrap_or(false) {
-                    args.push(r_KEY);
-                }
+            if move_window.renumber.unwrap_or(false) {
+                args.push(r_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if move_window.detached.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if move_window.detached.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_1_3")]
-            {
-                if move_window.kill.unwrap_or(false) {
-                    args.push(k_KEY);
-                }
+            if move_window.kill.unwrap_or(false) {
+                args.push(k_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(src_window) = move_window.src_window {
-                    s = src_window.to_string();
-                    args.extend_from_slice(&[s_KEY, &s])
-                }
+            if let Some(src_window) = move_window.src_window {
+                s = src_window.to_string();
+                args.extend_from_slice(&[s_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(dst_window) = move_window.dst_window {
-                    t = dst_window.to_string();
-                    args.extend_from_slice(&[t_KEY, &t])
-                }
+            if let Some(dst_window) = move_window.dst_window {
+                t = dst_window.to_string();
+                args.extend_from_slice(&[t_KEY, &t])
             }
         }
         let output = self.subcommand(TmuxInterface::MOVE_WINDOW, &args)?;

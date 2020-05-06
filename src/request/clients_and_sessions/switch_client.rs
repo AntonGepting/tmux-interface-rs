@@ -225,59 +225,41 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(switch_client) = switch_client {
             #[cfg(feature = "tmux_2_1")]
-            {
-                if switch_client.not_update_env.unwrap_or(false) {
-                    args.push(E_KEY);
-                }
+            if switch_client.not_update_env.unwrap_or(false) {
+                args.push(E_KEY);
             }
             #[cfg(feature = "tmux_1_4")]
-            {
-                if switch_client.last_session.unwrap_or(false) {
-                    args.push(l_KEY);
-                }
+            if switch_client.last_session.unwrap_or(false) {
+                args.push(l_KEY);
             }
             #[cfg(feature = "tmux_1_4")]
-            {
-                if switch_client.next_session.unwrap_or(false) {
-                    args.push(n_KEY);
-                }
+            if switch_client.next_session.unwrap_or(false) {
+                args.push(n_KEY);
             }
             #[cfg(feature = "tmux_1_4")]
-            {
-                if switch_client.previous_session.unwrap_or(false) {
-                    args.push(p_KEY);
-                }
+            if switch_client.previous_session.unwrap_or(false) {
+                args.push(p_KEY);
             }
             #[cfg(feature = "tmux_1_6")]
-            {
-                if switch_client.read_only.unwrap_or(false) {
-                    args.push(r_KEY);
-                }
+            if switch_client.read_only.unwrap_or(false) {
+                args.push(r_KEY);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if switch_client.keep_zoomed.unwrap_or(false) {
-                    args.push(Z_KEY);
-                }
+            if switch_client.keep_zoomed.unwrap_or(false) {
+                args.push(Z_KEY);
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(s) = switch_client.target_client {
-                    args.extend_from_slice(&[c_KEY, &s])
-                }
+            if let Some(s) = switch_client.target_client {
+                args.extend_from_slice(&[c_KEY, &s])
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(target_session) = switch_client.target_session {
-                    s = target_session.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_session) = switch_client.target_session {
+                s = target_session.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if let Some(s) = switch_client.key_table {
-                    args.extend_from_slice(&[T_KEY, &s])
-                }
+            if let Some(s) = switch_client.key_table {
+                args.extend_from_slice(&[T_KEY, &s])
             }
         }
         let output = self.subcommand(TmuxInterface::SWITCH_CLIENT, &args)?;

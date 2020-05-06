@@ -146,35 +146,25 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(pipe_pane) = pipe_pane {
             #[cfg(feature = "tmux_2_7")]
-            {
-                if pipe_pane.stdout.unwrap_or(false) {
-                    args.push(I_KEY);
-                }
+            if pipe_pane.stdout.unwrap_or(false) {
+                args.push(I_KEY);
             }
             #[cfg(feature = "tmux_2_7")]
-            {
-                if pipe_pane.stdin.unwrap_or(false) {
-                    args.push(O_KEY);
-                }
+            if pipe_pane.stdin.unwrap_or(false) {
+                args.push(O_KEY);
             }
             #[cfg(feature = "tmux_1_1")]
-            {
-                if pipe_pane.open.unwrap_or(false) {
-                    args.push(o_KEY);
-                }
+            if pipe_pane.open.unwrap_or(false) {
+                args.push(o_KEY);
             }
             #[cfg(feature = "tmux_1_1")]
-            {
-                if let Some(target_pane) = pipe_pane.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = pipe_pane.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if let Some(s) = pipe_pane.shell_command {
-                    args.push(&s)
-                }
+            if let Some(s) = pipe_pane.shell_command {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::PIPE_PANE, &args)?;

@@ -134,37 +134,27 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(display_menu) = display_menu {
             #[cfg(feature = "tmux_3_0")]
-            {
-                if let Some(s) = display_menu.target_client {
-                    args.extend_from_slice(&[c_KEY, &s])
-                }
+            if let Some(s) = display_menu.target_client {
+                args.extend_from_slice(&[c_KEY, &s])
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if let Some(target_pane) = display_menu.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = display_menu.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if let Some(s) = display_menu.title {
-                    args.extend_from_slice(&[T_KEY, &s])
-                }
+            if let Some(s) = display_menu.title {
+                args.extend_from_slice(&[T_KEY, &s])
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if let Some(position) = display_menu.x {
-                    x = position.to_string();
-                    args.extend_from_slice(&[x_KEY, &x]);
-                }
+            if let Some(position) = display_menu.x {
+                x = position.to_string();
+                args.extend_from_slice(&[x_KEY, &x]);
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if let Some(position) = display_menu.y {
-                    y = position.to_string();
-                    args.extend_from_slice(&[y_KEY, &y]);
-                }
+            if let Some(position) = display_menu.y {
+                y = position.to_string();
+                args.extend_from_slice(&[y_KEY, &y]);
             }
         }
         args.push(&name);

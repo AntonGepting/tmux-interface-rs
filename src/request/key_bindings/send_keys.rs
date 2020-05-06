@@ -238,55 +238,39 @@ impl<'a> TmuxInterface<'a> {
         let n;
         if let Some(send_keys) = send_keys {
             #[cfg(feature = "tmux_3_1")]
-            {
-                if send_keys.expand_formats.unwrap_or(false) {
-                    args.push(F_KEY);
-                }
+            if send_keys.expand_formats.unwrap_or(false) {
+                args.push(F_KEY);
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if send_keys.hex.unwrap_or(false) {
-                    args.push(H_KEY);
-                }
+            if send_keys.hex.unwrap_or(false) {
+                args.push(H_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if send_keys.disable_lookup.unwrap_or(false) {
-                    args.push(l_KEY);
-                }
+            if send_keys.disable_lookup.unwrap_or(false) {
+                args.push(l_KEY);
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if send_keys.mouse_event.unwrap_or(false) {
-                    args.push(M_KEY);
-                }
+            if send_keys.mouse_event.unwrap_or(false) {
+                args.push(M_KEY);
             }
             #[cfg(feature = "tmux_1_6")]
-            {
-                if send_keys.copy_mode.unwrap_or(false) {
-                    args.push(R_KEY);
-                }
+            if send_keys.copy_mode.unwrap_or(false) {
+                args.push(R_KEY);
             }
             #[cfg(feature = "tmux_2_4")]
-            {
-                if send_keys.reset.unwrap_or(false) {
-                    args.push(X_KEY);
-                }
+            if send_keys.reset.unwrap_or(false) {
+                args.push(X_KEY);
             }
             //send_keys.repeat_count.map(|s| Some(args.extend_from_slice(&[N_KEY, s])));
             #[cfg(feature = "tmux_2_4")]
-            {
-                if let Some(repeat_count) = send_keys.repeat_count {
-                    n = repeat_count.to_string();
-                    args.extend_from_slice(&[N_KEY, &n]);
-                }
+            if let Some(repeat_count) = send_keys.repeat_count {
+                n = repeat_count.to_string();
+                args.extend_from_slice(&[N_KEY, &n]);
             }
             #[cfg(feature = "tmux_1_6")]
-            {
-                if let Some(target_pane) = send_keys.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = send_keys.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
         }
         //args.extend_from_slice(send_keys.keys.as_slice());

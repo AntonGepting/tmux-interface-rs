@@ -263,58 +263,40 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(set_option) = set_option {
             #[cfg(feature = "tmux_1_0")]
-            {
-                if set_option.append.unwrap_or(false) {
-                    args.push(a_KEY);
-                }
+            if set_option.append.unwrap_or(false) {
+                args.push(a_KEY);
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if set_option.format.unwrap_or(false) {
-                    args.push(F_KEY);
-                }
+            if set_option.format.unwrap_or(false) {
+                args.push(F_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if set_option.global.unwrap_or(false) {
-                    args.push(g_KEY);
-                }
+            if set_option.global.unwrap_or(false) {
+                args.push(g_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if set_option.not_overwrite.unwrap_or(false) {
-                    args.push(o_KEY);
-                }
+            if set_option.not_overwrite.unwrap_or(false) {
+                args.push(o_KEY);
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if set_option.pane.unwrap_or(false) {
-                    args.push(p_KEY);
-                }
+            if set_option.pane.unwrap_or(false) {
+                args.push(p_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if set_option.quiet.unwrap_or(false) {
-                    args.push(q_KEY);
-                }
+            if set_option.quiet.unwrap_or(false) {
+                args.push(q_KEY);
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if set_option.server.unwrap_or(false) {
-                    args.push(s_KEY);
-                }
+            if set_option.server.unwrap_or(false) {
+                args.push(s_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if set_option.unset.unwrap_or(false) {
-                    args.push(u_KEY);
-                }
+            if set_option.unset.unwrap_or(false) {
+                args.push(u_KEY);
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if set_option.window.unwrap_or(false) {
-                    args.push(w_KEY);
-                }
+            if set_option.window.unwrap_or(false) {
+                args.push(w_KEY);
             }
             if let Some(target) = set_option.target {
                 s = target.to_string();

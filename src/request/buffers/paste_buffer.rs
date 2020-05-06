@@ -171,41 +171,29 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(paste_buffer) = paste_buffer {
             #[cfg(feature = "tmux_0_8")]
-            {
-                if paste_buffer.delete.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if paste_buffer.delete.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if paste_buffer.bracket_codes.unwrap_or(false) {
-                    args.push(p_KEY);
-                }
+            if paste_buffer.bracket_codes.unwrap_or(false) {
+                args.push(p_KEY);
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if paste_buffer.no_replacement.unwrap_or(false) {
-                    args.push(r_KEY);
-                }
+            if paste_buffer.no_replacement.unwrap_or(false) {
+                args.push(r_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(s) = paste_buffer.buffer_name {
-                    args.extend_from_slice(&[b_KEY, &s])
-                }
+            if let Some(s) = paste_buffer.buffer_name {
+                args.extend_from_slice(&[b_KEY, &s])
             }
             #[cfg(feature = "tmux_1_3")]
-            {
-                if let Some(s) = paste_buffer.separator {
-                    args.extend_from_slice(&[s_KEY, &s])
-                }
+            if let Some(s) = paste_buffer.separator {
+                args.extend_from_slice(&[s_KEY, &s])
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(target_pane) = paste_buffer.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = paste_buffer.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
         }
         let output = self.subcommand(TmuxInterface::PASTE_BUFFER, &args)?;

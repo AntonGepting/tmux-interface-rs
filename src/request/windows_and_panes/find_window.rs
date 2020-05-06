@@ -171,34 +171,24 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(find_window) = find_window {
             #[cfg(feature = "tmux_3_0")]
-            {
-                if find_window.regex.unwrap_or(false) {
-                    args.push(r_KEY);
-                }
+            if find_window.regex.unwrap_or(false) {
+                args.push(r_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if find_window.only_visible.unwrap_or(false) {
-                    args.push(C_KEY);
-                }
+            if find_window.only_visible.unwrap_or(false) {
+                args.push(C_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if find_window.only_name.unwrap_or(false) {
-                    args.push(N_KEY);
-                }
+            if find_window.only_name.unwrap_or(false) {
+                args.push(N_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if find_window.only_title.unwrap_or(false) {
-                    args.push(T_KEY);
-                }
+            if find_window.only_title.unwrap_or(false) {
+                args.push(T_KEY);
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if find_window.zoom.unwrap_or(false) {
-                    args.push(Z_KEY);
-                }
+            if find_window.zoom.unwrap_or(false) {
+                args.push(Z_KEY);
             }
             //#[cfg(feature = "tmux_2_6")]
             if let Some(target_pane) = find_window.target_pane {

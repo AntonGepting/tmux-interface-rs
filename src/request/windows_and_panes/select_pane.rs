@@ -321,89 +321,61 @@ impl<'a> TmuxInterface<'a> {
 
         if let Some(select_pane) = select_pane {
             #[cfg(feature = "tmux_1_3")]
-            {
-                if select_pane.down.unwrap_or(false) {
-                    args.push(D_KEY);
-                }
+            if select_pane.down.unwrap_or(false) {
+                args.push(D_KEY);
             }
             #[cfg(feature = "tmux_2_0")]
-            {
-                if select_pane.disable.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if select_pane.disable.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_2_0")]
-            {
-                if select_pane.enable.unwrap_or(false) {
-                    args.push(e_KEY);
-                }
+            if select_pane.enable.unwrap_or(false) {
+                args.push(e_KEY);
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if select_pane.show_style.unwrap_or(false) {
-                    args.push(g_KEY);
-                }
+            if select_pane.show_style.unwrap_or(false) {
+                args.push(g_KEY);
             }
             #[cfg(feature = "tmux_1_3")]
-            {
-                if select_pane.left.unwrap_or(false) {
-                    args.push(L_KEY);
-                }
+            if select_pane.left.unwrap_or(false) {
+                args.push(L_KEY);
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if select_pane.last.unwrap_or(false) {
-                    args.push(l_KEY);
-                }
+            if select_pane.last.unwrap_or(false) {
+                args.push(l_KEY);
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if select_pane.set_marked.unwrap_or(false) {
-                    args.push(M_KEY);
-                }
+            if select_pane.set_marked.unwrap_or(false) {
+                args.push(M_KEY);
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if select_pane.clear_marked.unwrap_or(false) {
-                    args.push(m_KEY);
-                }
+            if select_pane.clear_marked.unwrap_or(false) {
+                args.push(m_KEY);
             }
             #[cfg(feature = "tmux_1_3")]
-            {
-                if select_pane.right.unwrap_or(false) {
-                    args.push(R_KEY);
-                }
+            if select_pane.right.unwrap_or(false) {
+                args.push(R_KEY);
             }
             #[cfg(feature = "tmux_1_3")]
-            {
-                if select_pane.up.unwrap_or(false) {
-                    args.push(U_KEY);
-                }
+            if select_pane.up.unwrap_or(false) {
+                args.push(U_KEY);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if select_pane.keep_zoomed.unwrap_or(false) {
-                    args.push(Z_KEY);
-                }
+            if select_pane.keep_zoomed.unwrap_or(false) {
+                args.push(Z_KEY);
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if let Some(s) = select_pane.style {
-                    args.extend_from_slice(&[P_KEY, s])
-                }
+            if let Some(s) = select_pane.style {
+                args.extend_from_slice(&[P_KEY, s])
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(s) = select_pane.title {
-                    args.extend_from_slice(&[T_KEY, s])
-                }
+            if let Some(s) = select_pane.title {
+                args.extend_from_slice(&[T_KEY, s])
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(target_pane) = select_pane.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = select_pane.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
         }
         let output = self.subcommand(TmuxInterface::SELECT_PANE, &args)?;

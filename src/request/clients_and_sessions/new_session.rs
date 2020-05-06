@@ -342,91 +342,63 @@ impl<'a> TmuxInterface<'a> {
 
         if let Some(new_session) = new_session {
             #[cfg(feature = "tmux_1_8")]
-            {
-                if new_session.attach.unwrap_or(false) {
-                    args.push(A_KEY);
-                }
+            if new_session.attach.unwrap_or(false) {
+                args.push(A_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if new_session.detached.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if new_session.detached.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if new_session.detach_other.unwrap_or(false) {
-                    args.push(D_KEY);
-                }
+            if new_session.detach_other.unwrap_or(false) {
+                args.push(D_KEY);
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if new_session.not_update_env.unwrap_or(false) {
-                    args.push(E_KEY);
-                }
+            if new_session.not_update_env.unwrap_or(false) {
+                args.push(E_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if new_session.print.unwrap_or(false) {
-                    args.push(P_KEY);
-                }
+            if new_session.print.unwrap_or(false) {
+                args.push(P_KEY);
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if new_session.parent_sighup.unwrap_or(false) {
-                    args.push(X_KEY);
-                }
+            if new_session.parent_sighup.unwrap_or(false) {
+                args.push(X_KEY);
             }
             #[cfg(feature = "tmux_1_9")]
-            {
-                if let Some(s) = new_session.cwd {
-                    args.extend_from_slice(&[c_KEY, &s])
-                }
+            if let Some(s) = new_session.cwd {
+                args.extend_from_slice(&[c_KEY, &s])
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if let Some(s) = new_session.format {
-                    args.extend_from_slice(&[F_KEY, &s])
-                }
+            if let Some(s) = new_session.format {
+                args.extend_from_slice(&[F_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(s) = new_session.window_name {
-                    args.extend_from_slice(&[n_KEY, &s])
-                }
+            if let Some(s) = new_session.window_name {
+                args.extend_from_slice(&[n_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(s) = new_session.session_name {
-                    args.extend_from_slice(&[s_KEY, &s])
-                }
+            if let Some(s) = new_session.session_name {
+                args.extend_from_slice(&[s_KEY, &s])
             }
             #[cfg(feature = "tmux_2_4")]
-            {
-                if let Some(s) = new_session.group_name {
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(s) = new_session.group_name {
+                args.extend_from_slice(&[t_KEY, &s])
             }
             //new_session.width.map(|n| args.extend_from_slice(&[x_KEY, &n.to_string()]));
             #[cfg(feature = "tmux_1_6")]
-            {
-                if let Some(width) = new_session.width {
-                    x = width.to_string();
-                    args.extend_from_slice(&[x_KEY, &x]);
-                }
+            if let Some(width) = new_session.width {
+                x = width.to_string();
+                args.extend_from_slice(&[x_KEY, &x]);
             }
             #[cfg(feature = "tmux_1_6")]
-            {
-                if let Some(height) = new_session.height {
-                    y = height.to_string();
-                    args.extend_from_slice(&[y_KEY, &y]);
-                }
+            if let Some(height) = new_session.height {
+                y = height.to_string();
+                args.extend_from_slice(&[y_KEY, &y]);
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if let Some(s) = new_session.shell_command {
-                    args.push(&s)
-                }
+            if let Some(s) = new_session.shell_command {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::NEW_SESSION, &args)?;

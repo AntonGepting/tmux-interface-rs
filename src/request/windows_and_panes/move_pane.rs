@@ -163,67 +163,51 @@ impl<'a> TmuxInterface<'a> {
         let t;
         if let Some(move_pane) = move_pane {
             #[cfg(feature = "tmux_1_7")]
-            {
-                if move_pane.left_above.unwrap_or(false) {
-                    args.push(b_KEY);
-                }
+            if move_pane.left_above.unwrap_or(false) {
+                args.push(b_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if move_pane.detached.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if move_pane.detached.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if move_pane.horizontal.unwrap_or(false) {
-                    args.push(h_KEY);
-                }
+            if move_pane.horizontal.unwrap_or(false) {
+                args.push(h_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if move_pane.vertical.unwrap_or(false) {
-                    args.push(v_KEY);
-                }
+            if move_pane.vertical.unwrap_or(false) {
+                args.push(v_KEY);
             }
             #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-            {
-                if let Some(size) = &move_pane.size {
-                    match size {
-                        PaneSize::Size(size) => p = size.to_string(),
-                        PaneSize::Percentage(size) => p = format!("{}%", size),
-                    };
-                    args.extend_from_slice(&[l_KEY, &p]);
-                }
+            if let Some(size) = &move_pane.size {
+                match size {
+                    PaneSize::Size(size) => p = size.to_string(),
+                    PaneSize::Percentage(size) => p = format!("{}%", size),
+                };
+                args.extend_from_slice(&[l_KEY, &p]);
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(size) = &move_pane.size {
-                    match size {
-                        PaneSize::Size(size) => {
-                            p = size.to_string();
-                            args.extend_from_slice(&[l_KEY, &p]);
-                        }
-                        PaneSize::Percentage(size) => {
-                            p = size.to_string();
-                            args.extend_from_slice(&[p_KEY, &p]);
-                        }
-                    };
-                }
+            if let Some(size) = &move_pane.size {
+                match size {
+                    PaneSize::Size(size) => {
+                        p = size.to_string();
+                        args.extend_from_slice(&[l_KEY, &p]);
+                    }
+                    PaneSize::Percentage(size) => {
+                        p = size.to_string();
+                        args.extend_from_slice(&[p_KEY, &p]);
+                    }
+                };
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(src_pane) = move_pane.src_pane {
-                    s = src_pane.to_string();
-                    args.extend_from_slice(&[s_KEY, &s])
-                }
+            if let Some(src_pane) = move_pane.src_pane {
+                s = src_pane.to_string();
+                args.extend_from_slice(&[s_KEY, &s])
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(dst_pane) = move_pane.dst_pane {
-                    t = dst_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &t])
-                }
+            if let Some(dst_pane) = move_pane.dst_pane {
+                t = dst_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &t])
             }
         }
         let output = self.subcommand(TmuxInterface::MOVE_PANE, &args)?;

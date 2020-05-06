@@ -208,47 +208,33 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(set_window_option) = set_window_option {
             #[cfg(feature = "tmux_1_0")]
-            {
-                if set_window_option.append.unwrap_or(false) {
-                    args.push(a_KEY);
-                }
+            if set_window_option.append.unwrap_or(false) {
+                args.push(a_KEY);
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if set_window_option.format.unwrap_or(false) {
-                    args.push(F_KEY);
-                }
+            if set_window_option.format.unwrap_or(false) {
+                args.push(F_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if set_window_option.global.unwrap_or(false) {
-                    args.push(g_KEY);
-                }
+            if set_window_option.global.unwrap_or(false) {
+                args.push(g_KEY);
             }
             #[cfg(feature = "tmux_1_9")]
-            {
-                if set_window_option.not_overwrite.unwrap_or(false) {
-                    args.push(o_KEY);
-                }
+            if set_window_option.not_overwrite.unwrap_or(false) {
+                args.push(o_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if set_window_option.quiet.unwrap_or(false) {
-                    args.push(q_KEY);
-                }
+            if set_window_option.quiet.unwrap_or(false) {
+                args.push(q_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if set_window_option.unset.unwrap_or(false) {
-                    args.push(u_KEY);
-                }
+            if set_window_option.unset.unwrap_or(false) {
+                args.push(u_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(target_window) = set_window_option.target_window {
-                    s = target_window.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_window) = set_window_option.target_window {
+                s = target_window.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
         }
         args.push(option);

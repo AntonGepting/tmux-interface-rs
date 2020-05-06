@@ -260,77 +260,53 @@ impl<'a> TmuxInterface<'a> {
         let s: String;
         if let Some(capture_pane) = capture_pane {
             #[cfg(feature = "tmux_1_8")]
-            {
-                if capture_pane.alternate_screen.unwrap_or(false) {
-                    args.push(a_KEY);
-                }
+            if capture_pane.alternate_screen.unwrap_or(false) {
+                args.push(a_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if capture_pane.escape_sequences.unwrap_or(false) {
-                    args.push(e_KEY);
-                }
+            if capture_pane.escape_sequences.unwrap_or(false) {
+                args.push(e_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if capture_pane.stdout.unwrap_or(false) {
-                    args.push(p_KEY);
-                }
+            if capture_pane.stdout.unwrap_or(false) {
+                args.push(p_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if capture_pane.pane.unwrap_or(false) {
-                    args.push(P_KEY);
-                }
+            if capture_pane.pane.unwrap_or(false) {
+                args.push(P_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if capture_pane.quite.unwrap_or(false) {
-                    args.push(q_KEY);
-                }
+            if capture_pane.quite.unwrap_or(false) {
+                args.push(q_KEY);
             }
             #[cfg(feature = "tmux_2_4")]
-            {
-                if capture_pane.escape_non_printable.unwrap_or(false) {
-                    args.push(C_KEY);
-                }
+            if capture_pane.escape_non_printable.unwrap_or(false) {
+                args.push(C_KEY);
             }
             #[cfg(feature = "tmux_2_4")]
-            {
-                if capture_pane.join.unwrap_or(false) {
-                    args.push(J_KEY);
-                }
+            if capture_pane.join.unwrap_or(false) {
+                args.push(J_KEY);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if capture_pane.trailing_spaces.unwrap_or(false) {
-                    args.push(N_KEY);
-                }
+            if capture_pane.trailing_spaces.unwrap_or(false) {
+                args.push(N_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if let Some(s) = capture_pane.buffer_name {
-                    args.extend_from_slice(&[b_KEY, &s])
-                }
+            if let Some(s) = capture_pane.buffer_name {
+                args.extend_from_slice(&[b_KEY, &s])
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if let Some(s) = capture_pane.end_line {
-                    args.extend_from_slice(&[E_KEY, &s])
-                }
+            if let Some(s) = capture_pane.end_line {
+                args.extend_from_slice(&[E_KEY, &s])
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if let Some(s) = capture_pane.start_line {
-                    args.extend_from_slice(&[S_KEY, &s])
-                }
+            if let Some(s) = capture_pane.start_line {
+                args.extend_from_slice(&[S_KEY, &s])
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if let Some(target_pane) = capture_pane.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = capture_pane.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
         }
         let output = self.subcommand(TmuxInterface::CAPTURE_PANE, &args)?;

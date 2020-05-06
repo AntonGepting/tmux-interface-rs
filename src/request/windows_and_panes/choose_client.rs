@@ -199,53 +199,37 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(choose_client) = choose_client {
             #[cfg(feature = "tmux_2_6")]
-            {
-                if choose_client.without_preview.unwrap_or(false) {
-                    args.push(N_KEY);
-                }
+            if choose_client.without_preview.unwrap_or(false) {
+                args.push(N_KEY);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if choose_client.reverse_sort_order.unwrap_or(false) {
-                    args.push(r_KEY);
-                }
+            if choose_client.reverse_sort_order.unwrap_or(false) {
+                args.push(r_KEY);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if choose_client.zoom.unwrap_or(false) {
-                    args.push(Z_KEY);
-                }
+            if choose_client.zoom.unwrap_or(false) {
+                args.push(Z_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(s) = choose_client.format {
-                    args.extend_from_slice(&[F_KEY, &s])
-                }
+            if let Some(s) = choose_client.format {
+                args.extend_from_slice(&[F_KEY, &s])
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(s) = choose_client.filter {
-                    args.extend_from_slice(&[f_KEY, &s])
-                }
+            if let Some(s) = choose_client.filter {
+                args.extend_from_slice(&[f_KEY, &s])
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(s) = choose_client.sort_order {
-                    args.extend_from_slice(&[O_KEY, &s])
-                }
+            if let Some(s) = choose_client.sort_order {
+                args.extend_from_slice(&[O_KEY, &s])
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(target_pane) = choose_client.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = choose_client.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(s) = choose_client.template {
-                    args.push(&s)
-                }
+            if let Some(s) = choose_client.template {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::CHOOSE_CLIENT, &args)?;

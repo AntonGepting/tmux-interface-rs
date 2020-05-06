@@ -151,33 +151,25 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(if_shell) = if_shell {
             #[cfg(feature = "tmux_1_8")]
-            {
-                if if_shell.backgroud.unwrap_or(false) {
-                    args.push(b_KEY);
-                }
+            if if_shell.backgroud.unwrap_or(false) {
+                args.push(b_KEY);
             }
             #[cfg(feature = "tmux_2_0")]
-            {
-                if if_shell.not_execute.unwrap_or(false) {
-                    args.push(F_KEY);
-                }
+            if if_shell.not_execute.unwrap_or(false) {
+                args.push(F_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if let Some(target_pane) = if_shell.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = if_shell.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
         }
         args.push(shell_command);
         args.push(command);
         if let Some(if_shell) = if_shell {
             #[cfg(feature = "tmux_1_6")]
-            {
-                if let Some(s) = if_shell.second_command {
-                    args.push(&s)
-                }
+            if let Some(s) = if_shell.second_command {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::IF_SHELL, &args)?;

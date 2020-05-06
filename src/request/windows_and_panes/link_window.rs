@@ -133,36 +133,26 @@ impl<'a> TmuxInterface<'a> {
         let t;
         if let Some(link_window) = link_window {
             #[cfg(feature = "tmux_2_1")]
-            {
-                if link_window.add.unwrap_or(false) {
-                    args.push(a_KEY);
-                }
+            if link_window.add.unwrap_or(false) {
+                args.push(a_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if link_window.detached.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if link_window.detached.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if link_window.kill.unwrap_or(false) {
-                    args.push(k_KEY);
-                }
+            if link_window.kill.unwrap_or(false) {
+                args.push(k_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(src_window) = link_window.src_window {
-                    s = src_window.to_string();
-                    args.extend_from_slice(&[s_KEY, &s])
-                }
+            if let Some(src_window) = link_window.src_window {
+                s = src_window.to_string();
+                args.extend_from_slice(&[s_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(dst_window) = link_window.dst_window {
-                    t = dst_window.to_string();
-                    args.extend_from_slice(&[t_KEY, &t])
-                }
+            if let Some(dst_window) = link_window.dst_window {
+                t = dst_window.to_string();
+                args.extend_from_slice(&[t_KEY, &t])
             }
         }
         let output = self.subcommand(TmuxInterface::LINK_WINDOW, &args)?;

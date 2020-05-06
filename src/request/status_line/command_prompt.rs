@@ -179,40 +179,28 @@ impl<'a> TmuxInterface<'a> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(command_prompt) = command_prompt {
             #[cfg(feature = "tmux_2_4")]
-            {
-                if command_prompt.one_keypress.unwrap_or(false) {
-                    args.push(_1_KEY);
-                }
+            if command_prompt.one_keypress.unwrap_or(false) {
+                args.push(_1_KEY);
             }
             #[cfg(feature = "tmux_2_4")]
-            {
-                if command_prompt.on_input_change.unwrap_or(false) {
-                    args.push(i_KEY);
-                }
+            if command_prompt.on_input_change.unwrap_or(false) {
+                args.push(i_KEY);
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if let Some(s) = command_prompt.inputs {
-                    args.extend_from_slice(&[I_KEY, &s])
-                }
+            if let Some(s) = command_prompt.inputs {
+                args.extend_from_slice(&[I_KEY, &s])
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(s) = command_prompt.prompts {
-                    args.extend_from_slice(&[p_KEY, &s])
-                }
+            if let Some(s) = command_prompt.prompts {
+                args.extend_from_slice(&[p_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(s) = command_prompt.target_client {
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(s) = command_prompt.target_client {
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(s) = command_prompt.template {
-                    args.push(&s)
-                }
+            if let Some(s) = command_prompt.template {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::COMMAND_PROMPT, &args)?;

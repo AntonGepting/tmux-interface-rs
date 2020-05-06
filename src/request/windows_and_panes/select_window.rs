@@ -146,35 +146,25 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(select_window) = select_window {
             #[cfg(feature = "tmux_1_5")]
-            {
-                if select_window.last.unwrap_or(false) {
-                    args.push(l_KEY);
-                }
+            if select_window.last.unwrap_or(false) {
+                args.push(l_KEY);
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if select_window.next.unwrap_or(false) {
-                    args.push(n_KEY);
-                }
+            if select_window.next.unwrap_or(false) {
+                args.push(n_KEY);
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if select_window.previous.unwrap_or(false) {
-                    args.push(p_KEY);
-                }
+            if select_window.previous.unwrap_or(false) {
+                args.push(p_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if select_window.switch.unwrap_or(false) {
-                    args.push(T_KEY);
-                }
+            if select_window.switch.unwrap_or(false) {
+                args.push(T_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(target_window) = select_window.target_window {
-                    s = target_window.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_window) = select_window.target_window {
+                s = target_window.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
         }
         let output = self.subcommand(TmuxInterface::SELECT_WINDOW, &args)?;

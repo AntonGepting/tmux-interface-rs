@@ -263,65 +263,45 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(new_window) = new_window {
             #[cfg(feature = "tmux_1_3")]
-            {
-                if new_window.add.unwrap_or(false) {
-                    args.push(a_KEY);
-                }
+            if new_window.add.unwrap_or(false) {
+                args.push(a_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if new_window.detached.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if new_window.detached.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if new_window.kill.unwrap_or(false) {
-                    args.push(k_KEY);
-                }
+            if new_window.kill.unwrap_or(false) {
+                args.push(k_KEY);
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if new_window.print.unwrap_or(false) {
-                    args.push(P_KEY);
-                }
+            if new_window.print.unwrap_or(false) {
+                args.push(P_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(s) = new_window.cwd {
-                    args.extend_from_slice(&[c_KEY, &s])
-                }
+            if let Some(s) = new_window.cwd {
+                args.extend_from_slice(&[c_KEY, &s])
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if let Some(s) = new_window.environment {
-                    args.extend_from_slice(&[e_KEY, &s])
-                }
+            if let Some(s) = new_window.environment {
+                args.extend_from_slice(&[e_KEY, &s])
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(s) = new_window.format {
-                    args.extend_from_slice(&[F_KEY, &s])
-                }
+            if let Some(s) = new_window.format {
+                args.extend_from_slice(&[F_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(s) = new_window.window_name {
-                    args.extend_from_slice(&[n_KEY, &s])
-                }
+            if let Some(s) = new_window.window_name {
+                args.extend_from_slice(&[n_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(target_window) = new_window.target_window {
-                    s = target_window.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_window) = new_window.target_window {
+                s = target_window.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if let Some(s) = new_window.shell_command {
-                    args.push(&s)
-                }
+            if let Some(s) = new_window.shell_command {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::NEW_WINDOW, &args)?;

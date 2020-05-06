@@ -244,71 +244,49 @@ impl<'a> TmuxInterface<'a> {
         let s: String;
         if let Some(choose_tree) = choose_tree {
             #[cfg(feature = "tmux_2_7")]
-            {
-                if choose_tree.all.unwrap_or(false) {
-                    args.push(G_KEY);
-                }
+            if choose_tree.all.unwrap_or(false) {
+                args.push(G_KEY);
             }
             #[cfg(feature = "tmux_2_7")]
-            {
-                if choose_tree.without_preview.unwrap_or(false) {
-                    args.push(N_KEY);
-                }
+            if choose_tree.without_preview.unwrap_or(false) {
+                args.push(N_KEY);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if choose_tree.reverse_sort_order.unwrap_or(false) {
-                    args.push(r_KEY);
-                }
+            if choose_tree.reverse_sort_order.unwrap_or(false) {
+                args.push(r_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if choose_tree.collapsed_sessions.unwrap_or(false) {
-                    args.push(s_KEY);
-                }
+            if choose_tree.collapsed_sessions.unwrap_or(false) {
+                args.push(s_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if choose_tree.collapsed_windows.unwrap_or(false) {
-                    args.push(w_KEY);
-                }
+            if choose_tree.collapsed_windows.unwrap_or(false) {
+                args.push(w_KEY);
             }
             #[cfg(feature = "tmux_2_7")]
-            {
-                if choose_tree.zoom.unwrap_or(false) {
-                    args.push(Z_KEY);
-                }
+            if choose_tree.zoom.unwrap_or(false) {
+                args.push(Z_KEY);
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(s) = choose_tree.format {
-                    args.extend_from_slice(&[F_KEY, &s])
-                }
+            if let Some(s) = choose_tree.format {
+                args.extend_from_slice(&[F_KEY, &s])
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(s) = choose_tree.filter {
-                    args.extend_from_slice(&[f_KEY, &s])
-                }
+            if let Some(s) = choose_tree.filter {
+                args.extend_from_slice(&[f_KEY, &s])
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(s) = choose_tree.sort_order {
-                    args.extend_from_slice(&[O_KEY, &s])
-                }
+            if let Some(s) = choose_tree.sort_order {
+                args.extend_from_slice(&[O_KEY, &s])
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(target_pane) = choose_tree.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = choose_tree.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if let Some(s) = choose_tree.template {
-                    args.push(&s)
-                }
+            if let Some(s) = choose_tree.template {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::CHOOSE_TREE, &args)?;

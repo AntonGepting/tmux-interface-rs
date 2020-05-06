@@ -201,38 +201,28 @@ impl<'a> TmuxInterface<'a> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(bind_key) = bind_key {
             #[cfg(feature = "tmux_1_0")]
-            {
-                if bind_key.root.unwrap_or(false) {
-                    args.push(n_KEY);
-                }
+            if bind_key.root.unwrap_or(false) {
+                args.push(n_KEY);
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if bind_key.repeat.unwrap_or(false) {
-                    args.push(r_KEY);
-                }
+            if bind_key.repeat.unwrap_or(false) {
+                args.push(r_KEY);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if let Some(s) = bind_key.note {
-                    args.extend_from_slice(&[N_KEY, &s])
-                }
+            if let Some(s) = bind_key.note {
+                args.extend_from_slice(&[N_KEY, &s])
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if let Some(s) = bind_key.key_table {
-                    args.extend_from_slice(&[T_KEY, &s])
-                }
+            if let Some(s) = bind_key.key_table {
+                args.extend_from_slice(&[T_KEY, &s])
             }
         }
         args.push(key);
         args.push(command);
         if let Some(bind_key) = bind_key {
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(s) = bind_key.arguments {
-                    args.push(&s)
-                }
+            if let Some(s) = bind_key.arguments {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::BIND_KEY, &args)?;

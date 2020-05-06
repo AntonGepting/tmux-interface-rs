@@ -181,41 +181,29 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(attach_session) = attach_session {
             #[cfg(feature = "tmux_0_8")]
-            {
-                if attach_session.detach_other.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if attach_session.detach_other.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if attach_session.not_update_env.unwrap_or(false) {
-                    args.push(E_KEY);
-                }
+            if attach_session.not_update_env.unwrap_or(false) {
+                args.push(E_KEY);
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if attach_session.read_only.unwrap_or(false) {
-                    args.push(r_KEY);
-                }
+            if attach_session.read_only.unwrap_or(false) {
+                args.push(r_KEY);
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if attach_session.parent_sighup.unwrap_or(false) {
-                    args.push(x_KEY);
-                }
+            if attach_session.parent_sighup.unwrap_or(false) {
+                args.push(x_KEY);
             }
             #[cfg(feature = "tmux_1_9")]
-            {
-                if let Some(s) = attach_session.cwd {
-                    args.extend_from_slice(&[c_KEY, &s])
-                }
+            if let Some(s) = attach_session.cwd {
+                args.extend_from_slice(&[c_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            {
-                if let Some(ref target_session) = attach_session.target_session {
-                    s = target_session.to_string();
-                    args.extend_from_slice(&[t_KEY, &s]);
-                }
+            if let Some(ref target_session) = attach_session.target_session {
+                s = target_session.to_string();
+                args.extend_from_slice(&[t_KEY, &s]);
             }
         }
         let output = self.subcommand(TmuxInterface::ATTACH_SESSION, &args)?;

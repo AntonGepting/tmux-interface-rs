@@ -190,73 +190,55 @@ impl<'a> TmuxInterface<'a> {
         let l;
         if let Some(join_pane) = join_pane {
             #[cfg(feature = "tmux_2_6")]
-            {
-                if join_pane.left_above.unwrap_or(false) {
-                    args.push(b_KEY);
-                }
+            if join_pane.left_above.unwrap_or(false) {
+                args.push(b_KEY);
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if join_pane.detached.unwrap_or(false) {
-                    args.push(d_KEY);
-                }
+            if join_pane.detached.unwrap_or(false) {
+                args.push(d_KEY);
             }
             #[cfg(feature = "tmux_2_6")]
-            {
-                if join_pane.full_size.unwrap_or(false) {
-                    args.push(f_KEY);
-                }
+            if join_pane.full_size.unwrap_or(false) {
+                args.push(f_KEY);
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if join_pane.horizontal.unwrap_or(false) {
-                    args.push(h_KEY);
-                }
+            if join_pane.horizontal.unwrap_or(false) {
+                args.push(h_KEY);
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if join_pane.vertical.unwrap_or(false) {
-                    args.push(v_KEY);
-                }
+            if join_pane.vertical.unwrap_or(false) {
+                args.push(v_KEY);
             }
             #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_1")))]
-            {
-                if let Some(size) = &join_pane.size {
-                    match size {
-                        PaneSize::Size(size) => l = size.to_string(),
-                        PaneSize::Percentage(size) => l = format!("{}%", size),
-                    };
-                    args.extend_from_slice(&[l_KEY, &l]);
-                }
+            if let Some(size) = &join_pane.size {
+                match size {
+                    PaneSize::Size(size) => l = size.to_string(),
+                    PaneSize::Percentage(size) => l = format!("{}%", size),
+                };
+                args.extend_from_slice(&[l_KEY, &l]);
             }
             #[cfg(feature = "tmux_3_1")]
-            {
-                if let Some(size) = &join_pane.size {
-                    match size {
-                        PaneSize::Size(size) => {
-                            l = size.to_string();
-                            args.extend_from_slice(&[l_KEY, &l]);
-                        }
-                        PaneSize::Percentage(size) => {
-                            l = size.to_string();
-                            args.extend_from_slice(&[p_KEY, &l]);
-                        }
-                    };
-                }
+            if let Some(size) = &join_pane.size {
+                match size {
+                    PaneSize::Size(size) => {
+                        l = size.to_string();
+                        args.extend_from_slice(&[l_KEY, &l]);
+                    }
+                    PaneSize::Percentage(size) => {
+                        l = size.to_string();
+                        args.extend_from_slice(&[p_KEY, &l]);
+                    }
+                };
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if let Some(src_pane) = join_pane.src_pane {
-                    s = src_pane.to_string();
-                    args.extend_from_slice(&[s_KEY, &s])
-                }
+            if let Some(src_pane) = join_pane.src_pane {
+                s = src_pane.to_string();
+                args.extend_from_slice(&[s_KEY, &s])
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if let Some(dst_pane) = join_pane.dst_pane {
-                    t = dst_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &t])
-                }
+            if let Some(dst_pane) = join_pane.dst_pane {
+                t = dst_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &t])
             }
         }
         let output = self.subcommand(TmuxInterface::JOIN_PANE, &args)?;

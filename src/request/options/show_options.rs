@@ -245,52 +245,36 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(show_options) = show_options {
             #[cfg(feature = "tmux_3_0")]
-            {
-                if show_options.include_inherited.unwrap_or(false) {
-                    args.push(A_KEY);
-                }
+            if show_options.include_inherited.unwrap_or(false) {
+                args.push(A_KEY);
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if show_options.global.unwrap_or(false) {
-                    args.push(g_KEY);
-                }
+            if show_options.global.unwrap_or(false) {
+                args.push(g_KEY);
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if show_options.hooks.unwrap_or(false) {
-                    args.push(H_KEY);
-                }
+            if show_options.hooks.unwrap_or(false) {
+                args.push(H_KEY);
             }
             #[cfg(feature = "tmux_3_0")]
-            {
-                if show_options.pane.unwrap_or(false) {
-                    args.push(p_KEY);
-                }
+            if show_options.pane.unwrap_or(false) {
+                args.push(p_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if show_options.quiet.unwrap_or(false) {
-                    args.push(q_KEY);
-                }
+            if show_options.quiet.unwrap_or(false) {
+                args.push(q_KEY);
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if show_options.server.unwrap_or(false) {
-                    args.push(s_KEY);
-                }
+            if show_options.server.unwrap_or(false) {
+                args.push(s_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if show_options.value.unwrap_or(false) {
-                    args.push(v_KEY);
-                }
+            if show_options.value.unwrap_or(false) {
+                args.push(v_KEY);
             }
             #[cfg(feature = "tmux_1_2")]
-            {
-                if show_options.window.unwrap_or(false) {
-                    args.push(w_KEY);
-                }
+            if show_options.window.unwrap_or(false) {
+                args.push(w_KEY);
             }
             //#[cfg(feature = "tmux_X_X")]
             if let Some(target) = show_options.target {
@@ -298,10 +282,8 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_1_7")]
-            {
-                if let Some(s) = show_options.option {
-                    args.push(&s)
-                }
+            if let Some(s) = show_options.option {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::SHOW_OPTIONS, &args)?;

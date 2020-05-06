@@ -182,41 +182,29 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(select_layout) = select_layout {
             #[cfg(feature = "tmux_2_7")]
-            {
-                if select_layout.spread.unwrap_or(false) {
-                    args.push(E_KEY);
-                }
+            if select_layout.spread.unwrap_or(false) {
+                args.push(E_KEY);
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if select_layout.next_layout.unwrap_or(false) {
-                    args.push(n_KEY);
-                }
+            if select_layout.next_layout.unwrap_or(false) {
+                args.push(n_KEY);
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if select_layout.last_layout.unwrap_or(false) {
-                    args.push(o_KEY);
-                }
+            if select_layout.last_layout.unwrap_or(false) {
+                args.push(o_KEY);
             }
             #[cfg(feature = "tmux_1_5")]
-            {
-                if select_layout.previous_layout.unwrap_or(false) {
-                    args.push(p_KEY);
-                }
+            if select_layout.previous_layout.unwrap_or(false) {
+                args.push(p_KEY);
             }
             #[cfg(feature = "tmux_0_9")]
-            {
-                if let Some(target_pane) = select_layout.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = select_layout.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_1_0")]
-            {
-                if let Some(s) = select_layout.layout_name {
-                    args.push(&s)
-                }
+            if let Some(s) = select_layout.layout_name {
+                args.push(&s)
             }
         }
         let output = self.subcommand(TmuxInterface::SELECT_LAYOUT, &args)?;

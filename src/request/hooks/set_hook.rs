@@ -158,35 +158,25 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(set_hook) = set_hook {
             #[cfg(feature = "tmux_3_0")]
-            {
-                if set_hook.append.unwrap_or(false) {
-                    args.push(a_KEY);
-                }
+            if set_hook.append.unwrap_or(false) {
+                args.push(a_KEY);
             }
             #[cfg(feature = "tmux_2_2")]
-            {
-                if set_hook.global.unwrap_or(false) {
-                    args.push(g_KEY);
-                }
+            if set_hook.global.unwrap_or(false) {
+                args.push(g_KEY);
             }
             #[cfg(feature = "tmux_2_8")]
-            {
-                if set_hook.run.unwrap_or(false) {
-                    args.push(R_KEY);
-                }
+            if set_hook.run.unwrap_or(false) {
+                args.push(R_KEY);
             }
             #[cfg(feature = "tmux_2_4")]
-            {
-                if set_hook.unset.unwrap_or(false) {
-                    args.push(u_KEY);
-                }
+            if set_hook.unset.unwrap_or(false) {
+                args.push(u_KEY);
             }
             #[cfg(feature = "tmux_2_2")]
-            {
-                if let Some(target_session) = set_hook.target_session {
-                    s = target_session.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_session) = set_hook.target_session {
+                s = target_session.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
         }
         args.push(hook_name);

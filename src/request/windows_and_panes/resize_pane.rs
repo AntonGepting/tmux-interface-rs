@@ -225,67 +225,47 @@ impl<'a> TmuxInterface<'a> {
         let s;
         if let Some(resize_pane) = resize_pane {
             #[cfg(feature = "tmux_0_9")]
-            {
-                if resize_pane.down.unwrap_or(false) {
-                    args.push(D_KEY);
-                }
+            if resize_pane.down.unwrap_or(false) {
+                args.push(D_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if resize_pane.left.unwrap_or(false) {
-                    args.push(L_KEY);
-                }
+            if resize_pane.left.unwrap_or(false) {
+                args.push(L_KEY);
             }
             #[cfg(feature = "tmux_2_1")]
-            {
-                if resize_pane.mouse.unwrap_or(false) {
-                    args.push(M_KEY);
-                }
+            if resize_pane.mouse.unwrap_or(false) {
+                args.push(M_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if resize_pane.right.unwrap_or(false) {
-                    args.push(R_KEY);
-                }
+            if resize_pane.right.unwrap_or(false) {
+                args.push(R_KEY);
             }
             #[cfg(feature = "tmux_0_9")]
-            {
-                if resize_pane.up.unwrap_or(false) {
-                    args.push(U_KEY);
-                }
+            if resize_pane.up.unwrap_or(false) {
+                args.push(U_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if resize_pane.zoom.unwrap_or(false) {
-                    args.push(Z_KEY);
-                }
+            if resize_pane.zoom.unwrap_or(false) {
+                args.push(Z_KEY);
             }
             #[cfg(feature = "tmux_0_9")]
-            {
-                if let Some(target_pane) = resize_pane.target_pane {
-                    s = target_pane.to_string();
-                    args.extend_from_slice(&[t_KEY, &s])
-                }
+            if let Some(target_pane) = resize_pane.target_pane {
+                s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if let Some(width) = resize_pane.width {
-                    x = width.to_string();
-                    args.extend_from_slice(&[x_KEY, &x]);
-                }
+            if let Some(width) = resize_pane.width {
+                x = width.to_string();
+                args.extend_from_slice(&[x_KEY, &x]);
             }
             #[cfg(feature = "tmux_1_8")]
-            {
-                if let Some(height) = resize_pane.height {
-                    y = height.to_string();
-                    args.extend_from_slice(&[y_KEY, &y]);
-                }
+            if let Some(height) = resize_pane.height {
+                y = height.to_string();
+                args.extend_from_slice(&[y_KEY, &y]);
             }
             #[cfg(feature = "tmux_0_9")]
-            {
-                if let Some(s) = resize_pane.adjustment {
-                    args.push(s)
-                }
+            if let Some(s) = resize_pane.adjustment {
+                args.push(s)
             }
         }
         let output = self.subcommand(TmuxInterface::RESIZE_PANE, &args)?;
