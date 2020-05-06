@@ -568,9 +568,9 @@ pub use self::request::windows_and_panes::swap_pane::SwapPaneBuilder;
 // enums
 pub use crate::request::PaneSize;
 
-pub use crate::request::target_pane::{TargetPane, TargetPaneEx, TargetPaneToken};
+pub use crate::request::target_pane::{TargetPane, TargetPaneExt, TargetPaneToken};
 pub use crate::request::target_session::TargetSession;
-pub use crate::request::target_window::{TargetWindow, TargetWindowEx, TargetWindowToken};
+pub use crate::request::target_window::{TargetWindow, TargetWindowExt, TargetWindowToken};
 
 // structs
 pub use self::tmux_option::TmuxOption;

@@ -1,61 +1,61 @@
-use crate::request::target_window::TargetWindowEx;
+use crate::request::target_window::TargetWindowExt;
 use std::fmt;
 
 /// Extended `target-pane` struct, includes `target-window` (may indirect include `target-session`)
 #[derive(Default)]
-pub struct TargetPaneEx<'a> {
+pub struct TargetPaneExt<'a> {
     /// `target-window`
-    pub target_window: Option<&'a TargetWindowEx<'a>>,
+    pub target_window: Option<&'a TargetWindowExt<'a>>,
     /// `target-pane`
     pub target_pane: Option<TargetPane<'a>>,
 }
 
-impl<'a> TargetPaneEx<'a> {
+impl<'a> TargetPaneExt<'a> {
     /// simple initializing as start of a name
     pub fn new(target_pane: &'a str) -> Self {
-        TargetPaneEx {
+        TargetPaneExt {
             target_window: None,
             target_pane: Some(TargetPane::StartName(target_pane)),
         }
     }
 
-    pub fn token(target_window: Option<&'a TargetWindowEx>, token: TargetPaneToken) -> Self {
-        TargetPaneEx {
+    pub fn token(target_window: Option<&'a TargetWindowExt>, token: TargetPaneToken) -> Self {
+        TargetPaneExt {
             target_window,
             target_pane: Some(TargetPane::Token(token)),
         }
     }
 
-    pub fn index(target_window: Option<&'a TargetWindowEx>, index: usize) -> Self {
-        TargetPaneEx {
+    pub fn index(target_window: Option<&'a TargetWindowExt>, index: usize) -> Self {
+        TargetPaneExt {
             target_window,
             target_pane: Some(TargetPane::Index(index)),
         }
     }
 
-    pub fn id(target_window: Option<&'a TargetWindowEx>, id: usize) -> Self {
-        TargetPaneEx {
+    pub fn id(target_window: Option<&'a TargetWindowExt>, id: usize) -> Self {
+        TargetPaneExt {
             target_window,
             target_pane: Some(TargetPane::Id(id)),
         }
     }
 
-    pub fn exact_name(target_window: Option<&'a TargetWindowEx>, name: &'a str) -> Self {
-        TargetPaneEx {
+    pub fn exact_name(target_window: Option<&'a TargetWindowExt>, name: &'a str) -> Self {
+        TargetPaneExt {
             target_window,
             target_pane: Some(TargetPane::ExactName(name)),
         }
     }
 
-    pub fn start_name(target_window: Option<&'a TargetWindowEx>, name: &'a str) -> Self {
-        TargetPaneEx {
+    pub fn start_name(target_window: Option<&'a TargetWindowExt>, name: &'a str) -> Self {
+        TargetPaneExt {
             target_window,
             target_pane: Some(TargetPane::StartName(name)),
         }
     }
 
-    pub fn fn_match(target_window: Option<&'a TargetWindowEx>, name: &'a str) -> Self {
-        TargetPaneEx {
+    pub fn fn_match(target_window: Option<&'a TargetWindowExt>, name: &'a str) -> Self {
+        TargetPaneExt {
             target_window,
             target_pane: Some(TargetPane::FnMatch(name)),
         }
@@ -63,14 +63,14 @@ impl<'a> TargetPaneEx<'a> {
 
     // XXX: draft $1:@2.raw_name or .raw_name or raw_name:raw_name.raw_name?
     pub fn raw(name: &'a str) -> Self {
-        TargetPaneEx {
+        TargetPaneExt {
             target_window: None,
             target_pane: Some(TargetPane::Raw(name)),
         }
     }
 }
 
-impl<'a> fmt::Display for TargetPaneEx<'a> {
+impl<'a> fmt::Display for TargetPaneExt<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut w = String::new();
         let mut p = String::new();

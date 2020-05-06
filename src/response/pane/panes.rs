@@ -1,7 +1,7 @@
 use crate::response::pane::pane::{PANE_VARS, PANE_VARS_SEPARATOR};
 use crate::Error;
 use crate::Pane;
-use crate::{TargetWindowEx, TmuxInterface};
+use crate::{TargetWindowExt, TmuxInterface};
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -34,7 +34,7 @@ impl Panes {
         self.0.push(pane);
     }
 
-    pub fn get(target_window: &TargetWindowEx, bitflags: usize) -> Result<Self, Error> {
+    pub fn get(target_window: &TargetWindowExt, bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS
             .iter()
@@ -46,7 +46,7 @@ impl Panes {
         Panes::from_str(&panes_str, bitflags)
     }
 
-    pub fn get_all(target_session: &TargetWindowEx, bitflags: usize) -> Result<Self, Error> {
+    pub fn get_all(target_session: &TargetWindowExt, bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS
             .iter()

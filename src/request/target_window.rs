@@ -7,71 +7,71 @@ use std::fmt;
 /// [`TargetWindow`]: enum.TargetWindow.html
 /// [`TargetSession`]: enum.TargetSession.html
 #[derive(Debug, Default)]
-pub struct TargetWindowEx<'a> {
+pub struct TargetWindowExt<'a> {
     /// `TargetSession` (tmux analog: `target-session`)
     pub session: Option<&'a TargetSession<'a>>,
     /// `TargetWindow`  (tmux analog: `target-window`)
     pub window: Option<TargetWindow<'a>>, // bc. cant return value referencing local / temp value
 }
 
-impl<'a> TargetWindowEx<'a> {
+impl<'a> TargetWindowExt<'a> {
     /// simple initializing as start of a name
     pub fn new(target_window: &'a str) -> Self {
-        TargetWindowEx {
+        TargetWindowExt {
             session: None,
             window: Some(TargetWindow::StartName(target_window)),
         }
     }
 
-    /// Create [`TargetWindowEx`] structure using one of [`TargetWindowToken`]
+    /// Create [`TargetWindowExt`] structure using one of [`TargetWindowToken`]
     ///
     /// # Examples
     ///
     /// ```
-    /// use crate::tmux_interface::{TargetWindowEx, TargetWindowToken};
+    /// use crate::tmux_interface::{TargetWindowExt, TargetWindowToken};
     ///
-    /// let target_window = TargetWindowEx::token(None, TargetWindowToken::Start);
+    /// let target_window = TargetWindowExt::token(None, TargetWindowToken::Start);
     /// ```
     ///
-    /// [`TargetWindowEx`]: enum.TargetWindowEx.html
+    /// [`TargetWindowExt`]: enum.TargetWindowExt.html
     /// [`TargetWindowToken`]: enum.TargetWindowToken.html
     pub fn token(session: Option<&'a TargetSession<'a>>, token: TargetWindowToken) -> Self {
-        TargetWindowEx {
+        TargetWindowExt {
             session,
             window: Some(TargetWindow::Token(token)),
         }
     }
 
     pub fn index(session: Option<&'a TargetSession<'a>>, i: usize) -> Self {
-        TargetWindowEx {
+        TargetWindowExt {
             session,
             window: Some(TargetWindow::Index(i)),
         }
     }
 
     pub fn id(session: Option<&'a TargetSession<'a>>, id: usize) -> Self {
-        TargetWindowEx {
+        TargetWindowExt {
             session,
             window: Some(TargetWindow::Id(id)),
         }
     }
 
     pub fn exact_name(session: Option<&'a TargetSession<'a>>, name: &'a str) -> Self {
-        TargetWindowEx {
+        TargetWindowExt {
             session,
             window: Some(TargetWindow::ExactName(name)),
         }
     }
 
     pub fn start_name(session: Option<&'a TargetSession<'a>>, name: &'a str) -> Self {
-        TargetWindowEx {
+        TargetWindowExt {
             session,
             window: Some(TargetWindow::StartName(name)),
         }
     }
 
     pub fn fn_match(session: Option<&'a TargetSession<'a>>, name: &'a str) -> Self {
-        TargetWindowEx {
+        TargetWindowExt {
             session,
             window: Some(TargetWindow::FnMatch(name)),
         }
@@ -79,14 +79,14 @@ impl<'a> TargetWindowEx<'a> {
 
     // XXX: draft $1:@raw_name or .raw_name or raw_name:raw_name?
     pub fn raw(name: &'a str) -> Self {
-        TargetWindowEx {
+        TargetWindowExt {
             session: None,
             window: Some(TargetWindow::Raw(name)),
         }
     }
 }
 
-impl<'a> fmt::Display for TargetWindowEx<'a> {
+impl<'a> fmt::Display for TargetWindowExt<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut s = String::new();
         let mut w = String::new();
