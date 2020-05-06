@@ -5,8 +5,17 @@ fn move_pane() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^3.1:
+        // ```text
         // tmux move-pane [-bdhv] [-l size] [-s src-pane] [-t dst-pane]
         // (alias: movep)
+        // ```
+        //
+        // tmux ^1.7:
+        // ```text
+        // tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+        // (alias: movep)
+        // ```
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["move-pane", "-b", "-d", "-h", "-v", "-l", "1", "-s", "2", "-t", "3"]"#

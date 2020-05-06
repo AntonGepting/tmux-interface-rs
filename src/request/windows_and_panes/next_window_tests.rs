@@ -4,8 +4,17 @@ fn next_window() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^0.9:
+        // ```text
         // tmux next-window [-a] [-t target-session]
         // (alias: next)
+        // ```
+        //
+        // tmux ^0.8:
+        // ```text
+        // tmux next-window [-t target-session]
+        // (alias: next)
+        // ```
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["next-window", "-a", "-t", "1"]"#

@@ -4,8 +4,41 @@ fn break_pane() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^2.4:
+        // ```text
         // tmux break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
         // (alias: breakp)
+        // ```
+        //
+        // tmux ^2.2:
+        // ```text
+        // tmux break-pane [-dP] [-F format] [-s src-pane] [-t dst-window]
+        // (alias: breakp)
+        // ```
+        //
+        // tmux ^2.1:
+        // ```text
+        // tmux break-pane [-dP] [-F format] [-s src-pane] [-t dst-pane]
+        // (alias: breakp)
+        // ```
+        //
+        // tmux ^1.7:
+        // ```text
+        // tmux break-pane [-dP] [-F format] [-t target-pane]
+        // (alias: breakp)
+        // ```
+        //
+        // tmux ^1.0:
+        // ```text
+        // tmux break-pane [-d] [-t target-window]
+        // (alias: breakp)
+        // ```
+        //
+        // tmux ^0.8:
+        // ```text
+        // tmux break-pane [-d] [-p pane-index] [-t target-window]
+        // (alias: breakp)
+        // ```
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["break-pane", "-d", "-P", "-F", "1", "-n", "2", "-s", "3", "-t", "4"]"#

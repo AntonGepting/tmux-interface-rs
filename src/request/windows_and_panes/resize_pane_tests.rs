@@ -4,8 +4,29 @@ fn resize_pane() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^2.1:
+        // ```text
         // tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
         // (alias: resizep)
+        // ```
+        //
+        // tmux ^1.8:
+        // ```text
+        // tmux resize-pane [-DLRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+        // (alias: resizep)
+        // ```
+        //
+        // tmux ^1.0:
+        // ```text
+        // tmux resize-pane [-DLRU] [-t target-pane] [adjustment]
+        // (alias: resizep)
+        // ```
+        //
+        // tmux ^0.9:
+        // ```text
+        // tmux resize-pane [-DU] [-p pane-index] [-t target-pane] [adjustment]
+        // (alias: resizep)
+        // ```
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["resize-pane", "-D", "-L", "-M", "-R", "-U", "-Z", "-t", "1", "-x", "2", "-y", "3", "4"]"#

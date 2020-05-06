@@ -4,8 +4,11 @@ fn last_window() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^0.8:
+        // ```text
         // tmux last-window [-t target-session]
         // (alias: last)
+        // ```
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["last-window", "-t", "1"]"#

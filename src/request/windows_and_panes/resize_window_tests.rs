@@ -4,6 +4,8 @@ fn resize_window() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^2.9a:
+        // ```text
         // tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
         // (alias: resizew)
         assert_eq!(

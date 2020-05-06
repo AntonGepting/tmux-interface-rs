@@ -4,8 +4,29 @@ fn move_window() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^2.1:
+        // ```text
         // tmux move-window [-ardk] [-s src-window] [-t dst-window]
         // (alias: movew)
+        // ```
+        //
+        // tmux ^1.7:
+        // ```text
+        // tmux move-window [-rdk] [-s src-window] [-t dst-window]
+        // (alias: movew)
+        // ```
+        //
+        // tmux ^1.3:
+        // ```text
+        // tmux move-window [-dk] [-s src-window] [-t dst-window]
+        // (alias: movew)
+        // ```
+        //
+        // tmux ^0.8:
+        // ```text
+        // tmux move-window [-d] [-s src-window] [-t dst-window]
+        // (alias: movew)
+        // ```
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["move-window", "-a", "-r", "-d", "-k", "-s", "1", "-t", "2"]"#

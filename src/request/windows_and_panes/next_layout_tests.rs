@@ -4,8 +4,11 @@ fn next_layout() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^0.8:
+        // ```text
         // tmux next-layout [-t target-window]
         // (alias: nextl)
+        // ```
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["next-layout", "-t", "1"]"#

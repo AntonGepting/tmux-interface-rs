@@ -4,8 +4,11 @@ fn previous_layout() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^1.3:
+        // ```text
         // tmux previous-layout [-t target-window]
         // (alias: prevl)
+        // ```
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["previous-layout", "-t", "1"]"#

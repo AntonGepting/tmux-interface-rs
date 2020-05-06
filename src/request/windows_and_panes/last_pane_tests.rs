@@ -4,8 +4,23 @@ fn last_pane() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^3.1:
+        // ```text
         // tmux last-pane [-deZ] [-t target-window]
         // (alias: lastp)
+        // ```
+        //
+        // tmux ^2.0:
+        // ```text
+        // tmux last-pane [-de] [-t target-window]
+        // (alias: lastp)
+        // ```
+        //
+        // tmux ^1.4:
+        // ```text
+        // tmux last-pane [-t target-window]
+        // (alias: lastp)
+        // ```
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["last-pane", "-d", "-e", "-Z", "-t", "1"]"#

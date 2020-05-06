@@ -4,8 +4,23 @@ fn pipe_pane() {
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+        // tmux ^2.7:
+        // ```text
         // tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
         // (alias: pipep)
+        // ```
+        //
+        // tmux ^1.2:
+        // ```text
+        // tmux pipe-pane [-o] [-t target-pane] [shell-command]
+        // (alias: pipep)
+        // ```
+        //
+        // tmux ^1.1:
+        // ```text
+        // tmux pipe-pane [-o] [-t target-pane] [command]
+        // (alias: pipep)
+        // ```
         assert_eq!(
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["pipe-pane", "-I", "-O", "-o", "-t", "1", "2"]"#
