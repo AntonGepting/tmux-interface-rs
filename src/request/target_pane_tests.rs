@@ -1,8 +1,8 @@
 #[test]
 fn target_pane_ex() {
-    use crate::request::target_pane::{TargetPane, TargetPaneEx, TargetPaneToken};
+    use crate::request::target_pane::{TargetPane, TargetPaneExt, TargetPaneToken};
 
-    let target_pane = TargetPaneEx {
+    let target_pane = TargetPaneExt {
         target_window: None,
         target_pane: Some(TargetPane::Token(TargetPaneToken::Next(None))),
     };

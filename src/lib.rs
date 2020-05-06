@@ -80,14 +80,14 @@
 //!
 //! ```
 //! use crate::tmux_interface::{Sessions, Session, Windows, Window, Pane, Panes, TargetSession,
-//! TargetWindowEx};
+//! TargetWindowExt};
 //! use crate::tmux_interface::response::session::session::SESSION_ALL;
 //! use crate::tmux_interface::response::window::window::WINDOW_ALL;
 //! use crate::tmux_interface::response::pane::pane::PANE_ALL;
 //!
 //! let sessions = Sessions::get(SESSION_ALL).unwrap();
 //! let windows = Windows::get(&TargetSession::Raw("0"), WINDOW_ALL).unwrap();
-//! let panes = Panes::get(&TargetWindowEx::raw("0:1"), PANE_ALL).unwrap();
+//! let panes = Panes::get(&TargetWindowExt::raw("0:1"), PANE_ALL).unwrap();
 //! ```
 //!
 //! # Examples

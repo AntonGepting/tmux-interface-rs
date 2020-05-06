@@ -1,6 +1,6 @@
 #[test]
 fn send_keys() {
-    use crate::{Error, SendKeys, SendKeysBuilder, TargetPaneEx, TmuxInterface};
+    use crate::{Error, SendKeys, SendKeysBuilder, TargetPaneExt, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -71,7 +71,7 @@ fn send_keys() {
         Err(Error::Hook)
     }));
 
-    let target_pane = TargetPaneEx::raw("2");
+    let target_pane = TargetPaneExt::raw("2");
     let send_keys = SendKeys {
         #[cfg(feature = "tmux_3_1")]
         expand_formats: Some(true),

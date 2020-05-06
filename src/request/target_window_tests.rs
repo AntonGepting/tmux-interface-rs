@@ -1,12 +1,12 @@
 #[test]
 fn target_window_ex() {
-    use crate::request::target_window::{TargetWindow, TargetWindowEx, TargetWindowToken};
+    use crate::request::target_window::{TargetWindow, TargetWindowExt, TargetWindowToken};
 
-    let _target_window = TargetWindowEx {
+    let _target_window = TargetWindowExt {
         ..Default::default()
     };
 
-    let target_window = TargetWindowEx {
+    let target_window = TargetWindowExt {
         session: None,
         window: Some(TargetWindow::Token(TargetWindowToken::Start)),
     };
