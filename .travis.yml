@@ -1,7 +1,7 @@
 language: rust
 os:
   - linux
-  - osx
+  #- osx
 
 addons:
   #homebrew:
