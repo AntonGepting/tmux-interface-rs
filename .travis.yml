@@ -45,8 +45,8 @@ env:
   #- TMUX_VERSION=master CRATE_FEATURE=tmux_X_X
 
 before_script:
-  - ./scripts/tmux_setup.sh
   - export PATH="$HOME/build/tmux-$TMUX_VERSION/bin:$PATH"
+  - ./scripts/tmux_setup.sh
 
 script:
   #- cargo build --verbose
