@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # create sources dir, with parents
 mkdir -p ~/source
