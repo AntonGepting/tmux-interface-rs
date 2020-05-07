@@ -3,11 +3,11 @@ os:
   - linux
   - osx
 
-addons:
-  homebrew:
-    packages:
-      - tmux
-    update: true
+#addons:
+  #homebrew:
+    #packages:
+      #- tmux
+    #update: true
 
 rust:
   - stable
