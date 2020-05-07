@@ -3,11 +3,14 @@ os:
   - linux
   - osx
 
-#addons:
+addons:
   #homebrew:
     #packages:
       #- tmux
     #update: true
+  apt:
+    packages:
+      - libevent-dev
 
 rust:
   - stable
