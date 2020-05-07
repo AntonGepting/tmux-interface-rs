@@ -25,24 +25,50 @@ fn select_window() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["select-window", "-l", "-n", "-p", "-T", "-t", "1"]"#
         );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        s.push("select-window");
+        #[cfg(feature = "tmux_1_5")]
+        s.push("-l");
+        #[cfg(feature = "tmux_1_5")]
+        s.push("-n");
+        #[cfg(feature = "tmux_1_5")]
+        s.push("-p");
+        #[cfg(feature = "tmux_1_8")]
+        s.push("-T");
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-t", "1"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
 
     let select_window = SelectWindow {
+        #[cfg(feature = "tmux_1_5")]
         last: Some(true),
+        #[cfg(feature = "tmux_1_5")]
         next: Some(true),
+        #[cfg(feature = "tmux_1_5")]
         previous: Some(true),
+        #[cfg(feature = "tmux_1_8")]
         switch: Some(true),
+        #[cfg(feature = "tmux_0_8")]
         target_window: Some(&TargetWindow::Raw("1")),
     };
     tmux.select_window(Some(&select_window)).unwrap_err();
 
-    let select_window = SelectWindowBuilder::new()
-        .last()
-        .next()
-        .previous()
-        .switch()
-        .target_window(&TargetWindow::Raw("1"))
-        .build();
+    let mut builder = SelectWindowBuilder::new();
+    #[cfg(feature = "tmux_1_5")]
+    builder.last();
+    #[cfg(feature = "tmux_1_5")]
+    builder.next();
+    #[cfg(feature = "tmux_1_5")]
+    builder.previous();
+    #[cfg(feature = "tmux_1_8")]
+    builder.switch();
+    #[cfg(feature = "tmux_0_8")]
+    builder.target_window(&TargetWindow::Raw("1"));
+    let select_window = builder.build();
     tmux.select_window(Some(&select_window)).unwrap_err();
 }

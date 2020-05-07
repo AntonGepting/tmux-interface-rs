@@ -25,24 +25,50 @@ fn pipe_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["pipe-pane", "-I", "-O", "-o", "-t", "1", "2"]"#
         );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        s.push("pipe-pane");
+        #[cfg(feature = "tmux_2_7")]
+        s.push("-I");
+        #[cfg(feature = "tmux_2_7")]
+        s.push("-O");
+        #[cfg(feature = "tmux_1_1")]
+        s.push("-o");
+        #[cfg(feature = "tmux_1_1")]
+        s.extend_from_slice(&["-t", "1"]);
+        #[cfg(feature = "tmux_1_2")]
+        s.push("2");
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
 
     let pipe_pane = PipePane {
+        #[cfg(feature = "tmux_2_7")]
         stdout: Some(true),
+        #[cfg(feature = "tmux_2_7")]
         stdin: Some(true),
+        #[cfg(feature = "tmux_1_1")]
         open: Some(true),
+        #[cfg(feature = "tmux_1_1")]
         target_pane: Some(&TargetPane::Raw("1")),
+        #[cfg(feature = "tmux_1_2")]
         shell_command: Some("2"),
     };
     tmux.pipe_pane(Some(&pipe_pane)).unwrap_err();
 
-    let pipe_pane = PipePaneBuilder::new()
-        .stdout()
-        .stdin()
-        .open()
-        .target_pane(&TargetPane::Raw("1"))
-        .shell_command("2")
-        .build();
+    let mut builder = PipePaneBuilder::new();
+    #[cfg(feature = "tmux_2_7")]
+    builder.stdout();
+    #[cfg(feature = "tmux_2_7")]
+    builder.stdin();
+    #[cfg(feature = "tmux_1_1")]
+    builder.open();
+    #[cfg(feature = "tmux_1_1")]
+    builder.target_pane(&TargetPane::Raw("1"));
+    #[cfg(feature = "tmux_1_2")]
+    builder.shell_command("2");
+    let pipe_pane = builder.build();
     tmux.pipe_pane(Some(&pipe_pane)).unwrap_err();
 }

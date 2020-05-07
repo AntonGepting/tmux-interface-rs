@@ -43,26 +43,56 @@ fn break_pane() {
             format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
             r#""tmux" [] ["break-pane", "-d", "-P", "-F", "1", "-n", "2", "-s", "3", "-t", "4"]"#
         );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        s.push("break-pane");
+        #[cfg(feature = "tmux_0_8")]
+        s.push("-d");
+        #[cfg(feature = "tmux_1_7")]
+        s.push("-P");
+        #[cfg(feature = "tmux_1_7")]
+        s.extend_from_slice(&["-F", "1"]);
+        #[cfg(feature = "tmux_2_4")]
+        s.extend_from_slice(&["-n", "2"]);
+        #[cfg(feature = "tmux_2_1")]
+        s.extend_from_slice(&["-s", "3"]);
+        #[cfg(feature = "tmux_2_2")]
+        s.extend_from_slice(&["-t", "4"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
 
     let break_pane = BreakPane {
+        #[cfg(feature = "tmux_0_8")]
         detached: Some(true),
+        #[cfg(feature = "tmux_1_7")]
         print: Some(true),
+        #[cfg(feature = "tmux_1_7")]
         format: Some("1"),
+        #[cfg(feature = "tmux_2_4")]
         window_name: Some("2"),
+        #[cfg(feature = "tmux_2_1")]
         src_pane: Some(&TargetPane::Raw("3")),
+        #[cfg(feature = "tmux_2_2")]
         dst_window: Some(&TargetWindow::Raw("4")),
     };
     tmux.break_pane(Some(&break_pane)).unwrap_err();
 
-    let break_pane = BreakPaneBuilder::new()
-        .detached()
-        .print()
-        .format("1")
-        .window_name("2")
-        .src_pane(&TargetPane::Raw("3"))
-        .dst_window(&TargetWindow::Raw("4"))
-        .build();
+    let mut builder = BreakPaneBuilder::new();
+    #[cfg(feature = "tmux_0_8")]
+    builder.detached();
+    #[cfg(feature = "tmux_1_7")]
+    builder.print();
+    #[cfg(feature = "tmux_1_7")]
+    builder.format("1");
+    #[cfg(feature = "tmux_2_4")]
+    builder.window_name("2");
+    #[cfg(feature = "tmux_2_1")]
+    builder.src_pane(&TargetPane::Raw("3"));
+    #[cfg(feature = "tmux_2_2")]
+    builder.dst_window(&TargetWindow::Raw("4"));
+    let break_pane = builder.build();
     tmux.break_pane(Some(&break_pane)).unwrap_err();
 }

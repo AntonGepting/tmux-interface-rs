@@ -22,6 +22,16 @@ fn copy_mode() {
             format!("{:?} {:?} {:?}", bin, options, subcmd),
             r#""tmux" [] ["copy-mode", "-M", "-e", "-u", "-t", "1"]"#
         );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        s.push("copy-mode");
+        s.push("-M");
+        s.push("-e");
+        s.push("-u");
+        s.extend_from_slice(&["-t", "1"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     tmux.copy_mode(
