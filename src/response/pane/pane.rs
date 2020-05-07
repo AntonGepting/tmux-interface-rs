@@ -2,43 +2,43 @@ use crate::Error;
 use crate::PaneTabs;
 
 // NOTE: u32 mb not enough!
-pub const PANE_ACTIVE: usize = 1;
-pub const PANE_AT_BOTTOM: usize = 1 << 1;
-pub const PANE_AT_LEFT: usize = 1 << 2;
-pub const PANE_AT_RIGHT: usize = 1 << 3;
-pub const PANE_AT_TOP: usize = 1 << 4;
-pub const PANE_BOTTOM: usize = 1 << 5;
-pub const PANE_CURRENT_COMMAND: usize = 1 << 6;
-pub const PANE_CURRENT_PATH: usize = 1 << 7;
-pub const PANE_DEAD: usize = 1 << 8;
-pub const PANE_DEAD_STATUS: usize = 1 << 9;
-pub const PANE_FORMAT: usize = 1 << 10;
-pub const PANE_HEIGHT: usize = 1 << 11;
-pub const PANE_ID: usize = 1 << 12;
-pub const PANE_IN_MODE: usize = 1 << 13;
-pub const PANE_INDEX: usize = 1 << 14;
-pub const PANE_INPUT_OFF: usize = 1 << 15;
-pub const PANE_LEFT: usize = 1 << 16;
-pub const PANE_MARKED: usize = 1 << 17;
-pub const PANE_MARKED_SET: usize = 1 << 18;
-pub const PANE_MODE: usize = 1 << 19;
-pub const PANE_PID: usize = 1 << 20;
-pub const PANE_PIPE: usize = 1 << 21;
-pub const PANE_RIGHT: usize = 1 << 22;
-pub const PANE_SEARCH_STRING: usize = 1 << 23;
-pub const PANE_START_COMMMAND: usize = 1 << 24;
-pub const PANE_SYNCHRONIZED: usize = 1 << 25;
-pub const PANE_TABS: usize = 1 << 26;
-pub const PANE_TITLE: usize = 1 << 27;
-pub const PANE_TOP: usize = 1 << 28;
-pub const PANE_TTY: usize = 1 << 29;
-pub const PANE_WIDTH: usize = 1 << 30;
+pub const PANE_ACTIVE: u32 = 1;
+pub const PANE_AT_BOTTOM: u32 = 1 << 1;
+pub const PANE_AT_LEFT: u32 = 1 << 2;
+pub const PANE_AT_RIGHT: u32 = 1 << 3;
+pub const PANE_AT_TOP: u32 = 1 << 4;
+pub const PANE_BOTTOM: u32 = 1 << 5;
+pub const PANE_CURRENT_COMMAND: u32 = 1 << 6;
+pub const PANE_CURRENT_PATH: u32 = 1 << 7;
+pub const PANE_DEAD: u32 = 1 << 8;
+pub const PANE_DEAD_STATUS: u32 = 1 << 9;
+pub const PANE_FORMAT: u32 = 1 << 10;
+pub const PANE_HEIGHT: u32 = 1 << 11;
+pub const PANE_ID: u32 = 1 << 12;
+pub const PANE_IN_MODE: u32 = 1 << 13;
+pub const PANE_INDEX: u32 = 1 << 14;
+pub const PANE_INPUT_OFF: u32 = 1 << 15;
+pub const PANE_LEFT: u32 = 1 << 16;
+pub const PANE_MARKED: u32 = 1 << 17;
+pub const PANE_MARKED_SET: u32 = 1 << 18;
+pub const PANE_MODE: u32 = 1 << 19;
+pub const PANE_PID: u32 = 1 << 20;
+pub const PANE_PIPE: u32 = 1 << 21;
+pub const PANE_RIGHT: u32 = 1 << 22;
+pub const PANE_SEARCH_STRING: u32 = 1 << 23;
+pub const PANE_START_COMMMAND: u32 = 1 << 24;
+pub const PANE_SYNCHRONIZED: u32 = 1 << 25;
+pub const PANE_TABS: u32 = 1 << 26;
+pub const PANE_TITLE: u32 = 1 << 27;
+pub const PANE_TOP: u32 = 1 << 28;
+pub const PANE_TTY: u32 = 1 << 29;
+pub const PANE_WIDTH: u32 = 1 << 30;
 
 pub const PANE_FLAGS_NUM: usize = 31;
 
-pub const PANE_NONE: usize = 0;
+pub const PANE_NONE: u32 = 0;
 //pub const PANE_DEFAULT: usize = PANE_ID | PANE_TITLE;
-pub const PANE_ALL: usize = PANE_ACTIVE
+pub const PANE_ALL: u32 = PANE_ACTIVE
     | PANE_AT_BOTTOM
     | PANE_AT_LEFT
     | PANE_AT_RIGHT
@@ -72,7 +72,7 @@ pub const PANE_ALL: usize = PANE_ACTIVE
 
 pub const PANE_VARS_SEPARATOR: &str = "'";
 // FIXME: regex name can be anything, and other keys should be checked better
-pub const PANE_VARS: [(&str, usize, fn(p: &mut Pane, t: &str)); PANE_FLAGS_NUM] = [
+pub const PANE_VARS: [(&str, u32, fn(p: &mut Pane, t: &str)); PANE_FLAGS_NUM] = [
     ("pane_active", PANE_ACTIVE, |p, t| {
         p.active = t.parse::<usize>().map(|b| b == 1).ok()
     }),
@@ -226,7 +226,7 @@ impl Pane {
         Default::default()
     }
 
-    pub fn from_str(pane_str: &str, bitflags: usize) -> Result<Self, Error> {
+    pub fn from_str(pane_str: &str, bitflags: u32) -> Result<Self, Error> {
         let pv: Vec<&str> = pane_str.split(PANE_VARS_SEPARATOR).collect();
         let mut pv = pv.iter();
         // XXX: optimize?

@@ -31,7 +31,7 @@ impl Windows {
         self.0.push(window);
     }
 
-    pub fn get(target_session: &TargetSession, bitflags: usize) -> Result<Self, Error> {
+    pub fn get(target_session: &TargetSession, bitflags: u32) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let lsw_format = WINDOW_VARS
             .iter()
@@ -43,7 +43,7 @@ impl Windows {
         Windows::from_str(&windows_str, bitflags)
     }
 
-    pub fn from_str(windows_str: &str, bitflags: usize) -> Result<Self, Error> {
+    pub fn from_str(windows_str: &str, bitflags: u32) -> Result<Self, Error> {
         let mut windows = Windows::new();
         for line in windows_str.lines() {
             windows.push(Window::from_str(line, bitflags)?);

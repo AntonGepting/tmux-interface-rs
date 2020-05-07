@@ -34,7 +34,7 @@ impl Panes {
         self.0.push(pane);
     }
 
-    pub fn get(target_window: &TargetWindowExt, bitflags: usize) -> Result<Self, Error> {
+    pub fn get(target_window: &TargetWindowExt, bitflags: u32) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS
             .iter()
@@ -46,7 +46,7 @@ impl Panes {
         Panes::from_str(&panes_str, bitflags)
     }
 
-    pub fn get_all(target_session: &TargetWindowExt, bitflags: usize) -> Result<Self, Error> {
+    pub fn get_all(target_session: &TargetWindowExt, bitflags: u32) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS
             .iter()
@@ -59,7 +59,7 @@ impl Panes {
         Panes::from_str(&panes_str, bitflags)
     }
 
-    pub fn from_str(panes_str: &str, bitflags: usize) -> Result<Self, Error> {
+    pub fn from_str(panes_str: &str, bitflags: u32) -> Result<Self, Error> {
         let mut panes = Panes::new();
         for line in panes_str.lines() {
             panes.push(Pane::from_str(line, bitflags)?);

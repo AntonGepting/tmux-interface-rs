@@ -4,36 +4,36 @@ use crate::WindowFlag;
 use std::time::Duration;
 
 // NOTE: u32 mb not enough!
-pub const WINDOW_ACTIVE: usize = 1;
-pub const WINDOW_ACTIVITY: usize = 1 << 1;
-pub const WINDOW_ACTIVITY_FLAG: usize = 1 << 2;
-pub const WINDOW_BELL_FLAG: usize = 1 << 3;
-pub const WINDOW_BIGGER: usize = 1 << 4;
-pub const WINDOW_END_FLAG: usize = 1 << 5;
-pub const WINDOW_FLAGS: usize = 1 << 6;
-pub const WINDOW_FORMAT: usize = 1 << 7;
-pub const WINDOW_HEIGHT: usize = 1 << 8;
-pub const WINDOW_ID: usize = 1 << 9;
-pub const WINDOW_INDEX: usize = 1 << 10;
-pub const WINDOW_LAST_FLAG: usize = 1 << 11;
-pub const WINDOW_LAYOUT: usize = 1 << 12;
-pub const WINDOW_LINKED: usize = 1 << 13;
-pub const WINDOW_NAME: usize = 1 << 14;
-pub const WINDOW_OFFSET_X: usize = 1 << 15;
-pub const WINDOW_OFFSET_Y: usize = 1 << 16;
-pub const WINDOW_PANES: usize = 1 << 17;
-pub const WINDOW_SILENCE_FLAG: usize = 1 << 18;
-pub const WINDOW_STACK_INDEX: usize = 1 << 19;
-pub const WINDOW_START_FLAG: usize = 1 << 20;
-pub const WINDOW_VISIBLE_LAYOUT: usize = 1 << 21;
-pub const WINDOW_WIDTH: usize = 1 << 22;
-pub const WINDOW_ZOOMED_FLAG: usize = 1 << 23;
+pub const WINDOW_ACTIVE: u32 = 1;
+pub const WINDOW_ACTIVITY: u32 = 1 << 1;
+pub const WINDOW_ACTIVITY_FLAG: u32 = 1 << 2;
+pub const WINDOW_BELL_FLAG: u32 = 1 << 3;
+pub const WINDOW_BIGGER: u32 = 1 << 4;
+pub const WINDOW_END_FLAG: u32 = 1 << 5;
+pub const WINDOW_FLAGS: u32 = 1 << 6;
+pub const WINDOW_FORMAT: u32 = 1 << 7;
+pub const WINDOW_HEIGHT: u32 = 1 << 8;
+pub const WINDOW_ID: u32 = 1 << 9;
+pub const WINDOW_INDEX: u32 = 1 << 10;
+pub const WINDOW_LAST_FLAG: u32 = 1 << 11;
+pub const WINDOW_LAYOUT: u32 = 1 << 12;
+pub const WINDOW_LINKED: u32 = 1 << 13;
+pub const WINDOW_NAME: u32 = 1 << 14;
+pub const WINDOW_OFFSET_X: u32 = 1 << 15;
+pub const WINDOW_OFFSET_Y: u32 = 1 << 16;
+pub const WINDOW_PANES: u32 = 1 << 17;
+pub const WINDOW_SILENCE_FLAG: u32 = 1 << 18;
+pub const WINDOW_STACK_INDEX: u32 = 1 << 19;
+pub const WINDOW_START_FLAG: u32 = 1 << 20;
+pub const WINDOW_VISIBLE_LAYOUT: u32 = 1 << 21;
+pub const WINDOW_WIDTH: u32 = 1 << 22;
+pub const WINDOW_ZOOMED_FLAG: u32 = 1 << 23;
 
 pub const WINDOW_FLAGS_NUM: usize = 24;
 
-pub const WINDOW_NONE: usize = 0;
+pub const WINDOW_NONE: u32 = 0;
 //pub const WINDOW_DEFAULT: usize = WINDOW_ID | WINDOW_NAME;
-pub const WINDOW_ALL: usize = WINDOW_ACTIVE
+pub const WINDOW_ALL: u32 = WINDOW_ACTIVE
     | WINDOW_ACTIVITY
     | WINDOW_ACTIVITY_FLAG
     | WINDOW_BELL_FLAG
@@ -60,7 +60,7 @@ pub const WINDOW_ALL: usize = WINDOW_ACTIVE
 
 pub const WINDOW_VARS_SEPARATOR: &str = "'";
 // FIXME: regex name can be anything, and other keys should be checked better
-pub const WINDOW_VARS: [(&str, usize, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_NUM] = [
+pub const WINDOW_VARS: [(&str, u32, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_NUM] = [
     ("window_active", WINDOW_ACTIVE, |w, p| {
         w.active = p.parse::<usize>().map(|i| i == 1).ok()
     }),
@@ -191,7 +191,7 @@ impl Window {
     }
 
     // XXX: mb deserialize like serde something?
-    pub fn from_str(s: &str, bitflags: usize) -> Result<Self, Error> {
+    pub fn from_str(s: &str, bitflags: u32) -> Result<Self, Error> {
         let wv: Vec<&str> = s.split(WINDOW_VARS_SEPARATOR).collect();
         let mut wv = wv.iter();
         // XXX: optimize?
