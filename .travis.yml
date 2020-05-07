@@ -46,6 +46,7 @@ env:
 
 before_script:
   - ./scripts/tmux_setup.sh
+  - export PATH="$HOME/build/tmux-$TMUX_VERSION/bin:$PATH"
 
 script:
   #- cargo build --verbose

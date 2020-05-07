@@ -12,8 +12,8 @@ fi
 
 cd ~/source/tmux-$TMUX_VERSION
 git checkout $TMUX_VERSION
-export PATH="$HOME/build/tmux-$TMUX_VERSION/bin:$PATH"
-echo $PATH
+# cant be moved into script
+#export PATH="$HOME/build/tmux-$TMUX_VERSION/bin:$PATH"
 
 if [[ $TMUX_VERSION == "master" || ! $(tmux -V | grep $TMUX_VERSION) ]]; then
     sh autogen.sh;
