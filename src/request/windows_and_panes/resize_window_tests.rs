@@ -65,27 +65,27 @@ fn resize_window() {
     };
     tmux.resize_window(Some(&resize_window)).unwrap_err();
 
-    let mut builder = ResizeWindowBuilder::new()
+    let mut builder = ResizeWindowBuilder::new();
     #[cfg(feature = "tmux_2_9a")]
-    builder.smallest()
+    builder.smallest();
     #[cfg(feature = "tmux_2_9a")]
-    builder.largest()
+    builder.largest();
     #[cfg(feature = "tmux_2_9a")]
-    builder.down()
+    builder.down();
     #[cfg(feature = "tmux_2_9a")]
-    builder.left()
+    builder.left();
     #[cfg(feature = "tmux_2_9a")]
-    builder.right()
+    builder.right();
     #[cfg(feature = "tmux_2_9a")]
-    builder.up()
+    builder.up();
     #[cfg(feature = "tmux_2_9a")]
-    builder.target_window(&TargetWindow::Raw("1"))
+    builder.target_window(&TargetWindow::Raw("1"));
     #[cfg(feature = "tmux_2_9a")]
-    builder.width(2)
+    builder.width(2);
     #[cfg(feature = "tmux_2_9a")]
-    builder.height(3)
+    builder.height(3);
     #[cfg(feature = "tmux_2_9a")]
-    builder.adjustment("4")
+    builder.adjustment("4");
     let resize_window = builder.build();
     tmux.resize_window(Some(&resize_window)).unwrap_err();
 }
