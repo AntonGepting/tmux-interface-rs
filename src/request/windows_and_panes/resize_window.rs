@@ -7,7 +7,7 @@ use std::process::Output;
 ///
 /// # Manual
 ///
-/// tmux ^2.9a:
+/// tmux ^2.9:
 /// ```text
 /// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
 /// (alias: resizew)
@@ -15,24 +15,34 @@ use std::process::Output;
 #[derive(Default, Debug)]
 pub struct ResizeWindow<'a, T: Display> {
     /// [-a] - set the size of the smallest session containing the window
+    #[cfg(feature = "tmux_2_9")]
     pub smallest: Option<bool>,
     /// [-A] - set the size of the largest session containing the window
+    #[cfg(feature = "tmux_2_9")]
     pub largest: Option<bool>,
     /// [-D] - resize down by adjustment
+    #[cfg(feature = "tmux_2_9")]
     pub down: Option<bool>,
     /// [-L] - resize left by adjustment
+    #[cfg(feature = "tmux_2_9")]
     pub left: Option<bool>,
     /// [-R] - resize right by adjustment
+    #[cfg(feature = "tmux_2_9")]
     pub right: Option<bool>,
     /// [-U] - resize up by adjustment
+    #[cfg(feature = "tmux_2_9")]
     pub up: Option<bool>,
     /// [-t target-window] - target-window
+    #[cfg(feature = "tmux_2_9")]
     pub target_window: Option<&'a T>,
     /// [-x width] - absolute size
+    #[cfg(feature = "tmux_2_9")]
     pub width: Option<usize>,
     /// [-y height] - absolute size
+    #[cfg(feature = "tmux_2_9")]
     pub height: Option<usize>,
     /// [adjustment] - adjustment
+    #[cfg(feature = "tmux_2_9")]
     pub adjustment: Option<&'a str>,
 }
 
@@ -44,15 +54,25 @@ impl<'a, T: Display + Default> ResizeWindow<'a, T> {
 
 #[derive(Default, Debug)]
 pub struct ResizeWindowBuilder<'a, T: Display> {
+    #[cfg(feature = "tmux_2_9")]
     pub smallest: Option<bool>,
+    #[cfg(feature = "tmux_2_9")]
     pub largest: Option<bool>,
+    #[cfg(feature = "tmux_2_9")]
     pub down: Option<bool>,
+    #[cfg(feature = "tmux_2_9")]
     pub left: Option<bool>,
+    #[cfg(feature = "tmux_2_9")]
     pub right: Option<bool>,
+    #[cfg(feature = "tmux_2_9")]
     pub up: Option<bool>,
+    #[cfg(feature = "tmux_2_9")]
     pub target_window: Option<&'a T>,
+    #[cfg(feature = "tmux_2_9")]
     pub width: Option<usize>,
+    #[cfg(feature = "tmux_2_9")]
     pub height: Option<usize>,
+    #[cfg(feature = "tmux_2_9")]
     pub adjustment: Option<&'a str>,
 }
 
