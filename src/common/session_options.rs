@@ -348,7 +348,7 @@ pub const SESSION_OPTIONS_NUM: usize = 44;
 #[cfg(all(feature = "tmux_2_8", not(feature = "tmux_2_9")))]
 pub const SESSION_OPTIONS_NUM: usize = 44;
 #[cfg(all(feature = "tmux_2_9", not(feature = "tmux_2_9a")))]
-pub const SESSION_OPTIONS_NUM: usize = 47;
+pub const SESSION_OPTIONS_NUM: usize = 46; // 47
 #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_0")))]
 pub const SESSION_OPTIONS_NUM: usize = 48;
 #[cfg(all(feature = "tmux_3_0", not(feature = "tmux_3_0a")))]
