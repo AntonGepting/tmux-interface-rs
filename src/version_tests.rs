@@ -9,7 +9,7 @@ fn from_str() {
         "tmux 2.9a",
         "tmux 2.9",
         "tmux 2.8",
-        "tmux 2.7",
+        "tmux 2.7-rc",
         "tmux 2.6",
         "tmux 2.5",
         "tmux 2.4",

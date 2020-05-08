@@ -46,11 +46,16 @@ impl FromStr for Version {
                     version.minor = buff.parse()?;
                     break;
                 }
-                // end of minor part
+                // end of minor part, begin alpha, beta
                 ('a'..='z', VersionState::Minor) => {
                     version.minor = buff.parse()?;
                     state = VersionState::Suffix;
                     version.suffix.push(c);
+                }
+                // end of minor part, begin -rc
+                ('-', VersionState::Minor) => {
+                    version.minor = buff.parse()?;
+                    state = VersionState::Suffix;
                 }
                 // end of suffix part & EOL
                 ('\n', VersionState::Suffix) => {
