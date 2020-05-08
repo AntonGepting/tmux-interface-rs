@@ -350,9 +350,9 @@ pub const SESSION_OPTIONS_NUM: usize = 44;
 #[cfg(all(feature = "tmux_2_9", not(feature = "tmux_2_9a")))]
 pub const SESSION_OPTIONS_NUM: usize = 46; // 47
 #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_0")))]
-pub const SESSION_OPTIONS_NUM: usize = 48;
+pub const SESSION_OPTIONS_NUM: usize = 46; // 48
 #[cfg(all(feature = "tmux_3_0", not(feature = "tmux_3_0a")))]
-pub const SESSION_OPTIONS_NUM: usize = 45;
+pub const SESSION_OPTIONS_NUM: usize = 46; // 45
 #[cfg(all(feature = "tmux_3_0a", not(feature = "tmux_3_1")))]
 pub const SESSION_OPTIONS_NUM: usize = 45;
 #[cfg(all(feature = "tmux_3_1", not(feature = "tmux_X_X")))]
