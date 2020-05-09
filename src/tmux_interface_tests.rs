@@ -40,14 +40,14 @@ fn version_io_error() {
     assert!(if let Error::IO(_) = err { true } else { false });
 }
 
-#[test]
-fn version_parse_error() {
-    let mut tmux = TmuxInterface::new();
-    tmux.tmux = Some("./tests/tmux_error_mock.sh");
-    let err = tmux.version().unwrap_err();
-    assert!(if let Error::ParseInt(_) = err {
-        true
-    } else {
-        false
-    });
-}
+//#[test]
+//fn version_parse_error() {
+//let mut tmux = TmuxInterface::new();
+//tmux.tmux = Some("./tests/tmux_error_mock.sh");
+//let err = tmux.version().unwrap_err();
+//assert!(if let Error::ParseInt(_) = err {
+//true
+//} else {
+//false
+//});
+//}
