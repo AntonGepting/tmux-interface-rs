@@ -14,7 +14,7 @@ pub const PANE_OPTIONS_NONE: usize = 0;
 pub const PANE_OPTIONS_ALL: usize =
     ALLOW_RENAME | ALTERNATE_SCREEN | REMAIN_ON_EXIT | WINDOW_ACTIVE_STYLE | WINDOW_STYLE;
 
-#[cfg(all(feature = "tmux_3_1b", not(feature = "tmux_X_X")))]
+#[cfg(feature = "tmux_X_X")]
 pub const PANE_OPTIONS_NUM: usize = 5;
 
 // TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
