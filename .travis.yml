@@ -17,6 +17,12 @@ rust:
   - beta
   - nightly
 
+cache:
+  - apt
+  - directories:
+    - ~/source
+    - ~/build
+
 env:
   - TMUX_VERSION=0.8 CRATE_FEATURE=tmux_0_8
   - TMUX_VERSION=0.9 CRATE_FEATURE=tmux_0_9
