@@ -118,6 +118,8 @@ pub const SERVER_OPTIONS_NUM: usize = 12;
 //pub const SERVER_OPTIONS_NUM: usize = 12;
 #[cfg(all(feature = "tmux_3_1", not(feature = "tmux_X_X")))]
 pub const SERVER_OPTIONS_NUM: usize = 13;
+#[cfg(feature = "tmux_X_X")]
+pub const SERVER_OPTIONS_NUM: usize = 13;
 
 // array [0. tmux string, 1. parsing method, 2. string formatting method, 3. ID or bitmask]
 // TODO: array to Vec or again structure from_str

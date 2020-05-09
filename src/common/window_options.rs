@@ -213,7 +213,13 @@ pub const WINDOW_OPTIONS_NUM: usize = 31;
 pub const WINDOW_OPTIONS_NUM: usize = 31;
 #[cfg(all(feature = "tmux_3_0a", not(feature = "tmux_3_1")))]
 pub const WINDOW_OPTIONS_NUM: usize = 31;
-#[cfg(all(feature = "tmux_3_1", not(feature = "tmux_X_X")))]
+#[cfg(all(feature = "tmux_3_1", not(feature = "tmux_3_1a")))]
+pub const WINDOW_OPTIONS_NUM: usize = 31;
+#[cfg(all(feature = "tmux_3_1a", not(feature = "tmux_3_1b")))]
+pub const WINDOW_OPTIONS_NUM: usize = 31;
+#[cfg(all(feature = "tmux_3_1b", not(feature = "tmux_X_X")))]
+pub const WINDOW_OPTIONS_NUM: usize = 31;
+#[cfg(feature = "tmux_X_X")]
 pub const WINDOW_OPTIONS_NUM: usize = 31;
 
 // TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
