@@ -4,6 +4,7 @@ use std::str::FromStr;
 #[derive(PartialEq, Debug, Clone)]
 enum VersionState {
     ProgName,
+    Prefix,
     Major,
     Minor,
     Suffix,
@@ -13,6 +14,7 @@ enum VersionState {
 #[derive(Default, Clone, Debug)]
 pub struct Version {
     pub prog_name: String,
+    pub prefix: String,
     pub major: usize,
     pub minor: usize,
     pub suffix: String,
@@ -35,11 +37,19 @@ impl FromStr for Version {
                 (' ', VersionState::ProgName) => {
                     state = VersionState::Major;
                 }
+                ('a'..='z', VersionState::Major) => {
+                    state = VersionState::Prefix;
+                    version.prefix.push(c);
+                }
                 // end of major part
                 ('.', VersionState::Major) => {
                     state = VersionState::Minor;
                     version.major = buff.parse()?;
                     buff = String::new();
+                }
+                // end of prefix part, begin major
+                ('-', VersionState::Prefix) => {
+                    state = VersionState::Major;
                 }
                 // end of minor part & EOL
                 ('\n', VersionState::Minor) => {
@@ -63,6 +73,9 @@ impl FromStr for Version {
                 }
                 ('a'..='z', VersionState::ProgName) => {
                     version.prog_name.push(c);
+                }
+                ('a'..='z', VersionState::Prefix) => {
+                    version.prefix.push(c);
                 }
                 ('a'..='z', VersionState::Suffix) => {
                     version.suffix.push(c);
