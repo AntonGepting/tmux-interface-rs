@@ -19,9 +19,9 @@ rust:
 
 cache:
   - apt
-  - directories:
-    - ~/source
-    - ~/build
+  #- directories:
+    #- ~/source
+    #- ~/build
 
 env:
   - TMUX_VERSION=0.8 CRATE_FEATURE=tmux_0_8
