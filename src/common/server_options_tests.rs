@@ -1,9 +1,22 @@
 #[test]
+fn bitflags() {
+    use crate::{SERVER_OPTIONS_ALL, SERVER_OPTIONS_NONE};
+    let bitflags =
+        //12____8_7______0
+        0b_111111_11111111;
+    //println!("{:b}", SERVER_OPTIONS_ALL);
+    //println!("{:b}", &bitflags);
+    assert_eq!(bitflags, SERVER_OPTIONS_ALL);
+    assert_eq!(0, SERVER_OPTIONS_NONE);
+}
+
+#[test]
 fn set_clipboard() {
     use crate::common::server_options::SetClipboard;
 
     assert_eq!(SetClipboard::On.to_string(), "on");
     assert_eq!(SetClipboard::Off.to_string(), "off");
+    #[cfg(feature = "tmux_2_6")]
     assert_eq!(SetClipboard::External.to_string(), "external");
 }
 
@@ -11,15 +24,18 @@ fn set_clipboard() {
 fn parse() {
     use crate::{ServerOptions, ServerOptionsBuilder, SetClipboard, Switch};
 
-    let server_options_default = ServerOptionsBuilder::new()
-        .buffer_limit(50)
-        .default_terminal("\"screen-256color\"")
-        .exit_empty(Switch::On)
-        .command_alias(vec![
-            "\"split-pane=split-window\"",
-            "\"splitp=split-window\"",
-        ])
-        .build();
+    let mut builder = ServerOptionsBuilder::new();
+    builder.buffer_limit(50);
+    #[cfg(feature = "tmux_2_0")]
+    builder.default_terminal("\"screen-256color\"");
+    #[cfg(feature = "tmux_2_7")]
+    builder.exit_empty(Switch::On);
+    #[cfg(feature = "tmux_2_4")]
+    builder.command_alias(vec![
+        "\"split-pane=split-window\"",
+        "\"splitp=split-window\"",
+    ]);
+    let server_options_default = builder.build();
 
     // test int, string, enum, vec
     let server_options_str = r#"
@@ -32,27 +48,34 @@ fn parse() {
     let server_options = server_options_str.parse::<ServerOptions>().unwrap();
     assert_eq!(server_options_default, server_options);
 
-    let server_options_default = ServerOptionsBuilder::new()
-        .buffer_limit(50)
-        .command_alias(vec![
-            "\"split-pane=split-window\"",
-            "\"splitp=split-window\"",
-            "\"server-info=show-messages -JT\"",
-            "\"info=show-messages -JT\"",
-            "\"choose-window=choose-tree -w\"",
-            "\"choose-session=choose-tree -s\"",
-        ])
-        .default_terminal("\"screen-256color\"")
-        .escape_time(500)
-        .exit_empty(Switch::On)
-        .exit_unattached(Switch::Off)
-        .focus_events(Switch::Off)
-        .history_file("\"\"")
-        .message_limit(100)
-        .set_clipboard(SetClipboard::External)
-        .terminal_overrides(vec!["\"xterm*:XT:Ms=\\\\E]52;%p1%s;%p2%s\\\\007:Cs=\\\\E]12;%p1%s\\\\007:Cr=\\\\E]112\\\\007:Ss=\\\\E[%p1%d q:Se=\\\\E[2 q\"",
-        "\"screen*:XT\""])
-        .build();
+    let mut builder = ServerOptionsBuilder::new();
+    builder.buffer_limit(50);
+    #[cfg(feature = "tmux_2_4")]
+    builder.command_alias(vec![
+        "\"split-pane=split-window\"",
+        "\"splitp=split-window\"",
+        "\"server-info=show-messages -JT\"",
+        "\"info=show-messages -JT\"",
+        "\"choose-window=choose-tree -w\"",
+        "\"choose-session=choose-tree -s\"",
+    ]);
+    #[cfg(feature = "tmux_2_0")]
+    builder.default_terminal("\"screen-256color\"");
+    builder.escape_time(500);
+    #[cfg(feature = "tmux_2_7")]
+    builder.exit_empty(Switch::On);
+    builder.exit_unattached(Switch::Off);
+    #[cfg(feature = "tmux_1_9")]
+    builder.focus_events(Switch::Off);
+    #[cfg(feature = "tmux_2_1")]
+    builder.history_file("\"\"");
+    #[cfg(feature = "tmux_2_0")]
+    builder.message_limit(100);
+    builder.set_clipboard(SetClipboard::External);
+    #[cfg(feature = "tmux_2_0")]
+    builder.terminal_overrides(vec!["\"xterm*:XT:Ms=\\\\E]52;%p1%s;%p2%s\\\\007:Cs=\\\\E]12;%p1%s\\\\007:Cr=\\\\E]112\\\\007:Ss=\\\\E[%p1%d q:Se=\\\\E[2 q\"",
+        "\"screen*:XT\""]);
+    let server_options_default = builder.build();
 
     let server_options_str = r#"
         buffer-limit 50
@@ -77,6 +100,7 @@ fn parse() {
     assert_eq!(server_options_default, server_options);
 
     let server_options_default = ServerOptions {
+        #[cfg(feature = "tmux_2_1")]
         history_file: Some("\"\"".into()),
         ..Default::default()
     };

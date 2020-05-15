@@ -5,6 +5,7 @@ use std::str::FromStr;
 
 const ON: &str = "on";
 const OFF: &str = "off";
+#[cfg(feature = "tmux_2_6")]
 const EXTERNAL: &str = "external";
 
 //set-clipboard [on | external | off]
@@ -23,6 +24,7 @@ impl FromStr for SetClipboard {
         match s {
             ON => Ok(Self::On),
             OFF => Ok(Self::Off),
+            #[cfg(feature = "tmux_2_6")]
             EXTERNAL => Ok(Self::External),
             _ => Err(Error::ParseSetClipboard),
         }
@@ -34,12 +36,15 @@ impl fmt::Display for SetClipboard {
         let value = match self {
             Self::On => ON,
             Self::Off => OFF,
+            #[cfg(feature = "tmux_2_6")]
             Self::External => EXTERNAL,
         };
         f.write_str(value)
     }
 }
 
+// XXX: conditionals?
+// NOTE: total num: 14 (usize)
 pub const BACKSPACE: usize = 1;
 pub const BUFFER_LIMIT: usize = 1 << 1;
 pub const COMMAND_ALIAS: usize = 1 << 2;
@@ -50,12 +55,14 @@ pub const EXIT_UNATTACHED: usize = 1 << 6;
 pub const FOCUS_EVENTS: usize = 1 << 7;
 pub const HISTORY_FILE: usize = 1 << 8;
 pub const MESSAGE_LIMIT: usize = 1 << 9;
-pub const SET_CLIPBOARD: usize = 1 << 10;
-pub const TERMINAL_OVERRIDES: usize = 1 << 11;
-pub const USER_KEYS: usize = 1 << 12;
+pub const QUIET: usize = 1 << 10;
+pub const SET_CLIPBOARD: usize = 1 << 11;
+pub const TERMINAL_OVERRIDES: usize = 1 << 12;
+pub const USER_KEYS: usize = 1 << 13;
 
 pub const SERVER_OPTIONS_NONE: usize = 0;
 //pub const SERVER_OPTIONS_DEFAULT: usize = ;
+
 pub const SERVER_OPTIONS_ALL: usize = BACKSPACE
     | BUFFER_LIMIT
     | COMMAND_ALIAS
@@ -66,11 +73,12 @@ pub const SERVER_OPTIONS_ALL: usize = BACKSPACE
     | FOCUS_EVENTS
     | HISTORY_FILE
     | MESSAGE_LIMIT
+    | QUIET
     | SET_CLIPBOARD
     | TERMINAL_OVERRIDES
     | USER_KEYS;
 
-#[cfg(all(feature = "tmux_0_1", not(feature = "tmux_1_2")))]
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
 pub const SERVER_OPTIONS_NUM: usize = 0;
 #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_3")))]
 pub const SERVER_OPTIONS_NUM: usize = 2;
@@ -86,7 +94,9 @@ pub const SERVER_OPTIONS_NUM: usize = 5;
 //pub const SERVER_OPTIONS_NUM: usize = 5;
 //#[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
 //pub const SERVER_OPTIONS_NUM: usize = 5;
-#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_1_9a")))]
+pub const SERVER_OPTIONS_NUM: usize = 6;
+#[cfg(all(feature = "tmux_1_9a", not(feature = "tmux_2_0")))]
 pub const SERVER_OPTIONS_NUM: usize = 6;
 #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_1")))]
 pub const SERVER_OPTIONS_NUM: usize = 8;
@@ -224,7 +234,7 @@ pub const SERVER_OPTIONS: [(
     (
         "quiet",
         |o, _, s| o.quiet = s.parse().ok(),
-        |o| o.quiet.as_ref().map(|v| v.join(" ").to_string()),
+        |o| o.quiet.as_ref().map(|v| v.to_string()),
         QUIET,
     ),
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
@@ -246,7 +256,6 @@ pub const SERVER_OPTIONS: [(
 // TODO: Vec variables solution for arrays
 // TODO: check types
 // TODO: command_alias and terminal_overrides both as String and as Vec<String> see tmux versions
-// 3-13 Available server options are:
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct ServerOptions {
     // backspace key
@@ -427,6 +436,7 @@ pub struct ServerOptionsBuilder<'a> {
     pub quiet: Option<Switch>,
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     pub detach_on_destroy: Option<Switch>,
+    _phantom: &'a str,
 }
 
 impl<'a> ServerOptionsBuilder<'a> {
@@ -547,7 +557,7 @@ impl<'a> ServerOptionsBuilder<'a> {
             #[cfg(feature = "tmux_3_0")]
             user_keys: self.user_keys.clone(),
             #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-            quiet: self.quiet,
+            quiet: self.quiet.clone(),
             #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
             detach_on_destroy: self.quiet,
         }
