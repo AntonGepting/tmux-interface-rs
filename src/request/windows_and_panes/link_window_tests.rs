@@ -23,6 +23,7 @@ fn link_window() {
     }));
 
     let link_window = LinkWindow {
+        #[cfg(feature = "tmux_2_1")]
         add: Some(true),
         detached: Some(true),
         kill: Some(true),
@@ -31,12 +32,13 @@ fn link_window() {
     };
     tmux.link_window(Some(&link_window)).unwrap_err();
 
-    let link_window = LinkWindowBuilder::new()
-        .add()
-        .detached()
-        .kill()
-        .src_window(&TargetWindow::Raw("1"))
-        .dst_window(&TargetWindow::Raw("2"))
-        .build();
+    let mut builder = LinkWindowBuilder::new();
+    #[cfg(feature = "tmux_2_1")]
+    builder.add();
+    builder.detached();
+    builder.kill();
+    builder.src_window(&TargetWindow::Raw("1"));
+    builder.dst_window(&TargetWindow::Raw("2"));
+    let link_window = builder.build();
     tmux.link_window(Some(&link_window)).unwrap_err();
 }

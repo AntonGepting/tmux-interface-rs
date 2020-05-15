@@ -1,6 +1,7 @@
 #[test]
 fn if_shell() {
     use crate::{Error, IfShell, IfShellBuilder, TargetPane, TmuxInterface};
+    use std::marker::PhantomData;
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -52,6 +53,7 @@ fn if_shell() {
         #[cfg(feature = "tmux_1_8")]
         target_pane: Some(&TargetPane::Raw("1")),
         second_command: Some("4"),
+        _phantom: PhantomData,
     };
     tmux.if_shell(Some(&if_shell), "2", "3").unwrap_err();
 

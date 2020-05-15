@@ -72,11 +72,11 @@ fn join_pane() {
     tmux.join_pane(Some(&join_pane)).unwrap_err();
 
     let mut builder = JoinPaneBuilder::new();
-    #[cfg(feature = "tmux_1_2")]
+    #[cfg(feature = "tmux_2_6")]
     builder.left_above();
     #[cfg(feature = "tmux_1_2")]
     builder.detached();
-    #[cfg(feature = "tmux_1_2")]
+    #[cfg(feature = "tmux_2_6")]
     builder.full_size();
     #[cfg(feature = "tmux_1_2")]
     builder.horizontal();

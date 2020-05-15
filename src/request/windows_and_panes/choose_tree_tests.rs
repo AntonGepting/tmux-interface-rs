@@ -1,6 +1,11 @@
 #[test]
 fn choose_tree() {
-    use crate::{ChooseTree, ChooseTreeBuilder, Error, TargetPane, TmuxInterface};
+    #[cfg(feature = "tmux_2_6")]
+    use crate::TargetPane;
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
+    use crate::TargetWindow;
+    use crate::{ChooseTree, ChooseTreeBuilder, Error, TmuxInterface};
+    use std::marker::PhantomData;
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -53,7 +58,7 @@ fn choose_tree() {
         s.extend_from_slice(&["-O", "3"]);
         #[cfg(feature = "tmux_2_6")]
         s.extend_from_slice(&["-t", "4"]);
-        #[cfg(feature = "tmux_1_0")]
+        #[cfg(feature = "tmux_2_6")]
         s.push("5");
         assert_eq!(bin, "tmux");
         assert_eq!(options, &o);
@@ -82,8 +87,11 @@ fn choose_tree() {
         sort_order: Some("3"),
         #[cfg(feature = "tmux_2_6")]
         target_pane: Some(&TargetPane::Raw("4")),
-        #[cfg(feature = "tmux_1_0")]
+        #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
+        target_window: Some(&TargetWindow::Raw("4")),
+        #[cfg(feature = "tmux_2_6")]
         template: Some("5"),
+        _phantom: PhantomData,
     };
     tmux.choose_tree(Some(&choose_tree)).unwrap_err();
 
@@ -108,7 +116,9 @@ fn choose_tree() {
     builder.sort_order("3");
     #[cfg(feature = "tmux_2_6")]
     builder.target_pane(&TargetPane::Raw("4"));
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
+    builder.target_window(&TargetWindow::Raw("4"));
+    #[cfg(feature = "tmux_2_6")]
     builder.template("5");
     let choose_tree = builder.build();
     tmux.choose_tree(Some(&choose_tree)).unwrap_err();

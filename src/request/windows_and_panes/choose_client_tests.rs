@@ -1,6 +1,10 @@
 #[test]
 fn choose_client() {
-    use crate::{ChooseClient, ChooseClientBuilder, Error, TargetPane, TmuxInterface};
+    #[cfg(feature = "tmux_2_6")]
+    use crate::TargetPane;
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
+    use crate::TargetWindow;
+    use crate::{ChooseClient, ChooseClientBuilder, Error, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -45,6 +49,8 @@ fn choose_client() {
         s.extend_from_slice(&["-O", "3"]);
         #[cfg(feature = "tmux_2_6")]
         s.extend_from_slice(&["-t", "4"]);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
+        s.extend_from_slice(&["-t", "4"]);
         #[cfg(feature = "tmux_1_0")]
         s.push("5");
         assert_eq!(bin, "tmux");
@@ -68,6 +74,8 @@ fn choose_client() {
         sort_order: Some("3"),
         #[cfg(feature = "tmux_2_6")]
         target_pane: Some(&TargetPane::Raw("4")),
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
+        target_window: Some(&TargetWindow::Raw("2")),
         #[cfg(feature = "tmux_1_0")]
         template: Some("5"),
     };
@@ -88,6 +96,8 @@ fn choose_client() {
     builder.sort_order("3");
     #[cfg(feature = "tmux_2_6")]
     builder.target_pane(&TargetPane::Raw("4"));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
+    builder.target_window(&TargetWindow::Raw("4"));
     #[cfg(feature = "tmux_1_0")]
     builder.template("5");
     let choose_client = builder.build();

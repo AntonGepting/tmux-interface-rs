@@ -1,6 +1,8 @@
 #[test]
 fn break_pane() {
     use crate::{BreakPane, BreakPaneBuilder, Error, TargetPane, TargetWindow, TmuxInterface};
+    //use std::fmt::Display;
+    use std::marker::PhantomData;
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -77,6 +79,8 @@ fn break_pane() {
         src_pane: Some(&TargetPane::Raw("3")),
         #[cfg(feature = "tmux_2_2")]
         dst_window: Some(&TargetWindow::Raw("4")),
+        _phantom: PhantomData,
+        _phantom2: PhantomData,
     };
     tmux.break_pane(Some(&break_pane)).unwrap_err();
 
