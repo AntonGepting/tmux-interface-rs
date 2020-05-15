@@ -111,7 +111,7 @@ fn refresh_client() {
     builder.size((1, 2));
     #[cfg(feature = "tmux_2_9a")]
     builder.flags("3");
-    #[cfg(feature = "tmux_2_8")]
+    #[cfg(feature = "tmux_0_8")]
     builder.target_client("4");
     #[cfg(feature = "tmux_2_9a")]
     builder.adjustment(5);
