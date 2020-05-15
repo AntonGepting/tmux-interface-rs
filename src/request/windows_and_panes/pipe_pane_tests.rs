@@ -21,10 +21,6 @@ fn pipe_pane() {
         // tmux pipe-pane [-o] [-t target-pane] [command]
         // (alias: pipep)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["pipe-pane", "-I", "-O", "-o", "-t", "1", "2"]"#
-        );
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
         s.push("pipe-pane");

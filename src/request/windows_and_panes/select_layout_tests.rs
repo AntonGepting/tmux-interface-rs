@@ -33,10 +33,6 @@ fn select_layout() {
         // tmux select-layout [-t target-pane] layout-name
         // (alias: selectl)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["select-layout", "-E", "-n", "-o", "-p", "-t", "1", "2"]"#
-        );
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
         s.push("select-layout");
