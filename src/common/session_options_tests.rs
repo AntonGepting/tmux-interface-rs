@@ -1,8 +1,31 @@
 #[test]
+fn show_generated_struct() {
+    use crate::SessionOptions;
+
+    let session_options = SessionOptions {
+        ..Default::default()
+    };
+    dbg!(session_options);
+}
+
+#[test]
+fn bitflags() {
+    use crate::{SESSION_OPTIONS_ALL, SESSION_OPTIONS_NONE};
+    let bitflags =
+        // 80______________64_63_____________________________32_31______________________________0
+        0b_011111111111111111__11111111111111111111111111111111__11111111111111111111111111111111;
+    //println!("{:b}", SESSION_OPTIONS_ALL);
+    //println!("{:b}", &bitflags);
+    assert_eq!(bitflags, SESSION_OPTIONS_ALL);
+    assert_eq!(0, SESSION_OPTIONS_NONE);
+}
+
+#[test]
 fn activity() {
     use crate::common::session_options::Activity;
     assert_eq!(Activity::On.to_string(), "on");
     assert_eq!(Activity::Off.to_string(), "off");
+    #[cfg(feature = "tmux_2_6")]
     assert_eq!(Activity::Both.to_string(), "both");
 }
 
@@ -12,6 +35,7 @@ fn action() {
     assert_eq!(Action::Any.to_string(), "any");
     assert_eq!(Action::None.to_string(), "none");
     assert_eq!(Action::Current.to_string(), "current");
+    #[cfg(feature = "tmux_2_1")]
     assert_eq!(Action::Other.to_string(), "other");
 }
 
@@ -20,9 +44,13 @@ fn status() {
     use crate::common::session_options::Status;
     assert_eq!(Status::On.to_string(), "on");
     assert_eq!(Status::Off.to_string(), "off");
+    #[cfg(feature = "tmux_2_9")]
     assert_eq!(Status::_2.to_string(), "2");
+    #[cfg(feature = "tmux_2_9")]
     assert_eq!(Status::_3.to_string(), "3");
+    #[cfg(feature = "tmux_2_9")]
     assert_eq!(Status::_4.to_string(), "4");
+    #[cfg(feature = "tmux_2_9")]
     assert_eq!(Status::_5.to_string(), "5");
 }
 
