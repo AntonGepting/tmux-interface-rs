@@ -3,6 +3,8 @@ use crate::{SetOptionBuilder, ShowOptionsBuilder, TargetPane, TmuxInterface};
 use std::fmt;
 use std::str::FromStr;
 
+// XXX: conditionals?
+// NOTE: total num: 5 (usize)
 pub const ALLOW_RENAME: usize = 1 << 0;
 pub const ALTERNATE_SCREEN: usize = 1 << 1;
 pub const REMAIN_ON_EXIT: usize = 1 << 2;
