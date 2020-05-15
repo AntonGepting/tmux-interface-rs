@@ -68,9 +68,5 @@ before_script:
   - tmux -V
 
 script:
-  #- cargo build --verbose
-  #- cargo test --verbose
-  #- cargo build --features tmux_2_6 --verbose
-  #- cargo test --features tmux_2_6 --verbose
-  - cargo build --features $CRATE_FEATURE --verbose
-  - cargo test --features $CRATE_FEATURE --verbose
+  - cargo build --features $CRATE_FEATURE --no-default-features --verbose
+  - cargo test --features $CRATE_FEATURE --no-default-features --verbose
