@@ -341,9 +341,11 @@ pub use crate::common::session_options::WORD_SEPARATORS;
 
 // window options
 pub use crate::common::window_options::ClockModeStyle;
+#[cfg(feature = "tmux_2_3")]
 pub use crate::common::window_options::PaneBorderStatus;
 pub use crate::common::window_options::WindowOptions;
 pub use crate::common::window_options::WindowOptionsBuilder;
+#[cfg(feature = "tmux_2_9")]
 pub use crate::common::window_options::WindowSize;
 pub use crate::common::window_options::AGGRESIVE_RESIZE;
 pub use crate::common::window_options::AUTOMATIC_RENAME;
@@ -460,9 +462,9 @@ pub use crate::request::miscellaneous::if_shell::IfShellBuilder;
 pub use self::request::options::set_option::SetOption;
 #[cfg(feature = "tmux_1_0")]
 pub use self::request::options::set_option::SetOptionBuilder;
-#[cfg(feature = "tmux_2_6")]
+#[cfg(feature = "tmux_1_0")]
 pub use self::request::options::set_window_option::SetWindowOption;
-#[cfg(feature = "tmux_2_6")]
+#[cfg(feature = "tmux_1_0")]
 pub use self::request::options::set_window_option::SetWindowOptionBuilder;
 #[cfg(feature = "tmux_1_0")]
 pub use self::request::options::show_options::ShowOptions;
@@ -474,14 +476,14 @@ pub use self::request::status_line::command_prompt::CommandPrompt;
 #[cfg(feature = "tmux_1_0")]
 pub use self::request::status_line::command_prompt::CommandPromptBuilder;
 // not structure, pass as arguments
-#[cfg(not(feature = "tmux_2_6"))]
+#[cfg(feature = "tmux_3_0")]
 pub use self::request::status_line::display_menu::DisplayMenu;
-#[cfg(not(feature = "tmux_2_6"))]
+#[cfg(feature = "tmux_3_0")]
 pub use self::request::status_line::display_menu::DisplayMenuBuilder;
 // not structure, pass as arguments
-#[cfg(feature = "tmux_2_6")]
+#[cfg(feature = "tmux_1_0")]
 pub use self::request::status_line::display_message::DisplayMessage;
-#[cfg(feature = "tmux_2_6")]
+#[cfg(feature = "tmux_1_0")]
 pub use self::request::status_line::display_message::DisplayMessageBuilder;
 // windows and panes
 #[cfg(feature = "tmux_1_0")]

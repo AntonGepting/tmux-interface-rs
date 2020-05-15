@@ -2,6 +2,7 @@ use crate::error::Error;
 use crate::tmux_interface::*;
 use std::fmt::Display;
 use std::process::Output;
+use std::marker::PhantomData;
 
 /// Structure for conditional commands executing
 ///
@@ -48,6 +49,7 @@ pub struct IfShell<'a, T> {
     /// [command] - specify the second command
     #[cfg(feature = "tmux_1_6")]
     pub second_command: Option<&'a str>,
+    pub _phantom: PhantomData<&'a T>,
 }
 
 impl<'a, T: Display + Default> IfShell<'a, T> {
@@ -68,6 +70,7 @@ pub struct IfShellBuilder<'a, T> {
     //pub command: &'a str,
     #[cfg(feature = "tmux_1_6")]
     pub second_command: Option<&'a str>,
+    _phantom: PhantomData<&'a T>,
 }
 
 impl<'a, T: Display + Default> IfShellBuilder<'a, T> {
@@ -109,6 +112,7 @@ impl<'a, T: Display + Default> IfShellBuilder<'a, T> {
             target_pane: self.target_pane,
             #[cfg(feature = "tmux_1_6")]
             second_command: self.second_command,
+            _phantom: PhantomData,
         }
     }
 }
@@ -148,7 +152,9 @@ impl<'a> TmuxInterface<'a> {
         command: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
+        #[cfg(feature = "tmux_1_8")]
+        let s: String;
+        #[cfg(feature = "tmux_1_8")]
         if let Some(if_shell) = if_shell {
             #[cfg(feature = "tmux_1_8")]
             if if_shell.backgroud.unwrap_or(false) {
@@ -166,6 +172,7 @@ impl<'a> TmuxInterface<'a> {
         }
         args.push(shell_command);
         args.push(command);
+        #[cfg(feature = "tmux_1_6")]
         if let Some(if_shell) = if_shell {
             #[cfg(feature = "tmux_1_6")]
             if let Some(s) = if_shell.second_command {

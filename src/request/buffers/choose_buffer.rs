@@ -52,7 +52,7 @@ pub struct ChooseBuffer<'a, T: Display> {
     #[cfg(feature = "tmux_2_6")]
     pub sort_order: Option<&'a str>,
     /// [-t target-pane] - specify the target pane
-    #[cfg(feature = "tmux_1_7")]
+    #[cfg(feature = "tmux_1_3")]
     pub target_pane: Option<&'a T>,
     /// [template] - specify the template
     #[cfg(feature = "tmux_1_3")]
@@ -79,7 +79,7 @@ pub struct ChooseBufferBuilder<'a, T: Display> {
     pub filter: Option<&'a str>,
     #[cfg(feature = "tmux_2_6")]
     pub sort_order: Option<&'a str>,
-    #[cfg(feature = "tmux_1_7")]
+    #[cfg(feature = "tmux_1_3")]
     pub target_pane: Option<&'a T>,
     #[cfg(feature = "tmux_1_3")]
     pub template: Option<&'a str>,
@@ -126,7 +126,7 @@ impl<'a, T: Display + Default> ChooseBufferBuilder<'a, T> {
         self
     }
 
-    #[cfg(feature = "tmux_1_7")]
+    #[cfg(feature = "tmux_1_3")]
     pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
@@ -152,7 +152,7 @@ impl<'a, T: Display + Default> ChooseBufferBuilder<'a, T> {
             filter: self.filter,
             #[cfg(feature = "tmux_2_6")]
             sort_order: self.sort_order,
-            #[cfg(feature = "tmux_1_7")]
+            #[cfg(feature = "tmux_1_3")]
             target_pane: self.target_pane,
             #[cfg(feature = "tmux_1_3")]
             template: self.template,
@@ -196,7 +196,7 @@ impl<'a> TmuxInterface<'a> {
         choose_buffer: Option<&ChooseBuffer<T>>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
+        let s: String;
         if let Some(choose_buffer) = choose_buffer {
             #[cfg(feature = "tmux_2_6")]
             if choose_buffer.no_preview.unwrap_or(false) {

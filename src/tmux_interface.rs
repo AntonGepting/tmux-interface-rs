@@ -234,47 +234,61 @@ impl<'a> TmuxInterfaceBuilder<'a> {
         Default::default()
     }
 
+    #[cfg(feature = "tmux_0_8")]
     pub fn colours256(&mut self) -> &mut Self {
         self.colours256 = Some(true);
         self
     }
+
+    #[cfg(feature = "tmux_1_8")]
     pub fn control_mode(&mut self) -> &mut Self {
         self.control_mode = Some(true);
         self
     }
+
+    #[cfg(feature = "tmux_1_0")]
     pub fn login_shell(&mut self) -> &mut Self {
         self.login_shell = Some(true);
         self
     }
+
+    #[cfg(feature = "tmux_0_8")]
     pub fn force_utf8(&mut self) -> &mut Self {
         self.force_utf8 = Some(true);
         self
     }
+
+    #[cfg(feature = "tmux_0_8")]
     pub fn verbose_logging(&mut self) -> &mut Self {
         self.verbose_logging = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_4")]
     pub fn version(&mut self) -> &mut Self {
         self.verbose_logging = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_1_1")]
     pub fn shell_cmd(&mut self) -> &mut Self {
         self.verbose_logging = Some(true);
         self
     }
 
+    #[cfg(feature = "tmux_0_8")]
     pub fn file(&mut self, file: &'a str) -> &mut Self {
         self.file = Some(file);
         self
     }
 
+    #[cfg(feature = "tmux_0_8")]
     pub fn socket_name(&mut self, socket_name: &'a str) -> &mut Self {
         self.socket_name = Some(socket_name);
         self
     }
 
+    #[cfg(feature = "tmux_0_8")]
     pub fn socket_path(&mut self, socket_path: &'a str) -> &mut Self {
         self.socket_path = Some(socket_path);
         self
@@ -375,33 +389,42 @@ impl<'a> TmuxInterface<'a> {
         let mut bin = self.tmux.unwrap_or(TmuxInterface::TMUX).to_string();
         // XXX: using environment vars
         //self.environment.and_then(|s| Some(envs.push(s)));
+        #[cfg(feature = "tmux_0_8")]
         if self.colours256.unwrap_or(false) {
             options.push(_2_KEY);
         };
+        #[cfg(feature = "tmux_1_8")]
         if self.control_mode.unwrap_or(false) {
             options.push(C_KEY);
         };
         if self.disable_echo.unwrap_or(false) {
             options.push(CC_KEY);
         };
+        #[cfg(feature = "tmux_1_0")]
         if self.login_shell.unwrap_or(false) {
             options.push(l_KEY)
         };
+        #[cfg(feature = "tmux_0_8")]
         if self.force_utf8.unwrap_or(false) {
             options.push(u_KEY)
         }
+        #[cfg(feature = "tmux_0_8")]
         if self.verbose_logging.unwrap_or(false) {
             options.push(v_KEY)
         }
+        #[cfg(feature = "tmux_1_1")]
         if let Some(s) = self.shell_cmd {
             options.extend_from_slice(&[c_KEY, &s])
         }
+        #[cfg(feature = "tmux_0_8")]
         if let Some(s) = self.file {
             options.extend_from_slice(&[f_KEY, &s])
         }
+        #[cfg(feature = "tmux_0_8")]
         if let Some(s) = self.socket_name {
             options.extend_from_slice(&[L_KEY, &s])
         }
+        #[cfg(feature = "tmux_0_8")]
         if let Some(s) = self.socket_path {
             options.extend_from_slice(&[S_KEY, &s])
         }

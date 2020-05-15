@@ -50,6 +50,9 @@ pub struct PasteBuffer<'a, T: Display> {
     /// [-t target-pane] - specify the target pane
     #[cfg(feature = "tmux_1_7")]
     pub target_pane: Option<&'a T>,
+    /// [-t target-window] - specify the target window
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+    pub target_window: Option<&'a T>,
 }
 
 impl<'a, T: Display + Default> PasteBuffer<'a, T> {
@@ -72,6 +75,8 @@ pub struct PasteBufferBuilder<'a, T: Display> {
     pub separator: Option<&'a str>,
     #[cfg(feature = "tmux_1_7")]
     pub target_pane: Option<&'a T>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+    pub target_window: Option<&'a T>,
 }
 
 impl<'a, T: Display + Default> PasteBufferBuilder<'a, T> {
@@ -129,6 +134,8 @@ impl<'a, T: Display + Default> PasteBufferBuilder<'a, T> {
             separator: self.separator,
             #[cfg(feature = "tmux_1_7")]
             target_pane: self.target_pane,
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+            target_window: self.target_window,
         }
     }
 }
@@ -168,7 +175,7 @@ impl<'a> TmuxInterface<'a> {
         paste_buffer: Option<&PasteBuffer<T>>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
+        let s: String;
         if let Some(paste_buffer) = paste_buffer {
             #[cfg(feature = "tmux_0_8")]
             if paste_buffer.delete.unwrap_or(false) {

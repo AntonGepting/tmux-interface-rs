@@ -243,7 +243,8 @@ impl<'a> TmuxInterface<'a> {
         refresh_client: Option<&RefreshClient>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
+        #[cfg(feature = "tmux_2_4")]
+        let s: String;
         #[cfg(feature = "tmux_2_9a")]
         let n: String;
         if let Some(refresh_client) = refresh_client {

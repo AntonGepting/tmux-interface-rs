@@ -101,6 +101,9 @@ pub struct SplitWindow<'a, T: Display> {
     /// [-t target-pane] -
     #[cfg(feature = "tmux_1_2")]
     pub target_pane: Option<&'a T>,
+    /// [-t target-window] -
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
+    pub target_window: Option<&'a T>,
     /// [shell-command] - shell-command
     #[cfg(feature = "tmux_1_2")]
     pub shell_command: Option<&'a str>,
@@ -139,6 +142,8 @@ pub struct SplitWindowBuilder<'a, T: Display> {
     pub size: Option<&'a PaneSize>,
     #[cfg(feature = "tmux_1_2")]
     pub target_pane: Option<&'a T>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
+    pub target_window: Option<&'a T>,
     #[cfg(feature = "tmux_1_2")]
     pub shell_command: Option<&'a str>,
     #[cfg(feature = "tmux_1_7")]
@@ -252,6 +257,8 @@ impl<'a, T: Display + Default> SplitWindowBuilder<'a, T> {
             size: self.size,
             #[cfg(feature = "tmux_1_2")]
             target_pane: self.target_pane,
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
+            target_window: self.target_window,
             #[cfg(feature = "tmux_1_2")]
             shell_command: self.shell_command,
             #[cfg(feature = "tmux_1_7")]

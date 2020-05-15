@@ -2,6 +2,7 @@ use crate::error::Error;
 use crate::tmux_interface::*;
 use std::fmt::Display;
 use std::process::Output;
+use std::marker::PhantomData;
 
 /// Put a pane into tree mode, where a session, window or pane may be chosen interactively
 /// from a list
@@ -66,9 +67,13 @@ pub struct ChooseTree<'a, T: Display> {
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_2_6")]
     pub target_pane: Option<&'a T>,
+    /// [-t target-window] - target-window
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
+    pub target_window: Option<&'a T>,
     /// [template] - template
     #[cfg(feature = "tmux_2_6")]
     pub template: Option<&'a str>,
+    pub _phantom: PhantomData<&'a T>,
 }
 
 impl<'a, T: Display + Default> ChooseTree<'a, T> {
@@ -99,8 +104,11 @@ pub struct ChooseTreeBuilder<'a, T: Display> {
     pub sort_order: Option<&'a str>,
     #[cfg(feature = "tmux_2_6")]
     pub target_pane: Option<&'a T>,
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
+    pub target_window: Option<&'a T>,
     #[cfg(feature = "tmux_2_6")]
     pub template: Option<&'a str>,
+    pub _phantom: PhantomData<&'a T>,
 }
 
 impl<'a, T: Display + Default> ChooseTreeBuilder<'a, T> {
@@ -132,7 +140,7 @@ impl<'a, T: Display + Default> ChooseTreeBuilder<'a, T> {
         self
     }
 
-    #[cfg(feature = "tmux_2_8")]
+    #[cfg(feature = "tmux_1_8")]
     pub fn collapsed_windows(&mut self) -> &mut Self {
         self.collapsed_windows = Some(true);
         self
@@ -168,6 +176,12 @@ impl<'a, T: Display + Default> ChooseTreeBuilder<'a, T> {
         self
     }
 
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
+    pub fn target_window(&mut self, target_window: &'a T) -> &mut Self {
+        self.target_window = Some(target_window);
+        self
+    }
+
     #[cfg(feature = "tmux_2_6")]
     pub fn template(&mut self, template: &'a str) -> &mut Self {
         self.template = Some(template);
@@ -196,8 +210,11 @@ impl<'a, T: Display + Default> ChooseTreeBuilder<'a, T> {
             sort_order: self.sort_order,
             #[cfg(feature = "tmux_2_6")]
             target_pane: self.target_pane,
+            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
+            target_window: self.target_window,
             #[cfg(feature = "tmux_2_6")]
             template: self.template,
+            _phantom: PhantomData,
         }
     }
 }
@@ -241,6 +258,7 @@ impl<'a> TmuxInterface<'a> {
         choose_tree: Option<&ChooseTree<T>>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        #[cfg(feature = "tmux_2_6")]
         let s: String;
         if let Some(choose_tree) = choose_tree {
             #[cfg(feature = "tmux_2_7")]

@@ -10,7 +10,9 @@ impl TmuxOption {
         let mut tmux = TmuxInterface::new();
         let show_options = ShowOptions::<TargetPane> {
             global: Some(true),
+            #[cfg(feature = "tmux_1_8")]
             value: Some(true),
+            #[cfg(feature = "tmux_1_7")]
             option: Some(option_name),
             ..Default::default()
         };

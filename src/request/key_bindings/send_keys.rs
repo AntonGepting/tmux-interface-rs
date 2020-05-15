@@ -74,6 +74,9 @@ pub struct SendKeys<'a, T: Display> {
     /// [-t target-pane] - specify the target pane
     #[cfg(feature = "tmux_1_6")]
     pub target_pane: Option<&'a T>,
+    /// [-t target-window] - specify the target window
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+    pub target_window: Option<&'a T>,
     // key
     //pub key: Vec<&'a str>,
 }
@@ -102,6 +105,8 @@ pub struct SendKeysBuilder<'a, T: Display> {
     pub repeat_count: Option<usize>,
     #[cfg(feature = "tmux_1_6")]
     pub target_pane: Option<&'a T>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+    pub target_window: Option<&'a T>,
     //pub key: Vec<&'a str>,
 }
 
@@ -176,6 +181,8 @@ impl<'a, T: Display + Default> SendKeysBuilder<'a, T> {
             repeat_count: self.repeat_count,
             #[cfg(feature = "tmux_1_6")]
             target_pane: self.target_pane,
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+            target_window: self.target_window,
             // key: Vec<&'a str>,
         }
     }
@@ -235,7 +242,8 @@ impl<'a> TmuxInterface<'a> {
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
-        let n;
+        #[cfg(feature = "tmux_2_4")]
+        let n: String;
         if let Some(send_keys) = send_keys {
             #[cfg(feature = "tmux_3_1")]
             if send_keys.expand_formats.unwrap_or(false) {

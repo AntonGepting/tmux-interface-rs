@@ -13,6 +13,7 @@ use std::process::Output;
 /// [-x position] [-y position] name key command ...
 /// ```
 #[derive(Default, Debug)]
+#[cfg(feature = "tmux_3_0")]
 pub struct DisplayMenu<'a, T: Display> {
     /// [-c target-client] - target-client
     #[cfg(feature = "tmux_3_0")]
@@ -37,6 +38,7 @@ pub struct DisplayMenu<'a, T: Display> {
     //pub command: &'a str,
 }
 
+#[cfg(feature = "tmux_3_0")]
 impl<'a, T: Display + Default> DisplayMenu<'a, T> {
     pub fn new() -> Self {
         Default::default()
@@ -44,6 +46,7 @@ impl<'a, T: Display + Default> DisplayMenu<'a, T> {
 }
 
 #[derive(Default, Debug)]
+#[cfg(feature = "tmux_3_0")]
 pub struct DisplayMenuBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_3_0")]
     pub target_client: Option<&'a str>,
@@ -60,6 +63,7 @@ pub struct DisplayMenuBuilder<'a, T: Display> {
     //pub command: &'a str,
 }
 
+#[cfg(feature = "tmux_3_0")]
 impl<'a, T: Display + Default> DisplayMenuBuilder<'a, T> {
     pub fn new() -> Self {
         Default::default()
@@ -121,6 +125,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux display-menu [-c target-client] [-t target-pane] [-T title]
     /// [-x position] [-y position] name key command ...
     /// ```
+    #[cfg(feature = "tmux_3_0")]
     pub fn display_menu<T: Display>(
         &mut self,
         display_menu: Option<&DisplayMenu<T>>,

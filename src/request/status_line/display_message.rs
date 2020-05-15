@@ -2,6 +2,7 @@ use crate::error::Error;
 use crate::tmux_interface::*;
 use std::fmt::Display;
 use std::process::Output;
+use std::marker::PhantomData;
 
 /// Structure for displaying a message
 ///
@@ -59,6 +60,7 @@ pub struct DisplayMessage<'a, T: Display> {
     /// [message] - message
     #[cfg(feature = "tmux_1_0")]
     pub message: Option<&'a str>,
+    pub _phantom: PhantomData<&'a T>,
 }
 
 impl<'a, T: Display + Default> DisplayMessage<'a, T> {
@@ -83,6 +85,7 @@ pub struct DisplayMessageBuilder<'a, T> {
     pub target_pane: Option<&'a T>,
     #[cfg(feature = "tmux_1_0")]
     pub message: Option<&'a str>,
+    _phantom: PhantomData<&'a T>,
 }
 
 impl<'a, T: Display + Default> DisplayMessageBuilder<'a, T> {
@@ -148,6 +151,7 @@ impl<'a, T: Display + Default> DisplayMessageBuilder<'a, T> {
             target_pane: self.target_pane,
             #[cfg(feature = "tmux_1_0")]
             message: self.message,
+            _phantom: PhantomData
         }
     }
 }

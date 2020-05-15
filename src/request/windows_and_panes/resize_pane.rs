@@ -220,8 +220,10 @@ impl<'a> TmuxInterface<'a> {
         resize_pane: Option<&ResizePane<T>>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let x;
-        let y;
+        #[cfg(feature = "tmux_1_8")]
+        let x: String;
+        #[cfg(feature = "tmux_1_8")]
+        let y: String;
         let s;
         if let Some(resize_pane) = resize_pane {
             #[cfg(feature = "tmux_0_9")]
