@@ -317,6 +317,7 @@ impl ServerOptions {
 
     // XXX: bitmask is overkill now, mb later use for multiple select
     // NOTE: not allows selective get by bitmask
+    // FIXME: tmux v1.6 option attribute not exists, all options will be showed
     pub fn get(bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let selected_option = SERVER_OPTIONS
