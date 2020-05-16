@@ -21,10 +21,6 @@ fn select_window() {
         // tmux select-window [-t target-window]
         // (alias: selectw)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["select-window", "-l", "-n", "-p", "-T", "-t", "1"]"#
-        );
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
         s.push("select-window");
