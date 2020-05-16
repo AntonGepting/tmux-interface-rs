@@ -71,6 +71,7 @@ fn parse() {
     builder.history_file("\"\"");
     #[cfg(feature = "tmux_2_0")]
     builder.message_limit(100);
+    #[cfg(feature = "tmux_2_6")]
     builder.set_clipboard(SetClipboard::External);
     #[cfg(feature = "tmux_2_0")]
     builder.terminal_overrides(vec!["\"xterm*:XT:Ms=\\\\E]52;%p1%s;%p2%s\\\\007:Cs=\\\\E]12;%p1%s\\\\007:Cr=\\\\E]112\\\\007:Ss=\\\\E[%p1%d q:Se=\\\\E[2 q\"",
