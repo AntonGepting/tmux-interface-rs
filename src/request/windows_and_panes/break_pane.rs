@@ -2,6 +2,7 @@ use crate::error::Error;
 use crate::tmux_interface::*;
 use std::fmt::Display;
 use std::process::Output;
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
 use std::marker::PhantomData;
 
 /// Break `src-pane` off from its containing window to make it the only pane in `dst-window`
@@ -61,6 +62,9 @@ pub struct BreakPane<'a, T, U: Display> {
     /// [-s src-pane] - src-pane
     #[cfg(feature = "tmux_2_1")]
     pub src_pane: Option<&'a T>,
+    /// [-t dst-pane] - dst-pane
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+    pub dst_pane: Option<&'a U>,
     /// [-t dst-window] - dst-window
     #[cfg(feature = "tmux_2_2")]
     pub dst_window: Option<&'a U>,
@@ -73,8 +77,9 @@ pub struct BreakPane<'a, T, U: Display> {
     /// [-p pane-index] - pane-index
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
     pub pane_index: Option<usize>,
-    pub _phantom: PhantomData<&'a U>,
-    pub _phantom2: PhantomData<&'a T>,
+    //pub _phantom: PhantomData<&'a U>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
+    pub _phantom: PhantomData<&'a T>,
 }
 
 impl<'a, T: Display + Default, U: Display + Default> BreakPane<'a, T, U> {
@@ -95,6 +100,8 @@ pub struct BreakPaneBuilder<'a, T, U: Display> {
     pub window_name: Option<&'a str>,
     #[cfg(feature = "tmux_2_1")]
     pub src_pane: Option<&'a T>,
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+    pub dst_pane: Option<&'a U>,
     #[cfg(feature = "tmux_2_2")]
     pub dst_window: Option<&'a U>,
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
@@ -103,8 +110,9 @@ pub struct BreakPaneBuilder<'a, T, U: Display> {
     pub target_pane: Option<&'a U>,
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
     pub pane_index: Option<usize>,
-    _phantom: PhantomData<&'a U>,
-    _phantom2: PhantomData<&'a T>,
+    //_phantom: PhantomData<&'a U>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
+    _phantom: PhantomData<&'a T>,
 }
 
 impl<'a, T: Display + Default, U: Display + Default> BreakPaneBuilder<'a, T, U> {
@@ -142,9 +150,21 @@ impl<'a, T: Display + Default, U: Display + Default> BreakPaneBuilder<'a, T, U> 
         self
     }
 
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+    pub fn dst_pane(&mut self, dst_pane: &'a U) -> &mut Self {
+        self.dst_pane = Some(dst_pane);
+        self
+    }
+
     #[cfg(feature = "tmux_2_2")]
     pub fn dst_window(&mut self, dst_window: &'a U) -> &mut Self {
         self.dst_window = Some(dst_window);
+        self
+    }
+
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+    pub fn target_pane(&mut self, target_pane: &'a U) -> &mut Self {
+        self.target_pane = Some(target_pane);
         self
     }
 
@@ -160,6 +180,8 @@ impl<'a, T: Display + Default, U: Display + Default> BreakPaneBuilder<'a, T, U> 
             window_name: self.window_name,
             #[cfg(feature = "tmux_2_1")]
             src_pane: self.src_pane,
+            #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+            dst_pane: self.dst_pane,
             #[cfg(feature = "tmux_2_2")]
             dst_window: self.dst_window,
             #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
@@ -168,8 +190,9 @@ impl<'a, T: Display + Default, U: Display + Default> BreakPaneBuilder<'a, T, U> 
             target_pane: self.target_pane,
             #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
             pane_index: self.dst_window,
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
             _phantom: PhantomData,
-            _phantom2: PhantomData,
+            //_phantom2: PhantomData,
         }
     }
 }

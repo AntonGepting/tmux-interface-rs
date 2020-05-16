@@ -15,19 +15,35 @@ fn link_window() {
         // tmux link-window [-dk] [-s src-window] [-t dst-window]
         // (alias: linkw)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["link-window", "-a", "-d", "-k", "-s", "1", "-t", "2"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        s.push("link-window");
+        #[cfg(feature = "tmux_2_1")]
+        s.push("-a");
+        #[cfg(feature = "tmux_0_8")]
+        s.push("-d");
+        #[cfg(feature = "tmux_0_8")]
+        s.push("-k");
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-s", "1"]);
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-t", "2"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
 
     let link_window = LinkWindow {
         #[cfg(feature = "tmux_2_1")]
         add: Some(true),
+        #[cfg(feature = "tmux_0_8")]
         detached: Some(true),
+        #[cfg(feature = "tmux_0_8")]
         kill: Some(true),
+        #[cfg(feature = "tmux_0_8")]
         src_window: Some(&TargetWindow::Raw("1")),
+        #[cfg(feature = "tmux_0_8")]
         dst_window: Some(&TargetWindow::Raw("2")),
     };
     tmux.link_window(Some(&link_window)).unwrap_err();
@@ -35,9 +51,13 @@ fn link_window() {
     let mut builder = LinkWindowBuilder::new();
     #[cfg(feature = "tmux_2_1")]
     builder.add();
+    #[cfg(feature = "tmux_0_8")]
     builder.detached();
+    #[cfg(feature = "tmux_0_8")]
     builder.kill();
+    #[cfg(feature = "tmux_0_8")]
     builder.src_window(&TargetWindow::Raw("1"));
+    #[cfg(feature = "tmux_0_8")]
     builder.dst_window(&TargetWindow::Raw("2"));
     let link_window = builder.build();
     tmux.link_window(Some(&link_window)).unwrap_err();

@@ -27,10 +27,6 @@ fn move_window() {
         // tmux move-window [-d] [-s src-window] [-t dst-window]
         // (alias: movew)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["move-window", "-a", "-r", "-d", "-k", "-s", "1", "-t", "2"]"#
-        );
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
         s.push("move-window");

@@ -27,10 +27,6 @@ fn resize_pane() {
         // tmux resize-pane [-DU] [-p pane-index] [-t target-pane] [adjustment]
         // (alias: resizep)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["resize-pane", "-D", "-L", "-M", "-R", "-U", "-Z", "-t", "1", "-x", "2", "-y", "3", "4"]"#
-        );
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
         s.push("resize-pane");
