@@ -1,6 +1,9 @@
 #[test]
 fn break_pane() {
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+    #[cfg(any(
+        all(feature = "tmux_0_8", not(feature = "tmux_1_7")),
+        feature = "tmux_2_2"
+    ))]
     use crate::TargetWindow;
     use crate::{BreakPane, BreakPaneBuilder, Error, TargetPane, TmuxInterface};
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
