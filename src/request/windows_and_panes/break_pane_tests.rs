@@ -41,10 +41,6 @@ fn break_pane() {
         // tmux break-pane [-d] [-p pane-index] [-t target-window]
         // (alias: breakp)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["break-pane", "-d", "-P", "-F", "1", "-n", "2", "-s", "3", "-t", "4"]"#
-        );
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
         s.push("break-pane");

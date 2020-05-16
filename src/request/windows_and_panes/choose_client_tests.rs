@@ -75,7 +75,7 @@ fn choose_client() {
         #[cfg(feature = "tmux_2_6")]
         target_pane: Some(&TargetPane::Raw("4")),
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
-        target_window: Some(&TargetWindow::Raw("2")),
+        target_window: Some(&TargetWindow::Raw("4")),
         #[cfg(feature = "tmux_1_0")]
         template: Some("5"),
     };

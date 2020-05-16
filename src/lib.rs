@@ -58,11 +58,12 @@
 //!     ..Default::default()
 //! };
 //! tmux.new_session(Some(&new_session)).unwrap();
-//!    let attach_session = AttachSession {
+//! let attach_session = AttachSession {
 //!    target_session: Some(&TargetSession::Raw("test_session_name1")),
 //!    ..Default::default()
 //! };
 //! tmux.attach_session(Some(&attach_session)).unwrap();
+//! // if exists
 //! tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name1"))).unwrap();
 //!
 //! // or alternatively
@@ -72,6 +73,7 @@
 //! tmux.new_session(Some(&new_session)).unwrap();
 //! let mut attach_session = AttachSession::new();
 //! attach_session.target_session = Some(&TargetSession::Raw("test_session_name2"));
+//! // if exists
 //! tmux.kill_session(None, None, Some(&TargetSession::Raw("test_session_name2"))).unwrap();
 //! ```
 //!

@@ -22,7 +22,9 @@ fn set_clipboard() {
 
 #[test]
 fn parse() {
-    use crate::{ServerOptions, ServerOptionsBuilder, SetClipboard, Switch};
+    #[cfg(feature = "tmux_2_6")]
+    use crate::SetClipboard;
+    use crate::{ServerOptions, ServerOptionsBuilder, Switch};
 
     let mut builder = ServerOptionsBuilder::new();
     builder.buffer_limit(50);

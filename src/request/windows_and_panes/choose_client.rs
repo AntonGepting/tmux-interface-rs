@@ -209,7 +209,7 @@ impl<'a> TmuxInterface<'a> {
         choose_client: Option<&ChooseClient<T>>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_2_6")]
+        #[cfg(feature = "tmux_1_0")]
         let s: String;
         if let Some(choose_client) = choose_client {
             #[cfg(feature = "tmux_2_6")]
@@ -239,6 +239,11 @@ impl<'a> TmuxInterface<'a> {
             #[cfg(feature = "tmux_2_6")]
             if let Some(target_pane) = choose_client.target_pane {
                 s = target_pane.to_string();
+                args.extend_from_slice(&[t_KEY, &s])
+            }
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
+            if let Some(target_window) = choose_client.target_window {
+                s = target_window.to_string();
                 args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_1_0")]
