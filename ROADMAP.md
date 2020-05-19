@@ -300,8 +300,46 @@ Parsing objects and supported tmux variables:
 - mb split tmux versions in different folders
 - mb split into different librarys (options, get, set objects)
 - mb all args as sructs because of versions diffs?
-- [ ] travis ci test all supported tmux versions
-
+- [ ] Travis CI test all supported tmux versions
+    - Rust:
+        - [x] stable
+        - [x] beta
+        - [x] nightly
+    - OS:
+        - [x] Linux
+        - [ ] Windows
+        - [ ] MacOS
+    - Tmux:
+        - [ ] 0.8 - `tmux_0_8`
+        - [ ] 0.9 - `tmux_0_9`
+        - [ ] 1.0 - `tmux_1_0`
+        - [ ] 1.1 - `tmux_1_1`
+        - [ ] 1.2 - `tmux_1_2`
+        - [ ] 1.3 - `tmux_1_3`
+        - [ ] 1.4 - `tmux_1_4`
+        - [ ] 1.5 - `tmux_1_5`
+        - [ ] 1.6 - `tmux_1_6`
+        - [x] 1.7 - `tmux_1_7`
+        - [x] 1.8 - `tmux_1_8`
+        - [x] 1.9 - `tmux_1_9`
+        - [x] 1.9a - `tmux_1_9b`
+        - [x] 2.0 - `tmux_2_0`
+        - [x] 2.1 - `tmux_2_1`
+        - [x] 2.2 - `tmux_2_2`
+        - [x] 2.3 - `tmux_2_3`
+        - [x] 2.4 - `tmux_2_4`
+        - [x] 2.5 - `tmux_2_5`
+        - [x] 2.6 - `tmux_2_6`
+        - [x] 2.7 - `tmux_2_7`
+        - [x] 2.8 - `tmux_2_8`
+        - [x] 2.9 - `tmux_2_9`
+        - [x] 2.9a - `tmux_2_9a`
+        - [x] 3.0 - `tmux_3_0`
+        - [x] 3.0a - `tmux_3_0a`
+        - [x] 3.1 - `tmux_3_1`
+        - [x] 3.1a - `tmux_3_1a`
+        - [x] 3.1b - `tmux_3_1b`
+        - [x] master - `tmux_X_X`
 
 # Strategy
 strategy and decision making
