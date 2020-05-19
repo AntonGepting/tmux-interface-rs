@@ -93,34 +93,58 @@ pub const SESSION_VARS: [(&str, u16, fn(s: &mut Session, p: &str)); SESSION_FLAG
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct Session {
     /// Time of session last activity
+    #[cfg(feature = "tmux_2_1")]
     pub activity: Option<Duration>,
     /// List of window indexes with alerts
+    #[cfg(feature = "tmux_2_1")]
     pub alerts: Option<String>,
     /// Number of clients session is attached to
+    #[cfg(feature = "tmux_1_6")]
     pub attached: Option<usize>,
     /// Time session created
+    #[cfg(feature = "tmux_1_6")]
     pub created: Option<Duration>,
+    /// String time session created
+    #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_2_2")))]
+    pub created_string: Option<String>,
     /// 1 if format is for a session (not assuming the current)
+    #[cfg(feature = "tmux_2_6")]
     pub format: Option<bool>,
     /// Name of session group
+    #[cfg(feature = "tmux_1_6")]
     pub group: Option<String>,
     /// List of sessions in group
+    #[cfg(feature = "tmux_2_7")]
     pub group_list: Option<String>,
     /// Size of session group
+    #[cfg(feature = "tmux_2_7")]
     pub group_size: Option<String>,
     /// 1 if session in a group
+    #[cfg(feature = "tmux_1_6")]
     pub grouped: Option<bool>,
+    /// Height of session
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_9")))]
+    pub height: Option<usize>,
+    /// Width of session
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_9")))]
+    pub width: Option<usize>,
     /// Unique session ID
+    #[cfg(feature = "tmux_1_8")]
     pub id: Option<usize>,
     /// Time session last attached
+    #[cfg(feature = "tmux_2_1")]
     pub last_attached: Option<Duration>,
     /// 1 if multiple clients attached
+    #[cfg(feature = "tmux_2_0")]
     pub many_attached: Option<bool>,
     /// #S Name of session
+    #[cfg(feature = "tmux_1_6")]
     pub name: Option<String>,
     /// Window indexes in most recent order
+    #[cfg(feature = "tmux_2_5")]
     pub stack: Option<SessionStack>,
     /// Number of windows in session
+    #[cfg(feature = "tmux_1_6")]
     pub windows: Option<usize>,
 }
 

@@ -29,7 +29,8 @@ pub const WINDOW_VISIBLE_LAYOUT: u32 = 1 << 21;
 pub const WINDOW_WIDTH: u32 = 1 << 22;
 pub const WINDOW_ZOOMED_FLAG: u32 = 1 << 23;
 
-pub const WINDOW_FLAGS_NUM: usize = 24;
+//pub const WINDOW_FLAGS_NUM: usize = 24;
+pub const WINDOW_FLAGS_NUM: usize = 19;
 
 pub const WINDOW_NONE: u32 = 0;
 //pub const WINDOW_DEFAULT: usize = WINDOW_ID | WINDOW_NAME;
@@ -61,71 +62,99 @@ pub const WINDOW_ALL: u32 = WINDOW_ACTIVE
 pub const WINDOW_VARS_SEPARATOR: &str = "'";
 // FIXME: regex name can be anything, and other keys should be checked better
 pub const WINDOW_VARS: [(&str, u32, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_NUM] = [
+    #[cfg(feature = "tmux_1_6")]
     ("window_active", WINDOW_ACTIVE, |w, p| {
         w.active = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(feature = "tmux_2_1")]
     ("window_activity", WINDOW_ACTIVITY, |w, p| {
         w.activity = p.parse().ok().map(Duration::from_millis)
     }),
+    #[cfg(feature = "tmux_1_9")]
     ("window_activity_flag", WINDOW_ACTIVITY_FLAG, |w, p| {
         w.activity_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(feature = "tmux_1_9")]
     ("window_bell_flag", WINDOW_BELL_FLAG, |w, p| {
         w.bell_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(feature = "tmux_2_9")]
     ("window_bigger", WINDOW_BIGGER, |w, p| {
         w.bigger = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(feature = "tmux_2_9")]
     ("window_end_flag", WINDOW_END_FLAG, |w, p| {
         w.end_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_5")))]
+    ("window_find_matches", WINDOW_BIGGER, |w, p| {
+        w.bigger = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    #[cfg(feature = "tmux_1_6")]
     ("window_flags", WINDOW_FLAGS, |w, p| {
         w.flags = p.parse().ok()
     }),
+    #[cfg(feature = "tmux_2_6")]
     ("window_format", WINDOW_FORMAT, |w, p| {
         w.format = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(feature = "tmux_1_6")]
     ("window_height", WINDOW_HEIGHT, |w, p| {
         w.height = p.parse().ok()
     }),
+    #[cfg(feature = "tmux_1_7")]
     ("window_id", WINDOW_ID, |w, p| w.id = p[1..].parse().ok()), // skip `@` char
+    #[cfg(feature = "tmux_1_6")]
     ("window_index", WINDOW_INDEX, |w, p| {
         w.index = p.parse().ok()
     }),
+    #[cfg(feature = "tmux_2_0")]
     ("window_last_flag", WINDOW_LAST_FLAG, |w, p| {
         w.last_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(feature = "tmux_1_6")]
     ("window_layout", WINDOW_LAYOUT, |w, p| {
         w.layout = p.parse().ok()
     }),
+    #[cfg(feature = "tmux_2_1")]
     ("window_linked", WINDOW_LINKED, |w, p| {
         w.linked = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(feature = "tmux_1_6")]
     ("window_name", WINDOW_NAME, |w, p| w.name = p.parse().ok()),
+    #[cfg(feature = "tmux_2_9")]
     ("window_offset_x", WINDOW_OFFSET_X, |w, p| {
         w.offset_x = p.parse().ok()
     }),
+    #[cfg(feature = "tmux_2_9")]
     ("window_offset_y", WINDOW_OFFSET_Y, |w, p| {
         w.offset_y = p.parse().ok()
     }),
+    #[cfg(feature = "tmux_1_7")]
     ("window_panes", WINDOW_PANES, |w, p| {
         w.panes = p.parse().ok()
     }),
+    #[cfg(feature = "tmux_1_9")]
     ("window_silence_flag", WINDOW_SILENCE_FLAG, |w, p| {
         w.silence_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(feature = "tmux_2_5")]
     ("window_stack_index", WINDOW_STACK_INDEX, |w, p| {
         w.stack_index = p.parse().ok()
     }),
+    #[cfg(feature = "tmux_2_9")]
     ("window_start_flag", WINDOW_START_FLAG, |w, p| {
         w.start_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(feature = "tmux_2_2")]
     ("window_visible_layout", WINDOW_VISIBLE_LAYOUT, |w, p| {
         w.visible_layout = p.parse().ok()
     }),
+    #[cfg(feature = "tmux_1_6")]
     ("window_width", WINDOW_WIDTH, |w, p| {
         w.width = p.parse().ok()
     }),
+    #[cfg(feature = "tmux_2_0")]
     ("window_zoomed_flag", WINDOW_ZOOMED_FLAG, |w, p| {
         w.zoomed_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
@@ -136,52 +165,82 @@ pub const WINDOW_VARS: [(&str, u32, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_N
 #[derive(Default, Clone, PartialEq, Debug)]
 pub struct Window {
     /// 1 if window active
+    #[cfg(feature = "tmux_1_6")]
     pub active: Option<bool>,
     /// Time of window last activity
+    #[cfg(feature = "tmux_2_1")]
     pub activity: Option<Duration>,
     /// 1 if window has activity
+    #[cfg(feature = "tmux_1_9")]
     pub activity_flag: Option<bool>,
     /// 1 if window has bell
+    #[cfg(feature = "tmux_1_9")]
     pub bell_flag: Option<bool>,
+    /// 1 if window has content alert
+    #[cfg(feature = "tmux_1_9")]
+    pub content_flag: Option<bool>,
     /// 1 if window is larger than client
+    #[cfg(feature = "tmux_2_9")]
     pub bigger: Option<bool>,
     /// 1 if window has the highest index
+    #[cfg(feature = "tmux_2_9")]
     pub end_flag: Option<bool>,
+    /// Matched data from the find-window command if available
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
+    pub find_matches: Option<String>,
     /// #F Window flags
+    #[cfg(feature = "tmux_1_6")]
     pub flags: Option<WindowFlag>,
     /// 1 if format is for a window (not assuming the current)
+    #[cfg(feature = "tmux_2_6")]
     pub format: Option<bool>,
     /// Height of window
+    #[cfg(feature = "tmux_1_6")]
     pub height: Option<usize>,
     /// Unique window ID
+    #[cfg(feature = "tmux_1_7")]
     pub id: Option<usize>,
     /// #I Index of window
+    #[cfg(feature = "tmux_1_6")]
     pub index: Option<usize>,
     /// 1 if window is the last used
+    #[cfg(feature = "tmux_2_0")]
     pub last_flag: Option<bool>,
     /// Window layout description, ignoring zoomed window panes
+    #[cfg(feature = "tmux_1_6")]
     pub layout: Option<Layout>,
     /// 1 if window is linked across sessions
+    #[cfg(feature = "tmux_2_1")]
     pub linked: Option<bool>,
     /// #W Name of window
+    #[cfg(feature = "tmux_1_6")]
     pub name: Option<String>,
     /// X offset into window if larger than client
+    #[cfg(feature = "tmux_2_9")]
     pub offset_x: Option<usize>,
     /// Y offset into window if larger than client
+    #[cfg(feature = "tmux_2_9")]
     pub offset_y: Option<usize>,
     /// Number of panes in window
+    #[cfg(feature = "tmux_1_7")]
     pub panes: Option<usize>,
     /// 1 if window has silence alert
+    #[cfg(feature = "tmux_1_9")]
     pub silence_flag: Option<bool>,
     /// Index in session most recent stack
+    #[cfg(feature = "tmux_2_5")]
     pub stack_index: Option<usize>,
     /// 1 if window has the lowest index
+    #[cfg(feature = "tmux_2_9")]
     pub start_flag: Option<bool>,
     /// Window layout description, respecting zoomed window panes
+    #[cfg(feature = "tmux_2_2")]
     pub visible_layout: Option<Layout>,
     /// Width of window
+    #[cfg(feature = "tmux_1_6")]
     pub width: Option<usize>,
     /// 1 if window is zoomed
+    #[cfg(feature = "tmux_2_0")]
     pub zoomed_flag: Option<bool>,
 }
 

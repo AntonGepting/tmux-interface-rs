@@ -158,66 +158,100 @@ pub const PANE_VARS: [(&str, u32, fn(p: &mut Pane, t: &str)); PANE_FLAGS_NUM] = 
 #[derive(Default, Clone, PartialEq, Debug)]
 pub struct Pane {
     /// 1 if active pane
+    #[cfg(feature = "tmux_1_6")]
     pub active: Option<bool>,
     /// 1 if pane is at the bottom of window
+    #[cfg(feature = "tmux_2_6")]
     pub at_bottom: Option<bool>,
     /// 1 if pane is at the left of window
+    #[cfg(feature = "tmux_2_6")]
     pub at_left: Option<bool>,
     /// 1 if pane is at the right of window
+    #[cfg(feature = "tmux_2_6")]
     pub at_right: Option<bool>,
     /// 1 if pane is at the top of window
+    #[cfg(feature = "tmux_2_6")]
     pub at_top: Option<bool>,
     /// Bottom of pane
+    #[cfg(feature = "tmux_2_0")]
     pub bottom: Option<usize>,
     /// Current command if available
+    #[cfg(feature = "tmux_1_8")]
     pub current_command: Option<String>,
     /// Current path if available
+    #[cfg(feature = "tmux_1_7")]
     pub current_path: Option<String>,
     /// 1 if pane is dead
+    #[cfg(feature = "tmux_1_6")]
     pub dead: Option<bool>,
     /// Exit status of process in dead pane
+    #[cfg(feature = "tmux_2_0")]
     pub dead_status: Option<usize>,
     /// 1 if format is for a pane (not assuming the current)
+    #[cfg(feature = "tmux_2_6")]
     pub format: Option<bool>,
     /// Height of pane
+    #[cfg(feature = "tmux_1_6")]
     pub height: Option<usize>,
     /// #D Unique pane ID
+    #[cfg(feature = "tmux_1_6")]
     pub id: Option<usize>,
     /// 1 if pane is in a mode
+    #[cfg(feature = "tmux_1_8")]
     pub in_mode: Option<bool>,
     /// #P Index of pane
+    #[cfg(feature = "tmux_1_7")]
     pub index: Option<usize>,
     /// 1 if input to pane is disabled
+    #[cfg(feature = "tmux_2_0")]
     pub input_off: Option<bool>,
     /// Left of pane
+    #[cfg(feature = "tmux_2_0")]
     pub left: Option<usize>,
     /// 1 if this is the marked pane
+    #[cfg(feature = "tmux_3_0")]
     pub marked: Option<bool>,
     /// 1 if a marked pane is set
+    #[cfg(feature = "tmux_3_0")]
     pub marked_set: Option<bool>,
     /// Name of pane mode, if any
+    #[cfg(feature = "tmux_2_5")]
     pub mode: Option<usize>,
     /// PID of first process in pane
+    #[cfg(feature = "tmux_1_6")]
     pub pid: Option<usize>,
     /// 1 if pane is being piped
+    #[cfg(feature = "tmux_2_6")]
     pub pipe: Option<bool>,
     /// Right of pane
+    #[cfg(feature = "tmux_2_0")]
     pub right: Option<usize>,
     /// Last search string in copy mode
+    #[cfg(feature = "tmux_2_5")]
     pub search_string: Option<usize>,
     /// Command pane started with
+    #[cfg(feature = "tmux_1_6")]
     pub start_command: Option<usize>,
+    /// Path pane started with
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_0")))]
+    pub start_path: Option<usize>,
     /// 1 if pane is synchronized
+    #[cfg(feature = "tmux_1_9")]
     pub synchronized: Option<bool>,
     /// Pane tab positions
+    #[cfg(feature = "tmux_1_8")]
     pub tabs: Option<PaneTabs>,
     /// #T Title of pane
+    #[cfg(feature = "tmux_1_6")]
     pub title: Option<String>,
     /// Top of pane
+    #[cfg(feature = "tmux_2_0")]
     pub top: Option<usize>,
     /// Pseudo terminal of pane
+    #[cfg(feature = "tmux_1_6")]
     pub tty: Option<String>,
     /// Width of pane
+    #[cfg(feature = "tmux_1_6")]
     pub width: Option<usize>,
 }
 
