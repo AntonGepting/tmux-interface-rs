@@ -310,13 +310,13 @@ Parsing objects and supported tmux variables:
         - [ ] Windows
         - [ ] MacOS
     - Tmux:
-        - [ ] 0.8 - `tmux_0_8`
-        - [ ] 0.9 - `tmux_0_9`
-        - [ ] 1.0 - `tmux_1_0`
-        - [ ] 1.1 - `tmux_1_1`
-        - [ ] 1.2 - `tmux_1_2`
-        - [ ] 1.3 - `tmux_1_3`
-        - [ ] 1.4 - `tmux_1_4`
+        - [ ] 0.8 - `tmux_0_8` - tmux compilation error
+        - [ ] 0.9 - `tmux_0_9` - tmux compilation error
+        - [ ] 1.0 - `tmux_1_0` - tmux compilation error
+        - [ ] 1.1 - `tmux_1_1` - tmux compilation error
+        - [ ] 1.2 - `tmux_1_2` - tmux compilation error
+        - [ ] 1.3 - `tmux_1_3` - tmux compilation error
+        - [ ] 1.4 - `tmux_1_4` - tmux compilation error
         - [ ] 1.5 - `tmux_1_5`
         - [ ] 1.6 - `tmux_1_6`
         - [x] 1.7 - `tmux_1_7`
