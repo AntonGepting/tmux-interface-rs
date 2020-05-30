@@ -164,55 +164,85 @@ pub const WINDOW_VARS: [(&str, u32, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_N
 // XXX: check all types, optionality
 #[derive(Default, Clone, PartialEq, Debug)]
 pub struct Window {
-    /// 1 if window active
+    /// window_active - 1 if window active
     #[cfg(feature = "tmux_1_6")]
     pub active: Option<bool>,
-    /// Time of window last activity
+    /// window_active_clients - Number of clients viewing this window
+    #[cfg(feature = "tmux_3_1")]
+    pub active_clients: Option<usize>,
+    /// window_active_clients_list - List of clients viewing this window
+    #[cfg(feature = "tmux_3_1")]
+    pub active_clients_list: Option<String>,
+    /// window_active_sessions - Number of sessions on which this window is active
+    #[cfg(feature = "tmux_3_1")]
+    pub active_sessions: Option<usize>,
+    /// window_active_sessions_list - List of sessions on which this window is active
+    #[cfg(feature = "tmux_3_1")]
+    pub active_sessions_list: Option<String>,
+    /// window_activity - Time of window last activity
     #[cfg(feature = "tmux_2_1")]
     pub activity: Option<Duration>,
-    /// 1 if window has activity
-    #[cfg(feature = "tmux_1_9")]
+    /// session_activity_string - String time of session last activity
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+    pub activity_string: Option<String>,
+    /// window_activity_flag - 1 if window has activity
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2"), feature = "tmux_2_3"))]
     pub activity_flag: Option<bool>,
-    /// 1 if window has bell
+    /// window_bell_flag - 1 if window has bell
     #[cfg(feature = "tmux_1_9")]
     pub bell_flag: Option<bool>,
-    /// 1 if window has content alert
-    #[cfg(feature = "tmux_1_9")]
+    /// window_content_flag - 1 if window has content alert
+    #[cfg(all(feature = "tmux_1_9", not(feature = "2_0")))]
     pub content_flag: Option<bool>,
     /// 1 if window is larger than client
     #[cfg(feature = "tmux_2_9")]
     pub bigger: Option<bool>,
+    /// window_cell_height - Height of each cell in pixels
+    #[cfg(feature = "tmux_3_1")]
+    pub cell_height: Option<usize>,
+    /// window_cell_width - Width of each cell in pixels
+    #[cfg(feature = "tmux_3_1")]
+    pub cell_width: Option<usize>,
     /// 1 if window has the highest index
     #[cfg(feature = "tmux_2_9")]
     pub end_flag: Option<bool>,
-    /// Matched data from the find-window command if available
+    /// window_find_matches - Matched data from the find-window command if available
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
     pub find_matches: Option<String>,
-    /// #F Window flags
+    /// window_flags - #F Window flags
     #[cfg(feature = "tmux_1_6")]
     pub flags: Option<WindowFlag>,
-    /// 1 if format is for a window (not assuming the current)
+    /// 1 if format is for a window
     #[cfg(feature = "tmux_2_6")]
     pub format: Option<bool>,
-    /// Height of window
+    /// window_height - Height of window
     #[cfg(feature = "tmux_1_6")]
     pub height: Option<usize>,
-    /// Unique window ID
+    /// window_id - Unique window ID
     #[cfg(feature = "tmux_1_7")]
     pub id: Option<usize>,
-    /// #I Index of window
+    /// window_index - #I Index of window
     #[cfg(feature = "tmux_1_6")]
     pub index: Option<usize>,
-    /// 1 if window is the last used
+    /// window_last_flag - 1 if window is the last used
     #[cfg(feature = "tmux_2_0")]
     pub last_flag: Option<bool>,
-    /// Window layout description, ignoring zoomed window panes
+    /// window_layout - Window layout description, ignoring zoomed window panes
     #[cfg(feature = "tmux_1_6")]
     pub layout: Option<Layout>,
-    /// 1 if window is linked across sessions
+    /// window_linked - 1 if window is linked across sessions
     #[cfg(feature = "tmux_2_1")]
     pub linked: Option<bool>,
-    /// #W Name of window
+    /// window_linked_sessions - Number of sessions this window is linked to
+    #[cfg(feature = "tmux_3_1")]
+    pub linked_sessions: Option<usize>,
+    /// window_linked_sessions_list - List of sessions this window is linked to
+    #[cfg(feature = "tmux_3_1")]
+    pub linked_session_list: Option<String>,
+    /// window_marked_flag - 1 if window contains the marked pane
+    #[cfg(feature = "tmux_3_1")]
+    pub marked_flag: Option<bool>,
+    /// window_name - #W Name of window
     #[cfg(feature = "tmux_1_6")]
     pub name: Option<String>,
     /// X offset into window if larger than client
@@ -221,10 +251,10 @@ pub struct Window {
     /// Y offset into window if larger than client
     #[cfg(feature = "tmux_2_9")]
     pub offset_y: Option<usize>,
-    /// Number of panes in window
+    /// window_panes - Number of panes in window
     #[cfg(feature = "tmux_1_7")]
     pub panes: Option<usize>,
-    /// 1 if window has silence alert
+    /// window_silence_flag - 1 if window has silence alert
     #[cfg(feature = "tmux_1_9")]
     pub silence_flag: Option<bool>,
     /// Index in session most recent stack
@@ -236,10 +266,10 @@ pub struct Window {
     /// Window layout description, respecting zoomed window panes
     #[cfg(feature = "tmux_2_2")]
     pub visible_layout: Option<Layout>,
-    /// Width of window
+    /// window_width - Width of window
     #[cfg(feature = "tmux_1_6")]
     pub width: Option<usize>,
-    /// 1 if window is zoomed
+    /// window_zoomed_flag - 1 if window is zoomed
     #[cfg(feature = "tmux_2_0")]
     pub zoomed_flag: Option<bool>,
 }

@@ -92,16 +92,22 @@ pub const SESSION_VARS: [(&str, u16, fn(s: &mut Session, p: &str)); SESSION_FLAG
 // XXX: check all types
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct Session {
-    /// Time of session last activity
+    /// session_activity - Time of session last activity
     #[cfg(feature = "tmux_2_1")]
     pub activity: Option<Duration>,
-    /// List of window indexes with alerts
+    /// session_activity_string - String time of session last activity
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+    pub activity_string: Option<String>,
+    /// session_alerts - List of window indexes with alerts
     #[cfg(feature = "tmux_2_1")]
     pub alerts: Option<String>,
-    /// Number of clients session is attached to
+    /// session_attached - Number of clients session is attached to
     #[cfg(feature = "tmux_1_6")]
     pub attached: Option<usize>,
-    /// Time session created
+    /// session_attached_list - List of clients session is attached to
+    #[cfg(feature = "tmux_3_1")]
+    pub attached_list: Option<usize>,
+    /// session_created - Time session created
     #[cfg(feature = "tmux_1_6")]
     pub created: Option<Duration>,
     /// String time session created
@@ -110,40 +116,52 @@ pub struct Session {
     /// 1 if format is for a session (not assuming the current)
     #[cfg(feature = "tmux_2_6")]
     pub format: Option<bool>,
-    /// Name of session group
+    /// session_group - Name of session group
     #[cfg(feature = "tmux_1_6")]
     pub group: Option<String>,
-    /// List of sessions in group
+    /// session_group_attached - Number of clients sessions in group are attached >
+    #[cfg(feature = "tmux_3_1")]
+    pub group_attached: Option<usize>,
+    /// session_group_attached_list - List of clients sessions in group are attached to
+    #[cfg(feature = "tmux_3_1")]
+    pub group_attached_list: Option<String>,
+    /// session_group_list - List of sessions in group
     #[cfg(feature = "tmux_2_7")]
     pub group_list: Option<String>,
-    /// Size of session group
+    /// session_group_many_attached - 1 if multiple clients attached to sessions in gro
+    #[cfg(feature = "tmux_3_1")]
+    pub group_many_attached: Option<bool>,
+    /// session_size - Size of session group
     #[cfg(feature = "tmux_2_7")]
     pub group_size: Option<String>,
-    /// 1 if session in a group
+    /// session_grouped - 1 if session in a group
     #[cfg(feature = "tmux_1_6")]
     pub grouped: Option<bool>,
-    /// Height of session
+    /// session_height - Height of session
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_9")))]
     pub height: Option<usize>,
-    /// Width of session
+    /// session_width - Width of session
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_9")))]
     pub width: Option<usize>,
-    /// Unique session ID
+    /// session_id - Unique session ID
     #[cfg(feature = "tmux_1_8")]
     pub id: Option<usize>,
-    /// Time session last attached
+    /// session_last_attached - Time session last attached
     #[cfg(feature = "tmux_2_1")]
     pub last_attached: Option<Duration>,
-    /// 1 if multiple clients attached
+    /// session_last_attached_string - String time session last attached
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+    pub last_attached_string: Option<String>,
+    /// session_many_attached - 1 if multiple clients attached
     #[cfg(feature = "tmux_2_0")]
     pub many_attached: Option<bool>,
-    /// #S Name of session
+    /// session_name - #S Name of session
     #[cfg(feature = "tmux_1_6")]
     pub name: Option<String>,
-    /// Window indexes in most recent order
+    /// session_stack - Window indexes in most recent order
     #[cfg(feature = "tmux_2_5")]
     pub stack: Option<SessionStack>,
-    /// Number of windows in session
+    /// session_windows - Number of windows in session
     #[cfg(feature = "tmux_1_6")]
     pub windows: Option<usize>,
 }
