@@ -33,7 +33,7 @@ impl Sessions {
         self.0.push(session);
     }
 
-    pub fn get(bitflags: u16) -> Result<Self, Error> {
+    pub fn get(bitflags: u32) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let ls_format = SESSION_VARS
             .iter()
@@ -46,7 +46,7 @@ impl Sessions {
         Sessions::from_str(&sessions_str, bitflags)
     }
 
-    pub fn from_str(sessions_str: &str, bitflags: u16) -> Result<Self, Error> {
+    pub fn from_str(sessions_str: &str, bitflags: u32) -> Result<Self, Error> {
         let mut sessions = Sessions::new();
         for line in sessions_str.lines() {
             sessions.push(Session::from_str(line, bitflags)?);
