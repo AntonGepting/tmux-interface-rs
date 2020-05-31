@@ -3,43 +3,61 @@ use crate::Layout;
 use crate::WindowFlag;
 use std::time::Duration;
 
-// NOTE: u32 mb not enough!
-pub const WINDOW_ACTIVE: u32 = 1;
-pub const WINDOW_ACTIVITY: u32 = 1 << 1;
-pub const WINDOW_ACTIVITY_FLAG: u32 = 1 << 2;
-pub const WINDOW_BELL_FLAG: u32 = 1 << 3;
-pub const WINDOW_BIGGER: u32 = 1 << 4;
-pub const WINDOW_END_FLAG: u32 = 1 << 5;
-pub const WINDOW_FLAGS: u32 = 1 << 6;
-pub const WINDOW_FORMAT: u32 = 1 << 7;
-pub const WINDOW_HEIGHT: u32 = 1 << 8;
-pub const WINDOW_ID: u32 = 1 << 9;
-pub const WINDOW_INDEX: u32 = 1 << 10;
-pub const WINDOW_LAST_FLAG: u32 = 1 << 11;
-pub const WINDOW_LAYOUT: u32 = 1 << 12;
-pub const WINDOW_LINKED: u32 = 1 << 13;
-pub const WINDOW_NAME: u32 = 1 << 14;
-pub const WINDOW_OFFSET_X: u32 = 1 << 15;
-pub const WINDOW_OFFSET_Y: u32 = 1 << 16;
-pub const WINDOW_PANES: u32 = 1 << 17;
-pub const WINDOW_SILENCE_FLAG: u32 = 1 << 18;
-pub const WINDOW_STACK_INDEX: u32 = 1 << 19;
-pub const WINDOW_START_FLAG: u32 = 1 << 20;
-pub const WINDOW_VISIBLE_LAYOUT: u32 = 1 << 21;
-pub const WINDOW_WIDTH: u32 = 1 << 22;
-pub const WINDOW_ZOOMED_FLAG: u32 = 1 << 23;
+pub const WINDOW_ACTIVE: u64 = 1;
+pub const WINDOW_ACTIVE_CLIENTS: u64 = 2;
+pub const WINDOW_ACTIVE_CLIENTS_LIST: u64 = 3;
+pub const WINDOW_ACTIVE_SESSIONS: u64 = 4;
+pub const WINDOW_ACTIVE_SESSIONS_LIST: u64 = 5;
+pub const WINDOW_ACTIVITY: u64 = 1 << 6;
+pub const WINDOW_ACTIVITY_STRING: u64 = 1 << 7;
+pub const WINDOW_ACTIVITY_FLAG: u64 = 1 << 8;
+pub const WINDOW_BELL_FLAG: u64 = 1 << 9;
+pub const WINDOW_CONTENT_FLAG: u64 = 1 << 10;
+pub const WINDOW_BIGGER: u64 = 1 << 11;
+pub const WINDOW_CELL_WIDTH: u64 = 1 << 12;
+pub const WINDOW_END_FLAG: u64 = 1 << 13;
+pub const WINDOW_FIND_MATCHES: u64 = 1 << 14;
+pub const WINDOW_FLAGS: u64 = 1 << 15;
+pub const WINDOW_FORMAT: u64 = 1 << 16;
+pub const WINDOW_HEIGHT: u64 = 1 << 17;
+pub const WINDOW_ID: u64 = 1 << 18;
+pub const WINDOW_INDEX: u64 = 1 << 19;
+pub const WINDOW_LAST_FLAG: u64 = 1 << 20;
+pub const WINDOW_LAYOUT: u64 = 1 << 21;
+pub const WINDOW_LINKED: u64 = 1 << 22;
+pub const WINDOW_LINKED_SESSIONS: u64 = 1 << 23;
+pub const WINDOW_LINKED_SESSIONS_LIST: u64 = 1 << 24;
+pub const WINDOW_MARKED_FLAG: u64 = 1 << 25;
+pub const WINDOW_NAME: u64 = 1 << 26;
+pub const WINDOW_OFFSET_X: u64 = 1 << 27;
+pub const WINDOW_OFFSET_Y: u64 = 1 << 28;
+pub const WINDOW_PANES: u64 = 1 << 29;
+pub const WINDOW_SILENCE_FLAG: u64 = 1 << 30;
+pub const WINDOW_STACK_INDEX: u64 = 1 << 31;
+pub const WINDOW_START_FLAG: u64 = 1 << 32;
+pub const WINDOW_VISIBLE_LAYOUT: u64 = 1 << 33;
+pub const WINDOW_WIDTH: u64 = 1 << 34;
+pub const WINDOW_ZOOMED_FLAG: u64 = 1 << 35;
 
 //pub const WINDOW_FLAGS_NUM: usize = 24;
 pub const WINDOW_FLAGS_NUM: usize = 19;
 
-pub const WINDOW_NONE: u32 = 0;
+pub const WINDOW_NONE: u64 = 0;
 //pub const WINDOW_DEFAULT: usize = WINDOW_ID | WINDOW_NAME;
-pub const WINDOW_ALL: u32 = WINDOW_ACTIVE
+pub const WINDOW_ALL: u64 = WINDOW_ACTIVE
+    | WINDOW_ACTIVE_CLIENTS
+    | WINDOW_ACTIVE_CLIENTS_LIST
+    | WINDOW_ACTIVE_SESSIONS
+    | WINDOW_ACTIVE_SESSIONS_LIST
     | WINDOW_ACTIVITY
+    | WINDOW_ACTIVITY_STRING
     | WINDOW_ACTIVITY_FLAG
     | WINDOW_BELL_FLAG
+    | WINDOW_CONTENT_FLAG
     | WINDOW_BIGGER
+    | WINDOW_CELL_WIDTH
     | WINDOW_END_FLAG
+    | WINDOW_FIND_MATCHES
     | WINDOW_FLAGS
     | WINDOW_FORMAT
     | WINDOW_HEIGHT
@@ -48,6 +66,9 @@ pub const WINDOW_ALL: u32 = WINDOW_ACTIVE
     | WINDOW_LAST_FLAG
     | WINDOW_LAYOUT
     | WINDOW_LINKED
+    | WINDOW_LINKED_SESSIONS
+    | WINDOW_LINKED_SESSIONS_LIST
+    | WINDOW_MARKED_FLAG
     | WINDOW_NAME
     | WINDOW_OFFSET_X
     | WINDOW_OFFSET_Y
@@ -61,16 +82,40 @@ pub const WINDOW_ALL: u32 = WINDOW_ACTIVE
 
 pub const WINDOW_VARS_SEPARATOR: &str = "'";
 // FIXME: regex name can be anything, and other keys should be checked better
-pub const WINDOW_VARS: [(&str, u32, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_NUM] = [
+pub const WINDOW_VARS: [(&str, u64, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_NUM] = [
     #[cfg(feature = "tmux_1_6")]
     ("window_active", WINDOW_ACTIVE, |w, p| {
         w.active = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(feature = "tmux_3_1")]
+    ("window_active_clients", WINDOW_ACTIVE_CLIENTS, |w, p| {
+        w.active_clients = p.parse().ok()
+    }),
+    #[cfg(feature = "tmux_3_1")]
+    (
+        "window_active_clients_list",
+        WINDOW_ACTIVE_CLIENTS_LIST,
+        |w, p| w.active_clients_list = p.parse().ok(),
+    ),
+    #[cfg(feature = "tmux_3_1")]
+    ("window_active_sessions", WINDOW_ACTIVE_SESSIONS, |w, p| {
+        w.active_sessions = p.parse().ok()
+    }),
+    #[cfg(feature = "tmux_3_1")]
+    (
+        "window_active_sessions_list",
+        WINDOW_ACTIVE_SESSIONS_LIST,
+        |w, p| w.active_sessions_list = p.parse().ok(),
+    ),
     #[cfg(feature = "tmux_2_1")]
     ("window_activity", WINDOW_ACTIVITY, |w, p| {
         w.activity = p.parse().ok().map(Duration::from_millis)
     }),
-    #[cfg(feature = "tmux_1_9")]
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+    ("window_activity_string", WINDOW_ACTIVITY_STRING, |w, p| {
+        w.activity_string = p.parse().ok()
+    }),
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2"), feature = "tmux_2_3"))]
     ("window_activity_flag", WINDOW_ACTIVITY_FLAG, |w, p| {
         w.activity_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
@@ -78,15 +123,27 @@ pub const WINDOW_VARS: [(&str, u32, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_N
     ("window_bell_flag", WINDOW_BELL_FLAG, |w, p| {
         w.bell_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
+    #[cfg(all(feature = "tmux_1_9", not(feature = "2_0")))]
+    ("window_content_flag", WINDOW_CONTENT_FLAG, |w, p| {
+        w.content_flag = p.parse().ok()
+    }),
     #[cfg(feature = "tmux_2_9")]
     ("window_bigger", WINDOW_BIGGER, |w, p| {
         w.bigger = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    #[cfg(feature = "tmux_3_1")]
+    ("window_cell_height", WINDOW_CELL_WIDTH, |w, p| {
+        w.cell_height = p.parse().ok()
+    }),
+    #[cfg(feature = "tmux_3_1")]
+    ("window_cell_width", WINDOW_CELL_WIDTH, |w, p| {
+        w.cell_width = p.parse().ok()
     }),
     #[cfg(feature = "tmux_2_9")]
     ("window_end_flag", WINDOW_END_FLAG, |w, p| {
         w.end_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
-    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_5")))]
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
     ("window_find_matches", WINDOW_BIGGER, |w, p| {
         w.bigger = p.parse::<usize>().map(|i| i == 1).ok()
     }),
@@ -119,6 +176,20 @@ pub const WINDOW_VARS: [(&str, u32, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_N
     #[cfg(feature = "tmux_2_1")]
     ("window_linked", WINDOW_LINKED, |w, p| {
         w.linked = p.parse::<usize>().map(|i| i == 1).ok()
+    }),
+    #[cfg(feature = "tmux_3_1")]
+    ("window_linked_sessions", WINDOW_LINKED_SESSIONS, |w, p| {
+        w.linked_sessions = p.parse().ok()
+    }),
+    #[cfg(feature = "tmux_3_1")]
+    (
+        "window_linked_sessions_list",
+        WINDOW_LINKED_SESSIONS_LIST,
+        |w, p| w.linked_sessions_list = p.parse().ok(),
+    ),
+    #[cfg(feature = "tmux_3_1")]
+    ("window_marked_flag", WINDOW_MARKED_FLAG, |w, p| {
+        w.marked_flag = p.parse().ok()
     }),
     #[cfg(feature = "tmux_1_6")]
     ("window_name", WINDOW_NAME, |w, p| w.name = p.parse().ok()),
@@ -280,7 +351,7 @@ impl Window {
     }
 
     // XXX: mb deserialize like serde something?
-    pub fn from_str(s: &str, bitflags: u32) -> Result<Self, Error> {
+    pub fn from_str(s: &str, bitflags: u64) -> Result<Self, Error> {
         let wv: Vec<&str> = s.split(WINDOW_VARS_SEPARATOR).collect();
         let mut wv = wv.iter();
         // XXX: optimize?
