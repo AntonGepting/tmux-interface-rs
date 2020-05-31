@@ -4,9 +4,10 @@ echo "tmux list-sessions -F \"...\""
 echo "========================================================================="
 tmux ls -F "#{session_activity}:#{session_alerts}:#{session_attached}:\
 #{session_created}:#{session_format}:#{session_group}:#{session_group_list}:\
-#{session_group_size}:#{session_grouped}:#{session_id}:\
-#{session_last_attached}:#{session_many_attached}:#{session_name}:\
-#{session_stack}:#{session_windows}"
+#{session_group_size}:#{session_grouped}:#{session_height}:#{session_width}:\
+#{session_id}:#{session_last_attached}:#{session_many_attached}:#{session_name}:\
+#{session_stack}:#{session_windows}:\
+#{test_wrong_variable}"
 echo "========================================================================="
 
 
@@ -18,9 +19,9 @@ tmux lsw -a -F "#{window_active}'#{window_activity}'#{window_activity_flag}'\
 #{window_last_flag}'#{window_layout}'#{window_linked}'#{window_name}'\
 #{window_offset_x}'#{window_offset_y}'#{window_panes}'#{window_silence_flag}'\
 #{window_stack_index}'#{window_start_flag}'#{window_visible_layout}'\
-#{window_width}'#{window_zoomed_flag}"
+#{window_width}'#{window_zoomed_flag}'\
+#{test_wrong_variable}"
 echo "========================================================================="
-
 
 echo "tmux list-panes -a -F \"...\""
 echo "========================================================================="
@@ -31,19 +32,22 @@ tmux lsp -a -F "#{pane_active}'#{pane_at_bottom}'#{pane_at_left}'\
 #{pane_left}'#{pane_marked}'#{pane_marked_set}'#{pane_mode}'#{pane_pid}'\
 #{pane_pipe}'#{pane_right}'#{pane_search_string}'#{pane_start_command}'\
 #{pane_synchronized}'#{pane_tabs}'#{pane_title}'#{pane_top}'#{pane_tty}'\
-#{pane_width}"
+#{pane_width}'\
+#{test_wrong_variable}"
 echo "========================================================================="
 
 echo "tmux ls -F \"from all objects...\""
 echo "========================================================================="
 tmux ls -F "#{client_pid}:#{client_name}:#{session_activity}:#{window_active}:#{pane_active}:\
-#{buffer_name}:#{command}:#{cursor_x}"
+#{buffer_name}:#{command}:#{cursor_x}\
+#{test_wrong_variable}"
 echo "========================================================================="
 
 echo "tmux litst-client -F \"...\""
 echo "========================================================================="
 tmux lsc -F "#{client_pid}:#{client_name}:#{session_activity}:#{window_active}:#{pane_active}:\
-#{buffer_name}:#{command}:#{cursor_x}"
+#{buffer_name}:#{command}:#{cursor_x}\
+#{test_wrong_variable}"
 echo "========================================================================="
 
 # array with all formats
