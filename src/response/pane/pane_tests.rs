@@ -1,4 +1,16 @@
 #[test]
+fn bitflags() {
+    use crate::{PANE_ALL, PANE_NONE};
+    let bitflags =
+        // 31_____23____16_15_____________0
+        0b_000000011111111_1111111111111111;
+    //println!("{:b}", PANE_ALL);
+    //println!("{:b}", &bitflags);
+    assert_eq!(bitflags, PANE_ALL);
+    assert_eq!(0, PANE_NONE);
+}
+
+#[test]
 fn bool() {
     //let c = "1".parse::<bool>().unwrap();
     //assert_eq!(c, true);
@@ -19,7 +31,7 @@ fn parse() {
 }
 
 #[test]
-fn bitflags() {
+fn bitflag_operations() {
     let a = 0b001;
     let b = 0b010;
     let c = 0b100;

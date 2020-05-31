@@ -1,4 +1,16 @@
 #[test]
+fn bitflags() {
+    use crate::{WINDOW_ALL, WINDOW_NONE};
+    let bitflags =
+        // 31_____23____16_15_____________0
+        0b_000000011111111_1111111111111111;
+    //println!("{:b}", WINDOW_ALL);
+    //println!("{:b}", &bitflags);
+    assert_eq!(bitflags, WINDOW_ALL);
+    assert_eq!(0, WINDOW_NONE);
+}
+
+#[test]
 fn parse() {
     use crate::response::window::window::WINDOW_ALL;
     use crate::Window;
