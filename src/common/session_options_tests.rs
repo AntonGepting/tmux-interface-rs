@@ -2,10 +2,10 @@
 fn show_generated_struct() {
     use crate::SessionOptions;
 
-    let session_options = SessionOptions {
+    let _session_options = SessionOptions {
         ..Default::default()
     };
-    dbg!(session_options);
+    //dbg!(session_options);
 }
 
 #[test]

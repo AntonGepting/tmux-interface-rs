@@ -2,10 +2,10 @@
 fn show_generated_struct() {
     use crate::WindowOptions;
 
-    let window_options = WindowOptions {
+    let _window_options = WindowOptions {
         ..Default::default()
     };
-    dbg!(window_options);
+    //dbg!(window_options);
 }
 
 #[test]
