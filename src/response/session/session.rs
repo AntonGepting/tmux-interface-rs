@@ -1,31 +1,33 @@
 use crate::Error;
+#[cfg(feature = "tmux_2_5")]
 use crate::SessionStack;
+#[cfg(feature = "tmux_1_6")]
 use std::time::Duration;
 
 pub const SESSION_ACTIVITY: u32 = 1;
-pub const SESSION_ACTIVITY_STRING: u32 = 2;
-pub const SESSION_ALERTS: u32 = 1 << 3;
-pub const SESSION_ATTACHED: u32 = 1 << 4;
-pub const SESSION_ATTACHED_LIST: u32 = 1 << 5;
-pub const SESSION_CREATED: u32 = 1 << 6;
-pub const SESSION_CREATED_STRING: u32 = 1 << 7;
-pub const SESSION_FORMAT: u32 = 1 << 8;
-pub const SESSION_GROUP: u32 = 1 << 9;
-pub const SESSION_GROUP_ATTACHED: u32 = 1 << 10;
-pub const SESSION_GROUP_ATTACHED_LIST: u32 = 1 << 11;
-pub const SESSION_GROUP_LIST: u32 = 1 << 12;
-pub const SESSION_GROUP_MANY_ATTACHED: u32 = 1 << 13;
-pub const SESSION_GROUP_SIZE: u32 = 1 << 14;
-pub const SESSION_GROUPED: u32 = 1 << 15;
-pub const SESSION_HEIGHT: u32 = 1 << 16;
-pub const SESSION_WIDTH: u32 = 1 << 17;
-pub const SESSION_ID: u32 = 1 << 18;
-pub const SESSION_LAST_ATTACHED: u32 = 1 << 19;
-pub const SESSION_LAST_ATTACHED_STRING: u32 = 1 << 20;
-pub const SESSION_MANY_ATTACHED: u32 = 1 << 21;
-pub const SESSION_NAME: u32 = 1 << 22;
-pub const SESSION_STACK: u32 = 1 << 23;
-pub const SESSION_WINDOWS: u32 = 1 << 24;
+pub const SESSION_ACTIVITY_STRING: u32 = 1 << 1;
+pub const SESSION_ALERTS: u32 = 1 << 2;
+pub const SESSION_ATTACHED: u32 = 1 << 3;
+pub const SESSION_ATTACHED_LIST: u32 = 1 << 4;
+pub const SESSION_CREATED: u32 = 1 << 5;
+pub const SESSION_CREATED_STRING: u32 = 1 << 6;
+pub const SESSION_FORMAT: u32 = 1 << 7;
+pub const SESSION_GROUP: u32 = 1 << 8;
+pub const SESSION_GROUP_ATTACHED: u32 = 1 << 9;
+pub const SESSION_GROUP_ATTACHED_LIST: u32 = 1 << 10;
+pub const SESSION_GROUP_LIST: u32 = 1 << 11;
+pub const SESSION_GROUP_MANY_ATTACHED: u32 = 1 << 12;
+pub const SESSION_GROUP_SIZE: u32 = 1 << 13;
+pub const SESSION_GROUPED: u32 = 1 << 14;
+pub const SESSION_HEIGHT: u32 = 1 << 15;
+pub const SESSION_WIDTH: u32 = 1 << 16;
+pub const SESSION_ID: u32 = 1 << 17;
+pub const SESSION_LAST_ATTACHED: u32 = 1 << 18;
+pub const SESSION_LAST_ATTACHED_STRING: u32 = 1 << 19;
+pub const SESSION_MANY_ATTACHED: u32 = 1 << 20;
+pub const SESSION_NAME: u32 = 1 << 21;
+pub const SESSION_STACK: u32 = 1 << 22;
+pub const SESSION_WINDOWS: u32 = 1 << 23;
 
 // XXX: number of all flags, needed for array init
 // NOTE: variables were first intoduced in tmux 1.6
@@ -132,7 +134,7 @@ pub const SESSION_VARS: [(&str, u32, fn(s: &mut Session, p: &str)); SESSION_FLAG
     ("session_created", SESSION_CREATED, |s, p| {
         s.created = p.parse().ok().map(Duration::from_millis)
     }),
-    #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_2_2")))]
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
     ("session_created_string", SESSION_CREATED_STRING, |s, p| {
         s.created_string = p.parse().ok()
     }),
@@ -231,7 +233,7 @@ pub struct Session {
     #[cfg(feature = "tmux_1_6")]
     pub created: Option<Duration>,
     /// String time session created
-    #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_2_2")))]
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
     pub created_string: Option<String>,
     /// 1 if format is for a session (not assuming the current)
     #[cfg(feature = "tmux_2_6")]

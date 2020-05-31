@@ -1,4 +1,5 @@
 use crate::Error;
+#[cfg(feature = "tmux_1_8")]
 use crate::PaneTabs;
 
 pub const PANE_ACTIVE: u64 = 1;
@@ -104,11 +105,13 @@ pub const PANE_ALL: u64 = PANE_ACTIVE
     | PANE_MARKED
     | PANE_MARKED_SET
     | PANE_MODE
+    | PANE_PATH
     | PANE_PID
     | PANE_PIPE
     | PANE_RIGHT
     | PANE_SEARCH_STRING
     | PANE_START_COMMMAND
+    | PANE_START_PATH
     | PANE_SYNCHRONIZED
     | PANE_TABS
     | PANE_TITLE

@@ -1,9 +1,19 @@
 #[test]
+fn show_generated_struct() {
+    use crate::response::pane::pane::Pane;
+
+    let _pane = Pane {
+        ..Default::default()
+    };
+    //dbg!(_pane);
+}
+
+#[test]
 fn bitflags() {
     use crate::{PANE_ALL, PANE_NONE};
     let bitflags =
-        // 31_____23____16_15_____________0
-        0b_000000011111111_1111111111111111;
+        // _31____________16_15_____________0
+        0b_11111111111111111_1111111111111111;
     //println!("{:b}", PANE_ALL);
     //println!("{:b}", &bitflags);
     assert_eq!(bitflags, PANE_ALL);
@@ -53,36 +63,71 @@ fn parse2() {
     use crate::Pane;
 
     let origin = Pane {
+        #[cfg(feature = "tmux_1_6")]
         active: Some(true),
+        #[cfg(feature = "tmux_2_6")]
         at_bottom: Some(true),
+        #[cfg(feature = "tmux_2_6")]
         at_left: Some(true),
+        #[cfg(feature = "tmux_2_6")]
         at_right: Some(true),
+        #[cfg(feature = "tmux_2_6")]
         at_top: Some(true),
+        #[cfg(feature = "tmux_2_0")]
         bottom: Some(63),
+        #[cfg(feature = "tmux_1_8")]
         current_command: Some("bash".to_string()),
+        #[cfg(feature = "tmux_1_7")]
         current_path: Some("/home/user".to_string()),
+        #[cfg(feature = "tmux_1_6")]
         dead: Some(false),
+        #[cfg(feature = "tmux_2_0")]
         dead_status: None,
+        #[cfg(feature = "tmux_2_6")]
         format: Some(true),
+        #[cfg(feature = "tmux_1_6")]
         height: Some(64),
+        #[cfg(feature = "tmux_1_6")]
         id: Some(0),
+        #[cfg(feature = "tmux_1_8")]
         in_mode: Some(false),
+        #[cfg(feature = "tmux_1_7")]
         index: Some(0),
+        #[cfg(feature = "tmux_2_0")]
         input_off: Some(false),
+        #[cfg(feature = "tmux_2_0")]
         left: Some(0),
+        #[cfg(feature = "tmux_3_0")]
         marked: Some(false),
+        #[cfg(feature = "tmux_3_0")]
         marked_set: Some(false),
+        #[cfg(feature = "tmux_2_5")]
         mode: None,
+        #[cfg(feature = "tmux_3_1")]
+        path: None,
+        #[cfg(feature = "tmux_1_6")]
         pid: Some(1945),
+        #[cfg(feature = "tmux_2_6")]
         pipe: Some(false),
+        #[cfg(feature = "tmux_2_0")]
         right: Some(176),
+        #[cfg(feature = "tmux_2_5")]
         search_string: None,
+        #[cfg(feature = "tmux_1_6")]
         start_command: None,
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_0")))]
+        start_path: None,
+        #[cfg(feature = "tmux_1_9")]
         synchronized: Some(false),
+        #[cfg(feature = "tmux_1_8")]
         tabs: None,
+        #[cfg(feature = "tmux_1_6")]
         title: Some("asus".to_string()),
+        #[cfg(feature = "tmux_2_0")]
         top: Some(0),
+        #[cfg(feature = "tmux_1_6")]
         tty: Some("/dev/pts/2".to_string()),
+        #[cfg(feature = "tmux_1_6")]
         width: Some(177),
     };
 

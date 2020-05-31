@@ -1,46 +1,91 @@
 use crate::Error;
 use crate::Layout;
 use crate::WindowFlag;
+#[cfg(feature = "tmux_2_1")]
 use std::time::Duration;
 
 pub const WINDOW_ACTIVE: u64 = 1;
-pub const WINDOW_ACTIVE_CLIENTS: u64 = 2;
-pub const WINDOW_ACTIVE_CLIENTS_LIST: u64 = 3;
-pub const WINDOW_ACTIVE_SESSIONS: u64 = 4;
-pub const WINDOW_ACTIVE_SESSIONS_LIST: u64 = 5;
-pub const WINDOW_ACTIVITY: u64 = 1 << 6;
-pub const WINDOW_ACTIVITY_STRING: u64 = 1 << 7;
-pub const WINDOW_ACTIVITY_FLAG: u64 = 1 << 8;
-pub const WINDOW_BELL_FLAG: u64 = 1 << 9;
-pub const WINDOW_CONTENT_FLAG: u64 = 1 << 10;
-pub const WINDOW_BIGGER: u64 = 1 << 11;
-pub const WINDOW_CELL_WIDTH: u64 = 1 << 12;
-pub const WINDOW_END_FLAG: u64 = 1 << 13;
-pub const WINDOW_FIND_MATCHES: u64 = 1 << 14;
-pub const WINDOW_FLAGS: u64 = 1 << 15;
-pub const WINDOW_FORMAT: u64 = 1 << 16;
-pub const WINDOW_HEIGHT: u64 = 1 << 17;
-pub const WINDOW_ID: u64 = 1 << 18;
-pub const WINDOW_INDEX: u64 = 1 << 19;
-pub const WINDOW_LAST_FLAG: u64 = 1 << 20;
-pub const WINDOW_LAYOUT: u64 = 1 << 21;
-pub const WINDOW_LINKED: u64 = 1 << 22;
-pub const WINDOW_LINKED_SESSIONS: u64 = 1 << 23;
-pub const WINDOW_LINKED_SESSIONS_LIST: u64 = 1 << 24;
-pub const WINDOW_MARKED_FLAG: u64 = 1 << 25;
-pub const WINDOW_NAME: u64 = 1 << 26;
-pub const WINDOW_OFFSET_X: u64 = 1 << 27;
-pub const WINDOW_OFFSET_Y: u64 = 1 << 28;
-pub const WINDOW_PANES: u64 = 1 << 29;
-pub const WINDOW_SILENCE_FLAG: u64 = 1 << 30;
-pub const WINDOW_STACK_INDEX: u64 = 1 << 31;
-pub const WINDOW_START_FLAG: u64 = 1 << 32;
-pub const WINDOW_VISIBLE_LAYOUT: u64 = 1 << 33;
-pub const WINDOW_WIDTH: u64 = 1 << 34;
-pub const WINDOW_ZOOMED_FLAG: u64 = 1 << 35;
+pub const WINDOW_ACTIVE_CLIENTS: u64 = 1 << 1;
+pub const WINDOW_ACTIVE_CLIENTS_LIST: u64 = 1 << 2;
+pub const WINDOW_ACTIVE_SESSIONS: u64 = 1 << 3;
+pub const WINDOW_ACTIVE_SESSIONS_LIST: u64 = 1 << 4;
+pub const WINDOW_ACTIVITY: u64 = 1 << 5;
+pub const WINDOW_ACTIVITY_STRING: u64 = 1 << 6;
+pub const WINDOW_ACTIVITY_FLAG: u64 = 1 << 7;
+pub const WINDOW_BELL_FLAG: u64 = 1 << 8;
+pub const WINDOW_CONTENT_FLAG: u64 = 1 << 9;
+pub const WINDOW_BIGGER: u64 = 1 << 10;
+pub const WINDOW_CELL_WIDTH: u64 = 1 << 11;
+pub const WINDOW_END_FLAG: u64 = 1 << 12;
+pub const WINDOW_FIND_MATCHES: u64 = 1 << 13;
+pub const WINDOW_FLAGS: u64 = 1 << 14;
+pub const WINDOW_FORMAT: u64 = 1 << 15;
+pub const WINDOW_HEIGHT: u64 = 1 << 16;
+pub const WINDOW_ID: u64 = 1 << 17;
+pub const WINDOW_INDEX: u64 = 1 << 18;
+pub const WINDOW_LAST_FLAG: u64 = 1 << 19;
+pub const WINDOW_LAYOUT: u64 = 1 << 20;
+pub const WINDOW_LINKED: u64 = 1 << 21;
+pub const WINDOW_LINKED_SESSIONS: u64 = 1 << 22;
+pub const WINDOW_LINKED_SESSIONS_LIST: u64 = 1 << 23;
+pub const WINDOW_MARKED_FLAG: u64 = 1 << 24;
+pub const WINDOW_NAME: u64 = 1 << 25;
+pub const WINDOW_OFFSET_X: u64 = 1 << 26;
+pub const WINDOW_OFFSET_Y: u64 = 1 << 27;
+pub const WINDOW_PANES: u64 = 1 << 28;
+pub const WINDOW_SILENCE_FLAG: u64 = 1 << 29;
+pub const WINDOW_STACK_INDEX: u64 = 1 << 30;
+pub const WINDOW_START_FLAG: u64 = 1 << 31;
+pub const WINDOW_VISIBLE_LAYOUT: u64 = 1 << 32;
+pub const WINDOW_WIDTH: u64 = 1 << 33;
+pub const WINDOW_ZOOMED_FLAG: u64 = 1 << 34;
 
-//pub const WINDOW_FLAGS_NUM: usize = 24;
+// XXX: number of all flags, needed for array init
+// NOTE: variables were first intoduced in tmux 1.6
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_7")))]
+pub const WINDOW_FLAGS_NUM: usize = 7;
+#[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
+pub const WINDOW_FLAGS_NUM: usize = 10;
+#[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+pub const WINDOW_FLAGS_NUM: usize = 10;
+#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_1_9a")))]
+pub const WINDOW_FLAGS_NUM: usize = 14;
+#[cfg(all(feature = "tmux_1_9a", not(feature = "tmux_2_0")))]
+pub const WINDOW_FLAGS_NUM: usize = 14;
+#[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_1")))]
+pub const WINDOW_FLAGS_NUM: usize = 15;
+#[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+pub const WINDOW_FLAGS_NUM: usize = 18;
+#[cfg(all(feature = "tmux_2_2", not(feature = "tmux_2_3")))]
+pub const WINDOW_FLAGS_NUM: usize = 17;
+#[cfg(all(feature = "tmux_2_3", not(feature = "tmux_2_4")))]
+pub const WINDOW_FLAGS_NUM: usize = 18;
+#[cfg(all(feature = "tmux_2_4", not(feature = "tmux_2_5")))]
+pub const WINDOW_FLAGS_NUM: usize = 18;
+#[cfg(all(feature = "tmux_2_5", not(feature = "tmux_2_6")))]
 pub const WINDOW_FLAGS_NUM: usize = 19;
+#[cfg(all(feature = "tmux_2_6", not(feature = "tmux_2_7")))]
+pub const WINDOW_FLAGS_NUM: usize = 19;
+#[cfg(all(feature = "tmux_2_7", not(feature = "tmux_2_8")))]
+pub const WINDOW_FLAGS_NUM: usize = 19;
+#[cfg(all(feature = "tmux_2_8", not(feature = "tmux_2_9")))]
+pub const WINDOW_FLAGS_NUM: usize = 19;
+#[cfg(all(feature = "tmux_2_9", not(feature = "tmux_2_9a")))]
+pub const WINDOW_FLAGS_NUM: usize = 24;
+#[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_0")))]
+pub const WINDOW_FLAGS_NUM: usize = 24;
+#[cfg(all(feature = "tmux_3_0", not(feature = "tmux_3_0a")))]
+pub const WINDOW_FLAGS_NUM: usize = 24;
+#[cfg(all(feature = "tmux_3_0a", not(feature = "tmux_3_1")))]
+pub const WINDOW_FLAGS_NUM: usize = 24;
+#[cfg(all(feature = "tmux_3_1", not(feature = "tmux_3_1a")))]
+pub const WINDOW_FLAGS_NUM: usize = 33;
+#[cfg(all(feature = "tmux_3_1a", not(feature = "tmux_3_1b")))]
+pub const WINDOW_FLAGS_NUM: usize = 33;
+#[cfg(all(feature = "tmux_3_1b", not(feature = "tmux_X_X")))]
+pub const WINDOW_FLAGS_NUM: usize = 33;
+#[cfg(feature = "tmux_X_X")]
+pub const WINDOW_FLAGS_NUM: usize = 33;
 
 pub const WINDOW_NONE: u64 = 0;
 //pub const WINDOW_DEFAULT: usize = WINDOW_ID | WINDOW_NAME;
@@ -115,7 +160,10 @@ pub const WINDOW_VARS: [(&str, u64, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_N
     ("window_activity_string", WINDOW_ACTIVITY_STRING, |w, p| {
         w.activity_string = p.parse().ok()
     }),
-    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2"), feature = "tmux_2_3"))]
+    #[cfg(any(
+        all(feature = "tmux_1_9", not(feature = "tmux_2_2")),
+        feature = "tmux_2_3"
+    ))]
     ("window_activity_flag", WINDOW_ACTIVITY_FLAG, |w, p| {
         w.activity_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
@@ -123,7 +171,7 @@ pub const WINDOW_VARS: [(&str, u64, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_N
     ("window_bell_flag", WINDOW_BELL_FLAG, |w, p| {
         w.bell_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
-    #[cfg(all(feature = "tmux_1_9", not(feature = "2_0")))]
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
     ("window_content_flag", WINDOW_CONTENT_FLAG, |w, p| {
         w.content_flag = p.parse().ok()
     }),
@@ -144,8 +192,8 @@ pub const WINDOW_VARS: [(&str, u64, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_N
         w.end_flag = p.parse::<usize>().map(|i| i == 1).ok()
     }),
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    ("window_find_matches", WINDOW_BIGGER, |w, p| {
-        w.bigger = p.parse::<usize>().map(|i| i == 1).ok()
+    ("window_find_matches", WINDOW_FIND_MATCHES, |w, p| {
+        w.find_matches = p.parse().ok()
     }),
     #[cfg(feature = "tmux_1_6")]
     ("window_flags", WINDOW_FLAGS, |w, p| {
@@ -257,13 +305,16 @@ pub struct Window {
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
     pub activity_string: Option<String>,
     /// window_activity_flag - 1 if window has activity
-    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2"), feature = "tmux_2_3"))]
+    #[cfg(any(
+        all(feature = "tmux_1_9", not(feature = "tmux_2_2")),
+        feature = "tmux_2_3"
+    ))]
     pub activity_flag: Option<bool>,
     /// window_bell_flag - 1 if window has bell
     #[cfg(feature = "tmux_1_9")]
     pub bell_flag: Option<bool>,
     /// window_content_flag - 1 if window has content alert
-    #[cfg(all(feature = "tmux_1_9", not(feature = "2_0")))]
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
     pub content_flag: Option<bool>,
     /// 1 if window is larger than client
     #[cfg(feature = "tmux_2_9")]
@@ -309,7 +360,7 @@ pub struct Window {
     pub linked_sessions: Option<usize>,
     /// window_linked_sessions_list - List of sessions this window is linked to
     #[cfg(feature = "tmux_3_1")]
-    pub linked_session_list: Option<String>,
+    pub linked_sessions_list: Option<String>,
     /// window_marked_flag - 1 if window contains the marked pane
     #[cfg(feature = "tmux_3_1")]
     pub marked_flag: Option<bool>,
