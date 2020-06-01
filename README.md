@@ -17,7 +17,7 @@ the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
 
 1. Add a dependency in your `Cargo.toml`.
 
-    - Using **defaults**
+    - Using **defaults** (`tmux 2.8`)
         ```
         [dependencies]
         tmux_interface = "^0.1.0"
@@ -26,15 +26,16 @@ the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
     - Using **specified tmux version**:
 
         You can also add `features` to your dependencies entry in `Cargo.toml`, if
-        you want to specify the version of `tmux` you want to use (because
+        you want to specify the version of tmux you want to use (because
         different tmux versions may have incompatible CLI changes). Following
-        tmux versions as `features` are currently supported:
+        tmux versions are currently supported as `features`:
 
         `tmux_0_8`, `tmux_0_9`, `tmux_1_0`, `tmux_1_1`, `tmux_1_2`, `tmux_1_3`,
         `tmux_1_4`, `tmux_1_5`, `tmux_1_6`, `tmux_1_7`, `tmux_1_8`, `tmux_1_9`,
         `tmux_1_9a`, `tmux_2_0`, `tmux_2_1`, `tmux_2_2`, `tmux_2_3`, `tmux_2_4`,
         `tmux_2_5`, `tmux_2_6`, `tmux_2_7`, `tmux_2_8`, `tmux_2_9`, `tmux_2_9a`,
-        `tmux_3_0`, `tmux_3_0a`, `tmux_3_1`
+        `tmux_3_0`, `tmux_3_0a`, `tmux_3_1`, `tmux_3_1a`, `tmux_3_1b`,
+        `tmux_X_X`
 
         ```
         [dependencies]
@@ -70,13 +71,38 @@ the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
 
 2. Use library functions in your source file.
 
-    ```
-    use tmux_interface::{NewSessionBuilder, TmuxInterface};
+    - Using direct structure initialization:
+        ```
+        use tmux_interface::{NewSession, TmuxInterface};
 
-    let mut tmux = TmuxInterface::new();
-    let new_session = NewSessionBuilder::new().session_name("session_name").build();
-    tmux.new_session(Some(&new_session)).unwrap();
-    ```
+        let mut tmux = TmuxInterface::new();
+        let new_session = NewSession {
+            ..Default::default(),
+        };
+        tmux.new_session(Some(&new_session)).unwrap();
+        ```
+
+    - Using builder pattern:
+        ```
+        use tmux_interface::{NewSessionBuilder, TmuxInterface};
+
+        let mut tmux = TmuxInterface::new();
+        let new_session = NewSessionBuilder::new().session_name("session_name").build();
+        tmux.new_session(Some(&new_session)).unwrap();
+        ```
+
+    - Using structure modification:
+        ```
+        use tmux_interface::{NewSession, TmuxInterface};
+
+        let mut tmux = TmuxInterface::new();
+        let mut new_session = NewSession {
+            ..Default::default(),
+        };
+        new_session.name = "";
+        tmux.new_session(Some(&new_session)).unwrap();
+        ```
+
 
 ## Testing
 
