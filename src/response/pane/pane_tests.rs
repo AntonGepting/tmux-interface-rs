@@ -34,8 +34,112 @@ fn parse() {
     use crate::response::pane::pane::PANE_ALL;
     use crate::Pane;
 
-    let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0'8,16,24,32,40,48,56,64,72,80,88,96,104,112,120,128,136,144,152,160,168,176'asus'0'/dev/pts/2'177";
-    let pane = Pane::from_str(pane_str, PANE_ALL).unwrap();
+    //let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0'8,16,24,32,40,48,56,64,72,80,88,96,104,112,120,128,136,144,152,160,168,176'asus'0'/dev/pts/2'177";
+
+    let pane_vec = vec![
+        // pane_active
+        #[cfg(feature = "tmux_1_6")]
+        "1",
+        // pane_at_bottom
+        #[cfg(feature = "tmux_2_6")]
+        "0",
+        // pane_at_left
+        #[cfg(feature = "tmux_2_6")]
+        "1",
+        // pane_at_right
+        #[cfg(feature = "tmux_2_6")]
+        "1",
+        // pane_at_top
+        #[cfg(feature = "tmux_2_6")]
+        "1",
+        // pane_bottom
+        #[cfg(feature = "tmux_2_0")]
+        "45",
+        // pane_current_command
+        #[cfg(feature = "tmux_1_8")]
+        "bash",
+        // pane_current_path
+        #[cfg(feature = "tmux_1_7")]
+        "/home/user",
+        // pane_dead
+        #[cfg(feature = "tmux_1_6")]
+        "0",
+        // pane_dead_status
+        #[cfg(feature = "tmux_2_0")]
+        "",
+        // pane_format
+        #[cfg(feature = "tmux_2_6")]
+        "1",
+        // pane_height
+        #[cfg(feature = "tmux_1_6")]
+        "64",
+        // pane_id
+        #[cfg(feature = "tmux_1_6")]
+        "%0",
+        // pane_in_mode
+        #[cfg(feature = "tmux_1_8")]
+        "0",
+        // pane_index
+        #[cfg(feature = "tmux_1_7")]
+        "0",
+        // pane_input_off
+        #[cfg(feature = "tmux_2_0")]
+        "0",
+        // pane_left
+        #[cfg(feature = "tmux_2_0")]
+        "0",
+        // pane_marked
+        #[cfg(feature = "tmux_3_0")]
+        "0",
+        // pane_marked_set
+        #[cfg(feature = "tmux_3_0")]
+        "0",
+        // pane_mode
+        #[cfg(feature = "tmux_2_5")]
+        "",
+        // pane_path
+        #[cfg(feature = "tmux_3_1")]
+        "",
+        // pane_pid
+        #[cfg(feature = "tmux_1_6")]
+        "1945",
+        // pane_pipe
+        #[cfg(feature = "tmux_2_6")]
+        "0",
+        // pane_right
+        #[cfg(feature = "tmux_2_0")]
+        "176",
+        // pane_search_string
+        #[cfg(feature = "tmux_2_5")]
+        "",
+        // pane_start_command
+        #[cfg(feature = "tmux_1_6")]
+        "",
+        // pane_start_path
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_0")))]
+        "",
+        // pane_synchronized
+        #[cfg(feature = "tmux_1_9")]
+        "0",
+        // pane_tabs
+        #[cfg(feature = "tmux_1_8")]
+        "",
+        // pane_title
+        #[cfg(feature = "tmux_1_6")]
+        "title",
+        // pane_top
+        #[cfg(feature = "tmux_2_0")]
+        "0",
+        // pane_tty
+        #[cfg(feature = "tmux_1_6")]
+        "/dev/pts/2",
+        // pane_width
+        #[cfg(feature = "tmux_1_6")]
+        "177",
+    ];
+    //let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0''asus'0'/dev/pts/2'177";
+    let pane_str = pane_vec.join("'");
+    let pane = Pane::from_str(&pane_str, PANE_ALL).unwrap();
     assert_eq!(pane.current_path, Some("/home/user".to_string()));
     assert_eq!(pane.tty, Some("/dev/pts/2".to_string()));
 }
@@ -122,7 +226,7 @@ fn parse2() {
         #[cfg(feature = "tmux_1_8")]
         tabs: None,
         #[cfg(feature = "tmux_1_6")]
-        title: Some("asus".to_string()),
+        title: Some("title".to_string()),
         #[cfg(feature = "tmux_2_0")]
         top: Some(0),
         #[cfg(feature = "tmux_1_6")]
@@ -131,8 +235,110 @@ fn parse2() {
         width: Some(177),
     };
 
-    let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0''asus'0'/dev/pts/2'177";
+    let pane_vec = vec![
+        // pane_active
+        #[cfg(feature = "tmux_1_6")]
+        "1",
+        // pane_at_bottom
+        #[cfg(feature = "tmux_2_6")]
+        "1",
+        // pane_at_left
+        #[cfg(feature = "tmux_2_6")]
+        "1",
+        // pane_at_right
+        #[cfg(feature = "tmux_2_6")]
+        "1",
+        // pane_at_top
+        #[cfg(feature = "tmux_2_6")]
+        "1",
+        // pane_bottom
+        #[cfg(feature = "tmux_2_0")]
+        "63",
+        // pane_current_command
+        #[cfg(feature = "tmux_1_8")]
+        "bash",
+        // pane_current_path
+        #[cfg(feature = "tmux_1_7")]
+        "/home/user",
+        // pane_dead
+        #[cfg(feature = "tmux_1_6")]
+        "0",
+        // pane_dead_status
+        #[cfg(feature = "tmux_2_0")]
+        "",
+        // pane_format
+        #[cfg(feature = "tmux_2_6")]
+        "1",
+        // pane_height
+        #[cfg(feature = "tmux_1_6")]
+        "64",
+        // pane_id
+        #[cfg(feature = "tmux_1_6")]
+        "%0",
+        // pane_in_mode
+        #[cfg(feature = "tmux_1_8")]
+        "0",
+        // pane_index
+        #[cfg(feature = "tmux_1_7")]
+        "0",
+        // pane_input_off
+        #[cfg(feature = "tmux_2_0")]
+        "0",
+        // pane_left
+        #[cfg(feature = "tmux_2_0")]
+        "0",
+        // pane_marked
+        #[cfg(feature = "tmux_3_0")]
+        "0",
+        // pane_marked_set
+        #[cfg(feature = "tmux_3_0")]
+        "0",
+        // pane_mode
+        #[cfg(feature = "tmux_2_5")]
+        "",
+        // pane_path
+        #[cfg(feature = "tmux_3_1")]
+        "",
+        // pane_pid
+        #[cfg(feature = "tmux_1_6")]
+        "1945",
+        // pane_pipe
+        #[cfg(feature = "tmux_2_6")]
+        "0",
+        // pane_right
+        #[cfg(feature = "tmux_2_0")]
+        "176",
+        // pane_search_string
+        #[cfg(feature = "tmux_2_5")]
+        "",
+        // pane_start_command
+        #[cfg(feature = "tmux_1_6")]
+        "",
+        // pane_start_path
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_0")))]
+        "",
+        // pane_synchronized
+        #[cfg(feature = "tmux_1_9")]
+        "0",
+        // pane_tabs
+        #[cfg(feature = "tmux_1_8")]
+        "",
+        // pane_title
+        #[cfg(feature = "tmux_1_6")]
+        "title",
+        // pane_top
+        #[cfg(feature = "tmux_2_0")]
+        "0",
+        // pane_tty
+        #[cfg(feature = "tmux_1_6")]
+        "/dev/pts/2",
+        // pane_width
+        #[cfg(feature = "tmux_1_6")]
+        "177",
+    ];
+    //let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0''asus'0'/dev/pts/2'177";
     //let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0'8,16,24,32,40,48,56,64,72,80,88,96,104,112,120,128,136,144,152,160,168,176'asus'0'/dev/pts/2'177";
+    let pane_str = pane_vec.join("'");
     let pane = Pane::from_str(&pane_str, PANE_ALL).unwrap();
     //assert_eq!(pane.current_path, Some("/home/user".to_string()));
     //assert_eq!(pane.tty, Some("/dev/pts/2".to_string()));
