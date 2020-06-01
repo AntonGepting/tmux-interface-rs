@@ -6,12 +6,14 @@
 
 # tmux_interface v0.0.7
 - implement builder pattern for structures of tmux subcommands
-- add cargo features `tmux_2_6`, `tmux_X_X` for multiple tmux versions support
-- add target objects and functions (`TargetSession`, `TargetWindow`, `TargetWindowEx`,
-    `TargetPane`, `TargetPaneEx` as an equivalent to `target-session`,
-    `target-window`, `target-pane`)
-- restructuring of directories and files
-- add tmux options objects and functions drafts (`ServerOptions`, `SessionOptions`, `WindowOptions`, `PaneOptions`)
+    (`NewSessionBuilder::new().session_name("my_session_name").build()`)
+- add cargo features `tmux_0_8` ... `tmux_X_X` for multiple tmux versions support
+- add target objects and corresponding functions (`TargetSession`,
+`TargetWindow`, `TargetWindowEx`, `TargetPane`, `TargetPaneEx` as an equivalent
+to `target-session`, `target-window`, `target-pane`)
+- restructuring of directories and files add tmux options objects and functions
+- add tmux options (`ServerOptions`, `SessionOptions`, `WindowOptions`, `PaneOptions`)
+- add tmux variables (`session_*`, `window_*`, `pane_*`)
 
 
 # tmux_interface v0.0.6
