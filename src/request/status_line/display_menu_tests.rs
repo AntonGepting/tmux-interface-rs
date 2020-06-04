@@ -31,11 +31,13 @@ fn display_menu() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("2").to_string();
+
     let display_menu = DisplayMenu {
         #[cfg(feature = "tmux_3_0")]
         target_client: Some("1"),
         #[cfg(feature = "tmux_3_0")]
-        target_pane: Some(&TargetPane::Raw("2")),
+        target_pane: Some(&target_pane),
         #[cfg(feature = "tmux_3_0")]
         title: Some("3"),
         #[cfg(feature = "tmux_3_0")]
@@ -50,7 +52,7 @@ fn display_menu() {
     #[cfg(feature = "tmux_3_0")]
     builder.target_client("1");
     #[cfg(feature = "tmux_3_0")]
-    builder.target_pane(&TargetPane::Raw("2"));
+    builder.target_pane(&target_pane);
     #[cfg(feature = "tmux_3_0")]
     builder.title("3");
     #[cfg(feature = "tmux_3_0")]
