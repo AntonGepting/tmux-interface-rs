@@ -424,13 +424,17 @@ strategy and decision making
         .bool_result(self: TmuxInterface) -> bool
         ```
 
+- `&'a str` vs `T: Display` for request structures?
+    - [x] str, nothing to modify, no need for String
+    - [ ] String, better usability
+
 - `target_*` `AsRef<>`, `Into<>`?
     - [x]  using raw enum field, ugly
         ```
         .kill_pane(..., TargetPane::Raw("$1:@2.3"))
         .kill_pane(..., TargetPane::Id(3))
         ```
-    - [ ] using generic implements ...
+    - [ ] using generic implementations ...
         ```
         .kill_pane(..., "$1:@2.3")`
         .kill_pane(..., TargetPane::Id(3))
