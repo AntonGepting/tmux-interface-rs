@@ -175,7 +175,7 @@ impl<'a> ChooseTreeBuilder<'a> {
     }
 
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    pub fn target_window(&mut self, target_window: &'a T) -> &mut Self {
+    pub fn target_window(&mut self, target_window: &'a str) -> &mut Self {
         self.target_window = Some(target_window);
         self
     }
