@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
@@ -22,19 +21,17 @@ impl<'a> TmuxInterface<'a> {
     /// tmux kill-window [-a] [-t target-window]
     /// (alias: killw)
     /// ```
-    pub fn kill_window<T: Display>(
+    pub fn kill_window(
         &mut self,
         all: Option<bool>,
-        target_window: Option<&T>,
+        target_window: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if all.unwrap_or(false) {
             args.push(a_KEY);
         }
         if let Some(target_window) = target_window {
-            s = target_window.to_string();
-            args.extend_from_slice(&[t_KEY, &s]);
+            args.extend_from_slice(&[t_KEY, &target_window]);
         }
         let output = self.subcommand(TmuxInterface::KILL_WINDOW, &args)?;
         Ok(output)

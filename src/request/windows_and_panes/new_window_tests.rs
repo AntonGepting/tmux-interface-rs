@@ -76,6 +76,7 @@ fn new_window() {
         Err(Error::Hook)
     }));
 
+    let target_window = TargetWindow::Raw("5").to_string();
     let new_window = NewWindow {
         #[cfg(feature = "tmux_1_3")]
         add: Some(true),
@@ -94,7 +95,7 @@ fn new_window() {
         #[cfg(feature = "tmux_0_8")]
         window_name: Some("4"),
         #[cfg(feature = "tmux_0_8")]
-        target_window: Some(&TargetWindow::Raw("5")),
+        target_window: Some(&target_window),
         #[cfg(feature = "tmux_1_2")]
         shell_command: Some("6"),
     };

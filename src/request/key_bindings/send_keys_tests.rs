@@ -71,7 +71,7 @@ fn send_keys() {
         Err(Error::Hook)
     }));
 
-    let target_pane = TargetPaneExt::raw("2");
+    let target_pane = TargetPaneExt::raw("2").to_string();
     let send_keys = SendKeys {
         #[cfg(feature = "tmux_3_1")]
         expand_formats: Some(true),

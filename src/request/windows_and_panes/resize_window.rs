@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Resize a window, up, down, left or right
@@ -13,7 +12,7 @@ use std::process::Output;
 /// (alias: resizew)
 /// ```
 #[derive(Default, Debug)]
-pub struct ResizeWindow<'a, T: Display> {
+pub struct ResizeWindow<'a> {
     /// [-a] - set the size of the smallest session containing the window
     #[cfg(feature = "tmux_2_9")]
     pub smallest: Option<bool>,
@@ -34,7 +33,7 @@ pub struct ResizeWindow<'a, T: Display> {
     pub up: Option<bool>,
     /// [-t target-window] - target-window
     #[cfg(feature = "tmux_2_9")]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     /// [-x width] - absolute size
     #[cfg(feature = "tmux_2_9")]
     pub width: Option<usize>,
@@ -46,14 +45,14 @@ pub struct ResizeWindow<'a, T: Display> {
     pub adjustment: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> ResizeWindow<'a, T> {
-    pub fn new() -> ResizeWindow<'a, T> {
+impl<'a> ResizeWindow<'a> {
+    pub fn new() -> ResizeWindow<'a> {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct ResizeWindowBuilder<'a, T: Display> {
+pub struct ResizeWindowBuilder<'a> {
     #[cfg(feature = "tmux_2_9")]
     pub smallest: Option<bool>,
     #[cfg(feature = "tmux_2_9")]
@@ -67,7 +66,7 @@ pub struct ResizeWindowBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_2_9")]
     pub up: Option<bool>,
     #[cfg(feature = "tmux_2_9")]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     #[cfg(feature = "tmux_2_9")]
     pub width: Option<usize>,
     #[cfg(feature = "tmux_2_9")]
@@ -76,7 +75,7 @@ pub struct ResizeWindowBuilder<'a, T: Display> {
     pub adjustment: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> ResizeWindowBuilder<'a, T> {
+impl<'a> ResizeWindowBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -111,7 +110,7 @@ impl<'a, T: Display + Default> ResizeWindowBuilder<'a, T> {
         self
     }
 
-    pub fn target_window(&mut self, target_window: &'a T) -> &mut Self {
+    pub fn target_window(&mut self, target_window: &'a str) -> &mut Self {
         self.target_window = Some(target_window);
         self
     }
@@ -131,7 +130,7 @@ impl<'a, T: Display + Default> ResizeWindowBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> ResizeWindow<'a, T> {
+    pub fn build(&self) -> ResizeWindow<'a> {
         ResizeWindow {
             smallest: self.smallest,
             largest: self.largest,
@@ -159,14 +158,13 @@ impl<'a> TmuxInterface<'a> {
     /// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
     /// (alias: resizew)
     /// ```
-    pub fn resize_window<T: Display>(
+    pub fn resize_window(
         &mut self,
         resize_window: Option<&ResizeWindow<T>>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let x;
         let y;
-        let s;
         if let Some(resize_window) = resize_window {
             if resize_window.smallest.unwrap_or(false) {
                 args.push(a_KEY);
@@ -187,8 +185,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(U_KEY);
             }
             if let Some(target_window) = resize_window.target_window {
-                s = target_window.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_window])
             }
             if let Some(width) = resize_window.width {
                 x = width.to_string();
@@ -198,8 +195,8 @@ impl<'a> TmuxInterface<'a> {
                 y = height.to_string();
                 args.extend_from_slice(&[y_KEY, &y]);
             }
-            if let Some(s) = resize_window.adjustment {
-                args.push(s)
+            if let Some(adjustment) = resize_window.adjustment {
+                args.push(adjustment)
             }
         }
         let output = self.subcommand(TmuxInterface::RESIZE_WINDOW, &args)?;

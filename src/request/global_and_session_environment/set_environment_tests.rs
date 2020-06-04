@@ -33,6 +33,7 @@ fn set_environment() {
         assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
+    let target_session = TargetSession::Raw("1").to_string();
     let set_environment = SetEnvironment {
         #[cfg(feature = "tmux_1_0")]
         global: Some(true),
@@ -41,7 +42,7 @@ fn set_environment() {
         #[cfg(feature = "tmux_1_0")]
         unset: Some(true),
         #[cfg(feature = "tmux_1_0")]
-        target_session: Some(&TargetSession::Raw("1")),
+        target_session: Some(&target_session),
         #[cfg(feature = "tmux_1_0")]
         value: Some("3"),
     };
@@ -56,7 +57,7 @@ fn set_environment() {
     #[cfg(feature = "tmux_1_0")]
     builder.unset();
     #[cfg(feature = "tmux_1_0")]
-    builder.target_session(&TargetSession::Raw("1"));
+    builder.target_session(&target_session);
     #[cfg(feature = "tmux_1_0")]
     builder.value("3");
     let set_environment = builder.build();

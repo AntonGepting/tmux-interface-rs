@@ -12,6 +12,6 @@ fn rename_session() {
         );
         Err(Error::Hook)
     }));
-    tmux.rename_session(Some(&TargetSession::Raw("1")), "2")
-        .unwrap_err();
+    let target_session = TargetSession::Raw("1").to_string();
+    tmux.rename_session(Some(&target_session), "2").unwrap_err();
 }

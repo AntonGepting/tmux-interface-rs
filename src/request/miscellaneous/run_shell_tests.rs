@@ -12,6 +12,7 @@ fn run_shell() {
         );
         Err(Error::Hook)
     }));
-    tmux.run_shell(Some(true), Some(&TargetPane::Raw("1")), "2")
+    let target_pane = TargetPane::Raw("1").to_string();
+    tmux.run_shell(Some(true), Some(&target_pane), "2")
         .unwrap_err();
 }

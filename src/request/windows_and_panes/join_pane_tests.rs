@@ -51,6 +51,9 @@ fn join_pane() {
         Err(Error::Hook)
     }));
 
+    let src_pane = TargetPane::Raw("2").to_string();
+    let dst_pane = TargetPane::Raw("3").to_string();
+
     let join_pane = JoinPane {
         #[cfg(feature = "tmux_2_6")]
         left_above: Some(true),
@@ -65,9 +68,9 @@ fn join_pane() {
         #[cfg(feature = "tmux_1_2")]
         size: Some(&PaneSize::Percentage(1)),
         #[cfg(feature = "tmux_1_2")]
-        src_pane: Some(&TargetPane::Raw("2")),
+        src_pane: Some(&src_pane),
         #[cfg(feature = "tmux_1_2")]
-        dst_pane: Some(&TargetPane::Raw("3")),
+        dst_pane: Some(&dst_pane),
     };
     tmux.join_pane(Some(&join_pane)).unwrap_err();
 
@@ -85,9 +88,9 @@ fn join_pane() {
     #[cfg(feature = "tmux_1_2")]
     builder.size(&PaneSize::Percentage(1));
     #[cfg(feature = "tmux_1_2")]
-    builder.src_pane(&TargetPane::Raw("2"));
+    builder.src_pane(&src_pane);
     #[cfg(feature = "tmux_1_2")]
-    builder.dst_pane(&TargetPane::Raw("3"));
+    builder.dst_pane(&dst_pane);
     builder.build();
     tmux.join_pane(Some(&join_pane)).unwrap_err();
 }

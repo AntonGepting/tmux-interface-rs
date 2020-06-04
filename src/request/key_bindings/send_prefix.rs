@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
@@ -17,19 +16,17 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux send-prefix [-t target-pane]
     /// ```
-    pub fn send_prefix<T: Display>(
+    pub fn send_prefix(
         &mut self,
         secondary: Option<bool>,
-        target_pane: Option<&T>,
+        target_pane: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if secondary.unwrap_or(false) {
             args.push(_2_KEY);
         }
         if let Some(target_pane) = target_pane {
-            s = target_pane.to_string();
-            args.extend_from_slice(&[t_KEY, &s])
+            args.extend_from_slice(&[t_KEY, &target_pane])
         }
         let output = self.subcommand(TmuxInterface::SEND_PREFIX, &args)?;
         Ok(output)

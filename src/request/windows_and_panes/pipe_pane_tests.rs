@@ -40,6 +40,8 @@ fn pipe_pane() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("1").to_string();
+
     let pipe_pane = PipePane {
         #[cfg(feature = "tmux_2_7")]
         stdout: Some(true),
@@ -48,7 +50,7 @@ fn pipe_pane() {
         #[cfg(feature = "tmux_1_1")]
         open: Some(true),
         #[cfg(feature = "tmux_1_1")]
-        target_pane: Some(&TargetPane::Raw("1")),
+        target_pane: Some(&target_pane),
         #[cfg(feature = "tmux_1_2")]
         shell_command: Some("2"),
     };
@@ -62,7 +64,7 @@ fn pipe_pane() {
     #[cfg(feature = "tmux_1_1")]
     builder.open();
     #[cfg(feature = "tmux_1_1")]
-    builder.target_pane(&TargetPane::Raw("1"));
+    builder.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_2")]
     builder.shell_command("2");
     let pipe_pane = builder.build();

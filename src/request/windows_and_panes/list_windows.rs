@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use crate::TargetSession;
 
 impl<'a> TmuxInterface<'a> {
     const LIST_WINDOWS: &'static str = "list-windows";
@@ -31,10 +30,9 @@ impl<'a> TmuxInterface<'a> {
         &mut self,
         all: Option<bool>,
         format: Option<&str>,
-        target_session: Option<&TargetSession>,
+        target_session: Option<&'a str>,
     ) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if all.unwrap_or(false) {
             args.push(a_KEY);
         }
@@ -42,8 +40,7 @@ impl<'a> TmuxInterface<'a> {
             args.extend_from_slice(&[F_KEY, s])
         }
         if let Some(target_session) = target_session {
-            s = target_session.to_string();
-            args.extend_from_slice(&[t_KEY, &s])
+            args.extend_from_slice(&[t_KEY, &target_session])
         }
         let output = self.subcommand(TmuxInterface::LIST_WINDOWS, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());

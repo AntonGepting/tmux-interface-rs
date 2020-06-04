@@ -1,7 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
 use crate::PaneSize;
-use std::fmt::Display;
 
 /// Create a new pane by splitting target-pane
 ///
@@ -66,7 +65,7 @@ use std::fmt::Display;
 /// (alias: splitw)
 /// ```
 #[derive(Default, Debug)]
-pub struct SplitWindow<'a, T: Display> {
+pub struct SplitWindow<'a> {
     /// [-b] - cause the new pane to be created to the left of or above target-pane
     #[cfg(feature = "tmux_2_4")]
     pub before: Option<bool>,
@@ -100,10 +99,10 @@ pub struct SplitWindow<'a, T: Display> {
     pub size: Option<&'a PaneSize>,
     /// [-t target-pane] -
     #[cfg(feature = "tmux_1_2")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     /// [-t target-window] -
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     /// [shell-command] - shell-command
     #[cfg(feature = "tmux_1_2")]
     pub shell_command: Option<&'a str>,
@@ -112,14 +111,14 @@ pub struct SplitWindow<'a, T: Display> {
     pub format: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> SplitWindow<'a, T> {
+impl<'a> SplitWindow<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct SplitWindowBuilder<'a, T: Display> {
+pub struct SplitWindowBuilder<'a> {
     #[cfg(feature = "tmux_2_4")]
     pub before: Option<bool>,
     #[cfg(feature = "tmux_0_8")]
@@ -141,16 +140,16 @@ pub struct SplitWindowBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_0_8")]
     pub size: Option<&'a PaneSize>,
     #[cfg(feature = "tmux_1_2")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     #[cfg(feature = "tmux_1_2")]
     pub shell_command: Option<&'a str>,
     #[cfg(feature = "tmux_1_7")]
     pub format: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> SplitWindowBuilder<'a, T> {
+impl<'a> SplitWindowBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -216,7 +215,7 @@ impl<'a, T: Display + Default> SplitWindowBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_2")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
@@ -233,7 +232,7 @@ impl<'a, T: Display + Default> SplitWindowBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> SplitWindow<'a, T> {
+    pub fn build(&self) -> SplitWindow<'a> {
         SplitWindow {
             #[cfg(feature = "tmux_2_4")]
             before: self.before,
@@ -332,12 +331,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux split-window [-d] [-l size | -p percentage] [-t target-window] [command]
     /// (alias: splitw)
     /// ```
-    pub fn split_window<T: Display>(
+    pub fn split_window(
         &mut self,
-        split_window: Option<&SplitWindow<T>>,
+        split_window: Option<&SplitWindow>,
     ) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         let d;
 
         if let Some(split_window) = split_window {
@@ -370,12 +368,12 @@ impl<'a> TmuxInterface<'a> {
                 args.push(P_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            if let Some(s) = split_window.cwd {
-                args.extend_from_slice(&[c_KEY, &s]);
+            if let Some(cwd) = split_window.cwd {
+                args.extend_from_slice(&[c_KEY, &cwd]);
             }
             #[cfg(feature = "tmux_3_1")]
-            if let Some(s) = split_window.environment {
-                args.extend_from_slice(&[e_KEY, &s]);
+            if let Some(environment) = split_window.environment {
+                args.extend_from_slice(&[e_KEY, &environment]);
             }
             #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_1")))]
             if let Some(size) = &split_window.size {
@@ -400,16 +398,15 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_1_2")]
             if let Some(target_pane) = split_window.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
             #[cfg(feature = "tmux_1_2")]
-            if let Some(s) = split_window.shell_command {
-                args.push(&s)
+            if let Some(shell_command) = split_window.shell_command {
+                args.push(&shell_command)
             }
             #[cfg(feature = "tmux_1_7")]
-            if let Some(s) = split_window.format {
-                args.extend_from_slice(&[F_KEY, &s])
+            if let Some(format) = split_window.format {
+                args.extend_from_slice(&[F_KEY, &format])
             }
         }
         let output = self.subcommand(TmuxInterface::SPLIT_WINDOW, &args)?;

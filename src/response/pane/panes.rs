@@ -42,7 +42,8 @@ impl Panes {
             .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(PANE_VARS_SEPARATOR);
-        let panes_str = tmux.list_panes(None, None, Some(&lsp_format), Some(&target_window))?;
+        let target_window_str = target_window.to_string();
+        let panes_str = tmux.list_panes(None, None, Some(&lsp_format), Some(&target_window_str))?;
         Panes::from_str(&panes_str, bitflags)
     }
 
@@ -54,8 +55,13 @@ impl Panes {
             .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(PANE_VARS_SEPARATOR);
-        let panes_str =
-            tmux.list_panes(Some(true), None, Some(&lsp_format), Some(target_session))?;
+        let target_session_str = target_session.to_string();
+        let panes_str = tmux.list_panes(
+            Some(true),
+            None,
+            Some(&lsp_format),
+            Some(&target_session_str),
+        )?;
         Panes::from_str(&panes_str, bitflags)
     }
 

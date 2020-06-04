@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// This is similar to link-window, except the window at `src-window` is moved to `dst-window`
@@ -31,7 +30,7 @@ use std::process::Output;
 /// (alias: movew)
 /// ```
 #[derive(Default, Debug)]
-pub struct MoveWindow<'a, T: Display> {
+pub struct MoveWindow<'a> {
     /// [-a] - the window is moved to the next index up
     #[cfg(feature = "tmux_2_1")]
     pub add: Option<bool>,
@@ -46,20 +45,20 @@ pub struct MoveWindow<'a, T: Display> {
     pub kill: Option<bool>,
     /// [-s src-window] - src-window
     #[cfg(feature = "tmux_0_8")]
-    pub src_window: Option<&'a T>,
+    pub src_window: Option<&'a str>,
     /// [-t dst-window] - dst-window
     #[cfg(feature = "tmux_0_8")]
-    pub dst_window: Option<&'a T>,
+    pub dst_window: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> MoveWindow<'a, T> {
+impl<'a> MoveWindow<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct MoveWindowBuilder<'a, T: Display> {
+pub struct MoveWindowBuilder<'a> {
     #[cfg(feature = "tmux_2_1")]
     pub add: Option<bool>,
     #[cfg(feature = "tmux_1_7")]
@@ -69,12 +68,12 @@ pub struct MoveWindowBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_1_3")]
     pub kill: Option<bool>,
     #[cfg(feature = "tmux_0_8")]
-    pub src_window: Option<&'a T>,
+    pub src_window: Option<&'a str>,
     #[cfg(feature = "tmux_0_8")]
-    pub dst_window: Option<&'a T>,
+    pub dst_window: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> MoveWindowBuilder<'a, T> {
+impl<'a> MoveWindowBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -104,18 +103,18 @@ impl<'a, T: Display + Default> MoveWindowBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn src_window(&mut self, src_window: &'a T) -> &mut Self {
+    pub fn src_window(&mut self, src_window: &'a str) -> &mut Self {
         self.src_window = Some(src_window);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn dst_window(&mut self, dst_window: &'a T) -> &mut Self {
+    pub fn dst_window(&mut self, dst_window: &'a str) -> &mut Self {
         self.dst_window = Some(dst_window);
         self
     }
 
-    pub fn build(&self) -> MoveWindow<'a, T> {
+    pub fn build(&self) -> MoveWindow<'a> {
         MoveWindow {
             #[cfg(feature = "tmux_2_1")]
             add: self.add,
@@ -163,13 +162,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux move-window [-d] [-s src-window] [-t dst-window]
     /// (alias: movew)
     /// ```
-    pub fn move_window<T: Display>(
+    pub fn move_window(
         &mut self,
-        move_window: Option<&MoveWindow<T>>,
+        move_window: Option<&MoveWindow>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
-        let t;
         if let Some(move_window) = move_window {
             #[cfg(feature = "tmux_2_1")]
             if move_window.add.unwrap_or(false) {
@@ -189,13 +186,11 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_0_8")]
             if let Some(src_window) = move_window.src_window {
-                s = src_window.to_string();
-                args.extend_from_slice(&[s_KEY, &s])
+                args.extend_from_slice(&[s_KEY, &src_window])
             }
             #[cfg(feature = "tmux_0_8")]
             if let Some(dst_window) = move_window.dst_window {
-                t = dst_window.to_string();
-                args.extend_from_slice(&[t_KEY, &t])
+                args.extend_from_slice(&[t_KEY, &dst_window])
             }
         }
         let output = self.subcommand(TmuxInterface::MOVE_WINDOW, &args)?;

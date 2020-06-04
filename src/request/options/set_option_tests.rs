@@ -77,6 +77,7 @@ fn set_option() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("1").to_string();
     let set_option = SetOption {
         #[cfg(feature = "tmux_1_0")]
         append: Some(true),
@@ -97,7 +98,7 @@ fn set_option() {
         #[cfg(feature = "tmux_1_2")]
         window: Some(true),
         #[cfg(feature = "tmux_1_7")]
-        target: Some(&TargetPane::Raw("1")),
+        target: Some(&target_pane),
     };
     tmux.set_option(Some(&set_option), "2", "3").unwrap_err();
 
@@ -121,7 +122,7 @@ fn set_option() {
     #[cfg(feature = "tmux_1_2")]
     builder.window();
     #[cfg(feature = "tmux_1_7")]
-    builder.target(&TargetPane::Raw("1"));
+    builder.target(&target_pane);
     let set_option = builder.build();
     tmux.set_option(Some(&set_option), "2", "3").unwrap_err();
 }

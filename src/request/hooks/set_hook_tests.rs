@@ -44,6 +44,7 @@ fn set_hook() {
         Err(Error::Hook)
     }));
 
+    let target_session = &TargetSession::Raw("1").to_string();
     let set_hook = SetHook {
         #[cfg(feature = "tmux_3_0")]
         append: Some(true),
@@ -54,7 +55,7 @@ fn set_hook() {
         #[cfg(feature = "tmux_2_4")]
         unset: Some(true),
         #[cfg(feature = "tmux_2_2")]
-        target_session: Some(&TargetSession::Raw("1")),
+        target_session: Some(&target_session),
     };
     tmux.set_hook(Some(&set_hook), "2", "3").unwrap_err();
 
@@ -68,7 +69,7 @@ fn set_hook() {
     #[cfg(feature = "tmux_2_4")]
     builder.unset();
     #[cfg(feature = "tmux_2_2")]
-    builder.target_session(&TargetSession::Raw("1"));
+    builder.target_session(&target_session);
     let set_hook = builder.build();
     tmux.set_hook(Some(&set_hook), "2", "3").unwrap_err();
 }

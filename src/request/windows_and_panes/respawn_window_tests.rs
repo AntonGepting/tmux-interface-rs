@@ -46,6 +46,8 @@ fn respawn_window() {
         Err(Error::Hook)
     }));
 
+    let target_window = TargetWindow::Raw("3").to_string();
+
     let respawn_window = RespawnWindow {
         #[cfg(feature = "tmux_0_8")]
         kill: Some(true),
@@ -54,7 +56,7 @@ fn respawn_window() {
         #[cfg(feature = "tmux_3_0")]
         environment: Some("2"),
         #[cfg(feature = "tmux_0_9")]
-        target_window: Some(&TargetWindow::Raw("3")),
+        target_window: Some(&target_window),
         #[cfg(feature = "tmux_1_2")]
         shell_command: Some("4"),
     };
@@ -68,7 +70,7 @@ fn respawn_window() {
     #[cfg(feature = "tmux_3_0")]
     builder.environment("2");
     #[cfg(feature = "tmux_0_9")]
-    builder.target_window(&TargetWindow::Raw("3"));
+    builder.target_window(&target_window);
     #[cfg(feature = "tmux_1_2")]
     builder.shell_command("4");
     let respawn_window = builder.build();

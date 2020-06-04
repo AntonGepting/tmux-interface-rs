@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
@@ -15,25 +14,21 @@ impl<'a> TmuxInterface<'a> {
     /// tmux swap-window [-d] [-s src-window] [-t dst-window]
     /// (alias: swapw)
     /// ```
-    pub fn swap_window<T: Display>(
+    pub fn swap_window(
         &mut self,
         detached: Option<bool>,
-        src_window: Option<&'a T>,
-        dst_window: Option<&'a T>,
+        src_window: Option<&'a str>,
+        dst_window: Option<&'a str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
-        let t;
         if detached.unwrap_or(false) {
             args.push(d_KEY);
         }
         if let Some(src_window) = src_window {
-            s = src_window.to_string();
-            args.extend_from_slice(&[s_KEY, &s])
+            args.extend_from_slice(&[s_KEY, &src_window])
         }
         if let Some(dst_window) = dst_window {
-            t = dst_window.to_string();
-            args.extend_from_slice(&[t_KEY, &t])
+            args.extend_from_slice(&[t_KEY, &dst_window])
         }
         let output = self.subcommand(TmuxInterface::SWAP_WINDOW, &args)?;
         Ok(output)

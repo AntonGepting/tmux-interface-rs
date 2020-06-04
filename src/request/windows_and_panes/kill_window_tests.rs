@@ -21,6 +21,7 @@ fn kill_window() {
         );
         Err(Error::Hook)
     }));
-    tmux.kill_window(Some(true), Some(&TargetWindow::Raw("1")))
+    let target_window = TargetWindow::Raw("1").to_string();
+    tmux.kill_window(Some(true), Some(&target_window))
         .unwrap_err();
 }

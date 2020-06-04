@@ -44,7 +44,7 @@ fn detach_client() {
         assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
-
+    let target_session = TargetSession::Raw("2").to_string();
     let detach_client = DetachClient {
         #[cfg(feature = "tmux_2_2")]
         all: Some(true),
@@ -53,7 +53,7 @@ fn detach_client() {
         #[cfg(feature = "tmux_2_4")]
         shell_command: Some("1"),
         #[cfg(feature = "tmux_1_5")]
-        target_session: Some(&TargetSession::Raw("2")),
+        target_session: Some(&target_session),
         #[cfg(feature = "tmux_0_8")]
         target_client: Some("3"),
     };
@@ -67,7 +67,7 @@ fn detach_client() {
     #[cfg(feature = "tmux_2_4")]
     builder.shell_command("1");
     #[cfg(feature = "tmux_1_5")]
-    builder.target_session(&TargetSession::Raw("2"));
+    builder.target_session(&target_session);
     #[cfg(feature = "tmux_0_8")]
     builder.target_client("3");
     let detach_client = builder.build();

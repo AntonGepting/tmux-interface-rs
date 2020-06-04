@@ -12,6 +12,7 @@ fn send_prefix() {
         );
         Err(Error::Hook)
     }));
-    tmux.send_prefix(Some(true), Some(&TargetPane::Raw("1")))
+    let target_pane = TargetPane::Raw("1").to_string();
+    tmux.send_prefix(Some(true), Some(&target_pane))
         .unwrap_err();
 }

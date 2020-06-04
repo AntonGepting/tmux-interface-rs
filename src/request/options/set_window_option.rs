@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// # Manual
@@ -40,7 +39,7 @@ use std::process::Output;
 /// (alias: setw)
 /// ```
 #[derive(Default, Debug)]
-pub struct SetWindowOption<'a, T: Display> {
+pub struct SetWindowOption<'a> {
     /// [-a] -
     #[cfg(feature = "tmux_1_0")]
     pub append: Option<bool>,
@@ -61,13 +60,13 @@ pub struct SetWindowOption<'a, T: Display> {
     pub unset: Option<bool>,
     /// [-t target-window] -
     #[cfg(feature = "tmux_0_8")]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     //pub option: &'a str,                // option
     //pub value: &'a str,                 // value
 }
 
 #[derive(Default, Debug)]
-pub struct SetWindowOptionBuilder<'a, T: Display> {
+pub struct SetWindowOptionBuilder<'a> {
     #[cfg(feature = "tmux_1_0")]
     pub append: Option<bool>,
     #[cfg(feature = "tmux_2_6")]
@@ -81,12 +80,12 @@ pub struct SetWindowOptionBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_0_8")]
     pub unset: Option<bool>,
     #[cfg(feature = "tmux_0_8")]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     //pub option: &'a str,                // option
     //pub value: &'a str,                 // value
 }
 
-impl<'a, T: Display + Default> SetWindowOptionBuilder<'a, T> {
+impl<'a> SetWindowOptionBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -128,12 +127,12 @@ impl<'a, T: Display + Default> SetWindowOptionBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window(&mut self, target_window: &'a T) -> &mut Self {
+    pub fn target_window(&mut self, target_window: &'a str) -> &mut Self {
         self.target_window = Some(target_window);
         self
     }
 
-    pub fn build(&self) -> SetWindowOption<'a, T> {
+    pub fn build(&self) -> SetWindowOption<'a> {
         SetWindowOption {
             #[cfg(feature = "tmux_1_0")]
             append: self.append,
@@ -153,7 +152,7 @@ impl<'a, T: Display + Default> SetWindowOptionBuilder<'a, T> {
     }
 }
 
-impl<'a, T: Display + Default> SetWindowOption<'a, T> {
+impl<'a> SetWindowOption<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -198,14 +197,13 @@ impl<'a> TmuxInterface<'a> {
     /// tmux set-window-option [-gu] [-t target-window] option value
     /// (alias: setw)
     /// ```
-    pub fn set_window_option<T: Display>(
+    pub fn set_window_option(
         &mut self,
-        set_window_option: Option<&SetWindowOption<T>>,
+        set_window_option: Option<&SetWindowOption>,
         option: &str,
         value: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(set_window_option) = set_window_option {
             #[cfg(feature = "tmux_1_0")]
             if set_window_option.append.unwrap_or(false) {
@@ -233,8 +231,7 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_0_8")]
             if let Some(target_window) = set_window_option.target_window {
-                s = target_window.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_window])
             }
         }
         args.push(option);

@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 use std::marker::PhantomData;
 
@@ -36,7 +35,7 @@ use std::marker::PhantomData;
 /// [-t target-window]
 /// ```
 #[derive(Default, Debug)]
-pub struct ChooseTree<'a, T: Display> {
+pub struct ChooseTree<'a> {
     /// [-G] - include all sessions in any session groups in the tree rather than only the first
     #[cfg(feature = "tmux_2_7")]
     pub all: Option<bool>,
@@ -66,24 +65,23 @@ pub struct ChooseTree<'a, T: Display> {
     pub sort_order: Option<&'a str>,
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_2_6")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     /// [-t target-window] - target-window
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     /// [template] - template
     #[cfg(feature = "tmux_2_6")]
     pub template: Option<&'a str>,
-    pub _phantom: PhantomData<&'a T>,
 }
 
-impl<'a, T: Display + Default> ChooseTree<'a, T> {
+impl<'a> ChooseTree<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct ChooseTreeBuilder<'a, T: Display> {
+pub struct ChooseTreeBuilder<'a> {
     #[cfg(feature = "tmux_2_7")]
     pub all: Option<bool>,
     #[cfg(feature = "tmux_2_7")]
@@ -103,15 +101,15 @@ pub struct ChooseTreeBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_2_6")]
     pub sort_order: Option<&'a str>,
     #[cfg(feature = "tmux_2_6")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     #[cfg(feature = "tmux_2_6")]
     pub template: Option<&'a str>,
-    pub _phantom: PhantomData<&'a T>,
+    pub _phantom: PhantomData<&'a str>,
 }
 
-impl<'a, T: Display + Default> ChooseTreeBuilder<'a, T> {
+impl<'a> ChooseTreeBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -171,7 +169,7 @@ impl<'a, T: Display + Default> ChooseTreeBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_2_6")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
@@ -188,7 +186,7 @@ impl<'a, T: Display + Default> ChooseTreeBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> ChooseTree<'a, T> {
+    pub fn build(&self) -> ChooseTree<'a> {
         ChooseTree {
             #[cfg(feature = "tmux_2_7")]
             all: self.all,
@@ -214,7 +212,6 @@ impl<'a, T: Display + Default> ChooseTreeBuilder<'a, T> {
             target_window: self.target_window,
             #[cfg(feature = "tmux_2_6")]
             template: self.template,
-            _phantom: PhantomData,
         }
     }
 }
@@ -253,13 +250,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux choose-tree [-sw] [-b session-template] [-c window-template] [-S format] [-W format]
     /// [-t target-window]
     /// ```
-    pub fn choose_tree<T: Display>(
+    pub fn choose_tree(
         &mut self,
-        choose_tree: Option<&ChooseTree<T>>,
+        choose_tree: Option<&ChooseTree>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_2_6")]
-        let s: String;
         if let Some(choose_tree) = choose_tree {
             #[cfg(feature = "tmux_2_7")]
             if choose_tree.all.unwrap_or(false) {
@@ -286,25 +281,24 @@ impl<'a> TmuxInterface<'a> {
                 args.push(Z_KEY);
             }
             #[cfg(feature = "tmux_2_6")]
-            if let Some(s) = choose_tree.format {
-                args.extend_from_slice(&[F_KEY, &s])
+            if let Some(format) = choose_tree.format {
+                args.extend_from_slice(&[F_KEY, &format])
             }
             #[cfg(feature = "tmux_2_6")]
-            if let Some(s) = choose_tree.filter {
-                args.extend_from_slice(&[f_KEY, &s])
+            if let Some(filter) = choose_tree.filter {
+                args.extend_from_slice(&[f_KEY, &filter])
             }
             #[cfg(feature = "tmux_2_6")]
-            if let Some(s) = choose_tree.sort_order {
-                args.extend_from_slice(&[O_KEY, &s])
+            if let Some(sort_order) = choose_tree.sort_order {
+                args.extend_from_slice(&[O_KEY, &sort_order])
             }
             #[cfg(feature = "tmux_2_6")]
             if let Some(target_pane) = choose_tree.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
             #[cfg(feature = "tmux_2_6")]
-            if let Some(s) = choose_tree.template {
-                args.push(&s)
+            if let Some(template) = choose_tree.template {
+                args.push(&template)
             }
         }
         let output = self.subcommand(TmuxInterface::CHOOSE_TREE, &args)?;

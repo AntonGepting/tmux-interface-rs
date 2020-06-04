@@ -32,16 +32,12 @@ fn rotate_window() {
         Err(Error::Hook)
     }));
 
+    let target_window = TargetWindow::Raw("1").to_string();
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_1")))]
-    tmux.rotate_window(Some(true), Some(true), Some(&TargetWindow::Raw("1")))
+    tmux.rotate_window(Some(true), Some(true), Some(&target_window))
         .unwrap_err();
 
     #[cfg(feature = "tmux_3_1")]
-    tmux.rotate_window(
-        Some(true),
-        Some(true),
-        Some(true),
-        Some(&TargetWindow::Raw("1")),
-    )
-    .unwrap_err();
+    tmux.rotate_window(Some(true), Some(true), Some(true), Some(&target_window))
+        .unwrap_err();
 }

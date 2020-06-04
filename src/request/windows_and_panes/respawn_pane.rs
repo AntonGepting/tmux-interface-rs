@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Reactivate a pane in which the command has exited
@@ -25,7 +24,7 @@ use std::process::Output;
 /// (alias: respawnp)
 /// ```
 #[derive(Default, Debug)]
-pub struct RespawnPane<'a, T: Display> {
+pub struct RespawnPane<'a> {
     /// [-k] - any existing command is killed
     #[cfg(feature = "tmux_1_5")]
     pub kill: Option<bool>,
@@ -37,20 +36,20 @@ pub struct RespawnPane<'a, T: Display> {
     pub environment: Option<&'a str>,
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_1_5")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     /// [shell-command] - shell-command
     #[cfg(feature = "tmux_2_6")]
     pub shell_command: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> RespawnPane<'a, T> {
-    pub fn new() -> RespawnPane<'a, T> {
+impl<'a> RespawnPane<'a> {
+    pub fn new() -> RespawnPane<'a> {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct RespawnPaneBuilder<'a, T: Display> {
+pub struct RespawnPaneBuilder<'a> {
     #[cfg(feature = "tmux_1_5")]
     pub kill: Option<bool>,
     #[cfg(feature = "tmux_2_6")]
@@ -58,12 +57,12 @@ pub struct RespawnPaneBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_3_0")]
     pub environment: Option<&'a str>,
     #[cfg(feature = "tmux_1_5")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     #[cfg(feature = "tmux_2_6")]
     pub shell_command: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> RespawnPaneBuilder<'a, T> {
+impl<'a> RespawnPaneBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -87,7 +86,7 @@ impl<'a, T: Display + Default> RespawnPaneBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_5")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
@@ -98,7 +97,7 @@ impl<'a, T: Display + Default> RespawnPaneBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> RespawnPane<'a, T> {
+    pub fn build(&self) -> RespawnPane<'a> {
         RespawnPane {
             #[cfg(feature = "tmux_1_5")]
             kill: self.kill,
@@ -138,33 +137,31 @@ impl<'a> TmuxInterface<'a> {
     /// tmux respawn-pane [-k] [-t target-pane] [shell-command]
     /// (alias: respawnp)
     /// ```
-    pub fn respawn_pane<T: Display>(
+    pub fn respawn_pane(
         &mut self,
-        respawn_pane: Option<&RespawnPane<T>>,
+        respawn_pane: Option<&RespawnPane>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(respawn_pane) = respawn_pane {
             #[cfg(feature = "tmux_1_5")]
             if respawn_pane.kill.unwrap_or(false) {
                 args.push(k_KEY);
             }
             #[cfg(feature = "tmux_2_6")]
-            if let Some(s) = respawn_pane.start_directory {
-                args.extend_from_slice(&[c_KEY, &s])
+            if let Some(start_directory) = respawn_pane.start_directory {
+                args.extend_from_slice(&[c_KEY, &start_directory])
             }
             #[cfg(feature = "tmux_3_0")]
-            if let Some(s) = respawn_pane.environment {
-                args.extend_from_slice(&[e_KEY, &s])
+            if let Some(environment) = respawn_pane.environment {
+                args.extend_from_slice(&[e_KEY, &environment])
             }
             #[cfg(feature = "tmux_1_5")]
             if let Some(target_pane) = respawn_pane.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
             #[cfg(feature = "tmux_2_6")]
-            if let Some(s) = respawn_pane.shell_command {
-                args.push(s)
+            if let Some(shell_command) = respawn_pane.shell_command {
+                args.push(shell_command)
             }
         }
         let output = self.subcommand(TmuxInterface::RESPAWN_PANE, &args)?;

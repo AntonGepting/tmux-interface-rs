@@ -15,10 +15,10 @@ fn swap_window() {
         );
         Err(Error::Hook)
     }));
-    tmux.swap_window(
-        Some(true),
-        Some(&TargetWindow::Raw("1")),
-        Some(&TargetWindow::Raw("2")),
-    )
-    .unwrap_err();
+
+    let src_window = TargetWindow::Raw("1").to_string();
+    let dst_window = TargetWindow::Raw("2").to_string();
+
+    tmux.swap_window(Some(true), Some(&src_window), Some(&dst_window))
+        .unwrap_err();
 }

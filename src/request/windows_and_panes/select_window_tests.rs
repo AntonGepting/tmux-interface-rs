@@ -40,6 +40,8 @@ fn select_window() {
         Err(Error::Hook)
     }));
 
+    let target_window = TargetWindow::Raw("1").to_string();
+
     let select_window = SelectWindow {
         #[cfg(feature = "tmux_1_5")]
         last: Some(true),
@@ -50,7 +52,7 @@ fn select_window() {
         #[cfg(feature = "tmux_1_8")]
         switch: Some(true),
         #[cfg(feature = "tmux_0_8")]
-        target_window: Some(&TargetWindow::Raw("1")),
+        target_window: Some(&target_window),
     };
     tmux.select_window(Some(&select_window)).unwrap_err();
 
@@ -64,7 +66,7 @@ fn select_window() {
     #[cfg(feature = "tmux_1_8")]
     builder.switch();
     #[cfg(feature = "tmux_0_8")]
-    builder.target_window(&TargetWindow::Raw("1"));
+    builder.target_window(&target_window);
     let select_window = builder.build();
     tmux.select_window(Some(&select_window)).unwrap_err();
 }

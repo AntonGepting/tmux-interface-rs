@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Put a pane into client mode, allowing a client to be selected interactively from a list
@@ -32,7 +31,7 @@ use std::process::Output;
 /// tmux choose-client  [-t target-window] [template]
 /// ```
 #[derive(Default, Debug)]
-pub struct ChooseClient<'a, T: Display> {
+pub struct ChooseClient<'a> {
     /// [-N] - start without the preview
     #[cfg(feature = "tmux_2_6")]
     pub without_preview: Option<bool>,
@@ -53,23 +52,23 @@ pub struct ChooseClient<'a, T: Display> {
     pub sort_order: Option<&'a str>,
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_2_6")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     /// [-t target-window] - target-window
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     /// [template] - template
     #[cfg(feature = "tmux_1_0")]
     pub template: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> ChooseClient<'a, T> {
+impl<'a> ChooseClient<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct ChooseClientBuilder<'a, T: Display> {
+pub struct ChooseClientBuilder<'a> {
     #[cfg(feature = "tmux_2_6")]
     pub without_preview: Option<bool>,
     #[cfg(feature = "tmux_3_1")]
@@ -83,14 +82,14 @@ pub struct ChooseClientBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_2_6")]
     pub sort_order: Option<&'a str>,
     #[cfg(feature = "tmux_2_6")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     #[cfg(feature = "tmux_1_0")]
     pub template: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> ChooseClientBuilder<'a, T> {
+impl<'a> ChooseClientBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -132,13 +131,13 @@ impl<'a, T: Display + Default> ChooseClientBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_2_6")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
 
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
-    pub fn target_window(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_window(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_window = Some(target_pane);
         self
     }
@@ -149,7 +148,7 @@ impl<'a, T: Display + Default> ChooseClientBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> ChooseClient<'a, T> {
+    pub fn build(&self) -> ChooseClient<'a> {
         ChooseClient {
             #[cfg(feature = "tmux_2_6")]
             without_preview: self.without_preview,
@@ -204,13 +203,11 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux choose-client  [-t target-window] [template]
     /// ```
-    pub fn choose_client<T: Display>(
+    pub fn choose_client(
         &mut self,
-        choose_client: Option<&ChooseClient<T>>,
+        choose_client: Option<&ChooseClient>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_1_0")]
-        let s: String;
         if let Some(choose_client) = choose_client {
             #[cfg(feature = "tmux_2_6")]
             if choose_client.without_preview.unwrap_or(false) {
@@ -225,30 +222,28 @@ impl<'a> TmuxInterface<'a> {
                 args.push(Z_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            if let Some(s) = choose_client.format {
-                args.extend_from_slice(&[F_KEY, &s])
+            if let Some(format) = choose_client.format {
+                args.extend_from_slice(&[F_KEY, &format])
             }
             #[cfg(feature = "tmux_2_6")]
-            if let Some(s) = choose_client.filter {
-                args.extend_from_slice(&[f_KEY, &s])
+            if let Some(filter) = choose_client.filter {
+                args.extend_from_slice(&[f_KEY, &filter])
             }
             #[cfg(feature = "tmux_2_6")]
-            if let Some(s) = choose_client.sort_order {
-                args.extend_from_slice(&[O_KEY, &s])
+            if let Some(sort_order) = choose_client.sort_order {
+                args.extend_from_slice(&[O_KEY, &sort_order])
             }
             #[cfg(feature = "tmux_2_6")]
             if let Some(target_pane) = choose_client.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
             #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
             if let Some(target_window) = choose_client.target_window {
-                s = target_window.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_window])
             }
             #[cfg(feature = "tmux_1_0")]
-            if let Some(s) = choose_client.template {
-                args.push(&s)
+            if let Some(template) = choose_client.template {
+                args.push(&template)
             }
         }
         let output = self.subcommand(TmuxInterface::CHOOSE_CLIENT, &args)?;

@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Reactivate a window in which the command has exited
@@ -31,7 +30,7 @@ use std::process::Output;
 /// (alias: respawnw)
 /// ```
 #[derive(Default, Debug)]
-pub struct RespawnWindow<'a, T: Display> {
+pub struct RespawnWindow<'a> {
     /// [-k] - any existing command is killed
     #[cfg(feature = "tmux_0_8")]
     pub kill: Option<bool>,
@@ -43,20 +42,20 @@ pub struct RespawnWindow<'a, T: Display> {
     pub environment: Option<&'a str>,
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_0_8")]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     /// [shell-command] - shell-command
     #[cfg(feature = "tmux_1_2")]
     pub shell_command: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> RespawnWindow<'a, T> {
-    pub fn new() -> RespawnWindow<'a, T> {
+impl<'a> RespawnWindow<'a> {
+    pub fn new() -> RespawnWindow<'a> {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct RespawnWindowBuilder<'a, T: Display> {
+pub struct RespawnWindowBuilder<'a> {
     #[cfg(feature = "tmux_0_8")]
     pub kill: Option<bool>,
     #[cfg(feature = "tmux_2_6")]
@@ -64,12 +63,12 @@ pub struct RespawnWindowBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_3_0")]
     pub environment: Option<&'a str>,
     #[cfg(feature = "tmux_0_8")]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     #[cfg(feature = "tmux_1_2")]
     pub shell_command: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> RespawnWindowBuilder<'a, T> {
+impl<'a> RespawnWindowBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -93,7 +92,7 @@ impl<'a, T: Display + Default> RespawnWindowBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window(&mut self, target_window: &'a T) -> &mut Self {
+    pub fn target_window(&mut self, target_window: &'a str) -> &mut Self {
         self.target_window = Some(target_window);
         self
     }
@@ -104,7 +103,7 @@ impl<'a, T: Display + Default> RespawnWindowBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> RespawnWindow<'a, T> {
+    pub fn build(&self) -> RespawnWindow<'a> {
         RespawnWindow {
             #[cfg(feature = "tmux_0_8")]
             kill: self.kill,
@@ -150,12 +149,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux respawn-window [-k] [-t target-window] [command]
     /// (alias: respawnw)
     /// ```
-    pub fn respawn_window<T: Display>(
+    pub fn respawn_window(
         &mut self,
-        respawn_window: Option<&RespawnWindow<T>>,
+        respawn_window: Option<&RespawnWindow>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(respawn_window) = respawn_window {
             #[cfg(feature = "tmux_0_8")]
             if respawn_window.kill.unwrap_or(false) {
@@ -171,12 +169,11 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_0_8")]
             if let Some(target_window) = respawn_window.target_window {
-                s = target_window.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_window])
             }
             #[cfg(feature = "tmux_1_2")]
-            if let Some(s) = respawn_window.shell_command {
-                args.push(s)
+            if let Some(shell_command) = respawn_window.shell_command {
+                args.push(shell_command)
             }
         }
         let output = self.subcommand(TmuxInterface::RESPAWN_WINDOW, &args)?;

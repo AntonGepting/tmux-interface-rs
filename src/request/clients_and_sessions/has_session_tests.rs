@@ -12,6 +12,6 @@ fn has_session() {
         );
         Err(Error::Hook)
     }));
-    tmux.has_session(Some(&TargetSession::Raw("1")))
-        .unwrap_err();
+    let target_session = &TargetSession::Raw("1").to_string();
+    tmux.has_session(Some(&target_session)).unwrap_err();
 }

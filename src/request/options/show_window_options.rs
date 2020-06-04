@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
@@ -36,15 +35,14 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-window-options [-t target-window] option value
     /// (alias: showw)
     /// ```
-    pub fn show_window_options<T: Display>(
+    pub fn show_window_options(
         &mut self,
         global: Option<bool>,
         only_value: Option<bool>,
-        target_window: Option<&T>,
+        target_window: Option<&str>,
         option: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if global.unwrap_or(false) {
             args.push(g_KEY);
         }
@@ -52,8 +50,7 @@ impl<'a> TmuxInterface<'a> {
             args.push(v_KEY);
         }
         if let Some(target_window) = target_window {
-            s = target_window.to_string();
-            args.extend_from_slice(&[t_KEY, &s])
+            args.extend_from_slice(&[t_KEY, &target_window])
         }
         if let Some(s) = option {
             args.push(&s)

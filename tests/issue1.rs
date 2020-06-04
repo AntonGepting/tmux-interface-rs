@@ -53,7 +53,7 @@
 
 #[test]
 fn issue1() {
-    use tmux_interface::{AttachSession, NewSession, TargetPane, TargetSession, TmuxInterface};
+    use tmux_interface::{AttachSession, NewSession, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
 
@@ -65,16 +65,16 @@ fn issue1() {
     tmux.new_session(Some(&new_session)).unwrap();
 
     // do not wait for user input, because test is running on Travis CI
-    tmux.send_keys::<TargetPane>(None, &vec!["exit", "C-m"])
-        .unwrap();
+    tmux.send_keys(None, &vec!["exit", "C-m"]).unwrap();
 
+    let target_session = TargetSession::Raw("test_ti").to_string();
     let attach = AttachSession {
-        target_session: Some(&TargetSession::Raw("test_ti")),
+        target_session: Some(&target_session),
         ..Default::default()
     };
     let output = tmux.attach_session(Some(&attach)).unwrap();
     assert!(output.status.success());
 
-    tmux.kill_session(None, None, Some(&TargetSession::Raw("test_ti")))
+    tmux.kill_session(None, None, Some(&target_session))
         .unwrap();
 }

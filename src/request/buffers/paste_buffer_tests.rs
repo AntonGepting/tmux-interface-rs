@@ -49,6 +49,7 @@ fn paste_buffer() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("3").to_string();
     let paste_buffer = PasteBuffer {
         #[cfg(feature = "tmux_0_8")]
         delete: Some(true),
@@ -61,7 +62,7 @@ fn paste_buffer() {
         #[cfg(feature = "tmux_1_3")]
         separator: Some("2"),
         #[cfg(feature = "tmux_1_7")]
-        target_pane: Some(&TargetPane::Raw("3")),
+        target_pane: Some(&target_pane),
     };
     tmux.paste_buffer(Some(&paste_buffer)).unwrap_err();
 
@@ -77,7 +78,7 @@ fn paste_buffer() {
     #[cfg(feature = "tmux_1_3")]
     builder.separator("2");
     #[cfg(feature = "tmux_1_7")]
-    builder.target_pane(&TargetPane::Raw("3"));
+    builder.target_pane(&target_pane);
     let paste_buffer = builder.build();
     tmux.paste_buffer(Some(&paste_buffer)).unwrap_err();
 }

@@ -1,6 +1,6 @@
 use super::create_insert_vec;
 use crate::common::StatusKeys;
-use crate::{Error, SetOptionBuilder, ShowOptionsBuilder, Switch, TargetPane, TmuxInterface};
+use crate::{Error, SetOptionBuilder, ShowOptionsBuilder, Switch, TmuxInterface};
 use std::fmt;
 use std::str::FromStr;
 
@@ -1274,7 +1274,7 @@ pub struct SessionOptions {
 impl SessionOptions {
     pub fn get_all() -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
-        let show_options = ShowOptionsBuilder::<TargetPane>::new().global().build();
+        let show_options = ShowOptionsBuilder::new().global().build();
         let s = tmux.show_options(Some(&show_options))?;
         s.parse()
     }
@@ -1289,9 +1289,7 @@ impl SessionOptions {
             .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
-        let show_options = ShowOptionsBuilder::<TargetPane>::new()
-            .option(&selected_option)
-            .build();
+        let show_options = ShowOptionsBuilder::new().option(&selected_option).build();
         let s = tmux.show_options(Some(&show_options))?;
         s.parse()
     }
@@ -1304,7 +1302,7 @@ impl SessionOptions {
             .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
-        let show_options = ShowOptionsBuilder::<TargetPane>::new()
+        let show_options = ShowOptionsBuilder::new()
             .option(&selected_option)
             .global()
             .build();
@@ -1317,7 +1315,7 @@ impl SessionOptions {
         let mut tmux = TmuxInterface::new();
         for selected_option in SESSION_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
-                let set_option = SetOptionBuilder::<TargetPane>::new().build();
+                let set_option = SetOptionBuilder::new().build();
                 tmux.set_option(Some(&set_option), selected_option.0, &selected_value)?;
             }
         }
@@ -1328,7 +1326,7 @@ impl SessionOptions {
         let mut tmux = TmuxInterface::new();
         for selected_option in SESSION_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
-                let set_option = SetOptionBuilder::<TargetPane>::new().global().build();
+                let set_option = SetOptionBuilder::new().global().build();
                 tmux.set_option(Some(&set_option), selected_option.0, &selected_value)?;
             }
         }

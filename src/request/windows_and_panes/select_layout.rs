@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Choose a specific layout for a window
@@ -37,7 +36,7 @@ use std::process::Output;
 /// (alias: selectl)
 /// ```
 #[derive(Default, Debug)]
-pub struct SelectLayot<'a, T> {
+pub struct SelectLayot<'a> {
     /// [-E] - spread the current pane and any panes next to it out evenly
     #[cfg(feature = "tmux_2_7")]
     pub spread: Option<bool>,
@@ -52,20 +51,20 @@ pub struct SelectLayot<'a, T> {
     pub previous_layout: Option<bool>,
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_0_9")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     /// [layout-name] - layout-name
     #[cfg(feature = "tmux_1_0")]
     pub layout_name: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> SelectLayot<'a, T> {
+impl<'a> SelectLayot<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct SelectLayotBuilder<'a, T> {
+pub struct SelectLayotBuilder<'a> {
     #[cfg(feature = "tmux_2_7")]
     pub spread: Option<bool>,
     #[cfg(feature = "tmux_1_5")]
@@ -75,12 +74,12 @@ pub struct SelectLayotBuilder<'a, T> {
     #[cfg(feature = "tmux_1_5")]
     pub previous_layout: Option<bool>,
     #[cfg(feature = "tmux_0_9")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     #[cfg(feature = "tmux_1_0")]
     pub layout_name: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> SelectLayotBuilder<'a, T> {
+impl<'a> SelectLayotBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -109,7 +108,7 @@ impl<'a, T: Display + Default> SelectLayotBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_0_9")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
@@ -120,7 +119,7 @@ impl<'a, T: Display + Default> SelectLayotBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> SelectLayot<'a, T> {
+    pub fn build(&self) -> SelectLayot<'a> {
         SelectLayot {
             #[cfg(feature = "tmux_2_7")]
             spread: self.spread,
@@ -174,12 +173,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-layout [-t target-pane] layout-name
     /// (alias: selectl)
     /// ```
-    pub fn select_layout<T: Display>(
+    pub fn select_layout(
         &mut self,
-        select_layout: Option<&SelectLayot<T>>,
+        select_layout: Option<&SelectLayot>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(select_layout) = select_layout {
             #[cfg(feature = "tmux_2_7")]
             if select_layout.spread.unwrap_or(false) {
@@ -199,12 +197,11 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_0_9")]
             if let Some(target_pane) = select_layout.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
             #[cfg(feature = "tmux_1_0")]
-            if let Some(s) = select_layout.layout_name {
-                args.push(&s)
+            if let Some(layout_name) = select_layout.layout_name {
+                args.push(&layout_name)
             }
         }
         let output = self.subcommand(TmuxInterface::SELECT_LAYOUT, &args)?;

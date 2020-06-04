@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
@@ -27,19 +26,17 @@ impl<'a> TmuxInterface<'a> {
     /// tmux kill-pane [-p pane-index] [-t target-window]
     /// (alias: killp)
     /// ```
-    pub fn kill_pane<T: Display>(
+    pub fn kill_pane(
         &mut self,
         all: Option<bool>,
-        target_pane: Option<&T>,
+        target_pane: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let target;
         if all.unwrap_or(false) {
             args.push(a_KEY);
         }
         if let Some(target_pane) = target_pane {
-            target = target_pane.to_string();
-            args.extend_from_slice(&[t_KEY, &target])
+            args.extend_from_slice(&[t_KEY, &target_pane])
         }
         let output = self.subcommand(TmuxInterface::KILL_PANE, &args)?;
         Ok(output)

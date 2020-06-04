@@ -54,6 +54,8 @@ fn attach_session() {
         Err(Error::Hook)
     }));
 
+    let target_session = TargetSession::Raw("2").to_string();
+
     let attach_session = AttachSession {
         #[cfg(feature = "tmux_0_8")]
         detach_other: Some(true),
@@ -66,7 +68,7 @@ fn attach_session() {
         #[cfg(feature = "tmux_1_9")]
         cwd: Some("1"),
         #[cfg(feature = "tmux_0_8")]
-        target_session: Some(&TargetSession::Raw("2")),
+        target_session: Some(&target_session),
     };
     tmux.attach_session(Some(&attach_session)).unwrap_err();
 
@@ -82,7 +84,7 @@ fn attach_session() {
     #[cfg(feature = "tmux_1_9")]
     builder.cwd("1");
     #[cfg(feature = "tmux_0_8")]
-    builder.target_session(&TargetSession::Raw("2"));
+    builder.target_session(&target_session);
     let attach_session = builder.build();
     tmux.attach_session(Some(&attach_session)).unwrap_err();
 }

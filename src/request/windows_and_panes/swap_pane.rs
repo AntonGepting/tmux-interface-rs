@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Swap two panes
@@ -25,7 +24,7 @@ use std::process::Output;
 /// (alias: swapp)
 /// ```
 #[derive(Default, Debug)]
-pub struct SwapPane<'a, T: Display> {
+pub struct SwapPane<'a> {
     /// [-d] - instruct tmux not to change the active pane
     #[cfg(feature = "tmux_0_8")]
     pub detached: Option<bool>,
@@ -40,20 +39,20 @@ pub struct SwapPane<'a, T: Display> {
     pub keep_zoomed: Option<bool>,
     /// [-s src-pane] - src-pane
     #[cfg(feature = "tmux_1_0")]
-    pub src_pane: Option<&'a T>,
+    pub src_pane: Option<&'a str>,
     /// [-t dst-pane] - dst-pane
     #[cfg(feature = "tmux_1_0")]
-    pub dst_pane: Option<&'a T>,
+    pub dst_pane: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> SwapPane<'a, T> {
+impl<'a> SwapPane<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct SwapPaneBuilder<'a, T> {
+pub struct SwapPaneBuilder<'a> {
     #[cfg(feature = "tmux_0_8")]
     pub detached: Option<bool>,
     #[cfg(feature = "tmux_0_8")]
@@ -63,12 +62,12 @@ pub struct SwapPaneBuilder<'a, T> {
     #[cfg(feature = "tmux_3_1")]
     pub keep_zoomed: Option<bool>,
     #[cfg(feature = "tmux_1_0")]
-    pub src_pane: Option<&'a T>,
+    pub src_pane: Option<&'a str>,
     #[cfg(feature = "tmux_1_0")]
-    pub dst_pane: Option<&'a T>,
+    pub dst_pane: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> SwapPaneBuilder<'a, T> {
+impl<'a> SwapPaneBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -98,18 +97,18 @@ impl<'a, T: Display + Default> SwapPaneBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_0")]
-    pub fn src_pane(&mut self, src_pane: &'a T) -> &mut Self {
+    pub fn src_pane(&mut self, src_pane: &'a str) -> &mut Self {
         self.src_pane = Some(src_pane);
         self
     }
 
     #[cfg(feature = "tmux_1_0")]
-    pub fn dst_pane(&mut self, dst_pane: &'a T) -> &mut Self {
+    pub fn dst_pane(&mut self, dst_pane: &'a str) -> &mut Self {
         self.dst_pane = Some(dst_pane);
         self
     }
 
-    pub fn build(&self) -> SwapPane<'a, T> {
+    pub fn build(&self) -> SwapPane<'a> {
         SwapPane {
             #[cfg(feature = "tmux_0_8")]
             detached: self.detached,
@@ -151,13 +150,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux swap-pane [-dDU] [-p src-index] [-t target-window] [-q dst-index]
     /// (alias: swapp)
     /// ```
-    pub fn swap_pane<T: Display>(
+    pub fn swap_pane(
         &mut self,
-        swap_pane: Option<&SwapPane<T>>,
+        swap_pane: Option<&SwapPane>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let t;
-        let s;
         if let Some(swap_pane) = swap_pane {
             #[cfg(feature = "tmux_0_8")]
             if swap_pane.detached.unwrap_or(false) {
@@ -177,13 +174,11 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_1_0")]
             if let Some(src_pane) = swap_pane.src_pane {
-                s = src_pane.to_string();
-                args.extend_from_slice(&[s_KEY, &s])
+                args.extend_from_slice(&[s_KEY, &src_pane])
             }
             #[cfg(feature = "tmux_1_0")]
             if let Some(dst_pane) = swap_pane.dst_pane {
-                t = dst_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &t])
+                args.extend_from_slice(&[t_KEY, &dst_pane])
             }
         }
         let output = self.subcommand(TmuxInterface::SWAP_PANE, &args)?;

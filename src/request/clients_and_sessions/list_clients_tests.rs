@@ -12,6 +12,7 @@ fn list_clients() {
         );
         Err(Error::Hook)
     }));
-    tmux.list_clients(Some("1"), Some(&TargetSession::Raw("2")))
+    let target_session = TargetSession::Raw("2").to_string();
+    tmux.list_clients(Some("1"), Some(&target_session))
         .unwrap_err();
 }

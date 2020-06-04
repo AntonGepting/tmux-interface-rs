@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// # Manual
@@ -35,7 +34,7 @@ use std::process::Output;
 /// (alias: capturep)
 /// ```
 #[derive(Default, Debug)]
-pub struct CapturePane<'a, T: Display> {
+pub struct CapturePane<'a> {
     /// [-a] - the alternate screen is used, and the history is not accessible
     #[cfg(feature = "tmux_1_8")]
     pub alternate_screen: Option<bool>,
@@ -72,17 +71,17 @@ pub struct CapturePane<'a, T: Display> {
     pub start_line: Option<&'a str>,
     /// [-t target-pane] - specify target-pane
     #[cfg(feature = "tmux_1_2")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> CapturePane<'a, T> {
+impl<'a> CapturePane<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct CapturePaneBuilder<'a, T: Display> {
+pub struct CapturePaneBuilder<'a> {
     #[cfg(feature = "tmux_1_8")]
     pub alternate_screen: Option<bool>,
     #[cfg(feature = "tmux_1_8")]
@@ -106,10 +105,10 @@ pub struct CapturePaneBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_1_5")]
     pub start_line: Option<&'a str>,
     #[cfg(feature = "tmux_1_2")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> CapturePaneBuilder<'a, T> {
+impl<'a> CapturePaneBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -181,12 +180,12 @@ impl<'a, T: Display + Default> CapturePaneBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_2")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
 
-    pub fn build(&self) -> CapturePane<'a, T> {
+    pub fn build(&self) -> CapturePane<'a> {
         CapturePane {
             #[cfg(feature = "tmux_1_8")]
             alternate_screen: self.alternate_screen,
@@ -252,12 +251,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux capture-pane [-b buffer-index] [-t target-pane]
     /// (alias: capturep)
     /// ```
-    pub fn capture_pane<T: Display>(
+    pub fn capture_pane(
         &mut self,
-        capture_pane: Option<&CapturePane<T>>,
+        capture_pane: Option<&CapturePane>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s: String;
         if let Some(capture_pane) = capture_pane {
             #[cfg(feature = "tmux_1_8")]
             if capture_pane.alternate_screen.unwrap_or(false) {
@@ -292,21 +290,20 @@ impl<'a> TmuxInterface<'a> {
                 args.push(N_KEY);
             }
             #[cfg(feature = "tmux_1_8")]
-            if let Some(s) = capture_pane.buffer_name {
-                args.extend_from_slice(&[b_KEY, &s])
+            if let Some(buffer_name) = capture_pane.buffer_name {
+                args.extend_from_slice(&[b_KEY, &buffer_name])
             }
             #[cfg(feature = "tmux_1_5")]
-            if let Some(s) = capture_pane.end_line {
-                args.extend_from_slice(&[E_KEY, &s])
+            if let Some(end_line) = capture_pane.end_line {
+                args.extend_from_slice(&[E_KEY, &end_line])
             }
             #[cfg(feature = "tmux_1_5")]
-            if let Some(s) = capture_pane.start_line {
-                args.extend_from_slice(&[S_KEY, &s])
+            if let Some(start_line) = capture_pane.start_line {
+                args.extend_from_slice(&[S_KEY, &start_line])
             }
             #[cfg(feature = "tmux_1_2")]
             if let Some(target_pane) = capture_pane.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
         }
         let output = self.subcommand(TmuxInterface::CAPTURE_PANE, &args)?;

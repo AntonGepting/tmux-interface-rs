@@ -54,6 +54,7 @@ fn select_layout() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("1").to_string();
     let select_layout = SelectLayot {
         #[cfg(feature = "tmux_2_7")]
         spread: Some(true),
@@ -64,7 +65,7 @@ fn select_layout() {
         #[cfg(feature = "tmux_1_5")]
         previous_layout: Some(true),
         #[cfg(feature = "tmux_0_9")]
-        target_pane: Some(&TargetPane::Raw("1")),
+        target_pane: Some(&target_pane),
         #[cfg(feature = "tmux_1_0")]
         layout_name: Some("2"),
     };
@@ -80,7 +81,7 @@ fn select_layout() {
     #[cfg(feature = "tmux_1_5")]
     builder.previous_layout();
     #[cfg(feature = "tmux_0_9")]
-    builder.target_pane(&TargetPane::Raw("1"));
+    builder.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_0")]
     builder.layout_name("2");
     let select_layout = builder.build();

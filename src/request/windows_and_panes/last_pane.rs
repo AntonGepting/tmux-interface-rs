@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
@@ -28,15 +27,14 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: lastp)
     /// ```
     // FIXME: versions and function parameters
-    pub fn last_pane<T: Display>(
+    pub fn last_pane(
         &mut self,
         disable: Option<bool>,
         enable: Option<bool>,
         keep_zoomed: Option<bool>,
-        target_window: Option<&T>,
+        target_window: Option<&'a str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if disable.unwrap_or(false) {
             args.push(d_KEY);
         }
@@ -47,8 +45,7 @@ impl<'a> TmuxInterface<'a> {
             args.push(Z_KEY);
         }
         if let Some(target_window) = target_window {
-            s = target_window.to_string();
-            args.extend_from_slice(&[t_KEY, &s])
+            args.extend_from_slice(&[t_KEY, &target_window])
         }
         let output = self.subcommand(TmuxInterface::LAST_PANE, &args)?;
         Ok(output)

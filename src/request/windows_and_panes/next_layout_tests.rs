@@ -15,5 +15,6 @@ fn next_layout() {
         );
         Err(Error::Hook)
     }));
-    tmux.next_layout(Some(&TargetWindow::Raw("1"))).unwrap_err();
+    let target_window = TargetWindow::Raw("1").to_string();
+    tmux.next_layout(Some(&target_window)).unwrap_err();
 }

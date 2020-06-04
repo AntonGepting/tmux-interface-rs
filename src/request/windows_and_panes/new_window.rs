@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 
 /// Structure for creating new window, using `tmux new-window` command
 ///
@@ -50,7 +49,7 @@ use std::fmt::Display;
 /// (alias: neww)
 /// ```
 #[derive(Default, Debug)]
-pub struct NewWindow<'a, T: Display> {
+pub struct NewWindow<'a> {
     /// [-a] - new window is inserted at the next index up from the specified target-window
     #[cfg(feature = "tmux_1_3")]
     pub add: Option<bool>,
@@ -77,20 +76,20 @@ pub struct NewWindow<'a, T: Display> {
     pub window_name: Option<&'a str>,
     /// [-t target-window] - target-window
     #[cfg(feature = "tmux_0_8")]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     /// [shell-command] - shell-command
     #[cfg(feature = "tmux_1_2")]
     pub shell_command: Option<&'a str>,
 }
 
-impl<'a, T: Default + Display> NewWindow<'a, T> {
+impl<'a> NewWindow<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct NewWindowBuilder<'a, T: Display> {
+pub struct NewWindowBuilder<'a> {
     #[cfg(feature = "tmux_1_3")]
     pub add: Option<bool>,
     #[cfg(feature = "tmux_0_8")]
@@ -108,12 +107,12 @@ pub struct NewWindowBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_0_8")]
     pub window_name: Option<&'a str>,
     #[cfg(feature = "tmux_0_8")]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
     #[cfg(feature = "tmux_1_2")]
     pub shell_command: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> NewWindowBuilder<'a, T> {
+impl<'a> NewWindowBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -167,7 +166,7 @@ impl<'a, T: Display + Default> NewWindowBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window(&mut self, target_window: &'a T) -> &mut Self {
+    pub fn target_window(&mut self, target_window: &'a str) -> &mut Self {
         self.target_window = Some(target_window);
         self
     }
@@ -178,7 +177,7 @@ impl<'a, T: Display + Default> NewWindowBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> NewWindow<'a, T> {
+    pub fn build(&self) -> NewWindow<'a> {
         NewWindow {
             #[cfg(feature = "tmux_1_3")]
             add: self.add,
@@ -255,12 +254,11 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: neww)
     /// ```
     // TODO: target_window exitst error
-    pub fn new_window<T: Display>(
+    pub fn new_window(
         &mut self,
-        new_window: Option<&NewWindow<T>>,
+        new_window: Option<&NewWindow>,
     ) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(new_window) = new_window {
             #[cfg(feature = "tmux_1_3")]
             if new_window.add.unwrap_or(false) {
@@ -296,12 +294,11 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_0_8")]
             if let Some(target_window) = new_window.target_window {
-                s = target_window.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_window])
             }
             #[cfg(feature = "tmux_1_2")]
-            if let Some(s) = new_window.shell_command {
-                args.push(&s)
+            if let Some(shell_command) = new_window.shell_command {
+                args.push(&shell_command)
             }
         }
         let output = self.subcommand(TmuxInterface::NEW_WINDOW, &args)?;

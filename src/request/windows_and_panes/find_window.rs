@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Search for the fnmatch(3) pattern `match-string` in window names,
@@ -29,7 +28,7 @@ use std::process::Output;
 /// (alias: findw)
 /// ```
 #[derive(Default, Debug)]
-pub struct FindWindow<'a, T: Display> {
+pub struct FindWindow<'a> {
     /// [-r] - regular expression
     #[cfg(feature = "tmux_3_0")]
     pub regex: Option<bool>,
@@ -47,19 +46,19 @@ pub struct FindWindow<'a, T: Display> {
     pub zoom: Option<bool>,
     /// [-t target-pane] - target-pane
     //#[cfg(eature = "tmux_2_6")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     // match-string
     //pub match_string: &'a str,
 }
 
-impl<'a, T: Display + Default> FindWindow<'a, T> {
+impl<'a> FindWindow<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct FindWindowBuilder<'a, T: Display> {
+pub struct FindWindowBuilder<'a> {
     #[cfg(feature = "tmux_3_0")]
     pub regex: Option<bool>,
     #[cfg(feature = "tmux_1_7")]
@@ -71,11 +70,11 @@ pub struct FindWindowBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_3_0")]
     pub zoom: Option<bool>,
     //#[cfg(feature = "tmux_2_6")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     //pub match_string: &'a str,
 }
 
-impl<'a, T: Display + Default> FindWindowBuilder<'a, T> {
+impl<'a> FindWindowBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -111,12 +110,12 @@ impl<'a, T: Display + Default> FindWindowBuilder<'a, T> {
     }
 
     //#[cfg(feature = "tmux_2_6")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
 
-    pub fn build(&self) -> FindWindow<'a, T> {
+    pub fn build(&self) -> FindWindow<'a> {
         FindWindow {
             #[cfg(feature = "tmux_3_0")]
             regex: self.regex,
@@ -162,13 +161,12 @@ impl<'a> TmuxInterface<'a> {
     /// tmux find-window [-t target-pane] match-string
     /// (alias: findw)
     /// ```
-    pub fn find_window<T: Display>(
+    pub fn find_window(
         &mut self,
-        find_window: Option<&FindWindow<T>>,
+        find_window: Option<&FindWindow>,
         match_string: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(find_window) = find_window {
             #[cfg(feature = "tmux_3_0")]
             if find_window.regex.unwrap_or(false) {
@@ -192,8 +190,7 @@ impl<'a> TmuxInterface<'a> {
             }
             //#[cfg(feature = "tmux_2_6")]
             if let Some(target_pane) = find_window.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
         }
         args.push(match_string);

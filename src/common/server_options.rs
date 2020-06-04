@@ -1,5 +1,5 @@
 use super::create_insert_vec;
-use crate::{Error, SetOptionBuilder, ShowOptionsBuilder, Switch, TargetPane, TmuxInterface};
+use crate::{Error, SetOptionBuilder, ShowOptionsBuilder, Switch, TmuxInterface};
 use std::fmt;
 use std::str::FromStr;
 
@@ -310,7 +310,7 @@ impl ServerOptions {
     // faster than SERVER_OPTIONS_ALL bitmask if will be implemented selective
     pub fn get_all() -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
-        let show_options = ShowOptionsBuilder::<TargetPane>::new().server().build();
+        let show_options = ShowOptionsBuilder::new().server().build();
         let s = tmux.show_options(Some(&show_options))?;
         s.parse()
     }
@@ -326,7 +326,7 @@ impl ServerOptions {
             .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
-        let show_options = ShowOptionsBuilder::<TargetPane>::new()
+        let show_options = ShowOptionsBuilder::new()
             .server()
             .option(&selected_option)
             .build();
@@ -353,7 +353,7 @@ impl ServerOptions {
         let mut tmux = TmuxInterface::new();
         for selected_option in SERVER_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
-                let set_option = SetOptionBuilder::<TargetPane>::new().server().build();
+                let set_option = SetOptionBuilder::new().server().build();
                 tmux.set_option(Some(&set_option), selected_option.0, &selected_value)?;
             }
         }

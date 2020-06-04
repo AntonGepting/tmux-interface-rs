@@ -27,11 +27,7 @@ fn list_panes() {
         );
         Err(Error::Hook)
     }));
-    tmux.list_panes(
-        Some(true),
-        Some(true),
-        Some("1"),
-        Some(&TargetWindow::Raw("2")),
-    )
-    .unwrap_err();
+    let target_window = TargetWindow::Raw("2").to_string();
+    tmux.list_panes(Some(true), Some(true), Some("1"), Some(&target_window))
+        .unwrap_err();
 }

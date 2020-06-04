@@ -39,7 +39,8 @@ impl Windows {
             .map(|t| format!("#{{{}}}", t.0))
             .collect::<Vec<String>>()
             .join(WINDOW_VARS_SEPARATOR);
-        let windows_str = tmux.list_windows(None, Some(&lsw_format), Some(target_session))?;
+        let target_session_str = target_session.to_string();
+        let windows_str = tmux.list_windows(None, Some(&lsw_format), Some(&target_session_str))?;
         Windows::from_str(&windows_str, bitflags)
     }
 

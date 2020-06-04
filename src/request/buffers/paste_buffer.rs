@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Structure for inserting the contents of a paste buffer into the specified pane
@@ -31,7 +30,7 @@ use std::process::Output;
 /// (alias: pasteb)
 /// ```
 #[derive(Default, Debug)]
-pub struct PasteBuffer<'a, T: Display> {
+pub struct PasteBuffer<'a> {
     /// [-d] - delete the paste buffer
     #[cfg(feature = "tmux_0_8")]
     pub delete: Option<bool>,
@@ -49,20 +48,20 @@ pub struct PasteBuffer<'a, T: Display> {
     pub separator: Option<&'a str>,
     /// [-t target-pane] - specify the target pane
     #[cfg(feature = "tmux_1_7")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     /// [-t target-window] - specify the target window
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> PasteBuffer<'a, T> {
+impl<'a> PasteBuffer<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct PasteBufferBuilder<'a, T: Display> {
+pub struct PasteBufferBuilder<'a> {
     #[cfg(feature = "tmux_0_8")]
     pub delete: Option<bool>,
     #[cfg(feature = "tmux_1_7")]
@@ -74,12 +73,12 @@ pub struct PasteBufferBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_1_3")]
     pub separator: Option<&'a str>,
     #[cfg(feature = "tmux_1_7")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> PasteBufferBuilder<'a, T> {
+impl<'a> PasteBufferBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -115,12 +114,12 @@ impl<'a, T: Display + Default> PasteBufferBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_7")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
 
-    pub fn build(&self) -> PasteBuffer<'a, T> {
+    pub fn build(&self) -> PasteBuffer<'a> {
         PasteBuffer {
             #[cfg(feature = "tmux_0_8")]
             delete: self.delete,
@@ -170,12 +169,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux paste-buffer [-d] [-b buffer-index] [-t target-window]
     /// (alias: pasteb)
     /// ```
-    pub fn paste_buffer<T: Display>(
+    pub fn paste_buffer(
         &mut self,
-        paste_buffer: Option<&PasteBuffer<T>>,
+        paste_buffer: Option<&PasteBuffer>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s: String;
         if let Some(paste_buffer) = paste_buffer {
             #[cfg(feature = "tmux_0_8")]
             if paste_buffer.delete.unwrap_or(false) {
@@ -190,17 +188,16 @@ impl<'a> TmuxInterface<'a> {
                 args.push(r_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            if let Some(s) = paste_buffer.buffer_name {
-                args.extend_from_slice(&[b_KEY, &s])
+            if let Some(buffer_name) = paste_buffer.buffer_name {
+                args.extend_from_slice(&[b_KEY, &buffer_name])
             }
             #[cfg(feature = "tmux_1_3")]
-            if let Some(s) = paste_buffer.separator {
-                args.extend_from_slice(&[s_KEY, &s])
+            if let Some(separator) = paste_buffer.separator {
+                args.extend_from_slice(&[s_KEY, &separator])
             }
             #[cfg(feature = "tmux_1_7")]
             if let Some(target_pane) = paste_buffer.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
         }
         let output = self.subcommand(TmuxInterface::PASTE_BUFFER, &args)?;

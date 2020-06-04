@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Make pane `target-pane` the active pane in window `target-window`
@@ -55,7 +54,7 @@ use std::process::Output;
 /// (alias: selectp)
 /// ```
 #[derive(Default, Debug)]
-pub struct SelectPane<'a, T: Display> {
+pub struct SelectPane<'a> {
     /// [-D] - pane below
     #[cfg(feature = "tmux_1_3")]
     pub down: Option<bool>,
@@ -97,17 +96,17 @@ pub struct SelectPane<'a, T: Display> {
     pub title: Option<&'a str>,
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_1_0")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> SelectPane<'a, T> {
+impl<'a> SelectPane<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct SelectPaneBuilder<'a, T: Display> {
+pub struct SelectPaneBuilder<'a> {
     #[cfg(feature = "tmux_1_3")]
     pub down: Option<bool>,
     #[cfg(feature = "tmux_2_0")]
@@ -135,10 +134,10 @@ pub struct SelectPaneBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_2_6")]
     pub title: Option<&'a str>,
     #[cfg(feature = "tmux_1_0")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> SelectPaneBuilder<'a, T> {
+impl<'a> SelectPaneBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -222,11 +221,11 @@ impl<'a, T: Display + Default> SelectPaneBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
-    pub fn build(&self) -> SelectPane<'a, T> {
+    pub fn build(&self) -> SelectPane<'a> {
         SelectPane {
             #[cfg(feature = "tmux_1_3")]
             down: self.down,
@@ -312,12 +311,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-pane [-p pane-index] [-t target-window]
     /// (alias: selectp)
     /// ```
-    pub fn select_pane<T: Display>(
+    pub fn select_pane(
         &mut self,
-        select_pane: Option<&SelectPane<T>>,
+        select_pane: Option<&SelectPane>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
 
         if let Some(select_pane) = select_pane {
             #[cfg(feature = "tmux_1_3")]
@@ -365,17 +363,16 @@ impl<'a> TmuxInterface<'a> {
                 args.push(Z_KEY);
             }
             #[cfg(feature = "tmux_2_1")]
-            if let Some(s) = select_pane.style {
-                args.extend_from_slice(&[P_KEY, s])
+            if let Some(style) = select_pane.style {
+                args.extend_from_slice(&[P_KEY, &style])
             }
             #[cfg(feature = "tmux_2_6")]
-            if let Some(s) = select_pane.title {
-                args.extend_from_slice(&[T_KEY, s])
+            if let Some(title) = select_pane.title {
+                args.extend_from_slice(&[T_KEY, &title])
             }
             #[cfg(feature = "tmux_1_0")]
             if let Some(target_pane) = select_pane.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
         }
         let output = self.subcommand(TmuxInterface::SELECT_PANE, &args)?;

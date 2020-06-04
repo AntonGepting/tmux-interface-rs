@@ -88,6 +88,8 @@ fn select_pane() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("3").to_string();
+
     let select_pane = SelectPane {
         #[cfg(feature = "tmux_1_3")]
         down: Some(true),
@@ -116,7 +118,7 @@ fn select_pane() {
         #[cfg(feature = "tmux_2_6")]
         title: Some("2"),
         #[cfg(feature = "tmux_1_0")]
-        target_pane: Some(&TargetPane::Raw("3")),
+        target_pane: Some(&target_pane),
     };
     tmux.select_pane(Some(&select_pane)).unwrap_err();
 
@@ -148,7 +150,7 @@ fn select_pane() {
     #[cfg(feature = "tmux_2_6")]
     builder.title("2");
     #[cfg(feature = "tmux_1_0")]
-    builder.target_pane(&TargetPane::Raw("3"));
+    builder.target_pane(&target_pane);
     let select_pane = builder.build();
     tmux.select_pane(Some(&select_pane)).unwrap_err();
 }

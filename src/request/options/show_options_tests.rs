@@ -67,6 +67,7 @@ fn show_options() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("1").to_string();
     let show_options = ShowOptions {
         #[cfg(feature = "tmux_3_0")]
         include_inherited: Some(true),
@@ -84,7 +85,7 @@ fn show_options() {
         value: Some(true),
         #[cfg(feature = "tmux_1_2")]
         window: Some(true),
-        target: Some(&TargetPane::Raw("1")),
+        target: Some(&target_pane),
         #[cfg(feature = "tmux_1_7")]
         option: Some("2"),
     };
@@ -107,7 +108,7 @@ fn show_options() {
     builder.value();
     #[cfg(feature = "tmux_1_2")]
     builder.window();
-    builder.target(&TargetPane::Raw("1"));
+    builder.target(&target_pane);
     #[cfg(feature = "tmux_1_7")]
     builder.option("2");
     let show_options = builder.build();

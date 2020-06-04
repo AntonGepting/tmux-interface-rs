@@ -42,6 +42,9 @@ fn swap_pane() {
         Err(Error::Hook)
     }));
 
+    let src_pane = TargetPane::Raw("1").to_string();
+    let dst_pane = TargetPane::Raw("2").to_string();
+
     let swap_pane = SwapPane {
         #[cfg(feature = "tmux_0_8")]
         detached: Some(true),
@@ -52,9 +55,9 @@ fn swap_pane() {
         #[cfg(feature = "tmux_3_1")]
         keep_zoomed: Some(true),
         #[cfg(feature = "tmux_1_0")]
-        src_pane: Some(&TargetPane::Raw("1")),
+        src_pane: Some(&src_pane),
         #[cfg(feature = "tmux_1_0")]
-        dst_pane: Some(&TargetPane::Raw("2")),
+        dst_pane: Some(&dst_pane),
     };
     tmux.swap_pane(Some(&swap_pane)).unwrap_err();
 
@@ -68,9 +71,9 @@ fn swap_pane() {
     #[cfg(feature = "tmux_3_1")]
     builder.keep_zoomed();
     #[cfg(feature = "tmux_1_0")]
-    builder.src_pane(&TargetPane::Raw("1"));
+    builder.src_pane(&src_pane);
     #[cfg(feature = "tmux_1_0")]
-    builder.dst_pane(&TargetPane::Raw("2"));
+    builder.dst_pane(&dst_pane);
     let swap_pane = builder.build();
     tmux.swap_pane(Some(&swap_pane)).unwrap_err();
 }

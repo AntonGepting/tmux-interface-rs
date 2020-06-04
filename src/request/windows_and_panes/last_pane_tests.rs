@@ -27,11 +27,7 @@ fn last_pane() {
         );
         Err(Error::Hook)
     }));
-    tmux.last_pane(
-        Some(true),
-        Some(true),
-        Some(true),
-        Some(&TargetWindow::Raw("1")),
-    )
-    .unwrap_err();
+    let target_window = TargetWindow::Raw("1").to_string();
+    tmux.last_pane(Some(true), Some(true), Some(true), Some(&target_window))
+        .unwrap_err();
 }

@@ -2,7 +2,6 @@
 fn display_message() {
     use crate::{DisplayMessage, DisplayMessageBuilder};
     use crate::{Error, TargetPane, TmuxInterface};
-    use std::marker::PhantomData;
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -57,6 +56,7 @@ fn display_message() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("2").to_string();
     let display_message = DisplayMessage {
         #[cfg(feature = "tmux_2_9a")]
         list_format_vars: Some(true),
@@ -69,9 +69,8 @@ fn display_message() {
         #[cfg(feature = "tmux_1_0")]
         target_client: Some("1"),
         #[cfg(feature = "tmux_1_5")]
-        target_pane: Some(&TargetPane::Raw("2")),
+        target_pane: Some(&target_pane),
         message: Some("3"),
-        _phantom: PhantomData,
     };
     tmux.display_message(Some(&display_message)).unwrap_err();
 
@@ -87,7 +86,7 @@ fn display_message() {
     #[cfg(feature = "tmux_1_0")]
     builder.target_client("1");
     #[cfg(feature = "tmux_1_5")]
-    builder.target_pane(&TargetPane::Raw("2"));
+    builder.target_pane(&target_pane);
     builder.message("3");
     let display_message = builder.build();
     tmux.display_message(Some(&display_message)).unwrap_err();

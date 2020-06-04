@@ -1,9 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
-#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-use std::marker::PhantomData;
 
 /// Break `src-pane` off from its containing window to make it the only pane in `dst-window`
 ///
@@ -46,7 +43,7 @@ use std::marker::PhantomData;
 /// ```
 // FIXME: phantom conditionals
 #[derive(Default, Debug)]
-pub struct BreakPane<'a, T, U: Display> {
+pub struct BreakPane<'a> {
     /// [-d] - the new window does not become the current window
     #[cfg(feature = "tmux_0_8")]
     pub detached: Option<bool>,
@@ -61,35 +58,32 @@ pub struct BreakPane<'a, T, U: Display> {
     pub window_name: Option<&'a str>,
     /// [-s src-pane] - src-pane
     #[cfg(feature = "tmux_2_1")]
-    pub src_pane: Option<&'a T>,
+    pub src_pane: Option<&'a str>,
     /// [-t dst-pane] - dst-pane
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-    pub dst_pane: Option<&'a U>,
+    pub dst_pane: Option<&'a str>,
     /// [-t dst-window] - dst-window
     #[cfg(feature = "tmux_2_2")]
-    pub dst_window: Option<&'a U>,
+    pub dst_window: Option<&'a str>,
     /// [-t target-window] - target-window
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
-    pub target_window: Option<&'a U>,
+    pub target_window: Option<&'a str>,
     /// [-t target-pane] - target-pane
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    pub target_pane: Option<&'a U>,
+    pub target_pane: Option<&'a str>,
     /// [-p pane-index] - pane-index
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
     pub pane_index: Option<usize>,
-    //pub _phantom: PhantomData<&'a U>,
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-    pub _phantom: PhantomData<&'a T>,
 }
 
-impl<'a, T: Display + Default, U: Display + Default> BreakPane<'a, T, U> {
+impl<'a> BreakPane<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct BreakPaneBuilder<'a, T, U: Display> {
+pub struct BreakPaneBuilder<'a> {
     #[cfg(feature = "tmux_0_8")]
     pub detached: Option<bool>,
     #[cfg(feature = "tmux_1_7")]
@@ -99,23 +93,20 @@ pub struct BreakPaneBuilder<'a, T, U: Display> {
     #[cfg(feature = "tmux_2_4")]
     pub window_name: Option<&'a str>,
     #[cfg(feature = "tmux_2_1")]
-    pub src_pane: Option<&'a T>,
+    pub src_pane: Option<&'a str>,
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-    pub dst_pane: Option<&'a U>,
+    pub dst_pane: Option<&'a str>,
     #[cfg(feature = "tmux_2_2")]
-    pub dst_window: Option<&'a U>,
+    pub dst_window: Option<&'a str>,
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
-    pub target_window: Option<&'a U>,
+    pub target_window: Option<&'a str>,
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    pub target_pane: Option<&'a U>,
+    pub target_pane: Option<&'a str>,
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
     pub pane_index: Option<usize>,
-    //_phantom: PhantomData<&'a U>,
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-    _phantom: PhantomData<&'a T>,
 }
 
-impl<'a, T: Display + Default, U: Display + Default> BreakPaneBuilder<'a, T, U> {
+impl<'a> BreakPaneBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -145,30 +136,30 @@ impl<'a, T: Display + Default, U: Display + Default> BreakPaneBuilder<'a, T, U> 
     }
 
     #[cfg(feature = "tmux_2_1")]
-    pub fn src_pane(&mut self, src_pane: &'a T) -> &mut Self {
+    pub fn src_pane(&mut self, src_pane: &'a str) -> &mut Self {
         self.src_pane = Some(src_pane);
         self
     }
 
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-    pub fn dst_pane(&mut self, dst_pane: &'a U) -> &mut Self {
+    pub fn dst_pane(&mut self, dst_pane: &'a str) -> &mut Self {
         self.dst_pane = Some(dst_pane);
         self
     }
 
     #[cfg(feature = "tmux_2_2")]
-    pub fn dst_window(&mut self, dst_window: &'a U) -> &mut Self {
+    pub fn dst_window(&mut self, dst_window: &'a str) -> &mut Self {
         self.dst_window = Some(dst_window);
         self
     }
 
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    pub fn target_pane(&mut self, target_pane: &'a U) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
 
-    pub fn build(&self) -> BreakPane<'a, T, U> {
+    pub fn build(&self) -> BreakPane<'a> {
         BreakPane {
             #[cfg(feature = "tmux_0_8")]
             detached: self.detached,
@@ -190,9 +181,6 @@ impl<'a, T: Display + Default, U: Display + Default> BreakPaneBuilder<'a, T, U> 
             target_pane: self.target_pane,
             #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
             pane_index: self.dst_window,
-            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-            _phantom: PhantomData,
-            //_phantom2: PhantomData,
         }
     }
 }
@@ -239,15 +227,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux break-pane [-d] [-p pane-index] [-t target-window]
     /// (alias: breakp)
     /// ```
-    pub fn break_pane<T: Display, U: Display>(
+    pub fn break_pane(
         &mut self,
-        break_pane: Option<&BreakPane<T, U>>,
+        break_pane: Option<&BreakPane>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_2_1")]
-        let s: String;
-        #[cfg(feature = "tmux_2_2")]
-        let t: String;
         if let Some(break_pane) = break_pane {
             #[cfg(feature = "tmux_0_8")]
             if break_pane.detached.unwrap_or(false) {
@@ -258,22 +242,20 @@ impl<'a> TmuxInterface<'a> {
                 args.push(P_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            if let Some(s) = break_pane.format {
-                args.extend_from_slice(&[F_KEY, &s])
+            if let Some(format) = break_pane.format {
+                args.extend_from_slice(&[F_KEY, &format])
             }
             #[cfg(feature = "tmux_2_4")]
-            if let Some(s) = break_pane.window_name {
-                args.extend_from_slice(&[n_KEY, &s])
+            if let Some(window_name) = break_pane.window_name {
+                args.extend_from_slice(&[n_KEY, &window_name])
             }
             #[cfg(feature = "tmux_2_1")]
             if let Some(src_pane) = break_pane.src_pane {
-                s = src_pane.to_string();
-                args.extend_from_slice(&[s_KEY, &s])
+                args.extend_from_slice(&[s_KEY, &src_pane])
             }
             #[cfg(feature = "tmux_2_2")]
             if let Some(dst_window) = break_pane.dst_window {
-                t = dst_window.to_string();
-                args.extend_from_slice(&[t_KEY, &t]);
+                args.extend_from_slice(&[t_KEY, &dst_window]);
             }
         }
         let output = self.subcommand(TmuxInterface::BREAK_PANE, &args)?;

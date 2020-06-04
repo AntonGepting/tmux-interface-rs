@@ -15,6 +15,6 @@ fn previous_layout() {
         );
         Err(Error::Hook)
     }));
-    tmux.previous_layout(Some(&TargetWindow::Raw("1")))
-        .unwrap_err();
+    let target_window = TargetWindow::Raw("1").to_string();
+    tmux.previous_layout(Some(&target_window)).unwrap_err();
 }

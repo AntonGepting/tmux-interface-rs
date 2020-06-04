@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Resize a pane, up, down, left or right
@@ -31,7 +30,7 @@ use std::process::Output;
 /// (alias: resizep)
 /// ```
 #[derive(Default, Debug)]
-pub struct ResizePane<'a, T: Display> {
+pub struct ResizePane<'a> {
     /// [-D] - resize down by adjustment
     #[cfg(feature = "tmux_0_9")]
     pub down: Option<bool>,
@@ -52,7 +51,7 @@ pub struct ResizePane<'a, T: Display> {
     pub zoom: Option<bool>,
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_0_9")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     /// [-x width] - absolute size
     #[cfg(feature = "tmux_1_8")]
     pub width: Option<usize>,
@@ -64,14 +63,14 @@ pub struct ResizePane<'a, T: Display> {
     pub adjustment: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> ResizePane<'a, T> {
-    pub fn new() -> ResizePane<'a, T> {
+impl<'a> ResizePane<'a> {
+    pub fn new() -> ResizePane<'a> {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct ResizePaneBuilder<'a, T: Display> {
+pub struct ResizePaneBuilder<'a> {
     #[cfg(feature = "tmux_0_9")]
     pub down: Option<bool>,
     #[cfg(feature = "tmux_1_8")]
@@ -85,7 +84,7 @@ pub struct ResizePaneBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_1_8")]
     pub zoom: Option<bool>,
     #[cfg(feature = "tmux_0_9")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     #[cfg(feature = "tmux_1_8")]
     pub width: Option<usize>,
     #[cfg(feature = "tmux_1_8")]
@@ -94,7 +93,7 @@ pub struct ResizePaneBuilder<'a, T: Display> {
     pub adjustment: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> ResizePaneBuilder<'a, T> {
+impl<'a> ResizePaneBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -136,7 +135,7 @@ impl<'a, T: Display + Default> ResizePaneBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_0_9")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
@@ -159,7 +158,7 @@ impl<'a, T: Display + Default> ResizePaneBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> ResizePane<'a, T> {
+    pub fn build(&self) -> ResizePane<'a> {
         ResizePane {
             #[cfg(feature = "tmux_0_9")]
             down: self.down,
@@ -215,16 +214,15 @@ impl<'a> TmuxInterface<'a> {
     /// tmux resize-pane [-DU] [-p pane-index] [-t target-pane] [adjustment]
     /// (alias: resizep)
     /// ```
-    pub fn resize_pane<T: Display>(
+    pub fn resize_pane(
         &mut self,
-        resize_pane: Option<&ResizePane<T>>,
+        resize_pane: Option<&ResizePane>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         #[cfg(feature = "tmux_1_8")]
         let x: String;
         #[cfg(feature = "tmux_1_8")]
         let y: String;
-        let s;
         if let Some(resize_pane) = resize_pane {
             #[cfg(feature = "tmux_0_9")]
             if resize_pane.down.unwrap_or(false) {
@@ -252,8 +250,7 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_0_9")]
             if let Some(target_pane) = resize_pane.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
             #[cfg(feature = "tmux_1_8")]
             if let Some(width) = resize_pane.width {
@@ -266,8 +263,8 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[y_KEY, &y]);
             }
             #[cfg(feature = "tmux_0_9")]
-            if let Some(s) = resize_pane.adjustment {
-                args.push(s)
+            if let Some(adjustment) = resize_pane.adjustment {
+                args.push(adjustment)
             }
         }
         let output = self.subcommand(TmuxInterface::RESIZE_PANE, &args)?;

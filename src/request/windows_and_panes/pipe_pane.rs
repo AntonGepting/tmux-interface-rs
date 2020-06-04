@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Pipe output sent by the program in target-pane to a shell command or vice versa
@@ -25,7 +24,7 @@ use std::process::Output;
 /// (alias: pipep)
 /// ```
 #[derive(Default, Debug)]
-pub struct PipePane<'a, T: Display> {
+pub struct PipePane<'a> {
     /// [-I] - stdin is connected
     #[cfg(feature = "tmux_2_7")]
     pub stdout: Option<bool>,
@@ -37,20 +36,20 @@ pub struct PipePane<'a, T: Display> {
     pub open: Option<bool>,
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_1_1")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     /// [shell-command] - shell-command
     #[cfg(feature = "tmux_1_2")]
     pub shell_command: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> PipePane<'a, T> {
-    pub fn new() -> PipePane<'a, T> {
+impl<'a> PipePane<'a> {
+    pub fn new() -> PipePane<'a> {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct PipePaneBuilder<'a, T: Display> {
+pub struct PipePaneBuilder<'a> {
     #[cfg(feature = "tmux_2_7")]
     pub stdout: Option<bool>,
     #[cfg(feature = "tmux_2_7")]
@@ -58,12 +57,12 @@ pub struct PipePaneBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_1_1")]
     pub open: Option<bool>,
     #[cfg(feature = "tmux_1_1")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     #[cfg(feature = "tmux_1_2")]
     pub shell_command: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> PipePaneBuilder<'a, T> {
+impl<'a> PipePaneBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -87,7 +86,7 @@ impl<'a, T: Display + Default> PipePaneBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_1")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
@@ -98,7 +97,7 @@ impl<'a, T: Display + Default> PipePaneBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> PipePane<'a, T> {
+    pub fn build(&self) -> PipePane<'a> {
         PipePane {
             #[cfg(feature = "tmux_2_7")]
             stdout: self.stdout,
@@ -138,12 +137,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux pipe-pane [-o] [-t target-pane] [command]
     /// (alias: pipep)
     /// ```
-    pub fn pipe_pane<T: Display>(
+    pub fn pipe_pane(
         &mut self,
-        pipe_pane: Option<&PipePane<T>>,
+        pipe_pane: Option<&PipePane>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(pipe_pane) = pipe_pane {
             #[cfg(feature = "tmux_2_7")]
             if pipe_pane.stdout.unwrap_or(false) {
@@ -159,12 +157,11 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_1_1")]
             if let Some(target_pane) = pipe_pane.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
             #[cfg(feature = "tmux_1_2")]
-            if let Some(s) = pipe_pane.shell_command {
-                args.push(&s)
+            if let Some(shell_command) = pipe_pane.shell_command {
+                args.push(&shell_command)
             }
         }
         let output = self.subcommand(TmuxInterface::PIPE_PANE, &args)?;

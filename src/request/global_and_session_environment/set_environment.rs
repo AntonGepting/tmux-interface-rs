@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use crate::TargetSession;
 use std::process::Output;
 
 /// Structure for setting or unsetting an environment variable
@@ -25,7 +24,7 @@ pub struct SetEnvironment<'a> {
     pub unset: Option<bool>,
     /// [-t target-session] - target-session
     #[cfg(feature = "tmux_1_0")]
-    pub target_session: Option<&'a TargetSession<'a>>,
+    pub target_session: Option<&'a str>,
     // name
     //pub name: &'a str,
     /// [value] - specify the value
@@ -48,7 +47,7 @@ pub struct SetEnvironmentBuilder<'a> {
     #[cfg(feature = "tmux_1_0")]
     pub unset: Option<bool>,
     #[cfg(feature = "tmux_1_0")]
-    pub target_session: Option<&'a TargetSession<'a>>,
+    pub target_session: Option<&'a str>,
     //pub name: &'a str,
     #[cfg(feature = "tmux_1_0")]
     pub value: Option<&'a str>,
@@ -78,7 +77,7 @@ impl<'a> SetEnvironmentBuilder<'a> {
     }
 
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
+    pub fn target_session(&mut self, target_session: &'a str) -> &mut Self {
         self.target_session = Some(target_session);
         self
     }
@@ -123,7 +122,6 @@ impl<'a> TmuxInterface<'a> {
         name: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(set_environment) = set_environment {
             #[cfg(feature = "tmux_1_0")]
             if set_environment.global.unwrap_or(false) {
@@ -139,8 +137,7 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_1_0")]
             if let Some(target_session) = set_environment.target_session {
-                s = target_session.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_session])
             }
         }
         args.push(name);

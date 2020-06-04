@@ -1,13 +1,8 @@
 #[test]
 fn break_pane() {
-    #[cfg(any(
-        all(feature = "tmux_0_8", not(feature = "tmux_1_7")),
-        feature = "tmux_2_2"
-    ))]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
     use crate::TargetWindow;
     use crate::{BreakPane, BreakPaneBuilder, Error, TargetPane, TmuxInterface};
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-    use std::marker::PhantomData;
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -67,7 +62,12 @@ fn break_pane() {
         Err(Error::Hook)
     }));
 
-    let break_pane: BreakPane<TargetPane, _> = BreakPane {
+    let src_pane = TargetPane::Raw("3").to_string();
+    let dst_pane = TargetPane::Raw("4").to_string();
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+    let target_window = TargetWindow::Raw("4").to_string();
+
+    let break_pane: BreakPane = BreakPane {
         #[cfg(feature = "tmux_0_8")]
         detached: Some(true),
         #[cfg(feature = "tmux_1_7")]
@@ -77,22 +77,19 @@ fn break_pane() {
         #[cfg(feature = "tmux_2_4")]
         window_name: Some("2"),
         #[cfg(feature = "tmux_2_1")]
-        src_pane: Some(&TargetPane::Raw("3")),
+        src_pane: Some(&src_pane),
         #[cfg(feature = "tmux_2_2")]
-        dst_window: Some(&TargetWindow::Raw("4")),
+        dst_window: Some(&dst_pane),
         #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-        dst_pane: Some(&TargetPane::Raw("4")),
+        dst_pane: Some(&dst_pane),
         #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-        target_pane: Some(&TargetPane::Raw("3")),
+        target_pane: Some(&dst_pane),
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
-        target_window: Some(&TargetWindow::Raw("4")),
-        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-        _phantom: PhantomData,
-        //_phantom2: PhantomData,
+        target_window: Some(&target_window),
     };
     tmux.break_pane(Some(&break_pane)).unwrap_err();
 
-    let mut builder: BreakPaneBuilder<TargetPane, _> = BreakPaneBuilder::new();
+    let mut builder: BreakPaneBuilder = BreakPaneBuilder::new();
     #[cfg(feature = "tmux_0_8")]
     builder.detached();
     #[cfg(feature = "tmux_1_7")]
@@ -102,15 +99,15 @@ fn break_pane() {
     #[cfg(feature = "tmux_2_4")]
     builder.window_name("2");
     #[cfg(feature = "tmux_2_1")]
-    builder.src_pane(&TargetPane::Raw("3"));
+    builder.src_pane(&src_pane);
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-    builder.dst_pane(&TargetPane::Raw("4"));
+    builder.dst_pane(&dst_pane);
     #[cfg(feature = "tmux_2_2")]
-    builder.dst_window(&TargetWindow::Raw("4"));
+    builder.dst_window(&dst_pane);
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    builder.target_pane(&TargetPane::Raw("3"));
+    builder.target_pane(&dst_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
-    builder.target_window(&TargetWindow::Raw("4"));
+    builder.target_window(&target_window);
     let break_pane = builder.build();
     tmux.break_pane(Some(&break_pane)).unwrap_err();
 }

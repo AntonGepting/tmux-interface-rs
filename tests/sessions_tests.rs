@@ -4,7 +4,7 @@ fn get_sessions() {
     use tmux_interface::{NewSessionBuilder, Sessions, TargetSession, TmuxInterface};
 
     const TARGET_SESSION: &str = "test_get_sessions";
-    let target_session = TargetSession::Raw(TARGET_SESSION);
+    let target_session = TargetSession::Raw(TARGET_SESSION).to_string();
 
     let mut tmux = TmuxInterface::new();
     let new_session = NewSessionBuilder::new()

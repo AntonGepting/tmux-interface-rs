@@ -66,6 +66,9 @@ fn capture_pane() {
         Err(Error::Hook)
     }));
 
+    #[cfg(feature = "tmux_1_2")]
+    let target_pane = TargetPane::Raw("4").to_string();
+
     let capture_pane = CapturePane {
         #[cfg(feature = "tmux_1_8")]
         alternate_screen: Some(true),
@@ -90,7 +93,7 @@ fn capture_pane() {
         #[cfg(feature = "tmux_1_5")]
         start_line: Some("3"),
         #[cfg(feature = "tmux_1_2")]
-        target_pane: Some(&TargetPane::Raw("4")),
+        target_pane: Some(&target_pane),
     };
     tmux.capture_pane(Some(&capture_pane)).unwrap_err();
 
@@ -118,7 +121,7 @@ fn capture_pane() {
     #[cfg(feature = "tmux_1_5")]
     builder.start_line("3");
     #[cfg(feature = "tmux_1_2")]
-    builder.target_pane(&TargetPane::Raw("4"));
+    builder.target_pane(&target_pane);
     let capture_pane = builder.build();
     tmux.capture_pane(Some(&capture_pane)).unwrap_err();
 }

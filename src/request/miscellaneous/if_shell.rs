@@ -1,9 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
-#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_8")))]
-use std::marker::PhantomData;
 
 /// Structure for conditional commands executing
 ///
@@ -33,7 +30,7 @@ use std::marker::PhantomData;
 /// (alias: if)
 /// ```
 #[derive(Default, Debug)]
-pub struct IfShell<'a, T> {
+pub struct IfShell<'a> {
     /// [-b] - run in the background
     #[cfg(feature = "tmux_1_8")]
     pub backgroud: Option<bool>,
@@ -42,7 +39,7 @@ pub struct IfShell<'a, T> {
     pub not_execute: Option<bool>,
     /// [-t target-pane -] specify the target-pane
     #[cfg(feature = "tmux_1_8")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     // shell-command
     //pub shell_command: &'a str,
     // command
@@ -50,24 +47,22 @@ pub struct IfShell<'a, T> {
     /// [command] - specify the second command
     #[cfg(feature = "tmux_1_6")]
     pub second_command: Option<&'a str>,
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_8")))]
-    pub _phantom: PhantomData<&'a T>,
 }
 
-impl<'a, T: Display + Default> IfShell<'a, T> {
+impl<'a> IfShell<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct IfShellBuilder<'a, T> {
+pub struct IfShellBuilder<'a> {
     #[cfg(feature = "tmux_1_8")]
     pub backgroud: Option<bool>,
     #[cfg(feature = "tmux_2_0")]
     pub not_execute: Option<bool>,
     #[cfg(feature = "tmux_1_8")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     //pub shell_command: &'a str,
     //pub command: &'a str,
     #[cfg(feature = "tmux_1_6")]
@@ -76,7 +71,7 @@ pub struct IfShellBuilder<'a, T> {
     _phantom: PhantomData<&'a T>,
 }
 
-impl<'a, T: Display + Default> IfShellBuilder<'a, T> {
+impl<'a> IfShellBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -94,7 +89,7 @@ impl<'a, T: Display + Default> IfShellBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_8")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
@@ -105,7 +100,7 @@ impl<'a, T: Display + Default> IfShellBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> IfShell<'a, T> {
+    pub fn build(&self) -> IfShell<'a> {
         IfShell {
             #[cfg(feature = "tmux_1_8")]
             backgroud: self.backgroud,
@@ -149,15 +144,13 @@ impl<'a> TmuxInterface<'a> {
     /// tmux if-shell shell-command command
     /// (alias: if)
     /// ```
-    pub fn if_shell<T: Display>(
+    pub fn if_shell(
         &mut self,
-        if_shell: Option<&IfShell<T>>,
+        if_shell: Option<&IfShell>,
         shell_command: &str,
         command: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_1_8")]
-        let s: String;
         #[cfg(feature = "tmux_1_8")]
         if let Some(if_shell) = if_shell {
             #[cfg(feature = "tmux_1_8")]
@@ -170,8 +163,7 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_1_8")]
             if let Some(target_pane) = if_shell.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
         }
         args.push(shell_command);
@@ -179,8 +171,8 @@ impl<'a> TmuxInterface<'a> {
         #[cfg(feature = "tmux_1_6")]
         if let Some(if_shell) = if_shell {
             #[cfg(feature = "tmux_1_6")]
-            if let Some(s) = if_shell.second_command {
-                args.push(&s)
+            if let Some(second_command) = if_shell.second_command {
+                args.push(&second_command)
             }
         }
         let output = self.subcommand(TmuxInterface::IF_SHELL, &args)?;

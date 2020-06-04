@@ -13,7 +13,7 @@ use crate::tmux_interface::TmuxInterface;
 
 #[test]
 fn has_session() {
-    use crate::tmux_interface::{NewSession, TargetSession};
+    use crate::tmux_interface::NewSession;
 
     let mut tmux = TmuxInterface::new();
     //tmux.tmux = Some("./tests/tmux_mock.sh");
@@ -23,12 +23,8 @@ fn has_session() {
         ..Default::default()
     };
     tmux.new_session(Some(&new_session)).unwrap();
-    assert_eq!(
-        tmux.has_session(Some(&TargetSession::Raw("test_has_session")))
-            .unwrap(),
-        true
-    );
-    tmux.kill_session(None, None, Some(&TargetSession::Raw("test_has_session")))
+    assert_eq!(tmux.has_session(Some("test_has_session")).unwrap(), true);
+    tmux.kill_session(None, None, Some("test_has_session"))
         .unwrap();
 }
 
@@ -39,7 +35,7 @@ fn has_session() {
 
 #[test]
 fn kill_session() {
-    use crate::tmux_interface::{NewSession, TargetSession};
+    use crate::tmux_interface::NewSession;
 
     let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
@@ -48,13 +44,13 @@ fn kill_session() {
         ..Default::default()
     };
     tmux.new_session(Some(&new_session)).unwrap();
-    tmux.kill_session(None, None, Some(&TargetSession::Raw("test_kill_session")))
+    tmux.kill_session(None, None, Some("test_kill_session"))
         .unwrap();
 }
 
 #[test]
 fn callback() {
-    use crate::tmux_interface::{NewSession, TargetSession};
+    use crate::tmux_interface::NewSession;
 
     let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
@@ -71,7 +67,7 @@ fn callback() {
     }));
 
     tmux.new_session(Some(&new_session)).unwrap();
-    tmux.kill_session(None, None, Some(&TargetSession::Raw("test_kill_session")))
+    tmux.kill_session(None, None, Some("test_kill_session"))
         .unwrap();
 }
 
@@ -87,7 +83,7 @@ fn callback() {
 
 #[test]
 fn list_sessions() {
-    use crate::tmux_interface::{NewSession, TargetSession};
+    use crate::tmux_interface::NewSession;
 
     let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
@@ -97,7 +93,7 @@ fn list_sessions() {
     };
     tmux.new_session(Some(&new_session)).unwrap();
     tmux.list_sessions(None).unwrap();
-    tmux.kill_session(None, None, Some(&TargetSession::Raw("test_list_session")))
+    tmux.kill_session(None, None, Some("test_list_session"))
         .unwrap();
 }
 
@@ -113,7 +109,7 @@ fn list_sessions() {
 
 #[test]
 fn new_session() {
-    use crate::tmux_interface::{NewSession, TargetSession};
+    use crate::tmux_interface::NewSession;
 
     let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
@@ -122,7 +118,7 @@ fn new_session() {
         ..Default::default()
     };
     tmux.new_session(Some(&new_session)).unwrap();
-    tmux.kill_session(None, None, Some(&TargetSession::Raw("test_new_session")))
+    tmux.kill_session(None, None, Some("test_new_session"))
         .unwrap();
 }
 
@@ -133,7 +129,7 @@ fn new_session() {
 
 #[test]
 fn rename_session() {
-    use crate::tmux_interface::{NewSession, TargetSession};
+    use crate::tmux_interface::NewSession;
 
     let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
@@ -142,17 +138,10 @@ fn rename_session() {
         ..Default::default()
     };
     tmux.new_session(Some(&new_session)).unwrap();
-    tmux.rename_session(
-        Some(&TargetSession::Raw("test_rename_session")),
-        "rename_test_session",
-    )
-    .unwrap();
-    assert_eq!(
-        tmux.has_session(Some(&TargetSession::Raw("rename_test_session")))
-            .unwrap(),
-        true
-    );
-    tmux.kill_session(None, None, Some(&TargetSession::Raw("rename_test_session")))
+    tmux.rename_session(Some("test_rename_session"), "rename_test_session")
+        .unwrap();
+    assert_eq!(tmux.has_session(Some("rename_test_session")).unwrap(), true);
+    tmux.kill_session(None, None, Some("rename_test_session"))
         .unwrap();
 }
 
@@ -183,7 +172,7 @@ fn rename_session() {
 
 #[test]
 fn send_keys() {
-    use crate::tmux_interface::{NewSession, SendKeys, TargetPane, TargetSession};
+    use crate::tmux_interface::{NewSession, SendKeys, TargetPane};
 
     let mut tmux = TmuxInterface::new();
     let new_session = NewSession {
@@ -193,14 +182,14 @@ fn send_keys() {
     };
     tmux.new_session(Some(&new_session)).unwrap();
 
-    let target_pane = TargetPane::Raw("test_send_keys:^.0");
+    let target_pane = TargetPane::Raw("test_send_keys:^.0").to_string();
     let send_keys = SendKeys {
         target_pane: Some(&target_pane),
         ..Default::default()
     };
     tmux.send_keys(Some(&send_keys), &vec!["top", "C-m"])
         .unwrap();
-    tmux.kill_session(None, None, Some(&TargetSession::Raw("test_send_keys")))
+    tmux.kill_session(None, None, Some("test_send_keys"))
         .unwrap();
 }
 

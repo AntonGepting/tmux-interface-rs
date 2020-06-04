@@ -15,6 +15,6 @@ fn rename_window() {
         );
         Err(Error::Hook)
     }));
-    tmux.rename_window(Some(&TargetWindow::Raw("1")), "2")
-        .unwrap_err();
+    let target_window = TargetWindow::Raw("1").to_string();
+    tmux.rename_window(Some(&target_window), "2").unwrap_err();
 }

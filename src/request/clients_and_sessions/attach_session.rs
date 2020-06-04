@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use crate::TargetSession;
 use std::process::Output;
 
 /// Structure for attaching client to already existing session
@@ -55,7 +54,7 @@ pub struct AttachSession<'a> {
     pub cwd: Option<&'a str>,
     /// [-t target-session] - specify target session name
     #[cfg(feature = "tmux_0_8")]
-    pub target_session: Option<&'a TargetSession<'a>>,
+    pub target_session: Option<&'a str>,
 }
 
 impl<'a> AttachSession<'a> {
@@ -77,7 +76,7 @@ pub struct AttachSessionBuilder<'a> {
     #[cfg(feature = "tmux_1_9")]
     pub cwd: Option<&'a str>,
     #[cfg(feature = "tmux_0_8")]
-    pub target_session: Option<&'a TargetSession<'a>>,
+    pub target_session: Option<&'a str>,
 }
 
 impl<'a> AttachSessionBuilder<'a> {
@@ -116,7 +115,7 @@ impl<'a> AttachSessionBuilder<'a> {
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
+    pub fn target_session(&mut self, target_session: &'a str) -> &mut Self {
         self.target_session = Some(&target_session);
         self
     }
@@ -178,7 +177,6 @@ impl<'a> TmuxInterface<'a> {
         attach_session: Option<&AttachSession>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(attach_session) = attach_session {
             #[cfg(feature = "tmux_0_8")]
             if attach_session.detach_other.unwrap_or(false) {
@@ -201,9 +199,8 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[c_KEY, &s])
             }
             #[cfg(feature = "tmux_0_8")]
-            if let Some(ref target_session) = attach_session.target_session {
-                s = target_session.to_string();
-                args.extend_from_slice(&[t_KEY, &s]);
+            if let Some(target_session) = attach_session.target_session {
+                args.extend_from_slice(&[t_KEY, &target_session]);
             }
         }
         let output = self.subcommand(TmuxInterface::ATTACH_SESSION, &args)?;

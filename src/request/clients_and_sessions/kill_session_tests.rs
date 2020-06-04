@@ -11,6 +11,7 @@ fn kill_session() {
         );
         Err(Error::Hook)
     }));
-    tmux.kill_session(Some(true), Some(true), Some(&TargetSession::Raw("1")))
+    let target_session = TargetSession::Raw("1").to_string();
+    tmux.kill_session(Some(true), Some(true), Some(&target_session))
         .unwrap_err();
 }

@@ -63,7 +63,7 @@ fn set_window_option() {
         Err(Error::Hook)
     }));
 
-    let target_window = TargetWindow::Raw("1");
+    let target_window = TargetWindow::Raw("1").to_string();
     let set_window_option = SetWindowOption {
         #[cfg(feature = "tmux_1_0")]
         append: Some(true),

@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use crate::TargetSession;
 use std::process::Output;
 
 /// Structure to switch the current session for client `target-client` to `target-session`
@@ -67,7 +66,7 @@ pub struct SwitchClient<'a> {
     pub target_client: Option<&'a str>,
     /// [-t target-session] - specify the target session
     #[cfg(feature = "tmux_1_0")]
-    pub target_session: Option<&'a TargetSession<'a>>,
+    pub target_session: Option<&'a str>,
     /// [-T key-table] - set the client's key table
     #[cfg(feature = "tmux_2_1")]
     pub key_table: Option<&'a str>,
@@ -90,7 +89,7 @@ pub struct SwitchClientBuilder<'a> {
     #[cfg(feature = "tmux_1_0")]
     pub target_client: Option<&'a str>,
     #[cfg(feature = "tmux_1_0")]
-    pub target_session: Option<&'a TargetSession<'a>>,
+    pub target_session: Option<&'a str>,
     #[cfg(feature = "tmux_2_1")]
     pub key_table: Option<&'a str>,
 }
@@ -143,7 +142,7 @@ impl<'a> SwitchClientBuilder<'a> {
     }
 
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
+    pub fn target_session(&mut self, target_session: &'a str) -> &mut Self {
         self.target_session = Some(target_session);
         self
     }
@@ -222,7 +221,6 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn switch_client(&mut self, switch_client: Option<&SwitchClient>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(switch_client) = switch_client {
             #[cfg(feature = "tmux_2_1")]
             if switch_client.not_update_env.unwrap_or(false) {
@@ -254,8 +252,7 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_1_0")]
             if let Some(target_session) = switch_client.target_session {
-                s = target_session.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_session])
             }
             #[cfg(feature = "tmux_2_1")]
             if let Some(s) = switch_client.key_table {

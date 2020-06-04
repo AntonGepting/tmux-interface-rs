@@ -34,6 +34,9 @@ fn link_window() {
         Err(Error::Hook)
     }));
 
+    let src_window = TargetWindow::Raw("1").to_string();
+    let dst_window = TargetWindow::Raw("2").to_string();
+
     let link_window = LinkWindow {
         #[cfg(feature = "tmux_2_1")]
         add: Some(true),
@@ -42,9 +45,9 @@ fn link_window() {
         #[cfg(feature = "tmux_0_8")]
         kill: Some(true),
         #[cfg(feature = "tmux_0_8")]
-        src_window: Some(&TargetWindow::Raw("1")),
+        src_window: Some(&src_window),
         #[cfg(feature = "tmux_0_8")]
-        dst_window: Some(&TargetWindow::Raw("2")),
+        dst_window: Some(&dst_window),
     };
     tmux.link_window(Some(&link_window)).unwrap_err();
 
@@ -56,9 +59,9 @@ fn link_window() {
     #[cfg(feature = "tmux_0_8")]
     builder.kill();
     #[cfg(feature = "tmux_0_8")]
-    builder.src_window(&TargetWindow::Raw("1"));
+    builder.src_window(&src_window);
     #[cfg(feature = "tmux_0_8")]
-    builder.dst_window(&TargetWindow::Raw("2"));
+    builder.dst_window(&dst_window);
     let link_window = builder.build();
     tmux.link_window(Some(&link_window)).unwrap_err();
 }

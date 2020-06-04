@@ -42,6 +42,9 @@ fn move_pane() {
         Err(Error::Hook)
     }));
 
+    let src_pane = TargetPane::Raw("2").to_string();
+    let dst_pane = TargetPane::Raw("3").to_string();
+
     let move_pane = MovePane {
         #[cfg(feature = "tmux_1_7")]
         left_above: Some(true),
@@ -54,9 +57,9 @@ fn move_pane() {
         #[cfg(feature = "tmux_1_7")]
         size: Some(&PaneSize::Size(1)),
         #[cfg(feature = "tmux_1_7")]
-        src_pane: Some(&TargetPane::Raw("2")),
+        src_pane: Some(&src_pane),
         #[cfg(feature = "tmux_1_7")]
-        dst_pane: Some(&TargetPane::Raw("3")),
+        dst_pane: Some(&dst_pane),
     };
     tmux.move_pane(Some(&move_pane)).unwrap_err();
 
@@ -72,9 +75,9 @@ fn move_pane() {
     #[cfg(feature = "tmux_1_7")]
     builder.size(&PaneSize::Size(1));
     #[cfg(feature = "tmux_1_7")]
-    builder.src_pane(&TargetPane::Raw("2"));
+    builder.src_pane(&src_pane);
     #[cfg(feature = "tmux_1_7")]
-    builder.dst_pane(&TargetPane::Raw("3"));
+    builder.dst_pane(&dst_pane);
     let move_pane = builder.build();
     tmux.move_pane(Some(&move_pane)).unwrap_err();
 }

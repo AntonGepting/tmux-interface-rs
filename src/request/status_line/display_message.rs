@@ -1,8 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
-use std::marker::PhantomData;
 
 /// Structure for displaying a message
 ///
@@ -38,7 +36,7 @@ use std::marker::PhantomData;
 ///  (alias: display)
 /// ```
 #[derive(Default, Debug)]
-pub struct DisplayMessage<'a, T: Display> {
+pub struct DisplayMessage<'a> {
     /// [-a] - list the format variables and their values
     #[cfg(feature = "tmux_2_9a")]
     pub list_format_vars: Option<bool>,
@@ -56,21 +54,20 @@ pub struct DisplayMessage<'a, T: Display> {
     pub target_client: Option<&'a str>,
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_1_5")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     /// [message] - message
     #[cfg(feature = "tmux_1_0")]
     pub message: Option<&'a str>,
-    pub _phantom: PhantomData<&'a T>,
 }
 
-impl<'a, T: Display + Default> DisplayMessage<'a, T> {
+impl<'a> DisplayMessage<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct DisplayMessageBuilder<'a, T> {
+pub struct DisplayMessageBuilder<'a> {
     #[cfg(feature = "tmux_2_9a")]
     pub list_format_vars: Option<bool>,
     #[cfg(feature = "tmux_3_0")]
@@ -82,13 +79,12 @@ pub struct DisplayMessageBuilder<'a, T> {
     #[cfg(feature = "tmux_1_0")]
     pub target_client: Option<&'a str>,
     #[cfg(feature = "tmux_1_5")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     #[cfg(feature = "tmux_1_0")]
     pub message: Option<&'a str>,
-    _phantom: PhantomData<&'a T>,
 }
 
-impl<'a, T: Display + Default> DisplayMessageBuilder<'a, T> {
+impl<'a> DisplayMessageBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -124,7 +120,7 @@ impl<'a, T: Display + Default> DisplayMessageBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_5")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
@@ -135,7 +131,7 @@ impl<'a, T: Display + Default> DisplayMessageBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> DisplayMessage<'a, T> {
+    pub fn build(&self) -> DisplayMessage<'a> {
         DisplayMessage {
             #[cfg(feature = "tmux_2_9a")]
             list_format_vars: self.list_format_vars,
@@ -151,7 +147,6 @@ impl<'a, T: Display + Default> DisplayMessageBuilder<'a, T> {
             target_pane: self.target_pane,
             #[cfg(feature = "tmux_1_0")]
             message: self.message,
-            _phantom: PhantomData
         }
     }
 }
@@ -192,12 +187,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux display-message [-t target-client] [message]
     ///  (alias: display)
     /// ```
-    pub fn display_message<T: Display>(
+    pub fn display_message(
         &mut self,
-        display_message: Option<&DisplayMessage<T>>,
+        display_message: Option<&DisplayMessage>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(display_message) = display_message {
             #[cfg(feature = "tmux_2_9a")]
             if display_message.list_format_vars.unwrap_or(false) {
@@ -221,12 +215,11 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_1_5")]
             if let Some(target_pane) = display_message.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
             #[cfg(feature = "tmux_1_0")]
-            if let Some(s) = display_message.message {
-                args.push(&s)
+            if let Some(message) = display_message.message {
+                args.push(&message)
             }
         }
         let output = self.subcommand(TmuxInterface::DISPLAY_MESSAGE, &args)?;

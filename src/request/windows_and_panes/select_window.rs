@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Select the window at target-window.
@@ -25,7 +24,7 @@ use std::process::Output;
 /// (alias: selectw)
 /// ```
 #[derive(Default, Debug)]
-pub struct SelectWindow<'a, T: Display> {
+pub struct SelectWindow<'a> {
     /// [-l] - equivalent to last-window
     #[cfg(feature = "tmux_1_5")]
     pub last: Option<bool>,
@@ -40,17 +39,17 @@ pub struct SelectWindow<'a, T: Display> {
     pub switch: Option<bool>,
     /// [-t target-window] - target-window
     #[cfg(feature = "tmux_0_8")]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> SelectWindow<'a, T> {
-    pub fn new() -> SelectWindow<'a, T> {
+impl<'a> SelectWindow<'a> {
+    pub fn new() -> SelectWindow<'a> {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct SelectWindowBuilder<'a, T: Display> {
+pub struct SelectWindowBuilder<'a> {
     #[cfg(feature = "tmux_1_5")]
     pub last: Option<bool>,
     #[cfg(feature = "tmux_1_5")]
@@ -60,10 +59,10 @@ pub struct SelectWindowBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_1_8")]
     pub switch: Option<bool>,
     #[cfg(feature = "tmux_0_8")]
-    pub target_window: Option<&'a T>,
+    pub target_window: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> SelectWindowBuilder<'a, T> {
+impl<'a> SelectWindowBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -93,12 +92,12 @@ impl<'a, T: Display + Default> SelectWindowBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window(&mut self, target_window: &'a T) -> &mut Self {
+    pub fn target_window(&mut self, target_window: &'a str) -> &mut Self {
         self.target_window = Some(target_window);
         self
     }
 
-    pub fn build(&self) -> SelectWindow<'a, T> {
+    pub fn build(&self) -> SelectWindow<'a> {
         SelectWindow {
             #[cfg(feature = "tmux_1_5")]
             last: self.last,
@@ -138,12 +137,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-window [-t target-window]
     /// (alias: selectw)
     /// ```
-    pub fn select_window<T: Display>(
+    pub fn select_window(
         &mut self,
-        select_window: Option<&SelectWindow<T>>,
+        select_window: Option<&SelectWindow>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(select_window) = select_window {
             #[cfg(feature = "tmux_1_5")]
             if select_window.last.unwrap_or(false) {
@@ -163,8 +161,7 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_0_8")]
             if let Some(target_window) = select_window.target_window {
-                s = target_window.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_window])
             }
         }
         let output = self.subcommand(TmuxInterface::SELECT_WINDOW, &args)?;

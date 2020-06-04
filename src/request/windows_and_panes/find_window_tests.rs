@@ -47,6 +47,7 @@ fn find_window() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("1").to_string();
     let find_window = FindWindow {
         #[cfg(feature = "tmux_3_0")]
         regex: Some(true),
@@ -58,7 +59,7 @@ fn find_window() {
         only_title: Some(true),
         #[cfg(feature = "tmux_3_0")]
         zoom: Some(true),
-        target_pane: Some(&TargetPane::Raw("1")),
+        target_pane: Some(&target_pane),
     };
     tmux.find_window(Some(&find_window), "2").unwrap_err();
 
@@ -73,7 +74,7 @@ fn find_window() {
     builder.only_title();
     #[cfg(feature = "tmux_3_0")]
     builder.zoom();
-    builder.target_pane(&TargetPane::Raw("1"));
+    builder.target_pane(&target_pane);
     let find_window = builder.build();
     tmux.find_window(Some(&find_window), "2").unwrap_err();
 }

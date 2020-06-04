@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use crate::TargetSession;
 use std::process::Output;
 
 /// Structure for detaching the current client
@@ -43,7 +42,7 @@ pub struct DetachClient<'a> {
     pub shell_command: Option<&'a str>,
     /// [-s target-session] - specify the session, all clients currently attached
     #[cfg(feature = "tmux_1_5")]
-    pub target_session: Option<&'a TargetSession<'a>>,
+    pub target_session: Option<&'a str>,
     /// [-t target-client] - specify the client
     #[cfg(feature = "tmux_0_8")]
     pub target_client: Option<&'a str>,
@@ -64,7 +63,7 @@ pub struct DetachClientBuilder<'a> {
     #[cfg(feature = "tmux_2_4")]
     pub shell_command: Option<&'a str>,
     #[cfg(feature = "tmux_1_5")]
-    pub target_session: Option<&'a TargetSession<'a>>,
+    pub target_session: Option<&'a str>,
     #[cfg(feature = "tmux_0_8")]
     pub target_client: Option<&'a str>,
 }
@@ -93,7 +92,7 @@ impl<'a> DetachClientBuilder<'a> {
     }
 
     #[cfg(feature = "tmux_1_5")]
-    pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
+    pub fn target_session(&mut self, target_session: &'a str) -> &mut Self {
         self.target_session = Some(target_session);
         self
     }
@@ -152,7 +151,6 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn detach_client(&mut self, detach_client: Option<&DetachClient>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s: String;
         if let Some(detach_client) = detach_client {
             #[cfg(feature = "tmux_2_2")]
             if detach_client.all.unwrap_or(false) {
@@ -163,17 +161,16 @@ impl<'a> TmuxInterface<'a> {
                 args.push(P_KEY);
             }
             #[cfg(feature = "tmux_2_4")]
-            if let Some(s) = detach_client.shell_command {
-                args.extend_from_slice(&[E_KEY, &s])
+            if let Some(shell_command) = detach_client.shell_command {
+                args.extend_from_slice(&[E_KEY, &shell_command])
             }
             #[cfg(feature = "tmux_1_5")]
             if let Some(target_session) = detach_client.target_session {
-                s = target_session.to_string();
-                args.extend_from_slice(&[s_KEY, &s])
+                args.extend_from_slice(&[s_KEY, &target_session])
             }
             #[cfg(feature = "tmux_0_8")]
-            if let Some(s) = detach_client.target_client {
-                args.extend_from_slice(&[t_KEY, &s])
+            if let Some(target_client) = detach_client.target_client {
+                args.extend_from_slice(&[t_KEY, &target_client])
             }
         }
         let output = self.subcommand(TmuxInterface::DETACH_CLIENT, &args)?;

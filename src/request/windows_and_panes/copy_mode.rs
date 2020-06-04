@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
@@ -24,15 +23,14 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux copy-mode [-u] [-t target-window]
     /// ```
-    pub fn copy_mode<T: Display>(
+    pub fn copy_mode(
         &mut self,
         mouse_drag: Option<bool>,
         bottom_exit: Option<bool>,
         page_up: Option<bool>,
-        target_pane: Option<&T>,
+        target_pane: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if mouse_drag.unwrap_or(false) {
             args.push(M_KEY);
         }
@@ -43,8 +41,7 @@ impl<'a> TmuxInterface<'a> {
             args.push(u_KEY);
         }
         if let Some(target_pane) = target_pane {
-            s = target_pane.to_string();
-            args.extend_from_slice(&[t_KEY, &s])
+            args.extend_from_slice(&[t_KEY, &target_pane])
         }
         let output = self.subcommand(TmuxInterface::COPY_MODE, &args)?;
         Ok(output)

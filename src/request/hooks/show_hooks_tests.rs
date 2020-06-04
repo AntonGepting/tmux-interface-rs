@@ -12,6 +12,7 @@ fn show_hooks() {
         );
         Err(Error::Hook)
     }));
-    tmux.show_hooks(Some(true), Some(&TargetSession::Raw("1")))
+    let target_session = TargetSession::Raw("1").to_string();
+    tmux.show_hooks(Some(true), Some(&target_session))
         .unwrap_err();
 }

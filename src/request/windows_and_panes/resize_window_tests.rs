@@ -41,6 +41,7 @@ fn resize_window() {
         Err(Error::Hook)
     }));
 
+    let target_window = TargetWindow::Raw("1").to_string();
     let resize_window = ResizeWindow {
         #[cfg(feature = "tmux_2_9")]
         smallest: Some(true),
@@ -55,7 +56,7 @@ fn resize_window() {
         #[cfg(feature = "tmux_2_9")]
         up: Some(true),
         #[cfg(feature = "tmux_2_9")]
-        target_window: Some(&TargetWindow::Raw("1")),
+        target_window: Some(&target_window),
         #[cfg(feature = "tmux_2_9")]
         width: Some(2),
         #[cfg(feature = "tmux_2_9")]
@@ -79,7 +80,7 @@ fn resize_window() {
     #[cfg(feature = "tmux_2_9")]
     builder.up();
     #[cfg(feature = "tmux_2_9")]
-    builder.target_window(&TargetWindow::Raw("1"));
+    builder.target_window(&target_window);
     #[cfg(feature = "tmux_2_9")]
     builder.width(2);
     #[cfg(feature = "tmux_2_9")]

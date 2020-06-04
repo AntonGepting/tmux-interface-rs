@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Stucture for putting a pane into buffer mode
@@ -32,7 +31,7 @@ use std::process::Output;
 /// tmux choose-buffer [-t target-pane] [template]
 /// ```
 #[derive(Default, Debug)]
-pub struct ChooseBuffer<'a, T: Display> {
+pub struct ChooseBuffer<'a> {
     /// [-N] - start without the preview
     #[cfg(feature = "tmux_2_6")]
     pub no_preview: Option<bool>,
@@ -53,20 +52,20 @@ pub struct ChooseBuffer<'a, T: Display> {
     pub sort_order: Option<&'a str>,
     /// [-t target-pane] - specify the target pane
     #[cfg(feature = "tmux_1_3")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     /// [template] - specify the template
     #[cfg(feature = "tmux_1_3")]
     pub template: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> ChooseBuffer<'a, T> {
+impl<'a> ChooseBuffer<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct ChooseBufferBuilder<'a, T: Display> {
+pub struct ChooseBufferBuilder<'a> {
     #[cfg(feature = "tmux_2_6")]
     pub no_preview: Option<bool>,
     #[cfg(feature = "tmux_2_7")]
@@ -80,12 +79,12 @@ pub struct ChooseBufferBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_2_6")]
     pub sort_order: Option<&'a str>,
     #[cfg(feature = "tmux_1_3")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     #[cfg(feature = "tmux_1_3")]
     pub template: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> ChooseBufferBuilder<'a, T> {
+impl<'a> ChooseBufferBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -127,7 +126,7 @@ impl<'a, T: Display + Default> ChooseBufferBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_3")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
@@ -138,7 +137,7 @@ impl<'a, T: Display + Default> ChooseBufferBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> ChooseBuffer<'a, T> {
+    pub fn build(&self) -> ChooseBuffer<'a> {
         ChooseBuffer {
             #[cfg(feature = "tmux_2_6")]
             no_preview: self.no_preview,
@@ -191,12 +190,11 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux choose-buffer [-t target-pane] [template]
     /// ```
-    pub fn choose_buffer<T: Display>(
+    pub fn choose_buffer(
         &mut self,
-        choose_buffer: Option<&ChooseBuffer<T>>,
+        choose_buffer: Option<&ChooseBuffer>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s: String;
         if let Some(choose_buffer) = choose_buffer {
             #[cfg(feature = "tmux_2_6")]
             if choose_buffer.no_preview.unwrap_or(false) {
@@ -211,25 +209,24 @@ impl<'a> TmuxInterface<'a> {
                 args.push(r_KEY);
             }
             #[cfg(feature = "tmux_1_7")]
-            if let Some(s) = choose_buffer.format {
-                args.extend_from_slice(&[F_KEY, &s])
+            if let Some(format) = choose_buffer.format {
+                args.extend_from_slice(&[F_KEY, &format])
             }
             #[cfg(feature = "tmux_2_6")]
-            if let Some(s) = choose_buffer.filter {
-                args.extend_from_slice(&[f_KEY, &s])
+            if let Some(filter) = choose_buffer.filter {
+                args.extend_from_slice(&[f_KEY, &filter])
             }
             #[cfg(feature = "tmux_2_6")]
-            if let Some(s) = choose_buffer.sort_order {
-                args.extend_from_slice(&[O_KEY, &s])
+            if let Some(sort_order) = choose_buffer.sort_order {
+                args.extend_from_slice(&[O_KEY, &sort_order])
             }
             #[cfg(feature = "tmux_1_7")]
             if let Some(target_pane) = choose_buffer.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
             #[cfg(feature = "tmux_1_3")]
-            if let Some(s) = choose_buffer.template {
-                args.push(&s)
+            if let Some(template) = choose_buffer.template {
+                args.push(&template)
             }
         }
         let output = self.subcommand(TmuxInterface::CHOOSE_BUFFER, &args)?;

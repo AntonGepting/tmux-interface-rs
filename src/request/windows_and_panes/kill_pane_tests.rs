@@ -27,6 +27,6 @@ fn kill_pane() {
         );
         Err(Error::Hook)
     }));
-    tmux.kill_pane(Some(true), Some(&TargetPane::Raw("1")))
-        .unwrap_err();
+    let target_pane = TargetPane::Raw("1").to_string();
+    tmux.kill_pane(Some(true), Some(&target_pane)).unwrap_err();
 }

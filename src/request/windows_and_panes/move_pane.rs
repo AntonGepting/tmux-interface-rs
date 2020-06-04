@@ -1,7 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
 use crate::PaneSize;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Like join-pane, but `src-pane` and `dst-pane` may belong to the same window
@@ -20,7 +19,7 @@ use std::process::Output;
 /// (alias: movep)
 /// ```
 #[derive(Default, Debug)]
-pub struct MovePane<'a, T: Display> {
+pub struct MovePane<'a> {
     /// [-b] - cause src-pane to be joined to left of or above dst-pane
     #[cfg(feature = "tmux_1_7")]
     pub left_above: Option<bool>,
@@ -38,20 +37,20 @@ pub struct MovePane<'a, T: Display> {
     pub size: Option<&'a PaneSize>,
     /// [-s src-pane] - src-pane
     #[cfg(feature = "tmux_1_7")]
-    pub src_pane: Option<&'a T>,
+    pub src_pane: Option<&'a str>,
     /// [-t dst-pane] - dst-pane
     #[cfg(feature = "tmux_1_7")]
-    pub dst_pane: Option<&'a T>,
+    pub dst_pane: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> MovePane<'a, T> {
+impl<'a> MovePane<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct MovePaneBuilder<'a, T: Display> {
+pub struct MovePaneBuilder<'a> {
     #[cfg(feature = "tmux_1_7")]
     pub left_above: Option<bool>,
     #[cfg(feature = "tmux_1_7")]
@@ -63,12 +62,12 @@ pub struct MovePaneBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_1_7")]
     pub size: Option<&'a PaneSize>,
     #[cfg(feature = "tmux_1_7")]
-    pub src_pane: Option<&'a T>,
+    pub src_pane: Option<&'a str>,
     #[cfg(feature = "tmux_1_7")]
-    pub dst_pane: Option<&'a T>,
+    pub dst_pane: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> MovePaneBuilder<'a, T> {
+impl<'a> MovePaneBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -104,18 +103,18 @@ impl<'a, T: Display + Default> MovePaneBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_7")]
-    pub fn src_pane(&mut self, src_pane: &'a T) -> &mut Self {
+    pub fn src_pane(&mut self, src_pane: &'a str) -> &mut Self {
         self.src_pane = Some(src_pane);
         self
     }
 
     #[cfg(feature = "tmux_1_7")]
-    pub fn dst_pane(&mut self, dst_pane: &'a T) -> &mut Self {
+    pub fn dst_pane(&mut self, dst_pane: &'a str) -> &mut Self {
         self.dst_pane = Some(dst_pane);
         self
     }
 
-    pub fn build(&self) -> MovePane<'a, T> {
+    pub fn build(&self) -> MovePane<'a> {
         MovePane {
             #[cfg(feature = "tmux_1_7")]
             left_above: self.left_above,
@@ -153,14 +152,12 @@ impl<'a> TmuxInterface<'a> {
     /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: movep)
     /// ```
-    pub fn move_pane<T: Display>(
+    pub fn move_pane(
         &mut self,
-        move_pane: Option<&MovePane<T>>,
+        move_pane: Option<&MovePane>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let p;
-        let s;
-        let t;
         if let Some(move_pane) = move_pane {
             #[cfg(feature = "tmux_1_7")]
             if move_pane.left_above.unwrap_or(false) {
@@ -201,13 +198,11 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_1_7")]
             if let Some(src_pane) = move_pane.src_pane {
-                s = src_pane.to_string();
-                args.extend_from_slice(&[s_KEY, &s])
+                args.extend_from_slice(&[s_KEY, &src_pane])
             }
             #[cfg(feature = "tmux_1_7")]
             if let Some(dst_pane) = move_pane.dst_pane {
-                t = dst_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &t])
+                args.extend_from_slice(&[t_KEY, &dst_pane])
             }
         }
         let output = self.subcommand(TmuxInterface::MOVE_PANE, &args)?;

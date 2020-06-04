@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use crate::TargetSession;
 use std::process::Output;
 
 /// Structure for setting or unsetting hook `hook-name` to command.
@@ -42,7 +41,7 @@ pub struct SetHook<'a> {
     pub unset: Option<bool>,
     /// [-t target-session] - target-session
     #[cfg(feature = "tmux_2_2")]
-    pub target_session: Option<&'a TargetSession<'a>>,
+    pub target_session: Option<&'a str>,
     // hook-name
     //pub hook_name: &'a str,
     // command
@@ -66,7 +65,7 @@ pub struct SetHookBuilder<'a> {
     #[cfg(feature = "tmux_2_4")]
     pub unset: Option<bool>,
     #[cfg(feature = "tmux_2_2")]
-    pub target_session: Option<&'a TargetSession<'a>>,
+    pub target_session: Option<&'a str>,
     //pub hook_name: &'a str,
     //pub command: &'a str,
 }
@@ -101,7 +100,7 @@ impl<'a> SetHookBuilder<'a> {
     }
 
     #[cfg(feature = "tmux_2_2")]
-    pub fn target_session(&mut self, target_session: &'a TargetSession<'a>) -> &mut Self {
+    pub fn target_session(&mut self, target_session: &'a str) -> &mut Self {
         self.target_session = Some(target_session);
         self
     }
@@ -155,7 +154,6 @@ impl<'a> TmuxInterface<'a> {
         command: &str,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
         if let Some(set_hook) = set_hook {
             #[cfg(feature = "tmux_3_0")]
             if set_hook.append.unwrap_or(false) {
@@ -175,8 +173,7 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_2_2")]
             if let Some(target_session) = set_hook.target_session {
-                s = target_session.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_session])
             }
         }
         args.push(hook_name);

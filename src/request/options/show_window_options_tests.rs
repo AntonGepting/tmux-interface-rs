@@ -39,11 +39,7 @@ fn show_window_options() {
         );
         Err(Error::Hook)
     }));
-    tmux.show_window_options(
-        Some(true),
-        Some(true),
-        Some(&TargetWindow::Raw("1")),
-        Some("2"),
-    )
-    .unwrap_err();
+    let target_window = TargetWindow::Raw("1").to_string();
+    tmux.show_window_options(Some(true), Some(true), Some(&target_window), Some("2"))
+        .unwrap_err();
 }

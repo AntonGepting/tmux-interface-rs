@@ -58,6 +58,7 @@ fn choose_buffer() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("4").to_string();
     let choose_buffer = ChooseBuffer {
         #[cfg(feature = "tmux_2_6")]
         no_preview: Some(true),
@@ -71,7 +72,7 @@ fn choose_buffer() {
         filter: Some("2"),
         #[cfg(feature = "tmux_2_6")]
         sort_order: Some("3"),
-        target_pane: Some(&TargetPane::Raw("4")),
+        target_pane: Some(&target_pane),
         template: Some("5"),
     };
     tmux.choose_buffer(Some(&choose_buffer)).unwrap_err();
@@ -89,7 +90,7 @@ fn choose_buffer() {
     builder.filter("2");
     #[cfg(feature = "tmux_2_6")]
     builder.sort_order("3");
-    builder.target_pane(&TargetPane::Raw("4"));
+    builder.target_pane(&target_pane);
     builder.template("5");
     let choose_buffer = builder.build();
     tmux.choose_buffer(Some(&choose_buffer)).unwrap_err();

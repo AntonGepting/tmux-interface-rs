@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Structure for displaying a menu on target-client
@@ -14,13 +13,13 @@ use std::process::Output;
 /// ```
 #[derive(Default, Debug)]
 #[cfg(feature = "tmux_3_0")]
-pub struct DisplayMenu<'a, T: Display> {
+pub struct DisplayMenu<'a> {
     /// [-c target-client] - target-client
     #[cfg(feature = "tmux_3_0")]
     pub target_client: Option<&'a str>,
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_3_0")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     /// [-T title] - title
     #[cfg(feature = "tmux_3_0")]
     pub title: Option<&'a str>,
@@ -39,7 +38,7 @@ pub struct DisplayMenu<'a, T: Display> {
 }
 
 #[cfg(feature = "tmux_3_0")]
-impl<'a, T: Display + Default> DisplayMenu<'a, T> {
+impl<'a> DisplayMenu<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -47,11 +46,11 @@ impl<'a, T: Display + Default> DisplayMenu<'a, T> {
 
 #[derive(Default, Debug)]
 #[cfg(feature = "tmux_3_0")]
-pub struct DisplayMenuBuilder<'a, T: Display> {
+pub struct DisplayMenuBuilder<'a> {
     #[cfg(feature = "tmux_3_0")]
     pub target_client: Option<&'a str>,
     #[cfg(feature = "tmux_3_0")]
-    pub target_pane: Option<&'a T>,
+    pub target_pane: Option<&'a str>,
     #[cfg(feature = "tmux_3_0")]
     pub title: Option<&'a str>,
     #[cfg(feature = "tmux_3_0")]
@@ -64,7 +63,7 @@ pub struct DisplayMenuBuilder<'a, T: Display> {
 }
 
 #[cfg(feature = "tmux_3_0")]
-impl<'a, T: Display + Default> DisplayMenuBuilder<'a, T> {
+impl<'a> DisplayMenuBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -76,7 +75,7 @@ impl<'a, T: Display + Default> DisplayMenuBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_3_0")]
-    pub fn target_pane(&mut self, target_pane: &'a T) -> &mut Self {
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
         self.target_pane = Some(target_pane);
         self
     }
@@ -99,7 +98,7 @@ impl<'a, T: Display + Default> DisplayMenuBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> DisplayMenu<'a, T> {
+    pub fn build(&self) -> DisplayMenu<'a> {
         DisplayMenu {
             #[cfg(feature = "tmux_3_0")]
             target_client: self.target_client,
@@ -126,9 +125,9 @@ impl<'a> TmuxInterface<'a> {
     /// [-x position] [-y position] name key command ...
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn display_menu<T: Display>(
+    pub fn display_menu(
         &mut self,
-        display_menu: Option<&DisplayMenu<T>>,
+        display_menu: Option<&DisplayMenu>,
         name: &str,
         key: &str,
         command: &str,
@@ -136,20 +135,18 @@ impl<'a> TmuxInterface<'a> {
         let mut args: Vec<&str> = Vec::new();
         let x;
         let y;
-        let s;
         if let Some(display_menu) = display_menu {
             #[cfg(feature = "tmux_3_0")]
-            if let Some(s) = display_menu.target_client {
-                args.extend_from_slice(&[c_KEY, &s])
+            if let Some(target_client) = display_menu.target_client {
+                args.extend_from_slice(&[c_KEY, &target_client])
             }
             #[cfg(feature = "tmux_3_0")]
             if let Some(target_pane) = display_menu.target_pane {
-                s = target_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &s])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
             #[cfg(feature = "tmux_3_0")]
-            if let Some(s) = display_menu.title {
-                args.extend_from_slice(&[T_KEY, &s])
+            if let Some(title) = display_menu.title {
+                args.extend_from_slice(&[T_KEY, &title])
             }
             #[cfg(feature = "tmux_3_0")]
             if let Some(position) = display_menu.x {

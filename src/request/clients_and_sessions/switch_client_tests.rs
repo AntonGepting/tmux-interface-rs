@@ -66,6 +66,7 @@ fn attach_session() {
         Err(Error::Hook)
     }));
 
+    let target_session = TargetSession::Raw("2").to_string();
     let switch_client = SwitchClient {
         #[cfg(feature = "tmux_2_1")]
         not_update_env: Some(true),
@@ -82,7 +83,7 @@ fn attach_session() {
         #[cfg(feature = "tmux_1_0")]
         target_client: Some("1"),
         #[cfg(feature = "tmux_1_0")]
-        target_session: Some(&TargetSession::Raw("2")),
+        target_session: Some(&target_session),
         #[cfg(feature = "tmux_2_1")]
         key_table: Some("3"),
     };
@@ -104,7 +105,7 @@ fn attach_session() {
     #[cfg(feature = "tmux_1_0")]
     builder.target_client("1");
     #[cfg(feature = "tmux_1_0")]
-    builder.target_session(&TargetSession::Raw("2"));
+    builder.target_session(&target_session);
     #[cfg(feature = "tmux_2_1")]
     builder.key_table("3");
     let switch_client = builder.build();

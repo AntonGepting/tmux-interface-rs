@@ -1,7 +1,6 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
 use crate::PaneSize;
-use std::fmt::Display;
 use std::process::Output;
 
 /// Like split-window, but instead of splitting `dst-pane` and creating a new pane, split it
@@ -27,7 +26,7 @@ use std::process::Output;
 /// (alias: joinp)
 /// ```
 #[derive(Default, Debug)]
-pub struct JoinPane<'a, T: Display> {
+pub struct JoinPane<'a> {
     /// [-b] - cause src-pane to be joined to left of or above dst-pane
     #[cfg(feature = "tmux_2_6")]
     pub left_above: Option<bool>,
@@ -48,14 +47,14 @@ pub struct JoinPane<'a, T: Display> {
     pub size: Option<&'a PaneSize>,
     /// [-s src-pane] - src-pane
     #[cfg(feature = "tmux_1_2")]
-    pub src_pane: Option<&'a T>,
+    pub src_pane: Option<&'a str>,
     /// [-t dst-pane] - dst-pane
     #[cfg(feature = "tmux_1_2")]
-    pub dst_pane: Option<&'a T>,
+    pub dst_pane: Option<&'a str>,
 }
 
 #[derive(Default, Debug)]
-pub struct JoinPaneBuilder<'a, T> {
+pub struct JoinPaneBuilder<'a> {
     #[cfg(feature = "tmux_2_6")]
     pub left_above: Option<bool>,
     #[cfg(feature = "tmux_1_2")]
@@ -69,12 +68,12 @@ pub struct JoinPaneBuilder<'a, T> {
     #[cfg(feature = "tmux_1_2")]
     pub size: Option<&'a PaneSize>,
     #[cfg(feature = "tmux_1_2")]
-    pub src_pane: Option<&'a T>,
+    pub src_pane: Option<&'a str>,
     #[cfg(feature = "tmux_1_2")]
-    pub dst_pane: Option<&'a T>,
+    pub dst_pane: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> JoinPaneBuilder<'a, T> {
+impl<'a> JoinPaneBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -116,18 +115,18 @@ impl<'a, T: Display + Default> JoinPaneBuilder<'a, T> {
     }
 
     #[cfg(feature = "tmux_1_2")]
-    pub fn src_pane(&mut self, src_pane: &'a T) -> &mut Self {
+    pub fn src_pane(&mut self, src_pane: &'a str) -> &mut Self {
         self.src_pane = Some(src_pane);
         self
     }
 
     #[cfg(feature = "tmux_1_2")]
-    pub fn dst_pane(&mut self, dst_pane: &'a T) -> &mut Self {
+    pub fn dst_pane(&mut self, dst_pane: &'a str) -> &mut Self {
         self.dst_pane = Some(dst_pane);
         self
     }
 
-    pub fn build(&self) -> JoinPane<'a, T> {
+    pub fn build(&self) -> JoinPane<'a> {
         JoinPane {
             #[cfg(feature = "tmux_2_6")]
             left_above: self.left_above,
@@ -149,7 +148,7 @@ impl<'a, T: Display + Default> JoinPaneBuilder<'a, T> {
     }
 }
 
-impl<'a, T: Display + Default> JoinPane<'a, T> {
+impl<'a> JoinPane<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -180,13 +179,11 @@ impl<'a> TmuxInterface<'a> {
     /// tmux join-pane [-dhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: joinp)
     /// ```
-    pub fn join_pane<T: Display>(
+    pub fn join_pane(
         &mut self,
-        join_pane: Option<&JoinPane<T>>,
+        join_pane: Option<&JoinPane>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        let s;
-        let t;
         let l;
         if let Some(join_pane) = join_pane {
             #[cfg(feature = "tmux_2_6")]
@@ -232,13 +229,11 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_1_2")]
             if let Some(src_pane) = join_pane.src_pane {
-                s = src_pane.to_string();
-                args.extend_from_slice(&[s_KEY, &s])
+                args.extend_from_slice(&[s_KEY, &src_pane])
             }
             #[cfg(feature = "tmux_1_2")]
             if let Some(dst_pane) = join_pane.dst_pane {
-                t = dst_pane.to_string();
-                args.extend_from_slice(&[t_KEY, &t])
+                args.extend_from_slice(&[t_KEY, &dst_pane])
             }
         }
         let output = self.subcommand(TmuxInterface::JOIN_PANE, &args)?;

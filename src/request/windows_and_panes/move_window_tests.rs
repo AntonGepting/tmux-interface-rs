@@ -48,6 +48,9 @@ fn move_window() {
         Err(Error::Hook)
     }));
 
+    let src_pane = TargetWindow::Raw("1").to_string();
+    let dst_pane = TargetWindow::Raw("2").to_string();
+
     let move_window = MoveWindow {
         #[cfg(feature = "tmux_2_1")]
         add: Some(true),
@@ -58,9 +61,9 @@ fn move_window() {
         #[cfg(feature = "tmux_1_3")]
         kill: Some(true),
         #[cfg(feature = "tmux_0_8")]
-        src_window: Some(&TargetWindow::Raw("1")),
+        src_window: Some(&src_pane),
         #[cfg(feature = "tmux_0_8")]
-        dst_window: Some(&TargetWindow::Raw("2")),
+        dst_window: Some(&dst_pane),
     };
     tmux.move_window(Some(&move_window)).unwrap_err();
 
@@ -74,9 +77,9 @@ fn move_window() {
     #[cfg(feature = "tmux_1_3")]
     builder.kill();
     #[cfg(feature = "tmux_0_8")]
-    builder.src_window(&TargetWindow::Raw("1"));
+    builder.src_window(&src_pane);
     #[cfg(feature = "tmux_0_8")]
-    builder.dst_window(&TargetWindow::Raw("2"));
+    builder.dst_window(&dst_pane);
     builder.build();
     tmux.move_window(Some(&move_window)).unwrap_err();
 }

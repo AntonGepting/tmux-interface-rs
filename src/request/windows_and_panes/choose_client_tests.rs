@@ -59,6 +59,11 @@ fn choose_client() {
         Err(Error::Hook)
     }));
 
+    #[cfg(feature = "tmux_2_6")]
+    let target_pane = TargetPane::Raw("4").to_string();
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
+    let target_window = TargetWindow::Raw("4").to_string();
+
     let choose_client = ChooseClient {
         #[cfg(feature = "tmux_2_6")]
         without_preview: Some(true),
@@ -73,9 +78,9 @@ fn choose_client() {
         #[cfg(feature = "tmux_2_6")]
         sort_order: Some("3"),
         #[cfg(feature = "tmux_2_6")]
-        target_pane: Some(&TargetPane::Raw("4")),
+        target_pane: Some(&target_pane),
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
-        target_window: Some(&TargetWindow::Raw("4")),
+        target_window: Some(&target_window),
         #[cfg(feature = "tmux_1_0")]
         template: Some("5"),
     };
@@ -95,9 +100,9 @@ fn choose_client() {
     #[cfg(feature = "tmux_2_6")]
     builder.sort_order("3");
     #[cfg(feature = "tmux_2_6")]
-    builder.target_pane(&TargetPane::Raw("4"));
+    builder.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
-    builder.target_window(&TargetWindow::Raw("4"));
+    builder.target_window(&target_window);
     #[cfg(feature = "tmux_1_0")]
     builder.template("5");
     let choose_client = builder.build();

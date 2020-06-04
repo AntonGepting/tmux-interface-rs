@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::fmt::Display;
 
 /// Structure for showing options
 ///
@@ -42,7 +41,7 @@ use std::fmt::Display;
 /// (alias: show)
 /// ```
 #[derive(Default, Debug)]
-pub struct ShowOptions<'a, T: Display> {
+pub struct ShowOptions<'a> {
     /// [-A] - includes options inherited from a parent set of options
     #[cfg(feature = "tmux_3_0")]
     pub include_inherited: Option<bool>,
@@ -69,20 +68,20 @@ pub struct ShowOptions<'a, T: Display> {
     pub window: Option<bool>,
     /// [-t target-pane] - target session or window name
     //#[cfg(feature = "tmux_X_X")]
-    pub target: Option<&'a T>,
+    pub target: Option<&'a str>,
     /// [option] - specify option name
     #[cfg(feature = "tmux_1_7")]
     pub option: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> ShowOptions<'a, T> {
+impl<'a> ShowOptions<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 }
 
 #[derive(Default, Debug)]
-pub struct ShowOptionsBuilder<'a, T: Display> {
+pub struct ShowOptionsBuilder<'a> {
     #[cfg(feature = "tmux_3_0")]
     pub include_inherited: Option<bool>,
     #[cfg(feature = "tmux_1_2")]
@@ -100,12 +99,12 @@ pub struct ShowOptionsBuilder<'a, T: Display> {
     #[cfg(feature = "tmux_1_2")]
     pub window: Option<bool>,
     //#[cfg(feature = "tmux_X_X")]
-    pub target: Option<&'a T>,
+    pub target: Option<&'a str>,
     #[cfg(feature = "tmux_1_7")]
     pub option: Option<&'a str>,
 }
 
-impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
+impl<'a> ShowOptionsBuilder<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -159,7 +158,7 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
     }
 
     //#[cfg(feature = "tmux_X_X")]
-    pub fn target(&mut self, target: &'a T) -> &mut Self {
+    pub fn target(&mut self, target: &'a str) -> &mut Self {
         self.target = Some(target);
         self
     }
@@ -170,7 +169,7 @@ impl<'a, T: Display + Default> ShowOptionsBuilder<'a, T> {
         self
     }
 
-    pub fn build(&self) -> ShowOptions<'a, T> {
+    pub fn build(&self) -> ShowOptions<'a> {
         ShowOptions {
             #[cfg(feature = "tmux_3_0")]
             include_inherited: self.include_inherited,
@@ -237,9 +236,9 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-options [-t target-session] option value
     /// (alias: show)
     /// ```
-    pub fn show_options<T: Display>(
+    pub fn show_options(
         &mut self,
-        show_options: Option<&ShowOptions<T>>,
+        show_options: Option<&ShowOptions>,
     ) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
@@ -282,8 +281,8 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &s])
             }
             #[cfg(feature = "tmux_1_7")]
-            if let Some(s) = show_options.option {
-                args.push(&s)
+            if let Some(option) = show_options.option {
+                args.push(&option)
             }
         }
         let output = self.subcommand(TmuxInterface::SHOW_OPTIONS, &args)?;

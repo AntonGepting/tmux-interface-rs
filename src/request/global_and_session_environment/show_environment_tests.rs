@@ -27,11 +27,7 @@ fn show_environment() {
         );
         Err(Error::Hook)
     }));
-    tmux.show_environment(
-        Some(true),
-        Some(true),
-        Some(&TargetSession::Raw("1")),
-        Some("2"),
-    )
-    .unwrap_err();
+    let target_session = TargetSession::Raw("1").to_string();
+    tmux.show_environment(Some(true), Some(true), Some(&target_session), Some("2"))
+        .unwrap_err();
 }

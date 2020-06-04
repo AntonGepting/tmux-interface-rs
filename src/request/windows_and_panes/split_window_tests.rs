@@ -97,6 +97,8 @@ fn split_window() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("4").to_string();
+
     let split_window = SplitWindow {
         #[cfg(feature = "tmux_2_4")]
         before: Some(true),
@@ -119,7 +121,7 @@ fn split_window() {
         #[cfg(feature = "tmux_0_8")]
         size: Some(&PaneSize::Size(3)),
         #[cfg(feature = "tmux_1_2")]
-        target_pane: Some(&TargetPane::Raw("4")),
+        target_pane: Some(&target_pane),
         #[cfg(feature = "tmux_1_2")]
         shell_command: Some("5"),
         #[cfg(feature = "tmux_1_7")]
@@ -149,7 +151,7 @@ fn split_window() {
     #[cfg(feature = "tmux_0_8")]
     builder.size(&PaneSize::Size(3));
     #[cfg(feature = "tmux_1_2")]
-    builder.target_pane(&TargetPane::Raw("4"));
+    builder.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_2")]
     builder.shell_command("5");
     #[cfg(feature = "tmux_1_7")]

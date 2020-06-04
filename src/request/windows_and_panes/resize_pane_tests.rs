@@ -56,6 +56,7 @@ fn resize_pane() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("1").to_string();
     let resize_pane = ResizePane {
         #[cfg(feature = "tmux_0_9")]
         down: Some(true),
@@ -70,7 +71,7 @@ fn resize_pane() {
         #[cfg(feature = "tmux_1_8")]
         zoom: Some(true),
         #[cfg(feature = "tmux_0_9")]
-        target_pane: Some(&TargetPane::Raw("1")),
+        target_pane: Some(&target_pane),
         #[cfg(feature = "tmux_1_8")]
         width: Some(2),
         #[cfg(feature = "tmux_1_8")]
@@ -94,7 +95,7 @@ fn resize_pane() {
     #[cfg(feature = "tmux_1_8")]
     builder.zoom();
     #[cfg(feature = "tmux_0_9")]
-    builder.target_pane(&TargetPane::Raw("1"));
+    builder.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_8")]
     builder.width(2);
     #[cfg(feature = "tmux_1_8")]

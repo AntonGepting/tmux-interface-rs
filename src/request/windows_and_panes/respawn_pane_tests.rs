@@ -40,6 +40,7 @@ fn respawn_pane() {
         Err(Error::Hook)
     }));
 
+    let target_pane = TargetPane::Raw("3").to_string();
     let respawn_pane = RespawnPane {
         #[cfg(feature = "tmux_1_5")]
         kill: Some(true),
@@ -48,7 +49,7 @@ fn respawn_pane() {
         #[cfg(feature = "tmux_3_0")]
         environment: Some("2"),
         #[cfg(feature = "tmux_1_5")]
-        target_pane: Some(&TargetPane::Raw("3")),
+        target_pane: Some(&target_pane),
         #[cfg(feature = "tmux_2_6")]
         shell_command: Some("4"),
     };
@@ -62,7 +63,7 @@ fn respawn_pane() {
     #[cfg(feature = "tmux_3_0")]
     builder.environment("2");
     #[cfg(feature = "tmux_1_5")]
-    builder.target_pane(&TargetPane::Raw("3"));
+    builder.target_pane(&target_pane);
     #[cfg(feature = "tmux_2_6")]
     builder.shell_command("4");
     let respawn_pane = builder.build();

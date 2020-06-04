@@ -34,11 +34,7 @@ fn copy_mode() {
         assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
-    tmux.copy_mode(
-        Some(true),
-        Some(true),
-        Some(true),
-        Some(&TargetPane::Raw("1")),
-    )
-    .unwrap_err();
+    let target_pane = TargetPane::Raw("1").to_string();
+    tmux.copy_mode(Some(true), Some(true), Some(true), Some(&target_pane))
+        .unwrap_err();
 }
