@@ -95,7 +95,7 @@ pub struct PaneOptions {
 impl PaneOptions {
     pub fn get_all() -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
-        let show_options = ShowOptionsBuilder::<TargetPane>::new().global().build();
+        let show_options = ShowOptionsBuilder::new().global().build();
         let s = tmux.show_options(Some(&show_options))?;
         s.parse()
     }
@@ -111,7 +111,7 @@ impl PaneOptions {
             .map(|t| format!("{}", t.0))
             .collect::<Vec<String>>()
             .join(" ");
-        let show_options = ShowOptionsBuilder::<TargetPane>::new()
+        let show_options = ShowOptionsBuilder::new()
             .pane()
             .option(&selected_option)
             .build();
@@ -125,7 +125,7 @@ impl PaneOptions {
         let mut tmux = TmuxInterface::new();
         for selected_option in PANE_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
-                let set_option = SetOptionBuilder::<TargetPane>::new().pane().build();
+                let set_option = SetOptionBuilder::new().pane().build();
                 tmux.set_option(Some(&set_option), selected_option.0, &selected_value)?;
             }
         }
