@@ -158,10 +158,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
     /// (alias: resizew)
     /// ```
-    pub fn resize_window(
-        &mut self,
-        resize_window: Option<&ResizeWindow<T>>,
-    ) -> Result<Output, Error> {
+    pub fn resize_window(&mut self, resize_window: Option<&ResizeWindow>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let x;
         let y;
