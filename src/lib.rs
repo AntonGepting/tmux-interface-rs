@@ -73,6 +73,7 @@
 //! tmux.new_session(Some(&new_session)).unwrap();
 //! let mut attach_session = AttachSession::new();
 //! attach_session.target_session = Some("new_session_name2");
+//! tmux.attach_session(Some(&attach_session)).unwrap();
 //! // if exists
 //! tmux.kill_session(None, None, Some("new_session_name2")).unwrap();
 //! ```
