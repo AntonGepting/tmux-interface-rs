@@ -1,6 +1,8 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
 use std::process::Output;
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+use std::marker::PhantomData;
 
 /// Structure for conditional commands executing
 ///
@@ -47,6 +49,8 @@ pub struct IfShell<'a> {
     /// [command] - specify the second command
     #[cfg(feature = "tmux_1_6")]
     pub second_command: Option<&'a str>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+    pub _phantom: PhantomData<&'a str>,
 }
 
 impl<'a> IfShell<'a> {
@@ -67,6 +71,8 @@ pub struct IfShellBuilder<'a> {
     //pub command: &'a str,
     #[cfg(feature = "tmux_1_6")]
     pub second_command: Option<&'a str>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+    pub _phantom: PhantomData<&'a str>,
 }
 
 impl<'a> IfShellBuilder<'a> {
@@ -108,6 +114,8 @@ impl<'a> IfShellBuilder<'a> {
             target_pane: self.target_pane,
             #[cfg(feature = "tmux_1_6")]
             second_command: self.second_command,
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+            _phantom: PhantomData,
         }
     }
 }

@@ -253,6 +253,7 @@ pub mod error;
 
 pub mod common;
 pub mod request;
+#[cfg(feature = "tmux_1_6")]
 pub mod response;
 
 pub mod tmux_interface;
@@ -483,7 +484,7 @@ pub use crate::common::session_options::VISUAL_BELL;
 pub use crate::common::session_options::VISUAL_CONTENT;
 #[cfg(feature = "tmux_1_4")]
 pub use crate::common::session_options::VISUAL_SILENCE;
-#[cfg(feature = "tmux_1_4")]
+#[cfg(feature = "tmux_1_6")]
 pub use crate::common::session_options::WORD_SEPARATORS;
 // all
 pub use crate::common::session_options::SESSION_OPTIONS_ALL;
@@ -841,20 +842,34 @@ pub use crate::request::target_window::{TargetWindow, TargetWindowExt, TargetWin
 pub use self::tmux_option::TmuxOption;
 
 // enums
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::layout::layout_cell::LayoutType;
 // structs
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::layout::layout::Layout;
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::layout::layout_cell::LayoutCell;
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::layout::layout_checksum::LayoutChecksum;
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::pane::pane::Pane;
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::pane::pane_tabs::PaneTabs;
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::pane::panes::Panes;
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::session::session::Session;
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::session::session_stack::SessionStack;
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::session::sessions::Sessions;
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::window::window::Window;
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::window::window_flag::WindowFlag;
+#[cfg(feature = "tmux_1_6")]
 pub use self::response::window::windows::Windows;
+
 pub use self::version::Version;
 
 // structs
@@ -866,87 +881,164 @@ mod tmux_option_tests;
 mod version_tests;
 
 // consts
+// TODO: add all
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_ACTIVITY;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_ALERTS;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_ATTACHED;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_CREATED;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_FORMAT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_GROUP;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_GROUPED;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_GROUP_LIST;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_GROUP_SIZE;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_ID;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_LAST_ATTACHED;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_MANY_ATTACHED;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_NAME;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_STACK;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_WINDOWS;
 
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_NONE;
 //pub use crate::response::session::session::SESSION_DEFAULT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::session::session::SESSION_ALL;
 
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_ACTIVE;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_ACTIVITY;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_ACTIVITY_FLAG;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_BELL_FLAG;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_BIGGER;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_END_FLAG;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_FLAGS;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_FORMAT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_HEIGHT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_ID;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_INDEX;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_LAST_FLAG;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_LAYOUT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_LINKED;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_NAME;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_OFFSET_X;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_OFFSET_Y;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_PANES;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_SILENCE_FLAG;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_STACK_INDEX;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_START_FLAG;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_VISIBLE_LAYOUT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_WIDTH;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_ZOOMED_FLAG;
 
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_NONE;
 //pub use crate::response::window::window::WINDOW_DEFAULT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::window::window::WINDOW_ALL;
 
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_ACTIVE;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_AT_BOTTOM;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_AT_LEFT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_AT_RIGHT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_AT_TOP;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_BOTTOM;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_CURRENT_COMMAND;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_CURRENT_PATH;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_DEAD;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_DEAD_STATUS;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_FORMAT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_HEIGHT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_ID;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_INDEX;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_INPUT_OFF;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_IN_MODE;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_LEFT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_MARKED;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_MARKED_SET;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_MODE;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_PID;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_PIPE;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_RIGHT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_SEARCH_STRING;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_START_COMMMAND;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_SYNCHRONIZED;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_TABS;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_TITLE;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_TOP;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_TTY;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_WIDTH;
 
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_NONE;
 //pub use crate::response::pane::pane::PANE_DEFAULT;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::response::pane::pane::PANE_ALL;

@@ -162,6 +162,12 @@ impl<'a> SendKeysBuilder<'a> {
         self
     }
 
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+    pub fn target_window(&mut self, target_window: &'a str) -> &mut Self {
+        self.target_window = Some(target_window);
+        self
+    }
+
     pub fn build(&self) -> SendKeys<'a> {
         SendKeys {
             #[cfg(feature = "tmux_3_1")]

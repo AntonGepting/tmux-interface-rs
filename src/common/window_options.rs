@@ -697,7 +697,7 @@ pub const WINDOW_OPTIONS: [(
         "window-status-attr",
         |o, _, s| o.window_status_attr = Some(s.to_string()),
         |o| {
-            o.window_status_activity_attr
+            o.window_status_attr
                 .as_ref()
                 .map(|v| format!("\"{}\"", v.to_string()))
         },
@@ -708,7 +708,7 @@ pub const WINDOW_OPTIONS: [(
         "window-status-bg",
         |o, _, s| o.window_status_bg = Some(s.to_string()),
         |o| {
-            o.window_status_activity_bg
+            o.window_status_bg
                 .as_ref()
                 .map(|v| format!("\"{}\"", v.to_string()))
         },
@@ -719,7 +719,7 @@ pub const WINDOW_OPTIONS: [(
         "window-status-fg",
         |o, _, s| o.window_status_fg = Some(s.to_string()),
         |o| {
-            o.window_status_activity_fg
+            o.window_status_fg
                 .as_ref()
                 .map(|v| format!("\"{}\"", v.to_string()))
         },

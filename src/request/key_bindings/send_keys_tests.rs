@@ -89,6 +89,8 @@ fn send_keys() {
         repeat_count: Some(1),
         #[cfg(feature = "tmux_1_6")]
         target_pane: Some(&target_pane),
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+        target_window: Some(&target_pane),
     };
     tmux.send_keys(Some(&send_keys), &vec!["3"]).unwrap_err();
     //tmux.send_keys(None, &vec!["3"]);
@@ -110,6 +112,8 @@ fn send_keys() {
     builder.repeat_count(1);
     #[cfg(feature = "tmux_1_6")]
     builder.target_pane(&target_pane);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+    builder.target_window(&target_pane);
     let send_keys = builder.build();
     tmux.send_keys(Some(&send_keys), &vec!["3"]).unwrap_err();
 }

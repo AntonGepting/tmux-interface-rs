@@ -1,3 +1,4 @@
+#[cfg(feature = "tmux_1_6")]
 #[test]
 fn get_panes() {
     use tmux_interface::response::pane::pane::PANE_ALL;

@@ -184,7 +184,10 @@ fn send_keys() {
 
     let target_pane = TargetPane::Raw("test_send_keys:^.0").to_string();
     let send_keys = SendKeys {
+        #[cfg(feature = "tmux_1_6")]
         target_pane: Some(&target_pane),
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+        target_window: Some(&target_pane),
         ..Default::default()
     };
     tmux.send_keys(Some(&send_keys), &vec!["top", "C-m"])

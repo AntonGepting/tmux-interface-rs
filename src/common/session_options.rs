@@ -1007,7 +1007,7 @@ pub const SESSION_OPTIONS: [(
         |o| o.visual_silence.as_ref().map(|v| v.to_string()),
         VISUAL_SILENCE,
     ),
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_6")]
     (
         "word-separators",
         |o, _, s| o.word_separators = s.parse().ok(),
@@ -1266,7 +1266,7 @@ pub struct SessionOptions {
     #[cfg(feature = "tmux_1_4")]
     pub visual_silence: Option<Activity>,
     //word-separators string
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_6")]
     pub word_separators: Option<String>,
     //pub user_options: Option<HashMap<String, String>>
 }
@@ -1538,7 +1538,7 @@ pub struct SessionOptionsBuilder<'a> {
     pub visual_content: Option<Switch>,
     #[cfg(feature = "tmux_1_4")]
     pub visual_silence: Option<Activity>,
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_6")]
     pub word_separators: Option<&'a str>,
 }
 
@@ -1838,7 +1838,7 @@ impl<'a> SessionOptionsBuilder<'a> {
         self
     }
 
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_6")]
     pub fn word_separators(&mut self, word_separators: &'a str) -> &mut Self {
         self.word_separators = Some(word_separators);
         self
@@ -2005,7 +2005,7 @@ impl<'a> SessionOptionsBuilder<'a> {
             visual_content: self.visual_content.clone(),
             #[cfg(feature = "tmux_1_4")]
             visual_silence: self.visual_silence.clone(),
-            #[cfg(feature = "tmux_1_4")]
+            #[cfg(feature = "tmux_1_6")]
             word_separators: self.word_separators.map(|s| s.to_string()),
         }
     }

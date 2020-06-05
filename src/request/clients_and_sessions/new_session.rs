@@ -337,7 +337,9 @@ impl<'a> TmuxInterface<'a> {
     /// ```
     pub fn new_session(&mut self, new_session: Option<&NewSession>) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
+            #[cfg(feature = "tmux_1_6")]
         let x;
+            #[cfg(feature = "tmux_1_6")]
         let y;
 
         if let Some(new_session) = new_session {

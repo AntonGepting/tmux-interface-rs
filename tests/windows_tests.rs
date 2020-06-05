@@ -1,3 +1,4 @@
+#[cfg(feature = "tmux_1_6")]
 #[test]
 fn get_windows() {
     use tmux_interface::response::window::window::WINDOW_ALL;

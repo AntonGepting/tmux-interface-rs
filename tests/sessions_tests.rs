@@ -1,3 +1,4 @@
+#[cfg(feature = "tmux_1_6")]
 #[test]
 fn get_sessions() {
     use tmux_interface::response::session::session::SESSION_ALL;

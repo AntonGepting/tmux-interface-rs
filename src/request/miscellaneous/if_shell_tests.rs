@@ -1,6 +1,8 @@
 #[test]
 fn if_shell() {
     use crate::{Error, IfShell, IfShellBuilder, TargetPane, TmuxInterface};
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+    use std::marker::PhantomData;
 
     let mut tmux = TmuxInterface::new();
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
@@ -38,6 +40,7 @@ fn if_shell() {
         s.extend_from_slice(&["-t", "1"]);
         s.push("2");
         s.push("3");
+        #[cfg(feature = "tmux_1_6")]
         s.push("4");
         assert_eq!(bin, "tmux");
         assert_eq!(options, &o);
@@ -52,7 +55,10 @@ fn if_shell() {
         not_execute: Some(true),
         #[cfg(feature = "tmux_1_8")]
         target_pane: Some(&target_pane),
+        #[cfg(feature = "tmux_1_6")]
         second_command: Some("4"),
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+        _phantom: PhantomData,
     };
     tmux.if_shell(Some(&if_shell), "2", "3").unwrap_err();
 
@@ -63,6 +69,7 @@ fn if_shell() {
     builder.not_execute();
     #[cfg(feature = "tmux_1_8")]
     builder.target_pane(&target_pane);
+    #[cfg(feature = "tmux_1_6")]
     builder.second_command("4");
     let if_shell = builder.build();
     tmux.if_shell(Some(&if_shell), "2", "3").unwrap_err();
