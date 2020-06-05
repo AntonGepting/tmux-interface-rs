@@ -1,4 +1,14 @@
 #[test]
+fn show_generated_struct() {
+    use crate::ServerOptions;
+
+    let _server_options = ServerOptions {
+        ..Default::default()
+    };
+    //dbg!(_server_options);
+}
+
+#[test]
 fn bitflags() {
     use crate::{SERVER_OPTIONS_ALL, SERVER_OPTIONS_NONE};
     let bitflags =
@@ -28,7 +38,7 @@ fn parse() {
 
     let mut builder = ServerOptionsBuilder::new();
     builder.buffer_limit(50);
-    #[cfg(feature = "tmux_2_0")]
+    #[cfg(feature = "tmux_2_1")]
     builder.default_terminal("\"screen-256color\"");
     #[cfg(feature = "tmux_2_7")]
     builder.exit_empty(Switch::On);
@@ -61,7 +71,7 @@ fn parse() {
         "\"choose-window=choose-tree -w\"",
         "\"choose-session=choose-tree -s\"",
     ]);
-    #[cfg(feature = "tmux_2_0")]
+    #[cfg(feature = "tmux_2_1")]
     builder.default_terminal("\"screen-256color\"");
     builder.escape_time(500);
     #[cfg(feature = "tmux_2_7")]

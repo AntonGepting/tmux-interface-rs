@@ -5,7 +5,7 @@ fn show_generated_struct() {
     let _session_options = SessionOptions {
         ..Default::default()
     };
-    //dbg!(session_options);
+    //dbg!(_session_options);
 }
 
 #[test]

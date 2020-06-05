@@ -279,7 +279,7 @@ pub use crate::common::server_options::BACKSPACE;
 pub use crate::common::server_options::BUFFER_LIMIT;
 #[cfg(feature = "tmux_2_4")]
 pub use crate::common::server_options::COMMAND_ALIAS;
-#[cfg(feature = "tmux_2_0")]
+#[cfg(feature = "tmux_2_1")]
 pub use crate::common::server_options::DEFAULT_TERMINAL;
 #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
 pub use crate::common::server_options::DETACH_ON_DESTROY;

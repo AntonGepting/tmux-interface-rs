@@ -104,7 +104,7 @@ pub const SERVER_OPTIONS_NUM: usize = 6;
 #[cfg(all(feature = "tmux_1_9a", not(feature = "tmux_2_0")))]
 pub const SERVER_OPTIONS_NUM: usize = 6;
 #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_1")))]
-pub const SERVER_OPTIONS_NUM: usize = 8;
+pub const SERVER_OPTIONS_NUM: usize = 7;
 #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_4")))]
 pub const SERVER_OPTIONS_NUM: usize = 9;
 //#[cfg(all(feature = "tmux_2_2", not(feature = "tmux_2_4")))]
@@ -165,7 +165,7 @@ pub const SERVER_OPTIONS: [(
         |o| o.command_alias.as_ref().map(|v| v.join(" ")),
         COMMAND_ALIAS,
     ),
-    #[cfg(feature = "tmux_2_0")]
+    #[cfg(feature = "tmux_2_1")]
     (
         "default-terminal",
         |o, _, s| o.default_terminal = s.parse().ok(),
@@ -273,7 +273,7 @@ pub struct ServerOptions {
     #[cfg(feature = "tmux_2_4")]
     pub command_alias: Option<Vec<String>>,
     // default-terminal terminal
-    #[cfg(feature = "tmux_2_0")]
+    #[cfg(feature = "tmux_2_1")]
     pub default_terminal: Option<String>,
     //escape-time time
     #[cfg(feature = "tmux_1_2")]
@@ -419,7 +419,7 @@ pub struct ServerOptionsBuilder<'a> {
     pub buffer_limit: Option<usize>,
     #[cfg(feature = "tmux_2_4")]
     pub command_alias: Option<Vec<String>>,
-    #[cfg(feature = "tmux_2_0")]
+    #[cfg(feature = "tmux_2_1")]
     pub default_terminal: Option<&'a str>,
     #[cfg(feature = "tmux_1_2")]
     pub escape_time: Option<usize>,
@@ -469,7 +469,7 @@ impl<'a> ServerOptionsBuilder<'a> {
         self
     }
 
-    #[cfg(feature = "tmux_2_0")]
+    #[cfg(feature = "tmux_2_1")]
     pub fn default_terminal(&mut self, default_terminal: &'a str) -> &mut Self {
         self.default_terminal = Some(default_terminal);
         self
@@ -543,7 +543,7 @@ impl<'a> ServerOptionsBuilder<'a> {
             buffer_limit: self.buffer_limit,
             #[cfg(feature = "tmux_2_4")]
             command_alias: self.command_alias.clone(),
-            #[cfg(feature = "tmux_2_0")]
+            #[cfg(feature = "tmux_2_1")]
             default_terminal: self.default_terminal.map(|s| s.to_string()),
             #[cfg(feature = "tmux_1_2")]
             escape_time: self.escape_time,
