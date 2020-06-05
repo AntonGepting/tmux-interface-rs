@@ -223,11 +223,11 @@ impl<'a> SetOptionBuilder<'a> {
             #[cfg(feature = "tmux_1_2")]
             window: self.window,
             #[cfg(feature = "tmux_3_0")]
-            target_pane: self.target,
+            target_pane: self.target_pane,
             #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             target: self.target,
             #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
-            target_session: self.target,
+            target_session: self.target_session,
         }
     }
 }
@@ -324,7 +324,7 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(feature = "tmux_3_0")]
             if let Some(target_pane) = set_option.target_pane {
-                args.extend_from_slice(&[t_KEY, &target])
+                args.extend_from_slice(&[t_KEY, &target_pane])
             }
             #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             if let Some(target) = set_option.target {
@@ -332,7 +332,7 @@ impl<'a> TmuxInterface<'a> {
             }
             #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
             if let Some(target_session) = set_option.target_session {
-                args.extend_from_slice(&[t_KEY, &target])
+                args.extend_from_slice(&[t_KEY, &target_session])
             }
         }
         args.push(option);
