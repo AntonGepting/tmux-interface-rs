@@ -67,8 +67,6 @@ pub struct IfShellBuilder<'a> {
     //pub command: &'a str,
     #[cfg(feature = "tmux_1_6")]
     pub second_command: Option<&'a str>,
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_8")))]
-    _phantom: PhantomData<&'a T>,
 }
 
 impl<'a> IfShellBuilder<'a> {
@@ -110,8 +108,6 @@ impl<'a> IfShellBuilder<'a> {
             target_pane: self.target_pane,
             #[cfg(feature = "tmux_1_6")]
             second_command: self.second_command,
-            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_8")))]
-            _phantom: PhantomData,
         }
     }
 }
