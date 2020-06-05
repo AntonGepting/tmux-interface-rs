@@ -54,27 +54,27 @@
 //!
 //! let new_session = NewSession {
 //!     detached: Some(true),
-//!     session_name: Some("test_session_name1"),
+//!     session_name: Some("new_session_name1"),
 //!     ..Default::default()
 //! };
 //! tmux.new_session(Some(&new_session)).unwrap();
 //! let attach_session = AttachSession {
-//!    target_session: Some("test_session_name1"),
+//!    target_session: Some("new_session_name1"),
 //!    ..Default::default()
 //! };
 //! tmux.attach_session(Some(&attach_session)).unwrap();
 //! // if exists
-//! tmux.kill_session(None, None, Some("test_session_name1")).unwrap();
+//! tmux.kill_session(None, None, Some("new_session_name1")).unwrap();
 //!
 //! // or alternatively
 //! let mut new_session = NewSession::new();
 //! new_session.detached = Some(true);
-//! new_session.session_name = Some("test_session_name2");
+//! new_session.session_name = Some("new_session_name2");
 //! tmux.new_session(Some(&new_session)).unwrap();
 //! let mut attach_session = AttachSession::new();
-//! attach_session.target_session = Some("test_session_name2");
+//! attach_session.target_session = Some("new_session_name2");
 //! // if exists
-//! tmux.kill_session(None, None, Some("test_session_name2")).unwrap();
+//! tmux.kill_session(None, None, Some("new_session_name2")).unwrap();
 //! ```
 //!
 //!
@@ -110,12 +110,12 @@
 //!
 //! let new_session = NewSession {
 //!     detached: Some(true),
-//!     session_name: Some("test_session_name1"),
+//!     session_name: Some("new_session_name3"),
 //!     ..Default::default()
 //! };
 //! tmux.new_session(Some(&new_session)).unwrap();
 //! tmux.pre_hook = None;
-//! tmux.kill_session(None, None, Some("test_session_name1")).unwrap();
+//! tmux.kill_session(None, None, Some("new_session_name3")).unwrap();
 //! ```
 //!
 //! # New session
