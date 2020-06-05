@@ -10,6 +10,7 @@ const EXTERNAL: &str = "external";
 
 //set-clipboard [on | external | off]
 #[derive(PartialEq, Clone, Debug)]
+#[cfg(feature = "tmux_1_5")]
 pub enum SetClipboard {
     On,
     Off,
@@ -17,6 +18,7 @@ pub enum SetClipboard {
     External,
 }
 
+#[cfg(feature = "tmux_1_5")]
 impl FromStr for SetClipboard {
     type Err = Error;
 
@@ -31,6 +33,7 @@ impl FromStr for SetClipboard {
     }
 }
 
+#[cfg(feature = "tmux_1_5")]
 impl fmt::Display for SetClipboard {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let value = match self {
@@ -59,6 +62,7 @@ pub const QUIET: usize = 1 << 10;
 pub const SET_CLIPBOARD: usize = 1 << 11;
 pub const TERMINAL_OVERRIDES: usize = 1 << 12;
 pub const USER_KEYS: usize = 1 << 13;
+pub const DETACH_ON_DESTROY: usize = 1 << 14;
 
 pub const SERVER_OPTIONS_NONE: usize = 0;
 //pub const SERVER_OPTIONS_DEFAULT: usize = ;
@@ -76,7 +80,8 @@ pub const SERVER_OPTIONS_ALL: usize = BACKSPACE
     | QUIET
     | SET_CLIPBOARD
     | TERMINAL_OVERRIDES
-    | USER_KEYS;
+    | USER_KEYS
+    | DETACH_ON_DESTROY;
 
 #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
 pub const SERVER_OPTIONS_NUM: usize = 0;
@@ -318,6 +323,7 @@ impl ServerOptions {
     // XXX: bitmask is overkill now, mb later use for multiple select
     // NOTE: not allows selective get by bitmask
     // FIXME: tmux v1.6 option attribute not exists, all options will be showed
+    #[cfg(feature = "tmux_1_7")]
     pub fn get(bitflags: usize) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let selected_option = SERVER_OPTIONS

@@ -140,7 +140,9 @@ fn parse() {
     //let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0''asus'0'/dev/pts/2'177";
     let pane_str = pane_vec.join("'");
     let pane = Pane::from_str(&pane_str, PANE_ALL).unwrap();
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(pane.current_path, Some("/home/user".to_string()));
+    #[cfg(feature = "tmux_1_6")]
     assert_eq!(pane.tty, Some("/dev/pts/2".to_string()));
 }
 

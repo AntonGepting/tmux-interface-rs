@@ -63,6 +63,8 @@ fn paste_buffer() {
         separator: Some("2"),
         #[cfg(feature = "tmux_1_7")]
         target_pane: Some(&target_pane),
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+        target_window: Some(&target_pane),
     };
     tmux.paste_buffer(Some(&paste_buffer)).unwrap_err();
 
@@ -79,6 +81,8 @@ fn paste_buffer() {
     builder.separator("2");
     #[cfg(feature = "tmux_1_7")]
     builder.target_pane(&target_pane);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+    builder.target_window(&target_pane);
     let paste_buffer = builder.build();
     tmux.paste_buffer(Some(&paste_buffer)).unwrap_err();
 }

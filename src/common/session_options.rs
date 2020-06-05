@@ -1281,6 +1281,7 @@ impl SessionOptions {
 
     // XXX: bitmask is overkill now, mb later use for multiple select
     // NOTE: not allows selective get by bitmask
+    #[cfg(feature = "tmux_1_7")]
     pub fn get(bitflags: u128) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let selected_option = SESSION_OPTIONS
@@ -1294,6 +1295,7 @@ impl SessionOptions {
         s.parse()
     }
 
+    #[cfg(feature = "tmux_1_7")]
     pub fn get_global(bitflags: u128) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let selected_option = SESSION_OPTIONS
@@ -1927,11 +1929,11 @@ impl<'a> SessionOptionsBuilder<'a> {
             pane_active_border_style: self.pane_active_border_style.map(|s| s.to_string()),
             #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
             pane_border_style: self.pane_border_style.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_6")]
-            prefix: self.prefix.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_7")]
-            prefix2: self.prefix2.map(|s| s.to_string()),
             #[cfg(feature = "tmux_1_0")]
+            prefix: self.prefix.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_6")]
+            prefix2: self.prefix2.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_1_7")]
             renumber_windows: self.renumber_windows.clone(),
             #[cfg(feature = "tmux_1_0")]
             repeat_time: self.repeat_time,

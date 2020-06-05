@@ -157,6 +157,7 @@ fn parse() {
     let session2_str = session2_vec.join(":");
     let sessions_str = format!("{}\n{}", session1_str, session2_str);
     let sessions = Sessions::from_str(&sessions_str, SESSION_ALL).unwrap();
+    #[cfg(feature = "tmux_1_8")]
     assert_eq!(sessions[0].id, Some(0));
 
     //"1557947146::1:1557947146:1::::0::0:$0:1557947146:0:0:4,3,2,1:4\n\
@@ -313,5 +314,6 @@ fn parse() {
     let session2_str = session2_vec.join(":");
     let sessions_str = format!("{}\n{}", session1_str, session2_str);
     let sessions = Sessions::from_str(&sessions_str, SESSION_ALL).unwrap();
+    #[cfg(feature = "tmux_1_8")]
     assert_eq!(sessions[1].id, Some(40));
 }

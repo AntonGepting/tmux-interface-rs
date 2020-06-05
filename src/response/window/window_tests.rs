@@ -143,6 +143,7 @@ fn parse1() {
     //println!("{}", window_str);
 
     let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(window.id, Some(0));
 }
 
@@ -267,7 +268,9 @@ fn parse2() {
     ];
     let window_str = window_vec.join("'");
     let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    #[cfg(feature = "tmux_1_6")]
     assert_eq!(window.name, Some("bash".to_string()));
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(window.id, Some(1));
 }
 
@@ -392,7 +395,9 @@ fn parse3() {
     ];
     let window_str = window_vec.join("'");
     let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    #[cfg(feature = "tmux_1_6")]
     assert_eq!(window.name, Some("bash".to_string()));
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(window.id, Some(2));
 }
 
@@ -517,6 +522,7 @@ fn parse4() {
     ];
     let window_str = window_vec.join("'");
     let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(window.id, Some(3));
 }
 
@@ -641,6 +647,7 @@ fn parse5() {
     ];
     let window_str = window_vec.join("'");
     let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(window.id, Some(4));
 }
 
@@ -765,6 +772,7 @@ fn parse6() {
     ];
     let window_str = window_vec.join("'");
     let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(window.id, Some(5));
 }
 

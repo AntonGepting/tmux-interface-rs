@@ -1189,6 +1189,7 @@ impl WindowOptions {
 
     // XXX: bitmask is overkill now, mb later use for multiple select
     // NOTE: not allows selective get by bitmask
+    #[cfg(feature = "tmux_1_7")]
     pub fn get(bitflags: u128) -> Result<Self, Error> {
         let mut tmux = TmuxInterface::new();
         let selected_option = WINDOW_OPTIONS

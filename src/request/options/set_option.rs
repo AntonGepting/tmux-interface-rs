@@ -77,9 +77,14 @@ pub struct SetOption<'a> {
     #[cfg(feature = "tmux_1_2")]
     pub window: Option<bool>,
     /// [-t target-pane] - specify the target-pane
-    // FIXME: target, target-sesion, target-window
-    //#[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_3_0")]
+    pub target_pane: Option<&'a str>,
+    /// [-t target-session | target-window]
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     pub target: Option<&'a str>,
+    /// [-t target-session]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
+    pub target_session: Option<&'a str>,
     // option
     //pub option: &'a str,
     // value
@@ -112,7 +117,12 @@ pub struct SetOptionBuilder<'a> {
     pub unset: Option<bool>,
     #[cfg(feature = "tmux_1_2")]
     pub window: Option<bool>,
+    #[cfg(feature = "tmux_3_0")]
+    pub target_pane: Option<&'a str>,
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     pub target: Option<&'a str>,
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
+    pub target_session: Option<&'a str>,
     //pub option: &'a str,
     //pub value: &'a str,
 }
@@ -176,8 +186,19 @@ impl<'a> SetOptionBuilder<'a> {
         self
     }
 
+    #[cfg(feature = "tmux_3_0")]
+    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
+        self.target_pane = Some(target_pane);
+        self
+    }
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     pub fn target(&mut self, target: &'a str) -> &mut Self {
         self.target = Some(target);
+        self
+    }
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
+    pub fn target_session(&mut self, target_session: &'a str) -> &mut Self {
+        self.target_session = Some(target_session);
         self
     }
 
@@ -201,7 +222,12 @@ impl<'a> SetOptionBuilder<'a> {
             unset: self.unset,
             #[cfg(feature = "tmux_1_2")]
             window: self.window,
+            #[cfg(feature = "tmux_3_0")]
+            target_pane: self.target,
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             target: self.target,
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
+            target_session: self.target,
         }
     }
 }
@@ -296,7 +322,16 @@ impl<'a> TmuxInterface<'a> {
             if set_option.window.unwrap_or(false) {
                 args.push(w_KEY);
             }
+            #[cfg(feature = "tmux_3_0")]
+            if let Some(target_pane) = set_option.target_pane {
+                args.extend_from_slice(&[t_KEY, &target])
+            }
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             if let Some(target) = set_option.target {
+                args.extend_from_slice(&[t_KEY, &target])
+            }
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
+            if let Some(target_session) = set_option.target_session {
                 args.extend_from_slice(&[t_KEY, &target])
             }
         }

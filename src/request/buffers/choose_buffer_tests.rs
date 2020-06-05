@@ -50,7 +50,9 @@ fn choose_buffer() {
         s.extend_from_slice(&["-f", "2"]);
         #[cfg(feature = "tmux_2_6")]
         s.extend_from_slice(&["-O", "3"]);
+        #[cfg(feature = "tmux_1_3")]
         s.extend_from_slice(&["-t", "4"]);
+        #[cfg(feature = "tmux_1_3")]
         s.push("5");
         assert_eq!(bin, "tmux");
         assert_eq!(options, &o);
@@ -72,7 +74,9 @@ fn choose_buffer() {
         filter: Some("2"),
         #[cfg(feature = "tmux_2_6")]
         sort_order: Some("3"),
+        #[cfg(feature = "tmux_1_3")]
         target_pane: Some(&target_pane),
+        #[cfg(feature = "tmux_1_3")]
         template: Some("5"),
     };
     tmux.choose_buffer(Some(&choose_buffer)).unwrap_err();
@@ -90,7 +94,9 @@ fn choose_buffer() {
     builder.filter("2");
     #[cfg(feature = "tmux_2_6")]
     builder.sort_order("3");
+    #[cfg(feature = "tmux_1_3")]
     builder.target_pane(&target_pane);
+    #[cfg(feature = "tmux_1_3")]
     builder.template("5");
     let choose_buffer = builder.build();
     tmux.choose_buffer(Some(&choose_buffer)).unwrap_err();

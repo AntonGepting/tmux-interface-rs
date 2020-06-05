@@ -119,6 +119,12 @@ impl<'a> PasteBufferBuilder<'a> {
         self
     }
 
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+    pub fn target_window(&mut self, target_window: &'a str) -> &mut Self {
+        self.target_window = Some(target_window);
+        self
+    }
+
     pub fn build(&self) -> PasteBuffer<'a> {
         PasteBuffer {
             #[cfg(feature = "tmux_0_8")]

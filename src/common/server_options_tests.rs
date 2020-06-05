@@ -2,8 +2,8 @@
 fn bitflags() {
     use crate::{SERVER_OPTIONS_ALL, SERVER_OPTIONS_NONE};
     let bitflags =
-        //12____8_7______0
-        0b_111111_11111111;
+        // 14____8_7______0
+        0b_1111111_11111111;
     //println!("{:b}", SERVER_OPTIONS_ALL);
     //println!("{:b}", &bitflags);
     assert_eq!(bitflags, SERVER_OPTIONS_ALL);
@@ -130,6 +130,7 @@ fn get_all() {
 fn get_single() {
     use crate::common::server_options::ESCAPE_TIME;
     use crate::ServerOptions;
+    #[cfg(feature = "tmux_1_7")]
     let _server_options = ServerOptions::get(ESCAPE_TIME).unwrap();
     //assert_eq!(server_options.escape_time, Some(500));
 }

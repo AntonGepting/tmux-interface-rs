@@ -220,7 +220,7 @@ impl<'a> TmuxInterface<'a> {
             if let Some(sort_order) = choose_buffer.sort_order {
                 args.extend_from_slice(&[O_KEY, &sort_order])
             }
-            #[cfg(feature = "tmux_1_7")]
+            #[cfg(feature = "tmux_1_3")]
             if let Some(target_pane) = choose_buffer.target_pane {
                 args.extend_from_slice(&[t_KEY, &target_pane])
             }

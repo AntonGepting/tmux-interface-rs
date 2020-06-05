@@ -237,7 +237,9 @@ fn parse() {
     let window1_str = window1_vec.join("'");
     let windows_str = format!("{}\n{}", window0_str, window1_str);
     let windows = Windows::from_str(&windows_str, WINDOW_ALL).unwrap();
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(windows[0].id, Some(0));
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(windows[1].id, Some(1));
 }
 
@@ -713,8 +715,12 @@ fn parse2() {
         window0_str, window1_str, window2_str, window3_str
     );
     let windows = Windows::from_str(&windows_str, WINDOW_ALL).unwrap();
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(windows[0].id, Some(0));
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(windows[1].id, Some(1));
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(windows[2].id, Some(2));
+    #[cfg(feature = "tmux_1_7")]
     assert_eq!(windows[3].id, Some(3));
 }

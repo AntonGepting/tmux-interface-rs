@@ -67,7 +67,11 @@ fn set_option() {
         s.push("-u");
         #[cfg(feature = "tmux_1_2")]
         s.push("-w");
-        #[cfg(feature = "tmux_1_7")]
+        #[cfg(feature = "tmux_3_0")]
+        s.extend_from_slice(&["-t", "1"]);
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
+        s.extend_from_slice(&["-t", "1"]);
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
         s.extend_from_slice(&["-t", "1"]);
         s.push("2");
         s.push("3");
@@ -97,8 +101,12 @@ fn set_option() {
         unset: Some(true),
         #[cfg(feature = "tmux_1_2")]
         window: Some(true),
-        #[cfg(feature = "tmux_1_7")]
+        #[cfg(feature = "tmux_3_0")]
+        target_pane: Some(&target_pane),
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
         target: Some(&target_pane),
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
+        target_session: Some(&target_pane),
     };
     tmux.set_option(Some(&set_option), "2", "3").unwrap_err();
 
@@ -121,8 +129,13 @@ fn set_option() {
     builder.unset();
     #[cfg(feature = "tmux_1_2")]
     builder.window();
-    #[cfg(feature = "tmux_1_7")]
+    #[cfg(feature = "tmux_3_0")]
+    builder.target_pane(&target_pane);
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     builder.target(&target_pane);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
+    builder.target_session(&target_pane);
+
     let set_option = builder.build();
     tmux.set_option(Some(&set_option), "2", "3").unwrap_err();
 }

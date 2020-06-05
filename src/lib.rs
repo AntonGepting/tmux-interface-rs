@@ -267,120 +267,381 @@ pub use crate::common::Switch;
 // server options
 pub use crate::common::server_options::ServerOptions;
 pub use crate::common::server_options::ServerOptionsBuilder;
+// structures & enums
+#[cfg(feature = "tmux_1_5")]
 pub use crate::common::server_options::SetClipboard;
+// constants
+// TODO: sort alphabetically
+#[cfg(feature = "tmux_3_1")]
 pub use crate::common::server_options::BACKSPACE;
+#[cfg(feature = "tmux_1_5")]
 pub use crate::common::server_options::BUFFER_LIMIT;
+#[cfg(feature = "tmux_2_4")]
 pub use crate::common::server_options::COMMAND_ALIAS;
+#[cfg(feature = "tmux_2_0")]
 pub use crate::common::server_options::DEFAULT_TERMINAL;
+#[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+pub use crate::common::server_options::DETACH_ON_DESTROY;
+#[cfg(feature = "tmux_1_2")]
 pub use crate::common::server_options::ESCAPE_TIME;
+#[cfg(feature = "tmux_2_7")]
 pub use crate::common::server_options::EXIT_EMPTY;
+#[cfg(feature = "tmux_1_4")]
 pub use crate::common::server_options::EXIT_UNATTACHED;
+#[cfg(feature = "tmux_1_9")]
 pub use crate::common::server_options::FOCUS_EVENTS;
+#[cfg(feature = "tmux_2_1")]
 pub use crate::common::server_options::HISTORY_FILE;
+#[cfg(feature = "tmux_2_0")]
 pub use crate::common::server_options::MESSAGE_LIMIT;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+pub use crate::common::server_options::QUIET;
+#[cfg(feature = "tmux_1_5")]
+pub use crate::common::server_options::SET_CLIPBOARD;
+#[cfg(feature = "tmux_2_0")]
+pub use crate::common::server_options::TERMINAL_OVERRIDES;
+#[cfg(feature = "tmux_3_0")]
+pub use crate::common::server_options::USER_KEYS;
+// all & none
 pub use crate::common::server_options::SERVER_OPTIONS_ALL;
 pub use crate::common::server_options::SERVER_OPTIONS_NONE;
-pub use crate::common::server_options::SET_CLIPBOARD;
-pub use crate::common::server_options::TERMINAL_OVERRIDES;
-pub use crate::common::server_options::USER_KEYS;
 
 // session otions
-pub use crate::common::session_options::Action;
-pub use crate::common::session_options::Activity;
 pub use crate::common::session_options::SessionOptions;
 pub use crate::common::session_options::SessionOptionsBuilder;
+// structures & enums
+#[cfg(feature = "tmux_0_8")]
+pub use crate::common::session_options::Action;
+#[cfg(feature = "tmux_0_8")]
+pub use crate::common::session_options::Activity;
+#[cfg(feature = "tmux_0_8")]
 pub use crate::common::session_options::Status;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::StatusJustify;
+#[cfg(feature = "tmux_1_7")]
 pub use crate::common::session_options::StatusPosition;
+// constants
+// TODO: sort alphabetically
+#[cfg(feature = "tmux_2_6")]
 pub use crate::common::session_options::ACTIVITY_ACTION;
+#[cfg(feature = "tmux_1_8")]
 pub use crate::common::session_options::ASSUME_PASTE_TIME;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::BASE_INDEX;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::BELL_ACTION;
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+pub use crate::common::session_options::BELL_ON_ALERT;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
+pub use crate::common::session_options::BUFFER_LIMIT;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::DEFAULT_COMMAND;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::DEFAULT_PATH;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::DEFAULT_SHELL;
+#[cfg(feature = "tmux_2_9")]
 pub use crate::common::session_options::DEFAULT_SIZE;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+pub use crate::common::session_options::DEFAULT_TERMINAL;
+#[cfg(feature = "tmux_1_4")]
 pub use crate::common::session_options::DESTROY_UNATTACHED;
+#[cfg(feature = "tmux_1_4")]
 pub use crate::common::session_options::DETACH_ON_DESTROY;
+#[cfg(feature = "tmux_1_2")]
 pub use crate::common::session_options::DISPLAY_PANES_ACTIVE_COLOUR;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::DISPLAY_PANES_COLOUR;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::DISPLAY_PANES_TIME;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::DISPLAY_TIME;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::HISTORY_LIMIT;
+#[cfg(feature = "tmux_2_2")]
 pub use crate::common::session_options::KEY_TABLE;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::LOCK_AFTER_TIME;
+#[cfg(feature = "tmux_1_1")]
 pub use crate::common::session_options::LOCK_COMMAND;
+#[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
+pub use crate::common::session_options::LOCK_SERVER;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::MESSAGE_ATTR;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::MESSAGE_BG;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::MESSAGE_COMMAND_ATTR;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::MESSAGE_COMMAND_BG;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::MESSAGE_COMMAND_FG;
+#[cfg(feature = "tmux_1_9")]
 pub use crate::common::session_options::MESSAGE_COMMAND_STYLE;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::MESSAGE_FG;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+pub use crate::common::session_options::MESSAGE_LIMIT;
+#[cfg(feature = "tmux_1_9")]
 pub use crate::common::session_options::MESSAGE_STYLE;
+#[cfg(feature = "tmux_2_1")]
 pub use crate::common::session_options::MOUSE;
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+pub use crate::common::session_options::MOUSE_RESIZE_PANE;
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+pub use crate::common::session_options::MOUSE_SELECT_PANE;
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+pub use crate::common::session_options::MOUSE_SELECT_WINDOW;
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
+pub use crate::common::session_options::MOUSE_UTF8;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::PANE_ACTIVE_BORDER_BG;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::PANE_ACTIVE_BORDER_FG;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::PANE_ACTIVE_BORDER_STYLE;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_0")))]
+pub use crate::common::session_options::PANE_BORDER_BG;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::PANE_BORDER_FG;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+pub use crate::common::session_options::PANE_BORDER_STYLE;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::PREFIX;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::common::session_options::PREFIX2;
+#[cfg(feature = "tmux_1_7")]
 pub use crate::common::session_options::RENUMBER_WINDOWS;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::session_options::REPEAT_TIME;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
+pub use crate::common::session_options::SET_REMAIN_ON_EXIT;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::SET_TITLES;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::SET_TITLES_STRING;
+#[cfg(feature = "tmux_2_6")]
+pub use crate::common::session_options::SILENCE_ACTION;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::STATUS;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::STATUS_ATTR;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::STATUS_BG;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::STATUS_FG;
+#[cfg(feature = "tmux_2_9")]
+pub use crate::common::session_options::STATUS_FORMAT;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::STATUS_INTERVAL;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::STATUS_JUSTIFY;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::STATUS_KEYS;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::STATUS_LEFT;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::STATUS_LEFT_ATTR;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::STATUS_LEFT_BG;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::STATUS_LEFT_FG;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::STATUS_LEFT_LENGTH;
+#[cfg(feature = "tmux_1_9")]
+pub use crate::common::session_options::STATUS_LEFT_STYLE;
+#[cfg(feature = "tmux_1_7")]
+pub use crate::common::session_options::STATUS_POSITION;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::STATUS_RIGHT;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::STATUS_RIGHT_ATTR;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::STATUS_RIGHT_BG;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::session_options::STATUS_RIGHT_FG;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::STATUS_RIGHT_LENGTH;
+#[cfg(feature = "tmux_1_9")]
+pub use crate::common::session_options::STATUS_RIGHT_STYLE;
+#[cfg(feature = "tmux_1_9")]
+pub use crate::common::session_options::STATUS_STYLE;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
+pub use crate::common::session_options::STATUS_UTF8;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+pub use crate::common::session_options::TERMINAL_OVERRIDES;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::UPDATE_ENVIRONMENT;
+#[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
+pub use crate::common::session_options::USER_KEYS;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::VISUAL_ACTIVITY;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::session_options::VISUAL_BELL;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+pub use crate::common::session_options::VISUAL_CONTENT;
+#[cfg(feature = "tmux_1_4")]
+pub use crate::common::session_options::VISUAL_SILENCE;
+#[cfg(feature = "tmux_1_4")]
+pub use crate::common::session_options::WORD_SEPARATORS;
+// all
 pub use crate::common::session_options::SESSION_OPTIONS_ALL;
 pub use crate::common::session_options::SESSION_OPTIONS_NONE;
-pub use crate::common::session_options::SET_TITLES;
-pub use crate::common::session_options::SET_TITLES_STRING;
-pub use crate::common::session_options::SILENCE_ACTION;
-pub use crate::common::session_options::STATUS;
-pub use crate::common::session_options::STATUS_FORMAT;
-pub use crate::common::session_options::STATUS_INTERVAL;
-pub use crate::common::session_options::STATUS_JUSTIFY;
-pub use crate::common::session_options::STATUS_KEYS;
-pub use crate::common::session_options::STATUS_LEFT;
-pub use crate::common::session_options::STATUS_LEFT_LENGTH;
-pub use crate::common::session_options::STATUS_LEFT_STYLE;
-pub use crate::common::session_options::STATUS_POSITION;
-pub use crate::common::session_options::STATUS_RIGHT;
-pub use crate::common::session_options::STATUS_RIGHT_LENGTH;
-pub use crate::common::session_options::STATUS_RIGHT_STYLE;
-pub use crate::common::session_options::STATUS_STYLE;
-pub use crate::common::session_options::UPDATE_ENVIRONMENT;
-pub use crate::common::session_options::VISUAL_ACTIVITY;
-pub use crate::common::session_options::VISUAL_BELL;
-pub use crate::common::session_options::VISUAL_SILENCE;
-pub use crate::common::session_options::WORD_SEPARATORS;
 
 // window options
+pub use crate::common::window_options::WindowOptions;
+pub use crate::common::window_options::WindowOptionsBuilder;
+// structures & enums
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::window_options::ClockModeStyle;
 #[cfg(feature = "tmux_2_3")]
 pub use crate::common::window_options::PaneBorderStatus;
-pub use crate::common::window_options::WindowOptions;
-pub use crate::common::window_options::WindowOptionsBuilder;
 #[cfg(feature = "tmux_2_9")]
 pub use crate::common::window_options::WindowSize;
+// constants
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::window_options::AGGRESIVE_RESIZE;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
+pub use crate::common::window_options::ALLOW_RENAME;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
+pub use crate::common::window_options::ALTERNAME_SCREEN;
+#[cfg(feature = "tmux_1_0")] // 0.8
 pub use crate::common::window_options::AUTOMATIC_RENAME;
+#[cfg(feature = "tmux_1_9")]
 pub use crate::common::window_options::AUTOMATIC_RENAME_FORMAT;
+#[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+pub use crate::common::window_options::C0_CHANGE_INTERVAL;
+#[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+pub use crate::common::window_options::C0_CHANGE_TRIGGER;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::window_options::CLOCK_MODE_COLOUR;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::window_options::CLOCK_MODE_STYLE;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
+pub use crate::common::window_options::FORCE_HEIGHT;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
+pub use crate::common::window_options::FORCE_WIDTH;
+#[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
+pub use crate::common::window_options::LAYOUT_HISTORY_LIMIT;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::window_options::MAIN_PANE_HEIGHT;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::window_options::MAIN_PANE_WIDTH;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::MODE_ATTR;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::MODE_BG;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::MODE_FG;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::window_options::MODE_KEYS;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+pub use crate::common::window_options::MODE_MOUSE;
+#[cfg(feature = "tmux_1_9")]
 pub use crate::common::window_options::MODE_STYLE;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::window_options::MONITOR_ACTIVITY;
+#[cfg(feature = "tmux_2_6")]
 pub use crate::common::window_options::MONITOR_BELL;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+pub use crate::common::window_options::MONITOR_CONTENT;
+#[cfg(feature = "tmux_1_4")]
 pub use crate::common::window_options::MONITOR_SILENCE;
+#[cfg(feature = "tmux_1_4")]
 pub use crate::common::window_options::OTHER_PANE_HEIGHT;
+#[cfg(feature = "tmux_1_4")]
 pub use crate::common::window_options::OTHER_PANE_WIDTH;
+#[cfg(feature = "tmux_2_0")]
 pub use crate::common::window_options::PANE_ACTIVE_BORDER_STYLE;
+#[cfg(feature = "tmux_1_6")]
 pub use crate::common::window_options::PANE_BASE_INDEX;
+#[cfg(feature = "tmux_2_3")]
 pub use crate::common::window_options::PANE_BORDER_FORMAT;
+#[cfg(feature = "tmux_2_3")]
 pub use crate::common::window_options::PANE_BORDER_STATUS;
+#[cfg(feature = "tmux_2_0")]
 pub use crate::common::window_options::PANE_BORDER_STYLE;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
+pub use crate::common::window_options::REMAIN_ON_EXIT;
+#[cfg(feature = "tmux_1_0")]
 pub use crate::common::window_options::SYNCHRONIZE_PANES;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
+pub use crate::common::window_options::UTF8;
+#[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
+pub use crate::common::window_options::WINDOW_ACTIVE_STYLE;
+#[cfg(feature = "tmux_2_9")]
+pub use crate::common::window_options::WINDOW_SIZE;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_ACTIVITY_ATTR;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_ACTIVITY_BG;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_ACTIVITY_FG;
+#[cfg(feature = "tmux_1_9")]
+pub use crate::common::window_options::WINDOW_STATUS_ACTIVITY_STYLE;
+#[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+pub use crate::common::window_options::WINDOW_STATUS_ALERT_ATTR;
+#[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+pub use crate::common::window_options::WINDOW_STATUS_ALERT_BG;
+#[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+pub use crate::common::window_options::WINDOW_STATUS_ALERT_FG;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_ATTR;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_BELL_ATTR;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_BELL_BG;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_BELL_FG;
+#[cfg(feature = "tmux_1_9")]
+pub use crate::common::window_options::WINDOW_STATUS_BELL_STYLE;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_BG;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_CONTENT_ATTR;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_CONTENT_BG;
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_CONTENT_FG;
+#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+pub use crate::common::window_options::WINDOW_STATUS_CONTENT_STYLE;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_CURRENT_ATTR;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_CURRENT_BG;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_CURRENT_FG;
+#[cfg(feature = "tmux_1_2")]
+pub use crate::common::window_options::WINDOW_STATUS_CURRENT_FORMAT;
+#[cfg(feature = "tmux_1_9")]
+pub use crate::common::window_options::WINDOW_STATUS_CURRENT_STYLE;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_FG;
+#[cfg(feature = "tmux_1_2")]
+pub use crate::common::window_options::WINDOW_STATUS_FORMAT;
+#[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_LAST_ATTR;
+#[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_LAST_BG;
+#[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+pub use crate::common::window_options::WINDOW_STATUS_LAST_FG;
+#[cfg(feature = "tmux_1_9")]
+pub use crate::common::window_options::WINDOW_STATUS_LAST_STYLE;
+#[cfg(feature = "tmux_1_7")]
+pub use crate::common::window_options::WINDOW_STATUS_SEPARATOR;
+#[cfg(feature = "tmux_1_9")]
+pub use crate::common::window_options::WINDOW_STATUS_STYLE;
+#[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
+pub use crate::common::window_options::WINDOW_STYLE;
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
+pub use crate::common::window_options::WORD_SEPARATORS;
+#[cfg(feature = "tmux_1_7")]
+pub use crate::common::window_options::WRAP_SEARCH;
+#[cfg(feature = "tmux_1_0")]
+pub use crate::common::window_options::XTERM_KEYS;
+// all & none
 pub use crate::common::window_options::WINDOW_OPTIONS_ALL;
 pub use crate::common::window_options::WINDOW_OPTIONS_NONE;
-pub use crate::common::window_options::WINDOW_SIZE;
-pub use crate::common::window_options::WINDOW_STATUS_ACTIVITY_STYLE;
-pub use crate::common::window_options::WINDOW_STATUS_BELL_STYLE;
-pub use crate::common::window_options::WINDOW_STATUS_CURRENT_FORMAT;
-pub use crate::common::window_options::WINDOW_STATUS_CURRENT_STYLE;
-pub use crate::common::window_options::WINDOW_STATUS_FORMAT;
-pub use crate::common::window_options::WINDOW_STATUS_LAST_STYLE;
-pub use crate::common::window_options::WINDOW_STATUS_SEPARATOR;
-pub use crate::common::window_options::WINDOW_STATUS_STYLE;
-pub use crate::common::window_options::WRAP_SEARCH;
-pub use crate::common::window_options::XTERM_KEYS;
 
 // pane options
 #[cfg(feature = "tmux_3_1")]
