@@ -15,30 +15,31 @@ pub const WINDOW_ACTIVITY_FLAG: u64 = 1 << 7;
 pub const WINDOW_BELL_FLAG: u64 = 1 << 8;
 pub const WINDOW_CONTENT_FLAG: u64 = 1 << 9;
 pub const WINDOW_BIGGER: u64 = 1 << 10;
-pub const WINDOW_CELL_WIDTH: u64 = 1 << 11;
-pub const WINDOW_END_FLAG: u64 = 1 << 12;
-pub const WINDOW_FIND_MATCHES: u64 = 1 << 13;
-pub const WINDOW_FLAGS: u64 = 1 << 14;
-pub const WINDOW_FORMAT: u64 = 1 << 15;
-pub const WINDOW_HEIGHT: u64 = 1 << 16;
-pub const WINDOW_ID: u64 = 1 << 17;
-pub const WINDOW_INDEX: u64 = 1 << 18;
-pub const WINDOW_LAST_FLAG: u64 = 1 << 19;
-pub const WINDOW_LAYOUT: u64 = 1 << 20;
-pub const WINDOW_LINKED: u64 = 1 << 21;
-pub const WINDOW_LINKED_SESSIONS: u64 = 1 << 22;
-pub const WINDOW_LINKED_SESSIONS_LIST: u64 = 1 << 23;
-pub const WINDOW_MARKED_FLAG: u64 = 1 << 24;
-pub const WINDOW_NAME: u64 = 1 << 25;
-pub const WINDOW_OFFSET_X: u64 = 1 << 26;
-pub const WINDOW_OFFSET_Y: u64 = 1 << 27;
-pub const WINDOW_PANES: u64 = 1 << 28;
-pub const WINDOW_SILENCE_FLAG: u64 = 1 << 29;
-pub const WINDOW_STACK_INDEX: u64 = 1 << 30;
-pub const WINDOW_START_FLAG: u64 = 1 << 31;
-pub const WINDOW_VISIBLE_LAYOUT: u64 = 1 << 32;
-pub const WINDOW_WIDTH: u64 = 1 << 33;
-pub const WINDOW_ZOOMED_FLAG: u64 = 1 << 34;
+pub const WINDOW_CELL_HEIGHT: u64 = 1 << 11;
+pub const WINDOW_CELL_WIDTH: u64 = 1 << 12;
+pub const WINDOW_END_FLAG: u64 = 1 << 13;
+pub const WINDOW_FIND_MATCHES: u64 = 1 << 14;
+pub const WINDOW_FLAGS: u64 = 1 << 15;
+pub const WINDOW_FORMAT: u64 = 1 << 16;
+pub const WINDOW_HEIGHT: u64 = 1 << 17;
+pub const WINDOW_ID: u64 = 1 << 18;
+pub const WINDOW_INDEX: u64 = 1 << 19;
+pub const WINDOW_LAST_FLAG: u64 = 1 << 20;
+pub const WINDOW_LAYOUT: u64 = 1 << 21;
+pub const WINDOW_LINKED: u64 = 1 << 22;
+pub const WINDOW_LINKED_SESSIONS: u64 = 1 << 23;
+pub const WINDOW_LINKED_SESSIONS_LIST: u64 = 1 << 24;
+pub const WINDOW_MARKED_FLAG: u64 = 1 << 25;
+pub const WINDOW_NAME: u64 = 1 << 26;
+pub const WINDOW_OFFSET_X: u64 = 1 << 27;
+pub const WINDOW_OFFSET_Y: u64 = 1 << 28;
+pub const WINDOW_PANES: u64 = 1 << 29;
+pub const WINDOW_SILENCE_FLAG: u64 = 1 << 30;
+pub const WINDOW_STACK_INDEX: u64 = 1 << 31;
+pub const WINDOW_START_FLAG: u64 = 1 << 32;
+pub const WINDOW_VISIBLE_LAYOUT: u64 = 1 << 33;
+pub const WINDOW_WIDTH: u64 = 1 << 34;
+pub const WINDOW_ZOOMED_FLAG: u64 = 1 << 35;
 
 // XXX: number of all flags, needed for array init
 // NOTE: variables were first intoduced in tmux 1.6
@@ -100,6 +101,7 @@ pub const WINDOW_ALL: u64 = WINDOW_ACTIVE
     | WINDOW_BELL_FLAG
     | WINDOW_CONTENT_FLAG
     | WINDOW_BIGGER
+    | WINDOW_CELL_HEIGHT
     | WINDOW_CELL_WIDTH
     | WINDOW_END_FLAG
     | WINDOW_FIND_MATCHES
@@ -180,7 +182,7 @@ pub const WINDOW_VARS: [(&str, u64, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_N
         w.bigger = p.parse::<usize>().map(|i| i == 1).ok()
     }),
     #[cfg(feature = "tmux_3_1")]
-    ("window_cell_height", WINDOW_CELL_WIDTH, |w, p| {
+    ("window_cell_height", WINDOW_CELL_HEIGHT, |w, p| {
         w.cell_height = p.parse().ok()
     }),
     #[cfg(feature = "tmux_3_1")]

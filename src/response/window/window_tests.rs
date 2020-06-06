@@ -12,8 +12,8 @@ fn show_generated_struct() {
 fn bitflags() {
     use crate::{WINDOW_ALL, WINDOW_NONE};
     let bitflags =
-        // ___31_____________1615_____________0
-        0b_1111111111111111111_1111111111111111;
+        // 35___31_____________1615_____________0
+        0b_1111_1111111111111111_1111111111111111;
     //println!("{:b}", WINDOW_ALL);
     //println!("{:b}", &bitflags);
     assert_eq!(bitflags, WINDOW_ALL);
