@@ -1,10 +1,14 @@
-use super::error::Error;
-use super::ShowOptions;
-use super::TmuxInterface;
+#[cfg(feature = "tmux_1_7")]
+use crate::Error;
+#[cfg(feature = "tmux_1_7")]
+use crate::ShowOptions;
+#[cfg(feature = "tmux_1_7")]
+use crate::TmuxInterface;
 
 pub struct TmuxOption;
 
 impl TmuxOption {
+    #[cfg(feature = "tmux_1_7")]
     pub fn get_int(option_name: &str) -> Result<usize, Error> {
         let mut tmux = TmuxInterface::new();
         let show_options = ShowOptions {
