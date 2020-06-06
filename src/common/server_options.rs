@@ -1,3 +1,4 @@
+#[cfg(feature = "tmux_2_0")]
 use super::create_insert_vec;
 use crate::{Error, SetOptionBuilder, ShowOptionsBuilder, Switch, TmuxInterface};
 use std::fmt;
