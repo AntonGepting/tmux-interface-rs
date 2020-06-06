@@ -64,6 +64,8 @@ fn send_keys() {
         s.extend_from_slice(&["-N", "1"]);
         #[cfg(feature = "tmux_1_6")]
         s.extend_from_slice(&["-t", "2"]);
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+        s.extend_from_slice(&["-t", "2"]);
         s.push("3");
         assert_eq!(bin, "tmux");
         assert_eq!(options, &o);

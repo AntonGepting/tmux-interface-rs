@@ -283,6 +283,10 @@ impl<'a> TmuxInterface<'a> {
             if let Some(target_pane) = send_keys.target_pane {
                 args.extend_from_slice(&[t_KEY, &target_pane])
             }
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
+            if let Some(target_window) = send_keys.target_window {
+                args.extend_from_slice(&[t_KEY, &target_window])
+            }
         }
         //args.extend_from_slice(send_keys.keys.as_slice());
         //args.extend_from_slice(send_keys.keys);
