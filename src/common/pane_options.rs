@@ -1,5 +1,5 @@
 use crate::{Error, Switch};
-use crate::{SetOptionBuilder, ShowOptionsBuilder, TargetPane, TmuxInterface};
+use crate::{SetOptionBuilder, ShowOptionsBuilder, TmuxInterface};
 use std::fmt;
 use std::str::FromStr;
 
