@@ -69,6 +69,8 @@ matrix:
     - env: TMUX_VERSION=1.4 CRATE_FEATURE=tmux_1_4
       # failing docs
     - env: TMUX_VERSION=1.5 CRATE_FEATURE=tmux_1_5
+      # failing brand new version
+    #- env: TMUX_VERSION=master CRATE_FEATURE=tmux_X_X
 
 before_script:
   - mkdir -p ~/tmux/source
