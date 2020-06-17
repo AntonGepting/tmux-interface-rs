@@ -257,7 +257,6 @@ pub mod request;
 pub mod response;
 
 pub mod tmux_interface;
-pub mod tmux_option;
 pub mod version;
 
 pub use self::tmux_interface::TmuxInterface;
@@ -844,9 +843,6 @@ pub use crate::request::PaneSize;
 pub use crate::request::target_pane::{TargetPane, TargetPaneExt, TargetPaneToken};
 pub use crate::request::target_session::TargetSession;
 pub use crate::request::target_window::{TargetWindow, TargetWindowExt, TargetWindowToken};
-
-// structs
-pub use self::tmux_option::TmuxOption;
 
 // enums
 #[cfg(feature = "tmux_1_6")]
