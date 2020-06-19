@@ -1,4 +1,4 @@
-use crate::response::session::session::{SESSION_VARS, SESSION_VARS_SEPARATOR};
+use crate::variables::session::session::{SESSION_VARS, SESSION_VARS_SEPARATOR};
 use crate::Error;
 use crate::Session;
 use crate::TmuxInterface;

@@ -1,6 +1,6 @@
 #[test]
 fn show_generated_struct() {
-    use crate::response::window::window::Window;
+    use crate::Window;
 
     let _window = Window {
         ..Default::default()
@@ -23,8 +23,8 @@ fn bitflags() {
 //let window_str = "1557947146'0'1'0'''*'1'64'@0'4'0'3484,177x64,0,0{88x64,0,0,3,88x64,89,0,18}'0'bash'''2'0'0''3484,177x64,0,0{88x64,0,0,3,88x64,89,0,18}'177'0";
 #[test]
 fn parse1() {
-    use crate::response::window::window::WINDOW_ALL;
     use crate::Window;
+    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active
@@ -150,8 +150,8 @@ fn parse1() {
 //let window_str = "1557947146'0'0'0'''*'1'64'@1'1'0'c3bd,177x64,0,0,0'0'bash'''1'0'2''c3bd,177x64,0,0,0'177'0";
 #[test]
 fn parse2() {
-    use crate::response::window::window::WINDOW_ALL;
     use crate::Window;
+    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active
@@ -277,8 +277,8 @@ fn parse2() {
 //let window_str = "1557947146'0'0'0''''1'64'@2'1'0'c3bd,177x64,0,0,0'0'bash'''1'0'3''c3bd,177x64,0,0,0'177'0";
 #[test]
 fn parse3() {
-    use crate::response::window::window::WINDOW_ALL;
     use crate::Window;
+    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active
@@ -404,8 +404,8 @@ fn parse3() {
 //let window_str = "1557947146'0'0'0''''1'64'@3'2'0'8b65,177x64,0,0[177x46,0,0,1,177x17,0,47,4]'0'vim'''2'0'2''8b65,177x64,0,0[177x46,0,0,1,177x17,0,47,4]'177'0";
 #[test]
 fn parse4() {
-    use crate::response::window::window::WINDOW_ALL;
     use crate::Window;
+    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active
@@ -529,8 +529,8 @@ fn parse4() {
 //let window_str = "1557947146'0'0'0'''-'1'64'@4'3'1'7966,177x64,0,0[177x52,0,0,2,177x11,0,53,3]'0'vim'''2'0'1''7966,177x64,0,0[177x52,0,0,2,177x11,0,53,3]'177'0";
 #[test]
 fn parse5() {
-    use crate::response::window::window::WINDOW_ALL;
     use crate::Window;
+    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active
@@ -654,8 +654,8 @@ fn parse5() {
 //let window_str = "1557947146'0'1'0'''*'1'64'@5'4'0'c3c3,177x64,0,0,6'0'bash'''1'0'0''c3c3,177x64,0,0,6'177'0";
 #[test]
 fn parse6() {
-    use crate::response::window::window::WINDOW_ALL;
     use crate::Window;
+    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active

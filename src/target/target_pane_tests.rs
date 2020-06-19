@@ -1,6 +1,6 @@
 #[test]
 fn target_pane_ex() {
-    use crate::request::target_pane::{TargetPane, TargetPaneExt, TargetPaneToken};
+    use crate::{TargetPane, TargetPaneExt, TargetPaneToken};
 
     let target_pane = TargetPaneExt {
         target_window: None,
@@ -11,7 +11,7 @@ fn target_pane_ex() {
 
 #[test]
 fn target_pane() {
-    use crate::request::target_pane::{TargetPane, TargetPaneToken};
+    use crate::{TargetPane, TargetPaneToken};
 
     let target_pane = TargetPane::Token(TargetPaneToken::Next(None));
     assert_eq!(target_pane.to_string(), ".+");
@@ -31,7 +31,7 @@ fn target_pane() {
 
 #[test]
 fn target_pane_token() {
-    use crate::request::target_pane::{TargetPane, TargetPaneToken};
+    use crate::{TargetPane, TargetPaneToken};
 
     let type_token = TargetPane::Token(TargetPaneToken::Next(Some(1))).to_string();
     assert_eq!(type_token.to_string(), ".+1");

@@ -23,7 +23,7 @@ fn bitflags() {
 #[test]
 #[cfg(feature = "tmux_0_8")]
 fn activity() {
-    use crate::common::session_options::Activity;
+    use crate::Activity;
     assert_eq!(Activity::On.to_string(), "on");
     assert_eq!(Activity::Off.to_string(), "off");
     #[cfg(feature = "tmux_2_6")]
@@ -33,7 +33,7 @@ fn activity() {
 #[test]
 #[cfg(feature = "tmux_0_8")]
 fn action() {
-    use crate::common::session_options::Action;
+    use crate::Action;
     assert_eq!(Action::Any.to_string(), "any");
     assert_eq!(Action::None.to_string(), "none");
     assert_eq!(Action::Current.to_string(), "current");
@@ -44,7 +44,7 @@ fn action() {
 #[test]
 #[cfg(feature = "tmux_0_8")]
 fn status() {
-    use crate::common::session_options::Status;
+    use crate::Status;
     assert_eq!(Status::On.to_string(), "on");
     assert_eq!(Status::Off.to_string(), "off");
     #[cfg(feature = "tmux_2_9")]
@@ -60,7 +60,7 @@ fn status() {
 #[test]
 #[cfg(feature = "tmux_1_0")]
 fn status_justify() {
-    use crate::common::session_options::StatusJustify;
+    use crate::StatusJustify;
     assert_eq!(StatusJustify::Left.to_string(), "left");
     assert_eq!(StatusJustify::Centre.to_string(), "centre");
     assert_eq!(StatusJustify::Right.to_string(), "right");
@@ -69,7 +69,7 @@ fn status_justify() {
 #[test]
 #[cfg(feature = "tmux_1_7")]
 fn status_position() {
-    use crate::common::session_options::StatusPosition;
+    use crate::StatusPosition;
     assert_eq!(StatusPosition::Top.to_string(), "top");
     assert_eq!(StatusPosition::Bottom.to_string(), "bottom");
 }

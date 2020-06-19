@@ -1,6 +1,6 @@
 #[test]
 fn show_generated_struct() {
-    use crate::response::session::session::Session;
+    use crate::Session;
 
     let _session = Session {
         ..Default::default()
@@ -22,10 +22,10 @@ fn bitflags() {
 
 #[test]
 fn parse() {
-    use crate::response::session::session::Session;
-    use crate::response::session::session::SESSION_ALL;
+    use crate::Session;
     #[cfg(feature = "tmux_2_5")]
-    use crate::response::session::session_stack::SessionStack;
+    use crate::SessionStack;
+    use crate::SESSION_ALL;
     use std::time::Duration;
 
     let session_vec = vec![
@@ -160,10 +160,8 @@ fn parse() {
 
 #[test]
 fn parse2() {
-    use crate::response::session::session::Session;
-    use crate::response::session::session::{
-        SESSION_ACTIVITY, SESSION_CREATED, SESSION_LAST_ATTACHED,
-    };
+    use crate::Session;
+    use crate::{SESSION_ACTIVITY, SESSION_CREATED, SESSION_LAST_ATTACHED};
     use std::time::Duration;
 
     let session_str = "1557947146:1557947146:1557947146";

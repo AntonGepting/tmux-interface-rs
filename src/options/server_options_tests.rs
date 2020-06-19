@@ -22,7 +22,7 @@ fn bitflags() {
 
 #[test]
 fn set_clipboard() {
-    use crate::common::server_options::SetClipboard;
+    use crate::SetClipboard;
 
     assert_eq!(SetClipboard::On.to_string(), "on");
     assert_eq!(SetClipboard::Off.to_string(), "off");
@@ -138,8 +138,8 @@ fn get_all() {
 
 #[test]
 fn get_single() {
-    use crate::common::server_options::ESCAPE_TIME;
     use crate::ServerOptions;
+    use crate::ESCAPE_TIME;
     #[cfg(feature = "tmux_1_7")]
     let _server_options = ServerOptions::get(ESCAPE_TIME).unwrap();
     //assert_eq!(server_options.escape_time, Some(500));

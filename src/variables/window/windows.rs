@@ -1,4 +1,4 @@
-use crate::response::window::window::{WINDOW_VARS, WINDOW_VARS_SEPARATOR};
+use crate::variables::window::window::{WINDOW_VARS, WINDOW_VARS_SEPARATOR};
 use crate::{Error, TargetSession, TmuxInterface, Window};
 use std::ops::Index;
 

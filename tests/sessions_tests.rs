@@ -1,7 +1,7 @@
 #[cfg(feature = "tmux_1_6")]
 #[test]
 fn get_sessions() {
-    use tmux_interface::response::session::session::SESSION_ALL;
+    use tmux_interface::SESSION_ALL;
     use tmux_interface::{NewSessionBuilder, Sessions, TargetSession, TmuxInterface};
 
     const TARGET_SESSION: &str = "test_get_sessions";

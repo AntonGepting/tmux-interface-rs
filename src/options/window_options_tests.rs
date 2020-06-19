@@ -23,7 +23,7 @@ fn bitflags() {
 #[test]
 #[cfg(feature = "tmux_1_0")]
 fn status_position() {
-    use crate::common::window_options::ClockModeStyle;
+    use crate::ClockModeStyle;
     assert_eq!(ClockModeStyle::_12.to_string(), "12");
     assert_eq!(ClockModeStyle::_24.to_string(), "24");
 }
@@ -31,7 +31,7 @@ fn status_position() {
 #[test]
 #[cfg(feature = "tmux_2_3")]
 fn pane_border_status() {
-    use crate::common::window_options::PaneBorderStatus;
+    use crate::PaneBorderStatus;
     assert_eq!(PaneBorderStatus::Off.to_string(), "off");
     assert_eq!(PaneBorderStatus::Top.to_string(), "top");
     assert_eq!(PaneBorderStatus::Bottom.to_string(), "bottom");
@@ -40,7 +40,7 @@ fn pane_border_status() {
 #[test]
 #[cfg(feature = "tmux_2_9")]
 fn window_size() {
-    use crate::common::window_options::WindowSize;
+    use crate::WindowSize;
     assert_eq!(WindowSize::Largest.to_string(), "largest");
     assert_eq!(WindowSize::Smallest.to_string(), "smallest");
     assert_eq!(WindowSize::Manual.to_string(), "manual");

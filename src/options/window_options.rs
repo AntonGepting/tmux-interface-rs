@@ -1,4 +1,4 @@
-use crate::common::StatusKeys;
+use crate::options::StatusKeys;
 use crate::{Error, SetOptionBuilder, ShowOptionsBuilder, Switch, TmuxInterface};
 use std::fmt;
 use std::str::FromStr;

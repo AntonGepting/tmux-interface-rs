@@ -1,4 +1,4 @@
-use crate::request::target_window::TargetWindowExt;
+use super::target_window::TargetWindowExt;
 use std::fmt;
 
 /// Extended `target-pane` struct, includes `target-window` (may indirect include `target-session`)

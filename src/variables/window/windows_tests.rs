@@ -1,7 +1,6 @@
 #[test]
 fn parse() {
-    use crate::response::window::window::WINDOW_ALL;
-    use crate::Windows;
+    use crate::{Windows, WINDOW_ALL};
 
     //let windows_str = "
     // 1559064235'0'0'0''''1'64'@0'1'0'c3bd,177x64,0,0,0'0'bash'''1'0'2''c3bd,177x64,0,0,0'177'0\n\
@@ -245,8 +244,7 @@ fn parse() {
 
 #[test]
 fn parse2() {
-    use crate::response::window::window::WINDOW_ALL;
-    use crate::Windows;
+    use crate::{Windows, WINDOW_ALL};
 
     //let windows_str = "
     //1559064235'0'0'0''''1'64'@0'1'0'c3bd,177x64,0,0,0'0'bash'''1'0'3''c3bd,177x64,0,0,0'177'0\n\

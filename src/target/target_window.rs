@@ -1,4 +1,4 @@
-use crate::request::target_session::TargetSession;
+use super::target_session::TargetSession;
 use std::fmt;
 
 // XXX: borrowing/owning?

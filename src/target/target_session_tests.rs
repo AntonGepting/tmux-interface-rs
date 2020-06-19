@@ -1,6 +1,6 @@
 #[test]
 fn target_session() {
-    use crate::request::target_session::TargetSession;
+    use crate::TargetSession;
 
     let session_type = TargetSession::Id(1);
     assert_eq!(session_type.to_string(), "$1");

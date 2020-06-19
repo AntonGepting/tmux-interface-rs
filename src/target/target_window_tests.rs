@@ -1,6 +1,6 @@
 #[test]
 fn target_window_ex() {
-    use crate::request::target_window::{TargetWindow, TargetWindowExt, TargetWindowToken};
+    use crate::{TargetWindow, TargetWindowExt, TargetWindowToken};
 
     let _target_window = TargetWindowExt {
         ..Default::default()
@@ -15,7 +15,7 @@ fn target_window_ex() {
 
 #[test]
 fn target_window() {
-    use crate::request::target_window::{TargetWindow, TargetWindowToken};
+    use crate::{TargetWindow, TargetWindowToken};
 
     let target_window = TargetWindow::Token(TargetWindowToken::Start).to_string();
     assert_eq!(target_window, ":^");
@@ -35,7 +35,7 @@ fn target_window() {
 
 #[test]
 fn target_window_type_token() {
-    use crate::request::target_window::{TargetWindow, TargetWindowToken};
+    use crate::{TargetWindow, TargetWindowToken};
 
     let type_token = TargetWindow::Token(TargetWindowToken::Start).to_string();
     assert_eq!(type_token, ":^");

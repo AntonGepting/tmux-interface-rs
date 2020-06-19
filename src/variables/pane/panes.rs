@@ -1,4 +1,4 @@
-use crate::response::pane::pane::{PANE_VARS, PANE_VARS_SEPARATOR};
+use crate::variables::pane::pane::{PANE_VARS, PANE_VARS_SEPARATOR};
 use crate::Error;
 use crate::Pane;
 use crate::{TargetWindowExt, TmuxInterface};
