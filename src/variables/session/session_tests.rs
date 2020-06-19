@@ -160,23 +160,22 @@ fn parse() {
 
 #[test]
 fn parse2() {
+    use crate::Session;
     #[cfg(feature = "tmux_2_1")]
     use crate::SESSION_ACTIVITY;
     #[cfg(feature = "tmux_1_6")]
     use crate::SESSION_CREATED;
     #[cfg(feature = "tmux_2_1")]
     use crate::SESSION_LAST_ATTACHED;
-    use crate::{Session, SESSION_NONE};
     use std::time::Duration;
 
     let session_str = "1557947146:1557947146:1557947146";
-    let mut session_bitflag = SESSION_NONE;
     #[cfg(feature = "tmux_2_1")]
-    session_bitflag |= SESSION_ACTIVITY;
+    let session_bitflag = SESSION_ACTIVITY;
     #[cfg(feature = "tmux_1_6")]
-    session_bitflag |= SESSION_CREATED;
+    let session_bitflag = SESSION_ACTIVITY | SESSION_CREATED;
     #[cfg(feature = "tmux_2_1")]
-    session_bitflag |= SESSION_LAST_ATTACHED;
+    let session_bitflag = SESSION_ACTIVITY | SESSION_CREATED | SESSION_LAST_ATTACHED;
     let session = Session::from_str(session_str, session_bitflag).unwrap();
     let origin = Session {
         #[cfg(feature = "tmux_2_1")]
