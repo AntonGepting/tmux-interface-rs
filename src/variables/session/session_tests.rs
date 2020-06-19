@@ -170,10 +170,8 @@ fn parse2() {
     use std::time::Duration;
 
     let session_str = "1557947146:1557947146:1557947146";
-    #[cfg(feature = "tmux_2_1")]
-    let session_bitflag = SESSION_ACTIVITY;
     #[cfg(feature = "tmux_1_6")]
-    let session_bitflag = SESSION_ACTIVITY | SESSION_CREATED;
+    let session_bitflag = SESSION_CREATED;
     #[cfg(feature = "tmux_2_1")]
     let session_bitflag = SESSION_ACTIVITY | SESSION_CREATED | SESSION_LAST_ATTACHED;
     let session = Session::from_str(session_str, session_bitflag).unwrap();
