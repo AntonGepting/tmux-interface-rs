@@ -390,7 +390,7 @@ impl FromStr for ServerOptions {
                     server_var.1(
                         &mut server_options,
                         arr.get(1).and_then(|i| i.parse::<usize>().ok()),
-                        v[1],
+                        v.get(1).unwrap_or(&""),
                     )
                 }
             }

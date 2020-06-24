@@ -153,7 +153,7 @@ impl FromStr for PaneOptions {
                     pane_var.1(
                         &mut pane_options,
                         arr.get(1).and_then(|i| i.parse::<usize>().ok()),
-                        v[1],
+                        v.get(1).unwrap_or(&""),
                     )
                 }
             }
