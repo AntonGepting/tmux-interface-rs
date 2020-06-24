@@ -359,7 +359,7 @@ impl<'a> TmuxInterface<'a> {
         Default::default()
     }
 
-    /// Execute subcommand of tmux
+    /// Execute tmux command
     ///
     /// # Manual
     ///

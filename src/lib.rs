@@ -100,7 +100,7 @@
 //!
 //! let mut tmux = TmuxInterface::new();
 //! tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-//!     // changing of binary name, its arguments, subcommand and its parameters are allowed
+//!     // changing of binary name, its arguments, command and its parameters are allowed
 //!     // inside callback function
 //!     *bin = "tmux".to_string();
 //!     // display newly set variables

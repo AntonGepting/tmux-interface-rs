@@ -196,7 +196,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(adjustment)
             }
         }
-        let output = self.subcommand(TmuxInterface::RESIZE_WINDOW, &args)?;
+        let output = self.command(TmuxInterface::RESIZE_WINDOW, &args)?;
         Ok(output)
     }
 }

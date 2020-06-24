@@ -162,7 +162,7 @@ impl<'a> TmuxInterface<'a> {
         args.push(&name);
         args.push(&key);
         args.push(&command);
-        let output = self.subcommand(TmuxInterface::DISPLAY_MENU, &args)?;
+        let output = self.command(TmuxInterface::DISPLAY_MENU, &args)?;
         Ok(output)
     }
 }
