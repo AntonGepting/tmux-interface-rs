@@ -42,7 +42,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(s) = target_client {
             args.extend_from_slice(&[t_KEY, &s])
         }
-        let output = self.subcommand(TmuxInterface::SHOW_MESSAGES, &args)?;
+        let output = self.command(TmuxInterface::SHOW_MESSAGES, &args)?;
         Ok(output)
     }
 }

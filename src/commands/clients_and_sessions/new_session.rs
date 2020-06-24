@@ -403,7 +403,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&s)
             }
         }
-        let output = self.subcommand(TmuxInterface::NEW_SESSION, &args)?;
+        let output = self.command(TmuxInterface::NEW_SESSION, &args)?;
         let stdout = String::from_utf8_lossy(&output.stderr.as_slice());
         if output.status.success() {
             Ok(stdout.to_string())

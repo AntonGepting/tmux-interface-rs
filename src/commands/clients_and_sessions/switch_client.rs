@@ -259,7 +259,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[T_KEY, &s])
             }
         }
-        let output = self.subcommand(TmuxInterface::SWITCH_CLIENT, &args)?;
+        let output = self.command(TmuxInterface::SWITCH_CLIENT, &args)?;
         Ok(output)
     }
 }

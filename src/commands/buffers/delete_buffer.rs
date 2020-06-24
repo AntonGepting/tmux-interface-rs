@@ -32,7 +32,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(s) = buffer_name {
             args.extend_from_slice(&[b_KEY, &s])
         }
-        let output = self.subcommand(TmuxInterface::DELETE_BUFFER, &args)?;
+        let output = self.command(TmuxInterface::DELETE_BUFFER, &args)?;
         Ok(output)
     }
 }

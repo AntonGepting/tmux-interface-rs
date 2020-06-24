@@ -176,7 +176,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(shell_command)
             }
         }
-        let output = self.subcommand(TmuxInterface::RESPAWN_WINDOW, &args)?;
+        let output = self.command(TmuxInterface::RESPAWN_WINDOW, &args)?;
         Ok(output)
     }
 }

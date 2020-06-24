@@ -205,7 +205,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &dst_pane])
             }
         }
-        let output = self.subcommand(TmuxInterface::MOVE_PANE, &args)?;
+        let output = self.command(TmuxInterface::MOVE_PANE, &args)?;
         Ok(output)
     }
 }

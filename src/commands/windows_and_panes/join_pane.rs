@@ -236,7 +236,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &dst_pane])
             }
         }
-        let output = self.subcommand(TmuxInterface::JOIN_PANE, &args)?;
+        let output = self.command(TmuxInterface::JOIN_PANE, &args)?;
         Ok(output)
     }
 }

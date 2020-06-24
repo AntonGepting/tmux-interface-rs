@@ -60,7 +60,7 @@ impl<'a> TmuxInterface<'a> {
             args.extend_from_slice(&[T_KEY, &s])
         }
         args.push(key);
-        let output = self.subcommand(TmuxInterface::UNBIND_KEY, &args)?;
+        let output = self.command(TmuxInterface::UNBIND_KEY, &args)?;
         Ok(output)
     }
 }

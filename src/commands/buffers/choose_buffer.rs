@@ -229,7 +229,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&template)
             }
         }
-        let output = self.subcommand(TmuxInterface::CHOOSE_BUFFER, &args)?;
+        let output = self.command(TmuxInterface::CHOOSE_BUFFER, &args)?;
         Ok(output)
     }
 }

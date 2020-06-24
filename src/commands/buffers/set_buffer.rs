@@ -44,7 +44,7 @@ impl<'a> TmuxInterface<'a> {
             args.extend_from_slice(&[n_KEY, &s])
         }
         args.push(data);
-        let output = self.subcommand(TmuxInterface::SET_BUFFER, &args)?;
+        let output = self.command(TmuxInterface::SET_BUFFER, &args)?;
         Ok(output)
     }
 }

@@ -42,7 +42,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(s) = key_table {
             args.extend_from_slice(&[T_KEY, &s])
         }
-        let output = self.subcommand(TmuxInterface::LIST_KEYS, &args)?;
+        let output = self.command(TmuxInterface::LIST_KEYS, &args)?;
         Ok(output)
     }
 }

@@ -19,7 +19,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(target_window) = target_window {
             args.extend_from_slice(&[t_KEY, &target_window])
         }
-        let output = self.subcommand(TmuxInterface::NEXT_LAYOUT, &args)?;
+        let output = self.command(TmuxInterface::NEXT_LAYOUT, &args)?;
         Ok(output)
     }
 }

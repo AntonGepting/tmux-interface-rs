@@ -337,7 +337,7 @@ impl<'a> TmuxInterface<'a> {
         }
         args.push(option);
         args.push(value);
-        let output = self.subcommand(TmuxInterface::SET_OPTION, &args)?;
+        let output = self.command(TmuxInterface::SET_OPTION, &args)?;
         Ok(output)
     }
 }

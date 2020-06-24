@@ -32,7 +32,7 @@ impl<'a> TmuxInterface<'a> {
             args.extend_from_slice(&[t_KEY, &s])
         }
         args.push(command);
-        let output = self.subcommand(TmuxInterface::CONFIRM_BEFORE, &args)?;
+        let output = self.command(TmuxInterface::CONFIRM_BEFORE, &args)?;
         Ok(output)
     }
 }

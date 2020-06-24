@@ -52,7 +52,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(s) = template {
             args.push(&s)
         }
-        let output = self.subcommand(TmuxInterface::DISPLAY_PANES, &args)?;
+        let output = self.command(TmuxInterface::DISPLAY_PANES, &args)?;
         Ok(output)
     }
 }

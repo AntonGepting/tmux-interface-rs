@@ -222,7 +222,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&message)
             }
         }
-        let output = self.subcommand(TmuxInterface::DISPLAY_MESSAGE, &args)?;
+        let output = self.command(TmuxInterface::DISPLAY_MESSAGE, &args)?;
         Ok(output)
     }
 }

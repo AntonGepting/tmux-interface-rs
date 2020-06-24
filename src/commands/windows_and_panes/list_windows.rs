@@ -42,7 +42,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(target_session) = target_session {
             args.extend_from_slice(&[t_KEY, &target_session])
         }
-        let output = self.subcommand(TmuxInterface::LIST_WINDOWS, &args)?;
+        let output = self.command(TmuxInterface::LIST_WINDOWS, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         Ok(stdout.to_string())
     }

@@ -19,9 +19,9 @@ fn exec_io_error() {
 }
 
 #[test]
-fn subcommand() {
+fn command() {
     let mut tmux = TmuxInterface::new();
-    tmux.subcommand("has", &["-t", "session_name"]).unwrap();
+    tmux.command("has", &["-t", "session_name"]).unwrap();
 }
 
 #[test]

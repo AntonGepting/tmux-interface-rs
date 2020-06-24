@@ -24,7 +24,7 @@ impl<'a> TmuxInterface<'a> {
             args.extend_from_slice(&[t_KEY, &target_session])
         }
         args.push(new_name);
-        let output = self.subcommand(TmuxInterface::RENAME_SESSION, &args)?;
+        let output = self.command(TmuxInterface::RENAME_SESSION, &args)?;
         Ok(output)
     }
 }

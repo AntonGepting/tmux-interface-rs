@@ -206,7 +206,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &target_pane])
             }
         }
-        let output = self.subcommand(TmuxInterface::PASTE_BUFFER, &args)?;
+        let output = self.command(TmuxInterface::PASTE_BUFFER, &args)?;
         Ok(output)
     }
 }

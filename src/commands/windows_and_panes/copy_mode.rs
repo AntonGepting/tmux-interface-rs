@@ -43,7 +43,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(target_pane) = target_pane {
             args.extend_from_slice(&[t_KEY, &target_pane])
         }
-        let output = self.subcommand(TmuxInterface::COPY_MODE, &args)?;
+        let output = self.command(TmuxInterface::COPY_MODE, &args)?;
         Ok(output)
     }
 }

@@ -47,7 +47,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(target) = target {
             args.extend_from_slice(&[t_KEY, &target])
         }
-        let output = self.subcommand(TmuxInterface::LIST_PANES, &args)?;
+        let output = self.command(TmuxInterface::LIST_PANES, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         Ok(stdout.to_string())
     }

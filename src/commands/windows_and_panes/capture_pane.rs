@@ -306,7 +306,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &target_pane])
             }
         }
-        let output = self.subcommand(TmuxInterface::CAPTURE_PANE, &args)?;
+        let output = self.command(TmuxInterface::CAPTURE_PANE, &args)?;
         Ok(output)
     }
 }

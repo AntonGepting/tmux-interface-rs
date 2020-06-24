@@ -301,7 +301,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&n);
             }
         }
-        let output = self.subcommand(TmuxInterface::REFRESH_CLIENT, &args)?;
+        let output = self.command(TmuxInterface::REFRESH_CLIENT, &args)?;
         Ok(output)
     }
 }

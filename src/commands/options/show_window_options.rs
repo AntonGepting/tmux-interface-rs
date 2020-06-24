@@ -55,7 +55,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(s) = option {
             args.push(&s)
         }
-        let output = self.subcommand(TmuxInterface::SHOW_WINDOW_OPTIONS, &args)?;
+        let output = self.command(TmuxInterface::SHOW_WINDOW_OPTIONS, &args)?;
         Ok(output)
     }
 }

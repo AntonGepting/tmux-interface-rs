@@ -173,7 +173,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &target_client])
             }
         }
-        let output = self.subcommand(TmuxInterface::DETACH_CLIENT, &args)?;
+        let output = self.command(TmuxInterface::DETACH_CLIENT, &args)?;
         Ok(output)
     }
 }

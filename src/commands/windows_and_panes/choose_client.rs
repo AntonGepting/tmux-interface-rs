@@ -246,7 +246,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&template)
             }
         }
-        let output = self.subcommand(TmuxInterface::CHOOSE_CLIENT, &args)?;
+        let output = self.command(TmuxInterface::CHOOSE_CLIENT, &args)?;
         Ok(output)
     }
 }

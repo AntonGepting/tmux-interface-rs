@@ -30,7 +30,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(dst_window) = dst_window {
             args.extend_from_slice(&[t_KEY, &dst_window])
         }
-        let output = self.subcommand(TmuxInterface::SWAP_WINDOW, &args)?;
+        let output = self.command(TmuxInterface::SWAP_WINDOW, &args)?;
         Ok(output)
     }
 }

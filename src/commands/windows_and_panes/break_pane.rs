@@ -264,7 +264,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &dst_window]);
             }
         }
-        let output = self.subcommand(TmuxInterface::BREAK_PANE, &args)?;
+        let output = self.command(TmuxInterface::BREAK_PANE, &args)?;
         Ok(output)
     }
 }

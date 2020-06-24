@@ -301,7 +301,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&shell_command)
             }
         }
-        let output = self.subcommand(TmuxInterface::NEW_WINDOW, &args)?;
+        let output = self.command(TmuxInterface::NEW_WINDOW, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         if output.status.success() {
             Ok(stdout.to_string())

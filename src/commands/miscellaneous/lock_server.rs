@@ -13,7 +13,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: lock)
     /// ```
     pub fn lock_server(&mut self) -> Result<Output, Error> {
-        let output = self.subcommand(TmuxInterface::LOCK_SERVER, &[])?;
+        let output = self.command(TmuxInterface::LOCK_SERVER, &[])?;
         Ok(output)
     }
 }

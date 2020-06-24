@@ -44,7 +44,7 @@ impl<'a> TmuxInterface<'a> {
             args.push(v_KEY);
         }
         args.push(path);
-        let output = self.subcommand(TmuxInterface::SOURCE_FILE, &args)?;
+        let output = self.command(TmuxInterface::SOURCE_FILE, &args)?;
         Ok(output)
     }
 }

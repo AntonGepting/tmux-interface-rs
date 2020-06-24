@@ -178,7 +178,7 @@ impl<'a> TmuxInterface<'a> {
         }
         args.push(hook_name);
         args.push(command);
-        let output = self.subcommand(TmuxInterface::SET_HOOK, &args)?;
+        let output = self.command(TmuxInterface::SET_HOOK, &args)?;
         Ok(output)
     }
 }

@@ -15,7 +15,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: start)
     /// ```
     pub fn start_server(&mut self) -> Result<Output, Error> {
-        let output = self.subcommand(TmuxInterface::START_SERVER, &[""])?;
+        let output = self.command(TmuxInterface::START_SERVER, &[""])?;
         Ok(output)
     }
 }

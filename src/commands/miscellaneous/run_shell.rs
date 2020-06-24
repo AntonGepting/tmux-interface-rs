@@ -38,7 +38,7 @@ impl<'a> TmuxInterface<'a> {
             args.extend_from_slice(&[t_KEY, &target_pane])
         }
         args.push(shell_command);
-        let output = self.subcommand(TmuxInterface::RUN_SHELL, &args)?;
+        let output = self.command(TmuxInterface::RUN_SHELL, &args)?;
         Ok(output)
     }
 }

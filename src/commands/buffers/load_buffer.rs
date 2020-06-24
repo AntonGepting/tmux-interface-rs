@@ -32,7 +32,7 @@ impl<'a> TmuxInterface<'a> {
             args.extend_from_slice(&[b_KEY, &s])
         }
         args.push(path);
-        let output = self.subcommand(TmuxInterface::LOAD_BUFFER, &args)?;
+        let output = self.command(TmuxInterface::LOAD_BUFFER, &args)?;
         Ok(output)
     }
 }

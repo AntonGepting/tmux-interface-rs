@@ -38,7 +38,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(target_session) = target_session {
             args.extend_from_slice(&[t_KEY, &target_session])
         }
-        let output = self.subcommand(TmuxInterface::LIST_CLIENTS, &args)?;
+        let output = self.command(TmuxInterface::LIST_CLIENTS, &args)?;
         Ok(output)
     }
 }

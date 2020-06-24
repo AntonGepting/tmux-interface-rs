@@ -292,7 +292,7 @@ impl<'a> TmuxInterface<'a> {
         //args.extend_from_slice(send_keys.keys);
         args.append(&mut key.clone());
         //args.push("C-m");
-        let output = self.subcommand(TmuxInterface::SEND_KEYS, &args)?;
+        let output = self.command(TmuxInterface::SEND_KEYS, &args)?;
         Ok(output)
     }
 }

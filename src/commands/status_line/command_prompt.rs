@@ -203,7 +203,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&s)
             }
         }
-        let output = self.subcommand(TmuxInterface::COMMAND_PROMPT, &args)?;
+        let output = self.command(TmuxInterface::COMMAND_PROMPT, &args)?;
         Ok(output)
     }
 }

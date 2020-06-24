@@ -179,7 +179,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&second_command)
             }
         }
-        let output = self.subcommand(TmuxInterface::IF_SHELL, &args)?;
+        let output = self.command(TmuxInterface::IF_SHELL, &args)?;
         Ok(output)
     }
 }

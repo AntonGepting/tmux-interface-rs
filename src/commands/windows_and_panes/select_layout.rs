@@ -204,7 +204,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&layout_name)
             }
         }
-        let output = self.subcommand(TmuxInterface::SELECT_LAYOUT, &args)?;
+        let output = self.command(TmuxInterface::SELECT_LAYOUT, &args)?;
         Ok(output)
     }
 }

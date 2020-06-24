@@ -40,7 +40,7 @@ impl<'a> TmuxInterface<'a> {
             args.extend_from_slice(&[b_KEY, &s])
         }
         args.push(path);
-        let output = self.subcommand(TmuxInterface::SAVE_BUFFER, &args)?;
+        let output = self.command(TmuxInterface::SAVE_BUFFER, &args)?;
         Ok(output)
     }
 }

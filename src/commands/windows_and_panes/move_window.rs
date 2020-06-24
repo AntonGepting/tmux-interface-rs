@@ -193,7 +193,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &dst_window])
             }
         }
-        let output = self.subcommand(TmuxInterface::MOVE_WINDOW, &args)?;
+        let output = self.command(TmuxInterface::MOVE_WINDOW, &args)?;
         Ok(output)
     }
 }

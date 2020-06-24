@@ -194,7 +194,7 @@ impl<'a> TmuxInterface<'a> {
             }
         }
         args.push(match_string);
-        let output = self.subcommand(TmuxInterface::FIND_WINDOW, &args)?;
+        let output = self.command(TmuxInterface::FIND_WINDOW, &args)?;
         Ok(output)
     }
 }

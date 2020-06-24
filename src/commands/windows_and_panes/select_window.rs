@@ -164,7 +164,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &target_window])
             }
         }
-        let output = self.subcommand(TmuxInterface::SELECT_WINDOW, &args)?;
+        let output = self.command(TmuxInterface::SELECT_WINDOW, &args)?;
         Ok(output)
     }
 }

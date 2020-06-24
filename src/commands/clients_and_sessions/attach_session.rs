@@ -203,7 +203,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &target_session]);
             }
         }
-        let output = self.subcommand(TmuxInterface::ATTACH_SESSION, &args)?;
+        let output = self.command(TmuxInterface::ATTACH_SESSION, &args)?;
         Ok(output)
     }
 }

@@ -147,7 +147,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&s)
             }
         }
-        let output = self.subcommand(TmuxInterface::SET_ENVIRONMENT, &args)?;
+        let output = self.command(TmuxInterface::SET_ENVIRONMENT, &args)?;
         Ok(output)
     }
 }

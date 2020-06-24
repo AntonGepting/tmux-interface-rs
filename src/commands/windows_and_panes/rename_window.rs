@@ -24,7 +24,7 @@ impl<'a> TmuxInterface<'a> {
             args.extend_from_slice(&[t_KEY, &target_window])
         }
         args.push(new_name);
-        let output = self.subcommand(TmuxInterface::RENAME_WINDOW, &args)?;
+        let output = self.command(TmuxInterface::RENAME_WINDOW, &args)?;
         Ok(output)
     }
 }

@@ -150,7 +150,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[t_KEY, &dst_window])
             }
         }
-        let output = self.subcommand(TmuxInterface::LINK_WINDOW, &args)?;
+        let output = self.command(TmuxInterface::LINK_WINDOW, &args)?;
         Ok(output)
     }
 }

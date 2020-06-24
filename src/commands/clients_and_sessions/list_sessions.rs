@@ -24,7 +24,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(s) = format {
             args.extend_from_slice(&[F_KEY, s])
         }
-        let output = self.subcommand(TmuxInterface::LIST_SESSIONS, &args)?;
+        let output = self.command(TmuxInterface::LIST_SESSIONS, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         Ok(stdout.to_string())
     }

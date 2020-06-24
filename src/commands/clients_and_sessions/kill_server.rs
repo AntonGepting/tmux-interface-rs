@@ -14,7 +14,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux kill-server
     /// ```
     pub fn kill_server(&mut self) -> Result<Output, Error> {
-        let output = self.subcommand(TmuxInterface::KILL_SERVER, &[""])?;
+        let output = self.command(TmuxInterface::KILL_SERVER, &[""])?;
         Ok(output)
     }
 }

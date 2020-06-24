@@ -25,7 +25,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(s) = format {
             args.extend_from_slice(&[F_KEY, &s])
         }
-        let output = self.subcommand(TmuxInterface::LIST_COMMANDS, &args)?;
+        let output = self.command(TmuxInterface::LIST_COMMANDS, &args)?;
         Ok(output)
     }
 }

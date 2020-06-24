@@ -301,7 +301,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&template)
             }
         }
-        let output = self.subcommand(TmuxInterface::CHOOSE_TREE, &args)?;
+        let output = self.command(TmuxInterface::CHOOSE_TREE, &args)?;
         Ok(output)
     }
 }

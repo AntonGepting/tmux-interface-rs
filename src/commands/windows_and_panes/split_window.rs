@@ -409,7 +409,7 @@ impl<'a> TmuxInterface<'a> {
                 args.extend_from_slice(&[F_KEY, &format])
             }
         }
-        let output = self.subcommand(TmuxInterface::SPLIT_WINDOW, &args)?;
+        let output = self.command(TmuxInterface::SPLIT_WINDOW, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         Ok(stdout.to_string())
     }

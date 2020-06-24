@@ -44,7 +44,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(s) = variable {
             args.push(&s)
         }
-        let output = self.subcommand(TmuxInterface::SHOW_ENVIRONMENT, &args)?;
+        let output = self.command(TmuxInterface::SHOW_ENVIRONMENT, &args)?;
         Ok(output)
     }
 }

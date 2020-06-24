@@ -285,7 +285,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&option)
             }
         }
-        let output = self.subcommand(TmuxInterface::SHOW_OPTIONS, &args)?;
+        let output = self.command(TmuxInterface::SHOW_OPTIONS, &args)?;
         let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
         Ok(stdout.to_string())
     }

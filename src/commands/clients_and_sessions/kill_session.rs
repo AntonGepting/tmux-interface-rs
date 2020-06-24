@@ -39,7 +39,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(target_session) = target_session {
             args.extend_from_slice(&[t_KEY, &target_session])
         }
-        let output = self.subcommand(TmuxInterface::KILL_SESSION, &args)?;
+        let output = self.command(TmuxInterface::KILL_SESSION, &args)?;
         Ok(output)
     }
 }

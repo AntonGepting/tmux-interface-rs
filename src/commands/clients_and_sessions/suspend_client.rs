@@ -25,7 +25,7 @@ impl<'a> TmuxInterface<'a> {
         if let Some(s) = target_client {
             args.extend_from_slice(&[t_KEY, &s])
         }
-        let output = self.subcommand(TmuxInterface::SUSPEND_CLIENT, &args)?;
+        let output = self.command(TmuxInterface::SUSPEND_CLIENT, &args)?;
         Ok(output)
     }
 }

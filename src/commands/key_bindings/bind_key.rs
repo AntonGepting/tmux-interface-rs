@@ -225,7 +225,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(&s)
             }
         }
-        let output = self.subcommand(TmuxInterface::BIND_KEY, &args)?;
+        let output = self.command(TmuxInterface::BIND_KEY, &args)?;
         Ok(output)
     }
 }

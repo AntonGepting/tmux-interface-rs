@@ -374,12 +374,12 @@ impl<'a> TmuxInterface<'a> {
     /// use crate::tmux_interface::TmuxInterface;
     ///
     /// let mut tmux = TmuxInterface::new();
-    /// tmux.subcommand("has-session", &["-t", "session_name"]).unwrap();
+    /// tmux.command("has-session", &["-t", "session_name"]).unwrap();
     /// ```
     // XXX: rename to command?
-    pub fn subcommand(&mut self, subcmd: &str, args: &[&str]) -> Result<Output, Error> {
+    pub fn command(&mut self, cmd: &str, args: &[&str]) -> Result<Output, Error> {
         let mut options: Vec<&str> = Vec::new();
-        options.push(subcmd);
+        options.push(cmd);
         options.extend_from_slice(args);
         self.exec(&mut options)
     }
@@ -430,7 +430,7 @@ impl<'a> TmuxInterface<'a> {
         }
 
         // pre hook callback
-        // XXX: check argumets, mb separate subcmd too
+        // XXX: check argumets, mb separate cmd too
         if let Some(pre_hook) = self.pre_hook.as_mut() {
             let result = pre_hook(&mut bin, &mut options, &mut args)?;
             if let Some(mut output) = result {

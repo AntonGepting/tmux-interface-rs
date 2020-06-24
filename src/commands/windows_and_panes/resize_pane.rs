@@ -267,7 +267,7 @@ impl<'a> TmuxInterface<'a> {
                 args.push(adjustment)
             }
         }
-        let output = self.subcommand(TmuxInterface::RESIZE_PANE, &args)?;
+        let output = self.command(TmuxInterface::RESIZE_PANE, &args)?;
         Ok(output)
     }
 }

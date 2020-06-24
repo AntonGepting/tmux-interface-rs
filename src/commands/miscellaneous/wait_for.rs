@@ -37,7 +37,7 @@ impl<'a> TmuxInterface<'a> {
             args.push(U_KEY);
         }
         args.push(channel);
-        let output = self.subcommand(TmuxInterface::WAIT_FOR, &args)?;
+        let output = self.command(TmuxInterface::WAIT_FOR, &args)?;
         Ok(output)
     }
 }
