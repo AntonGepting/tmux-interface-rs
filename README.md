@@ -15,7 +15,7 @@ the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
 
 ## Usage
 
-1. Add a dependency in your `Cargo.toml`.
+1. Add the new crate dependency in your `Cargo.toml`.
 
     - Using **defaults** (`tmux 2.8`)
         ```
@@ -25,10 +25,10 @@ the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
 
     - Using **specified tmux version**:
 
-        You can also add `features` to your dependencies entry in `Cargo.toml`, if
-        you want to specify the version of tmux you want to use (because
-        different tmux versions may have incompatible CLI changes). Following
-        tmux versions are currently supported as `features`:
+        There is an optional dependency parameter `features` in
+        `Cargo.toml`, to specify the compatible version of tmux. Because
+        different tmux versions may have incompatible CLI changes. Following
+        tmux versions are currently supported as library `features`:
 
         `tmux_0_8`, `tmux_0_9`, `tmux_1_0`, `tmux_1_1`, `tmux_1_2`, `tmux_1_3`,
         `tmux_1_4`, `tmux_1_5`, `tmux_1_6`, `tmux_1_7`, `tmux_1_8`, `tmux_1_9`,
@@ -77,6 +77,7 @@ the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
 
         let mut tmux = TmuxInterface::new();
         let new_session = NewSession {
+            name: "session_name",
             ..Default::default(),
         };
         tmux.new_session(Some(&new_session)).unwrap();
@@ -131,11 +132,12 @@ OS:
 `tmux_interface` library is licensed under the MIT license. Please read the
 [license file](LICENSE.md) in the repository for more information.
 
+
 ## See also
 
-<!--- [Rust programming language](https://www.rust-lang.org/)-->
-<!--- [crates.io](https://www.crates.io/)-->
-<!--- [docs.rs](https://www.docs.rs/)-->
-<!--- [rust-clippy](https://github.com/rust-lang/rust-clippy)-->
-<!--- [TMUX](https://github.com/tmux/tmux)-->
-<!--- [TMUX man](http://man7.org/linux/man-pages/man1/tmux.1.html)-->
+- [Rust programming language](https://www.rust-lang.org/)
+- [crates.io](https://www.crates.io/)
+- [docs.rs](https://www.docs.rs/)
+- [rust-clippy](https://github.com/rust-lang/rust-clippy)
+- [TMUX](https://github.com/tmux/tmux)
+- [TMUX man](http://man7.org/linux/man-pages/man1/tmux.1.html)
