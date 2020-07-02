@@ -1,3 +1,5 @@
+# NOTE: based on .travis.yml file created by tmuxp project contributors:
+# [tmuxp](https://github.com/tmux-python/tmuxp/blob/master/.travis.yml)
 language: rust
 os:
   - linux
