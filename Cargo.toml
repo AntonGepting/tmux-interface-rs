@@ -9,6 +9,7 @@ readme = "README.md"
 keywords = ["tmux", "cli", "interface"]
 categories = ["api-bindings", "command-line-utilities", "command-line-interface"]
 repository = "https://github.com/AntonGepting/tmux-interface-rs"
+exclude = ["/scripts", "/.travis.yml"]
 
 [features]
 # earlier versions currently are not supported
