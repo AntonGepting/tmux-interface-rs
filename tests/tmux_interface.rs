@@ -48,28 +48,29 @@ fn kill_session() {
         .unwrap();
 }
 
-#[test]
-fn callback() {
-    use crate::tmux_interface::NewSession;
+// NOTE: comment out, bash scripts moved out from tests directory
+//#[test]
+//fn callback() {
+//use crate::tmux_interface::NewSession;
 
-    let mut tmux = TmuxInterface::new();
-    let new_session = NewSession {
-        detached: Some(true),
-        session_name: Some("test_kill_session"),
-        ..Default::default()
-    };
+//let mut tmux = TmuxInterface::new();
+//let new_session = NewSession {
+//detached: Some(true),
+//session_name: Some("test_kill_session"),
+//..Default::default()
+//};
 
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        *bin = "./tests/tmux_test.sh".to_string();
-        println!("callback() prehook: {:?} {:?} {:?}", bin, options, subcmd);
-        //Err(Error::new("hook"))
-        Ok(None)
-    }));
+//tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
+//*bin = "./tests/tmux_test.sh".to_string();
+//println!("callback() prehook: {:?} {:?} {:?}", bin, options, subcmd);
+////Err(Error::new("hook"))
+//Ok(None)
+//}));
 
-    tmux.new_session(Some(&new_session)).unwrap();
-    tmux.kill_session(None, None, Some("test_kill_session"))
-        .unwrap();
-}
+//tmux.new_session(Some(&new_session)).unwrap();
+//tmux.kill_session(None, None, Some("test_kill_session"))
+//.unwrap();
+//}
 
 //#[test]
 //fn list_clients() {
