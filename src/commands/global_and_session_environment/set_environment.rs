@@ -107,7 +107,10 @@ impl<'a> SetEnvironmentBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SET_ENVIRONMENT: &'static str = "set-environment";
+    #[cfg(feature = "use_cmd_alias")]
+    const SET_ENVIRONMENT: &'static str = "setenv";
 
     /// # Manual
     ///

@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const WAIT_FOR: &'static str = "wait-for";
+    #[cfg(feature = "use_cmd_alias")]
+    const WAIT_FOR: &'static str = "wait";
 
     // TODO: enum for arg
     /// # Manual

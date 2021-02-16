@@ -1,8 +1,8 @@
 use crate::error::Error;
 use crate::tmux_interface::*;
-use std::process::Output;
 #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
 use std::marker::PhantomData;
+use std::process::Output;
 
 /// Structure for conditional commands executing
 ///
@@ -121,7 +121,10 @@ impl<'a> IfShellBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const IF_SHELL: &'static str = "if-shell";
+    #[cfg(feature = "use_cmd_alias")]
+    const IF_SHELL: &'static str = "if";
 
     /// # Manual
     ///

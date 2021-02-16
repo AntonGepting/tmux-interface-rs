@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SHOW_MESSAGES: &'static str = "show-messages";
+    #[cfg(feature = "use_cmd_alias")]
+    const SHOW_MESSAGES: &'static str = "showmsgs";
 
     /// Show client messages or server information
     ///

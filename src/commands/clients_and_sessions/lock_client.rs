@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const LOCK_CLIENT: &'static str = "lock-client";
+    #[cfg(feature = "use_cmd_alias")]
+    const LOCK_CLIENT: &'static str = "lockc";
 
     /// Lock `target-client`
     ///

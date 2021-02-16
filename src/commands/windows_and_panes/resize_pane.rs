@@ -185,7 +185,10 @@ impl<'a> ResizePaneBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const RESIZE_PANE: &'static str = "resize-pane";
+    #[cfg(feature = "use_cmd_alias")]
+    const RESIZE_PANE: &'static str = "resizep";
 
     /// Resize a pane, up, down, left or right
     ///
@@ -214,10 +217,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux resize-pane [-DU] [-p pane-index] [-t target-pane] [adjustment]
     /// (alias: resizep)
     /// ```
-    pub fn resize_pane(
-        &mut self,
-        resize_pane: Option<&ResizePane>,
-    ) -> Result<Output, Error> {
+    pub fn resize_pane(&mut self, resize_pane: Option<&ResizePane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         #[cfg(feature = "tmux_1_8")]
         let x: String;

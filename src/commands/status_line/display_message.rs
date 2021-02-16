@@ -152,7 +152,10 @@ impl<'a> DisplayMessageBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const DISPLAY_MESSAGE: &'static str = "display-message";
+    #[cfg(feature = "use_cmd_alias")]
+    const DISPLAY_MESSAGE: &'static str = "display";
 
     /// Structure for displaying a message
     ///

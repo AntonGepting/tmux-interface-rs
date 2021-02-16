@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const PREVIOUS_LAYOUT: &'static str = "previous-layout";
+    #[cfg(feature = "use_cmd_alias")]
+    const PREVIOUS_LAYOUT: &'static str = "prevl";
 
     /// Move to the previous layout in the session
     ///

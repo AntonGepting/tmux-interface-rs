@@ -2,7 +2,10 @@ use crate::error::Error;
 use crate::tmux_interface::*;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const LIST_WINDOWS: &'static str = "list-windows";
+    #[cfg(feature = "use_cmd_alias")]
+    const LIST_WINDOWS: &'static str = "lsw";
 
     // XXX: better return type
     /// List windows on the server

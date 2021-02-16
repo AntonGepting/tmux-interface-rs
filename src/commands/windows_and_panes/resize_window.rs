@@ -147,7 +147,10 @@ impl<'a> ResizeWindowBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const RESIZE_WINDOW: &'static str = "resize-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const RESIZE_WINDOW: &'static str = "resizew";
 
     /// Resize a window, up, down, left or right
     ///

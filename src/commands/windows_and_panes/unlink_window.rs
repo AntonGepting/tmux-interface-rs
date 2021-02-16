@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const UNLINK_WINDOW: &'static str = "unlink-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const UNLINK_WINDOW: &'static str = "unlinkw";
 
     /// Unlink `target-window`
     ///

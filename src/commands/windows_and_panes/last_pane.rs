@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const LAST_PANE: &'static str = "last-pane";
+    #[cfg(feature = "use_cmd_alias")]
+    const LAST_PANE: &'static str = "lastp";
 
     /// Select the last (previously selected) pane
     ///

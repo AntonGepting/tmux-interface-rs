@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const RENAME_WINDOW: &'static str = "rename-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const RENAME_WINDOW: &'static str = "renamew";
 
     /// Rename the current window, or the window at target-window if specified, to new-name
     ///

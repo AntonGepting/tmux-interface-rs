@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SAVE_BUFFER: &'static str = "save-buffer";
+    #[cfg(feature = "use_cmd_alias")]
+    const SAVE_BUFFER: &'static str = "saveb";
 
     /// Save the contents of the specified paste buffer to path.
     ///

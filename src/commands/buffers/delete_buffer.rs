@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const DELETE_BUFFER: &'static str = "delete-buffer";
+    #[cfg(feature = "use_cmd_alias")]
+    const DELETE_BUFFER: &'static str = "deleteb";
 
     /// Delete the buffer named buffer-name, or the most recently added automatically named buffer
     /// if not specified.

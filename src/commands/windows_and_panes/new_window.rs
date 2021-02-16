@@ -204,7 +204,10 @@ impl<'a> NewWindowBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const NEW_WINDOW: &'static str = "new-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const NEW_WINDOW: &'static str = "neww";
 
     /// Create a new window
     ///
@@ -254,10 +257,7 @@ impl<'a> TmuxInterface<'a> {
     /// (alias: neww)
     /// ```
     // TODO: target_window exitst error
-    pub fn new_window(
-        &mut self,
-        new_window: Option<&NewWindow>,
-    ) -> Result<String, Error> {
+    pub fn new_window(&mut self, new_window: Option<&NewWindow>) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(new_window) = new_window {
             #[cfg(feature = "tmux_1_3")]

@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const DISPLAY_PANES: &'static str = "display-panes";
+    #[cfg(feature = "use_cmd_alias")]
+    const DISPLAY_PANES: &'static str = "displayp";
 
     /// Display a visible indicator of each pane shown by `target-client`
     ///

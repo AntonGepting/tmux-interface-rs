@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const CONFIRM_BEFORE: &'static str = "confirm-before";
+    #[cfg(feature = "use_cmd_alias")]
+    const CONFIRM_BEFORE: &'static str = "confirm";
 
     /// # Manual
     ///

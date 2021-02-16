@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const LOAD_BUFFER: &'static str = "load-buffer";
+    #[cfg(feature = "use_cmd_alias")]
+    const LOAD_BUFFER: &'static str = "loadb";
 
     /// Load the contents of the specified paste buffer from path.
     ///

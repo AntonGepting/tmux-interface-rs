@@ -134,7 +134,10 @@ impl<'a> FindWindowBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const FIND_WINDOW: &'static str = "find-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const FIND_WINDOW: &'static str = "findw";
 
     /// Search for the fnmatch(3) pattern `match-string` in window names,
     /// titles, and visible content (but not history)

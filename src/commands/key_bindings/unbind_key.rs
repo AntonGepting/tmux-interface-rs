@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const UNBIND_KEY: &'static str = "unbind-key";
+    #[cfg(feature = "use_cmd_alias")]
+    const UNBIND_KEY: &'static str = "unbind";
 
     /// # Manual
     ///

@@ -108,7 +108,10 @@ impl<'a> LinkWindowBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const LINK_WINDOW: &'static str = "link-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const LINK_WINDOW: &'static str = "linkw";
 
     /// Link the window at src-window to the specified dst-window
     ///
@@ -123,10 +126,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux link-window [-dk] [-s src-window] [-t dst-window]
     /// (alias: linkw)
     /// ```
-    pub fn link_window(
-        &mut self,
-        link_window: Option<&LinkWindow>,
-    ) -> Result<Output, Error> {
+    pub fn link_window(&mut self, link_window: Option<&LinkWindow>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(link_window) = link_window {
             #[cfg(feature = "tmux_2_1")]

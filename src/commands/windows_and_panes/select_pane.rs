@@ -260,7 +260,10 @@ impl<'a> SelectPaneBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SELECT_PANE: &'static str = "select-pane";
+    #[cfg(feature = "use_cmd_alias")]
+    const SELECT_PANE: &'static str = "selectp";
 
     /// # Manual
     ///
@@ -311,10 +314,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-pane [-p pane-index] [-t target-window]
     /// (alias: selectp)
     /// ```
-    pub fn select_pane(
-        &mut self,
-        select_pane: Option<&SelectPane>,
-    ) -> Result<Output, Error> {
+    pub fn select_pane(&mut self, select_pane: Option<&SelectPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
 
         if let Some(select_pane) = select_pane {

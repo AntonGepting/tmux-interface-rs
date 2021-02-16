@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const LIST_COMMANDS: &'static str = "list-commands";
+    #[cfg(feature = "use_cmd_alias")]
+    const LIST_COMMANDS: &'static str = "lscm";
 
     /// List the syntax of all commands supported by tmux
     ///

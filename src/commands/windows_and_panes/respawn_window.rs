@@ -120,7 +120,10 @@ impl<'a> RespawnWindowBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const RESPAWN_WINDOW: &'static str = "respawn-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const RESPAWN_WINDOW: &'static str = "respawnw";
 
     /// Reactivate a window in which the command has exited
     ///

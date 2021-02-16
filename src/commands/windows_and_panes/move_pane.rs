@@ -135,7 +135,10 @@ impl<'a> MovePaneBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const MOVE_PANE: &'static str = "move-pane";
+    #[cfg(feature = "use_cmd_alias")]
+    const MOVE_PANE: &'static str = "movep";
 
     /// Like join-pane, but `src-pane` and `dst-pane` may belong to the same window
     ///
@@ -152,10 +155,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: movep)
     /// ```
-    pub fn move_pane(
-        &mut self,
-        move_pane: Option<&MovePane>,
-    ) -> Result<Output, Error> {
+    pub fn move_pane(&mut self, move_pane: Option<&MovePane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let p;
         if let Some(move_pane) = move_pane {

@@ -196,7 +196,10 @@ impl<'a> ShowOptionsBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SHOW_OPTIONS: &'static str = "show-options";
+    #[cfg(feature = "use_cmd_alias")]
+    const SHOW_OPTIONS: &'static str = "show";
 
     // XXX: better result type?
     /// # Manual
@@ -236,10 +239,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux show-options [-t target-session] option value
     /// (alias: show)
     /// ```
-    pub fn show_options(
-        &mut self,
-        show_options: Option<&ShowOptions>,
-    ) -> Result<String, Error> {
+    pub fn show_options(&mut self, show_options: Option<&ShowOptions>) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         let s;
         if let Some(show_options) = show_options {

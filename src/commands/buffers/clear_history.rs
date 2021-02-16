@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const CLEAR_HISTORY: &'static str = "clear-history";
+    #[cfg(feature = "use_cmd_alias")]
+    const CLEAR_HISTORY: &'static str = "clearhist";
 
     /// Remove and free the history for the specified pane.
     ///

@@ -133,7 +133,10 @@ impl<'a> MoveWindowBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const MOVE_WINDOW: &'static str = "move-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const MOVE_WINDOW: &'static str = "movew";
 
     /// This is similar to link-window, except the window at `src-window` is moved to `dst-window`
     ///
@@ -162,10 +165,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux move-window [-d] [-s src-window] [-t dst-window]
     /// (alias: movew)
     /// ```
-    pub fn move_window(
-        &mut self,
-        move_window: Option<&MoveWindow>,
-    ) -> Result<Output, Error> {
+    pub fn move_window(&mut self, move_window: Option<&MoveWindow>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(move_window) = move_window {
             #[cfg(feature = "tmux_2_1")]

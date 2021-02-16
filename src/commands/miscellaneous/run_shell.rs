@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const RUN_SHELL: &'static str = "run-shell";
+    #[cfg(feature = "use_cmd_alias")]
+    const RUN_SHELL: &'static str = "run";
 
     /// # Manual
     ///

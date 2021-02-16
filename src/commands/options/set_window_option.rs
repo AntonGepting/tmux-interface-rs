@@ -159,7 +159,10 @@ impl<'a> SetWindowOption<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SET_WINDOW_OPTION: &'static str = "set-window-option";
+    #[cfg(feature = "use_cmd_alias")]
+    const SET_WINDOW_OPTION: &'static str = "setw";
 
     /// # Manual
     ///

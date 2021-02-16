@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SUSPEND_CLIENT: &'static str = "suspend-client";
+    #[cfg(feature = "use_cmd_alias")]
+    const SUSPEND_CLIENT: &'static str = "suspendc";
 
     /// Suspend a client by sending SIGTSTP (tty stop)
     ///

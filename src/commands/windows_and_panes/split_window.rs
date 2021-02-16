@@ -267,7 +267,10 @@ impl<'a> SplitWindowBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SPLIT_WINDOW: &'static str = "split-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const SPLIT_WINDOW: &'static str = "splitw";
 
     /// Create a new pane by splitting `target-pane`
     ///
@@ -331,10 +334,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux split-window [-d] [-l size | -p percentage] [-t target-window] [command]
     /// (alias: splitw)
     /// ```
-    pub fn split_window(
-        &mut self,
-        split_window: Option<&SplitWindow>,
-    ) -> Result<String, Error> {
+    pub fn split_window(&mut self, split_window: Option<&SplitWindow>) -> Result<String, Error> {
         let mut args: Vec<&str> = Vec::new();
         let d;
 

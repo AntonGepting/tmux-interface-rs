@@ -146,7 +146,10 @@ impl<'a> PasteBufferBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const PASTE_BUFFER: &'static str = "paste-buffer";
+    #[cfg(feature = "use_cmd_alias")]
+    const PASTE_BUFFER: &'static str = "pasteb";
 
     /// Insert the contents of a paste buffer into the specified pane.
     ///
@@ -175,10 +178,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux paste-buffer [-d] [-b buffer-index] [-t target-window]
     /// (alias: pasteb)
     /// ```
-    pub fn paste_buffer(
-        &mut self,
-        paste_buffer: Option<&PasteBuffer>,
-    ) -> Result<Output, Error> {
+    pub fn paste_buffer(&mut self, paste_buffer: Option<&PasteBuffer>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(paste_buffer) = paste_buffer {
             #[cfg(feature = "tmux_0_8")]

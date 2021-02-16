@@ -190,10 +190,7 @@ impl<'a> TmuxInterface<'a> {
     /// ```text
     /// tmux choose-buffer [-t target-pane] [template]
     /// ```
-    pub fn choose_buffer(
-        &mut self,
-        choose_buffer: Option<&ChooseBuffer>,
-    ) -> Result<Output, Error> {
+    pub fn choose_buffer(&mut self, choose_buffer: Option<&ChooseBuffer>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(choose_buffer) = choose_buffer {
             #[cfg(feature = "tmux_2_6")]

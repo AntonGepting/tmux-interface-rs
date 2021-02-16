@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const RENAME_SESSION: &'static str = "rename-session";
+    #[cfg(feature = "use_cmd_alias")]
+    const RENAME_SESSION: &'static str = "rename";
 
     /// Rename the session to `new-name`
     ///

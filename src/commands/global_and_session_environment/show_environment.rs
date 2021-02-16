@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SHOW_ENVIRONMENT: &'static str = "show-environment";
+    #[cfg(feature = "use_cmd_alias")]
+    const SHOW_ENVIRONMENT: &'static str = "showenv";
 
     /// # Manual
     ///

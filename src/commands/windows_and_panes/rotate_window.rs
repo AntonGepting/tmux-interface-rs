@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const ROTATE_WINDOW: &'static str = "rotate-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const ROTATE_WINDOW: &'static str = "rotatew";
 
     /// Rotate the positions of the panes within a window
     ///

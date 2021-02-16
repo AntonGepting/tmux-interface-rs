@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const LIST_KEYS: &'static str = "list-keys";
+    #[cfg(feature = "use_cmd_alias")]
+    const LIST_KEYS: &'static str = "lsk";
 
     /// # Manual
     ///

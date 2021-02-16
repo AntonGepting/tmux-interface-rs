@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SOURCE_FILE: &'static str = "source-file";
+    #[cfg(feature = "use_cmd_alias")]
+    const SOURCE_FILE: &'static str = "source";
 
     /// Execute commands from path
     ///

@@ -139,7 +139,10 @@ impl<'a> AttachSessionBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const ATTACH_SESSION: &'static str = "attach-session";
+    #[cfg(feature = "use_cmd_alias")]
+    const ATTACH_SESSION: &'static str = "attach";
 
     /// # Manual
     ///

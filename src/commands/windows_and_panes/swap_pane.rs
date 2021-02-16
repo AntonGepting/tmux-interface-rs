@@ -127,7 +127,10 @@ impl<'a> SwapPaneBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SWAP_PANE: &'static str = "swap-pane";
+    #[cfg(feature = "use_cmd_alias")]
+    const SWAP_PANE: &'static str = "swapp";
 
     /// Swap two panes
     ///
@@ -150,10 +153,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux swap-pane [-dDU] [-p src-index] [-t target-window] [-q dst-index]
     /// (alias: swapp)
     /// ```
-    pub fn swap_pane(
-        &mut self,
-        swap_pane: Option<&SwapPane>,
-    ) -> Result<Output, Error> {
+    pub fn swap_pane(&mut self, swap_pane: Option<&SwapPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(swap_pane) = swap_pane {
             #[cfg(feature = "tmux_0_8")]

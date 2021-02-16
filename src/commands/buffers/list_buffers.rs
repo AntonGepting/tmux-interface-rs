@@ -3,7 +3,11 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const LIST_BUFFERS: &'static str = "list-buffers";
+    #[cfg(feature = "use_cmd_alias")]
+    const LIST_BUFFERS: &'static str = "lsb";
+
     /// List the global buffers.
     ///
     /// # Manual

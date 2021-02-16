@@ -216,7 +216,10 @@ impl<'a> CapturePaneBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const CAPTURE_PANE: &'static str = "capture-pane";
+    #[cfg(feature = "use_cmd_alias")]
+    const CAPTURE_PANE: &'static str = "capturep";
 
     /// Capture the contents of a pane
     ///
@@ -251,10 +254,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux capture-pane [-b buffer-index] [-t target-pane]
     /// (alias: capturep)
     /// ```
-    pub fn capture_pane(
-        &mut self,
-        capture_pane: Option<&CapturePane>,
-    ) -> Result<Output, Error> {
+    pub fn capture_pane(&mut self, capture_pane: Option<&CapturePane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(capture_pane) = capture_pane {
             #[cfg(feature = "tmux_1_8")]

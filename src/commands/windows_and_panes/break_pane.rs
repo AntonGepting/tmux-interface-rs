@@ -192,7 +192,10 @@ impl<'a> BreakPaneBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const BREAK_PANE: &'static str = "break-pane";
+    #[cfg(feature = "use_cmd_alias")]
+    const BREAK_PANE: &'static str = "breakp";
 
     /// Break `src-pane` off from its containing window to make it the only pane in `dst-window`
     ///
@@ -233,10 +236,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux break-pane [-d] [-p pane-index] [-t target-window]
     /// (alias: breakp)
     /// ```
-    pub fn break_pane(
-        &mut self,
-        break_pane: Option<&BreakPane>,
-    ) -> Result<Output, Error> {
+    pub fn break_pane(&mut self, break_pane: Option<&BreakPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(break_pane) = break_pane {
             #[cfg(feature = "tmux_0_8")]

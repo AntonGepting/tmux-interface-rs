@@ -114,7 +114,10 @@ impl<'a> SelectWindowBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SELECT_WINDOW: &'static str = "select-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const SELECT_WINDOW: &'static str = "selectw";
 
     /// Select the window at target-window
     ///
@@ -137,10 +140,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-window [-t target-window]
     /// (alias: selectw)
     /// ```
-    pub fn select_window(
-        &mut self,
-        select_window: Option<&SelectWindow>,
-    ) -> Result<Output, Error> {
+    pub fn select_window(&mut self, select_window: Option<&SelectWindow>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(select_window) = select_window {
             #[cfg(feature = "tmux_1_5")]

@@ -120,7 +120,10 @@ impl<'a> DetachClientBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const DETACH_CLIENT: &'static str = "detach-client";
+    #[cfg(feature = "use_cmd_alias")]
+    const DETACH_CLIENT: &'static str = "detach";
 
     /// Detach the current client
     ///

@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SET_BUFFER: &'static str = "set-buffer";
+    #[cfg(feature = "use_cmd_alias")]
+    const SET_BUFFER: &'static str = "setb";
 
     /// Set the contents of the specified buffer to data.
     ///

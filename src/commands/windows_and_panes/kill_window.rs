@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const KILL_WINDOW: &'static str = "kill-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const KILL_WINDOW: &'static str = "killw";
 
     /// Kill the current window or the window at target-window, removing it from any sessions
     /// to which it is linked

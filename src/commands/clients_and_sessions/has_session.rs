@@ -2,7 +2,10 @@ use crate::error::Error;
 use crate::tmux_interface::*;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const HAS_SESSION: &'static str = "has-session";
+    #[cfg(feature = "use_cmd_alias")]
+    const HAS_SESSION: &'static str = "has";
 
     // XXX: better result return?
     /// Report if the specified session exist

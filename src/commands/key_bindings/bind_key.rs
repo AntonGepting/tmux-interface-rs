@@ -147,7 +147,10 @@ impl<'a> BindKeyBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const BIND_KEY: &'static str = "bind-key";
+    #[cfg(feature = "use_cmd_alias")]
+    const BIND_KEY: &'static str = "bind";
 
     /// # Manual
     ///

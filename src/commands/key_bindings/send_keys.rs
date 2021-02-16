@@ -194,7 +194,10 @@ impl<'a> SendKeysBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SEND_KEYS: &'static str = "send-keys";
+    #[cfg(feature = "use_cmd_alias")]
+    const SEND_KEYS: &'static str = "send";
 
     // FIXME: repeat-count
     /// # Manual

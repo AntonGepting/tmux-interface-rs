@@ -178,7 +178,10 @@ impl<'a> SwitchClientBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SWITCH_CLIENT: &'static str = "switch-client";
+    #[cfg(feature = "use_cmd_alias")]
+    const SWITCH_CLIENT: &'static str = "switchc";
 
     /// Switch the current session for client `target-client` to `target-session`
     ///

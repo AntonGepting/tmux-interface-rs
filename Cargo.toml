@@ -63,5 +63,7 @@ tmux_latest = ["tmux_3_1b"]
 #tmux_stable = ["tmux_2_8"]
 # default tmux version for library
 default = ["tmux_2_8"]
+# use alias instead of full tmux command name (e.g. `list-sessions` -> `ls`)
+use_cmd_alias = []
 
 [dependencies]

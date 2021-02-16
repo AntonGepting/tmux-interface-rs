@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const PREVIOUS_WINDOW: &'static str = "previous-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const PREVIOUS_WINDOW: &'static str = "prev";
 
     /// Move to the previous window in the session
     ///

@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const KILL_PANE: &'static str = "kill-pane";
+    #[cfg(feature = "use_cmd_alias")]
+    const KILL_PANE: &'static str = "killp";
 
     /// Destroy the given pane
     ///

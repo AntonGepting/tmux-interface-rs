@@ -2,7 +2,10 @@ use crate::error::Error;
 use crate::tmux_interface::*;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const LIST_SESSIONS: &'static str = "list-sessions";
+    #[cfg(feature = "use_cmd_alias")]
+    const LIST_SESSIONS: &'static str = "ls";
 
     // XXX: better result return?
     /// List all sessions managed by the server

@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SHOW_BUFFER: &'static str = "show-buffer";
+    #[cfg(feature = "use_cmd_alias")]
+    const SHOW_BUFFER: &'static str = "showb";
 
     /// Display the contents of the specified buffer.
     ///

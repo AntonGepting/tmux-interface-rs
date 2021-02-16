@@ -114,7 +114,10 @@ impl<'a> RespawnPaneBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const RESPAWN_PANE: &'static str = "respawn-pane";
+    #[cfg(feature = "use_cmd_alias")]
+    const RESPAWN_PANE: &'static str = "respawnp";
 
     /// Reactivate a pane in which the command has exited
     ///
@@ -137,10 +140,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux respawn-pane [-k] [-t target-pane] [shell-command]
     /// (alias: respawnp)
     /// ```
-    pub fn respawn_pane(
-        &mut self,
-        respawn_pane: Option<&RespawnPane>,
-    ) -> Result<Output, Error> {
+    pub fn respawn_pane(&mut self, respawn_pane: Option<&RespawnPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(respawn_pane) = respawn_pane {
             #[cfg(feature = "tmux_1_5")]

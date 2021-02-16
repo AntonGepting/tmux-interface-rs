@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const LOCK_SESSION: &'static str = "lock-session";
+    #[cfg(feature = "use_cmd_alias")]
+    const LOCK_SESSION: &'static str = "locks";
 
     /// Lock all clients attached to `target-session`
     /// # Manual

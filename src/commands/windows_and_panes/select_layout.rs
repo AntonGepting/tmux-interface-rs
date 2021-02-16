@@ -138,7 +138,10 @@ impl<'a> SelectLayotBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SELECT_LAYOUT: &'static str = "select-layout";
+    #[cfg(feature = "use_cmd_alias")]
+    const SELECT_LAYOUT: &'static str = "selectl";
 
     /// Choose a specific layout for a window
     ///
@@ -173,10 +176,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux select-layout [-t target-pane] layout-name
     /// (alias: selectl)
     /// ```
-    pub fn select_layout(
-        &mut self,
-        select_layout: Option<&SelectLayot>,
-    ) -> Result<Output, Error> {
+    pub fn select_layout(&mut self, select_layout: Option<&SelectLayot>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(select_layout) = select_layout {
             #[cfg(feature = "tmux_2_7")]

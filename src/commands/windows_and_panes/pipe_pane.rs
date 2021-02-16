@@ -114,7 +114,10 @@ impl<'a> PipePaneBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const PIPE_PANE: &'static str = "pipe-pane";
+    #[cfg(feature = "use_cmd_alias")]
+    const PIPE_PANE: &'static str = "pipep";
 
     /// Pipe output sent by the program in target-pane to a shell command or vice versa
     ///
@@ -137,10 +140,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux pipe-pane [-o] [-t target-pane] [command]
     /// (alias: pipep)
     /// ```
-    pub fn pipe_pane(
-        &mut self,
-        pipe_pane: Option<&PipePane>,
-    ) -> Result<Output, Error> {
+    pub fn pipe_pane(&mut self, pipe_pane: Option<&PipePane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         if let Some(pipe_pane) = pipe_pane {
             #[cfg(feature = "tmux_2_7")]

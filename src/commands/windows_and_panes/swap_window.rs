@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SWAP_WINDOW: &'static str = "swap-window";
+    #[cfg(feature = "use_cmd_alias")]
+    const SWAP_WINDOW: &'static str = "swapw";
 
     /// This is similar to link-window, except the source and destination windows are swapped
     ///

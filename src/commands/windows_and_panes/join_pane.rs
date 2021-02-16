@@ -155,7 +155,10 @@ impl<'a> JoinPane<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const JOIN_PANE: &'static str = "join-pane";
+    #[cfg(feature = "use_cmd_alias")]
+    const JOIN_PANE: &'static str = "joinp";
 
     /// Like split-window, but instead of splitting `dst-pane` and creating a new pane, split it
     /// and move `src-pane` into the space
@@ -179,10 +182,7 @@ impl<'a> TmuxInterface<'a> {
     /// tmux join-pane [-dhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     /// (alias: joinp)
     /// ```
-    pub fn join_pane(
-        &mut self,
-        join_pane: Option<&JoinPane>,
-    ) -> Result<Output, Error> {
+    pub fn join_pane(&mut self, join_pane: Option<&JoinPane>) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
         let l;
         if let Some(join_pane) = join_pane {

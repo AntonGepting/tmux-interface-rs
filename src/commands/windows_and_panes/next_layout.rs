@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const NEXT_LAYOUT: &'static str = "next-layout";
+    #[cfg(feature = "use_cmd_alias")]
+    const NEXT_LAYOUT: &'static str = "nextl";
 
     /// Move a window to the next layout and rearrange the panes to fit
     ///

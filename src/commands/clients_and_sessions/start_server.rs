@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const START_SERVER: &'static str = "start-server";
+    #[cfg(feature = "use_cmd_alias")]
+    const START_SERVER: &'static str = "start";
 
     /// Start the tmux server, if not already running, without creating any sessions
     ///

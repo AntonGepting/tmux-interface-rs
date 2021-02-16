@@ -3,7 +3,10 @@ use crate::tmux_interface::*;
 //use std::process::Output;
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const LIST_PANES: &'static str = "list-panes";
+    #[cfg(feature = "use_cmd_alias")]
+    const LIST_PANES: &'static str = "lsp";
 
     // XXX: better return type
     /// List panes on the server

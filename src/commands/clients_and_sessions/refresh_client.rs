@@ -204,7 +204,11 @@ impl<'a> RefreshClientBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const REFRESH_CLIENT: &'static str = "refresh-client";
+    #[cfg(feature = "use_cmd_alias")]
+    const REFRESH_CLIENT: &'static str = "refresh";
+
     /// Refresh the current client
     ///
     /// # Manual

@@ -233,7 +233,10 @@ impl<'a> SetOptionBuilder<'a> {
 }
 
 impl<'a> TmuxInterface<'a> {
+    #[cfg(not(feature = "use_cmd_alias"))]
     const SET_OPTION: &'static str = "set-option";
+    #[cfg(feature = "use_cmd_alias")]
+    const SET_OPTION: &'static str = "set";
 
     /// # Manual
     ///
