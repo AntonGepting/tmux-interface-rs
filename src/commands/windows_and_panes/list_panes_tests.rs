@@ -21,10 +21,23 @@ fn list_panes() {
         // tmux list-panes [-t target]
         // (alias: lsp)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["list-panes", "-a", "-s", "-F", "1", "-t", "2"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("list-panes");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("lsp");
+        #[cfg(feature = "tmux_1_5")]
+        s.push("-a");
+        #[cfg(feature = "tmux_1_5")]
+        s.push("-s");
+        #[cfg(feature = "tmux_1_6")]
+        s.extend_from_slice(&["-F", "1"]);
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-t", "2"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     let target_window = TargetWindow::Raw("2").to_string();

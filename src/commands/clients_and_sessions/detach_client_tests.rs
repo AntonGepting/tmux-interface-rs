@@ -28,7 +28,10 @@ fn detach_client() {
         // (alias: detach)
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("detach-client");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("detach");
         #[cfg(feature = "tmux_2_2")]
         s.push("-a");
         #[cfg(feature = "tmux_1_5")]

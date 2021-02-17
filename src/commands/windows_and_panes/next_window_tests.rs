@@ -15,10 +15,19 @@ fn next_window() {
         // tmux next-window [-t target-session]
         // (alias: next)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["next-window", "-a", "-t", "1"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("next-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("next");
+        #[cfg(feature = "tmux_0_9")]
+        s.push("-a");
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-t", "1"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     tmux.next_window(Some(true), Some("1")).unwrap_err();

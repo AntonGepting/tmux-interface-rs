@@ -21,10 +21,19 @@ fn kill_pane() {
         // tmux kill-pane [-p pane-index] [-t target-window]
         // (alias: killp)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["kill-pane", "-a", "-t", "1"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("kill-pane");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("killp");
+        #[cfg(feature = "tmux_1_1")]
+        s.push("-a");
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-t", "1"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     let target_pane = TargetPane::Raw("1").to_string();

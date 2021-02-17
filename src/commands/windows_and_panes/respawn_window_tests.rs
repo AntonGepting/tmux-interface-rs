@@ -29,7 +29,10 @@ fn respawn_window() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("respawn-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("respawnw");
         #[cfg(feature = "tmux_0_8")]
         s.push("-k");
         #[cfg(feature = "tmux_2_6")]

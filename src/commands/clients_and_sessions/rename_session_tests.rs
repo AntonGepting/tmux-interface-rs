@@ -6,10 +6,17 @@ fn rename_session() {
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
         // tmux rename-session [-t target-session] new-name
         // (alias: rename)
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["rename-session", "-t", "1", "2"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("rename-session");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("rename");
+        s.extend_from_slice(&["-t", "1"]);
+        s.push("2");
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     let target_session = TargetSession::Raw("1").to_string();

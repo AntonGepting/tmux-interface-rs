@@ -9,10 +9,16 @@ fn last_window() {
         // tmux last-window [-t target-session]
         // (alias: last)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["last-window", "-t", "1"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("last-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("last");
+        s.extend_from_slice(&["-t", "1"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     tmux.last_window(Some("1")).unwrap_err();

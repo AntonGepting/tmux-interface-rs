@@ -9,10 +9,21 @@ fn swap_window() {
         // tmux swap-window [-d] [-s src-window] [-t dst-window]
         // (alias: swapw)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["swap-window", "-d", "-s", "1", "-t", "2"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("swap-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("swapw");
+        #[cfg(feature = "tmux_0_8")]
+        s.push("-d");
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-s", "1"]);
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-t", "2"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
 

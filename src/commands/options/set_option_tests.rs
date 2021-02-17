@@ -48,7 +48,10 @@ fn set_option() {
         // FIXME: target, target-sesion, target-window
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("set-option");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("set");
         #[cfg(feature = "tmux_1_0")]
         s.push("-a");
         #[cfg(feature = "tmux_2_6")]

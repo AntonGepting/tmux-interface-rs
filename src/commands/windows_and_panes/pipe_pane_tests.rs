@@ -23,7 +23,10 @@ fn pipe_pane() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("pipe-pane");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("pipep");
         #[cfg(feature = "tmux_2_7")]
         s.push("-I");
         #[cfg(feature = "tmux_2_7")]

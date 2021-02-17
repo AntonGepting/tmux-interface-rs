@@ -64,7 +64,10 @@ fn split_window() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("split-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("splitw");
         #[cfg(feature = "tmux_2_4")]
         s.push("-b");
         #[cfg(feature = "tmux_0_8")]

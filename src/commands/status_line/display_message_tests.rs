@@ -36,7 +36,10 @@ fn display_message() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("display-message");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("display");
         #[cfg(feature = "tmux_2_9a")]
         s.push("-a");
         #[cfg(feature = "tmux_3_0")]

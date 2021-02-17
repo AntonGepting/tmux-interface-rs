@@ -41,7 +41,10 @@ fn show_options() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("show-options");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("show");
         #[cfg(feature = "tmux_3_0")]
         s.push("-A");
         #[cfg(feature = "tmux_1_2")]

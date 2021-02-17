@@ -28,7 +28,10 @@ fn find_window() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("find-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("findw");
         #[cfg(feature = "tmux_3_0")]
         s.push("-r");
         #[cfg(feature = "tmux_1_7")]

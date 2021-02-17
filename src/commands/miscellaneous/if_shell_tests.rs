@@ -31,7 +31,10 @@ fn if_shell() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("if-shell");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("if");
         #[cfg(feature = "tmux_1_8")]
         s.push("-b");
         #[cfg(feature = "tmux_2_0")]

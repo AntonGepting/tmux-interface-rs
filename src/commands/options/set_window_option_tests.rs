@@ -40,7 +40,10 @@ fn set_window_option() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("set-window-option");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("setw");
         #[cfg(feature = "tmux_1_0")]
         s.push("-a");
         #[cfg(feature = "tmux_2_6")]

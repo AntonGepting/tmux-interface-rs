@@ -17,7 +17,10 @@ fn rotate_window() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("rotate-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("rotatew");
         #[cfg(feature = "tmux_0_8")]
         s.push("-D");
         #[cfg(feature = "tmux_0_8")]

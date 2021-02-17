@@ -6,10 +6,16 @@ fn lock_client() {
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
         // tmux lock-client [-t target-client]
         // (alias: lockc)
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["lock-client", "-t", "1"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("lock-client");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("lockc");
+        s.extend_from_slice(&["-t", "1"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     tmux.lock_client(Some("1")).unwrap_err();

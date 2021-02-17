@@ -49,7 +49,10 @@ fn new_window() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("new-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("neww");
         #[cfg(feature = "tmux_1_3")]
         s.push("-a");
         #[cfg(feature = "tmux_0_8")]

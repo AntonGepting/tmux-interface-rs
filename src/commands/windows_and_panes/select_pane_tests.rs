@@ -53,7 +53,10 @@ fn select_pane() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("select-pane");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("selectp");
         #[cfg(feature = "tmux_1_3")]
         s.push("-D");
         #[cfg(feature = "tmux_2_0")]

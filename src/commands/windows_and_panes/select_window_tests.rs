@@ -23,7 +23,10 @@ fn select_window() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("select-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("selectw");
         #[cfg(feature = "tmux_1_5")]
         s.push("-l");
         #[cfg(feature = "tmux_1_5")]

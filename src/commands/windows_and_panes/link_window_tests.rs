@@ -17,7 +17,10 @@ fn link_window() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("link-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("linkw");
         #[cfg(feature = "tmux_2_1")]
         s.push("-a");
         #[cfg(feature = "tmux_0_8")]

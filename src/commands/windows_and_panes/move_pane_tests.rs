@@ -15,13 +15,12 @@ fn move_pane() {
         // tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
         // (alias: movep)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["move-pane", "-b", "-d", "-h", "-v", "-l", "1", "-s", "2", "-t", "3"]"#
-        );
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("move-pane");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("movep");
         #[cfg(feature = "tmux_1_7")]
         s.push("-b");
         #[cfg(feature = "tmux_1_7")]

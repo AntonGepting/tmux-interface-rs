@@ -35,7 +35,10 @@ fn attach_session() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("attach-session");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("attach");
         #[cfg(feature = "tmux_0_8")]
         s.push("-d");
         #[cfg(feature = "tmux_2_1")]

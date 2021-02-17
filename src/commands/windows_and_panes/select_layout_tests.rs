@@ -35,7 +35,10 @@ fn select_layout() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("select-layout");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("selectl");
         #[cfg(feature = "tmux_2_7")]
         s.push("-E");
         #[cfg(feature = "tmux_1_5")]

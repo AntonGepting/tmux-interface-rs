@@ -9,10 +9,19 @@ fn rename_window() {
         // tmux rename-window [-t target-window] new-name
         // (alias: renamew)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["rename-window", "-t", "1", "2"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("rename-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("renamew");
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-t", "1"]);
+        #[cfg(feature = "tmux_0_8")]
+        s.push("2");
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     let target_window = TargetWindow::Raw("1").to_string();

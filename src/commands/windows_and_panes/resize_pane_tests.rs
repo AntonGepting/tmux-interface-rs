@@ -29,7 +29,10 @@ fn resize_pane() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("resize-pane");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("resizep");
         #[cfg(feature = "tmux_0_9")]
         s.push("-D");
         #[cfg(feature = "tmux_1_8")]

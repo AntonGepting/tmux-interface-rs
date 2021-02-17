@@ -30,7 +30,10 @@ fn paste_buffer() {
 
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("paste-buffer");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("pasteb");
         #[cfg(feature = "tmux_0_8")]
         s.push("-d");
         #[cfg(feature = "tmux_1_7")]

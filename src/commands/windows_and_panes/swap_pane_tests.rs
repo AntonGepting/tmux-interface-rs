@@ -23,7 +23,10 @@ fn swap_pane() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("swap-pane");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("swapp");
         #[cfg(feature = "tmux_0_8")]
         s.push("-d");
         #[cfg(feature = "tmux_0_8")]

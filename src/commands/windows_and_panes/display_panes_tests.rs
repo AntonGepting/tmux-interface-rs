@@ -27,14 +27,15 @@ fn display_panes() {
         // tmux display-panes [-t target-client]
         // (alias: displayp)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["display-panes", "-b", "-d", "1", "-t", "2", "3"]"#
-        );
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("display-panes");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("displayp");
+        #[cfg(feature = "tmux_2_9")]
         s.push("-b");
+        #[cfg(feature = "tmux_2_6")]
         s.extend_from_slice(&["-d", "1"]);
         s.extend_from_slice(&["-t", "2"]);
         s.push("3");

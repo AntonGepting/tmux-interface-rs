@@ -1,5 +1,5 @@
 #[test]
-fn attach_session() {
+fn switch_client() {
     use crate::{Error, SwitchClient, SwitchClientBuilder, TargetSession, TmuxInterface};
 
     let mut tmux = TmuxInterface::new();
@@ -41,7 +41,10 @@ fn attach_session() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("switch-client");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("switchc");
         #[cfg(feature = "tmux_2_1")]
         s.push("-E");
         #[cfg(feature = "tmux_1_4")]

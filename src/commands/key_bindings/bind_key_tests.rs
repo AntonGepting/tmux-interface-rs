@@ -47,7 +47,10 @@ fn bind_key() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("bind-key");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("bind");
         #[cfg(feature = "tmux_1_0")]
         s.push("-n");
         #[cfg(feature = "tmux_0_8")]

@@ -35,7 +35,10 @@ fn refresh_client() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("refresh-client");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("refresh");
         #[cfg(feature = "tmux_2_9a")]
         s.push("-c");
         #[cfg(feature = "tmux_2_9a")]

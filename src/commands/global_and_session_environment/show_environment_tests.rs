@@ -21,10 +21,19 @@ fn show_environment() {
         // tmux show-environment [-g] [-t target-session]
         // (alias: showenv)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["show-environment", "-g", "-s", "-t", "1", "2"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("show-environment");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("showenv");
+        s.push("-g");
+        s.push("-s");
+        s.extend_from_slice(&["-t", "1"]);
+        s.push("2");
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     let target_session = TargetSession::Raw("1").to_string();

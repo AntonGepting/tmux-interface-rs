@@ -21,10 +21,21 @@ fn list_windows() {
         // tmux list-windows [-t target-session]
         // (alias: lsw)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["list-windows", "-a", "-F", "1", "-t", "2"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("list-windows");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("lsw");
+        #[cfg(feature = "tmux_1_5")]
+        s.push("-a");
+        #[cfg(feature = "tmux_1_6")]
+        s.extend_from_slice(&["-F", "1"]);
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-t", "2"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     let target_session = TargetSession::Raw("2").to_string();

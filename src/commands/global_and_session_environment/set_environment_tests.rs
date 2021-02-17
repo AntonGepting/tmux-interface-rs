@@ -9,13 +9,12 @@ fn set_environment() {
         // tmux set-environment [-gru] [-t target-session] name [value]
         // (alias: setenv)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["set-environment", "-g", "-r", "-u", "-t", "1", "2", "3"]"#
-        );
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("set-environment");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("setenv");
         #[cfg(feature = "tmux_1_0")]
         s.push("-g");
         #[cfg(feature = "tmux_1_0")]

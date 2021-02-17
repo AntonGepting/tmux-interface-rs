@@ -65,7 +65,10 @@ fn new_session() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("new-session");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("new");
         #[cfg(feature = "tmux_1_8")]
         s.push("-A");
         #[cfg(feature = "tmux_0_8")]

@@ -47,7 +47,10 @@ fn send_keys() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("send-keys");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("send");
         #[cfg(feature = "tmux_3_1")]
         s.push("-F");
         #[cfg(feature = "tmux_3_0")]

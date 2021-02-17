@@ -21,10 +21,23 @@ fn last_pane() {
         // tmux last-pane [-t target-window]
         // (alias: lastp)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["last-pane", "-d", "-e", "-Z", "-t", "1"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("last-pane");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("lastp");
+        #[cfg(feature = "tmux_2_0")]
+        s.push("-d");
+        #[cfg(feature = "tmux_2_0")]
+        s.push("-e");
+        #[cfg(feature = "tmux_3_1")]
+        s.push("-Z");
+        #[cfg(feature = "tmux_1_4")]
+        s.extend_from_slice(&["-t", "1"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     let target_window = TargetWindow::Raw("1").to_string();

@@ -6,10 +6,19 @@ fn wait_for() {
     tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
         // tmux wait-for [-L | -S | -U] channel
         // (alias: wait)
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["wait-for", "-L", "-S", "-U", "1"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("wait-for");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("wait");
+        s.push("-L");
+        s.push("-S");
+        s.push("-U");
+        s.push("1");
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     tmux.wait_for(Some(true), Some(true), Some(true), "1")

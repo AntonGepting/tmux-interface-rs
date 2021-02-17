@@ -12,13 +12,22 @@ fn kill_window() {
         //
         // tmux ^0.8:
         // ```text
-        // tmux kill-window [-a] [-t target-window]
+        // tmux kill-window [-t target-window]
         // (alias: killw)
         // ```
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["kill-window", "-a", "-t", "1"]"#
-        );
+        let mut s = Vec::new();
+        let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
+        s.push("kill-window");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("killw");
+        #[cfg(feature = "tmux_1_7")]
+        s.push("-a");
+        #[cfg(feature = "tmux_0_8")]
+        s.extend_from_slice(&["-t", "1"]);
+        assert_eq!(bin, "tmux");
+        assert_eq!(options, &o);
+        assert_eq!(subcmd, &s);
         Err(Error::Hook)
     }));
     let target_window = TargetWindow::Raw("1").to_string();

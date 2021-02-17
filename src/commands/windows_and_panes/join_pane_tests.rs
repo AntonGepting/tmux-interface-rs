@@ -26,7 +26,10 @@ fn join_pane() {
         // ```
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
+        #[cfg(not(feature = "use_cmd_alias"))]
         s.push("join-pane");
+        #[cfg(feature = "use_cmd_alias")]
+        s.push("joinp");
         #[cfg(feature = "tmux_2_6")]
         s.push("-b");
         #[cfg(feature = "tmux_1_2")]
