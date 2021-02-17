@@ -9,7 +9,7 @@ fn list_sessions() {
         let mut s = Vec::new();
         let o: Vec<&str> = Vec::new();
         #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("lsit-sessions");
+        s.push("list-sessions");
         #[cfg(feature = "use_cmd_alias")]
         s.push("ls");
         s.extend_from_slice(&["-F", "1"]);
