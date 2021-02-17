@@ -37,7 +37,9 @@ fn display_panes() {
         s.push("-b");
         #[cfg(feature = "tmux_2_6")]
         s.extend_from_slice(&["-d", "1"]);
+        #[cfg(feature = "tmux_1_0")]
         s.extend_from_slice(&["-t", "2"]);
+        #[cfg(feature = "tmux_2_3")]
         s.push("3");
         assert_eq!(bin, "tmux");
         assert_eq!(options, &o);
