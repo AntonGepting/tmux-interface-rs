@@ -46,7 +46,7 @@ impl<'a> TmuxInterface<'a> {
         option: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_1_7")]
+        #[cfg(feature = "tmux_1_0")]
         if global.unwrap_or(false) {
             args.push(g_KEY);
         }
