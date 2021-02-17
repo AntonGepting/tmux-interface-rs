@@ -43,15 +43,19 @@ impl<'a> TmuxInterface<'a> {
         template: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        #[cfg(feature = "tmux_2_9")]
         if not_block.unwrap_or(false) {
             args.push(b_KEY);
         }
+        #[cfg(feature = "tmux_2_6")]
         if let Some(s) = duration {
             args.extend_from_slice(&[d_KEY, &s])
         }
+        #[cfg(feature = "tmux_1_0")]
         if let Some(s) = target_client {
             args.extend_from_slice(&[t_KEY, &s])
         }
+        #[cfg(feature = "tmux_2_3")]
         if let Some(s) = template {
             args.push(&s)
         }

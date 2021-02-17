@@ -38,15 +38,19 @@ impl<'a> TmuxInterface<'a> {
         target_window: Option<&'a str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        #[cfg(feature = "tmux_2_0")]
         if disable.unwrap_or(false) {
             args.push(d_KEY);
         }
+        #[cfg(feature = "tmux_2_0")]
         if enable.unwrap_or(false) {
             args.push(e_KEY);
         }
+        #[cfg(feature = "tmux_3_1")]
         if keep_zoomed.unwrap_or(false) {
             args.push(Z_KEY);
         }
+        #[cfg(feature = "tmux_1_4")]
         if let Some(target_window) = target_window {
             args.extend_from_slice(&[t_KEY, &target_window])
         }
