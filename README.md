@@ -122,9 +122,10 @@ Rust:
 - nightly (Travis CI)
 
 OS:
-- Debian 11 Bullseye, x64 (manually); tmux 3.0a
-- Ubuntu 16.04 Xenial Xerus, x64 (Travis CI); tmux 2.6
-- MacOS 10.13.6 High Sierra, x64 (Travis CI); tmux 3.0a
+- Debian 11 Bullseye, x64 (manually); tmux 3.0c
+- Ubuntu 16.04 Xenial Xerus, x64 (Travis CI); tmux 1.6 - 3.0c
+  (tmux 0.8 - 1.5 build fail)
+<!--- MacOS 10.13.6 High Sierra, x64 (Travis CI); tmux 3.0a-->
 
 
 ## License
