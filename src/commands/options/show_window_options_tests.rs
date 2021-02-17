@@ -43,7 +43,9 @@ fn show_window_options() {
         s.push("-g");
         #[cfg(feature = "tmux_1_8")]
         s.push("-v");
+        #[cfg(feature = "tmux_0_8")]
         s.extend_from_slice(&["-t", "1"]);
+        #[cfg(feature = "tmux_0_8")]
         s.push("2");
         assert_eq!(bin, "tmux");
         assert_eq!(options, &o);

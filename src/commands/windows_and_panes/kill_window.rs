@@ -30,9 +30,11 @@ impl<'a> TmuxInterface<'a> {
         target_window: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        #[cfg(feature = "tmux_1_7")]
         if all.unwrap_or(false) {
             args.push(a_KEY);
         }
+        #[cfg(feature = "tmux_0_8")]
         if let Some(target_window) = target_window {
             args.extend_from_slice(&[t_KEY, &target_window]);
         }

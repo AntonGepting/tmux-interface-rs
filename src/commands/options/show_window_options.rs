@@ -46,15 +46,19 @@ impl<'a> TmuxInterface<'a> {
         option: Option<&str>,
     ) -> Result<Output, Error> {
         let mut args: Vec<&str> = Vec::new();
+        #[cfg(feature = "tmux_1_7")]
         if global.unwrap_or(false) {
             args.push(g_KEY);
         }
+        #[cfg(feature = "tmux_1_8")]
         if only_value.unwrap_or(false) {
             args.push(v_KEY);
         }
+        #[cfg(feature = "tmux_0_8")]
         if let Some(target_window) = target_window {
             args.extend_from_slice(&[t_KEY, &target_window])
         }
+        #[cfg(feature = "tmux_0_8")]
         if let Some(s) = option {
             args.push(&s)
         }
