@@ -1,10 +1,10 @@
 # Changelog
 
 
-# tmux_interface vX.X.X
+## tmux_interface vX.X.X
 
 
-# tmux_interface v0.0.7
+## tmux_interface v0.0.7
 - add cargo feature `use_cmd_alias` for alias support for tmux commands
   (`list-sessions` -> `ls`)
 - implement builder pattern for structures of tmux subcommands
@@ -18,7 +18,7 @@ to `target-session`, `target-window`, `target-pane`)
 - add tmux variables (`session_*`, `window_*`, `pane_*`)
 
 
-# tmux_interface v0.0.6
+## tmux_interface v0.0.6
 - add `Layout` struct
 - add `from_str` functions for parsing
 - add `SessionStack` struct
@@ -33,12 +33,12 @@ to `target-session`, `target-window`, `target-pane`)
 - add `tmux 3.0a` support
 
 
-# tmux_interface v0.0.5
+## tmux_interface v0.0.5
 - remove `regex` dependency
 - add fsm for parsing
 
 
-# tmux_interface v0.0.4
+## tmux_interface v0.0.4
 - add functions:
     - `show-options`
     - `exec`
@@ -83,13 +83,13 @@ to `target-session`, `target-window`, `target-pane`)
 - add key bindings functions
 - support `rust 1.37`
 
-# tmux_interface v0.0.3
+## tmux_interface v0.0.3
 - remove `serde_yaml` dependency
 
-# tmux_interface v0.0.2
+## tmux_interface v0.0.2
 - fix `regex` dependency
 
-# tmux_interface v0.0.1
+## tmux_interface v0.0.1
 - add basic `tmux` functionality:
     - buffers
     - hooks
