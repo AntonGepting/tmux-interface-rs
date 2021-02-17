@@ -5,11 +5,13 @@
 
 
 # tmux_interface v0.0.7
+- add cargo feature `use_cmd_alias` for alias support for tmux commands
+  (`list-sessions` -> `ls`)
 - implement builder pattern for structures of tmux subcommands
     (`NewSessionBuilder::new().session_name("my_session_name").build()`)
 - add cargo features `tmux_0_8` ... `tmux_X_X` for multiple tmux versions support
 - add target objects and corresponding functions (`TargetSession`,
-`TargetWindow`, `TargetWindowEx`, `TargetPane`, `TargetPaneEx` as an equivalent
+`TargetWindow`, `TargetWindowExt`, `TargetPane`, `TargetPaneExt` as an equivalent
 to `target-session`, `target-window`, `target-pane`)
 - restructuring of directories and files add tmux options objects and functions
 - add tmux options (`ServerOptions`, `SessionOptions`, `WindowOptions`, `PaneOptions`)
