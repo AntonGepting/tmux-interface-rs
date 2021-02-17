@@ -35,7 +35,7 @@ the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
         `tmux_1_9a`, `tmux_2_0`, `tmux_2_1`, `tmux_2_2`, `tmux_2_3`, `tmux_2_4`,
         `tmux_2_5`, `tmux_2_6`, `tmux_2_7`, `tmux_2_8`, `tmux_2_9`, `tmux_2_9a`,
         `tmux_3_0`, `tmux_3_0a`, `tmux_3_1`, `tmux_3_1a`, `tmux_3_1b`,
-        `tmux_X_X`
+        `tmux_3_1c`, `tmux_X_X`
 
         ```
         [dependencies]

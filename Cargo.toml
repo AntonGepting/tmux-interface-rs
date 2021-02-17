@@ -55,10 +55,11 @@ tmux_3_0a = ["tmux_3_0"]
 tmux_3_1 = ["tmux_3_0a"]
 tmux_3_1a = ["tmux_3_1"]
 tmux_3_1b = ["tmux_3_1a"]
+tmux_3_1c = ["tmux_3_1b"]
 # tmux current version wich is currently in development
-tmux_X_X = ["tmux_3_1b"]
+tmux_X_X = ["tmux_3_1c"]
 # tmux latest synonymous version
-tmux_latest = ["tmux_3_1b"]
+tmux_latest = ["tmux_3_1c"]
 # tmux stable synonymous version
 #tmux_stable = ["tmux_2_8"]
 # default tmux version for library

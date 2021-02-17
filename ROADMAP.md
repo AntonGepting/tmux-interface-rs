@@ -339,6 +339,7 @@ Parsing objects and supported tmux variables:
         - [x] 3.1 - `tmux_3_1`
         - [x] 3.1a - `tmux_3_1a`
         - [x] 3.1b - `tmux_3_1b`
+        - [x] 3.1c - `tmux_3_1c`
         - [x] master - `tmux_X_X`
 
 # Strategy
