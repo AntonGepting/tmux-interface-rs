@@ -1,3 +1,6 @@
+#![forbid(unsafe_code)]
+//#![warn(missing_docs)]
+
 //! `tmux_interface` is a library for communication with [TMUX](https://github.com/tmux/tmux) via
 //! CLI.
 //!
