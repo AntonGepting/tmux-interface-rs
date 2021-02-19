@@ -328,25 +328,24 @@ impl<'a> TmuxInterfaceBuilder<'a> {
     }
 
     pub fn build(&self) -> TmuxInterface<'a> {
-        unimplemented!();
-        //TmuxInterface {
-        //colours256: self.colours256,
-        //control_mode: self.control_mode,
-        //login_shell: self.login_shell,
-        //force_utf8: self.force_utf8,
-        //verbose_logging: self.verbose_logging,
-        //version: self.version,
-        //shell_cmd: self.shell_cmd,
-        //file: self.file,
-        //socket_name: self.socket_name,
-        //socket_path: self.socket_path,
-        //disable_echo: self.disable_echo,
-        //tmux: self.tmux,
-        //environment: self.environment,
-        //// TODO: fix errors
-        //pre_hook: None,
-        //post_hook: None,
-        //}
+        TmuxInterface {
+            colours256: self.colours256,
+            control_mode: self.control_mode,
+            login_shell: self.login_shell,
+            force_utf8: self.force_utf8,
+            verbose_logging: self.verbose_logging,
+            version: self.version,
+            shell_cmd: self.shell_cmd,
+            file: self.file,
+            socket_name: self.socket_name,
+            socket_path: self.socket_path,
+            disable_echo: self.disable_echo,
+            tmux: self.tmux,
+            environment: self.environment,
+            // TODO: fix errors
+            pre_hook: None,
+            post_hook: None,
+        }
     }
 }
 

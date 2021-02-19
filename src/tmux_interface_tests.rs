@@ -40,6 +40,14 @@ fn version_io_error() {
     assert!(if let Error::IO(_) = err { true } else { false });
 }
 
+#[test]
+fn builder() {
+    use crate::TmuxInterfaceBuilder;
+
+    let mut tmux = TmuxInterfaceBuilder::new().tmux("tmux").build();
+    let version = tmux.version().unwrap();
+}
+
 //#[test]
 //fn version_parse_error() {
 //let mut tmux = TmuxInterface::new();
