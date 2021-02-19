@@ -264,6 +264,7 @@ pub mod tmux_interface;
 pub mod version;
 
 pub use self::tmux_interface::TmuxInterface;
+pub use self::tmux_interface::TmuxInterfaceBuilder;
 
 // common options
 pub use crate::options::StatusKeys;
