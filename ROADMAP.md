@@ -440,3 +440,29 @@ strategy and decision making
         .kill_pane(..., "$1:@2.3")`
         .kill_pane(..., TargetPane::Id(3))
         ```
+
+- Architecture
+
+    - [ ] low level abstraction
+        ```
+        tmux.cmd(NEW_SESSION).flag(A).flag(B).option(C, option).arg(argument).exec()
+        ```
+        - mb macro, reusable in mid high?
+
+    - [x] mid level abstraction (current)
+        ```
+        NewSessionBuilder().new().name().build() (.exec()?)
+        tmux.new_session(new_session)
+        ```
+
+    - [ ] high level abstraction
+        ```
+        session.new(name, option)
+        .get()
+        .rename()
+        window.new(name, option)
+        ```
+        - names not the same as in tmux, complete another model, mb better
+          suitable for rust app
+
+
