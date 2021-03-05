@@ -1,7 +1,5 @@
-use crate::tmux::Tmux;
-use crate::tmux_command::TmuxCommand;
 use crate::tmux_interface::*;
-use crate::tmux_output::TmuxOutput;
+use crate::{Tmux, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Structure for creating a new session

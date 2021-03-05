@@ -1,23 +1,24 @@
 #[test]
 fn lock_session() {
-    use crate::{Error, TargetSession, TmuxInterface};
+    use crate::{Error, LockSession, TargetSession, TmuxCommand, TmuxInterface};
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux lock-session [-t target-session]
-        // (alias: locks)
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("lock-session");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("locks");
-        s.extend_from_slice(&["-t", "1"]);
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
-    let target_session = TargetSession::Raw("1").to_string();
-    tmux.lock_session(Some(&target_session)).unwrap_err();
+    // tmux lock-session [-t target-session]
+    // (alias: locks)
+    let mut lock_session = LockSession::new();
+    lock_session.target_session("1");
+
+    let mut s = Vec::new();
+    s.extend_from_slice(&["-t", "1"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+    let tmux_command: TmuxCommand = lock_session.into();
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "lock-session";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "locks";
+
+    assert_eq!(tmux_command.bin, None);
+    assert_eq!(tmux_command.bin_args, None);
+    assert_eq!(tmux_command.cmd, Some(cmd.into()));
+    assert_eq!(tmux_command.cmd_args, Some(s));
 }
