@@ -272,6 +272,7 @@ pub use self::tmux_interface::TmuxInterface;
 pub use self::tmux_interface::TmuxInterfaceBuilder;
 pub use crate::tmux::Tmux;
 pub use crate::tmux_command::TmuxCommand;
+pub use crate::tmux_output::TmuxOutput;
 
 // common options
 pub use crate::options::StatusKeys;

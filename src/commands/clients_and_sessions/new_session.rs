@@ -1,7 +1,7 @@
-use crate::error::Error;
 use crate::tmux::Tmux;
 use crate::tmux_command::TmuxCommand;
 use crate::tmux_interface::*;
+use crate::tmux_output::TmuxOutput;
 use std::borrow::Cow;
 
 /// Structure for creating a new session
@@ -81,7 +81,7 @@ impl<'a> NewSession<'a> {
             TmuxCommand {
                 bin: None,
                 bin_args: None,
-                cmd: Some(NewSession::NEW_SESSION),
+                cmd: Some(NewSession::NEW_SESSION.into()),
                 cmd_args: None,
             }
         })
@@ -131,35 +131,35 @@ impl<'a> NewSession<'a> {
 
     /// [-c start-directory] - specify starting directory
     #[cfg(feature = "tmux_1_9")]
-    pub fn start_directory<C: Into<Cow<'a, str>>>(&mut self, start_directory: C) -> &mut Self {
+    pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, start_directory: S) -> &mut Self {
         self.0.insert_option(c_KEY, start_directory);
         self
     }
 
     /// [-F format] - specify different format
     #[cfg(feature = "tmux_1_8")]
-    pub fn format<C: Into<Cow<'a, str>>>(&mut self, format: C) -> &mut Self {
+    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
         self.0.insert_option(F_KEY, format);
         self
     }
 
     /// [-n window-name] - window name of the initial window
     #[cfg(feature = "tmux_0_8")]
-    pub fn window_name<C: Into<Cow<'a, str>>>(&mut self, window_name: C) -> &mut Self {
+    pub fn window_name<S: Into<Cow<'a, str>>>(&mut self, window_name: S) -> &mut Self {
         self.0.insert_option(n_KEY, window_name);
         self
     }
 
     /// [-s session-name] - specify a session name
     #[cfg(feature = "tmux_0_8")]
-    pub fn session_name<C: Into<Cow<'a, str>>>(&mut self, session_name: C) -> &mut Self {
+    pub fn session_name<S: Into<Cow<'a, str>>>(&mut self, session_name: S) -> &mut Self {
         self.0.insert_option(s_KEY, session_name);
         self
     }
 
     /// [-t group-name] - specify a session group
     #[cfg(feature = "tmux_2_4")]
-    pub fn group_name<C: Into<Cow<'a, str>>>(&mut self, group_name: C) -> &mut Self {
+    pub fn group_name<S: Into<Cow<'a, str>>>(&mut self, group_name: S) -> &mut Self {
         self.0.insert_option(t_KEY, group_name);
         self
     }
@@ -180,9 +180,14 @@ impl<'a> NewSession<'a> {
 
     /// [shell-command] - shell command to execute in the initial window
     #[cfg(feature = "tmux_1_2")]
-    pub fn shell_command<C: Into<Cow<'a, str>>>(&mut self, shell_command: C) -> &mut Self {
+    pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
         self.0.insert_param(shell_command);
         self
+    }
+
+    /// run command
+    pub fn exec(&mut self) -> TmuxOutput {
+        self.0.exec()
     }
 }
 
@@ -196,7 +201,15 @@ impl<'a> From<NewSession<'a>> for TmuxCommand<'a> {
 impl<'a> From<Tmux<'a>> for NewSession<'a> {
     fn from(item: Tmux<'a>) -> Self {
         let mut command: TmuxCommand = item.into();
-        command.cmd = Some("new-session");
+        command.cmd = Some(NewSession::NEW_SESSION.into());
+        NewSession(command)
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for NewSession<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        let mut command: TmuxCommand = item.into();
+        command.cmd = Some(NewSession::NEW_SESSION.into());
         NewSession(command)
     }
 }

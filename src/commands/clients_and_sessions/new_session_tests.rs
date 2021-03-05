@@ -132,8 +132,6 @@ fn new_session() {
 
     assert_eq!(tmux_command.bin, None);
     assert_eq!(tmux_command.bin_args, None);
-    assert_eq!(tmux_command.cmd, Some(cmd));
+    assert_eq!(tmux_command.cmd, Some(cmd.into()));
     assert_eq!(tmux_command.cmd_args, Some(s));
-
-    let mut new_session = NewSession::new().group_name("asdf".to_string());
 }
