@@ -1,3 +1,7 @@
+pub mod tmux;
+pub mod tmux_command;
+pub mod tmux_output;
+
 pub mod buffers;
 pub mod clients_and_sessions;
 pub mod global_and_session_environment;

@@ -1,6 +1,5 @@
-use crate::tmux_command::TmuxCommand;
 use crate::tmux_interface::*;
-use crate::tmux_output::TmuxOutput;
+use crate::{TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 #[derive(Default, Debug, Clone)]

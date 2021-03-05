@@ -263,16 +263,10 @@ pub mod variables;
 pub mod tmux_interface;
 pub mod version;
 
-pub mod tmux;
-pub mod tmux_command;
-pub mod tmux_output;
 pub mod tmux_tests;
 
 pub use self::tmux_interface::TmuxInterface;
 pub use self::tmux_interface::TmuxInterfaceBuilder;
-pub use crate::tmux::Tmux;
-pub use crate::tmux_command::TmuxCommand;
-pub use crate::tmux_output::TmuxOutput;
 
 // common options
 pub use crate::options::StatusKeys;
@@ -692,6 +686,10 @@ pub use crate::options::pane_options::PANE_OPTIONS_ALL;
 #[cfg(feature = "tmux_3_1")]
 pub use crate::options::pane_options::PANE_OPTIONS_NONE;
 
+pub use self::commands::tmux::Tmux;
+pub use self::commands::tmux_command::TmuxCommand;
+pub use self::commands::tmux_output::TmuxOutput;
+
 // buffers
 #[cfg(feature = "tmux_1_3")]
 pub use self::commands::buffers::choose_buffer::ChooseBuffer;
@@ -710,6 +708,8 @@ pub use self::commands::clients_and_sessions::attach_session::AttachSessionBuild
 pub use self::commands::clients_and_sessions::detach_client::DetachClient;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::clients_and_sessions::detach_client::DetachClientBuilder;
+#[cfg(feature = "tmux_1_1")]
+pub use self::commands::clients_and_sessions::lock_session::LockSession;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::clients_and_sessions::new_session::NewSession;
 #[cfg(feature = "tmux_1_0")]
