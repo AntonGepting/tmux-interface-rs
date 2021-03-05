@@ -37,7 +37,7 @@ impl<'a> LockSession<'a> {
     }
 
     /// run command
-    pub fn exec(&mut self) -> TmuxOutput {
+    pub fn exec(&self) -> TmuxOutput {
         self.0.exec()
     }
 }
