@@ -263,8 +263,15 @@ pub mod variables;
 pub mod tmux_interface;
 pub mod version;
 
+pub mod tmux;
+pub mod tmux_command;
+pub mod tmux_output;
+pub mod tmux_tests;
+
 pub use self::tmux_interface::TmuxInterface;
 pub use self::tmux_interface::TmuxInterfaceBuilder;
+pub use crate::tmux::Tmux;
+pub use crate::tmux_command::TmuxCommand;
 
 // common options
 pub use crate::options::StatusKeys;
@@ -704,8 +711,6 @@ pub use self::commands::clients_and_sessions::detach_client::DetachClient;
 pub use self::commands::clients_and_sessions::detach_client::DetachClientBuilder;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::clients_and_sessions::new_session::NewSession;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::clients_and_sessions::new_session::NewSessionBuilder;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::clients_and_sessions::refresh_client::RefreshClient;
 #[cfg(feature = "tmux_1_0")]
