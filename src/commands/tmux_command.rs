@@ -18,7 +18,21 @@ use std::process::{Command, Stdio};
 //      [ ] String - modification
 //      [ ] Cow - both
 //
+//  - trait command methods exec
+//      [x] no, fields inaccesible directly, only methods set get, implemetation  imol for needed,
+//      same thing.
+//      [ ] yes
+//
 // - no need to sset Option<bool>
+//
+// - args/fns names
+//      [ ] exact as original
+//      [x] near the original
+//      [ ] rename for consistance cwd, target, name
+//
+//  - consuming not consuming builder pattern?
+//      [ ] self
+//      [x] &mut self (preferred) but here?
 ///
 /// Standard tmux command line arguments syntax:
 /// ```text
@@ -42,6 +56,19 @@ pub struct TmuxCommand<'a> {
     /// Tmux command arguments (part IV)
     pub cmd_args: Option<Vec<Cow<'a, str>>>,
 }
+
+//pub trait MyCommand<'a> {
+//fn set_bin<S: Into<Cow<'a, str>>>(&mut self, bin: S) -> &mut Self;
+//fn get_bin(&self) -> Option<&Cow<'a, str>>;
+
+//fn exec(&self) -> TmuxOutput {
+//let tmux_bin = self.get_bin().unwrap_or(&Cow::Borrowed(TmuxCommand::TMUX));
+//let mut command = Command::new(&**tmux_bin);
+//let output = command.output().unwrap();
+//println!("{:?}", output);
+//TmuxOutput(output)
+//}
+//}
 
 impl<'a> TmuxCommand<'a> {
     const TMUX: &'static str = "tmux";
@@ -106,15 +133,16 @@ impl<'a> TmuxCommand<'a> {
         TmuxOutput(output)
     }
 
+    // XXX: hard bound to cmd_args
+    // if vec doesn't exist, creates it and appends with given arguments
     /// insert a single flag (`-x`)
-    /// if vec doesn't exist, creates it and appends with given arguments
-    pub fn insert_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S) -> &mut Self {
-        self.insert_param(flag.into())
+    pub fn push_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S) -> &mut Self {
+        self.push_param(flag.into())
     }
 
+    // if vec doesn't exist, creates it and appends with given arguments
     /// insert an option (`-x  <OPTION>`)
-    /// if vec doesn't exist, creates it and appends with given arguments
-    pub fn insert_option<S, U>(&mut self, key: S, option: U) -> &mut Self
+    pub fn push_option<S, U>(&mut self, key: S, option: U) -> &mut Self
     where
         S: Into<Cow<'a, str>>,
         U: Into<Cow<'a, str>>,
@@ -125,19 +153,14 @@ impl<'a> TmuxCommand<'a> {
         self
     }
 
+    // if vec doesn't exist, creates it and appends with given arguments
     /// insert a single parameter (`[PARAM]`)
-    /// if vec doesn't exist, creates it and appends with given arguments
-    pub fn insert_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self {
+    pub fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self {
         self.cmd_args.get_or_insert(Vec::new()).push(param.into());
         self
     }
 
     pub fn new() -> Self {
-        TmuxCommand {
-            bin: None,
-            bin_args: None,
-            cmd: None,
-            cmd_args: None,
-        }
+        Default::default()
     }
 }

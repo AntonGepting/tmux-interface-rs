@@ -32,7 +32,7 @@ impl<'a> LockSession<'a> {
 
     /// [-t target-session]
     pub fn target_session<T: Into<Cow<'a, str>>>(&mut self, target_session: T) -> &mut Self {
-        self.0.insert_option(t_KEY, target_session);
+        self.0.push_option(t_KEY, target_session);
         self
     }
 

@@ -51,39 +51,31 @@
 //! # Examples
 //!
 //! ```
-//! use crate::tmux_interface::{TmuxInterface, AttachSession, NewSession};
+//! use crate::tmux_interface::{AttachSession, NewSession, KillSession};
 //!
-//! let mut tmux = TmuxInterface::new();
+//! // 1. Method - one-liner
+//! NewSession::new().detached().session_name("new_session_name1").exec()
+//! AttachSession::new().target_session("new_session_name1").exec()
+//! KillSession::new().target_session("new_session_name1").exec();
 //!
-//! let new_session = NewSession {
-//!     detached: Some(true),
-//!     session_name: Some("new_session_name1"),
-//!     ..Default::default()
-//! };
-//! tmux.new_session(Some(&new_session)).unwrap();
-//! let attach_session = AttachSession {
-//!    target_session: Some("new_session_name1"),
-//!    ..Default::default()
-//! };
-//! tmux.attach_session(Some(&attach_session)).unwrap();
-//! // if exists
-//! tmux.kill_session(None, None, Some("new_session_name1")).unwrap();
-//!
-//! // or alternatively
+//! // 2. Method - multi-liner
 //! let mut new_session = NewSession::new();
-//! new_session.detached = Some(true);
-//! new_session.session_name = Some("new_session_name2");
-//! tmux.new_session(Some(&new_session)).unwrap();
+//! new_session.detached();
+//! new_session.session_name("new_session_name2");
+//! new_session.exec();
+//!
 //! let mut attach_session = AttachSession::new();
-//! attach_session.target_session = Some("new_session_name2");
-//! tmux.attach_session(Some(&attach_session)).unwrap();
-//! // if exists
-//! tmux.kill_session(None, None, Some("new_session_name2")).unwrap();
+//! attach_session.target_session("new_session_name2");
+//! attach_session.exec();
+//!
+//! let mut kill_session = KillSession::new();
+//! kill_session.target_session("new_session_name2").exec();
 //! ```
 //!
 //!
 //! # Examples
 //!
+//! Parsing examples:
 //! ```
 //! use crate::tmux_interface::{Sessions, Session, Windows, Window, Pane, Panes, TargetSession,
 //! TargetWindowExt};
@@ -96,30 +88,16 @@
 //! let panes = Panes::get(&TargetWindowExt::raw("0:1"), PANE_ALL).unwrap();
 //! ```
 //!
+//!
 //! # Examples
 //!
+//! Change tmux command line flags, options
 //! ```
-//! use crate::tmux_interface::{TmuxInterface, NewSession, TargetSession};
+//! use crate::tmux_interface::{Tmux, NewSession, KillSession};
 //!
-//! let mut tmux = TmuxInterface::new();
-//! tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-//!     // changing of binary name, its arguments, command and its parameters are allowed
-//!     // inside callback function
-//!     *bin = "tmux".to_string();
-//!     // display newly set variables
-//!     println!("pre hook: {:?} {:?} {:?}", bin, options, subcmd);
-//!     //Err(Error::new("pre hook error"))
-//!     Ok(None)
-//! }));
-//!
-//! let new_session = NewSession {
-//!     detached: Some(true),
-//!     session_name: Some("new_session_name3"),
-//!     ..Default::default()
-//! };
-//! tmux.new_session(Some(&new_session)).unwrap();
-//! tmux.pre_hook = None;
-//! tmux.kill_session(None, None, Some("new_session_name3")).unwrap();
+//! let tmux = Tmux::new().bin("tmux");
+//! NewSession::from(&tmux).detached().session_name("new_session_name3").exec();
+//! KillSession::from(&tmux).target_session("new_session_name3")).exec();
 //! ```
 //!
 //! # New session
@@ -703,11 +681,12 @@ pub use self::commands::buffers::paste_buffer::PasteBufferBuilder;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::clients_and_sessions::attach_session::AttachSession;
 #[cfg(feature = "tmux_1_0")]
-pub use self::commands::clients_and_sessions::attach_session::AttachSessionBuilder;
-#[cfg(feature = "tmux_1_0")]
 pub use self::commands::clients_and_sessions::detach_client::DetachClient;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::clients_and_sessions::detach_client::DetachClientBuilder;
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::clients_and_sessions::has_session::HasSession;
+
+//pub use self::commands::clients_and_sessions::kill_session::KillSession;
+
 #[cfg(feature = "tmux_1_1")]
 pub use self::commands::clients_and_sessions::lock_session::LockSession;
 #[cfg(feature = "tmux_1_0")]
@@ -715,11 +694,8 @@ pub use self::commands::clients_and_sessions::new_session::NewSession;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::clients_and_sessions::refresh_client::RefreshClient;
 #[cfg(feature = "tmux_1_0")]
-pub use self::commands::clients_and_sessions::refresh_client::RefreshClientBuilder;
-#[cfg(feature = "tmux_1_0")]
 pub use self::commands::clients_and_sessions::switch_client::SwitchClient;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::clients_and_sessions::switch_client::SwitchClientBuilder;
+
 // global and session environment
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::global_and_session_environment::set_environment::SetEnvironment;
