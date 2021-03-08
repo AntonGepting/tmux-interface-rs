@@ -1,5 +1,5 @@
 use crate::tmux_interface::*;
-use crate::{Tmux, TmuxCommand, TmuxOutput};
+use crate::{TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Lock all clients attached to `target-session`
@@ -42,24 +42,24 @@ impl<'a> LockSession<'a> {
     }
 }
 
-impl<'a> From<LockSession<'a>> for TmuxCommand<'a> {
-    fn from(item: LockSession<'a>) -> Self {
-        item.0
-    }
-}
+//impl<'a> From<LockSession<'a>> for TmuxCommand<'a> {
+//fn from(item: LockSession<'a>) -> Self {
+//item.0
+//}
+//}
 
-impl<'a> From<Tmux<'a>> for LockSession<'a> {
-    fn from(item: Tmux<'a>) -> Self {
-        let mut command: TmuxCommand = item.into();
-        command.cmd = Some(LockSession::LOCK_SESSION.into());
-        LockSession(command)
-    }
-}
+//impl<'a> From<Tmux<'a>> for LockSession<'a> {
+//fn from(item: Tmux<'a>) -> Self {
+//let mut command: TmuxCommand = item.into();
+//command.cmd = Some(LockSession::LOCK_SESSION.into());
+//LockSession(command)
+//}
+//}
 
-impl<'a> From<TmuxCommand<'a>> for LockSession<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        let mut command: TmuxCommand = item.into();
-        command.cmd = Some(LockSession::LOCK_SESSION.into());
-        LockSession(command)
-    }
-}
+//impl<'a> From<TmuxCommand<'a>> for LockSession<'a> {
+//fn from(item: TmuxCommand<'a>) -> Self {
+//let mut command: TmuxCommand = item.into();
+//command.cmd = Some(LockSession::LOCK_SESSION.into());
+//LockSession(command)
+//}
+//}

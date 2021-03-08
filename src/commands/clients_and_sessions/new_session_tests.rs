@@ -61,9 +61,7 @@ fn new_session() {
     // tmux new-session [-d] [-n window-name] [-s session-name] [command]
     // (alias: new)
     // ```
-    let mut new_session = NewSession::new();
-    let tmux = Tmux::new();
-    let mut new_session = NewSession::from(tmux);
+    let mut new_session = TmuxCommand::new_session();
     #[cfg(feature = "tmux_1_8")]
     new_session.attach();
     #[cfg(feature = "tmux_0_8")]

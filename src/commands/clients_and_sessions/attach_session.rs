@@ -1,5 +1,5 @@
 use crate::tmux_interface::*;
-use crate::{Tmux, TmuxCommand, TmuxOutput};
+use crate::{TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Structure for attaching client to already existing session
@@ -101,32 +101,32 @@ impl<'a> AttachSession<'a> {
     }
 }
 
-impl<'a> From<Tmux<'a>> for AttachSession<'a> {
-    fn from(item: Tmux<'a>) -> Self {
-        AttachSession(TmuxCommand {
-            bin: item.0.bin,
-            cmd: Some(AttachSession::ATTACH_SESSION.into()),
-            ..Default::default()
-        })
-    }
-}
+//impl<'a> From<Tmux<'a>> for AttachSession<'a> {
+//fn from(item: Tmux<'a>) -> Self {
+//AttachSession(TmuxCommand {
+//bin: item.0.bin,
+//cmd: Some(AttachSession::ATTACH_SESSION.into()),
+//..Default::default()
+//})
+//}
+//}
 
-impl<'a> From<&Tmux<'a>> for AttachSession<'a> {
-    fn from(item: &Tmux<'a>) -> Self {
-        AttachSession(TmuxCommand {
-            bin: item.0.bin.clone(),
-            cmd: Some(AttachSession::ATTACH_SESSION.into()),
-            ..Default::default()
-        })
-    }
-}
+//impl<'a> From<&Tmux<'a>> for AttachSession<'a> {
+//fn from(item: &Tmux<'a>) -> Self {
+//AttachSession(TmuxCommand {
+//bin: item.0.bin.clone(),
+//cmd: Some(AttachSession::ATTACH_SESSION.into()),
+//..Default::default()
+//})
+//}
+//}
 
-impl<'a> From<&mut Tmux<'a>> for AttachSession<'a> {
-    fn from(item: &mut Tmux<'a>) -> Self {
-        AttachSession(TmuxCommand {
-            bin: item.0.bin.clone(),
-            cmd: Some(AttachSession::ATTACH_SESSION.into()),
-            ..Default::default()
-        })
-    }
-}
+//impl<'a> From<&mut Tmux<'a>> for AttachSession<'a> {
+//fn from(item: &mut Tmux<'a>) -> Self {
+//AttachSession(TmuxCommand {
+//bin: item.0.bin.clone(),
+//cmd: Some(AttachSession::ATTACH_SESSION.into()),
+//..Default::default()
+//})
+//}
+//}

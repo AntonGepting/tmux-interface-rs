@@ -1,5 +1,5 @@
 use crate::tmux_interface::*;
-use crate::{Tmux, TmuxCommand, TmuxOutput};
+use crate::{TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 #[derive(Default, Debug)]
@@ -58,21 +58,21 @@ impl<'a> From<HasSession<'a>> for TmuxCommand<'a> {
 //}
 //}
 
-impl<'a> From<&Tmux<'a>> for HasSession<'a> {
-    fn from(item: &Tmux<'a>) -> Self {
-        let mut command: TmuxCommand = item.into();
-        command.cmd = Some(HasSession::HAS_SESSION.into());
-        HasSession(command)
-    }
-}
+//impl<'a> From<&Tmux<'a>> for HasSession<'a> {
+//fn from(item: &Tmux<'a>) -> Self {
+//let mut command: TmuxCommand = item.into();
+//command.cmd = Some(HasSession::HAS_SESSION.into());
+//HasSession(command)
+//}
+//}
 
-impl<'a> From<TmuxCommand<'a>> for HasSession<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        let mut command: TmuxCommand = item.into();
-        command.cmd = Some(HasSession::HAS_SESSION.into());
-        HasSession(command)
-    }
-}
+//impl<'a> From<TmuxCommand<'a>> for HasSession<'a> {
+//fn from(item: TmuxCommand<'a>) -> Self {
+//let mut command: TmuxCommand = item.into();
+//command.cmd = Some(HasSession::HAS_SESSION.into());
+//HasSession(command)
+//}
+//}
 
 //impl<'a> From<&TmuxCommand<'a>> for HasSession<'a> {
 //fn from(item: &TmuxCommand<'a>) -> Self {

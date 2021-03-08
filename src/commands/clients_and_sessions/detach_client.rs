@@ -1,5 +1,5 @@
 use crate::tmux_interface::*;
-use crate::{TmuxCommand, TmuxOutput};
+use crate::{TmuxCommand, TmuxCommandTrait};
 use std::borrow::Cow;
 
 /// Structure for detaching the current client
@@ -29,61 +29,58 @@ use std::borrow::Cow;
 /// tmux detach-client [-t target-client]
 /// (alias: detach)
 /// ```
-#[derive(Default, Debug)]
-pub struct DetachClient<'a>(TmuxCommand<'a>);
+impl<'a> DetachClient<'a> for TmuxCommand<'a> {}
 
-impl<'a> DetachClient<'a> {
+pub trait DetachClient<'a>: TmuxCommandTrait<'a> {
     #[cfg(not(feature = "use_cmd_alias"))]
     const DETACH_CLIENT: &'static str = "detach-client";
     #[cfg(feature = "use_cmd_alias")]
     const DETACH_CLIENT: &'static str = "detach";
 
-    pub fn new() -> Self {
-        DetachClient({
-            TmuxCommand {
-                cmd: Some(DetachClient::DETACH_CLIENT.into()),
-                ..Default::default()
-            }
-        })
+    fn new() -> TmuxCommand<'a> {
+        TmuxCommand {
+            cmd: Some(<TmuxCommand as DetachClient>::DETACH_CLIENT.into()),
+            ..Default::default()
+        }
     }
 
     /// [-a] - kill all but the client client given with `-t`
     #[cfg(feature = "tmux_2_2")]
-    pub fn all(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+    fn all(&mut self) -> &mut Self {
+        self.push_flag(a_KEY);
         self
     }
 
     /// [-P] - send SIGHUP to the parent process of the client, typically causing it to exit
     #[cfg(feature = "tmux_1_5")]
-    pub fn parent_sighup(&mut self) -> &mut Self {
-        self.0.push_flag(P_KEY);
+    fn parent_sighup(&mut self) -> &mut Self {
+        self.push_flag(P_KEY);
         self
     }
 
     /// [-E shell-command] - run shell-command to replace the client
     #[cfg(feature = "tmux_2_4")]
-    pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
-        self.0.push_option(E_KEY, shell_command);
+    fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
+        self.push_option(E_KEY, shell_command);
         self
     }
 
     /// [-s target-session] - specify the session, all clients currently attached
     #[cfg(feature = "tmux_1_5")]
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(s_KEY, target_session);
+    fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+        self.push_option(s_KEY, target_session);
         self
     }
 
     /// [-t target-client] - specify the client
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_client);
+    fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+        self.push_option(t_KEY, target_client);
         self
     }
 
-    /// run command
-    pub fn exec(&self) -> TmuxOutput {
-        self.0.exec()
-    }
+    // run command
+    //fn exec(&self) -> TmuxOutput {
+    //self.exec()
+    //}
 }

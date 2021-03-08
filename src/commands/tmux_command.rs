@@ -1,3 +1,5 @@
+use crate::commands::NEW_SESSION;
+use crate::NewSession;
 use crate::TmuxOutput;
 use std::borrow::Cow;
 use std::process::{Command, Stdio};
@@ -8,6 +10,7 @@ use std::process::{Command, Stdio};
 //      [ ] two structs, complexity~+, usability~-
 //      call wrapping impossible cmd+args(tmux+args) != tmux args cmd args
 // - Check tmux order options flags matters?
+//      [ ] trait, supertrait
 //
 // - exec vs run
 //      [x] exec - execute
@@ -28,7 +31,8 @@ use std::process::{Command, Stdio};
 // - args/fns names
 //      [ ] exact as original
 //      [x] near the original
-//      [ ] rename for consistance cwd, target, name
+//      [ ] rename for consistance cwd, target, name (example: `new_session().session_name("")` better
+//      `new_session().name("")`)
 //
 //  - consuming not consuming builder pattern?
 //      [ ] self
@@ -98,6 +102,29 @@ impl<'a> TmuxCommand<'a> {
         self
     }
 
+    // if we are working with same type problems multiple traits methods mixing allowed (NewSession, DetachClient, chaining methods)
+    //pub fn new_session(&mut self) -> &mut Self {
+    //self.cmd = Some(Cow::Borrowed(<TmuxCommand as NewSession>::NEW_SESSION));
+    //self
+    //}
+
+    // example
+    //pub fn new_session(&mut self) -> impl NewSession<'a> {
+    //<TmuxCommand as NewSession>::new()
+    //}
+
+    // clone
+    //pub fn new_session(&self) -> impl NewSession<'a> {
+    //<TmuxCommand as NewSession>::clone_from(self)
+    //}
+    pub fn new_session(&mut self) -> &mut Self
+    where
+        Self: NewSession<'a>,
+    {
+        //self.cmd = Some(Cow::Borrowed(<TmuxCommand as NewSession>::NEW_SESSION));
+        self.cmd(NEW_SESSION)
+    }
+
     //// NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
     //cmd.stdin(Stdio::inherit());
     /// run command
@@ -162,5 +189,46 @@ impl<'a> TmuxCommand<'a> {
 
     pub fn new() -> Self {
         Default::default()
+    }
+}
+
+pub trait TmuxCommandTrait<'a>: std::fmt::Debug {
+    fn push_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S) -> &mut Self;
+    fn push_option<S, U>(&mut self, key: S, option: U) -> &mut Self
+    where
+        S: Into<Cow<'a, str>>,
+        U: Into<Cow<'a, str>>;
+    fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self;
+
+    fn bin<S: Into<Cow<'a, str>>>(&mut self, bin: S) -> &mut Self;
+
+    fn exec(&self) {
+        dbg!(self);
+    }
+}
+
+impl<'a> TmuxCommandTrait<'a> for TmuxCommand<'a> {
+    fn bin<S: Into<Cow<'a, str>>>(&mut self, bin: S) -> &mut Self {
+        self.bin = Some(bin.into());
+        self
+    }
+
+    fn push_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S) -> &mut Self {
+        self.push_flag(flag);
+        self
+    }
+
+    fn push_option<S, U>(&mut self, key: S, option: U) -> &mut Self
+    where
+        S: Into<Cow<'a, str>>,
+        U: Into<Cow<'a, str>>,
+    {
+        self.push_option(key, option);
+        self
+    }
+
+    fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self {
+        self.push_param(param);
+        self
     }
 }

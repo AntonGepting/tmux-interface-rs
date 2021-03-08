@@ -666,6 +666,7 @@ pub use crate::options::pane_options::PANE_OPTIONS_NONE;
 
 pub use self::commands::tmux::Tmux;
 pub use self::commands::tmux_command::TmuxCommand;
+pub use self::commands::tmux_command::TmuxCommandTrait;
 pub use self::commands::tmux_output::TmuxOutput;
 
 // buffers
