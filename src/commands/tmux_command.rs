@@ -4,40 +4,6 @@ use crate::TmuxOutput;
 use std::borrow::Cow;
 use std::process::{Command, Stdio};
 
-// 2. String for hooks and mutability
-// 1. bin and cmd must be in same struct?
-//      [x] one struct, understanding~+
-//      [ ] two structs, complexity~+, usability~-
-//      call wrapping impossible cmd+args(tmux+args) != tmux args cmd args
-// - Check tmux order options flags matters?
-//      [ ] trait, supertrait
-//
-// - exec vs run
-//      [x] exec - execute
-//      [ ] run
-//
-//  - String or str in struct
-//      [ ] &str - chep runtime
-//      [ ] String - modification
-//      [ ] Cow - both
-//
-//  - trait command methods exec
-//      [x] no, fields inaccesible directly, only methods set get, implemetation  imol for needed,
-//      same thing.
-//      [ ] yes
-//
-// - no need to sset Option<bool>
-//
-// - args/fns names
-//      [ ] exact as original
-//      [x] near the original
-//      [ ] rename for consistance cwd, target, name (example: `new_session().session_name("")` better
-//      `new_session().name("")`)
-//
-//  - consuming not consuming builder pattern?
-//      [ ] self
-//      [x] &mut self (preferred) but here?
-///
 /// Standard tmux command line arguments syntax:
 /// ```text
 /// tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
