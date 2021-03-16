@@ -1,6 +1,5 @@
 use crate::tmux_interface::*;
 use crate::{TmuxCommand, TmuxCommandTrait};
-use std::borrow::Cow;
 
 /// Structure for detaching the current client
 ///
@@ -29,15 +28,15 @@ use std::borrow::Cow;
 /// tmux detach-client [-t target-client]
 /// (alias: detach)
 /// ```
-impl<'a> DetachClient<'a> for TmuxCommand<'a> {}
+impl DetachClient for TmuxCommand {}
 
-pub trait DetachClient<'a>: TmuxCommandTrait<'a> {
+pub trait DetachClient: TmuxCommandTrait {
     #[cfg(not(feature = "use_cmd_alias"))]
     const DETACH_CLIENT: &'static str = "detach-client";
     #[cfg(feature = "use_cmd_alias")]
     const DETACH_CLIENT: &'static str = "detach";
 
-    fn new() -> TmuxCommand<'a> {
+    fn new() -> TmuxCommand {
         TmuxCommand {
             cmd: Some(<TmuxCommand as DetachClient>::DETACH_CLIENT.into()),
             ..Default::default()
@@ -60,21 +59,21 @@ pub trait DetachClient<'a>: TmuxCommandTrait<'a> {
 
     /// [-E shell-command] - run shell-command to replace the client
     #[cfg(feature = "tmux_2_4")]
-    fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
+    fn shell_command<S: Into<String>>(&mut self, shell_command: S) -> &mut Self {
         self.push_option(E_KEY, shell_command);
         self
     }
 
     /// [-s target-session] - specify the session, all clients currently attached
     #[cfg(feature = "tmux_1_5")]
-    fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    fn target_session<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
         self.push_option(s_KEY, target_session);
         self
     }
 
     /// [-t target-client] - specify the client
     #[cfg(feature = "tmux_0_8")]
-    fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+    fn target_client<S: Into<String>>(&mut self, target_client: S) -> &mut Self {
         self.push_option(t_KEY, target_client);
         self
     }

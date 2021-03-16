@@ -1,6 +1,5 @@
 use crate::tmux_interface::*;
 use crate::{TmuxCommand, TmuxOutput};
-use std::borrow::Cow;
 
 /// Structure for attaching client to already existing session
 ///
@@ -36,9 +35,9 @@ use std::borrow::Cow;
 /// (alias: attach)
 /// ```
 #[derive(Clone, Debug)]
-pub struct AttachSession<'a>(TmuxCommand<'a>);
+pub struct AttachSession(TmuxCommand);
 
-impl<'a> AttachSession<'a> {
+impl AttachSession {
     #[cfg(not(feature = "use_cmd_alias"))]
     const ATTACH_SESSION: &'static str = "attach-session";
     #[cfg(feature = "use_cmd_alias")]
@@ -83,14 +82,14 @@ impl<'a> AttachSession<'a> {
 
     /// [-c working-directory] - specify starting directory
     #[cfg(feature = "tmux_1_9")]
-    pub fn working_directory<S: Into<Cow<'a, str>>>(&mut self, working_directory: S) -> &mut Self {
+    pub fn working_directory<S: Into<String>>(&mut self, working_directory: S) -> &mut Self {
         self.0.push_option(c_KEY, working_directory);
         self
     }
 
     /// [-t target-session] - specify target session name
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(t_KEY, target_session);
         self
     }
@@ -101,8 +100,8 @@ impl<'a> AttachSession<'a> {
     }
 }
 
-//impl<'a> From<Tmux<'a>> for AttachSession<'a> {
-//fn from(item: Tmux<'a>) -> Self {
+//impl From<Tmux> for AttachSession {
+//fn from(item: Tmux) -> Self {
 //AttachSession(TmuxCommand {
 //bin: item.0.bin,
 //cmd: Some(AttachSession::ATTACH_SESSION.into()),
@@ -111,8 +110,8 @@ impl<'a> AttachSession<'a> {
 //}
 //}
 
-//impl<'a> From<&Tmux<'a>> for AttachSession<'a> {
-//fn from(item: &Tmux<'a>) -> Self {
+//impl From<&Tmux> for AttachSession {
+//fn from(item: &Tmux) -> Self {
 //AttachSession(TmuxCommand {
 //bin: item.0.bin.clone(),
 //cmd: Some(AttachSession::ATTACH_SESSION.into()),
@@ -121,8 +120,8 @@ impl<'a> AttachSession<'a> {
 //}
 //}
 
-//impl<'a> From<&mut Tmux<'a>> for AttachSession<'a> {
-//fn from(item: &mut Tmux<'a>) -> Self {
+//impl From<&mut Tmux> for AttachSession {
+//fn from(item: &mut Tmux) -> Self {
 //AttachSession(TmuxCommand {
 //bin: item.0.bin.clone(),
 //cmd: Some(AttachSession::ATTACH_SESSION.into()),

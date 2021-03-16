@@ -1,6 +1,5 @@
 use crate::tmux_interface::*;
 use crate::{TmuxCommand, TmuxOutput};
-use std::borrow::Cow;
 
 /// Lock all clients attached to `target-session`
 /// # Manual
@@ -11,9 +10,9 @@ use std::borrow::Cow;
 /// (alias: locks)
 /// ```
 #[derive(Default, Debug)]
-pub struct LockSession<'a>(TmuxCommand<'a>);
+pub struct LockSession(TmuxCommand);
 
-impl<'a> LockSession<'a> {
+impl LockSession {
     #[cfg(not(feature = "use_cmd_alias"))]
     const LOCK_SESSION: &'static str = "lock-session";
     #[cfg(feature = "use_cmd_alias")]
@@ -31,7 +30,7 @@ impl<'a> LockSession<'a> {
     }
 
     /// [-t target-session]
-    pub fn target_session<T: Into<Cow<'a, str>>>(&mut self, target_session: T) -> &mut Self {
+    pub fn target_session<T: Into<String>>(&mut self, target_session: T) -> &mut Self {
         self.0.push_option(t_KEY, target_session);
         self
     }
@@ -42,22 +41,22 @@ impl<'a> LockSession<'a> {
     }
 }
 
-//impl<'a> From<LockSession<'a>> for TmuxCommand<'a> {
-//fn from(item: LockSession<'a>) -> Self {
+//impl From<LockSession> for TmuxCommand {
+//fn from(item: LockSession) -> Self {
 //item.0
 //}
 //}
 
-//impl<'a> From<Tmux<'a>> for LockSession<'a> {
-//fn from(item: Tmux<'a>) -> Self {
+//impl From<Tmux> for LockSession {
+//fn from(item: Tmux) -> Self {
 //let mut command: TmuxCommand = item.into();
 //command.cmd = Some(LockSession::LOCK_SESSION.into());
 //LockSession(command)
 //}
 //}
 
-//impl<'a> From<TmuxCommand<'a>> for LockSession<'a> {
-//fn from(item: TmuxCommand<'a>) -> Self {
+//impl From<TmuxCommand> for LockSession {
+//fn from(item: TmuxCommand) -> Self {
 //let mut command: TmuxCommand = item.into();
 //command.cmd = Some(LockSession::LOCK_SESSION.into());
 //LockSession(command)

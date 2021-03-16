@@ -1,9 +1,8 @@
 use crate::tmux_interface::*;
 use crate::{TmuxCommand, TmuxOutput};
-use std::borrow::Cow;
 
 #[derive(Default, Debug)]
-pub struct HasSession<'a>(TmuxCommand<'a>);
+pub struct HasSession(TmuxCommand);
 
 // XXX: better result return?
 /// Report if the specified session exist
@@ -15,7 +14,7 @@ pub struct HasSession<'a>(TmuxCommand<'a>);
 /// tmux has-session [-t target-session]
 /// (alias: has)
 /// ```
-impl<'a> HasSession<'a> {
+impl HasSession {
     #[cfg(not(feature = "use_cmd_alias"))]
     const HAS_SESSION: &'static str = "has-session";
     #[cfg(feature = "use_cmd_alias")]
@@ -32,7 +31,7 @@ impl<'a> HasSession<'a> {
         })
     }
 
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(t_KEY, target_session);
         self
     }
@@ -43,39 +42,39 @@ impl<'a> HasSession<'a> {
     }
 }
 
-impl<'a> From<HasSession<'a>> for TmuxCommand<'a> {
-    fn from(item: HasSession<'a>) -> Self {
+impl From<HasSession> for TmuxCommand {
+    fn from(item: HasSession) -> Self {
         item.0
     }
 }
 
 // XXX: ? mb implement too
-//impl<'a> From<Tmux<'a>> for HasSession<'a> {
-//fn from(item: Tmux<'a>) -> Self {
+//impl From<Tmux> for HasSession {
+//fn from(item: Tmux) -> Self {
 //let mut command: HasSession = item.into();
 //command.cmd = Some(HasSession::HAS_SESSION.into());
 //HasSession(command)
 //}
 //}
 
-//impl<'a> From<&Tmux<'a>> for HasSession<'a> {
-//fn from(item: &Tmux<'a>) -> Self {
+//impl From<&Tmux> for HasSession {
+//fn from(item: &Tmux) -> Self {
 //let mut command: TmuxCommand = item.into();
 //command.cmd = Some(HasSession::HAS_SESSION.into());
 //HasSession(command)
 //}
 //}
 
-//impl<'a> From<TmuxCommand<'a>> for HasSession<'a> {
-//fn from(item: TmuxCommand<'a>) -> Self {
+//impl From<TmuxCommand> for HasSession {
+//fn from(item: TmuxCommand) -> Self {
 //let mut command: TmuxCommand = item.into();
 //command.cmd = Some(HasSession::HAS_SESSION.into());
 //HasSession(command)
 //}
 //}
 
-//impl<'a> From<&TmuxCommand<'a>> for HasSession<'a> {
-//fn from(item: &TmuxCommand<'a>) -> Self {
+//impl From<&TmuxCommand> for HasSession {
+//fn from(item: &TmuxCommand) -> Self {
 //let mut command: TmuxCommand = item.into();
 //command.cmd = Some(HasSession::HAS_SESSION.into());
 //HasSession(command)

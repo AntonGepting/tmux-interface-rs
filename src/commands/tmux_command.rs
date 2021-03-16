@@ -1,7 +1,6 @@
 use crate::commands::NEW_SESSION;
 use crate::NewSession;
 use crate::TmuxOutput;
-use std::borrow::Cow;
 use std::process::{Command, Stdio};
 
 /// Standard tmux command line arguments syntax:
@@ -15,19 +14,19 @@ use std::process::{Command, Stdio};
 /// - command (part III) (example: `[command]`)
 /// - command args (part IV) (example: `[flags]`)
 #[derive(Default, Debug, Clone)]
-pub struct TmuxCommand<'a> {
+pub struct TmuxCommand {
     // XXX: rename tmux?
     /// Tmux executable name, (part I) if is `None`, will be used `tmux`
-    pub bin: Option<Cow<'a, str>>,
+    pub bin: Option<String>,
     /// Tmux executable arguments (part II)
-    pub bin_args: Option<Vec<Cow<'a, str>>>,
+    pub bin_args: Option<Vec<String>>,
     /// Tmux command (part III)
-    pub cmd: Option<Cow<'a, str>>,
+    pub cmd: Option<String>,
     /// Tmux command arguments (part IV)
-    pub cmd_args: Option<Vec<Cow<'a, str>>>,
+    pub cmd_args: Option<Vec<String>>,
 }
 
-//pub trait MyCommand<'a> {
+//pub trait MyCommand {
 //fn set_bin<S: Into<Cow<'a, str>>>(&mut self, bin: S) -> &mut Self;
 //fn get_bin(&self) -> Option<&Cow<'a, str>>;
 
@@ -40,7 +39,7 @@ pub struct TmuxCommand<'a> {
 //}
 //}
 
-impl<'a> TmuxCommand<'a> {
+impl TmuxCommand {
     const TMUX: &'static str = "tmux";
 
     //pub fn create(
@@ -57,13 +56,13 @@ impl<'a> TmuxCommand<'a> {
     //}
     //}
 
-    pub fn bin<S: Into<Cow<'a, str>>>(&mut self, bin: S) -> &mut Self {
+    pub fn bin<S: Into<String>>(&mut self, bin: S) -> &mut Self {
         //self.tmux.bin = bin;
         self.bin = Some(bin.into());
         self
     }
 
-    pub fn cmd<S: Into<Cow<'a, str>>>(&mut self, cmd: S) -> &mut Self {
+    pub fn cmd<S: Into<String>>(&mut self, cmd: S) -> &mut Self {
         self.cmd = Some(cmd.into());
         self
     }
@@ -75,17 +74,17 @@ impl<'a> TmuxCommand<'a> {
     //}
 
     // example
-    //pub fn new_session(&mut self) -> impl NewSession<'a> {
+    //pub fn new_session(&mut self) -> impl NewSession {
     //<TmuxCommand as NewSession>::new()
     //}
 
     // clone
-    //pub fn new_session(&self) -> impl NewSession<'a> {
+    //pub fn new_session(&self) -> impl NewSession {
     //<TmuxCommand as NewSession>::clone_from(self)
     //}
     pub fn new_session(&mut self) -> &mut Self
     where
-        Self: NewSession<'a>,
+        Self: NewSession,
     {
         //self.cmd = Some(Cow::Borrowed(<TmuxCommand as NewSession>::NEW_SESSION));
         self.cmd(NEW_SESSION)
@@ -95,10 +94,10 @@ impl<'a> TmuxCommand<'a> {
     //cmd.stdin(Stdio::inherit());
     /// run command
     pub fn exec(&self) -> TmuxOutput {
-        let tmux_bin = &**self
-            .bin
-            .as_ref()
-            .unwrap_or(&Cow::Borrowed(TmuxCommand::TMUX));
+        let tmux_bin = match &self.bin {
+            Some(s) => s.into(),
+            None => TmuxCommand::TMUX.to_string(),
+        };
         let mut command = Command::new(tmux_bin);
 
         // XXX: ugly?
@@ -106,6 +105,9 @@ impl<'a> TmuxCommand<'a> {
             for a in s {
                 command.arg(&**a);
             }
+        }
+        if let Some(s) = &self.bin_args {
+            command.args(s);
         }
 
         if let Some(s) = &self.cmd {
@@ -129,16 +131,16 @@ impl<'a> TmuxCommand<'a> {
     // XXX: hard bound to cmd_args
     // if vec doesn't exist, creates it and appends with given arguments
     /// insert a single flag (`-x`)
-    pub fn push_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S) -> &mut Self {
+    pub fn push_flag<S: Into<String>>(&mut self, flag: S) -> &mut Self {
         self.push_param(flag.into())
     }
 
     // if vec doesn't exist, creates it and appends with given arguments
-    /// insert an option (`-x  <OPTION>`)
+    /// insert an option, flag and value (`-x  <VALUE>`)
     pub fn push_option<S, U>(&mut self, key: S, option: U) -> &mut Self
     where
-        S: Into<Cow<'a, str>>,
-        U: Into<Cow<'a, str>>,
+        S: Into<String>,
+        U: Into<String>,
     {
         self.cmd_args
             .get_or_insert(Vec::new())
@@ -147,8 +149,8 @@ impl<'a> TmuxCommand<'a> {
     }
 
     // if vec doesn't exist, creates it and appends with given arguments
-    /// insert a single parameter (`[PARAM]`)
-    pub fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self {
+    /// insert a single parameter (`[VALUE]`)
+    pub fn push_param<S: Into<String>>(&mut self, param: S) -> &mut Self {
         self.cmd_args.get_or_insert(Vec::new()).push(param.into());
         self
     }
@@ -158,42 +160,42 @@ impl<'a> TmuxCommand<'a> {
     }
 }
 
-pub trait TmuxCommandTrait<'a>: std::fmt::Debug {
-    fn push_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S) -> &mut Self;
+pub trait TmuxCommandTrait: std::fmt::Debug {
+    fn push_flag<S: Into<String>>(&mut self, flag: S) -> &mut Self;
     fn push_option<S, U>(&mut self, key: S, option: U) -> &mut Self
     where
-        S: Into<Cow<'a, str>>,
-        U: Into<Cow<'a, str>>;
-    fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self;
+        S: Into<String>,
+        U: Into<String>;
+    fn push_param<S: Into<String>>(&mut self, param: S) -> &mut Self;
 
-    fn bin<S: Into<Cow<'a, str>>>(&mut self, bin: S) -> &mut Self;
+    fn bin<S: Into<String>>(&mut self, bin: S) -> &mut Self;
 
     fn exec(&self) {
         dbg!(self);
     }
 }
 
-impl<'a> TmuxCommandTrait<'a> for TmuxCommand<'a> {
-    fn bin<S: Into<Cow<'a, str>>>(&mut self, bin: S) -> &mut Self {
+impl TmuxCommandTrait for TmuxCommand {
+    fn bin<S: Into<String>>(&mut self, bin: S) -> &mut Self {
         self.bin = Some(bin.into());
         self
     }
 
-    fn push_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S) -> &mut Self {
+    fn push_flag<S: Into<String>>(&mut self, flag: S) -> &mut Self {
         self.push_flag(flag);
         self
     }
 
     fn push_option<S, U>(&mut self, key: S, option: U) -> &mut Self
     where
-        S: Into<Cow<'a, str>>,
-        U: Into<Cow<'a, str>>,
+        S: Into<String>,
+        U: Into<String>,
     {
         self.push_option(key, option);
         self
     }
 
-    fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self {
+    fn push_param<S: Into<String>>(&mut self, param: S) -> &mut Self {
         self.push_param(param);
         self
     }

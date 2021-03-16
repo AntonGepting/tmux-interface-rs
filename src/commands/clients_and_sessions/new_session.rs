@@ -1,7 +1,6 @@
 use crate::commands::NEW_SESSION;
 use crate::tmux_interface::*;
 use crate::{TmuxCommand, TmuxCommandTrait};
-use std::borrow::Cow;
 
 /// Structure for creating a new session
 ///
@@ -67,7 +66,7 @@ use std::borrow::Cow;
 /// (alias: new)
 /// ```
 
-//impl<'a> Default for NewSession<'a> {
+//impl Default for NewSession {
 //fn default() -> Self {
 //NewSession(TmuxCommand {
 //bin: None,
@@ -78,14 +77,14 @@ use std::borrow::Cow;
 //}
 //}
 
-impl<'a> NewSession<'a> for TmuxCommand<'a> {}
+impl NewSession for TmuxCommand {}
 
-pub trait NewSession<'a>: TmuxCommandTrait<'a> {
-    fn new() -> TmuxCommand<'a> {
+pub trait NewSession: TmuxCommandTrait {
+    fn new() -> TmuxCommand {
         TmuxCommand {
             bin: None,
             bin_args: None,
-            cmd: Some(Cow::Borrowed(NEW_SESSION)),
+            cmd: Some(NEW_SESSION.to_string()),
             cmd_args: None,
         }
     }
@@ -134,35 +133,35 @@ pub trait NewSession<'a>: TmuxCommandTrait<'a> {
 
     /// [-c start-directory] - specify starting directory
     #[cfg(feature = "tmux_1_9")]
-    fn start_directory<S: Into<Cow<'a, str>>>(&mut self, start_directory: S) -> &mut Self {
+    fn start_directory<S: Into<String>>(&mut self, start_directory: S) -> &mut Self {
         self.push_option(c_KEY, start_directory);
         self
     }
 
     /// [-F format] - specify different format
     #[cfg(feature = "tmux_1_8")]
-    fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
+    fn format<S: Into<String>>(&mut self, format: S) -> &mut Self {
         self.push_option(F_KEY, format);
         self
     }
 
     /// [-n window-name] - window name of the initial window
     #[cfg(feature = "tmux_0_8")]
-    fn window_name<S: Into<Cow<'a, str>>>(&mut self, window_name: S) -> &mut Self {
+    fn window_name<S: Into<String>>(&mut self, window_name: S) -> &mut Self {
         self.push_option(n_KEY, window_name);
         self
     }
 
     /// [-s session-name] - specify a session name
     #[cfg(feature = "tmux_0_8")]
-    fn session_name<S: Into<Cow<'a, str>>>(&mut self, session_name: S) -> &mut Self {
+    fn session_name<S: Into<String>>(&mut self, session_name: S) -> &mut Self {
         self.push_option(s_KEY, session_name);
         self
     }
 
     /// [-t group-name] - specify a session group
     #[cfg(feature = "tmux_2_4")]
-    fn group_name<S: Into<Cow<'a, str>>>(&mut self, group_name: S) -> &mut Self {
+    fn group_name<S: Into<String>>(&mut self, group_name: S) -> &mut Self {
         self.push_option(t_KEY, group_name);
         self
     }
@@ -183,12 +182,12 @@ pub trait NewSession<'a>: TmuxCommandTrait<'a> {
 
     /// [shell-command] - shell command to execute in the initial window
     #[cfg(feature = "tmux_1_2")]
-    fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
+    fn shell_command<S: Into<String>>(&mut self, shell_command: S) -> &mut Self {
         self.push_param(shell_command);
         self
     }
 
-    //fn clone_from(orig: &TmuxCommand<'a>) -> TmuxCommand<'a> {
+    //fn clone_from(orig: &TmuxCommand) -> TmuxCommand {
     //let mut tmux = <TmuxCommand as NewSession>::new();
     //tmux.bin = orig.bin.clone();
     //tmux.cmd = Some(Cow::Borrowed("new-session-from"));

@@ -1,16 +1,15 @@
 use crate::tmux_interface::*;
 use crate::{TmuxCommand, TmuxCommandTrait};
-use std::borrow::Cow;
 
-impl<'a> Tmux<'a> for TmuxCommand<'a> {}
+impl Tmux for TmuxCommand {}
 
 // XXX: using environment vars
-pub trait Tmux<'a>: TmuxCommandTrait<'a> {
+pub trait Tmux: TmuxCommandTrait {
     const TMUX: &'static str = "tmux";
 
-    fn new() -> TmuxCommand<'a> {
+    fn new() -> TmuxCommand {
         TmuxCommand {
-            bin: Some(Cow::Borrowed(<TmuxCommand as Tmux>::TMUX)),
+            bin: Some(<TmuxCommand as Tmux>::TMUX.to_string()),
             bin_args: None,
             cmd: None,
             cmd_args: None,
@@ -63,39 +62,39 @@ pub trait Tmux<'a>: TmuxCommandTrait<'a> {
     }
 
     #[cfg(feature = "tmux_1_1")]
-    fn shell_cmd<S: Into<Cow<'a, str>>>(&mut self, shell_cmd: S) -> &mut Self {
+    fn shell_cmd<S: Into<String>>(&mut self, shell_cmd: S) -> &mut Self {
         self.push_option(c_KEY, shell_cmd);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    fn file<S: Into<Cow<'a, str>>>(&mut self, file: S) -> &mut Self {
+    fn file<S: Into<String>>(&mut self, file: S) -> &mut Self {
         self.push_option(f_KEY, file);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    fn socket_name<S: Into<Cow<'a, str>>>(&mut self, socket_name: S) -> &mut Self {
+    fn socket_name<S: Into<String>>(&mut self, socket_name: S) -> &mut Self {
         self.push_option(L_KEY, socket_name);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    fn socket_path<S: Into<Cow<'a, str>>>(&mut self, socket_path: S) -> &mut Self {
+    fn socket_path<S: Into<String>>(&mut self, socket_path: S) -> &mut Self {
         self.push_option(S_KEY, socket_path);
         self
     }
 
     // XXX: ???
-    //pub fn cmd(self) -> TmuxCommand<'a> {
+    //pub fn cmd(self) -> TmuxCommand {
     //self.0
     //}
 
-    //pub fn owned(self) -> Tmux<'a> {
+    //pub fn owned(self) -> Tmux {
     //self
     //}
 
-    //pub fn new_session(&self) -> NewSession<'a> {
+    //pub fn new_session(&self) -> NewSession {
     //}
 
     //fn exec(&self) -> TmuxOutput {
@@ -107,19 +106,19 @@ pub trait Tmux<'a>: TmuxCommandTrait<'a> {
     //}
 }
 
-//impl<'a> From<Tmux<'a>> for TmuxCommand<'a> {
-//fn from(item: Tmux<'a>) -> Self {
+//impl From<Tmux> for TmuxCommand {
+//fn from(item: Tmux) -> Self {
 //item.0
 //}
 //}
 
-//impl<'a> From<&Tmux<'a>> for TmuxCommand<'a> {
-//fn from(item: &Tmux<'a>) -> Self {
+//impl From<&Tmux> for TmuxCommand {
+//fn from(item: &Tmux) -> Self {
 //item.0.clone()
 //}
 //}
 
-//impl<'a> MyCommand<'a> for Tmux<'a> {
+//impl MyCommand for Tmux {
 //fn set_bin<S: Into<Cow<'a, str>>>(&mut self, bin: S) -> &mut Self {
 //self.0.bin = Some(bin.into());
 //self
