@@ -1,5 +1,6 @@
-use crate::tmux_interface::*;
+use crate::commands::constants::*;
 use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
 /// Lock all clients attached to `target-session`
 /// # Manual
@@ -9,24 +10,21 @@ use crate::{TmuxCommand, TmuxOutput};
 /// tmux lock-session [-t target-session]
 /// (alias: locks)
 /// ```
-#[derive(Default, Debug)]
-pub struct LockSession(TmuxCommand);
+#[derive(Debug)]
+pub struct LockSession<'a>(TmuxCommand<'a>);
 
-impl LockSession {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const LOCK_SESSION: &'static str = "lock-session";
-    #[cfg(feature = "use_cmd_alias")]
-    const LOCK_SESSION: &'static str = "locks";
-
-    pub fn new() -> Self {
-        LockSession({
-            TmuxCommand {
-                bin: None,
-                bin_args: None,
-                cmd: Some(LockSession::LOCK_SESSION.into()),
-                cmd_args: None,
-            }
+impl<'a> Default for LockSession<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(LOCK_SESSION)),
+            ..Default::default()
         })
+    }
+}
+
+impl<'a> LockSession<'a> {
+    pub fn new() -> Self {
+        Default::default()
     }
 
     /// [-t target-session]
@@ -36,29 +34,17 @@ impl LockSession {
     }
 
     /// run command
-    pub fn exec(&self) -> TmuxOutput {
-        self.0.exec()
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
     }
 }
 
-//impl From<LockSession> for TmuxCommand {
-//fn from(item: LockSession) -> Self {
-//item.0
-//}
-//}
-
-//impl From<Tmux> for LockSession {
-//fn from(item: Tmux) -> Self {
-//let mut command: TmuxCommand = item.into();
-//command.cmd = Some(LockSession::LOCK_SESSION.into());
-//LockSession(command)
-//}
-//}
-
-//impl From<TmuxCommand> for LockSession {
-//fn from(item: TmuxCommand) -> Self {
-//let mut command: TmuxCommand = item.into();
-//command.cmd = Some(LockSession::LOCK_SESSION.into());
-//LockSession(command)
-//}
-//}
+impl<'a> From<TmuxCommand<'a>> for LockSession<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(LOCK_SESSION)),
+            ..Default::default()
+        })
+    }
+}

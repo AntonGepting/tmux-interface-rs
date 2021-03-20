@@ -1,45 +1,74 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    const KILL_SESSION: &'static str = "kill-session";
+/// Destroy the given session
+///
+/// # Manual
+///
+/// tmux ^2.2:
+/// ```text
+/// tmux kill-session [-aC] [-t target-session]
+/// ```
+///
+/// tmux ^1.7:
+/// ```text
+/// tmux kill-session [-a] [-t target-session]
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux kill-session [-t target-session]
+/// ```
+#[derive(Debug, Clone)]
+pub struct KillSession<'a>(TmuxCommand<'a>);
 
-    /// Destroy the given session
-    ///
-    /// # Manual
-    ///
-    /// tmux ^2.2:
-    /// ```text
-    /// tmux kill-session [-aC] [-t target-session]
-    /// ```
-    ///
-    /// tmux ^1.7:
-    /// ```text
-    /// tmux kill-session [-a] [-t target-session]
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux kill-session [-t target-session]
-    /// ```
-    pub fn kill_session(
-        &mut self,
-        all: Option<bool>,
-        clear_alerts: Option<bool>,
-        target_session: Option<&'a str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if all.unwrap_or(false) {
-            args.push(a_KEY);
-        }
-        if clear_alerts.unwrap_or(false) {
-            args.push(C_KEY);
-        }
-        if let Some(target_session) = target_session {
-            args.extend_from_slice(&[t_KEY, &target_session])
-        }
-        let output = self.command(TmuxInterface::KILL_SESSION, &args)?;
-        Ok(output)
+impl<'a> Default for KillSession<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(KILL_SESSION)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> KillSession<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    /// [-a]
+    #[cfg(feature = "tmux_2_2")]
+    pub fn all(&mut self) -> &mut Self {
+        self.0.push_flag(a_KEY);
+        self
+    }
+
+    /// [-C]
+    #[cfg(feature = "tmux_1_7")]
+    pub fn clear_alerts(&mut self) -> &mut Self {
+        self.0.push_flag(C_KEY);
+        self
+    }
+
+    /// [-t target-session]
+    #[cfg(feature = "tmux_0_8")]
+    pub fn target_session<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_session);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for KillSession<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(KILL_SESSION)),
+            ..Default::default()
+        })
     }
 }

@@ -1,51 +1,80 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const SHOW_MESSAGES: &'static str = "show-messages";
-    #[cfg(feature = "use_cmd_alias")]
-    const SHOW_MESSAGES: &'static str = "showmsgs";
+/// Show client messages or server information
+///
+/// # Manual
+///
+/// tmux ^2.2:
+/// ```text
+/// tmux show-messages [-JT] [-t target-client]
+/// (alias: showmsgs)
+/// ```
+///
+/// tmux ^1.9:
+/// ```text
+/// tmux show-messages [-IJT] [-t target-client]
+/// (alias: showmsgs)
+/// ```
+///
+/// tmux ^1.2:
+/// ```text
+/// tmux show-messages [-t target-client]
+/// (alias: showmsgs)
+/// ```
+#[derive(Debug, Clone)]
+pub struct ShowMessages<'a>(TmuxCommand<'a>);
 
-    /// Show client messages or server information
-    ///
-    /// # Manual
-    ///
-    /// tmux ^2.2:
-    /// ```text
-    /// tmux show-messages [-JT] [-t target-client]
-    /// (alias: showmsgs)
-    /// ```
-    ///
-    /// tmux ^1.9:
-    /// ```text
-    /// tmux show-messages [-IJT] [-t target-client]
-    /// (alias: showmsgs)
-    /// ```
-    ///
-    /// tmux ^1.2:
-    /// ```text
-    /// tmux show-messages [-t target-client]
-    /// (alias: showmsgs)
-    /// ```
-    pub fn show_messages(
-        &mut self,
-        jobs: Option<bool>,
-        terminal: Option<bool>,
-        target_client: Option<&str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if jobs.unwrap_or(false) {
-            args.push(J_KEY);
-        }
-        if terminal.unwrap_or(false) {
-            args.push(T_KEY);
-        }
-        if let Some(s) = target_client {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        let output = self.command(TmuxInterface::SHOW_MESSAGES, &args)?;
-        Ok(output)
+impl<'a> Default for ShowMessages<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(SHOW_MESSAGES)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> ShowMessages<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
+    pub fn server(&mut self) -> &mut Self {
+        self.0.push_flag(I_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_9")]
+    pub fn jobs(&mut self) -> &mut Self {
+        self.0.push_flag(J_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_9")]
+    pub fn terminals(&mut self) -> &mut Self {
+        self.0.push_flag(T_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_2")]
+    pub fn start_directory<S: Into<String>>(&mut self, target_client: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_client);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for ShowMessages<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(SHOW_MESSAGES)),
+            ..Default::default()
+        })
     }
 }

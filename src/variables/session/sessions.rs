@@ -1,7 +1,7 @@
 use crate::variables::session::session::{SESSION_VARS, SESSION_VARS_SEPARATOR};
 use crate::Error;
+use crate::ListSessions;
 use crate::Session;
-use crate::TmuxInterface;
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -34,7 +34,6 @@ impl Sessions {
     }
 
     pub fn get(bitflags: u32) -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
         let ls_format = SESSION_VARS
             .iter()
             .filter(|t| bitflags & t.1 == t.1)
@@ -42,7 +41,8 @@ impl Sessions {
             .collect::<Vec<String>>()
             .join(SESSION_VARS_SEPARATOR);
         //let format = SessionFormat::create(bitflags);
-        let sessions_str = tmux.list_sessions(Some(&ls_format))?;
+        let output = ListSessions::new().format(&ls_format).output();
+        let sessions_str = String::from_utf8_lossy(&output.0.stdout.as_slice());
         Sessions::from_str(&sessions_str, bitflags)
     }
 

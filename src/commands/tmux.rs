@@ -1,19 +1,24 @@
-use crate::tmux_interface::*;
-use crate::{TmuxCommand, TmuxCommandTrait};
+use crate::commands::constants::*;
+use crate::TmuxCommand;
 
-impl Tmux for TmuxCommand {}
+#[derive(Default, Debug, Clone)]
+pub struct Tmux<'a>(TmuxCommand<'a>);
+
+//impl Default for Tmux {
+//fn default() -> Self {
+//Self(TmuxCommand {
+//cmd: Some(NewSession::NEW_SESSION.to_string()),
+//..Default::default()
+//})
+//}
+//}
 
 // XXX: using environment vars
-pub trait Tmux: TmuxCommandTrait {
-    const TMUX: &'static str = "tmux";
+impl<'a> Tmux<'a> {
+    pub const TMUX: &'static str = "tmux";
 
-    fn new() -> TmuxCommand {
-        TmuxCommand {
-            bin: Some(<TmuxCommand as Tmux>::TMUX.to_string()),
-            bin_args: None,
-            cmd: None,
-            cmd_args: None,
-        }
+    pub fn new() -> Self {
+        Default::default()
     }
 
     //fn bin<S: Into<Cow<'a, str>>>(mut self, bin: S) -> Self {
@@ -21,88 +26,72 @@ pub trait Tmux: TmuxCommandTrait {
     //self
     //}
 
-    fn version(&mut self) -> &mut Self {
-        self.push_flag(V_KEY);
+    pub fn version(&mut self) -> &mut Self {
+        self.0.push_flag(V_KEY);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    fn colours256(&mut self) -> &mut Self {
-        self.push_flag(_2_KEY);
+    pub fn colours256(&mut self) -> &mut Self {
+        self.0.push_flag(_2_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_8")]
-    fn control_mode(&mut self) -> &mut Self {
-        self.push_flag(C_KEY);
+    pub fn control_mode(&mut self) -> &mut Self {
+        self.0.push_flag(C_KEY);
         self
     }
 
-    fn disable_echo(&mut self) -> &mut Self {
-        self.push_flag(CC_KEY);
+    pub fn disable_echo(&mut self) -> &mut Self {
+        self.0.push_flag(CC_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_0")]
-    fn login_shell(&mut self) -> &mut Self {
-        self.push_flag(l_KEY);
+    pub fn login_shell(&mut self) -> &mut Self {
+        self.0.push_flag(l_KEY);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    fn force_utf8(&mut self) -> &mut Self {
-        self.push_flag(u_KEY);
+    pub fn force_utf8(&mut self) -> &mut Self {
+        self.0.push_flag(u_KEY);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    fn verbose_logging(&mut self) -> &mut Self {
-        self.push_flag(v_KEY);
+    pub fn verbose_logging(&mut self) -> &mut Self {
+        self.0.push_flag(v_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_1")]
-    fn shell_cmd<S: Into<String>>(&mut self, shell_cmd: S) -> &mut Self {
-        self.push_option(c_KEY, shell_cmd);
+    pub fn shell_cmd<S: Into<String>>(&mut self, shell_cmd: S) -> &mut Self {
+        self.0.push_option(c_KEY, shell_cmd);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    fn file<S: Into<String>>(&mut self, file: S) -> &mut Self {
-        self.push_option(f_KEY, file);
+    pub fn file<S: Into<String>>(&mut self, file: S) -> &mut Self {
+        self.0.push_option(f_KEY, file);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    fn socket_name<S: Into<String>>(&mut self, socket_name: S) -> &mut Self {
-        self.push_option(L_KEY, socket_name);
+    pub fn socket_name<S: Into<String>>(&mut self, socket_name: S) -> &mut Self {
+        self.0.push_option(L_KEY, socket_name);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    fn socket_path<S: Into<String>>(&mut self, socket_path: S) -> &mut Self {
-        self.push_option(S_KEY, socket_path);
+    pub fn socket_path<S: Into<String>>(&mut self, socket_path: S) -> &mut Self {
+        self.0.push_option(S_KEY, socket_path);
         self
     }
 
-    // XXX: ???
-    //pub fn cmd(self) -> TmuxCommand {
-    //self.0
-    //}
-
-    //pub fn owned(self) -> Tmux {
-    //self
-    //}
-
-    //pub fn new_session(&self) -> NewSession {
-    //}
-
-    //fn exec(&self) -> TmuxOutput {
-    //self.exec()
-    //}
-
-    //fn build(self) -> Self {
-    //self
+    //fn output(&self) -> TmuxOutput {
+    //self.output()
     //}
 }
 

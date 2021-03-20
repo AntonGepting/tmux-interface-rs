@@ -93,11 +93,11 @@
 //!
 //! Change tmux command line flags, options
 //! ```
-//! use crate::tmux_interface::{Tmux, NewSession, KillSession};
+//! use crate::tmux_interface::{TmuxCommand, NewSession, KillSession};
 //!
-//! let tmux = Tmux::new().bin("tmux");
-//! NewSession::from(&tmux).detached().session_name("new_session_name3").exec();
-//! KillSession::from(&tmux).target_session("new_session_name3")).exec();
+//! let tmux = TmuxCommand::new().bin("tmux");
+//! NewSession::from(tmux).detached().session_name("new_session_name3").output();
+//! KillSession::from(tmux).target_session("new_session_name3").output();
 //! ```
 //!
 //! # New session
@@ -118,38 +118,33 @@
 //! using builder pattern:
 //!
 //! ```
-//! use crate::tmux_interface::{TmuxInterface, TargetSession, NewSessionBuilder};
+//! use crate::{TmuxCommand, TargetSession};
 //!
-//! let mut tmux = TmuxInterface::new();
-//! let new_session = NewSessionBuilder::new().detached().session_name("new_session_builder").build();
-//! tmux.new_session(Some(&new_session)).unwrap();
-//! tmux.kill_session(None, None, Some("new_session_builder")).unwrap();
+//! let mut tmux = TmuxCommand::new();
+//! tmux.new_session().detached().session_name("new_session_default").output();
+//! tmux.kill_session().session_name("new_session_builder").output();
 //! ```
 //!
 //! using `std::default::Default` trait:
 //! ```
-//! use crate::tmux_interface::{TmuxInterface, NewSession, TargetSession};
+//! use crate::{TmuxCommand, NewSession, TargetSession};
 //!
-//! let mut tmux = TmuxInterface::new();
-//! let new_session = NewSession {
-//!     detached: Some(true),
-//!     session_name: Some("new_session_default"),
-//!     ..Default::default()
-//! };
-//! tmux.new_session(Some(&new_session)).unwrap();
-//! tmux.kill_session(None, None, Some("new_session_default")).unwrap();
+//! let mut tmux = TmuxCommand::new();
+//! let new_session =
+//! tmux.new_session().detached().session_name("new_session_default").output();
+//! tmux.kill_session().session_name("new_session_default").output();
 //! ```
 //!
 //! using direct structure modification:
 //! ```
-//! use crate::tmux_interface::{TmuxInterface, NewSession, TargetSession};
+//! use crate::{TmuxCommand, NewSession, TargetSession};
 //!
-//! let mut tmux = TmuxInterface::new();
+//! let mut tmux = TmuxCommand::new();
 //! let mut new_session = NewSession::new();
-//! new_session.detached = Some(true);
-//! new_session.session_name = Some("new_session_direct");
-//! tmux.new_session(Some(&new_session)).unwrap();
-//! tmux.kill_session(None, None, Some("new_session_direct")).unwrap();
+//! new_session.detached();
+//! new_session.session_name("new_session_direct");
+//! new_session().output();
+//! tmux.kill_session().session_name("new_session_direct").output();
 //! ```
 //!
 //!
@@ -211,20 +206,11 @@
 //!     use tmux_interface::{AttachSession, NewSession, TargetPane, TargetSession, TmuxInterface};
 //!
 //!     let target_session = TargetSession::Raw("session_name").to_string();
-//!     let mut tmux = TmuxInterface::new();
-//!     let new_session = NewSession {
-//!         detached: Some(true),
-//!         session_name: Some("session_name"),
-//!         ..Default::default()
-//!     };
-//!     tmux.new_session(Some(&new_session)).unwrap();
-//!     let attach_session = AttachSession {
-//!         target_session: Some(&target_session),
-//!         ..Default::default()
-//!     };
-//!     tmux.send_keys(None, &vec!["exit", "C-m"]).unwrap();
-//!     tmux.attach_session(Some(&attach_session)).unwrap();
-//!     tmux.kill_session(None, None, Some(&target_session))
+//!     let mut tmux = TmuxCommand::new();
+//!     let new_session = NewSession::new().detached().session_name("session_name").output();
+//!     let attach_session = AttachSession::new().target_session(&target_session).output();
+//!     tmux.send_keys(, &vec!["exit", "C-m"]).unwrap();
+//!     tmux.kill_session.target_session(&target_session))
 //!         .unwrap();
 //!     ```
 //!
@@ -666,7 +652,6 @@ pub use crate::options::pane_options::PANE_OPTIONS_NONE;
 
 pub use self::commands::tmux::Tmux;
 pub use self::commands::tmux_command::TmuxCommand;
-pub use self::commands::tmux_command::TmuxCommandTrait;
 pub use self::commands::tmux_output::TmuxOutput;
 
 // buffers
@@ -685,8 +670,28 @@ pub use self::commands::clients_and_sessions::attach_session::AttachSession;
 pub use self::commands::clients_and_sessions::detach_client::DetachClient;
 #[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::has_session::HasSession;
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::clients_and_sessions::list_sessions::ListSessions;
 
-//pub use self::commands::clients_and_sessions::kill_session::KillSession;
+pub use self::commands::clients_and_sessions::list_clients::ListClients;
+
+pub use self::commands::clients_and_sessions::kill_session::KillSession;
+
+pub use self::commands::clients_and_sessions::list_commands::ListCommands;
+
+pub use self::commands::clients_and_sessions::kill_server::KillServer;
+
+pub use self::commands::clients_and_sessions::lock_client::LockClient;
+
+pub use self::commands::clients_and_sessions::rename_session::RenameSession;
+
+pub use self::commands::clients_and_sessions::show_messages::ShowMessages;
+
+pub use self::commands::clients_and_sessions::source_file::SourceFile;
+
+pub use self::commands::clients_and_sessions::start_server::StartServer;
+
+pub use self::commands::clients_and_sessions::suspend_client::SuspendClient;
 
 #[cfg(feature = "tmux_1_1")]
 pub use self::commands::clients_and_sessions::lock_session::LockSession;

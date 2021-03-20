@@ -1,60 +1,80 @@
-use crate::error::Error;
 use crate::tmux_interface::*;
-use std::process::Output;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
+/// Select the last (previously selected) pane
+///
+/// # Manual
+///
+/// tmux ^3.1:
+/// ```text
+/// tmux last-pane [-deZ] [-t target-window]
+/// (alias: lastp)
+/// ```
+///
+/// tmux ^2.0:
+/// ```text
+/// tmux last-pane [-de] [-t target-window]
+/// (alias: lastp)
+/// ```
+///
+/// tmux ^1.4:
+/// ```text
+/// tmux last-pane [-t target-window]
+/// (alias: lastp)
+/// ```
+// FIXME: versions and function parameters
+#[derive(Debug, Clone)]
+pub struct LastPane<'a>(TmuxCommand<'a>);
+
+impl<'a> Default for LastPane<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(LastPane::LAST_PANE)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> LastPane<'a> {
     #[cfg(not(feature = "use_cmd_alias"))]
     const LAST_PANE: &'static str = "last-pane";
     #[cfg(feature = "use_cmd_alias")]
     const LAST_PANE: &'static str = "lastp";
 
-    /// Select the last (previously selected) pane
-    ///
-    /// # Manual
-    ///
-    /// tmux ^3.1:
-    /// ```text
-    /// tmux last-pane [-deZ] [-t target-window]
-    /// (alias: lastp)
-    /// ```
-    ///
-    /// tmux ^2.0:
-    /// ```text
-    /// tmux last-pane [-de] [-t target-window]
-    /// (alias: lastp)
-    /// ```
-    ///
-    /// tmux ^1.4:
-    /// ```text
-    /// tmux last-pane [-t target-window]
-    /// (alias: lastp)
-    /// ```
-    // FIXME: versions and function parameters
-    pub fn last_pane(
-        &mut self,
-        disable: Option<bool>,
-        enable: Option<bool>,
-        keep_zoomed: Option<bool>,
-        target_window: Option<&'a str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_2_0")]
-        if disable.unwrap_or(false) {
-            args.push(d_KEY);
-        }
-        #[cfg(feature = "tmux_2_0")]
-        if enable.unwrap_or(false) {
-            args.push(e_KEY);
-        }
-        #[cfg(feature = "tmux_3_1")]
-        if keep_zoomed.unwrap_or(false) {
-            args.push(Z_KEY);
-        }
-        #[cfg(feature = "tmux_1_4")]
-        if let Some(target_window) = target_window {
-            args.extend_from_slice(&[t_KEY, &target_window])
-        }
-        let output = self.command(TmuxInterface::LAST_PANE, &args)?;
-        Ok(output)
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    /// [-d]
+    #[cfg(feature = "tmux_2_0")]
+    pub fn disable(&mut self) -> &mut Self {
+        self.0.push_flag(d_KEY);
+        self
+    }
+
+    /// [-e]
+    #[cfg(feature = "tmux_2_0")]
+    pub fn enable(&mut self) -> &mut Self {
+        self.0.push_flag(e_KEY);
+        self
+    }
+
+    /// [-Z]
+    #[cfg(feature = "tmux_3_1")]
+    pub fn keep_zoomed(&mut self) -> &mut Self {
+        self.0.push_flag(Z_KEY);
+        self
+    }
+
+    /// [-t target-window]
+    #[cfg(feature = "tmux_1_4")]
+    pub fn target_window<S: Into<String>>(&mut self, target_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_window);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
     }
 }

@@ -1,53 +1,80 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const SOURCE_FILE: &'static str = "source-file";
-    #[cfg(feature = "use_cmd_alias")]
-    const SOURCE_FILE: &'static str = "source";
+/// Execute commands from path
+///
+/// # Manual
+///
+/// tmux ^3.0:
+/// ```text
+/// tmux source-file [-nqv] path
+/// (alias: source)
+/// ```
+///
+/// tmux ^2.3:
+/// ```text
+/// tmux source-file path
+/// (alias: source)
+///
+/// ```
+/// tmux ^0.8:
+/// ```text
+/// tmux source-file path
+/// (alias: source)
+/// ```
+#[derive(Debug, Clone)]
+pub struct SourceFile<'a>(TmuxCommand<'a>);
 
-    /// Execute commands from path
-    ///
-    /// # Manual
-    ///
-    /// tmux ^3.0:
-    /// ```text
-    /// tmux source-file [-nqv] path
-    /// (alias: source)
-    /// ```
-    ///
-    /// tmux ^2.3:
-    /// ```text
-    /// tmux source-file path
-    /// (alias: source)
-    ///
-    /// ```
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux source-file path
-    /// (alias: source)
-    /// ```
-    pub fn source_file(
-        &mut self,
-        not_execute: Option<bool>,
-        quite: Option<bool>,
-        show_parsed: Option<bool>,
-        path: &str,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if not_execute.unwrap_or(false) {
-            args.push(n_KEY);
-        }
-        if quite.unwrap_or(false) {
-            args.push(q_KEY);
-        }
-        if show_parsed.unwrap_or(false) {
-            args.push(v_KEY);
-        }
-        args.push(path);
-        let output = self.command(TmuxInterface::SOURCE_FILE, &args)?;
-        Ok(output)
+impl<'a> Default for SourceFile<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(SOURCE_FILE)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> SourceFile<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_3_0")]
+    pub fn not_execute(&mut self) -> &mut Self {
+        self.0.push_flag(n_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_3_0")]
+    pub fn not_execute(&mut self) -> &mut Self {
+        self.0.push_flag(q_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_3_0")]
+    pub fn not_execute(&mut self) -> &mut Self {
+        self.0.push_flag(v_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_8")]
+    pub fn path<S: Into<String>>(&mut self, path: S) -> &mut Self {
+        self.0.push_param(path);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for SourceFile<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(SOURCE_FILE)),
+            ..Default::default()
+        })
     }
 }

@@ -1,5 +1,6 @@
-use crate::tmux_interface::*;
+use crate::commands::constants::*;
 use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
 /// Structure for attaching client to already existing session
 ///
@@ -35,21 +36,20 @@ use crate::{TmuxCommand, TmuxOutput};
 /// (alias: attach)
 /// ```
 #[derive(Clone, Debug)]
-pub struct AttachSession(TmuxCommand);
+pub struct AttachSession<'a>(pub TmuxCommand<'a>);
 
-impl AttachSession {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const ATTACH_SESSION: &'static str = "attach-session";
-    #[cfg(feature = "use_cmd_alias")]
-    const ATTACH_SESSION: &'static str = "attach";
-
-    pub fn new() -> Self {
-        AttachSession({
-            TmuxCommand {
-                cmd: Some(AttachSession::ATTACH_SESSION.into()),
-                ..Default::default()
-            }
+impl<'a> Default for AttachSession<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(ATTACH_SESSION)),
+            ..Default::default()
         })
+    }
+}
+
+impl<'a> AttachSession<'a> {
+    pub fn new() -> Self {
+        Default::default()
     }
 
     /// [-d] - any other clients attached to the session are detached
@@ -94,38 +94,17 @@ impl AttachSession {
         self
     }
 
-    /// run command
-    pub fn exec(&self) -> TmuxOutput {
-        self.0.exec()
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
     }
 }
 
-//impl From<Tmux> for AttachSession {
-//fn from(item: Tmux) -> Self {
-//AttachSession(TmuxCommand {
-//bin: item.0.bin,
-//cmd: Some(AttachSession::ATTACH_SESSION.into()),
-//..Default::default()
-//})
-//}
-//}
-
-//impl From<&Tmux> for AttachSession {
-//fn from(item: &Tmux) -> Self {
-//AttachSession(TmuxCommand {
-//bin: item.0.bin.clone(),
-//cmd: Some(AttachSession::ATTACH_SESSION.into()),
-//..Default::default()
-//})
-//}
-//}
-
-//impl From<&mut Tmux> for AttachSession {
-//fn from(item: &mut Tmux) -> Self {
-//AttachSession(TmuxCommand {
-//bin: item.0.bin.clone(),
-//cmd: Some(AttachSession::ATTACH_SESSION.into()),
-//..Default::default()
-//})
-//}
-//}
+impl<'a> From<TmuxCommand<'a>> for AttachSession<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(ATTACH_SESSION)),
+            ..Default::default()
+        })
+    }
+}

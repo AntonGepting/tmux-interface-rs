@@ -1,34 +1,56 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const LIST_COMMANDS: &'static str = "list-commands";
-    #[cfg(feature = "use_cmd_alias")]
-    const LIST_COMMANDS: &'static str = "lscm";
+/// List the syntax of all commands supported by tmux
+///
+/// # Manual
+///
+/// tmux ^2.3:
+/// ```text
+/// tmux list-commands [-F format]
+/// (alias: lscm)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux list-commands
+/// (alias: lscm)
+/// ```
+#[derive(Debug, Clone)]
+pub struct ListCommands<'a>(TmuxCommand<'a>);
 
-    /// List the syntax of all commands supported by tmux
-    ///
-    /// # Manual
-    ///
-    /// tmux ^2.3:
-    /// ```text
-    /// tmux list-commands [-F format]
-    /// (alias: lscm)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux list-commands
-    /// (alias: lscm)
-    /// ```
-    pub fn list_commands(&mut self, format: Option<&str>) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if let Some(s) = format {
-            args.extend_from_slice(&[F_KEY, &s])
-        }
-        let output = self.command(TmuxInterface::LIST_COMMANDS, &args)?;
-        Ok(output)
+impl<'a> Default for ListCommands<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(LIST_COMMANDS)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> ListCommands<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_2_3")]
+    pub fn format<S: Into<String>>(&mut self, format: S) -> &mut Self {
+        self.0.push_option(F_KEY, format);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for ListCommands<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(LIST_COMMANDS)),
+            ..Default::default()
+        })
     }
 }

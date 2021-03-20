@@ -1,33 +1,56 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const RENAME_SESSION: &'static str = "rename-session";
-    #[cfg(feature = "use_cmd_alias")]
-    const RENAME_SESSION: &'static str = "rename";
+/// Rename the session to `new-name`
+///
+/// # Manual
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux rename-session [-t target-session] new-name
+/// (alias: rename)
+/// ```
+#[derive(Debug, Clone)]
+pub struct RenameSession<'a>(TmuxCommand<'a>);
 
-    /// Rename the session to `new-name`
-    ///
-    /// # Manual
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux rename-session [-t target-session] new-name
-    /// (alias: rename)
-    /// ```
-    pub fn rename_session(
-        &mut self,
-        target_session: Option<&'a str>,
-        new_name: &str,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if let Some(target_session) = target_session {
-            args.extend_from_slice(&[t_KEY, &target_session])
-        }
-        args.push(new_name);
-        let output = self.command(TmuxInterface::RENAME_SESSION, &args)?;
-        Ok(output)
+impl<'a> Default for RenameSession<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(RENAME_SESSION)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> RenameSession<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn shell_command<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_session);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn new_name<S: Into<String>>(&mut self, new_name: S) -> &mut Self {
+        self.0.push_param(new_name);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for RenameSession<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(RENAME_SESSION)),
+            ..Default::default()
+        })
     }
 }

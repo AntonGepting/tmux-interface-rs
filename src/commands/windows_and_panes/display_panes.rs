@@ -1,65 +1,85 @@
-use crate::error::Error;
 use crate::tmux_interface::*;
-use std::process::Output;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
+/// Display a visible indicator of each pane shown by `target-client`
+///
+/// # Manual
+///
+/// tmux ^2.9:
+/// ```text
+/// tmux display-panes [-b] [-d duration] [-t target-client] [template]
+/// (alias: displayp)
+/// ```
+///
+/// tmux ^2.6:
+/// ```text
+/// tmux display-panes [-d duration] [-t target-client] [template]
+/// (alias: displayp)
+/// ```
+///
+/// tmux ^2.3:
+/// ```text
+/// tmux display-panes [-t target-client] [template]
+/// (alias: displayp)
+/// ```
+///
+/// tmux ^1.0:
+/// ```text
+/// tmux display-panes [-t target-client]
+/// (alias: displayp)
+/// ```
+#[derive(Debug, Clone)]
+pub struct DisplayPanes<'a>(TmuxCommand<'a>);
+
+impl<'a> Default for DisplayPanes<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(DisplayPanes::DISPLAY_PANES)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> DisplayPanes<'a> {
     #[cfg(not(feature = "use_cmd_alias"))]
     const DISPLAY_PANES: &'static str = "display-panes";
     #[cfg(feature = "use_cmd_alias")]
     const DISPLAY_PANES: &'static str = "displayp";
 
-    /// Display a visible indicator of each pane shown by `target-client`
-    ///
-    /// # Manual
-    ///
-    /// tmux ^2.9:
-    /// ```text
-    /// tmux display-panes [-b] [-d duration] [-t target-client] [template]
-    /// (alias: displayp)
-    /// ```
-    ///
-    /// tmux ^2.6:
-    /// ```text
-    /// tmux display-panes [-d duration] [-t target-client] [template]
-    /// (alias: displayp)
-    /// ```
-    ///
-    /// tmux ^2.3:
-    /// ```text
-    /// tmux display-panes [-t target-client] [template]
-    /// (alias: displayp)
-    /// ```
-    ///
-    /// tmux ^1.0:
-    /// ```text
-    /// tmux display-panes [-t target-client]
-    /// (alias: displayp)
-    /// ```
-    pub fn display_panes(
-        &mut self,
-        not_block: Option<bool>,
-        duration: Option<&str>,
-        target_client: Option<&str>,
-        template: Option<&str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_2_9")]
-        if not_block.unwrap_or(false) {
-            args.push(b_KEY);
-        }
-        #[cfg(feature = "tmux_2_6")]
-        if let Some(s) = duration {
-            args.extend_from_slice(&[d_KEY, &s])
-        }
-        #[cfg(feature = "tmux_1_0")]
-        if let Some(s) = target_client {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        #[cfg(feature = "tmux_2_3")]
-        if let Some(s) = template {
-            args.push(&s)
-        }
-        let output = self.command(TmuxInterface::DISPLAY_PANES, &args)?;
-        Ok(output)
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    /// [-b]
+    #[cfg(feature = "tmux_2_9")]
+    pub fn not_block(&mut self) -> &mut Self {
+        self.0.push_flag(b_KEY);
+        self
+    }
+
+    /// [-d duration]
+    #[cfg(feature = "tmux_2_6")]
+    pub fn start_directory<S: Into<String>>(&mut self, duration: S) -> &mut Self {
+        self.0.push_option(d_KEY, duration);
+        self
+    }
+
+    /// [-d duration]
+    #[cfg(feature = "tmux_1_0")]
+    pub fn target_client<S: Into<String>>(&mut self, target_client: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_client);
+        self
+    }
+
+    /// [template]
+    #[cfg(feature = "tmux_2_3")]
+    pub fn template<S: Into<String>>(&mut self, template: S) -> &mut Self {
+        self.0.push_param(template);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
     }
 }

@@ -1,34 +1,57 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const LIST_SESSIONS: &'static str = "list-sessions";
-    #[cfg(feature = "use_cmd_alias")]
-    const LIST_SESSIONS: &'static str = "ls";
+// XXX: better result return?
+/// List all sessions managed by the server
+/// # Manual
+///
+/// tmux ^1.6:
+/// ```text
+/// tmux list-sessions [-F format]
+/// (alias: ls)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux list-sessions
+/// (alias: ls)
+/// ```
+/// [-t target-session]
+#[derive(Debug, Clone)]
+pub struct ListSessions<'a>(TmuxCommand<'a>);
 
-    // XXX: better result return?
-    /// List all sessions managed by the server
-    /// # Manual
-    ///
-    /// tmux ^1.6:
-    /// ```text
-    /// tmux list-sessions [-F format]
-    /// (alias: ls)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux list-sessions
-    /// (alias: ls)
-    /// ```
-    pub fn list_sessions(&mut self, format: Option<&str>) -> Result<String, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if let Some(s) = format {
-            args.extend_from_slice(&[F_KEY, s])
-        }
-        let output = self.command(TmuxInterface::LIST_SESSIONS, &args)?;
-        let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
-        Ok(stdout.to_string())
+impl<'a> Default for ListSessions<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(LIST_SESSIONS)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> ListSessions<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_1_6")]
+    pub fn format<S: Into<String>>(&mut self, format: S) -> &mut Self {
+        self.0.push_option(F_KEY, format);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for ListSessions<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(LIST_SESSIONS)),
+            ..Default::default()
+        })
     }
 }

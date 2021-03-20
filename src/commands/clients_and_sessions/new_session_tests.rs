@@ -90,7 +90,6 @@ fn new_session() {
     new_session.height(7);
     #[cfg(feature = "tmux_1_2")]
     new_session.shell_command("8");
-    let tmux_command: TmuxCommand = new_session.into();
 
     #[cfg(not(feature = "use_cmd_alias"))]
     let cmd = "new-session";
@@ -128,8 +127,8 @@ fn new_session() {
     s.push("8");
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(tmux_command.bin, None);
-    assert_eq!(tmux_command.bin_args, None);
-    assert_eq!(tmux_command.cmd, Some(cmd.into()));
-    assert_eq!(tmux_command.cmd_args, Some(s));
+    assert_eq!(new_session.bin, None);
+    assert_eq!(new_session.bin_args, None);
+    assert_eq!(new_session.cmd, Some(cmd.into()));
+    assert_eq!(new_session.cmd_args, Some(s));
 }

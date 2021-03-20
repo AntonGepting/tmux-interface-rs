@@ -1,28 +1,50 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const LOCK_CLIENT: &'static str = "lock-client";
-    #[cfg(feature = "use_cmd_alias")]
-    const LOCK_CLIENT: &'static str = "lockc";
+/// Lock `target-client`
+///
+/// # Manual
+///
+/// tmux ^1.1:
+/// ```text
+/// tmux lock-client [-t target-client]
+/// (alias: lockc)
+/// ```
+#[derive(Debug, Clone)]
+pub struct LockClient<'a>(TmuxCommand<'a>);
 
-    /// Lock `target-client`
-    ///
-    /// # Manual
-    ///
-    /// tmux ^1.1:
-    /// ```text
-    /// tmux lock-client [-t target-client]
-    /// (alias: lockc)
-    /// ```
-    pub fn lock_client(&mut self, target_client: Option<&str>) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if let Some(s) = target_client {
-            args.extend_from_slice(&[t_KEY, s])
-        }
-        let output = self.command(TmuxInterface::LOCK_CLIENT, &args)?;
-        Ok(output)
+impl<'a> Default for LockClient<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(LOCK_CLIENT)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> LockClient<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_1_1")]
+    pub fn target_session<S: Into<String>>(&mut self, target_client: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_client);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for LockClient<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(LOCK_CLIENT)),
+            ..Default::default()
+        })
     }
 }

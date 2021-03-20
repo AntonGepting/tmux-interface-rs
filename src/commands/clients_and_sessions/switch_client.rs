@@ -1,6 +1,6 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
 /// Structure to switch the current session for client `target-client` to `target-session`
 ///
@@ -41,228 +41,97 @@ use std::process::Output;
 /// tmux switch-client [-c target-client -t target-session]
 /// (alias: switchc)
 /// ```
-#[derive(Default, Debug)]
-pub struct SwitchClient<'a> {
-    /// [-E] - update-environment option will not be applied
-    #[cfg(feature = "tmux_2_1")]
-    pub not_update_env: Option<bool>,
-    /// [-l] - move to the last session
-    #[cfg(feature = "tmux_1_4")]
-    pub last_session: Option<bool>,
-    /// [-n] - move to the next session
-    #[cfg(feature = "tmux_1_4")]
-    pub next_session: Option<bool>,
-    /// [-p] - move to the previous session
-    #[cfg(feature = "tmux_1_4")]
-    pub previous_session: Option<bool>,
-    /// [-r] - toggle whether a client is read-only
-    #[cfg(feature = "tmux_1_6")]
-    pub read_only: Option<bool>,
-    /// [-Z] - keep the window zoomed if it was zoomed
-    #[cfg(feature = "tmux_3_1")]
-    pub keep_zoomed: Option<bool>,
-    /// [-c target-client] - specify the target-client
-    #[cfg(feature = "tmux_1_0")]
-    pub target_client: Option<&'a str>,
-    /// [-t target-session] - specify the target session
-    #[cfg(feature = "tmux_1_0")]
-    pub target_session: Option<&'a str>,
-    /// [-T key-table] - set the client's key table
-    #[cfg(feature = "tmux_2_1")]
-    pub key_table: Option<&'a str>,
+#[derive(Debug)]
+pub struct SwitchClient<'a>(TmuxCommand<'a>);
+
+impl<'a> Default for SwitchClient<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(SWITCH_CLIENT)),
+            ..Default::default()
+        })
+    }
 }
 
-#[derive(Default, Debug)]
-pub struct SwitchClientBuilder<'a> {
-    #[cfg(feature = "tmux_2_1")]
-    pub not_update_env: Option<bool>,
-    #[cfg(feature = "tmux_1_4")]
-    pub last_session: Option<bool>,
-    #[cfg(feature = "tmux_1_4")]
-    pub next_session: Option<bool>,
-    #[cfg(feature = "tmux_1_4")]
-    pub previous_session: Option<bool>,
-    #[cfg(feature = "tmux_1_6")]
-    pub read_only: Option<bool>,
-    #[cfg(feature = "tmux_3_1")]
-    pub keep_zoomed: Option<bool>,
-    #[cfg(feature = "tmux_1_0")]
-    pub target_client: Option<&'a str>,
-    #[cfg(feature = "tmux_1_0")]
-    pub target_session: Option<&'a str>,
-    #[cfg(feature = "tmux_2_1")]
-    pub key_table: Option<&'a str>,
-}
-
-impl<'a> SwitchClientBuilder<'a> {
+impl<'a> SwitchClient<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 
+    /// [-E] - update-environment option will not be applied
     #[cfg(feature = "tmux_2_1")]
     pub fn not_update_env(&mut self) -> &mut Self {
-        self.not_update_env = Some(true);
+        self.0.push_flag(E_KEY);
         self
     }
 
+    /// [-l] - move to the last session
     #[cfg(feature = "tmux_1_4")]
     pub fn last_session(&mut self) -> &mut Self {
-        self.last_session = Some(true);
+        self.0.push_flag(l_KEY);
         self
     }
 
+    /// [-n] - move to the next session
     #[cfg(feature = "tmux_1_4")]
     pub fn next_session(&mut self) -> &mut Self {
-        self.next_session = Some(true);
+        self.0.push_flag(n_KEY);
         self
     }
 
+    /// [-p] - move to the previous session
     #[cfg(feature = "tmux_1_4")]
     pub fn previous_session(&mut self) -> &mut Self {
-        self.previous_session = Some(true);
+        self.0.push_flag(p_KEY);
         self
     }
 
+    /// [-r] - toggle whether a client is read-only
     #[cfg(feature = "tmux_1_6")]
     pub fn read_only(&mut self) -> &mut Self {
-        self.read_only = Some(true);
+        self.0.push_flag(r_KEY);
         self
     }
 
+    /// [-Z] - keep the window zoomed if it was zoomed
     #[cfg(feature = "tmux_3_1")]
     pub fn keep_zoomed(&mut self) -> &mut Self {
-        self.keep_zoomed = Some(true);
+        self.0.push_flag(Z_KEY);
         self
     }
 
+    /// [-c target-client] - specify the target-client
     #[cfg(feature = "tmux_1_0")]
     pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
-        self.target_client = Some(target_client);
+        self.0.push_option(c_KEY, target_client);
         self
     }
 
+    /// [-t target-session] - specify the target session
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_session(&mut self, target_session: &'a str) -> &mut Self {
-        self.target_session = Some(target_session);
+    pub fn target_session<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_session);
         self
     }
 
+    /// [-T key-table] - set the client's key table
     #[cfg(feature = "tmux_2_1")]
-    pub fn key_table(&mut self, key_table: &'a str) -> &mut Self {
-        self.key_table = Some(key_table);
+    pub fn key_table<S: Into<String>>(&mut self, key_table: S) -> &mut Self {
+        self.0.push_option(T_KEY, key_table);
         self
     }
 
-    pub fn build(&self) -> SwitchClient<'a> {
-        SwitchClient {
-            #[cfg(feature = "tmux_2_1")]
-            not_update_env: self.not_update_env,
-            #[cfg(feature = "tmux_1_4")]
-            last_session: self.last_session,
-            #[cfg(feature = "tmux_1_4")]
-            next_session: self.next_session,
-            #[cfg(feature = "tmux_1_4")]
-            previous_session: self.previous_session,
-            #[cfg(feature = "tmux_1_6")]
-            read_only: self.read_only,
-            #[cfg(feature = "tmux_3_1")]
-            keep_zoomed: self.keep_zoomed,
-            #[cfg(feature = "tmux_1_0")]
-            target_client: self.target_client,
-            #[cfg(feature = "tmux_1_0")]
-            target_session: self.target_session,
-            #[cfg(feature = "tmux_2_1")]
-            key_table: self.key_table,
-        }
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
     }
 }
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const SWITCH_CLIENT: &'static str = "switch-client";
-    #[cfg(feature = "use_cmd_alias")]
-    const SWITCH_CLIENT: &'static str = "switchc";
-
-    /// Switch the current session for client `target-client` to `target-session`
-    ///
-    /// # Manual
-    ///
-    /// tmux ^3.1:
-    /// ```text
-    /// tmux switch-client [-ElnprZ] [-c target-client] [-t target-session] [-T key-table]
-    /// (alias: switchc)
-    /// ```
-    ///
-    /// tmux ^2.1:
-    /// ```text
-    /// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
-    /// (alias: switchc)
-    /// ```
-    ///
-    /// tmux ^1.6:
-    /// ```text
-    /// tmux switch-client [-lnpr] [-c target-client] [-t target-session]
-    /// (alias: switchc)
-    /// ```
-    ///
-    /// tmux ^1.4:
-    /// ```text
-    /// tmux switch-client [-lnp] [-c target-client] [-t target-session]
-    /// (alias: switchc)
-    /// ```
-    ///
-    /// tmux ^1.0:
-    /// ```text
-    /// tmux switch-client [-c target-client] [-t target-session]
-    /// (alias: switchc)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux switch-client [-c target-client -t target-session]
-    /// (alias: switchc)
-    /// ```
-    pub fn switch_client(&mut self, switch_client: Option<&SwitchClient>) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if let Some(switch_client) = switch_client {
-            #[cfg(feature = "tmux_2_1")]
-            if switch_client.not_update_env.unwrap_or(false) {
-                args.push(E_KEY);
-            }
-            #[cfg(feature = "tmux_1_4")]
-            if switch_client.last_session.unwrap_or(false) {
-                args.push(l_KEY);
-            }
-            #[cfg(feature = "tmux_1_4")]
-            if switch_client.next_session.unwrap_or(false) {
-                args.push(n_KEY);
-            }
-            #[cfg(feature = "tmux_1_4")]
-            if switch_client.previous_session.unwrap_or(false) {
-                args.push(p_KEY);
-            }
-            #[cfg(feature = "tmux_1_6")]
-            if switch_client.read_only.unwrap_or(false) {
-                args.push(r_KEY);
-            }
-            #[cfg(feature = "tmux_3_1")]
-            if switch_client.keep_zoomed.unwrap_or(false) {
-                args.push(Z_KEY);
-            }
-            #[cfg(feature = "tmux_1_0")]
-            if let Some(s) = switch_client.target_client {
-                args.extend_from_slice(&[c_KEY, &s])
-            }
-            #[cfg(feature = "tmux_1_0")]
-            if let Some(target_session) = switch_client.target_session {
-                args.extend_from_slice(&[t_KEY, &target_session])
-            }
-            #[cfg(feature = "tmux_2_1")]
-            if let Some(s) = switch_client.key_table {
-                args.extend_from_slice(&[T_KEY, &s])
-            }
-        }
-        let output = self.command(TmuxInterface::SWITCH_CLIENT, &args)?;
-        Ok(output)
+impl<'a> From<TmuxCommand<'a>> for SwitchClient<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(SWITCH_CLIENT)),
+            ..Default::default()
+        })
     }
 }

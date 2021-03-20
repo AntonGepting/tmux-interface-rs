@@ -1,3 +1,4 @@
+pub mod constants;
 pub mod tmux;
 pub mod tmux_command;
 pub mod tmux_output;
@@ -18,8 +19,3 @@ pub enum PaneSize {
     Size(usize),
     Percentage(usize),
 }
-
-#[cfg(not(feature = "use_cmd_alias"))]
-pub const NEW_SESSION: &'static str = "new-session";
-#[cfg(feature = "use_cmd_alias")]
-pub const NEW_SESSION: &'static str = "new";
