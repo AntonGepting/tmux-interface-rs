@@ -11,7 +11,7 @@ use std::borrow::Cow;
 /// (alias: locks)
 /// ```
 #[derive(Debug)]
-pub struct LockSession<'a>(TmuxCommand<'a>);
+pub struct LockSession<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for LockSession<'a> {
     fn default() -> Self {
@@ -28,7 +28,7 @@ impl<'a> LockSession<'a> {
     }
 
     /// [-t target-session]
-    pub fn target_session<T: Into<String>>(&mut self, target_session: T) -> &mut Self {
+    pub fn target_session<T: Into<Cow<'a, str>>>(&mut self, target_session: T) -> &mut Self {
         self.0.push_option(t_KEY, target_session);
         self
     }
@@ -43,6 +43,16 @@ impl<'a> From<TmuxCommand<'a>> for LockSession<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(LOCK_SESSION)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for LockSession<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(LOCK_SESSION)),
             ..Default::default()
         })

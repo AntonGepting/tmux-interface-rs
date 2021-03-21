@@ -24,7 +24,7 @@ use std::borrow::Cow;
 /// (alias: lsc)
 /// ```
 #[derive(Debug, Clone)]
-pub struct ListClients<'a>(TmuxCommand<'a>);
+pub struct ListClients<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for ListClients<'a> {
     fn default() -> Self {
@@ -41,13 +41,13 @@ impl<'a> ListClients<'a> {
     }
 
     #[cfg(feature = "tmux_1_6")]
-    pub fn format<S: Into<String>>(&mut self, format: S) -> &mut Self {
+    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
         self.0.push_option(F_KEY, format);
         self
     }
 
     #[cfg(feature = "tmux_1_5")]
-    pub fn target_session<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(t_KEY, target_session);
         self
     }
@@ -61,6 +61,16 @@ impl<'a> From<TmuxCommand<'a>> for ListClients<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(LIST_CLIENTS)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for ListClients<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(LIST_CLIENTS)),
             ..Default::default()
         })

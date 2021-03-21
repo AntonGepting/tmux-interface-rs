@@ -18,7 +18,7 @@ use std::borrow::Cow;
 /// (alias: lscm)
 /// ```
 #[derive(Debug, Clone)]
-pub struct ListCommands<'a>(TmuxCommand<'a>);
+pub struct ListCommands<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for ListCommands<'a> {
     fn default() -> Self {
@@ -35,7 +35,7 @@ impl<'a> ListCommands<'a> {
     }
 
     #[cfg(feature = "tmux_2_3")]
-    pub fn format<S: Into<String>>(&mut self, format: S) -> &mut Self {
+    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
         self.0.push_option(F_KEY, format);
         self
     }
@@ -49,6 +49,16 @@ impl<'a> From<TmuxCommand<'a>> for ListCommands<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(LIST_COMMANDS)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for ListCommands<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(LIST_COMMANDS)),
             ..Default::default()
         })

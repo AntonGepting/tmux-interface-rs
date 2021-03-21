@@ -1,24 +1,32 @@
 #[test]
 fn lock_session() {
-    use crate::{Error, LockSession, TargetSession, TmuxCommand, TmuxInterface};
+    use crate::LockSession;
+    use std::borrow::Cow;
 
+    // Lock all clients attached to `target-session`
+    // # Manual
+    //
+    // tmux ^1.1:
+    // ```text
     // tmux lock-session [-t target-session]
     // (alias: locks)
+    // ```
     let mut lock_session = LockSession::new();
+    #[cfg(feature = "tmux_1_1")]
     lock_session.target_session("1");
-
-    let mut s = Vec::new();
-    s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
-    let tmux_command: TmuxCommand = lock_session.into();
 
     #[cfg(not(feature = "use_cmd_alias"))]
     let cmd = "lock-session";
     #[cfg(feature = "use_cmd_alias")]
     let cmd = "locks";
 
-    assert_eq!(tmux_command.bin, None);
-    assert_eq!(tmux_command.bin_args, None);
-    assert_eq!(tmux_command.cmd, Some(cmd.into()));
-    assert_eq!(tmux_command.cmd_args, Some(s));
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_1_1")]
+    s.extend_from_slice(&["-t", "1"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(lock_session.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(lock_session.0.bin_args, None);
+    assert_eq!(lock_session.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(lock_session.0.cmd_args, Some(s));
 }

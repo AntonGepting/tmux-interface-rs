@@ -66,7 +66,7 @@ use std::borrow::Cow;
 /// (alias: new)
 /// ```
 #[derive(Debug, Clone)]
-pub struct NewSession<'a>(TmuxCommand<'a>);
+pub struct NewSession<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for NewSession<'a> {
     fn default() -> Self {
@@ -126,35 +126,35 @@ impl<'a> NewSession<'a> {
 
     /// [-c start-directory] - specify starting directory
     #[cfg(feature = "tmux_1_9")]
-    pub fn start_directory<S: Into<String>>(&mut self, start_directory: S) -> &mut Self {
+    pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, start_directory: S) -> &mut Self {
         self.0.push_option(c_KEY, start_directory);
         self
     }
 
     /// [-F format] - specify different format
     #[cfg(feature = "tmux_1_8")]
-    pub fn format<S: Into<String>>(&mut self, format: S) -> &mut Self {
+    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
         self.0.push_option(F_KEY, format);
         self
     }
 
     /// [-n window-name] - window name of the initial window
     #[cfg(feature = "tmux_0_8")]
-    pub fn window_name<S: Into<String>>(&mut self, window_name: S) -> &mut Self {
+    pub fn window_name<S: Into<Cow<'a, str>>>(&mut self, window_name: S) -> &mut Self {
         self.0.push_option(n_KEY, window_name);
         self
     }
 
     /// [-s session-name] - specify a session name
     #[cfg(feature = "tmux_0_8")]
-    pub fn session_name<S: Into<String>>(&mut self, session_name: S) -> &mut Self {
+    pub fn session_name<S: Into<Cow<'a, str>>>(&mut self, session_name: S) -> &mut Self {
         self.0.push_option(s_KEY, session_name);
         self
     }
 
     /// [-t group-name] - specify a session group
     #[cfg(feature = "tmux_2_4")]
-    pub fn group_name<S: Into<String>>(&mut self, group_name: S) -> &mut Self {
+    pub fn group_name<S: Into<Cow<'a, str>>>(&mut self, group_name: S) -> &mut Self {
         self.0.push_option(t_KEY, group_name);
         self
     }
@@ -175,7 +175,7 @@ impl<'a> NewSession<'a> {
 
     /// [shell-command] - shell command to execute in the initial window
     #[cfg(feature = "tmux_1_2")]
-    pub fn shell_command<S: Into<String>>(&mut self, shell_command: S) -> &mut Self {
+    pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
         self.0.push_param(shell_command);
         self
     }
@@ -189,6 +189,16 @@ impl<'a> From<TmuxCommand<'a>> for NewSession<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(NEW_SESSION)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for NewSession<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(NEW_SESSION)),
             ..Default::default()
         })

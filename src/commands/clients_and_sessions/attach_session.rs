@@ -82,14 +82,14 @@ impl<'a> AttachSession<'a> {
 
     /// [-c working-directory] - specify starting directory
     #[cfg(feature = "tmux_1_9")]
-    pub fn working_directory<S: Into<String>>(&mut self, working_directory: S) -> &mut Self {
+    pub fn working_directory<S: Into<Cow<'a, str>>>(&mut self, working_directory: S) -> &mut Self {
         self.0.push_option(c_KEY, working_directory);
         self
     }
 
     /// [-t target-session] - specify target session name
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_session<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(t_KEY, target_session);
         self
     }
@@ -103,6 +103,16 @@ impl<'a> From<TmuxCommand<'a>> for AttachSession<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(ATTACH_SESSION)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for AttachSession<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(ATTACH_SESSION)),
             ..Default::default()
         })

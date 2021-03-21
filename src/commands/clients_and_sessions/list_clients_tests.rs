@@ -1,25 +1,49 @@
 #[test]
 fn list_clients() {
-    use crate::{Error, TargetSession, TmuxInterface};
+    use crate::{ListClients, TargetSession};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux list-clients [-F format] [-t target-session]
-        // (alias: lsc)
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("list-clients");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("lsc");
-        s.extend_from_slice(&["-F", "1"]);
-        s.extend_from_slice(&["-t", "2"]);
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
+    // List all clients attached to the server
+    //
+    // # Manual
+    //
+    // tmux ^1.6:
+    // ```text
+    // tmux list-clients [-F format] [-t target-session]
+    // (alias: lsc)
+    //
+    // ```
+    // tmux ^1.5:
+    // ```text
+    // tmux list-clients [-t target-session]
+    // (alias: lsc)
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux list-clients
+    // (alias: lsc)
+    // ```
     let target_session = TargetSession::Raw("2").to_string();
-    tmux.list_clients(Some("1"), Some(&target_session))
-        .unwrap_err();
+
+    let mut list_clients = ListClients::new();
+    #[cfg(feature = "tmux_1_6")]
+    list_clients.format("1");
+    #[cfg(feature = "tmux_1_5")]
+    list_clients.target_session(&target_session);
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "list-clients";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "lsc";
+
+    let mut s = Vec::new();
+    s.extend_from_slice(&["-F", "1"]);
+    s.extend_from_slice(&["-t", "2"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(list_clients.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(list_clients.0.bin_args, None);
+    assert_eq!(list_clients.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(list_clients.0.cmd_args, Some(s));
 }

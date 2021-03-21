@@ -12,7 +12,7 @@ use std::borrow::Cow;
 /// (alias: rename)
 /// ```
 #[derive(Debug, Clone)]
-pub struct RenameSession<'a>(TmuxCommand<'a>);
+pub struct RenameSession<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for RenameSession<'a> {
     fn default() -> Self {
@@ -29,13 +29,13 @@ impl<'a> RenameSession<'a> {
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn shell_command<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(t_KEY, target_session);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn new_name<S: Into<String>>(&mut self, new_name: S) -> &mut Self {
+    pub fn new_name<S: Into<Cow<'a, str>>>(&mut self, new_name: S) -> &mut Self {
         self.0.push_param(new_name);
         self
     }
@@ -49,6 +49,16 @@ impl<'a> From<TmuxCommand<'a>> for RenameSession<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(RENAME_SESSION)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for RenameSession<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(RENAME_SESSION)),
             ..Default::default()
         })

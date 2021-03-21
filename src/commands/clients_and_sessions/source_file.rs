@@ -24,7 +24,7 @@ use std::borrow::Cow;
 /// (alias: source)
 /// ```
 #[derive(Debug, Clone)]
-pub struct SourceFile<'a>(TmuxCommand<'a>);
+pub struct SourceFile<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for SourceFile<'a> {
     fn default() -> Self {
@@ -47,19 +47,19 @@ impl<'a> SourceFile<'a> {
     }
 
     #[cfg(feature = "tmux_3_0")]
-    pub fn not_execute(&mut self) -> &mut Self {
+    pub fn quite(&mut self) -> &mut Self {
         self.0.push_flag(q_KEY);
         self
     }
 
     #[cfg(feature = "tmux_3_0")]
-    pub fn not_execute(&mut self) -> &mut Self {
+    pub fn verbose(&mut self) -> &mut Self {
         self.0.push_flag(v_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_8")]
-    pub fn path<S: Into<String>>(&mut self, path: S) -> &mut Self {
+    pub fn path<S: Into<Cow<'a, str>>>(&mut self, path: S) -> &mut Self {
         self.0.push_param(path);
         self
     }
@@ -73,6 +73,16 @@ impl<'a> From<TmuxCommand<'a>> for SourceFile<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(SOURCE_FILE)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for SourceFile<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SOURCE_FILE)),
             ..Default::default()
         })

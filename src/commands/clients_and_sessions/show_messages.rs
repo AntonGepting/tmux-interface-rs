@@ -24,7 +24,7 @@ use std::borrow::Cow;
 /// (alias: showmsgs)
 /// ```
 #[derive(Debug, Clone)]
-pub struct ShowMessages<'a>(TmuxCommand<'a>);
+pub struct ShowMessages<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for ShowMessages<'a> {
     fn default() -> Self {
@@ -59,7 +59,7 @@ impl<'a> ShowMessages<'a> {
     }
 
     #[cfg(feature = "tmux_1_2")]
-    pub fn start_directory<S: Into<String>>(&mut self, target_client: S) -> &mut Self {
+    pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
         self.0.push_option(t_KEY, target_client);
         self
     }
@@ -73,6 +73,16 @@ impl<'a> From<TmuxCommand<'a>> for ShowMessages<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(SHOW_MESSAGES)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for ShowMessages<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SHOW_MESSAGES)),
             ..Default::default()
         })

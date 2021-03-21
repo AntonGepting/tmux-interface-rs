@@ -36,7 +36,7 @@ use std::borrow::Cow;
 /// (alias: refresh)
 /// ```
 #[derive(Debug, Clone)]
-pub struct RefreshClient<'a>(TmuxCommand<'a>);
+pub struct RefreshClient<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for RefreshClient<'a> {
     fn default() -> Self {
@@ -145,6 +145,16 @@ impl<'a> From<TmuxCommand<'a>> for RefreshClient<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(REFRESH_CLIENT)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for RefreshClient<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(REFRESH_CLIENT)),
             ..Default::default()
         })

@@ -21,7 +21,7 @@ use std::borrow::Cow;
 /// tmux kill-session [-t target-session]
 /// ```
 #[derive(Debug, Clone)]
-pub struct KillSession<'a>(TmuxCommand<'a>);
+pub struct KillSession<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for KillSession<'a> {
     fn default() -> Self {
@@ -53,7 +53,7 @@ impl<'a> KillSession<'a> {
 
     /// [-t target-session]
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_session<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(t_KEY, target_session);
         self
     }
@@ -67,6 +67,16 @@ impl<'a> From<TmuxCommand<'a>> for KillSession<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(KILL_SESSION)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for KillSession<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(KILL_SESSION)),
             ..Default::default()
         })

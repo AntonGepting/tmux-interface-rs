@@ -1,24 +1,38 @@
 #[test]
 fn rename_session() {
-    use crate::{Error, TargetSession, TmuxInterface};
+    use crate::{RenameSession, TargetSession};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux rename-session [-t target-session] new-name
-        // (alias: rename)
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("rename-session");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("rename");
-        s.extend_from_slice(&["-t", "1"]);
-        s.push("2");
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
+    // Rename the session to `new-name`
+    //
+    // # Manual
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux rename-session [-t target-session] new-name
+    // (alias: rename)
+    // ```
     let target_session = TargetSession::Raw("1").to_string();
-    tmux.rename_session(Some(&target_session), "2").unwrap_err();
+    let mut rename_session = RenameSession::new();
+    #[cfg(feature = "tmux_0_8")]
+    rename_session.target_session(&target_session);
+    #[cfg(feature = "tmux_0_8")]
+    rename_session.new_name("2");
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "rename-session";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "rename";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-t", "1"]);
+    #[cfg(feature = "tmux_0_8")]
+    s.push("2");
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(rename_session.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(rename_session.0.bin_args, None);
+    assert_eq!(rename_session.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(rename_session.0.cmd_args, Some(s));
 }

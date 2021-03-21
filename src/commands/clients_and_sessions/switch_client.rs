@@ -42,7 +42,7 @@ use std::borrow::Cow;
 /// (alias: switchc)
 /// ```
 #[derive(Debug)]
-pub struct SwitchClient<'a>(TmuxCommand<'a>);
+pub struct SwitchClient<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for SwitchClient<'a> {
     fn default() -> Self {
@@ -109,14 +109,14 @@ impl<'a> SwitchClient<'a> {
 
     /// [-t target-session] - specify the target session
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_session<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(t_KEY, target_session);
         self
     }
 
     /// [-T key-table] - set the client's key table
     #[cfg(feature = "tmux_2_1")]
-    pub fn key_table<S: Into<String>>(&mut self, key_table: S) -> &mut Self {
+    pub fn key_table<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
         self.0.push_option(T_KEY, key_table);
         self
     }
@@ -130,6 +130,16 @@ impl<'a> From<TmuxCommand<'a>> for SwitchClient<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(SWITCH_CLIENT)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for SwitchClient<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SWITCH_CLIENT)),
             ..Default::default()
         })

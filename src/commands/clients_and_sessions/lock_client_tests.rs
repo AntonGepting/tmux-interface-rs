@@ -1,22 +1,31 @@
 #[test]
 fn lock_client() {
-    use crate::{Error, TmuxInterface};
+    use crate::LockClient;
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux lock-client [-t target-client]
-        // (alias: lockc)
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("lock-client");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("lockc");
-        s.extend_from_slice(&["-t", "1"]);
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
-    tmux.lock_client(Some("1")).unwrap_err();
+    // Lock `target-client`
+    //
+    // # Manual
+    //
+    // tmux ^1.1:
+    // ```text
+    // tmux lock-client [-t target-client]
+    // (alias: lockc)
+    // ```
+    let mut lock_client = LockClient::new();
+    lock_client.target_client("1");
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "lock-client";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "lockc";
+
+    let mut s = Vec::new();
+    s.extend_from_slice(&["-t", "1"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(lock_client.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(lock_client.0.bin_args, None);
+    assert_eq!(lock_client.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(lock_client.0.cmd_args, Some(s));
 }

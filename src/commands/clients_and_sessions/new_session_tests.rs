@@ -1,7 +1,12 @@
 #[test]
 fn new_session() {
-    use crate::{Error, NewSession, Tmux, TmuxCommand};
+    use crate::NewSession;
+    use std::borrow::Cow;
 
+    // Structure for creating a new session
+    //
+    // # Manual
+    //
     // tmux 3.0:
     // ```text
     // tmux new-session [-AdDEPX] [-c start-directory] [-F format] [-n window-name] [-s session-name]
@@ -61,7 +66,7 @@ fn new_session() {
     // tmux new-session [-d] [-n window-name] [-s session-name] [command]
     // (alias: new)
     // ```
-    let mut new_session = TmuxCommand::new_session();
+    let mut new_session = NewSession::new();
     #[cfg(feature = "tmux_1_8")]
     new_session.attach();
     #[cfg(feature = "tmux_0_8")]
@@ -127,8 +132,8 @@ fn new_session() {
     s.push("8");
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(new_session.bin, None);
-    assert_eq!(new_session.bin_args, None);
-    assert_eq!(new_session.cmd, Some(cmd.into()));
-    assert_eq!(new_session.cmd_args, Some(s));
+    assert_eq!(new_session.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(new_session.0.bin_args, None);
+    assert_eq!(new_session.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(new_session.0.cmd_args, Some(s));
 }

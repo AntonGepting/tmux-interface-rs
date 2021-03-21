@@ -19,11 +19,11 @@ pub struct TmuxCommand<'a> {
     /// Tmux executable name, (part I) if is `None`, will be used `tmux`
     pub bin: Cow<'a, str>,
     /// Tmux executable arguments (part II)
-    pub bin_args: Option<Vec<String>>,
+    pub bin_args: Option<Vec<Cow<'a, str>>>,
     /// Tmux command (part III)
     pub cmd: Option<Cow<'a, str>>,
     /// Tmux command arguments (part IV)
-    pub cmd_args: Option<Vec<String>>,
+    pub cmd_args: Option<Vec<Cow<'a, str>>>,
 }
 
 impl<'a> Default for TmuxCommand<'a> {
@@ -38,6 +38,10 @@ impl<'a> Default for TmuxCommand<'a> {
 }
 
 impl<'a> TmuxCommand<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
     pub fn bin<S: Into<Cow<'a, str>>>(&mut self, bin: S) -> &mut Self {
         //self.tmux.bin = bin;
         self.bin = bin.into();
@@ -68,19 +72,20 @@ impl<'a> TmuxCommand<'a> {
 
         // XXX: ugly?
         if let Some(s) = &self.bin_args {
-            command.args(s);
-        }
-        if let Some(s) = &self.bin_args {
-            command.args(s);
+            for a in s {
+                command.arg(a.as_ref());
+            }
         }
 
         if let Some(s) = &self.cmd {
-            command.arg(&**s);
+            command.arg(s.as_ref());
         }
 
         // XXX: ugly?
         if let Some(s) = &self.cmd_args {
-            command.args(s);
+            for a in s {
+                command.arg(a.as_ref());
+            }
         }
 
         command
@@ -94,7 +99,7 @@ impl<'a> TmuxCommand<'a> {
     // XXX: hard bound to cmd_args
     // if vec doesn't exist, creates it and appends with given arguments
     /// insert a single flag (`-x`)
-    pub fn push_flag<S: Into<String>>(&mut self, flag: S) -> &mut Self {
+    pub fn push_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S) -> &mut Self {
         self.push_param(flag.into())
     }
 
@@ -102,8 +107,8 @@ impl<'a> TmuxCommand<'a> {
     /// insert an option, flag and value (`-x  <VALUE>`)
     pub fn push_option<S, U>(&mut self, key: S, option: U) -> &mut Self
     where
-        S: Into<String>,
-        U: Into<String>,
+        S: Into<Cow<'a, str>>,
+        U: Into<Cow<'a, str>>,
     {
         self.cmd_args
             .get_or_insert(Vec::new())
@@ -113,16 +118,15 @@ impl<'a> TmuxCommand<'a> {
 
     // if vec doesn't exist, creates it and appends with given arguments
     /// insert a single parameter (`[VALUE]`)
-    pub fn push_param<S: Into<String>>(&mut self, param: S) -> &mut Self {
+    pub fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self {
         self.cmd_args.get_or_insert(Vec::new()).push(param.into());
         self
     }
 
-    pub fn new() -> Self {
-        Default::default()
-    }
+    // TODO: custom command
+    //pub fn custom<S: Into<Cow<'a, str>>>(&self, ) -> &mut Self {
+    //}
 
     //pub fn output(&self) -> Ou {
-
     //}
 }

@@ -17,9 +17,8 @@ use std::borrow::Cow;
 /// tmux list-sessions
 /// (alias: ls)
 /// ```
-/// [-t target-session]
 #[derive(Debug, Clone)]
-pub struct ListSessions<'a>(TmuxCommand<'a>);
+pub struct ListSessions<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for ListSessions<'a> {
     fn default() -> Self {
@@ -36,7 +35,7 @@ impl<'a> ListSessions<'a> {
     }
 
     #[cfg(feature = "tmux_1_6")]
-    pub fn format<S: Into<String>>(&mut self, format: S) -> &mut Self {
+    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
         self.0.push_option(F_KEY, format);
         self
     }
@@ -50,6 +49,16 @@ impl<'a> From<TmuxCommand<'a>> for ListSessions<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(LIST_SESSIONS)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for ListSessions<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(LIST_SESSIONS)),
             ..Default::default()
         })

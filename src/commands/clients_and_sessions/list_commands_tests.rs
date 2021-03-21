@@ -1,22 +1,39 @@
 #[test]
 fn list_commands() {
-    use crate::{Error, TmuxInterface};
+    use crate::ListCommands;
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux list-commands [-F format]
-        // (alias: lscm)
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("list-commands");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("lscm");
-        s.extend_from_slice(&["-F", "1"]);
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
-    tmux.list_commands(Some("1")).unwrap_err();
+    // List the syntax of all commands supported by tmux
+    //
+    // # Manual
+    //
+    // tmux ^2.3:
+    // ```text
+    // tmux list-commands [-F format]
+    // (alias: lscm)
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux list-commands
+    // (alias: lscm)
+    // ```
+    let mut list_commands = ListCommands::new();
+    #[cfg(feature = "tmux_2_3")]
+    list_commands.format("1");
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "list-commands";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "lscm";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_2_3")]
+    s.extend_from_slice(&["-F", "1"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(list_commands.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(list_commands.0.bin_args, None);
+    assert_eq!(list_commands.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(list_commands.0.cmd_args, Some(s));
 }

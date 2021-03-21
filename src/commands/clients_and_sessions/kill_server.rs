@@ -11,7 +11,7 @@ use std::borrow::Cow;
 /// tmux kill-server
 /// ```
 #[derive(Debug, Clone)]
-pub struct KillServer<'a>(TmuxCommand<'a>);
+pub struct KillServer<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for KillServer<'a> {
     fn default() -> Self {
@@ -32,6 +32,16 @@ impl<'a> From<TmuxCommand<'a>> for KillServer<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(KILL_SERVER)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for KillServer<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(KILL_SERVER)),
             ..Default::default()
         })

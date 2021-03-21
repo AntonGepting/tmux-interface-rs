@@ -1,8 +1,12 @@
 #[test]
 fn attach_session() {
-    use crate::{AttachSession, Error, TargetSession, TmuxInterface};
+    use crate::{AttachSession, TargetSession};
     use std::borrow::Cow;
 
+    // Structure for attaching client to already existing session
+    //
+    // # Manual
+    //
     // tmux ^3.0:
     // ```text
     // tmux attach-session [-dErx] [-c working-directory] [-t target-session]
@@ -68,7 +72,7 @@ fn attach_session() {
     s.extend_from_slice(&["-t", "2"]);
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(attach_session.0.bin, None);
+    assert_eq!(attach_session.0.bin, Cow::Borrowed("tmux"));
     assert_eq!(attach_session.0.bin_args, None);
     assert_eq!(attach_session.0.cmd, Some(Cow::Borrowed(cmd)));
     assert_eq!(attach_session.0.cmd_args, Some(s));

@@ -12,7 +12,7 @@ use std::borrow::Cow;
 /// (alias: start)
 /// ```
 #[derive(Debug, Clone)]
-pub struct StartServer<'a>(TmuxCommand<'a>);
+pub struct StartServer<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for StartServer<'a> {
     fn default() -> Self {
@@ -37,6 +37,16 @@ impl<'a> From<TmuxCommand<'a>> for StartServer<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(START_SERVER)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for StartServer<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(START_SERVER)),
             ..Default::default()
         })

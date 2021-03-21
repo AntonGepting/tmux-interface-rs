@@ -1,22 +1,26 @@
 #[test]
 fn start_server() {
-    use crate::{Error, TmuxInterface};
+    use crate::StartServer;
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux start-server
-        // (alias: start)
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("start-server");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("start");
-        s.push("");
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
-    tmux.start_server().unwrap_err();
+    // Start the tmux server, if not already running, without creating any sessions
+    //
+    // # Manual
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux start-server
+    // (alias: start)
+    // ```
+    let start_server = StartServer::new();
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "start-server";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "start";
+
+    assert_eq!(start_server.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(start_server.0.bin_args, None);
+    assert_eq!(start_server.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(start_server.0.cmd_args, None);
 }

@@ -30,7 +30,7 @@ use std::borrow::Cow;
 /// (alias: detach)
 /// ```
 #[derive(Clone, Debug)]
-pub struct DetachClient<'a>(TmuxCommand<'a>);
+pub struct DetachClient<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for DetachClient<'a> {
     fn default() -> Self {
@@ -62,21 +62,21 @@ impl<'a> DetachClient<'a> {
 
     /// [-E shell-command] - run shell-command to replace the client
     #[cfg(feature = "tmux_2_4")]
-    pub fn shell_command<S: Into<String>>(&mut self, shell_command: S) -> &mut Self {
+    pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
         self.0.push_option(E_KEY, shell_command);
         self
     }
 
     /// [-s target-session] - specify the session, all clients currently attached
     #[cfg(feature = "tmux_1_5")]
-    pub fn target_session<S: Into<String>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(s_KEY, target_session);
         self
     }
 
     /// [-t target-client] - specify the client
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_client<S: Into<String>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
         self.0.push_option(t_KEY, target_client);
         self
     }
@@ -90,6 +90,16 @@ impl<'a> From<TmuxCommand<'a>> for DetachClient<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            cmd: Some(Cow::Borrowed(DETACH_CLIENT)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for DetachClient<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(DETACH_CLIENT)),
             ..Default::default()
         })

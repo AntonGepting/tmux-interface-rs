@@ -1,30 +1,23 @@
 use crate::commands::constants::*;
-use crate::TmuxCommand;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-#[derive(Default, Debug, Clone)]
+#[derive(Debug, Clone)]
 pub struct Tmux<'a>(TmuxCommand<'a>);
 
-//impl Default for Tmux {
-//fn default() -> Self {
-//Self(TmuxCommand {
-//cmd: Some(NewSession::NEW_SESSION.to_string()),
-//..Default::default()
-//})
-//}
-//}
+impl<'a> Default for Tmux<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            ..Default::default()
+        })
+    }
+}
 
 // XXX: using environment vars
 impl<'a> Tmux<'a> {
-    pub const TMUX: &'static str = "tmux";
-
     pub fn new() -> Self {
         Default::default()
     }
-
-    //fn bin<S: Into<Cow<'a, str>>>(mut self, bin: S) -> Self {
-    //self.bin = Some(bin.into());
-    //self
-    //}
 
     pub fn version(&mut self) -> &mut Self {
         self.0.push_flag(V_KEY);
@@ -67,53 +60,48 @@ impl<'a> Tmux<'a> {
     }
 
     #[cfg(feature = "tmux_1_1")]
-    pub fn shell_cmd<S: Into<String>>(&mut self, shell_cmd: S) -> &mut Self {
+    pub fn shell_cmd<S: Into<Cow<'a, str>>>(&mut self, shell_cmd: S) -> &mut Self {
         self.0.push_option(c_KEY, shell_cmd);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn file<S: Into<String>>(&mut self, file: S) -> &mut Self {
+    pub fn file<S: Into<Cow<'a, str>>>(&mut self, file: S) -> &mut Self {
         self.0.push_option(f_KEY, file);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn socket_name<S: Into<String>>(&mut self, socket_name: S) -> &mut Self {
+    pub fn socket_name<S: Into<Cow<'a, str>>>(&mut self, socket_name: S) -> &mut Self {
         self.0.push_option(L_KEY, socket_name);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn socket_path<S: Into<String>>(&mut self, socket_path: S) -> &mut Self {
+    pub fn socket_path<S: Into<Cow<'a, str>>>(&mut self, socket_path: S) -> &mut Self {
         self.0.push_option(S_KEY, socket_path);
         self
     }
 
-    //fn output(&self) -> TmuxOutput {
-    //self.output()
-    //}
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
 }
 
-//impl From<Tmux> for TmuxCommand {
-//fn from(item: Tmux) -> Self {
-//item.0
-//}
-//}
+impl<'a> From<TmuxCommand<'a>> for Tmux<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            ..Default::default()
+        })
+    }
+}
 
-//impl From<&Tmux> for TmuxCommand {
-//fn from(item: &Tmux) -> Self {
-//item.0.clone()
-//}
-//}
-
-//impl MyCommand for Tmux {
-//fn set_bin<S: Into<Cow<'a, str>>>(&mut self, bin: S) -> &mut Self {
-//self.0.bin = Some(bin.into());
-//self
-//}
-
-//fn get_bin(&self) -> Option<&Cow<'a, str>> {
-//self.0.bin.as_ref()
-//}
-//}
+impl<'a> From<&TmuxCommand<'a>> for Tmux<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            ..Default::default()
+        })
+    }
+}
