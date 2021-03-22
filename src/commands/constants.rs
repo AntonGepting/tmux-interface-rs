@@ -60,7 +60,7 @@ pub const Z_KEY: &str = "-Z";
 
 pub const CC_KEY: &str = "-CC";
 
-/// Default tmux binary name
+// Default tmux binary name
 pub const TMUX: &'static str = "tmux";
 
 #[cfg(not(feature = "use_cmd_alias"))]
@@ -145,3 +145,151 @@ pub const HAS_SESSION: &'static str = "has";
 pub const LOCK_SESSION: &'static str = "lock-session";
 #[cfg(feature = "use_cmd_alias")]
 pub const LOCK_SESSION: &'static str = "locks";
+
+// Buffers
+
+pub const CHOOSE_BUFFER: &'static str = "choose-buffer";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const CLEAR_HISTORY: &'static str = "clear-history";
+#[cfg(feature = "use_cmd_alias")]
+pub const CLEAR_HISTORY: &'static str = "clearhist";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const DELETE_BUFFER: &'static str = "delete-buffer";
+#[cfg(feature = "use_cmd_alias")]
+pub const DELETE_BUFFER: &'static str = "deleteb";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const LIST_BUFFERS: &'static str = "list-buffers";
+#[cfg(feature = "use_cmd_alias")]
+pub const LIST_BUFFERS: &'static str = "lsb";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const LOAD_BUFFER: &'static str = "load-buffer";
+#[cfg(feature = "use_cmd_alias")]
+pub const LOAD_BUFFER: &'static str = "loadb";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const PASTE_BUFFER: &'static str = "paste-buffer";
+#[cfg(feature = "use_cmd_alias")]
+pub const PASTE_BUFFER: &'static str = "pasteb";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SAVE_BUFFER: &'static str = "save-buffer";
+#[cfg(feature = "use_cmd_alias")]
+pub const SAVE_BUFFER: &'static str = "saveb";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SET_BUFFER: &'static str = "set-buffer";
+#[cfg(feature = "use_cmd_alias")]
+pub const SET_BUFFER: &'static str = "setb";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SHOW_BUFFER: &'static str = "show-buffer";
+#[cfg(feature = "use_cmd_alias")]
+pub const SHOW_BUFFER: &'static str = "showb";
+
+// Environment
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SET_ENVIRONMENT: &'static str = "set-environment";
+#[cfg(feature = "use_cmd_alias")]
+pub const SET_ENVIRONMENT: &'static str = "setenv";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SHOW_ENVIRONMENT: &'static str = "show-environment";
+#[cfg(feature = "use_cmd_alias")]
+pub const SHOW_ENVIRONMENT: &'static str = "showenv";
+
+// Hooks
+
+pub const SET_HOOK: &'static str = "set-hook";
+
+pub const SHOW_HOOKS: &'static str = "show-hooks";
+
+// Keys
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const BIND_KEY: &'static str = "bind-key";
+#[cfg(feature = "use_cmd_alias")]
+pub const BIND_KEY: &'static str = "bind";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const LIST_KEYS: &'static str = "list-keys";
+#[cfg(feature = "use_cmd_alias")]
+pub const LIST_KEYS: &'static str = "lsk";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SEND_KEYS: &'static str = "send-keys";
+#[cfg(feature = "use_cmd_alias")]
+pub const SEND_KEYS: &'static str = "send";
+
+pub const SEND_PREFIX: &'static str = "send-prefix";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const UNBIND_KEY: &'static str = "unbind-key";
+#[cfg(feature = "use_cmd_alias")]
+pub const UNBIND_KEY: &'static str = "unbind";
+
+// miscellaneous
+
+pub const CLOCK_MODE: &'static str = "clock-mode";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const LOCK_SERVER: &'static str = "lock-server";
+#[cfg(feature = "use_cmd_alias")]
+pub const LOCK_SERVER: &'static str = "lock";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const RUN_SHELL: &'static str = "run-shell";
+#[cfg(feature = "use_cmd_alias")]
+pub const RUN_SHELL: &'static str = "run";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const WAIT_FOR: &'static str = "wait-for";
+#[cfg(feature = "use_cmd_alias")]
+pub const WAIT_FOR: &'static str = "wait";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const IF_SHELL: &'static str = "if-shell";
+#[cfg(feature = "use_cmd_alias")]
+pub const IF_SHELL: &'static str = "if";
+
+// options
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SET_OPTION: &'static str = "set-option";
+#[cfg(feature = "use_cmd_alias")]
+pub const SET_OPTION: &'static str = "set";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SET_WINDOW_OPTION: &'static str = "set-window-option";
+#[cfg(feature = "use_cmd_alias")]
+pub const SET_WINDOW_OPTION: &'static str = "setw";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SHOW_OPTIONS: &'static str = "show-options";
+#[cfg(feature = "use_cmd_alias")]
+pub const SHOW_OPTIONS: &'static str = "show";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SHOW_WINDOW_OPTIONS: &'static str = "show-window-options";
+#[cfg(feature = "use_cmd_alias")]
+pub const SHOW_WINDOW_OPTIONS: &'static str = "showw";
+
+// status line
+
+pub const COMMAND_PROMPT: &'static str = "command-prompt";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const CONFIRM_BEFORE: &'static str = "confirm-before";
+#[cfg(feature = "use_cmd_alias")]
+pub const CONFIRM_BEFORE: &'static str = "confirm";
+
+pub const DISPLAY_MENU: &'static str = "display-menu";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const DISPLAY_MESSAGE: &'static str = "display-message";
+#[cfg(feature = "use_cmd_alias")]
+pub const DISPLAY_MESSAGE: &'static str = "display";

@@ -60,21 +60,21 @@ impl<'a> DisplayPanes<'a> {
 
     /// [-d duration]
     #[cfg(feature = "tmux_2_6")]
-    pub fn start_directory<S: Into<String>>(&mut self, duration: S) -> &mut Self {
+    pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, duration: S) -> &mut Self {
         self.0.push_option(d_KEY, duration);
         self
     }
 
     /// [-d duration]
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_client<S: Into<String>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
         self.0.push_option(t_KEY, target_client);
         self
     }
 
     /// [template]
     #[cfg(feature = "tmux_2_3")]
-    pub fn template<S: Into<String>>(&mut self, template: S) -> &mut Self {
+    pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
         self.0.push_param(template);
         self
     }

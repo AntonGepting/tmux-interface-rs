@@ -1,34 +1,68 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    const SEND_PREFIX: &'static str = "send-prefix";
+/// # Manual
+///
+/// tmux ^1.6
+/// ```text
+/// tmux send-prefix [-2] [-t target-pane]
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux send-prefix [-t target-pane]
+/// ```
+#[derive(Debug, Clone)]
+pub struct SendPrefix<'a>(pub TmuxCommand<'a>);
 
-    /// # Manual
-    ///
-    /// tmux ^1.6
-    /// ```text
-    /// tmux send-prefix [-2] [-t target-pane]
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux send-prefix [-t target-pane]
-    /// ```
-    pub fn send_prefix(
-        &mut self,
-        secondary: Option<bool>,
-        target_pane: Option<&str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if secondary.unwrap_or(false) {
-            args.push(_2_KEY);
-        }
-        if let Some(target_pane) = target_pane {
-            args.extend_from_slice(&[t_KEY, &target_pane])
-        }
-        let output = self.command(TmuxInterface::SEND_PREFIX, &args)?;
-        Ok(output)
+impl<'a> Default for SendPrefix<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(SEND_PREFIX)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> SendPrefix<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_1_6")]
+    pub fn secondary(&mut self) -> &mut Self {
+        self.0.push_flag(_2_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_pane);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for SendPrefix<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(SEND_KEYS)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for SendPrefix<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(SEND_KEYS)),
+            ..Default::default()
+        })
     }
 }

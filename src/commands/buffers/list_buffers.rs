@@ -1,40 +1,78 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const LIST_BUFFERS: &'static str = "list-buffers";
-    #[cfg(feature = "use_cmd_alias")]
-    const LIST_BUFFERS: &'static str = "lsb";
+/// List the global buffers.
+///
+/// # Manual
+///
+/// tmux ^1.7:
+/// ```text
+/// tmux list-buffers [-F format]
+/// (alias: lsb)
+/// ```
+///
+/// tmux ^1.5:
+/// ```text
+/// tmux list-buffers
+/// (alias: lsb)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux list-buffers [-t target-session]
+/// (alias: lsb)
+/// ```
+#[derive(Debug, Clone)]
+pub struct ListBuffers<'a>(pub TmuxCommand<'a>);
 
-    /// List the global buffers.
-    ///
-    /// # Manual
-    ///
-    /// tmux ^1.7:
-    /// ```text
-    /// tmux list-buffers [-F format]
-    /// (alias: lsb)
-    /// ```
-    ///
-    /// tmux ^1.5:
-    /// ```text
-    /// tmux list-buffers
-    /// (alias: lsb)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux list-buffers [-t target-session]
-    /// (alias: lsb)
-    /// ```
-    pub fn list_buffers(&mut self, format: Option<&str>) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if let Some(s) = format {
-            args.extend_from_slice(&[F_KEY, &s])
-        }
-        let output = self.command(TmuxInterface::LIST_BUFFERS, &args)?;
-        Ok(output)
+impl<'a> Default for ListBuffers<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(LIST_BUFFERS)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> ListBuffers<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_session);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_7")]
+    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
+        self.0.push_option(t_KEY, format);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for ListBuffers<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(LIST_BUFFERS)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for ListBuffers<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(LIST_BUFFERS)),
+            ..Default::default()
+        })
     }
 }

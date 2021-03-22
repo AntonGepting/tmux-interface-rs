@@ -1,68 +1,105 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const SHOW_WINDOW_OPTIONS: &'static str = "show-window-options";
-    #[cfg(feature = "use_cmd_alias")]
-    const SHOW_WINDOW_OPTIONS: &'static str = "showw";
+/// # Manual
+///
+/// tmux ^3.0:
+/// ```text
+/// (removed)
+/// ```
+///
+/// tmux ^1.8:
+/// ```text
+/// tmux show-window-options [-gv] [-t target-window] [option]
+/// (alias: showw)
+/// ```
+///
+/// tmux ^1.7:
+/// ```text
+/// tmux show-window-options [-g] [-t target-window] [option]
+/// (alias: showw)
+/// ```
+///
+/// tmux ^1.0:
+/// ```text
+/// tmux show-window-options [-g] [-t target-window]
+/// (alias: showw)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux show-window-options [-t target-window] option value
+/// (alias: showw)
+/// ```
+#[derive(Debug, Clone)]
+pub struct ShowWindowOptions<'a>(pub TmuxCommand<'a>);
 
-    /// # Manual
-    ///
-    /// tmux ^3.0:
-    /// ```text
-    /// (removed)
-    /// ```
-    ///
-    /// tmux ^1.8:
-    /// ```text
-    /// tmux show-window-options [-gv] [-t target-window] [option]
-    /// (alias: showw)
-    /// ```
-    ///
-    /// tmux ^1.7:
-    /// ```text
-    /// tmux show-window-options [-g] [-t target-window] [option]
-    /// (alias: showw)
-    /// ```
-    ///
-    /// tmux ^1.0:
-    /// ```text
-    /// tmux show-window-options [-g] [-t target-window]
-    /// (alias: showw)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux show-window-options [-t target-window] option value
-    /// (alias: showw)
-    /// ```
-    pub fn show_window_options(
-        &mut self,
-        global: Option<bool>,
-        only_value: Option<bool>,
-        target_window: Option<&str>,
-        option: Option<&str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_1_0")]
-        if global.unwrap_or(false) {
-            args.push(g_KEY);
-        }
-        #[cfg(feature = "tmux_1_8")]
-        if only_value.unwrap_or(false) {
-            args.push(v_KEY);
-        }
-        #[cfg(feature = "tmux_0_8")]
-        if let Some(target_window) = target_window {
-            args.extend_from_slice(&[t_KEY, &target_window])
-        }
-        #[cfg(feature = "tmux_0_8")]
-        if let Some(s) = option {
-            args.push(&s)
-        }
-        let output = self.command(TmuxInterface::SHOW_WINDOW_OPTIONS, &args)?;
-        Ok(output)
+impl<'a> Default for ShowWindowOptions<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(SHOW_WINDOW_OPTIONS)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> ShowWindowOptions<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_1_0")]
+    pub fn global(&mut self) -> &mut Self {
+        self.0.push_flag(g_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_8")]
+    pub fn only_value(&mut self) -> &mut Self {
+        self.0.push_flag(v_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_window);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn option<S: Into<Cow<'a, str>>>(&mut self, option: S) -> &mut Self {
+        self.0.push_param(option);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn value<S: Into<Cow<'a, str>>>(&mut self, value: S) -> &mut Self {
+        self.0.push_param(value);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for ShowWindowOptions<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(SHOW_WINDOW_OPTIONS)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for ShowWindowOptions<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(SHOW_WINDOW_OPTIONS)),
+            ..Default::default()
+        })
     }
 }

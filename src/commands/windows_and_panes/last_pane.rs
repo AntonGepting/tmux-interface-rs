@@ -69,7 +69,7 @@ impl<'a> LastPane<'a> {
 
     /// [-t target-window]
     #[cfg(feature = "tmux_1_4")]
-    pub fn target_window<S: Into<String>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.0.push_option(t_KEY, target_window);
         self
     }

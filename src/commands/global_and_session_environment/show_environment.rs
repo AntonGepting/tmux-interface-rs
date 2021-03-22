@@ -1,53 +1,88 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const SHOW_ENVIRONMENT: &'static str = "show-environment";
-    #[cfg(feature = "use_cmd_alias")]
-    const SHOW_ENVIRONMENT: &'static str = "showenv";
+/// # Manual
+///
+/// tmux ^2.1:
+/// ```text
+/// tmux show-environment [-gs] [-t target-session] [variable]
+/// (alias: showenv)
+/// ```
+///
+/// tmux ^1.7:
+/// ```text
+/// tmux show-environment [-g] [-t target-session] [variable]
+/// (alias: showenv)
+/// ```
+///
+/// tmux ^1.0:
+/// ```text
+/// tmux show-environment [-g] [-t target-session]
+/// (alias: showenv)
+/// ```
+#[derive(Debug, Clone)]
+pub struct ShowEnvironment<'a>(pub TmuxCommand<'a>);
 
-    /// # Manual
-    ///
-    /// tmux ^2.1:
-    /// ```text
-    /// tmux show-environment [-gs] [-t target-session] [variable]
-    /// (alias: showenv)
-    /// ```
-    ///
-    /// tmux ^1.7:
-    /// ```text
-    /// tmux show-environment [-g] [-t target-session] [variable]
-    /// (alias: showenv)
-    /// ```
-    ///
-    /// tmux ^1.0:
-    /// ```text
-    /// tmux show-environment [-g] [-t target-session]
-    /// (alias: showenv)
-    /// ```
-    pub fn show_environment(
-        &mut self,
-        global: Option<bool>,
-        shell_format: Option<bool>,
-        target_session: Option<&'a str>,
-        variable: Option<&str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if global.unwrap_or(false) {
-            args.push(g_KEY);
-        }
-        if shell_format.unwrap_or(false) {
-            args.push(s_KEY);
-        }
-        if let Some(target_session) = target_session {
-            args.extend_from_slice(&[t_KEY, &target_session])
-        }
-        if let Some(s) = variable {
-            args.push(&s)
-        }
-        let output = self.command(TmuxInterface::SHOW_ENVIRONMENT, &args)?;
-        Ok(output)
+impl<'a> Default for ShowEnvironment<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(SHOW_ENVIRONMENT)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> ShowEnvironment<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_1_0")]
+    pub fn global(&mut self) -> &mut Self {
+        self.0.push_flag(g_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_2_1")]
+    pub fn as_shell_commands(&mut self) -> &mut Self {
+        self.0.push_flag(s_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_0")]
+    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_session);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_7")]
+    pub fn variable<S: Into<Cow<'a, str>>>(&mut self, variable: S) -> &mut Self {
+        self.0.push_param(variable);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for ShowEnvironment<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(SHOW_ENVIRONMENT)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for ShowEnvironment<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(SHOW_ENVIRONMENT)),
+            ..Default::default()
+        })
     }
 }

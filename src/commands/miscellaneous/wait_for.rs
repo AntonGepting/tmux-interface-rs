@@ -1,46 +1,84 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const WAIT_FOR: &'static str = "wait-for";
-    #[cfg(feature = "use_cmd_alias")]
-    const WAIT_FOR: &'static str = "wait";
+// TODO: enum for arg
+/// # Manual
+///
+/// tmux ^1.9:
+/// ```text
+/// tmux wait-for [-L | -S | -U] channel
+/// (alias: wait)
+/// ```
+///
+/// tmux ^1.8:
+/// ```text
+/// tmux wait-for -LSU channel
+/// (alias: wait)
+/// ```
+// FIXME: not multiple, only one choice
+#[derive(Debug, Clone)]
+pub struct WaitFor<'a>(pub TmuxCommand<'a>);
 
-    // TODO: enum for arg
-    /// # Manual
-    ///
-    /// tmux ^1.9:
-    /// ```text
-    /// tmux wait-for [-L | -S | -U] channel
-    /// (alias: wait)
-    /// ```
-    ///
-    /// tmux ^1.8:
-    /// ```text
-    /// tmux wait-for -LSU channel
-    /// (alias: wait)
-    /// ```
-    pub fn wait_for(
-        &mut self,
-        lock: Option<bool>,
-        prevent_exit: Option<bool>,
-        unlock: Option<bool>,
-        channel: &str,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if lock.unwrap_or(false) {
-            args.push(L_KEY);
-        }
-        if prevent_exit.unwrap_or(false) {
-            args.push(S_KEY);
-        }
-        if unlock.unwrap_or(false) {
-            args.push(U_KEY);
-        }
-        args.push(channel);
-        let output = self.command(TmuxInterface::WAIT_FOR, &args)?;
-        Ok(output)
+impl<'a> Default for WaitFor<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(WAIT_FOR)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> WaitFor<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_1_8")]
+    pub fn locked(&mut self) -> &mut Self {
+        self.0.push_flag(L_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_8")]
+    pub fn woken(&mut self) -> &mut Self {
+        self.0.push_flag(S_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_8")]
+    pub fn unlocked(&mut self) -> &mut Self {
+        self.0.push_flag(U_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_8")]
+    pub fn channel<S: Into<Cow<'a, str>>>(&mut self, channel: S) -> &mut Self {
+        self.0.push_param(channel);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for WaitFor<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(WAIT_FOR)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for WaitFor<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(WAIT_FOR)),
+            ..Default::default()
+        })
     }
 }

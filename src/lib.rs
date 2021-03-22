@@ -657,12 +657,24 @@ pub use self::commands::tmux_output::TmuxOutput;
 // buffers
 #[cfg(feature = "tmux_1_3")]
 pub use self::commands::buffers::choose_buffer::ChooseBuffer;
-#[cfg(feature = "tmux_1_3")]
-pub use self::commands::buffers::choose_buffer::ChooseBufferBuilder;
+
+pub use self::commands::buffers::clear_history::ClearHistory;
+
+pub use self::commands::buffers::delete_buffer::DeleteBuffer;
+
+pub use self::commands::buffers::list_buffers::ListBuffers;
+
+pub use self::commands::buffers::load_buffer::LoadBuffer;
+
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::buffers::paste_buffer::PasteBuffer;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::buffers::paste_buffer::PasteBufferBuilder;
+
+pub use self::commands::buffers::save_buffer::SaveBuffer;
+
+pub use self::commands::buffers::set_buffer::SetBuffer;
+
+pub use self::commands::buffers::show_buffer::ShowBuffer;
+
 // clients and sessions
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::clients_and_sessions::attach_session::AttachSession;
@@ -705,55 +717,62 @@ pub use self::commands::clients_and_sessions::switch_client::SwitchClient;
 // global and session environment
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::global_and_session_environment::set_environment::SetEnvironment;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::global_and_session_environment::set_environment::SetEnvironmentBuilder;
+
+pub use self::commands::global_and_session_environment::show_environment::ShowEnvironment;
+
 // hooks
 #[cfg(feature = "tmux_2_2")]
 pub use self::commands::hooks::set_hook::SetHook;
-#[cfg(feature = "tmux_2_2")]
-pub use self::commands::hooks::set_hook::SetHookBuilder;
+
+pub use self::commands::hooks::show_hooks::ShowHooks;
+
 // key bindings
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::key_bindings::bind_key::BindKey;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::key_bindings::bind_key::BindKeyBuilder;
+
+pub use self::commands::key_bindings::list_keys::ListKeys;
+
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::key_bindings::send_keys::SendKeys;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::key_bindings::send_keys::SendKeysBuilder;
+
+pub use self::commands::key_bindings::send_prefix::SendPrefix;
+
+pub use self::commands::key_bindings::unbind_key::UnbindKey;
+
 // miscellaneous
+pub use self::commands::miscellaneous::clock_mode::ClockMode;
+
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::miscellaneous::if_shell::IfShell;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::miscellaneous::if_shell::IfShellBuilder;
+
+pub use self::commands::miscellaneous::lock_server::LockServer;
+
+pub use self::commands::miscellaneous::run_shell::RunShell;
+
+pub use self::commands::miscellaneous::wait_for::WaitFor;
+
 // options
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::options::set_option::SetOption;
 #[cfg(feature = "tmux_1_0")]
-pub use self::commands::options::set_option::SetOptionBuilder;
-#[cfg(feature = "tmux_1_0")]
 pub use self::commands::options::set_window_option::SetWindowOption;
 #[cfg(feature = "tmux_1_0")]
-pub use self::commands::options::set_window_option::SetWindowOptionBuilder;
-#[cfg(feature = "tmux_1_0")]
 pub use self::commands::options::show_options::ShowOptions;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::options::show_options::ShowOptionsBuilder;
+
+pub use self::commands::options::show_window_options::ShowWindowOptions;
+
 // status line
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::status_line::command_prompt::CommandPrompt;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::status_line::command_prompt::CommandPromptBuilder;
-// not structure, pass as arguments
+
+pub use self::commands::status_line::confirm_before::ConfirmBefore;
+
 #[cfg(feature = "tmux_3_0")]
 pub use self::commands::status_line::display_menu::DisplayMenu;
-#[cfg(feature = "tmux_3_0")]
-pub use self::commands::status_line::display_menu::DisplayMenuBuilder;
-// not structure, pass as arguments
+
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::status_line::display_message::DisplayMessage;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::status_line::display_message::DisplayMessageBuilder;
+
 // windows and panes
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::break_pane::BreakPane;

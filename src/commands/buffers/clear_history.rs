@@ -1,34 +1,78 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const CLEAR_HISTORY: &'static str = "clear-history";
-    #[cfg(feature = "use_cmd_alias")]
-    const CLEAR_HISTORY: &'static str = "clearhist";
+/// Remove and free the history for the specified pane.
+///
+/// # Manual
+///
+/// tmux ^1.0:
+/// ```text
+/// tmux clear-history [-t target-pane]
+/// (alias: clearhist)
+/// ```
+///
+/// tmux ^0.9:
+/// ```text
+/// tmux clear-history [-p pane-index] [-t target-window]
+/// (alias: clearhist)
+/// ```
+#[derive(Debug, Clone)]
+pub struct ClearHistory<'a>(pub TmuxCommand<'a>);
 
-    /// Remove and free the history for the specified pane.
-    ///
-    /// # Manual
-    ///
-    /// tmux ^1.0:
-    /// ```text
-    /// tmux clear-history [-t target-pane]
-    /// (alias: clearhist)
-    /// ```
-    ///
-    /// tmux ^0.9:
-    /// ```text
-    /// tmux clear-history [-p pane-index] [-t target-window]
-    /// (alias: clearhist)
-    /// ```
-    pub fn clear_history(&mut self, target_pane: Option<&'a str>) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if let Some(target_pane) = target_pane {
-            args.extend_from_slice(&[t_KEY, &target_pane])
-        }
-        let output = self.command(TmuxInterface::CLEAR_HISTORY, &args)?;
-        Ok(output)
+impl<'a> Default for ClearHistory<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(CLEAR_HISTORY)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> ClearHistory<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_1_0")]
+    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_pane);
+        self
+    }
+
+    #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
+    pub fn pane_index<S: Into<Cow<'a, str>>>(&mut self, pane_index: S) -> &mut Self {
+        self.0.push_option(p_KEY, pane_index);
+        self
+    }
+
+    #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_window);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for ClearHistory<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(CLEAR_HISTORY)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for ClearHistory<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(CLEAR_HISTORY)),
+            ..Default::default()
+        })
     }
 }

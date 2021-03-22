@@ -1,53 +1,102 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const SET_BUFFER: &'static str = "set-buffer";
-    #[cfg(feature = "use_cmd_alias")]
-    const SET_BUFFER: &'static str = "setb";
+/// Set the contents of the specified buffer to data.
+///
+/// # Manual
+///
+/// tmux ^2.0:
+/// ```text
+/// tmux set-buffer [-a] [-b buffer-name] [-n new-buffer-name] data
+/// (alias: setb)
+/// ```
+///
+/// tmux ^1.5:
+/// ```text
+/// tmux set-buffer [-b buffer-index] data
+/// (alias: setb)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux set-buffer [-b buffer-index] [-t target-session] data
+/// (alias: setb)
+/// ```
+#[derive(Debug, Clone)]
+pub struct SetBuffer<'a>(pub TmuxCommand<'a>);
 
-    /// Set the contents of the specified buffer to data.
-    ///
-    /// # Manual
-    ///
-    /// tmux ^2.0:
-    /// ```text
-    /// tmux set-buffer [-a] [-b buffer-name] [-n new-buffer-name] data
-    /// (alias: setb)
-    /// ```
-    ///
-    /// tmux ^1.5:
-    /// ```text
-    /// tmux set-buffer [-b buffer-index] data
-    /// (alias: setb)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux set-buffer [-b buffer-index] [-t target-session] data
-    /// (alias: setb)
-    /// ```
-    pub fn set_buffer(
-        &mut self,
-        append: Option<bool>,
-        buffer_name: Option<&str>,
-        new_buffer_name: Option<&str>,
-        data: &str,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if append.unwrap_or(false) {
-            args.push(a_KEY);
-        }
-        if let Some(s) = buffer_name {
-            args.extend_from_slice(&[b_KEY, &s])
-        }
-        if let Some(s) = new_buffer_name {
-            args.extend_from_slice(&[n_KEY, &s])
-        }
-        args.push(data);
-        let output = self.command(TmuxInterface::SET_BUFFER, &args)?;
-        Ok(output)
+impl<'a> Default for SetBuffer<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(SET_BUFFER)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> SetBuffer<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_2_0")]
+    pub fn append(&mut self) -> &mut Self {
+        self.0.push_flag(a_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_2_0")]
+    pub fn buffer_name<S: Into<Cow<'a, str>>>(&mut self, buffer_name: S) -> &mut Self {
+        self.0.push_option(b_KEY, buffer_name);
+        self
+    }
+
+    #[cfg(feature = "tmux_2_0")]
+    pub fn new_buffer_name<S: Into<Cow<'a, str>>>(&mut self, new_buffer_name: S) -> &mut Self {
+        self.0.push_option(n_KEY, new_buffer_name);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn data<S: Into<Cow<'a, str>>>(&mut self, data: S) -> &mut Self {
+        self.0.push_param(data);
+        self
+    }
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    pub fn buffer_index<S: Into<Cow<'a, str>>>(&mut self, buffer_index: S) -> &mut Self {
+        self.0.push_option(b_KEY, buffer_index);
+        self
+    }
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_session);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for SetBuffer<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(SET_BUFFER)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for SetBuffer<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(SET_BUFFER)),
+            ..Default::default()
+        })
     }
 }

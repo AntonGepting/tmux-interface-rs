@@ -1,47 +1,88 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const RUN_SHELL: &'static str = "run-shell";
-    #[cfg(feature = "use_cmd_alias")]
-    const RUN_SHELL: &'static str = "run";
+/// # Manual
+///
+/// tmux ^1.8:
+/// ```text
+/// tmux run-shell [-b] [-t target-pane] shell-command
+/// (alias: run)
+/// ```
+///
+/// tmux ^1.2:
+/// ```text
+/// tmux run-shell shell-command
+/// (alias: run)
+/// ```
+///
+/// tmux ^1.1:
+/// ```text
+/// tmux run-shell command
+/// (alias: run)
+/// ```
+#[derive(Debug, Clone)]
+pub struct RunShell<'a>(pub TmuxCommand<'a>);
 
-    /// # Manual
-    ///
-    /// tmux ^1.8:
-    /// ```text
-    /// tmux run-shell [-b] [-t target-pane] shell-command
-    /// (alias: run)
-    /// ```
-    ///
-    /// tmux ^1.2:
-    /// ```text
-    /// tmux run-shell shell-command
-    /// (alias: run)
-    /// ```
-    ///
-    /// tmux ^1.1:
-    /// ```text
-    /// tmux run-shell command
-    /// (alias: run)
-    /// ```
-    pub fn run_shell(
-        &mut self,
-        backgroud: Option<bool>,
-        target_pane: Option<&str>,
-        shell_command: &str,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if backgroud.unwrap_or(false) {
-            args.push(b_KEY);
-        }
-        if let Some(target_pane) = target_pane {
-            args.extend_from_slice(&[t_KEY, &target_pane])
-        }
-        args.push(shell_command);
-        let output = self.command(TmuxInterface::RUN_SHELL, &args)?;
-        Ok(output)
+impl<'a> Default for RunShell<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(RUN_SHELL)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> RunShell<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_1_8")]
+    pub fn backgroud(&mut self) -> &mut Self {
+        self.0.push_flag(b_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_8")]
+    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_pane);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_2")]
+    pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
+        self.0.push_param(shell_command);
+        self
+    }
+
+    #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
+    pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
+        self.0.push_param(command);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for RunShell<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(RUN_SHELL)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for RunShell<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(RUN_SHELL)),
+            ..Default::default()
+        })
     }
 }

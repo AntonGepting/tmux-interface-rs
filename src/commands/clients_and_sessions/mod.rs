@@ -1,8 +1,7 @@
-use crate::TmuxCommand;
 use crate::{
     AttachSession, DetachClient, HasSession, KillServer, KillSession, ListClients, ListCommands,
     ListSessions, LockClient, LockSession, NewSession, RefreshClient, RenameSession, ShowMessages,
-    SourceFile, StartServer, SuspendClient, SwitchClient,
+    SourceFile, StartServer, SuspendClient, SwitchClient, TmuxCommand,
 };
 
 /// All functions from man tmux "Clients and Sessions" listed below
