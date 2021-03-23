@@ -7,10 +7,10 @@ pub mod set_hook;
 #[cfg(feature = "tmux_2_2")]
 pub mod show_hooks;
 
-#[cfg(feature = "tmux_2_2")]
-pub mod set_hook_tests;
-#[cfg(feature = "tmux_2_2")]
-pub mod show_hooks_tests;
+//#[cfg(feature = "tmux_2_2")]
+//pub mod set_hook_tests;
+//#[cfg(feature = "tmux_2_2")]
+//pub mod show_hooks_tests;
 
 impl<'a> TmuxCommand<'a> {
     pub fn set_hook(&self) -> SetHook<'a> {

@@ -17,20 +17,20 @@ pub mod run_shell;
 #[cfg(feature = "tmux_1_8")]
 pub mod wait_for;
 
-#[cfg(feature = "tmux_1_0")]
-pub mod clock_mode_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod if_shell_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod lock_server_tests;
 //#[cfg(feature = "tmux_1_0")]
-//pub mod server_info_tests;
+//pub mod clock_mode_tests;
 //#[cfg(feature = "tmux_1_0")]
-//pub mod set_password_tests;
-#[cfg(feature = "tmux_1_1")]
-pub mod run_shell_tests;
-#[cfg(feature = "tmux_1_8")]
-pub mod wait_for_tests;
+//pub mod if_shell_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod lock_server_tests;
+////#[cfg(feature = "tmux_1_0")]
+////pub mod server_info_tests;
+////#[cfg(feature = "tmux_1_0")]
+////pub mod set_password_tests;
+//#[cfg(feature = "tmux_1_1")]
+//pub mod run_shell_tests;
+//#[cfg(feature = "tmux_1_8")]
+//pub mod wait_for_tests;
 
 impl<'a> TmuxCommand<'a> {
     pub fn clock_mode(&self) -> ClockMode<'a> {

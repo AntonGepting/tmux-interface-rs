@@ -26,26 +26,26 @@ pub mod set_buffer;
 #[cfg(feature = "tmux_1_0")]
 pub mod show_buffer;
 
-#[cfg(feature = "tmux_1_3")]
-pub mod choose_buffer_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod clear_history_tests;
+//#[cfg(feature = "tmux_1_3")]
+//pub mod choose_buffer_tests;
 //#[cfg(feature = "tmux_1_0")]
-//pub mod copy_buffer_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod delete_buffer_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod list_buffers_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod load_buffer_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod paste_buffer_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod save_buffer_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod set_buffer_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod show_buffer_tests;
+//pub mod clear_history_tests;
+////#[cfg(feature = "tmux_1_0")]
+////pub mod copy_buffer_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod delete_buffer_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod list_buffers_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod load_buffer_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod paste_buffer_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod save_buffer_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod set_buffer_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod show_buffer_tests;
 
 impl<'a> TmuxCommand<'a> {
     pub fn choose_buffer(&self) -> ChooseBuffer<'a> {

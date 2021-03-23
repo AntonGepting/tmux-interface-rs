@@ -7,10 +7,10 @@ pub mod set_environment;
 #[cfg(feature = "tmux_1_0")]
 pub mod show_environment;
 
-#[cfg(feature = "tmux_1_0")]
-pub mod set_environment_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod show_environment_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod set_environment_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod show_environment_tests;
 
 impl<'a> TmuxCommand<'a> {
     pub fn set_environment(&self) -> SetEnvironment<'a> {

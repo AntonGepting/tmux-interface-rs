@@ -15,14 +15,14 @@ pub mod display_message;
 //#[cfg(feature = "tmux_1_0")]
 //pub mod select_prompt;
 
-#[cfg(feature = "tmux_1_0")]
-pub mod command_prompt_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod confirm_before_tests;
-#[cfg(feature = "tmux_3_0")]
-pub mod display_menu_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod display_message_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod command_prompt_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod confirm_before_tests;
+//#[cfg(feature = "tmux_3_0")]
+//pub mod display_menu_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod display_message_tests;
 
 impl<'a> TmuxCommand<'a> {
     pub fn command_prompt(&self) -> CommandPrompt<'a> {

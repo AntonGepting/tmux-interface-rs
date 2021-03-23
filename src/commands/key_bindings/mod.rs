@@ -13,16 +13,16 @@ pub mod send_prefix;
 #[cfg(feature = "tmux_1_0")]
 pub mod unbind_key;
 
-#[cfg(feature = "tmux_1_0")]
-pub mod bind_key_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod list_keys_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod send_keys_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod send_prefix_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod unbind_key_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod bind_key_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod list_keys_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod send_keys_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod send_prefix_tests;
+//#[cfg(feature = "tmux_1_0")]
+//pub mod unbind_key_tests;
 
 impl<'a> TmuxCommand<'a> {
     pub fn bind_key(&self) -> BindKey<'a> {
