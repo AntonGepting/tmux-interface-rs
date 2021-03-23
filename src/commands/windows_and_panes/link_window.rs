@@ -1,6 +1,6 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
 /// Link the window at src-window to the specified dst-window
 ///
@@ -17,140 +17,79 @@ use std::process::Output;
 /// tmux link-window [-dk] [-s src-window] [-t dst-window]
 /// (alias: linkw)
 /// ```
-#[derive(Default, Debug)]
-pub struct LinkWindow<'a> {
-    /// [-a] - the window is moved to the next index up
-    #[cfg(feature = "tmux_2_1")]
-    pub add: Option<bool>,
-    /// [-d] - the newly linked window is not selected
-    #[cfg(feature = "tmux_0_8")]
-    pub detached: Option<bool>,
-    /// [-k] - if dst-window exists, it is killed, otherwise an error is generated
-    #[cfg(feature = "tmux_0_8")]
-    pub kill: Option<bool>,
-    /// [-s src-window] - src-window
-    #[cfg(feature = "tmux_0_8")]
-    pub src_window: Option<&'a str>,
-    /// [-t dst-window] - dst-window
-    #[cfg(feature = "tmux_0_8")]
-    pub dst_window: Option<&'a str>,
+#[derive(Debug, Clone)]
+pub struct LinkWindow<'a>(pub TmuxCommand<'a>);
+
+impl<'a> Default for LinkWindow<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(LINK_WINDOW)),
+            ..Default::default()
+        })
+    }
 }
 
 impl<'a> LinkWindow<'a> {
     pub fn new() -> Self {
         Default::default()
     }
-}
 
-#[derive(Default, Debug)]
-pub struct LinkWindowBuilder<'a> {
-    #[cfg(feature = "tmux_2_1")]
-    pub add: Option<bool>,
-    #[cfg(feature = "tmux_0_8")]
-    pub detached: Option<bool>,
-    #[cfg(feature = "tmux_0_8")]
-    pub kill: Option<bool>,
-    #[cfg(feature = "tmux_0_8")]
-    pub src_window: Option<&'a str>,
-    #[cfg(feature = "tmux_0_8")]
-    pub dst_window: Option<&'a str>,
-}
-
-impl<'a> LinkWindowBuilder<'a> {
-    pub fn new() -> Self {
-        Default::default()
-    }
-
+    /// [-a] - the window is moved to the next index up
     #[cfg(feature = "tmux_2_1")]
     pub fn add(&mut self) -> &mut Self {
-        self.add = Some(true);
+        self.0.push_flag(a_KEY);
         self
     }
 
+    /// [-d] - the newly linked window is not selected
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
-        self.detached = Some(true);
+        self.0.push_flag(d_KEY);
         self
     }
 
+    /// [-k] - if dst-window exists, it is killed, otherwise an error is generated
     #[cfg(feature = "tmux_0_8")]
     pub fn kill(&mut self) -> &mut Self {
-        self.kill = Some(true);
+        self.0.push_flag(k_KEY);
         self
     }
 
+    /// [-s src-window] - src-window
     #[cfg(feature = "tmux_0_8")]
-    pub fn src_window(&mut self, src_window: &'a str) -> &mut Self {
-        self.src_window = Some(src_window);
+    pub fn src_window<S: Into<Cow<'a, str>>>(&mut self, src_window: S) -> &mut Self {
+        self.0.push_option(s_KEY, src_window);
         self
     }
 
+    /// [-t dst-window] - dst-window
     #[cfg(feature = "tmux_0_8")]
-    pub fn dst_window(&mut self, dst_window: &'a str) -> &mut Self {
-        self.dst_window = Some(dst_window);
+    pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, dst_window);
         self
     }
 
-    pub fn build(&self) -> LinkWindow<'a> {
-        LinkWindow {
-            #[cfg(feature = "tmux_2_1")]
-            add: self.add,
-            #[cfg(feature = "tmux_0_8")]
-            detached: self.detached,
-            #[cfg(feature = "tmux_0_8")]
-            kill: self.kill,
-            #[cfg(feature = "tmux_0_8")]
-            src_window: self.src_window,
-            #[cfg(feature = "tmux_0_8")]
-            dst_window: self.dst_window,
-        }
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
     }
 }
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const LINK_WINDOW: &'static str = "link-window";
-    #[cfg(feature = "use_cmd_alias")]
-    const LINK_WINDOW: &'static str = "linkw";
+impl<'a> From<TmuxCommand<'a>> for LinkWindow<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(LINK_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
 
-    /// Link the window at src-window to the specified dst-window
-    ///
-    /// tmux ^2.1:
-    /// ```text
-    /// tmux link-window [-adk] [-s src-window] [-t dst-window]
-    /// (alias: linkw)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux link-window [-dk] [-s src-window] [-t dst-window]
-    /// (alias: linkw)
-    /// ```
-    pub fn link_window(&mut self, link_window: Option<&LinkWindow>) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if let Some(link_window) = link_window {
-            #[cfg(feature = "tmux_2_1")]
-            if link_window.add.unwrap_or(false) {
-                args.push(a_KEY);
-            }
-            #[cfg(feature = "tmux_0_8")]
-            if link_window.detached.unwrap_or(false) {
-                args.push(d_KEY);
-            }
-            #[cfg(feature = "tmux_0_8")]
-            if link_window.kill.unwrap_or(false) {
-                args.push(k_KEY);
-            }
-            #[cfg(feature = "tmux_0_8")]
-            if let Some(src_window) = link_window.src_window {
-                args.extend_from_slice(&[s_KEY, &src_window])
-            }
-            #[cfg(feature = "tmux_0_8")]
-            if let Some(dst_window) = link_window.dst_window {
-                args.extend_from_slice(&[t_KEY, &dst_window])
-            }
-        }
-        let output = self.command(TmuxInterface::LINK_WINDOW, &args)?;
-        Ok(output)
+impl<'a> From<&TmuxCommand<'a>> for LinkWindow<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(LINK_WINDOW)),
+            ..Default::default()
+        })
     }
 }

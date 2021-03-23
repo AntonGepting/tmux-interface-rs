@@ -1,39 +1,72 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const SWAP_WINDOW: &'static str = "swap-window";
-    #[cfg(feature = "use_cmd_alias")]
-    const SWAP_WINDOW: &'static str = "swapw";
+/// This is similar to link-window, except the source and destination windows are swapped
+///
+/// # Manual
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux swap-window [-d] [-s src-window] [-t dst-window]
+/// (alias: swapw)
+/// ```
+#[derive(Debug, Clone)]
+pub struct SwapWindow<'a>(pub TmuxCommand<'a>);
 
-    /// This is similar to link-window, except the source and destination windows are swapped
-    ///
-    /// # Manual
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux swap-window [-d] [-s src-window] [-t dst-window]
-    /// (alias: swapw)
-    /// ```
-    pub fn swap_window(
-        &mut self,
-        detached: Option<bool>,
-        src_window: Option<&'a str>,
-        dst_window: Option<&'a str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if detached.unwrap_or(false) {
-            args.push(d_KEY);
-        }
-        if let Some(src_window) = src_window {
-            args.extend_from_slice(&[s_KEY, &src_window])
-        }
-        if let Some(dst_window) = dst_window {
-            args.extend_from_slice(&[t_KEY, &dst_window])
-        }
-        let output = self.command(TmuxInterface::SWAP_WINDOW, &args)?;
-        Ok(output)
+impl<'a> Default for SwapWindow<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(SWAP_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> SwapWindow<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn detached(&mut self) -> &mut Self {
+        self.0.push_flag(d_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn src_window<S: Into<Cow<'a, str>>>(&mut self, src_window: S) -> &mut Self {
+        self.0.push_option(s_KEY, src_window);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, dst_window);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for SwapWindow<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(SWAP_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for SwapWindow<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(SWAP_WINDOW)),
+            ..Default::default()
+        })
     }
 }

@@ -776,84 +776,62 @@ pub use self::commands::status_line::display_message::DisplayMessage;
 // windows and panes
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::break_pane::BreakPane;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::break_pane::BreakPaneBuilder;
 #[cfg(feature = "tmux_1_2")]
 pub use self::commands::windows_and_panes::capture_pane::CapturePane;
-#[cfg(feature = "tmux_1_2")]
-pub use self::commands::windows_and_panes::capture_pane::CapturePaneBuilder;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::choose_client::ChooseClient;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::choose_client::ChooseClientBuilder;
 #[cfg(feature = "tmux_1_7")]
 pub use self::commands::windows_and_panes::choose_tree::ChooseTree;
-#[cfg(feature = "tmux_1_7")]
-pub use self::commands::windows_and_panes::choose_tree::ChooseTreeBuilder;
+
+pub use self::commands::windows_and_panes::copy_mode::CopyMode;
+
+pub use self::commands::windows_and_panes::display_panes::DisplayPanes;
+
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::find_window::FindWindow;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::find_window::FindWindowBuilder;
 #[cfg(feature = "tmux_1_2")]
 pub use self::commands::windows_and_panes::join_pane::JoinPane;
-#[cfg(feature = "tmux_1_2")]
-pub use self::commands::windows_and_panes::join_pane::JoinPaneBuilder;
+
+pub use self::commands::windows_and_panes::kill_pane::KillPane;
+
+pub use self::commands::windows_and_panes::kill_window::KillWindow;
+
+pub use self::commands::windows_and_panes::last_pane::LastPane;
+
+pub use self::commands::windows_and_panes::last_window::LastWindow;
+
+pub use self::commands::windows_and_panes::list_panes::ListPanes;
+
+pub use self::commands::windows_and_panes::list_windows::ListWindows;
+
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::link_window::LinkWindow;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::link_window::LinkWindowBuilder;
 #[cfg(feature = "tmux_1_7")]
 pub use self::commands::windows_and_panes::move_pane::MovePane;
-#[cfg(feature = "tmux_1_7")]
-pub use self::commands::windows_and_panes::move_pane::MovePaneBuilder;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::move_window::MoveWindow;
 #[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::move_window::MoveWindowBuilder;
-#[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::new_window::NewWindow;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::new_window::NewWindowBuilder;
 #[cfg(feature = "tmux_1_1")]
 pub use self::commands::windows_and_panes::pipe_pane::PipePane;
-#[cfg(feature = "tmux_1_1")]
-pub use self::commands::windows_and_panes::pipe_pane::PipePaneBuilder;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::resize_pane::ResizePane;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::resize_pane::ResizePaneBuilder;
 #[cfg(feature = "tmux_2_9")]
 pub use self::commands::windows_and_panes::resize_window::ResizeWindow;
-#[cfg(feature = "tmux_2_9")]
-pub use self::commands::windows_and_panes::resize_window::ResizeWindowBuilder;
 #[cfg(feature = "tmux_1_5")]
 pub use self::commands::windows_and_panes::respawn_pane::RespawnPane;
-#[cfg(feature = "tmux_1_5")]
-pub use self::commands::windows_and_panes::respawn_pane::RespawnPaneBuilder;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::respawn_window::RespawnWindow;
 #[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::respawn_window::RespawnWindowBuilder;
-#[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::select_layout::SelectLayot;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::select_layout::SelectLayotBuilder;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::select_pane::SelectPane;
 #[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::select_pane::SelectPaneBuilder;
-#[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::select_window::SelectWindow;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::select_window::SelectWindowBuilder;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::split_window::SplitWindow;
 #[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::split_window::SplitWindowBuilder;
-#[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::swap_pane::SwapPane;
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::swap_pane::SwapPaneBuilder;
 
 // enums
 pub use crate::commands::PaneSize;

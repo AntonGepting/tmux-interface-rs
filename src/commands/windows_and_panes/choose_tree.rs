@@ -1,7 +1,6 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
-use std::marker::PhantomData;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
 /// Put a pane into tree mode, where a session, window or pane may be chosen interactively
 /// from a list
@@ -34,274 +33,128 @@ use std::marker::PhantomData;
 /// tmux choose-tree [-sw] [-b session-template] [-c window-template] [-S format] [-W format]
 /// [-t target-window]
 /// ```
-#[derive(Default, Debug)]
-pub struct ChooseTree<'a> {
-    /// [-G] - include all sessions in any session groups in the tree rather than only the first
-    #[cfg(feature = "tmux_2_7")]
-    pub all: Option<bool>,
-    /// [-N] - start without the preview
-    #[cfg(feature = "tmux_2_7")]
-    pub without_preview: Option<bool>,
-    /// [-r] - reverses the sort order
-    #[cfg(feature = "tmux_3_1")]
-    pub reverse_sort_order: Option<bool>,
-    /// [-s] - start with collapsed sessions
-    #[cfg(feature = "tmux_1_7")]
-    pub collapsed_sessions: Option<bool>,
-    /// [-w] - start with collapsed windows
-    #[cfg(feature = "tmux_1_8")]
-    pub collapsed_windows: Option<bool>,
-    /// [-Z] - zoom the pane
-    #[cfg(feature = "tmux_2_7")]
-    pub zoom: Option<bool>,
-    /// [-F format] - format
-    #[cfg(feature = "tmux_2_6")]
-    pub format: Option<&'a str>,
-    /// [-f filter] - filter
-    #[cfg(feature = "tmux_2_6")]
-    pub filter: Option<&'a str>,
-    /// [-O sort-order] - specifies the initial sort field
-    #[cfg(feature = "tmux_2_6")]
-    pub sort_order: Option<&'a str>,
-    /// [-t target-pane] - target-pane
-    #[cfg(feature = "tmux_2_6")]
-    pub target_pane: Option<&'a str>,
-    /// [-t target-window] - target-window
-    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    pub target_window: Option<&'a str>,
-    /// [template] - template
-    #[cfg(feature = "tmux_2_6")]
-    pub template: Option<&'a str>,
+#[derive(Debug, Clone)]
+pub struct ChooseTree<'a>(pub TmuxCommand<'a>);
+
+impl<'a> Default for ChooseTree<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(CHOOSE_TREE)),
+            ..Default::default()
+        })
+    }
 }
 
 impl<'a> ChooseTree<'a> {
     pub fn new() -> Self {
         Default::default()
     }
-}
 
-#[derive(Default, Debug)]
-pub struct ChooseTreeBuilder<'a> {
-    #[cfg(feature = "tmux_2_7")]
-    pub all: Option<bool>,
-    #[cfg(feature = "tmux_2_7")]
-    pub without_preview: Option<bool>,
-    #[cfg(feature = "tmux_3_1")]
-    pub reverse_sort_order: Option<bool>,
-    #[cfg(feature = "tmux_1_7")]
-    pub collapsed_sessions: Option<bool>,
-    #[cfg(feature = "tmux_1_8")]
-    pub collapsed_windows: Option<bool>,
-    #[cfg(feature = "tmux_2_7")]
-    pub zoom: Option<bool>,
-    #[cfg(feature = "tmux_2_6")]
-    pub format: Option<&'a str>,
-    #[cfg(feature = "tmux_2_6")]
-    pub filter: Option<&'a str>,
-    #[cfg(feature = "tmux_2_6")]
-    pub sort_order: Option<&'a str>,
-    #[cfg(feature = "tmux_2_6")]
-    pub target_pane: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    pub target_window: Option<&'a str>,
-    #[cfg(feature = "tmux_2_6")]
-    pub template: Option<&'a str>,
-    pub _phantom: PhantomData<&'a str>,
-}
-
-impl<'a> ChooseTreeBuilder<'a> {
-    pub fn new() -> Self {
-        Default::default()
-    }
-
+    /// [-G] - include all sessions in any session groups in the tree rather than only the first
     #[cfg(feature = "tmux_2_7")]
     pub fn all(&mut self) -> &mut Self {
-        self.all = Some(true);
+        self.0.push_flag(G_KEY);
         self
     }
 
+    /// [-N] - start without the preview
     #[cfg(feature = "tmux_2_7")]
     pub fn without_preview(&mut self) -> &mut Self {
-        self.without_preview = Some(true);
+        self.0.push_flag(N_KEY);
         self
     }
 
+    /// [-r] - reverses the sort order
     #[cfg(feature = "tmux_3_1")]
     pub fn reverse_sort_order(&mut self) -> &mut Self {
-        self.reverse_sort_order = Some(true);
+        self.0.push_flag(r_KEY);
         self
     }
 
+    /// [-s] - start with collapsed sessions
     #[cfg(feature = "tmux_1_7")]
     pub fn collapsed_sessions(&mut self) -> &mut Self {
-        self.collapsed_sessions = Some(true);
+        self.0.push_flag(s_KEY);
         self
     }
 
+    /// [-w] - start with collapsed windows
     #[cfg(feature = "tmux_1_8")]
     pub fn collapsed_windows(&mut self) -> &mut Self {
-        self.collapsed_windows = Some(true);
+        self.0.push_flag(w_KEY);
         self
     }
 
+    /// [-Z] - zoom the pane
     #[cfg(feature = "tmux_2_7")]
     pub fn zoom(&mut self) -> &mut Self {
-        self.zoom = Some(true);
+        self.0.push_flag(Z_KEY);
         self
     }
 
+    /// [-F format] - format
     #[cfg(feature = "tmux_2_6")]
-    pub fn format(&mut self, format: &'a str) -> &mut Self {
-        self.format = Some(format);
+    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
+        self.0.push_option(n_KEY, format);
         self
     }
 
+    /// [-f filter] - filter
     #[cfg(feature = "tmux_2_6")]
-    pub fn filter(&mut self, filter: &'a str) -> &mut Self {
-        self.filter = Some(filter);
+    pub fn filter<S: Into<Cow<'a, str>>>(&mut self, filter: S) -> &mut Self {
+        self.0.push_option(f_KEY, filter);
         self
     }
 
+    /// [-O sort-order] - specifies the initial sort field
     #[cfg(feature = "tmux_2_6")]
-    pub fn sort_order(&mut self, sort_order: &'a str) -> &mut Self {
-        self.sort_order = Some(sort_order);
+    pub fn sort_order<S: Into<Cow<'a, str>>>(&mut self, sort_order: S) -> &mut Self {
+        self.0.push_option(O_KEY, sort_order);
         self
     }
 
+    /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_2_6")]
-    pub fn target_pane(&mut self, target_pane: &'a str) -> &mut Self {
-        self.target_pane = Some(target_pane);
+    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_pane);
         self
     }
 
+    /// [-t target-window] - target-window
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    pub fn target_window(&mut self, target_window: &'a str) -> &mut Self {
-        self.target_window = Some(target_window);
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_window);
         self
     }
 
+    /// [template] - template
     #[cfg(feature = "tmux_2_6")]
-    pub fn template(&mut self, template: &'a str) -> &mut Self {
-        self.template = Some(template);
+    pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
+        self.0.push_param(template);
         self
     }
 
-    pub fn build(&self) -> ChooseTree<'a> {
-        ChooseTree {
-            #[cfg(feature = "tmux_2_7")]
-            all: self.all,
-            #[cfg(feature = "tmux_2_7")]
-            without_preview: self.without_preview,
-            #[cfg(feature = "tmux_3_1")]
-            reverse_sort_order: self.reverse_sort_order,
-            #[cfg(feature = "tmux_1_7")]
-            collapsed_sessions: self.collapsed_sessions,
-            #[cfg(feature = "tmux_1_8")]
-            collapsed_windows: self.collapsed_windows,
-            #[cfg(feature = "tmux_2_7")]
-            zoom: self.zoom,
-            #[cfg(feature = "tmux_2_6")]
-            format: self.format,
-            #[cfg(feature = "tmux_2_6")]
-            filter: self.filter,
-            #[cfg(feature = "tmux_2_6")]
-            sort_order: self.sort_order,
-            #[cfg(feature = "tmux_2_6")]
-            target_pane: self.target_pane,
-            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-            target_window: self.target_window,
-            #[cfg(feature = "tmux_2_6")]
-            template: self.template,
-        }
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
     }
 }
 
-impl<'a> TmuxInterface<'a> {
-    const CHOOSE_TREE: &'static str = "choose-tree";
+impl<'a> From<TmuxCommand<'a>> for ChooseTree<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(CHOOSE_TREE)),
+            ..Default::default()
+        })
+    }
+}
 
-    /// Put a pane into tree mode, where a session, window or pane may be chosen interactively
-    /// from a list
-    ///
-    /// # Manual
-    ///
-    /// tmux ^3.1:
-    /// ```text
-    /// tmux choose-tree [-GNrswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
-    /// ```
-    ///
-    /// tmux ^2.7:
-    /// ```text
-    /// tmux choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
-    /// ```
-    ///
-    /// tmux ^2.6:
-    /// ```text
-    /// tmux choose-tree [-Nsw] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
-    /// ```
-    ///
-    /// tmux ^1.8:
-    /// ```text
-    /// tmux choose-tree [-suw] [-b session-template] [-c window-template] [-S format] [-W format]
-    /// [-t target-window]
-    /// ```
-    ///
-    /// tmux ^1.7:
-    /// ```text
-    /// tmux choose-tree [-sw] [-b session-template] [-c window-template] [-S format] [-W format]
-    /// [-t target-window]
-    /// ```
-    pub fn choose_tree(
-        &mut self,
-        choose_tree: Option<&ChooseTree>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if let Some(choose_tree) = choose_tree {
-            #[cfg(feature = "tmux_2_7")]
-            if choose_tree.all.unwrap_or(false) {
-                args.push(G_KEY);
-            }
-            #[cfg(feature = "tmux_2_7")]
-            if choose_tree.without_preview.unwrap_or(false) {
-                args.push(N_KEY);
-            }
-            #[cfg(feature = "tmux_3_1")]
-            if choose_tree.reverse_sort_order.unwrap_or(false) {
-                args.push(r_KEY);
-            }
-            #[cfg(feature = "tmux_1_7")]
-            if choose_tree.collapsed_sessions.unwrap_or(false) {
-                args.push(s_KEY);
-            }
-            #[cfg(feature = "tmux_1_8")]
-            if choose_tree.collapsed_windows.unwrap_or(false) {
-                args.push(w_KEY);
-            }
-            #[cfg(feature = "tmux_2_7")]
-            if choose_tree.zoom.unwrap_or(false) {
-                args.push(Z_KEY);
-            }
-            #[cfg(feature = "tmux_2_6")]
-            if let Some(format) = choose_tree.format {
-                args.extend_from_slice(&[F_KEY, &format])
-            }
-            #[cfg(feature = "tmux_2_6")]
-            if let Some(filter) = choose_tree.filter {
-                args.extend_from_slice(&[f_KEY, &filter])
-            }
-            #[cfg(feature = "tmux_2_6")]
-            if let Some(sort_order) = choose_tree.sort_order {
-                args.extend_from_slice(&[O_KEY, &sort_order])
-            }
-            #[cfg(feature = "tmux_2_6")]
-            if let Some(target_pane) = choose_tree.target_pane {
-                args.extend_from_slice(&[t_KEY, &target_pane])
-            }
-            #[cfg(feature = "tmux_2_6")]
-            if let Some(template) = choose_tree.template {
-                args.push(&template)
-            }
-        }
-        let output = self.command(TmuxInterface::CHOOSE_TREE, &args)?;
-        Ok(output)
+impl<'a> From<&TmuxCommand<'a>> for ChooseTree<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(CHOOSE_TREE)),
+            ..Default::default()
+        })
     }
 }

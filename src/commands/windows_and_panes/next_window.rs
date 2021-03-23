@@ -1,41 +1,72 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const NEXT_WINDOW: &'static str = "next-window";
-    #[cfg(feature = "use_cmd_alias")]
-    const NEXT_WINDOW: &'static str = "next";
+/// Move to the next window in the session
+///
+/// # Manual
+///
+/// tmux ^0.9:
+/// ```text
+/// tmux next-window [-a] [-t target-session]
+/// (alias: next)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux next-window [-t target-session]
+/// (alias: next)
+/// ```
+#[derive(Debug, Clone)]
+pub struct NextWindow<'a>(pub TmuxCommand<'a>);
 
-    /// Move to the next window in the session
-    ///
-    /// # Manual
-    ///
-    /// tmux ^0.9:
-    /// ```text
-    /// tmux next-window [-a] [-t target-session]
-    /// (alias: next)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux next-window [-t target-session]
-    /// (alias: next)
-    /// ```
-    pub fn next_window(
-        &mut self,
-        alert: Option<bool>,
-        target_session: Option<&str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if alert.unwrap_or(false) {
-            args.push(a_KEY);
-        }
-        if let Some(s) = target_session {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        let output = self.command(TmuxInterface::NEXT_WINDOW, &args)?;
-        Ok(output)
+impl<'a> Default for NextWindow<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(NEXT_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> NextWindow<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_0_9")]
+    pub fn attach(&mut self) -> &mut Self {
+        self.0.push_flag(a_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_window);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for NextWindow<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(NEXT_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for NextWindow<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(NEXT_WINDOW)),
+            ..Default::default()
+        })
     }
 }

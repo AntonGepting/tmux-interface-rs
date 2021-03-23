@@ -1,41 +1,72 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const UNLINK_WINDOW: &'static str = "unlink-window";
-    #[cfg(feature = "use_cmd_alias")]
-    const UNLINK_WINDOW: &'static str = "unlinkw";
+/// Unlink `target-window`
+///
+/// # Manual
+///
+/// tmux ^1.0:
+/// ```text
+/// tmux unlink-window [-k] [-t target-window]
+/// (alias: unlinkw)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux unlink-window [-t target-window]
+/// (alias: unlinkw)
+/// ```
+#[derive(Debug, Clone)]
+pub struct UnlinkWindow<'a>(pub TmuxCommand<'a>);
 
-    /// Unlink `target-window`
-    ///
-    /// # Manual
-    ///
-    /// tmux ^1.0:
-    /// ```text
-    /// tmux unlink-window [-k] [-t target-window]
-    /// (alias: unlinkw)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux unlink-window [-t target-window]
-    /// (alias: unlinkw)
-    /// ```
-    pub fn unlink_window(
-        &mut self,
-        k: Option<bool>,
-        target_window: Option<&'a str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if k.unwrap_or(false) {
-            args.push(k_KEY);
-        }
-        if let Some(target_window) = target_window {
-            args.extend_from_slice(&[t_KEY, &target_window]);
-        }
-        let output = self.command(TmuxInterface::UNLINK_WINDOW, &args)?;
-        Ok(output)
+impl<'a> Default for UnlinkWindow<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(UNLINK_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> UnlinkWindow<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_1_0")]
+    pub fn detach_other(&mut self) -> &mut Self {
+        self.0.push_flag(k_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_window);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for UnlinkWindow<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(UNLINK_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for UnlinkWindow<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(UNLINK_WINDOW)),
+            ..Default::default()
+        })
     }
 }

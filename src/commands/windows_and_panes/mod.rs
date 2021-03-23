@@ -1,3 +1,8 @@
+use crate::{
+    BreakPane, CapturePane, ChooseClient, ChooseTree, CopyMode, DisplayPanes, FindWindow, JoinPane,
+    KillPane, KillWindow, LastPane, LastWindow, LinkWindow, ListPanes, ListWindows, TmuxCommand,
+};
+
 /// Windows and panes
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES)
 #[cfg(feature = "tmux_1_0")]
@@ -153,3 +158,65 @@ pub mod unlink_window;
 //pub mod swap_window_tests;
 //#[cfg(feature = "tmux_1_0")]
 //pub mod unlink_window_tests;
+
+impl<'a> TmuxCommand<'a> {
+    pub fn break_pane(&self) -> BreakPane<'a> {
+        BreakPane::from(self)
+    }
+
+    pub fn capture_pane(&self) -> CapturePane<'a> {
+        CapturePane::from(self)
+    }
+
+    pub fn choose_client(&self) -> ChooseClient<'a> {
+        ChooseClient::from(self)
+    }
+
+    pub fn choose_tree(&self) -> ChooseTree<'a> {
+        ChooseTree::from(self)
+    }
+
+    pub fn copy_mode(&self) -> CopyMode<'a> {
+        CopyMode::from(self)
+    }
+
+    pub fn display_panes(&self) -> DisplayPanes<'a> {
+        DisplayPanes::from(self)
+    }
+
+    pub fn find_window(&self) -> FindWindow<'a> {
+        FindWindow::from(self)
+    }
+
+    pub fn join_pane(&self) -> JoinPane<'a> {
+        JoinPane::from(self)
+    }
+
+    pub fn kill_pane(&self) -> KillPane<'a> {
+        KillPane::from(self)
+    }
+
+    pub fn kill_window(&self) -> KillWindow<'a> {
+        KillWindow::from(self)
+    }
+
+    pub fn last_pane(&self) -> LastPane<'a> {
+        LastPane::from(self)
+    }
+
+    pub fn last_window(&self) -> LastWindow<'a> {
+        LastWindow::from(self)
+    }
+
+    pub fn link_window(&self) -> LinkWindow<'a> {
+        LinkWindow::from(self)
+    }
+
+    pub fn list_panes(&self) -> ListPanes<'a> {
+        ListPanes::from(self)
+    }
+
+    pub fn list_windows(&self) -> ListWindows<'a> {
+        ListWindows::from(self)
+    }
+}

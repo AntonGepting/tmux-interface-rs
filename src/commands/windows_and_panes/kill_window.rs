@@ -1,44 +1,73 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const KILL_WINDOW: &'static str = "kill-window";
-    #[cfg(feature = "use_cmd_alias")]
-    const KILL_WINDOW: &'static str = "killw";
+/// Kill the current window or the window at target-window, removing it from any sessions
+/// to which it is linked
+///
+/// # Manual
+///
+/// tmux ^1.7:
+/// ```text
+/// tmux kill-window [-a] [-t target-window]
+/// (alias: killw)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux kill-window [-a] [-t target-window]
+/// (alias: killw)
+/// ```
+#[derive(Debug, Clone)]
+pub struct KillWindow<'a>(pub TmuxCommand<'a>);
 
-    /// Kill the current window or the window at target-window, removing it from any sessions
-    /// to which it is linked
-    ///
-    /// # Manual
-    ///
-    /// tmux ^1.7:
-    /// ```text
-    /// tmux kill-window [-a] [-t target-window]
-    /// (alias: killw)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux kill-window [-a] [-t target-window]
-    /// (alias: killw)
-    /// ```
-    pub fn kill_window(
-        &mut self,
-        all: Option<bool>,
-        target_window: Option<&str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        #[cfg(feature = "tmux_1_7")]
-        if all.unwrap_or(false) {
-            args.push(a_KEY);
-        }
-        #[cfg(feature = "tmux_0_8")]
-        if let Some(target_window) = target_window {
-            args.extend_from_slice(&[t_KEY, &target_window]);
-        }
-        let output = self.command(TmuxInterface::KILL_WINDOW, &args)?;
-        Ok(output)
+impl<'a> Default for KillWindow<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(KILL_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> KillWindow<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_1_7")]
+    pub fn parent_sighup(&mut self) -> &mut Self {
+        self.0.push_flag(a_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_window);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for KillWindow<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(KILL_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for KillWindow<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(KILL_WINDOW)),
+            ..Default::default()
+        })
     }
 }

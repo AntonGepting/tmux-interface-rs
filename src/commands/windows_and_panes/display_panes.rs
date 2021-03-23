@@ -1,4 +1,4 @@
-use crate::tmux_interface::*;
+use crate::commands::constants::*;
 use crate::{TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
@@ -35,18 +35,13 @@ pub struct DisplayPanes<'a>(TmuxCommand<'a>);
 impl<'a> Default for DisplayPanes<'a> {
     fn default() -> Self {
         Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(DisplayPanes::DISPLAY_PANES)),
+            cmd: Some(Cow::Borrowed(DISPLAY_PANES)),
             ..Default::default()
         })
     }
 }
 
 impl<'a> DisplayPanes<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const DISPLAY_PANES: &'static str = "display-panes";
-    #[cfg(feature = "use_cmd_alias")]
-    const DISPLAY_PANES: &'static str = "displayp";
-
     pub fn new() -> Self {
         Default::default()
     }
@@ -81,5 +76,25 @@ impl<'a> DisplayPanes<'a> {
 
     pub fn output(&self) -> TmuxOutput {
         self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for DisplayPanes<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(DISPLAY_PANES)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for DisplayPanes<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(DISPLAY_PANES)),
+            ..Default::default()
+        })
     }
 }

@@ -1,57 +1,87 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-//use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const LIST_PANES: &'static str = "list-panes";
-    #[cfg(feature = "use_cmd_alias")]
-    const LIST_PANES: &'static str = "lsp";
+// XXX: better return type
+/// List panes on the server
+///
+/// # Manual
+///
+/// tmux ^1.6:
+/// ```text
+/// tmux list-panes [-as] [-F format] [-t target]
+/// (alias: lsp)
+/// ```
+///
+/// tmux ^1.5:
+/// ```text
+/// tmux list-panes [-as] [-t target]
+/// (alias: lsp)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux list-panes [-t target]
+/// (alias: lsp)
+/// ```
+#[derive(Debug, Clone)]
+pub struct ListPanes<'a>(pub TmuxCommand<'a>);
 
-    // XXX: better return type
-    /// List panes on the server
-    ///
-    /// # Manual
-    ///
-    /// tmux ^1.6:
-    /// ```text
-    /// tmux list-panes [-as] [-F format] [-t target]
-    /// (alias: lsp)
-    /// ```
-    ///
-    /// tmux ^1.5:
-    /// ```text
-    /// tmux list-panes [-as] [-t target]
-    /// (alias: lsp)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux list-panes [-t target]
-    /// (alias: lsp)
-    /// ```
-    pub fn list_panes(
-        &mut self,
-        all: Option<bool>,
-        session: Option<bool>,
-        format: Option<&'a str>,
-        target: Option<&'a str>,
-    ) -> Result<String, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if all.unwrap_or(false) {
-            args.push(a_KEY);
-        }
-        if session.unwrap_or(false) {
-            args.push(s_KEY);
-        }
-        if let Some(format) = format {
-            args.extend_from_slice(&[F_KEY, &format])
-        }
-        if let Some(target) = target {
-            args.extend_from_slice(&[t_KEY, &target])
-        }
-        let output = self.command(TmuxInterface::LIST_PANES, &args)?;
-        let stdout = String::from_utf8_lossy(&output.stdout.as_slice());
-        Ok(stdout.to_string())
+impl<'a> Default for ListPanes<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(LIST_PANES)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> ListPanes<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn all(&mut self) -> &mut Self {
+        self.0.push_flag(a_KEY);
+        self
+    }
+
+    pub fn session(&mut self) -> &mut Self {
+        self.0.push_flag(s_KEY);
+        self
+    }
+
+    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
+        self.0.push_option(F_KEY, format);
+        self
+    }
+
+    pub fn target<S: Into<Cow<'a, str>>>(&mut self, target: S) -> &mut Self {
+        self.0.push_option(t_KEY, target);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for ListPanes<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(LIST_PANES)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for ListPanes<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(LIST_PANES)),
+            ..Default::default()
+        })
     }
 }

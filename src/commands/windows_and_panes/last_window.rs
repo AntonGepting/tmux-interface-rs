@@ -1,28 +1,59 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const LAST_WINDOW: &'static str = "last-window";
-    #[cfg(feature = "use_cmd_alias")]
-    const LAST_WINDOW: &'static str = "last";
+/// Select the last (previously selected) window
+///
+/// # Manual
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux last-window [-t target-session]
+/// (alias: last)
+/// ```
+#[derive(Debug, Clone)]
+pub struct LastWindow<'a>(pub TmuxCommand<'a>);
 
-    /// Select the last (previously selected) window
-    ///
-    /// # Manual
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux last-window [-t target-session]
-    /// (alias: last)
-    /// ```
-    pub fn last_window(&mut self, target_session: Option<&str>) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if let Some(s) = target_session {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        let output = self.command(TmuxInterface::LAST_WINDOW, &args)?;
-        Ok(output)
+impl<'a> Default for LastWindow<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(LAST_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> LastWindow<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_session);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for LastWindow<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(LAST_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for LastWindow<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(LAST_WINDOW)),
+            ..Default::default()
+        })
     }
 }

@@ -1,47 +1,90 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const KILL_PANE: &'static str = "kill-pane";
-    #[cfg(feature = "use_cmd_alias")]
-    const KILL_PANE: &'static str = "killp";
+/// Destroy the given pane
+///
+/// # Manual
+///
+/// tmux ^1.1:
+/// ```text
+/// tmux kill-pane [-a] [-t target-pane]
+/// (alias: killp)
+/// ```
+///
+/// tmux ^1.0:
+/// ```text
+/// tmux kill-pane [-t target-pane]
+/// (alias: killp)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux kill-pane [-p pane-index] [-t target-window]
+/// (alias: killp)
+/// ```
+#[derive(Debug, Clone)]
+pub struct KillPane<'a>(pub TmuxCommand<'a>);
 
-    /// Destroy the given pane
-    ///
-    /// # Manual
-    ///
-    /// tmux ^1.1:
-    /// ```text
-    /// tmux kill-pane [-a] [-t target-pane]
-    /// (alias: killp)
-    /// ```
-    ///
-    /// tmux ^1.0:
-    /// ```text
-    /// tmux kill-pane [-t target-pane]
-    /// (alias: killp)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux kill-pane [-p pane-index] [-t target-window]
-    /// (alias: killp)
-    /// ```
-    pub fn kill_pane(
-        &mut self,
-        all: Option<bool>,
-        target_pane: Option<&str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if all.unwrap_or(false) {
-            args.push(a_KEY);
-        }
-        if let Some(target_pane) = target_pane {
-            args.extend_from_slice(&[t_KEY, &target_pane])
-        }
-        let output = self.command(TmuxInterface::KILL_PANE, &args)?;
-        Ok(output)
+impl<'a> Default for KillPane<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(KILL_PANE)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> KillPane<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_1_1")]
+    pub fn all(&mut self) -> &mut Self {
+        self.0.push_flag(a_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_1_0")]
+    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_pane);
+        self
+    }
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
+    pub fn pane_index<S: Into<Cow<'a, str>>>(&mut self, pane_index: S) -> &mut Self {
+        self.0.push_option(p_KEY, pane_index);
+        self
+    }
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_window);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for KillPane<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(KILL_PANE)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for KillPane<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(KILL_PANE)),
+            ..Default::default()
+        })
     }
 }

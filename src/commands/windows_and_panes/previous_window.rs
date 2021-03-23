@@ -1,41 +1,72 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const PREVIOUS_WINDOW: &'static str = "previous-window";
-    #[cfg(feature = "use_cmd_alias")]
-    const PREVIOUS_WINDOW: &'static str = "prev";
+/// Move to the previous window in the session
+///
+/// # Manual
+///
+/// tmux ^0.9:
+/// ```text
+/// tmux previous-window [-a] [-t target-session]
+/// (alias: prev)
+/// ```
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux previous-window [-t target-session]
+/// (alias: prev)
+/// ```
+#[derive(Debug, Clone)]
+pub struct PreviousWindow<'a>(pub TmuxCommand<'a>);
 
-    /// Move to the previous window in the session
-    ///
-    /// # Manual
-    ///
-    /// tmux ^0.9:
-    /// ```text
-    /// tmux previous-window [-a] [-t target-session]
-    /// (alias: prev)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux previous-window [-t target-session]
-    /// (alias: prev)
-    /// ```
-    pub fn previous_window(
-        &mut self,
-        alert: Option<bool>,
-        target_session: Option<&str>,
-    ) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if alert.unwrap_or(false) {
-            args.push(a_KEY);
-        }
-        if let Some(s) = target_session {
-            args.extend_from_slice(&[t_KEY, &s])
-        }
-        let output = self.command(TmuxInterface::PREVIOUS_WINDOW, &args)?;
-        Ok(output)
+impl<'a> Default for PreviousWindow<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(PREVIOUS_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> PreviousWindow<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_0_9")]
+    pub fn parent_sighup(&mut self) -> &mut Self {
+        self.0.push_flag(a_KEY);
+        self
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_session);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for PreviousWindow<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(PREVIOUS_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for PreviousWindow<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(PREVIOUS_WINDOW)),
+            ..Default::default()
+        })
     }
 }

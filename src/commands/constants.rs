@@ -293,3 +293,176 @@ pub const DISPLAY_MENU: &'static str = "display-menu";
 pub const DISPLAY_MESSAGE: &'static str = "display-message";
 #[cfg(feature = "use_cmd_alias")]
 pub const DISPLAY_MESSAGE: &'static str = "display";
+
+// windows
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const BREAK_PANE: &'static str = "break-pane";
+#[cfg(feature = "use_cmd_alias")]
+pub const BREAK_PANE: &'static str = "breakp";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const CAPTURE_PANE: &'static str = "capture-pane";
+#[cfg(feature = "use_cmd_alias")]
+pub const CAPTURE_PANE: &'static str = "capturep";
+
+pub const CHOOSE_CLIENT: &'static str = "choose-client";
+
+pub const CHOOSE_TREE: &'static str = "choose-tree";
+
+pub const COPY_MODE: &'static str = "copy-mode";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const DISPLAY_PANES: &'static str = "display-panes";
+#[cfg(feature = "use_cmd_alias")]
+pub const DISPLAY_PANES: &'static str = "displayp";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const FIND_WINDOW: &'static str = "find-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const FIND_WINDOW: &'static str = "findw";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const JOIN_PANE: &'static str = "join-pane";
+#[cfg(feature = "use_cmd_alias")]
+pub const JOIN_PANE: &'static str = "joinp";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const KILL_PANE: &'static str = "kill-pane";
+#[cfg(feature = "use_cmd_alias")]
+pub const KILL_PANE: &'static str = "killp";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const KILL_WINDOW: &'static str = "kill-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const KILL_WINDOW: &'static str = "killw";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const LAST_PANE: &'static str = "last-pane";
+#[cfg(feature = "use_cmd_alias")]
+pub const LAST_PANE: &'static str = "lastp";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const LAST_WINDOW: &'static str = "last-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const LAST_WINDOW: &'static str = "last";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const LINK_WINDOW: &'static str = "link-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const LINK_WINDOW: &'static str = "linkw";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const LIST_PANES: &'static str = "list-panes";
+#[cfg(feature = "use_cmd_alias")]
+pub const LIST_PANES: &'static str = "lsp";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const LIST_WINDOWS: &'static str = "list-windows";
+#[cfg(feature = "use_cmd_alias")]
+pub const LIST_WINDOWS: &'static str = "lsw";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const MOVE_PANE: &'static str = "move-pane";
+#[cfg(feature = "use_cmd_alias")]
+pub const MOVE_PANE: &'static str = "movep";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const MOVE_WINDOW: &'static str = "move-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const MOVE_WINDOW: &'static str = "movew";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const NEW_WINDOW: &'static str = "new-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const NEW_WINDOW: &'static str = "neww";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const NEXT_LAYOUT: &'static str = "next-layout";
+#[cfg(feature = "use_cmd_alias")]
+pub const NEXT_LAYOUT: &'static str = "nextl";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const NEXT_WINDOW: &'static str = "next-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const NEXT_WINDOW: &'static str = "next";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const PIPE_PANE: &'static str = "pipe-pane";
+#[cfg(feature = "use_cmd_alias")]
+pub const PIPE_PANE: &'static str = "pipep";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const PREVIOUS_LAYOUT: &'static str = "previous-layout";
+#[cfg(feature = "use_cmd_alias")]
+pub const PREVIOUS_LAYOUT: &'static str = "prevl";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const PREVIOUS_WINDOW: &'static str = "previous-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const PREVIOUS_WINDOW: &'static str = "prev";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const RENAME_WINDOW: &'static str = "rename-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const RENAME_WINDOW: &'static str = "renamew";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const RESIZE_PANE: &'static str = "resize-pane";
+#[cfg(feature = "use_cmd_alias")]
+pub const RESIZE_PANE: &'static str = "resizep";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const RESIZE_WINDOW: &'static str = "resize-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const RESIZE_WINDOW: &'static str = "resizew";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const RESPAWN_PANE: &'static str = "respawn-pane";
+#[cfg(feature = "use_cmd_alias")]
+pub const RESPAWN_PANE: &'static str = "respawnp";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const RESPAWN_WINDOW: &'static str = "respawn-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const RESPAWN_WINDOW: &'static str = "respawnw";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const ROTATE_WINDOW: &'static str = "rotate-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const ROTATE_WINDOW: &'static str = "rotatew";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SELECT_LAYOUT: &'static str = "select-layout";
+#[cfg(feature = "use_cmd_alias")]
+pub const SELECT_LAYOUT: &'static str = "selectl";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SELECT_PANE: &'static str = "select-pane";
+#[cfg(feature = "use_cmd_alias")]
+pub const SELECT_PANE: &'static str = "selectp";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SELECT_WINDOW: &'static str = "select-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const SELECT_WINDOW: &'static str = "selectw";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SPLIT_WINDOW: &'static str = "split-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const SPLIT_WINDOW: &'static str = "splitw";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SWAP_PANE: &'static str = "swap-pane";
+#[cfg(feature = "use_cmd_alias")]
+pub const SWAP_PANE: &'static str = "swapp";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const SWAP_WINDOW: &'static str = "swap-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const SWAP_WINDOW: &'static str = "swapw";
+
+#[cfg(not(feature = "use_cmd_alias"))]
+pub const UNLINK_WINDOW: &'static str = "unlink-window";
+#[cfg(feature = "use_cmd_alias")]
+pub const UNLINK_WINDOW: &'static str = "unlinkw";

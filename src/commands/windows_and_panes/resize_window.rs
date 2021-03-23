@@ -1,6 +1,6 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
 /// Resize a window, up, down, left or right
 ///
@@ -11,195 +11,104 @@ use std::process::Output;
 /// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
 /// (alias: resizew)
 /// ```
-#[derive(Default, Debug)]
-pub struct ResizeWindow<'a> {
-    /// [-a] - set the size of the smallest session containing the window
-    #[cfg(feature = "tmux_2_9")]
-    pub smallest: Option<bool>,
-    /// [-A] - set the size of the largest session containing the window
-    #[cfg(feature = "tmux_2_9")]
-    pub largest: Option<bool>,
-    /// [-D] - resize down by adjustment
-    #[cfg(feature = "tmux_2_9")]
-    pub down: Option<bool>,
-    /// [-L] - resize left by adjustment
-    #[cfg(feature = "tmux_2_9")]
-    pub left: Option<bool>,
-    /// [-R] - resize right by adjustment
-    #[cfg(feature = "tmux_2_9")]
-    pub right: Option<bool>,
-    /// [-U] - resize up by adjustment
-    #[cfg(feature = "tmux_2_9")]
-    pub up: Option<bool>,
-    /// [-t target-window] - target-window
-    #[cfg(feature = "tmux_2_9")]
-    pub target_window: Option<&'a str>,
-    /// [-x width] - absolute size
-    #[cfg(feature = "tmux_2_9")]
-    pub width: Option<usize>,
-    /// [-y height] - absolute size
-    #[cfg(feature = "tmux_2_9")]
-    pub height: Option<usize>,
-    /// [adjustment] - adjustment
-    #[cfg(feature = "tmux_2_9")]
-    pub adjustment: Option<&'a str>,
-}
+#[derive(Debug, Clone)]
+pub struct ResizeWindow<'a>(pub TmuxCommand<'a>);
 
-impl<'a> ResizeWindow<'a> {
-    pub fn new() -> ResizeWindow<'a> {
-        Default::default()
+impl<'a> Default for ResizeWindow<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(RESIZE_WINDOW)),
+            ..Default::default()
+        })
     }
 }
 
-#[derive(Default, Debug)]
-pub struct ResizeWindowBuilder<'a> {
-    #[cfg(feature = "tmux_2_9")]
-    pub smallest: Option<bool>,
-    #[cfg(feature = "tmux_2_9")]
-    pub largest: Option<bool>,
-    #[cfg(feature = "tmux_2_9")]
-    pub down: Option<bool>,
-    #[cfg(feature = "tmux_2_9")]
-    pub left: Option<bool>,
-    #[cfg(feature = "tmux_2_9")]
-    pub right: Option<bool>,
-    #[cfg(feature = "tmux_2_9")]
-    pub up: Option<bool>,
-    #[cfg(feature = "tmux_2_9")]
-    pub target_window: Option<&'a str>,
-    #[cfg(feature = "tmux_2_9")]
-    pub width: Option<usize>,
-    #[cfg(feature = "tmux_2_9")]
-    pub height: Option<usize>,
-    #[cfg(feature = "tmux_2_9")]
-    pub adjustment: Option<&'a str>,
-}
-
-impl<'a> ResizeWindowBuilder<'a> {
+impl<'a> ResizeWindow<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 
+    /// [-a] - set the size of the smallest session containing the window
     pub fn smallest(&mut self) -> &mut Self {
-        self.smallest = Some(true);
+        self.0.push_flag(a_KEY);
         self
     }
 
+    /// [-A] - set the size of the largest session containing the window
     pub fn largest(&mut self) -> &mut Self {
-        self.largest = Some(true);
+        self.0.push_flag(A_KEY);
         self
     }
 
+    /// [-D] - resize down by adjustment
     pub fn down(&mut self) -> &mut Self {
-        self.down = Some(true);
+        self.0.push_flag(D_KEY);
         self
     }
 
+    /// [-L] - resize left by adjustment
     pub fn left(&mut self) -> &mut Self {
-        self.left = Some(true);
+        self.0.push_flag(L_KEY);
         self
     }
 
+    /// [-R] - resize right by adjustment
     pub fn right(&mut self) -> &mut Self {
-        self.right = Some(true);
+        self.0.push_flag(R_KEY);
         self
     }
 
+    /// [-U] - resize up by adjustment
     pub fn up(&mut self) -> &mut Self {
-        self.up = Some(true);
+        self.0.push_flag(U_KEY);
         self
     }
 
-    pub fn target_window(&mut self, target_window: &'a str) -> &mut Self {
-        self.target_window = Some(target_window);
+    /// [-t target-window] - target-window
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, start_directory);
         self
     }
 
+    /// [-x width] - absolute size
     pub fn width(&mut self, width: usize) -> &mut Self {
-        self.width = Some(width);
+        self.0.push_option(x_KEY, width.to_string());
         self
     }
 
+    /// [-y height] - absolute size
     pub fn height(&mut self, height: usize) -> &mut Self {
-        self.height = Some(height);
+        self.0.push_option(y_KEY, height.to_string());
         self
     }
 
-    pub fn adjustment(&mut self, adjustment: &'a str) -> &mut Self {
-        self.adjustment = Some(adjustment);
+    /// [adjustment] - adjustment
+    pub fn adjustment<S: Into<Cow<'a, str>>>(&mut self, adjustment: S) -> &mut Self {
+        self.0.push_param(adjustment);
         self
     }
 
-    pub fn build(&self) -> ResizeWindow<'a> {
-        ResizeWindow {
-            smallest: self.smallest,
-            largest: self.largest,
-            down: self.down,
-            left: self.left,
-            right: self.right,
-            up: self.up,
-            target_window: self.target_window,
-            width: self.width,
-            height: self.height,
-            adjustment: self.adjustment,
-        }
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
     }
 }
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const RESIZE_WINDOW: &'static str = "resize-window";
-    #[cfg(feature = "use_cmd_alias")]
-    const RESIZE_WINDOW: &'static str = "resizew";
+impl<'a> From<TmuxCommand<'a>> for ResizeWindow<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(RESIZE_WINDOW)),
+            ..Default::default()
+        })
+    }
+}
 
-    /// Resize a window, up, down, left or right
-    ///
-    /// # Manual
-    ///
-    /// tmux ^2.9a:
-    /// ```text
-    /// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
-    /// (alias: resizew)
-    /// ```
-    pub fn resize_window(&mut self, resize_window: Option<&ResizeWindow>) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        let x;
-        let y;
-        if let Some(resize_window) = resize_window {
-            if resize_window.smallest.unwrap_or(false) {
-                args.push(a_KEY);
-            }
-            if resize_window.largest.unwrap_or(false) {
-                args.push(A_KEY);
-            }
-            if resize_window.down.unwrap_or(false) {
-                args.push(D_KEY);
-            }
-            if resize_window.left.unwrap_or(false) {
-                args.push(L_KEY);
-            }
-            if resize_window.right.unwrap_or(false) {
-                args.push(R_KEY);
-            }
-            if resize_window.up.unwrap_or(false) {
-                args.push(U_KEY);
-            }
-            if let Some(target_window) = resize_window.target_window {
-                args.extend_from_slice(&[t_KEY, &target_window])
-            }
-            if let Some(width) = resize_window.width {
-                x = width.to_string();
-                args.extend_from_slice(&[x_KEY, &x]);
-            }
-            if let Some(height) = resize_window.height {
-                y = height.to_string();
-                args.extend_from_slice(&[y_KEY, &y]);
-            }
-            if let Some(adjustment) = resize_window.adjustment {
-                args.push(adjustment)
-            }
-        }
-        let output = self.command(TmuxInterface::RESIZE_WINDOW, &args)?;
-        Ok(output)
+impl<'a> From<&TmuxCommand<'a>> for ResizeWindow<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(RESIZE_WINDOW)),
+            ..Default::default()
+        })
     }
 }

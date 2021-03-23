@@ -1,28 +1,60 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
-impl<'a> TmuxInterface<'a> {
-    #[cfg(not(feature = "use_cmd_alias"))]
-    const NEXT_LAYOUT: &'static str = "next-layout";
-    #[cfg(feature = "use_cmd_alias")]
-    const NEXT_LAYOUT: &'static str = "nextl";
+/// Move a window to the next layout and rearrange the panes to fit
+///
+/// # Manual
+///
+/// tmux ^0.8:
+/// ```text
+/// tmux next-layout [-t target-window]
+/// (alias: nextl)
+/// ```
+#[derive(Debug, Clone)]
+pub struct NextLayout<'a>(pub TmuxCommand<'a>);
 
-    /// Move a window to the next layout and rearrange the panes to fit
-    ///
-    /// # Manual
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux next-layout [-t target-window]
-    /// (alias: nextl)
-    /// ```
-    pub fn next_layout(&mut self, target_window: Option<&'a str>) -> Result<Output, Error> {
-        let mut args: Vec<&str> = Vec::new();
-        if let Some(target_window) = target_window {
-            args.extend_from_slice(&[t_KEY, &target_window])
-        }
-        let output = self.command(TmuxInterface::NEXT_LAYOUT, &args)?;
-        Ok(output)
+impl<'a> Default for NextLayout<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(NEXT_LAYOUT)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> NextLayout<'a> {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[cfg(feature = "tmux_0_8")]
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_window);
+        self
+    }
+
+    pub fn output(&self) -> TmuxOutput {
+        self.0.output()
+    }
+}
+
+impl<'a> From<TmuxCommand<'a>> for NextLayout<'a> {
+    fn from(item: TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin,
+            cmd: Some(Cow::Borrowed(NEXT_LAYOUT)),
+            ..Default::default()
+        })
+    }
+}
+
+impl<'a> From<&TmuxCommand<'a>> for NextLayout<'a> {
+    fn from(item: &TmuxCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            bin: item.bin.clone(),
+            cmd: Some(Cow::Borrowed(NEXT_LAYOUT)),
+            ..Default::default()
+        })
     }
 }
