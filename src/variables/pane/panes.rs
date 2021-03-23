@@ -1,7 +1,7 @@
 use crate::variables::pane::pane::{PANE_VARS, PANE_VARS_SEPARATOR};
 use crate::Error;
-use crate::Pane;
-use crate::{TargetWindowExt, TmuxInterface};
+use crate::TargetWindowExt;
+use crate::{ListPanes, Pane};
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -35,7 +35,6 @@ impl Panes {
     }
 
     pub fn get(target_window: &TargetWindowExt, bitflags: u64) -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS
             .iter()
             .filter(|t| bitflags & t.1 == t.1)
@@ -43,12 +42,15 @@ impl Panes {
             .collect::<Vec<String>>()
             .join(PANE_VARS_SEPARATOR);
         let target_window_str = target_window.to_string();
-        let panes_str = tmux.list_panes(None, None, Some(&lsp_format), Some(&target_window_str))?;
+        let panes_str = ListPanes::new()
+            .format(&lsp_format)
+            .target(&target_window_str)
+            .output()
+            .string();
         Panes::from_str(&panes_str, bitflags)
     }
 
     pub fn get_all(target_session: &TargetWindowExt, bitflags: u64) -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
         let lsp_format = PANE_VARS
             .iter()
             .filter(|t| bitflags & t.1 == t.1)
@@ -56,12 +58,11 @@ impl Panes {
             .collect::<Vec<String>>()
             .join(PANE_VARS_SEPARATOR);
         let target_session_str = target_session.to_string();
-        let panes_str = tmux.list_panes(
-            Some(true),
-            None,
-            Some(&lsp_format),
-            Some(&target_session_str),
-        )?;
+        let panes_str = ListPanes::new()
+            .format(&lsp_format)
+            .target(&target_session_str)
+            .output()
+            .string();
         Panes::from_str(&panes_str, bitflags)
     }
 

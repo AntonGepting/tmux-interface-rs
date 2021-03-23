@@ -1,5 +1,5 @@
 use crate::variables::window::window::{WINDOW_VARS, WINDOW_VARS_SEPARATOR};
-use crate::{Error, TargetSession, TmuxInterface, Window};
+use crate::{Error, ListWindows, TargetSession, Window};
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -32,7 +32,6 @@ impl Windows {
     }
 
     pub fn get(target_session: &TargetSession, bitflags: u64) -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
         let lsw_format = WINDOW_VARS
             .iter()
             .filter(|t| bitflags & t.1 == t.1)
@@ -40,7 +39,11 @@ impl Windows {
             .collect::<Vec<String>>()
             .join(WINDOW_VARS_SEPARATOR);
         let target_session_str = target_session.to_string();
-        let windows_str = tmux.list_windows(None, Some(&lsw_format), Some(&target_session_str))?;
+        let windows_str = ListWindows::new()
+            .format(&lsw_format)
+            .target_session(&target_session_str)
+            .output()
+            .string();
         Windows::from_str(&windows_str, bitflags)
     }
 

@@ -1,6 +1,6 @@
 #[cfg(feature = "tmux_2_0")]
 use super::create_insert_vec;
-use crate::{Error, SetOptionBuilder, ShowOptionsBuilder, Switch, TmuxInterface};
+use crate::{Error, SetOption, ShowOptions, Switch};
 use std::fmt;
 use std::str::FromStr;
 
@@ -315,9 +315,7 @@ pub struct ServerOptions {
 impl ServerOptions {
     // faster than SERVER_OPTIONS_ALL bitmask if will be implemented selective
     pub fn get_all() -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
-        let show_options = ShowOptionsBuilder::new().server().build();
-        let s = tmux.show_options(Some(&show_options))?;
+        let s = ShowOptions::new().server().output().string();
         s.parse()
     }
 
@@ -326,18 +324,17 @@ impl ServerOptions {
     // FIXME: tmux v1.6 option attribute not exists, all options will be showed
     #[cfg(feature = "tmux_1_7")]
     pub fn get(bitflags: usize) -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
         let selected_option = SERVER_OPTIONS
             .iter()
             .filter(|t| bitflags == t.3)
             .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
-        let show_options = ShowOptionsBuilder::new()
+        let s = ShowOptions::new()
             .server()
             .option(&selected_option)
-            .build();
-        let s = tmux.show_options(Some(&show_options))?;
+            .output()
+            .string();
         s.parse()
     }
 
@@ -357,11 +354,13 @@ impl ServerOptions {
 
     // allows selective set by bitmask
     pub fn set(&self, bitflags: usize) -> Result<(), Error> {
-        let mut tmux = TmuxInterface::new();
         for selected_option in SERVER_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
-                let set_option = SetOptionBuilder::new().server().build();
-                tmux.set_option(Some(&set_option), selected_option.0, &selected_value)?;
+                SetOption::new()
+                    .server()
+                    .option(selected_option.0)
+                    .value(&selected_value)
+                    .output();
             }
         }
         Ok(())

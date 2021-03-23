@@ -1,5 +1,5 @@
 use crate::options::StatusKeys;
-use crate::{Error, SetOptionBuilder, ShowOptionsBuilder, Switch, TmuxInterface};
+use crate::{Error, SetOption, ShowOptions, Switch};
 use std::fmt;
 use std::str::FromStr;
 
@@ -1181,38 +1181,41 @@ pub struct WindowOptions {
 
 impl WindowOptions {
     pub fn get_all() -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
-        let show_options = ShowOptionsBuilder::new().global().window().build();
-        let s = tmux.show_options(Some(&show_options))?;
-        s.parse()
+        ShowOptions::new()
+            .global()
+            .window()
+            .output()
+            .string()
+            .parse()
     }
 
     // XXX: bitmask is overkill now, mb later use for multiple select
     // NOTE: not allows selective get by bitmask
     #[cfg(feature = "tmux_1_7")]
     pub fn get(bitflags: u128) -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
         let selected_option = WINDOW_OPTIONS
             .iter()
             .filter(|t| bitflags == t.3)
             .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
-        let show_options = ShowOptionsBuilder::new()
+        ShowOptions::new()
             .server()
             .option(&selected_option)
-            .build();
-        let s = tmux.show_options(Some(&show_options))?;
-        s.parse()
+            .output()
+            .string()
+            .parse()
     }
 
     // allows selective set by bitmask
     pub fn set(&self, bitflags: u128) -> Result<(), Error> {
-        let mut tmux = TmuxInterface::new();
         for selected_option in WINDOW_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
-                let set_option = SetOptionBuilder::new().server().build();
-                tmux.set_option(Some(&set_option), selected_option.0, &selected_value)?;
+                SetOption::new()
+                    .server()
+                    .option(selected_option.0)
+                    .value(&selected_value)
+                    .output();
             }
         }
         Ok(())

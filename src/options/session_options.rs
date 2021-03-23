@@ -1,6 +1,6 @@
 use super::create_insert_vec;
 use crate::options::StatusKeys;
-use crate::{Error, SetOptionBuilder, ShowOptionsBuilder, Switch, TmuxInterface};
+use crate::{Error, SetOption, ShowOptions, Switch};
 use std::fmt;
 use std::str::FromStr;
 
@@ -1273,9 +1273,7 @@ pub struct SessionOptions {
 
 impl SessionOptions {
     pub fn get_all() -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
-        let show_options = ShowOptionsBuilder::new().global().build();
-        let s = tmux.show_options(Some(&show_options))?;
+        let s = ShowOptions::new().global().output().string();
         s.parse()
     }
 
@@ -1283,53 +1281,54 @@ impl SessionOptions {
     // NOTE: not allows selective get by bitmask
     #[cfg(feature = "tmux_1_7")]
     pub fn get(bitflags: u128) -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
         let selected_option = SESSION_OPTIONS
             .iter()
             .filter(|t| bitflags == t.3)
             .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
-        let show_options = ShowOptionsBuilder::new().option(&selected_option).build();
-        let s = tmux.show_options(Some(&show_options))?;
+        let s = ShowOptions::new()
+            .option(&selected_option)
+            .output()
+            .string();
         s.parse()
     }
 
     #[cfg(feature = "tmux_1_7")]
     pub fn get_global(bitflags: u128) -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
         let selected_option = SESSION_OPTIONS
             .iter()
             .filter(|t| bitflags == t.3)
             .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
-        let show_options = ShowOptionsBuilder::new()
+        let s = ShowOptions::new()
             .option(&selected_option)
             .global()
-            .build();
-        let s = tmux.show_options(Some(&show_options))?;
+            .output()
+            .string();
         s.parse()
     }
 
     // allows selective set by bitmask
     pub fn set(&self, bitflags: u128) -> Result<(), Error> {
-        let mut tmux = TmuxInterface::new();
         for selected_option in SESSION_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
-                let set_option = SetOptionBuilder::new().build();
-                tmux.set_option(Some(&set_option), selected_option.0, &selected_value)?;
+                SetOption::new()
+                    .option(selected_option.0)
+                    .option(&selected_value);
             }
         }
         Ok(())
     }
 
     pub fn set_global(&self, bitflags: u128) -> Result<(), Error> {
-        let mut tmux = TmuxInterface::new();
         for selected_option in SESSION_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
-                let set_option = SetOptionBuilder::new().global().build();
-                tmux.set_option(Some(&set_option), selected_option.0, &selected_value)?;
+                SetOption::new()
+                    .global()
+                    .option(selected_option.0)
+                    .value(&selected_value);
             }
         }
         Ok(())
