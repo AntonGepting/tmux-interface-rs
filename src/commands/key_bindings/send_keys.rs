@@ -110,7 +110,7 @@ impl<'a> SendKeys<'a> {
 
     /// [-N repeat-count] - specify a repeat count
     #[cfg(feature = "tmux_2_4")]
-    pub fn repeat_count<S: Into<Cow<'a, str>>>(&mut self, repeat_count: usize) -> &mut Self {
+    pub fn repeat_count(&mut self, repeat_count: usize) -> &mut Self {
         self.0.push_option(N_KEY, repeat_count.to_string());
         self
     }

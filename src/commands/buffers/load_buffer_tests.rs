@@ -3,27 +3,27 @@ fn load_buffer() {
     use crate::LoadBuffer;
     use std::borrow::Cow;
 
-    /// Load the contents of the specified paste buffer from path.
-    ///
-    /// # Manual
-    ///
-    /// tmux ^2.0:
-    /// ```text
-    /// tmux load-buffer [-b buffer-name] path
-    /// (alias: loadb)
-    /// ```
-    ///
-    /// tmux ^1.5:
-    /// ```text
-    /// tmux load-buffer [-b buffer-index] path
-    /// (alias: loadb)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux load-buffer [-b buffer-index] [-t target-session] path
-    /// (alias: loadb)
-    /// ```
+    // Load the contents of the specified paste buffer from path.
+    //
+    // # Manual
+    //
+    // tmux ^2.0:
+    // ```text
+    // tmux load-buffer [-b buffer-name] path
+    // (alias: loadb)
+    // ```
+    //
+    // tmux ^1.5:
+    // ```text
+    // tmux load-buffer [-b buffer-index] path
+    // (alias: loadb)
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux load-buffer [-b buffer-index] [-t target-session] path
+    // (alias: loadb)
+    // ```
     let mut load_buffer = LoadBuffer::new();
     #[cfg(feature = "tmux_2_0")]
     load_buffer.buffer_name("1");

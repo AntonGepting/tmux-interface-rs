@@ -1,17 +1,36 @@
 #[test]
 fn send_prefix() {
-    use crate::{Error, TargetPane, TmuxInterface};
+    use crate::{SendPrefix, TargetPane};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux send-prefix [-2] [-t target-pane]
-        assert_eq!(
-            format!(r#"{:?} {:?} {:?}"#, bin, options, subcmd),
-            r#""tmux" [] ["send-prefix", "-2", "-t", "1"]"#
-        );
-        Err(Error::Hook)
-    }));
-    let target_pane = TargetPane::Raw("1").to_string();
-    tmux.send_prefix(Some(true), Some(&target_pane))
-        .unwrap_err();
+    // # Manual
+    //
+    // tmux ^1.6
+    // ```text
+    // tmux send-prefix [-2] [-t target-pane]
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux send-prefix [-t target-pane]
+    // ```
+    let mut send_prefix = SendPrefix::new();
+    #[cfg(feature = "tmux_1_6")]
+    send_prefix.secondary();
+    #[cfg(feature = "tmux_0_8")]
+    send_prefix.target_pane("1");
+
+    let cmd = "send-prefix";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_1_6")]
+    s.push("-2");
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-t", "1"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(send_prefix.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(send_prefix.0.bin_args, None);
+    assert_eq!(send_prefix.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(send_prefix.0.cmd_args, Some(s));
 }

@@ -1,6 +1,6 @@
 #[test]
 fn delete_buffer() {
-    use crate::{DeleteBuffer, Error, TargetPane};
+    use crate::{DeleteBuffer, TargetPane};
     use std::borrow::Cow;
 
     // Delete the buffer named buffer-name, or the most recently added automatically named buffer

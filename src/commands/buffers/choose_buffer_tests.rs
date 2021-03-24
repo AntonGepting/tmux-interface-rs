@@ -1,6 +1,6 @@
 #[test]
 fn choose_buffer() {
-    use crate::{ChooseBuffer, Error, TargetPane};
+    use crate::{ChooseBuffer, TargetPane};
     use std::borrow::Cow;
 
     // Stucture for putting a pane into buffer mode
@@ -52,7 +52,7 @@ fn choose_buffer() {
     #[cfg(feature = "tmux_2_6")]
     choose_buffer.sort_order("3");
     #[cfg(feature = "tmux_1_3")]
-    choose_buffer.target_pane("4");
+    choose_buffer.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_3")]
     choose_buffer.template("5");
 

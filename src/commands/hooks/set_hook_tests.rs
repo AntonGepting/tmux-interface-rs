@@ -3,29 +3,29 @@ fn set_hook() {
     use crate::{SetHook, TargetSession};
     use std::borrow::Cow;
 
-    /// Structure for setting or unsetting hook `hook-name` to command.
-    ///
-    /// # Manual
-    ///
-    /// tmux ^3.0:
-    /// ```text
-    /// tmux set-hook [-agRu] [-t target-session] hook-name command
-    /// ```
-    ///
-    /// tmux ^2.8:
-    /// ```text
-    /// tmux set-hook [-gRu] [-t target-session] hook-name command
-    /// ```
-    ///
-    /// tmux ^2.4:
-    /// ```text
-    /// tmux set-hook [-gu] [-t target-session] hook-name command
-    /// ```
-    ///
-    /// tmux ^2.2:
-    /// ```text
-    /// tmux set-hook [-g] [-t target-session] hook-name command
-    /// ```
+    // Structure for setting or unsetting hook `hook-name` to command.
+    //
+    // # Manual
+    //
+    // tmux ^3.0:
+    // ```text
+    // tmux set-hook [-agRu] [-t target-session] hook-name command
+    // ```
+    //
+    // tmux ^2.8:
+    // ```text
+    // tmux set-hook [-gRu] [-t target-session] hook-name command
+    // ```
+    //
+    // tmux ^2.4:
+    // ```text
+    // tmux set-hook [-gu] [-t target-session] hook-name command
+    // ```
+    //
+    // tmux ^2.2:
+    // ```text
+    // tmux set-hook [-g] [-t target-session] hook-name command
+    // ```
     let target_session = TargetSession::Raw("1").to_string();
 
     let mut set_hook = SetHook::new();

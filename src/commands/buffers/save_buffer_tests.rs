@@ -3,27 +3,27 @@ fn save_buffer() {
     use crate::SaveBuffer;
     use std::borrow::Cow;
 
-    /// Save the contents of the specified paste buffer to path.
-    ///
-    /// # Manual
-    ///
-    /// tmux ^2.0:
-    /// ```text
-    /// tmux save-buffer [-a] [-b buffer-name] path
-    /// (alias: saveb)
-    /// ```
-    ///
-    /// tmux ^1.5:
-    /// ```text
-    /// tmux save-buffer [-a] [-b buffer-index] path
-    /// (alias: saveb)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux save-buffer [-a] [-b buffer-index] [-t target-session] path
-    /// (alias: saveb)
-    /// ```
+    // Save the contents of the specified paste buffer to path.
+    //
+    // # Manual
+    //
+    // tmux ^2.0:
+    // ```text
+    // tmux save-buffer [-a] [-b buffer-name] path
+    // (alias: saveb)
+    // ```
+    //
+    // tmux ^1.5:
+    // ```text
+    // tmux save-buffer [-a] [-b buffer-index] path
+    // (alias: saveb)
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux save-buffer [-a] [-b buffer-index] [-t target-session] path
+    // (alias: saveb)
+    // ```
     let mut save_buffer = SaveBuffer::new();
     #[cfg(feature = "tmux_0_8")]
     save_buffer.append();

@@ -1,29 +1,29 @@
 #[test]
 fn list_buffers() {
-    use crate::{Error, ListBuffers};
+    use crate::ListBuffers;
     use std::borrow::Cow;
 
-    /// List the global buffers.
-    ///
-    /// # Manual
-    ///
-    /// tmux ^1.7:
-    /// ```text
-    /// tmux list-buffers [-F format]
-    /// (alias: lsb)
-    /// ```
-    ///
-    /// tmux ^1.5:
-    /// ```text
-    /// tmux list-buffers
-    /// (alias: lsb)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux list-buffers [-t target-session]
-    /// (alias: lsb)
-    /// ```
+    // List the global buffers.
+    //
+    // # Manual
+    //
+    // tmux ^1.7:
+    // ```text
+    // tmux list-buffers [-F format]
+    // (alias: lsb)
+    // ```
+    //
+    // tmux ^1.5:
+    // ```text
+    // tmux list-buffers
+    // (alias: lsb)
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux list-buffers [-t target-session]
+    // (alias: lsb)
+    // ```
     let mut list_buffers = ListBuffers::new();
     #[cfg(feature = "tmux_1_7")]
     list_buffers.format("1");

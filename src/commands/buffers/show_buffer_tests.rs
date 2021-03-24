@@ -3,21 +3,21 @@ fn show_buffer() {
     use crate::ShowBuffer;
     use std::borrow::Cow;
 
-    /// Display the contents of the specified buffer.
-    ///
-    /// # Manual
-    ///
-    /// tmux ^1.5:
-    /// ```text
-    /// tmux show-buffer [-b buffer-name]
-    /// (alias: showb)
-    /// ```
-    ///
-    /// tmux ^0.8:
-    /// ```text
-    /// tmux show-buffer [-b buffer-index] [-t target-session]
-    /// (alias: showb)
-    /// ```
+    // Display the contents of the specified buffer.
+    //
+    // # Manual
+    //
+    // tmux ^1.5:
+    // ```text
+    // tmux show-buffer [-b buffer-name]
+    // (alias: showb)
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux show-buffer [-b buffer-index] [-t target-session]
+    // (alias: showb)
+    // ```
     let mut show_buffer = ShowBuffer::new();
     #[cfg(feature = "tmux_1_5")]
     show_buffer.buffer_name("1");

@@ -3,12 +3,12 @@ fn show_hooks() {
     use crate::{ShowHooks, TargetSession};
     use std::borrow::Cow;
 
-    /// # Manual
-    ///
-    /// tmux ^2.2:
-    /// ```text
-    /// tmux show-hooks [-g] [-t target-session]
-    /// ```
+    // # Manual
+    //
+    // tmux ^2.2:
+    // ```text
+    // tmux show-hooks [-g] [-t target-session]
+    // ```
     let target_session = TargetSession::Raw("1").to_string();
 
     let mut show_hooks = ShowHooks::new();

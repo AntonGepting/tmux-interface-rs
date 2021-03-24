@@ -95,7 +95,7 @@ impl<'a> BindKey<'a> {
     /// [arguments] - arguments
     #[cfg(feature = "tmux_0_8")]
     pub fn arguments<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
-        self.0.push_option(T_KEY, key_table);
+        self.0.push_param(key_table);
         self
     }
 

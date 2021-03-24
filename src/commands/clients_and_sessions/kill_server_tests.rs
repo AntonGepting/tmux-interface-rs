@@ -11,7 +11,8 @@ fn kill_server() {
     // ```text
     // tmux kill-server
     // ```
-    let mut kill_server = KillServer::new();
+    let kill_server = KillServer::new();
+
     let cmd = "kill-server";
 
     assert_eq!(kill_server.0.bin, Cow::Borrowed("tmux"));
