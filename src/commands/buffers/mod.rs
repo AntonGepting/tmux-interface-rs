@@ -4,7 +4,7 @@ use crate::{
 };
 
 /// All functions from man tmux "Buffers" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#BUFFERS)
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#BUFFERS))
 #[cfg(feature = "tmux_1_3")]
 pub mod choose_buffer;
 #[cfg(feature = "tmux_1_0")]
@@ -26,27 +26,30 @@ pub mod set_buffer;
 #[cfg(feature = "tmux_1_0")]
 pub mod show_buffer;
 
-//#[cfg(feature = "tmux_1_3")]
-//pub mod choose_buffer_tests;
+#[cfg(feature = "tmux_1_3")]
+pub mod choose_buffer_tests;
+#[cfg(feature = "tmux_1_0")]
+pub mod clear_history_tests;
+// XXX: versions check
 //#[cfg(feature = "tmux_1_0")]
-//pub mod clear_history_tests;
-////#[cfg(feature = "tmux_1_0")]
-////pub mod copy_buffer_tests;
-//#[cfg(feature = "tmux_1_0")]
-//pub mod delete_buffer_tests;
-//#[cfg(feature = "tmux_1_0")]
-//pub mod list_buffers_tests;
-//#[cfg(feature = "tmux_1_0")]
-//pub mod load_buffer_tests;
-//#[cfg(feature = "tmux_1_0")]
-//pub mod paste_buffer_tests;
-//#[cfg(feature = "tmux_1_0")]
-//pub mod save_buffer_tests;
-//#[cfg(feature = "tmux_1_0")]
-//pub mod set_buffer_tests;
-//#[cfg(feature = "tmux_1_0")]
-//pub mod show_buffer_tests;
+//pub mod copy_buffer_tests;
+#[cfg(feature = "tmux_1_0")]
+pub mod delete_buffer_tests;
+#[cfg(feature = "tmux_1_0")]
+pub mod list_buffers_tests;
+#[cfg(feature = "tmux_1_0")]
+pub mod load_buffer_tests;
+#[cfg(feature = "tmux_1_0")]
+pub mod paste_buffer_tests;
+#[cfg(feature = "tmux_1_0")]
+pub mod save_buffer_tests;
+#[cfg(feature = "tmux_1_0")]
+pub mod set_buffer_tests;
+#[cfg(feature = "tmux_1_0")]
+pub mod show_buffer_tests;
 
+/// All functions from man tmux "Buffers" listed below
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#BUFFERS))
 impl<'a> TmuxCommand<'a> {
     pub fn choose_buffer(&self) -> ChooseBuffer<'a> {
         ChooseBuffer::from(self)

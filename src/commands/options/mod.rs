@@ -1,7 +1,7 @@
 use crate::{SetOption, SetWindowOption, ShowOptions, ShowWindowOptions, TmuxCommand};
 
 /// All functions from man tmux "Options" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#OPTIONS)
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#OPTIONS))
 #[cfg(feature = "tmux_1_0")]
 pub mod set_option;
 #[cfg(feature = "tmux_1_0")]
@@ -20,6 +20,8 @@ pub mod show_window_options;
 //#[cfg(feature = "tmux_1_0")]
 //pub mod show_window_options_tests;
 
+/// All functions from man tmux "Options" listed below
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#OPTIONS))
 impl<'a> TmuxCommand<'a> {
     pub fn set_option(&self) -> SetOption<'a> {
         SetOption::from(self)

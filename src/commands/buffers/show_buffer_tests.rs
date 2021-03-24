@@ -1,22 +1,48 @@
 #[test]
 fn show_buffer() {
-    use crate::{Error, TmuxInterface};
+    use crate::ShowBuffer;
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux show-buffer [-b buffer-name]
-        // (alias: showb)
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("show-buffer");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("showb");
-        s.extend_from_slice(&["-b", "1"]);
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
-    tmux.show_buffer(Some("1")).unwrap_err();
+    /// Display the contents of the specified buffer.
+    ///
+    /// # Manual
+    ///
+    /// tmux ^1.5:
+    /// ```text
+    /// tmux show-buffer [-b buffer-name]
+    /// (alias: showb)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux show-buffer [-b buffer-index] [-t target-session]
+    /// (alias: showb)
+    /// ```
+    let mut show_buffer = ShowBuffer::new();
+    #[cfg(feature = "tmux_1_5")]
+    show_buffer.buffer_name("1");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    show_buffer.buffer_index("2");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    show_buffer.target_session("3");
+
+    let mut s = Vec::new();
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "show-buffer";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "showb";
+
+    #[cfg(feature = "tmux_1_5")]
+    s.extend_from_slice(&["-b", "1"]);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    s.extend_from_slice(&["-b", "2"]);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    s.extend_from_slice(&["-b", "3"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(show_buffer.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(show_buffer.0.bin_args, None);
+    assert_eq!(show_buffer.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(show_buffer.0.cmd_args, Some(s));
 }

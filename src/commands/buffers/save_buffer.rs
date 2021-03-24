@@ -64,6 +64,7 @@ impl<'a> SaveBuffer<'a> {
         self
     }
 
+    #[cfg(feature = "tmux_0_8")]
     pub fn path<S: Into<Cow<'a, str>>>(&mut self, path: S) -> &mut Self {
         self.0.push_param(path);
         self

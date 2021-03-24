@@ -1,7 +1,7 @@
 use crate::{ClockMode, IfShell, LockServer, RunShell, TmuxCommand, WaitFor};
 
 /// All functions from man tmux "Miscellaneous" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#MISCELLANEOUS)
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#MISCELLANEOUS))
 #[cfg(feature = "tmux_1_0")]
 pub mod clock_mode;
 #[cfg(feature = "tmux_1_0")]
@@ -32,6 +32,8 @@ pub mod wait_for;
 //#[cfg(feature = "tmux_1_8")]
 //pub mod wait_for_tests;
 
+/// All functions from man tmux "Miscellaneous" listed below
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#MISCELLANEOUS))
 impl<'a> TmuxCommand<'a> {
     pub fn clock_mode(&self) -> ClockMode<'a> {
         ClockMode::from(self)

@@ -1,22 +1,49 @@
 #[test]
 fn list_buffers() {
-    use crate::{Error, TmuxInterface};
+    use crate::{Error, ListBuffers};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux list-buffers [-F format]
-        // (alias: lsb)
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("list-buffers");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("lsb");
-        s.extend_from_slice(&["-F", "1"]);
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
-    tmux.list_buffers(Some("1")).unwrap_err();
+    /// List the global buffers.
+    ///
+    /// # Manual
+    ///
+    /// tmux ^1.7:
+    /// ```text
+    /// tmux list-buffers [-F format]
+    /// (alias: lsb)
+    /// ```
+    ///
+    /// tmux ^1.5:
+    /// ```text
+    /// tmux list-buffers
+    /// (alias: lsb)
+    /// ```
+    ///
+    /// tmux ^0.8:
+    /// ```text
+    /// tmux list-buffers [-t target-session]
+    /// (alias: lsb)
+    /// ```
+    let mut list_buffers = ListBuffers::new();
+    #[cfg(feature = "tmux_1_7")]
+    list_buffers.format("1");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    list_buffers.target_session("2");
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "list-buffers";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "lsb";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_1_7")]
+    s.extend_from_slice(&["-F", "1"]);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    s.extend_from_slice(&["-t", "2"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(list_buffers.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(list_buffers.0.bin_args, None);
+    assert_eq!(list_buffers.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(list_buffers.0.cmd_args, Some(s));
 }

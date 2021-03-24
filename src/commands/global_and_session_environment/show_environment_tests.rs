@@ -1,42 +1,57 @@
 #[test]
 fn show_environment() {
-    use crate::{Error, TargetSession, TmuxInterface};
+    use crate::{ShowEnvironment, TargetSession};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux ^2.1:
-        // ```text
-        // tmux show-environment [-gs] [-t target-session] [variable]
-        // (alias: showenv)
-        // ```
-        //
-        // tmux ^1.7:
-        // ```text
-        // tmux show-environment [-g] [-t target-session] [variable]
-        // (alias: showenv)
-        // ```
-        //
-        // tmux ^1.0:
-        // ```text
-        // tmux show-environment [-g] [-t target-session]
-        // (alias: showenv)
-        // ```
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("show-environment");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("showenv");
-        s.push("-g");
-        s.push("-s");
-        s.extend_from_slice(&["-t", "1"]);
-        s.push("2");
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
+    // # Manual
+    //
+    // tmux ^2.1:
+    // ```text
+    // tmux show-environment [-gs] [-t target-session] [variable]
+    // (alias: showenv)
+    // ```
+    //
+    // tmux ^1.7:
+    // ```text
+    // tmux show-environment [-g] [-t target-session] [variable]
+    // (alias: showenv)
+    // ```
+    //
+    // tmux ^1.0:
+    // ```text
+    // tmux show-environment [-g] [-t target-session]
+    // (alias: showenv)
+    // ```
     let target_session = TargetSession::Raw("1").to_string();
-    tmux.show_environment(Some(true), Some(true), Some(&target_session), Some("2"))
-        .unwrap_err();
+
+    let mut show_environment = ShowEnvironment::new();
+    #[cfg(feature = "tmux_1_0")]
+    show_environment.global();
+    #[cfg(feature = "tmux_2_1")]
+    show_environment.as_shell_commands();
+    #[cfg(feature = "tmux_1_7")]
+    show_environment.target_session("1");
+    #[cfg(feature = "tmux_1_7")]
+    show_environment.variable("2");
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "show-environment";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "showenv";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_1_0")]
+    s.push("-g");
+    #[cfg(feature = "tmux_2_1")]
+    s.push("-s");
+    #[cfg(feature = "tmux_1_7")]
+    s.extend_from_slice(&["-t", "1"]);
+    #[cfg(feature = "tmux_1_7")]
+    s.push("2");
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(show_environment.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(show_environment.0.bin_args, None);
+    assert_eq!(show_environment.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(show_environment.0.cmd_args, Some(s));
 }

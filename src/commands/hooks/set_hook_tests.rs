@@ -1,75 +1,70 @@
 #[test]
 fn set_hook() {
-    use crate::{Error, SetHook, SetHookBuilder, TargetSession, TmuxInterface};
+    use crate::{SetHook, TargetSession};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux ^3.0:
-        // ```text
-        // tmux set-hook [-agRu] [-t target-session] hook-name command
-        // ```
-        //
-        // tmux ^2.8:
-        // ```text
-        // tmux set-hook [-gRu] [-t target-session] hook-name command
-        // ```
-        //
-        // tmux ^2.4:
-        // ```text
-        // tmux set-hook [-gu] [-t target-session] hook-name command
-        // ```
-        //
-        // tmux ^2.2:
-        // ```text
-        // tmux set-hook [-g] [-t target-session] hook-name command
-        // ```
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        s.push("set-hook");
-        #[cfg(feature = "tmux_3_0")]
-        s.push("-a");
-        #[cfg(feature = "tmux_2_2")]
-        s.push("-g");
-        #[cfg(feature = "tmux_2_8")]
-        s.push("-R");
-        #[cfg(feature = "tmux_2_4")]
-        s.push("-u");
-        #[cfg(feature = "tmux_2_2")]
-        s.extend_from_slice(&["-t", "1"]);
-        s.push("2");
-        s.push("3");
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
+    /// Structure for setting or unsetting hook `hook-name` to command.
+    ///
+    /// # Manual
+    ///
+    /// tmux ^3.0:
+    /// ```text
+    /// tmux set-hook [-agRu] [-t target-session] hook-name command
+    /// ```
+    ///
+    /// tmux ^2.8:
+    /// ```text
+    /// tmux set-hook [-gRu] [-t target-session] hook-name command
+    /// ```
+    ///
+    /// tmux ^2.4:
+    /// ```text
+    /// tmux set-hook [-gu] [-t target-session] hook-name command
+    /// ```
+    ///
+    /// tmux ^2.2:
+    /// ```text
+    /// tmux set-hook [-g] [-t target-session] hook-name command
+    /// ```
+    let target_session = TargetSession::Raw("1").to_string();
 
-    let target_session = &TargetSession::Raw("1").to_string();
-    let set_hook = SetHook {
-        #[cfg(feature = "tmux_3_0")]
-        append: Some(true),
-        #[cfg(feature = "tmux_2_2")]
-        global: Some(true),
-        #[cfg(feature = "tmux_2_8")]
-        run: Some(true),
-        #[cfg(feature = "tmux_2_4")]
-        unset: Some(true),
-        #[cfg(feature = "tmux_2_2")]
-        target_session: Some(&target_session),
-    };
-    tmux.set_hook(Some(&set_hook), "2", "3").unwrap_err();
-
-    let mut builder = SetHookBuilder::new();
+    let mut set_hook = SetHook::new();
     #[cfg(feature = "tmux_3_0")]
-    builder.append();
+    set_hook.append();
     #[cfg(feature = "tmux_2_2")]
-    builder.global();
+    set_hook.global();
     #[cfg(feature = "tmux_2_8")]
-    builder.run();
+    set_hook.run();
     #[cfg(feature = "tmux_2_4")]
-    builder.unset();
+    set_hook.unset();
     #[cfg(feature = "tmux_2_2")]
-    builder.target_session(&target_session);
-    let set_hook = builder.build();
-    tmux.set_hook(Some(&set_hook), "2", "3").unwrap_err();
+    set_hook.target_session(&target_session);
+    #[cfg(feature = "tmux_2_2")]
+    set_hook.name("2");
+    #[cfg(feature = "tmux_2_2")]
+    set_hook.command("3");
+
+    let cmd = "set-hook";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_3_0")]
+    s.push("-a");
+    #[cfg(feature = "tmux_2_2")]
+    s.push("-g");
+    #[cfg(feature = "tmux_2_8")]
+    s.push("-R");
+    #[cfg(feature = "tmux_2_4")]
+    s.push("-u");
+    #[cfg(feature = "tmux_2_2")]
+    s.extend_from_slice(&["-t", "1"]);
+    #[cfg(feature = "tmux_2_2")]
+    s.push("2");
+    #[cfg(feature = "tmux_2_2")]
+    s.push("3");
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(set_hook.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(set_hook.0.bin_args, None);
+    assert_eq!(set_hook.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(set_hook.0.cmd_args, Some(s));
 }

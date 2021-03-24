@@ -3,7 +3,7 @@ use crate::DisplayMenu;
 use crate::{CommandPrompt, ConfirmBefore, DisplayMessage, TmuxCommand};
 
 /// All functions from man tmux "Status line" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#STATUS_LINE)
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#STATUS_LINE))
 #[cfg(feature = "tmux_1_0")]
 pub mod command_prompt;
 #[cfg(feature = "tmux_1_0")]
@@ -24,6 +24,8 @@ pub mod display_message;
 //#[cfg(feature = "tmux_1_0")]
 //pub mod display_message_tests;
 
+/// All functions from man tmux "Status line" listed below
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#STATUS_LINE))
 impl<'a> TmuxCommand<'a> {
     pub fn command_prompt(&self) -> CommandPrompt<'a> {
         CommandPrompt::from(self)

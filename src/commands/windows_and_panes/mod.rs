@@ -3,8 +3,8 @@ use crate::{
     KillPane, KillWindow, LastPane, LastWindow, LinkWindow, ListPanes, ListWindows, TmuxCommand,
 };
 
-/// Windows and panes
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES)
+/// All functions from man tmux "Windows and Panes" listed below
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES))
 #[cfg(feature = "tmux_1_0")]
 pub mod break_pane;
 #[cfg(feature = "tmux_1_2")]
@@ -159,6 +159,8 @@ pub mod unlink_window;
 //#[cfg(feature = "tmux_1_0")]
 //pub mod unlink_window_tests;
 
+/// All functions from man tmux "Windows and Panes" listed below
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES))
 impl<'a> TmuxCommand<'a> {
     pub fn break_pane(&self) -> BreakPane<'a> {
         BreakPane::from(self)

@@ -1,7 +1,7 @@
 use crate::{BindKey, ListKeys, SendKeys, SendPrefix, TmuxCommand, UnbindKey};
 
 /// All functions from man tmux "Key Bindings" listed below
-/// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#KEY_BINDINGS)
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#KEY_BINDINGS))
 #[cfg(feature = "tmux_1_0")]
 pub mod bind_key;
 #[cfg(feature = "tmux_1_0")]
@@ -24,6 +24,8 @@ pub mod unbind_key;
 //#[cfg(feature = "tmux_1_0")]
 //pub mod unbind_key_tests;
 
+/// All functions from man tmux "Key Bindings" listed below
+/// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#KEY_BINDINGS))
 impl<'a> TmuxCommand<'a> {
     pub fn bind_key(&self) -> BindKey<'a> {
         BindKey::from(self)
