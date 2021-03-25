@@ -1,6 +1,6 @@
 #[test]
 fn send_prefix() {
-    use crate::{SendPrefix, TargetPane};
+    use crate::SendPrefix;
     use std::borrow::Cow;
 
     // # Manual

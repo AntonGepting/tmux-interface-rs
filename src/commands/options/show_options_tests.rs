@@ -1,119 +1,99 @@
 #[test]
 fn show_options() {
-    use crate::{Error, ShowOptions, ShowOptionsBuilder, TargetPane, TmuxInterface};
+    use crate::{ShowOptions, TargetPane};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux ^3.0:
-        // ```text
-        // tmux show-options [-AgHpqsvw] [-t target-pane] [option]
-        // (alias: show)
-        // ```
-        //
-        // tmux ^1.8:
-        // ```text
-        // tmux show-options [-gqsvw] [-t target-session | target-window] [option]
-        // (alias: show)
-        // ```
-        //
-        // tmux ^1.7:
-        // ```text
-        // tmux show-options [-gsw] [-t target-session | target-window] [option]
-        // (alias: show)
-        // ```
-        //
-        // tmux ^1.2:
-        // ```text
-        // tmux show-options [-gsw] [-t target-session | target-window]
-        // (alias: show)
-        // ```
-        //
-        // tmux ^1.0:
-        // ```text
-        // tmux show-options [-t target-session]
-        // (alias: show)
-        // ```
-        //
-        // tmux ^0.8:
-        // ```text
-        // tmux show-options [-t target-session] option value
-        // (alias: show)
-        // ```
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("show-options");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("show");
-        #[cfg(feature = "tmux_3_0")]
-        s.push("-A");
-        #[cfg(feature = "tmux_1_2")]
-        s.push("-g");
-        #[cfg(feature = "tmux_3_0")]
-        s.push("-H");
-        #[cfg(feature = "tmux_3_0")]
-        s.push("-p");
-        #[cfg(feature = "tmux_1_8")]
-        s.push("-q");
-        #[cfg(feature = "tmux_1_2")]
-        s.push("-s");
-        #[cfg(feature = "tmux_1_8")]
-        s.push("-v");
-        #[cfg(feature = "tmux_1_2")]
-        s.push("-w");
-        s.extend_from_slice(&["-t", "1"]);
-        #[cfg(feature = "tmux_1_7")]
-        s.push("2");
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
+    // Structure for showing options
+    //
+    // # Manual
+    //
+    // tmux ^3.0:
+    // ```text
+    // tmux show-options [-AgHpqsvw] [-t target-pane] [option]
+    // (alias: show)
+    // ```
+    //
+    // tmux ^1.8:
+    // ```text
+    // tmux show-options [-gqsvw] [-t target-session | target-window] [option]
+    // (alias: show)
+    // ```
+    //
+    // tmux ^1.7:
+    // ```text
+    // tmux show-options [-gsw] [-t target-session | target-window] [option]
+    // (alias: show)
+    // ```
+    //
+    // tmux ^1.2:
+    // ```text
+    // tmux show-options [-gsw] [-t target-session | target-window]
+    // (alias: show)
+    // ```
+    //
+    // tmux ^1.0:
+    // ```text
+    // tmux show-options [-t target-session]
+    // (alias: show)
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux show-options [-t target-session] option value
+    // (alias: show)
+    // ```
 
     let target_pane = TargetPane::Raw("1").to_string();
-    let show_options = ShowOptions {
-        #[cfg(feature = "tmux_3_0")]
-        include_inherited: Some(true),
-        #[cfg(feature = "tmux_1_2")]
-        global: Some(true),
-        #[cfg(feature = "tmux_3_0")]
-        hooks: Some(true),
-        #[cfg(feature = "tmux_3_0")]
-        pane: Some(true),
-        #[cfg(feature = "tmux_1_8")]
-        quiet: Some(true),
-        #[cfg(feature = "tmux_1_2")]
-        server: Some(true),
-        #[cfg(feature = "tmux_1_8")]
-        value: Some(true),
-        #[cfg(feature = "tmux_1_2")]
-        window: Some(true),
-        target: Some(&target_pane),
-        #[cfg(feature = "tmux_1_7")]
-        option: Some("2"),
-    };
-    tmux.show_options(Some(&show_options)).unwrap_err();
-
-    let mut builder = ShowOptionsBuilder::new();
+    let mut show_options = ShowOptions::new();
     #[cfg(feature = "tmux_3_0")]
-    builder.include_inherited();
+    show_options.include_inherited();
     #[cfg(feature = "tmux_1_2")]
-    builder.global();
+    show_options.global();
     #[cfg(feature = "tmux_3_0")]
-    builder.hooks();
+    show_options.hooks();
     #[cfg(feature = "tmux_3_0")]
-    builder.pane();
+    show_options.pane();
     #[cfg(feature = "tmux_1_8")]
-    builder.quiet();
+    show_options.quiet();
     #[cfg(feature = "tmux_1_2")]
-    builder.server();
+    show_options.server();
     #[cfg(feature = "tmux_1_8")]
-    builder.value();
+    show_options.value();
     #[cfg(feature = "tmux_1_2")]
-    builder.window();
-    builder.target(&target_pane);
+    show_options.window();
+    show_options.target(&target_pane);
     #[cfg(feature = "tmux_1_7")]
-    builder.option("2");
-    let show_options = builder.build();
-    tmux.show_options(Some(&show_options)).unwrap_err();
+    show_options.option("2");
+
+    let mut s = Vec::new();
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "show-options";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "show";
+
+    #[cfg(feature = "tmux_3_0")]
+    s.push("-A");
+    #[cfg(feature = "tmux_1_2")]
+    s.push("-g");
+    #[cfg(feature = "tmux_3_0")]
+    s.push("-H");
+    #[cfg(feature = "tmux_3_0")]
+    s.push("-p");
+    #[cfg(feature = "tmux_1_8")]
+    s.push("-q");
+    #[cfg(feature = "tmux_1_2")]
+    s.push("-s");
+    #[cfg(feature = "tmux_1_8")]
+    s.push("-v");
+    #[cfg(feature = "tmux_1_2")]
+    s.push("-w");
+    s.extend_from_slice(&["-t", "1"]);
+    #[cfg(feature = "tmux_1_7")]
+    s.push("2");
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(show_options.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(show_options.0.bin_args, None);
+    assert_eq!(show_options.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(show_options.0.cmd_args, Some(s));
 }

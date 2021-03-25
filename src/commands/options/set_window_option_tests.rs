@@ -1,107 +1,94 @@
 #[test]
 fn set_window_option() {
-    use crate::{Error, SetWindowOption, SetWindowOptionBuilder, TargetWindow, TmuxInterface};
+    use crate::{SetWindowOption, TargetWindow};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux ^3.0:
-        // ```text
-        // (removed)
-        // ```
-        //
-        // tmux ^2.6:
-        // ```text
-        // tmux set-window-option [-aFgoqu] [-t target-window] option value
-        // (alias: setw)
-        // ```
-        //
-        // tmux ^1.9:
-        // ```text
-        // tmux set-window-option [-agoqu] [-t target-window] option value
-        // (alias: setw)
-        // ```
-        //
-        // tmux ^1.7:
-        // ```text
-        // tmux set-window-option [-agqu] [-t target-window] option value
-        // (alias: setw)
-        // ```
-        //
-        // tmux ^1.0:
-        // ```text
-        // tmux set-window-option [-agu] [-t target-window] option value
-        // (alias: setw)
-        // ```
-        //
-        // tmux ^0.8:
-        // ```text
-        // tmux set-window-option [-gu] [-t target-window] option value
-        // (alias: setw)
-        // ```
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("set-window-option");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("setw");
-        #[cfg(feature = "tmux_1_0")]
-        s.push("-a");
-        #[cfg(feature = "tmux_2_6")]
-        s.push("-F");
-        #[cfg(feature = "tmux_0_8")]
-        s.push("-g");
-        #[cfg(feature = "tmux_1_9")]
-        s.push("-o");
-        #[cfg(feature = "tmux_1_7")]
-        s.push("-q");
-        #[cfg(feature = "tmux_0_8")]
-        s.push("-u");
-        #[cfg(feature = "tmux_0_8")]
-        s.extend_from_slice(&["-t", "1"]);
-        s.push("2");
-        s.push("3");
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
-
+    // # Manual
+    //
+    // tmux ^3.0:
+    // ```text
+    // (removed)
+    // ```
+    //
+    // tmux ^2.6:
+    // ```text
+    // tmux set-window-option [-aFgoqu] [-t target-window] option value
+    // (alias: setw)
+    // ```
+    //
+    // tmux ^1.9:
+    // ```text
+    // tmux set-window-option [-agoqu] [-t target-window] option value
+    // (alias: setw)
+    // ```
+    //
+    // tmux ^1.7:
+    // ```text
+    // tmux set-window-option [-agqu] [-t target-window] option value
+    // (alias: setw)
+    // ```
+    //
+    // tmux ^1.0:
+    // ```text
+    // tmux set-window-option [-agu] [-t target-window] option value
+    // (alias: setw)
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux set-window-option [-gu] [-t target-window] option value
+    // (alias: setw)
+    // ```
     let target_window = TargetWindow::Raw("1").to_string();
-    let set_window_option = SetWindowOption {
-        #[cfg(feature = "tmux_1_0")]
-        append: Some(true),
-        #[cfg(feature = "tmux_2_6")]
-        format: Some(true),
-        #[cfg(feature = "tmux_0_8")]
-        global: Some(true),
-        #[cfg(feature = "tmux_1_9")]
-        not_overwrite: Some(true),
-        #[cfg(feature = "tmux_1_7")]
-        quiet: Some(true),
-        #[cfg(feature = "tmux_0_8")]
-        unset: Some(true),
-        #[cfg(feature = "tmux_0_8")]
-        target_window: Some(&target_window),
-    };
-    tmux.set_window_option(Some(&set_window_option), "2", "3")
-        .unwrap_err();
 
-    let mut builder = SetWindowOptionBuilder::new();
+    let mut set_window_option = SetWindowOption::new();
     #[cfg(feature = "tmux_1_0")]
-    builder.append();
+    set_window_option.append();
     #[cfg(feature = "tmux_2_6")]
-    builder.format();
+    set_window_option.format();
     #[cfg(feature = "tmux_0_8")]
-    builder.global();
+    set_window_option.global();
     #[cfg(feature = "tmux_1_9")]
-    builder.not_overwrite();
+    set_window_option.not_overwrite();
     #[cfg(feature = "tmux_1_7")]
-    builder.quiet();
+    set_window_option.quiet();
     #[cfg(feature = "tmux_0_8")]
-    builder.unset();
+    set_window_option.unset();
     #[cfg(feature = "tmux_0_8")]
-    builder.target_window(&target_window);
-    let set_window_option = builder.build();
-    tmux.set_window_option(Some(&set_window_option), "2", "3")
-        .unwrap_err();
+    set_window_option.target_window(&target_window);
+    #[cfg(feature = "tmux_0_8")]
+    set_window_option.option("2");
+    #[cfg(feature = "tmux_0_8")]
+    set_window_option.value("3");
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "set-window-option";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "setw";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_1_0")]
+    s.push("-a");
+    #[cfg(feature = "tmux_2_6")]
+    s.push("-F");
+    #[cfg(feature = "tmux_0_8")]
+    s.push("-g");
+    #[cfg(feature = "tmux_1_9")]
+    s.push("-o");
+    #[cfg(feature = "tmux_1_7")]
+    s.push("-q");
+    #[cfg(feature = "tmux_0_8")]
+    s.push("-u");
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-t", "1"]);
+    #[cfg(feature = "tmux_0_8")]
+    s.push("2");
+    #[cfg(feature = "tmux_0_8")]
+    s.push("3");
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(set_window_option.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(set_window_option.0.bin_args, None);
+    assert_eq!(set_window_option.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(set_window_option.0.cmd_args, Some(s));
 }

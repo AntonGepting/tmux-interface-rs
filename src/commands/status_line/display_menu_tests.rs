@@ -1,17 +1,34 @@
 #[test]
 fn display_menu() {
-    use crate::{DisplayMenu, DisplayMenuBuilder, Error, TargetPane, TmuxInterface};
+    use crate::{DisplayMenu, TargetPane};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux ^3.0:
-        // ```text
-        // tmux display-menu [-c target-client] [-t target-pane] [-T title]
-        // [-x position] [-y position] name key command ...
-        // ```
+// Structure for displaying a menu on target-client
+//
+// # Manual
+//
+// tmux ^3.0:
+// ```text
+// tmux display-menu [-c target-client] [-t target-pane] [-T title]
+// [-x position] [-y position] name key command ...
+// ```
+    let mut display_menu = DisplayMenu::new();
+    #[cfg(feature = "tmux_3_0")]
+    display_menu.target_client("1");
+    #[cfg(feature = "tmux_3_0")]
+    display_menu.target_pane(&target_pane);
+    #[cfg(feature = "tmux_3_0")]
+    display_menu.title("3");
+    #[cfg(feature = "tmux_3_0")]
+    display_menu.x(4);
+    #[cfg(feature = "tmux_3_0")]
+    display_menu.y(5);
+
+    let target_pane = TargetPane::Raw("2").to_string();
+
+        let cmd = "display-menu";
+
         let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        s.push("display-menu");
         #[cfg(feature = "tmux_3_0")]
         s.extend_from_slice(&["-c", "1"]);
         #[cfg(feature = "tmux_3_0")]
@@ -25,41 +42,11 @@ fn display_menu() {
         s.push("6");
         s.push("7");
         s.push("8");
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
+        let s = s.into_iter().map(|a| a.into()).collect();
 
-    let target_pane = TargetPane::Raw("2").to_string();
-
-    let display_menu = DisplayMenu {
-        #[cfg(feature = "tmux_3_0")]
-        target_client: Some("1"),
-        #[cfg(feature = "tmux_3_0")]
-        target_pane: Some(&target_pane),
-        #[cfg(feature = "tmux_3_0")]
-        title: Some("3"),
-        #[cfg(feature = "tmux_3_0")]
-        x: Some(4),
-        #[cfg(feature = "tmux_3_0")]
-        y: Some(5),
-    };
-    tmux.display_menu(Some(&display_menu), "6", "7", "8")
-        .unwrap_err();
-
-    let mut builder = DisplayMenuBuilder::new();
-    #[cfg(feature = "tmux_3_0")]
-    builder.target_client("1");
-    #[cfg(feature = "tmux_3_0")]
-    builder.target_pane(&target_pane);
-    #[cfg(feature = "tmux_3_0")]
-    builder.title("3");
-    #[cfg(feature = "tmux_3_0")]
-    builder.x(4);
-    #[cfg(feature = "tmux_3_0")]
-    builder.y(5);
-    let display_menu = builder.build();
-    tmux.display_menu(Some(&display_menu), "6", "7", "8")
-        .unwrap_err();
+    assert_eq!(display_menu.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(display_menu.0.bin_args, None);
+    assert_eq!(display_menu.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(display_menu.0.cmd_args, Some(s));
+}
 }

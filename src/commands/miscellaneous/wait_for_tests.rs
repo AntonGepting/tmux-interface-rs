@@ -1,26 +1,49 @@
 #[test]
 fn wait_for() {
-    use crate::{Error, TmuxInterface};
+    use crate::WaitFor;
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux wait-for [-L | -S | -U] channel
-        // (alias: wait)
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("wait-for");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("wait");
-        s.push("-L");
-        s.push("-S");
-        s.push("-U");
-        s.push("1");
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
-    tmux.wait_for(Some(true), Some(true), Some(true), "1")
-        .unwrap_err();
+    // # Manual
+    //
+    // tmux ^1.9:
+    // ```text
+    // tmux wait-for [-L | -S | -U] channel
+    // (alias: wait)
+    // ```
+    //
+    // tmux ^1.8:
+    // ```text
+    // tmux wait-for -LSU channel
+    // (alias: wait)
+    // ```
+    let mut wait_for = WaitFor::new();
+    #[cfg(feature = "tmux_1_8")]
+    wait_for.locked();
+    #[cfg(feature = "tmux_1_8")]
+    wait_for.woken();
+    #[cfg(feature = "tmux_1_8")]
+    wait_for.unlocked();
+    #[cfg(feature = "tmux_1_8")]
+    wait_for.channel("1");
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "wait-for";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "wait";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_1_8")]
+    s.push("-L");
+    #[cfg(feature = "tmux_1_8")]
+    s.push("-S");
+    #[cfg(feature = "tmux_1_8")]
+    s.push("-U");
+    #[cfg(feature = "tmux_1_8")]
+    s.push("1");
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(wait_for.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(wait_for.0.bin_args, None);
+    assert_eq!(wait_for.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(wait_for.0.cmd_args, Some(s));
 }

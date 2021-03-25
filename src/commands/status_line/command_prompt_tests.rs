@@ -1,88 +1,74 @@
 #[test]
 fn command_prompt() {
-    use crate::{CommandPrompt, CommandPromptBuilder, Error, TmuxInterface};
+    use crate::CommandPrompt;
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux ^3.1:
-        // ```text
-        // tmux command-prompt [-1ikN] [-I inputs] [-p prompts] [-t target-client] [template]
-        // ```
-        //
-        // tmux ^3.0:
-        // ```text
-        // tmux command-prompt [-1Ni] [-I inputs] [-p prompts] [-t target-client] [template]
-        // ```
-        //
-        // tmux ^2.4:
-        // ```text
-        // tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
-        // ```
-        //
-        // tmux ^1.5:
-        // ```text
-        // tmux command-prompt [-I inputs] [-p prompts] [-t target-client] [template]
-        // ```
-        //
-        // tmux ^1.0:
-        // ```text
-        // tmux command-prompt [-p prompts] [-t target-client] [template]
-        // ```
-        //
-        // tmux ^0.8:
-        // ```text
-        // tmux command-prompt [-t target-client] [template]
-        // ```
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        s.push("command-prompt");
-        #[cfg(feature = "tmux_2_4")]
-        s.push("-1");
-        #[cfg(feature = "tmux_2_4")]
-        s.push("-i");
-        #[cfg(feature = "tmux_1_5")]
-        s.extend_from_slice(&["-I", "1"]);
-        #[cfg(feature = "tmux_1_0")]
-        s.extend_from_slice(&["-p", "2"]);
-        #[cfg(feature = "tmux_0_8")]
-        s.extend_from_slice(&["-t", "3"]);
-        #[cfg(feature = "tmux_0_8")]
-        s.push("4");
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
-
-    let command_prompt = CommandPrompt {
-        #[cfg(feature = "tmux_2_4")]
-        one_keypress: Some(true),
-        #[cfg(feature = "tmux_2_4")]
-        on_input_change: Some(true),
-        #[cfg(feature = "tmux_1_5")]
-        inputs: Some("1"),
-        #[cfg(feature = "tmux_1_0")]
-        prompts: Some("2"),
-        #[cfg(feature = "tmux_0_8")]
-        target_client: Some("3"),
-        #[cfg(feature = "tmux_0_8")]
-        template: Some("4"),
-    };
-    tmux.command_prompt(Some(&command_prompt)).unwrap_err();
-
-    let mut builder = CommandPromptBuilder::new();
+    // Structure for open the command prompt in a client
+    //
+    // # Manual
+    //
+    // tmux ^3.1:
+    // ```text
+    // tmux command-prompt [-1ikN] [-I inputs] [-p prompts] [-t target-client] [template]
+    // ```
+    //
+    // tmux ^3.0:
+    // ```text
+    // tmux command-prompt [-1Ni] [-I inputs] [-p prompts] [-t target-client] [template]
+    // ```
+    //
+    // tmux ^2.4:
+    // ```text
+    // tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
+    // ```
+    //
+    // tmux ^1.5:
+    // ```text
+    // tmux command-prompt [-I inputs] [-p prompts] [-t target-client] [template]
+    // ```
+    //
+    // tmux ^1.0:
+    // ```text
+    // tmux command-prompt [-p prompts] [-t target-client] [template]
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux command-prompt [-t target-client] [template]
+    // ```
+    let mut command_prompt = CommandPrompt::new();
     #[cfg(feature = "tmux_2_4")]
-    builder.one_keypress();
+    command_prompt.one_keypress();
     #[cfg(feature = "tmux_2_4")]
-    builder.on_input_change();
+    command_prompt.on_input_change();
     #[cfg(feature = "tmux_1_5")]
-    builder.inputs("1");
+    command_prompt.inputs("1");
     #[cfg(feature = "tmux_1_0")]
-    builder.prompts("2");
+    command_prompt.prompts("2");
     #[cfg(feature = "tmux_0_8")]
-    builder.target_client("3");
+    command_prompt.target_client("3");
     #[cfg(feature = "tmux_0_8")]
-    builder.template("4");
-    let command_prompt = builder.build();
-    tmux.command_prompt(Some(&command_prompt)).unwrap_err();
+    command_prompt.template("4");
+
+    let cmd = "command-prompt";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_2_4")]
+    s.push("-1");
+    #[cfg(feature = "tmux_2_4")]
+    s.push("-i");
+    #[cfg(feature = "tmux_1_5")]
+    s.extend_from_slice(&["-I", "1"]);
+    #[cfg(feature = "tmux_1_0")]
+    s.extend_from_slice(&["-p", "2"]);
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-t", "3"]);
+    #[cfg(feature = "tmux_0_8")]
+    s.push("4");
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(command_prompt.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(command_prompt.0.bin_args, None);
+    assert_eq!(command_prompt.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(command_prompt.0.cmd_args, Some(s));
 }
