@@ -54,22 +54,22 @@
 //! use crate::tmux_interface::{AttachSession, NewSession, KillSession};
 //!
 //! // 1. Method - one-liner
-//! NewSession::new().detached().session_name("new_session_name1").exec()
-//! AttachSession::new().target_session("new_session_name1").exec()
-//! KillSession::new().target_session("new_session_name1").exec();
+//! NewSession::new().detached().session_name("new_session_name1").output();
+//! AttachSession::new().target_session("new_session_name1").output();
+//! KillSession::new().target_session("new_session_name1").output();
 //!
 //! // 2. Method - multi-liner
 //! let mut new_session = NewSession::new();
 //! new_session.detached();
 //! new_session.session_name("new_session_name2");
-//! new_session.exec();
+//! new_session.output();
 //!
 //! let mut attach_session = AttachSession::new();
 //! attach_session.target_session("new_session_name2");
-//! attach_session.exec();
+//! attach_session.output();
 //!
 //! let mut kill_session = KillSession::new();
-//! kill_session.target_session("new_session_name2").exec();
+//! kill_session.target_session("new_session_name2").output();
 //! ```
 //!
 //!
@@ -95,9 +95,10 @@
 //! ```
 //! use crate::tmux_interface::{TmuxCommand, NewSession, KillSession};
 //!
-//! let tmux = TmuxCommand::new().bin("tmux");
-//! NewSession::from(tmux).detached().session_name("new_session_name3").output();
-//! KillSession::from(tmux).target_session("new_session_name3").output();
+//! let mut tmux = TmuxCommand::new();
+//! tmux.bin("tmux");
+//! NewSession::from(&tmux).detached().session_name("new_session_name3").output();
+//! KillSession::from(&tmux).target_session("new_session_name3").output();
 //! ```
 //!
 //! # New session
@@ -118,33 +119,33 @@
 //! using builder pattern:
 //!
 //! ```
-//! use crate::{TmuxCommand, TargetSession};
+//! use crate::tmux_interface::{TmuxCommand, TargetSession};
 //!
 //! let mut tmux = TmuxCommand::new();
 //! tmux.new_session().detached().session_name("new_session_default").output();
-//! tmux.kill_session().session_name("new_session_builder").output();
+//! tmux.kill_session().target_session("new_session_builder").output();
 //! ```
 //!
 //! using `std::default::Default` trait:
 //! ```
-//! use crate::{TmuxCommand, NewSession, TargetSession};
+//! use crate::tmux_interface::{TmuxCommand, NewSession, TargetSession};
 //!
 //! let mut tmux = TmuxCommand::new();
 //! let new_session =
 //! tmux.new_session().detached().session_name("new_session_default").output();
-//! tmux.kill_session().session_name("new_session_default").output();
+//! tmux.kill_session().target_session("new_session_default").output();
 //! ```
 //!
 //! using direct structure modification:
 //! ```
-//! use crate::{TmuxCommand, NewSession, TargetSession};
+//! use crate::tmux_interface::{TmuxCommand, NewSession, TargetSession};
 //!
 //! let mut tmux = TmuxCommand::new();
 //! let mut new_session = NewSession::new();
 //! new_session.detached();
 //! new_session.session_name("new_session_direct");
-//! new_session().output();
-//! tmux.kill_session().session_name("new_session_direct").output();
+//! new_session.output();
+//! tmux.kill_session().target_session("new_session_direct").output();
 //! ```
 //!
 //!
@@ -203,15 +204,14 @@
 //!
 //! 3. Use it's functions
 //!     ```
-//!     use tmux_interface::{AttachSession, NewSession, TargetPane, TargetSession, TmuxInterface};
+//!     use crate::tmux_interface::{AttachSession, NewSession, TargetPane, TargetSession, TmuxCommand};
 //!
 //!     let target_session = TargetSession::Raw("session_name").to_string();
 //!     let mut tmux = TmuxCommand::new();
 //!     let new_session = NewSession::new().detached().session_name("session_name").output();
 //!     let attach_session = AttachSession::new().target_session(&target_session).output();
-//!     tmux.send_keys(, &vec!["exit", "C-m"]).unwrap();
-//!     tmux.kill_session.target_session(&target_session))
-//!         .unwrap();
+//!     tmux.send_keys().key("exit").key("C-m").output();
+//!     tmux.kill_session().target_session(&target_session).output();
 //!     ```
 //!
 //!
@@ -224,13 +224,9 @@ pub mod target;
 #[cfg(feature = "tmux_1_6")]
 pub mod variables;
 
-pub mod tmux_interface;
 pub mod version;
 
 pub mod tmux_tests;
-
-pub use self::tmux_interface::TmuxInterface;
-pub use self::tmux_interface::TmuxInterfaceBuilder;
 
 // common options
 pub use crate::options::StatusKeys;
@@ -874,7 +870,6 @@ pub use self::version::Version;
 // structs
 pub use self::error::Error;
 
-mod tmux_interface_tests;
 //mod options_tests;
 //mod tmux_option_tests;
 mod version_tests;
