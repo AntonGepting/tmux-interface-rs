@@ -14,8 +14,6 @@ impl TmuxOutput {
         self.0.status
     }
 
-    //pub fn
-
     // TODO: refactor
     pub fn string(&self) -> String {
         String::from_utf8_lossy(&self.0.stdout.as_slice()).to_string()

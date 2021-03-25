@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{TmuxCommand, TmuxOutput};
+use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Select the window at target-window.
@@ -75,7 +75,7 @@ impl<'a> SelectWindow<'a> {
         self
     }
 
-    pub fn output(&self) -> TmuxOutput {
+    pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
 }

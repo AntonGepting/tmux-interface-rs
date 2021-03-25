@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{TmuxCommand, TmuxOutput};
+use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Move to the next window in the session
@@ -46,7 +46,7 @@ impl<'a> NextWindow<'a> {
         self
     }
 
-    pub fn output(&self) -> TmuxOutput {
+    pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
 }

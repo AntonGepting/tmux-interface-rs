@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{TmuxCommand, TmuxOutput};
+use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Kill the current window or the window at target-window, removing it from any sessions
@@ -47,7 +47,7 @@ impl<'a> KillWindow<'a> {
         self
     }
 
-    pub fn output(&self) -> TmuxOutput {
+    pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
 }

@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{TmuxCommand, TmuxOutput};
+use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Structure to switch the current session for client `target-client` to `target-session`
@@ -121,7 +121,7 @@ impl<'a> SwitchClient<'a> {
         self
     }
 
-    pub fn output(&self) -> TmuxOutput {
+    pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
 }

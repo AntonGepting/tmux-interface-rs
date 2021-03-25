@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{TmuxCommand, TmuxOutput};
+use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Lock all clients attached to `target-session`
@@ -34,7 +34,7 @@ impl<'a> LockSession<'a> {
     }
 
     /// run command
-    pub fn output(&self) -> TmuxOutput {
+    pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
 }

@@ -86,8 +86,8 @@ pub mod unlink_window;
 //#[cfg(feature = "tmux_1_0")]
 //pub mod up_pane;
 
-//#[cfg(feature = "tmux_1_0")]
-//pub mod break_pane_tests;
+#[cfg(feature = "tmux_1_0")]
+pub mod break_pane_tests;
 //#[cfg(feature = "tmux_1_2")]
 //pub mod capture_pane_tests;
 //#[cfg(feature = "tmux_1_0")]

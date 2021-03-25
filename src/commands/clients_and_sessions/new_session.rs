@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{TmuxCommand, TmuxOutput};
+use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Structure for creating a new session
@@ -180,7 +180,7 @@ impl<'a> NewSession<'a> {
         self
     }
 
-    pub fn output(&self) -> TmuxOutput {
+    pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
 }
@@ -204,3 +204,13 @@ impl<'a> From<&TmuxCommand<'a>> for NewSession<'a> {
         })
     }
 }
+
+//impl<'a> From<&mut TmuxCommand<'a>> for NewSession<'a> {
+//fn from(item: &mut TmuxCommand<'a>) -> Self {
+//Self(TmuxCommand {
+//bin: item.bin.clone(),
+//cmd: Some(Cow::Borrowed(NEW_SESSION)),
+//..Default::default()
+//})
+//}
+//}

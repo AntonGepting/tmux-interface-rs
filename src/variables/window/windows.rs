@@ -42,7 +42,7 @@ impl Windows {
         let windows_str = ListWindows::new()
             .format(&lsw_format)
             .target_session(&target_session_str)
-            .output()
+            .output()?
             .string();
         Windows::from_str(&windows_str, bitflags)
     }

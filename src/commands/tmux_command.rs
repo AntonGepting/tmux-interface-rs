@@ -1,5 +1,5 @@
 use crate::commands::constants::TMUX;
-use crate::TmuxOutput;
+use crate::{Error, TmuxOutput};
 use std::borrow::Cow;
 use std::process::{Command, Stdio};
 
@@ -16,7 +16,7 @@ use std::process::{Command, Stdio};
 #[derive(Debug, Clone)]
 pub struct TmuxCommand<'a> {
     // XXX: rename tmux?
-    /// Tmux executable name, (part I) if is `None`, will be used `tmux`
+    /// Tmux executable name, (part I)
     pub bin: Cow<'a, str>,
     /// Tmux executable arguments (part II)
     pub bin_args: Option<Vec<Cow<'a, str>>>,
@@ -58,13 +58,11 @@ impl<'a> TmuxCommand<'a> {
     //// NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
     //cmd.stdin(Stdio::inherit());
     /// run command
-    pub fn output(&self) -> TmuxOutput {
+    pub fn output(&self) -> Result<TmuxOutput, Error> {
         let mut command = self.push_tmux_command();
-        println!("{:?}", &self);
         command.stdin(Stdio::inherit());
-        let output = command.output().unwrap();
-        println!("{:?}", output);
-        TmuxOutput(output)
+        let output = command.output()?;
+        Ok(TmuxOutput(output))
     }
 
     pub fn push_tmux_command(&self) -> Command {
@@ -129,4 +127,24 @@ impl<'a> TmuxCommand<'a> {
 
     //pub fn output(&self) -> Ou {
     //}
+
+    // prepared for run as std::process::Command()
+    pub fn to_command(&self) -> (String, Vec<String>) {
+        let bin = self.bin.to_string();
+
+        let args = Vec::new();
+        //if let Some(v) = &self.bin_args {
+        //args.extend_from_slice(v.borrow());
+        //}
+
+        //if let Some(s) = &self.cmd {
+        //args.push(s.to_string());
+        //}
+
+        //if let Some(v) = &self.cmd_args {
+        //args.extend_from_slice(v);
+        //}
+
+        (bin, args)
+    }
 }

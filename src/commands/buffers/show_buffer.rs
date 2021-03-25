@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{TmuxCommand, TmuxOutput};
+use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Display the contents of the specified buffer.
@@ -51,7 +51,7 @@ impl<'a> ShowBuffer<'a> {
         self.0.push_option(t_KEY, target_session);
         self
     }
-    pub fn output(&self) -> TmuxOutput {
+    pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
 }

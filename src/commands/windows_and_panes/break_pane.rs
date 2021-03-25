@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{TmuxCommand, TmuxOutput};
+use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Break `src-pane` off from its containing window to make it the only pane in `dst-window`
@@ -125,7 +125,7 @@ impl<'a> BreakPane<'a> {
 
     /// [-p pane-index] - pane-index
 
-    pub fn output(&self) -> TmuxOutput {
+    pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
 }

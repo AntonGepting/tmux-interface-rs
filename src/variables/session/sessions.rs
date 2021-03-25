@@ -41,7 +41,7 @@ impl Sessions {
             .collect::<Vec<String>>()
             .join(SESSION_VARS_SEPARATOR);
         //let format = SessionFormat::create(bitflags);
-        let output = ListSessions::new().format(&ls_format).output();
+        let output = ListSessions::new().format(&ls_format).output()?;
         let sessions_str = String::from_utf8_lossy(&output.0.stdout.as_slice());
         Sessions::from_str(&sessions_str, bitflags)
     }

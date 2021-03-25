@@ -45,7 +45,7 @@ impl Panes {
         let panes_str = ListPanes::new()
             .format(&lsp_format)
             .target(&target_window_str)
-            .output()
+            .output()?
             .string();
         Panes::from_str(&panes_str, bitflags)
     }
@@ -61,7 +61,7 @@ impl Panes {
         let panes_str = ListPanes::new()
             .format(&lsp_format)
             .target(&target_session_str)
-            .output()
+            .output()?
             .string();
         Panes::from_str(&panes_str, bitflags)
     }
