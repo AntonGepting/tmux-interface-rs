@@ -43,7 +43,7 @@ impl<'a> ListWindows<'a> {
 
     #[cfg(feature = "tmux_1_5")]
     pub fn all(&mut self) -> &mut Self {
-        self.0.push_flag(d_KEY);
+        self.0.push_flag(a_KEY);
         self
     }
 

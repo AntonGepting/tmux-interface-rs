@@ -105,7 +105,7 @@ impl<'a> ChooseClient<'a> {
 
     /// [template] - template
     #[cfg(feature = "tmux_1_0")]
-    pub fn termplate<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
+    pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
         self.0.push_param(template);
         self
     }

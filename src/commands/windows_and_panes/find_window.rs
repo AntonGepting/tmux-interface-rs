@@ -80,7 +80,7 @@ impl<'a> FindWindow<'a> {
     }
 
     /// [-t target-pane] - target-pane
-    //#[cfg(feature = "tmux_2_6")]
+    #[cfg(feature = "tmux_0_8")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(t_KEY, target_pane);
         self

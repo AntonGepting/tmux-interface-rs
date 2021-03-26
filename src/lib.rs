@@ -806,12 +806,28 @@ pub use self::commands::windows_and_panes::link_window::LinkWindow;
 pub use self::commands::windows_and_panes::move_pane::MovePane;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::move_window::MoveWindow;
+
+pub use self::commands::windows_and_panes::next_layout::NextLayout;
+
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::new_window::NewWindow;
+
+pub use self::commands::windows_and_panes::next_window::NextWindow;
+
 #[cfg(feature = "tmux_1_1")]
 pub use self::commands::windows_and_panes::pipe_pane::PipePane;
+
+pub use self::commands::windows_and_panes::previous_layout::PreviousLayout;
+
+pub use self::commands::windows_and_panes::previous_window::PreviousWindow;
+
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::resize_pane::ResizePane;
+
+pub use self::commands::windows_and_panes::rename_window::RenameWindow;
+
+pub use self::commands::windows_and_panes::rotate_window::RotateWindow;
+
 #[cfg(feature = "tmux_2_9")]
 pub use self::commands::windows_and_panes::resize_window::ResizeWindow;
 #[cfg(feature = "tmux_1_5")]
@@ -828,6 +844,10 @@ pub use self::commands::windows_and_panes::select_window::SelectWindow;
 pub use self::commands::windows_and_panes::split_window::SplitWindow;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::windows_and_panes::swap_pane::SwapPane;
+
+pub use self::commands::windows_and_panes::swap_window::SwapWindow;
+
+pub use self::commands::windows_and_panes::unlink_window::UnlinkWindow;
 
 // enums
 pub use crate::commands::PaneSize;

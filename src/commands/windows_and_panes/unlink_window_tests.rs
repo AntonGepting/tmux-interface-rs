@@ -1,36 +1,44 @@
 #[test]
 fn unlink_window() {
-    use crate::{Error, TargetWindow, TmuxInterface};
+    use crate::{TargetWindow, UnlinkWindow};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux ^1.0:
-        // ```text
-        // tmux unlink-window [-k] [-t target-window]
-        // (alias: unlinkw)
-        // ```
-        //
-        // tmux ^0.8:
-        // ```text
-        // tmux unlink-window [-t target-window]
-        // (alias: unlinkw)
-        // ```
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("unlink-window");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("unlinkw");
-        #[cfg(feature = "tmux_0_8")]
-        s.push("-k");
-        #[cfg(feature = "tmux_0_8")]
-        s.extend_from_slice(&["-t", "1"]);
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
+    // Unlink `target-window`
+    //
+    // # Manual
+    //
+    // tmux ^1.0:
+    // ```text
+    // tmux unlink-window [-k] [-t target-window]
+    // (alias: unlinkw)
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux unlink-window [-t target-window]
+    // (alias: unlinkw)
+    // ```
     let target_window = TargetWindow::Raw("1").to_string();
-    tmux.unlink_window(Some(true), Some(&target_window))
-        .unwrap_err();
+    let mut unlink_window = UnlinkWindow::new();
+    #[cfg(feature = "tmux_0_8")]
+    unlink_window.detach_other();
+    #[cfg(feature = "tmux_0_8")]
+    unlink_window.target_window("1");
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "unlink-window";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "unlinkw";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_0_8")]
+    s.push("-k");
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-t", "1"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(unlink_window.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(unlink_window.0.bin_args, None);
+    assert_eq!(unlink_window.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(unlink_window.0.cmd_args, Some(s));
 }

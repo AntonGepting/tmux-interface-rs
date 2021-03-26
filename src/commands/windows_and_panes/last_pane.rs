@@ -25,7 +25,7 @@ use std::borrow::Cow;
 /// ```
 // FIXME: versions and function parameters
 #[derive(Debug, Clone)]
-pub struct LastPane<'a>(TmuxCommand<'a>);
+pub struct LastPane<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for LastPane<'a> {
     fn default() -> Self {

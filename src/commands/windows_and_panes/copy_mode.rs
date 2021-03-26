@@ -37,22 +37,32 @@ impl<'a> CopyMode<'a> {
         Default::default()
     }
 
+    #[cfg(feature = "tmux_2_1")]
     pub fn mouse_drag(&mut self) -> &mut Self {
         self.0.push_flag(M_KEY);
         self
     }
 
+    #[cfg(feature = "tmux_2_1")]
     pub fn bottom_exit(&mut self) -> &mut Self {
         self.0.push_flag(e_KEY);
         self
     }
 
+    #[cfg(feature = "tmux_0_8")]
     pub fn page_up(&mut self) -> &mut Self {
         self.0.push_flag(u_KEY);
         self
     }
 
+    #[cfg(feature = "tmux_1_0")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+        self.0.push_option(t_KEY, target_pane);
+        self
+    }
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(t_KEY, target_pane);
         self
     }

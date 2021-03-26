@@ -1,40 +1,57 @@
 #[test]
 fn copy_mode() {
-    use crate::{Error, TargetPane, TmuxInterface};
+    use crate::{CopyMode, TargetPane};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux ^2.1:
-        // ```text
-        // tmux copy-mode [-Meu] [-t target-pane]
-        // ```
-        //
-        // tmux ^1.0:
-        // ```text
-        // tmux copy-mode [-u] [-t target-pane]
-        // ```
-        //
-        // tmux ^0.8:
-        // ```text
-        // tmux copy-mode [-u] [-t target-window]
-        // ```
-        assert_eq!(
-            format!("{:?} {:?} {:?}", bin, options, subcmd),
-            r#""tmux" [] ["copy-mode", "-M", "-e", "-u", "-t", "1"]"#
-        );
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        s.push("copy-mode");
-        s.push("-M");
-        s.push("-e");
-        s.push("-u");
-        s.extend_from_slice(&["-t", "1"]);
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
+    // Enter copy mode
+    //
+    // # Manual
+    //
+    // tmux ^2.1:
+    // ```text
+    // tmux copy-mode [-Meu] [-t target-pane]
+    // ```
+    //
+    // tmux ^1.0:
+    // ```text
+    // tmux copy-mode [-u] [-t target-pane]
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux copy-mode [-u] [-t target-window]
+    // ```
     let target_pane = TargetPane::Raw("1").to_string();
-    tmux.copy_mode(Some(true), Some(true), Some(true), Some(&target_pane))
-        .unwrap_err();
+
+    let mut copy_mode = CopyMode::new();
+    #[cfg(feature = "tmux_2_1")]
+    copy_mode.mouse_drag();
+    #[cfg(feature = "tmux_2_1")]
+    copy_mode.bottom_exit();
+    #[cfg(feature = "tmux_0_8")]
+    copy_mode.page_up();
+    #[cfg(feature = "tmux_1_0")]
+    copy_mode.target_pane("1");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
+    copy_mode.target_window("1");
+
+    let cmd = "copy-mode";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_2_1")]
+    s.push("-M");
+    #[cfg(feature = "tmux_2_1")]
+    s.push("-e");
+    #[cfg(feature = "tmux_0_8")]
+    s.push("-u");
+    #[cfg(feature = "tmux_1_0")]
+    s.extend_from_slice(&["-t", "1"]);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
+    s.extend_from_slice(&["-t", "1"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(copy_mode.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(copy_mode.0.bin_args, None);
+    assert_eq!(copy_mode.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(copy_mode.0.cmd_args, Some(s));
 }

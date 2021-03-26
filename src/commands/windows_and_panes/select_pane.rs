@@ -157,7 +157,7 @@ impl<'a> SelectPane<'a> {
     /// [-T title] - title
     #[cfg(feature = "tmux_2_6")]
     pub fn title<S: Into<Cow<'a, str>>>(&mut self, title: S) -> &mut Self {
-        self.0.push_option(P_KEY, title);
+        self.0.push_option(T_KEY, title);
         self
     }
 

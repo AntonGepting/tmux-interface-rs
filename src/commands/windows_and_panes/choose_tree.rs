@@ -95,7 +95,7 @@ impl<'a> ChooseTree<'a> {
     /// [-F format] - format
     #[cfg(feature = "tmux_2_6")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(n_KEY, format);
+        self.0.push_option(F_KEY, format);
         self
     }
 

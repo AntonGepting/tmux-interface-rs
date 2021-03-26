@@ -1,34 +1,42 @@
 #[test]
 fn next_window() {
-    use crate::{Error, TmuxInterface};
+    use crate::NextWindow;
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux ^0.9:
-        // ```text
-        // tmux next-window [-a] [-t target-session]
-        // (alias: next)
-        // ```
-        //
-        // tmux ^0.8:
-        // ```text
-        // tmux next-window [-t target-session]
-        // (alias: next)
-        // ```
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("next-window");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("next");
-        #[cfg(feature = "tmux_0_9")]
-        s.push("-a");
-        #[cfg(feature = "tmux_0_8")]
-        s.extend_from_slice(&["-t", "1"]);
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
-    tmux.next_window(Some(true), Some("1")).unwrap_err();
+    // Move to the next window in the session
+    //
+    // # Manual
+    //
+    // tmux ^0.9:
+    // ```text
+    // tmux next-window [-a] [-t target-session]
+    // (alias: next)
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux next-window [-t target-session]
+    // (alias: next)
+    // ```
+    let mut next_window = NextWindow::new();
+    next_window.attach();
+    #[cfg(feature = "tmux_0_8")]
+    next_window.target_window("1");
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "next-window";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "next";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_0_9")]
+    s.push("-a");
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-t", "1"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(next_window.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(next_window.0.bin_args, None);
+    assert_eq!(next_window.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(next_window.0.cmd_args, Some(s));
 }

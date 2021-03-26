@@ -80,7 +80,7 @@ impl<'a> JoinPane<'a> {
 
     /// [-l size] - specify the size of the new pane in lines/columns
     #[cfg(feature = "tmux_1_2")]
-    pub fn size(&mut self, size: PaneSize) -> &mut Self {
+    pub fn size(&mut self, size: &PaneSize) -> &mut Self {
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_1")))]
         match size {
             PaneSize::Size(size) => self.0.push_option(l_KEY, size.to_string()),

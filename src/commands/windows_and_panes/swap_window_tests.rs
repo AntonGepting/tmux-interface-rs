@@ -1,35 +1,45 @@
 #[test]
 fn swap_window() {
-    use crate::{Error, TargetWindow, TmuxInterface};
+    use crate::{SwapWindow, TargetWindow};
+    use std::borrow::Cow;
 
-    let mut tmux = TmuxInterface::new();
-    tmux.pre_hook = Some(Box::new(|bin, options, subcmd| {
-        // tmux ^0.8:
-        // ```text
-        // tmux swap-window [-d] [-s src-window] [-t dst-window]
-        // (alias: swapw)
-        // ```
-        let mut s = Vec::new();
-        let o: Vec<&str> = Vec::new();
-        #[cfg(not(feature = "use_cmd_alias"))]
-        s.push("swap-window");
-        #[cfg(feature = "use_cmd_alias")]
-        s.push("swapw");
-        #[cfg(feature = "tmux_0_8")]
-        s.push("-d");
-        #[cfg(feature = "tmux_0_8")]
-        s.extend_from_slice(&["-s", "1"]);
-        #[cfg(feature = "tmux_0_8")]
-        s.extend_from_slice(&["-t", "2"]);
-        assert_eq!(bin, "tmux");
-        assert_eq!(options, &o);
-        assert_eq!(subcmd, &s);
-        Err(Error::Hook)
-    }));
-
+    // This is similar to link-window, except the source and destination windows are swapped
+    //
+    // # Manual
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux swap-window [-d] [-s src-window] [-t dst-window]
+    // (alias: swapw)
+    // ```
     let src_window = TargetWindow::Raw("1").to_string();
     let dst_window = TargetWindow::Raw("2").to_string();
 
-    tmux.swap_window(Some(true), Some(&src_window), Some(&dst_window))
-        .unwrap_err();
+    let mut swap_window = SwapWindow::new();
+    #[cfg(feature = "tmux_0_8")]
+    swap_window.detached();
+    #[cfg(feature = "tmux_0_8")]
+    swap_window.src_window("1");
+    #[cfg(feature = "tmux_0_8")]
+    swap_window.dst_window("2");
+
+    #[cfg(not(feature = "use_cmd_alias"))]
+    let cmd = "swap-window";
+    #[cfg(feature = "use_cmd_alias")]
+    let cmd = "swapw";
+
+    let mut s = Vec::new();
+    #[cfg(feature = "tmux_0_8")]
+    s.push("-d");
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-s", "1"]);
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-t", "2"]);
+
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(swap_window.0.bin, Cow::Borrowed("tmux"));
+    assert_eq!(swap_window.0.bin_args, None);
+    assert_eq!(swap_window.0.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(swap_window.0.cmd_args, Some(s));
 }

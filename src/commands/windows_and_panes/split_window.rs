@@ -172,11 +172,12 @@ impl<'a> SplitWindow<'a> {
     /// [shell-command] - shell-command
     #[cfg(feature = "tmux_1_2")]
     pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
-        self.0.push_option(t_KEY, shell_command);
+        self.0.push_param(shell_command);
         self
     }
 
     /// [-t target-window] -
+    #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.0.push_option(t_KEY, target_window);
         self

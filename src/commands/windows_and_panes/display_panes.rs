@@ -30,7 +30,7 @@ use std::borrow::Cow;
 /// (alias: displayp)
 /// ```
 #[derive(Debug, Clone)]
-pub struct DisplayPanes<'a>(TmuxCommand<'a>);
+pub struct DisplayPanes<'a>(pub TmuxCommand<'a>);
 
 impl<'a> Default for DisplayPanes<'a> {
     fn default() -> Self {
