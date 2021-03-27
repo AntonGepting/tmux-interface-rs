@@ -65,6 +65,41 @@ pub const TMUX: &str = "tmux";
 
 // XXX: mb CMD_ALIAS const
 
+// tmux commands, which have no aliases:
+//
+// Buffers:
+// - choose-buffer
+//
+// Clients and Sessions:
+// - kill-server
+// - kill-session
+//
+// Global and Session Environment:
+// -
+//
+// Hooks:
+// - set-hook
+// - show-hooks
+//
+// Key bindings:
+// - send-prefix
+//
+// Miscellaneous:
+//
+// - clock-mode
+//
+// Options:
+// -
+//
+// Status Line:
+// - command-prompt
+// - display-menu
+//
+// Windows and panes:
+// - choose-client
+// - choose-tree
+// - copy-mode
+
 // Buffers
 
 pub const CHOOSE_BUFFER: &str = "choose-buffer";
@@ -182,6 +217,7 @@ pub const SWITCH_CLIENT: &str = "switch-client";
 pub const SWITCH_CLIENT: &str = "switchc";
 
 pub const KILL_SERVER: &str = "kill-server";
+
 pub const KILL_SESSION: &str = "kill-session";
 
 #[cfg(not(feature = "use_cmd_alias"))]
