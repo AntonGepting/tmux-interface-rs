@@ -122,7 +122,7 @@ impl<'a> ShowOptions<'a> {
         self
     }
 
-    /// [option] - specify option name
+    /// \[option\] - specify option name
     #[cfg(feature = "tmux_1_7")]
     pub fn option<S: Into<Cow<'a, str>>>(&mut self, option: S) -> &mut Self {
         self.0.push_param(option);

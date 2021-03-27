@@ -94,7 +94,7 @@ impl<'a> DisplayMessage<'a> {
         self
     }
 
-    /// [message] - message
+    /// \[message\] - message
     #[cfg(feature = "tmux_1_0")]
     pub fn message<S: Into<Cow<'a, str>>>(&mut self, message: S) -> &mut Self {
         self.0.push_param(message);

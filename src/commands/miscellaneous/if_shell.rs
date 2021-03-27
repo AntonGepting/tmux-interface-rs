@@ -75,7 +75,7 @@ impl<'a> IfShell<'a> {
         self
     }
 
-    /// [command] - specify the second command
+    /// \[command\] - specify the second command
     #[cfg(feature = "tmux_0_8")]
     pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
         self.0.push_param(command);

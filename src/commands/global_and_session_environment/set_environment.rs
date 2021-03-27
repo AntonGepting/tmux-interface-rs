@@ -62,7 +62,7 @@ impl<'a> SetEnvironment<'a> {
         self
     }
 
-    /// [value] - specify the value
+    /// \[value\] - specify the value
     #[cfg(feature = "tmux_1_0")]
     pub fn value<S: Into<Cow<'a, str>>>(&mut self, value: S) -> &mut Self {
         self.0.push_param(value);

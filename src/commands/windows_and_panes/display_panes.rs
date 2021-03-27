@@ -67,7 +67,7 @@ impl<'a> DisplayPanes<'a> {
         self
     }
 
-    /// [template]
+    /// \[template\]
     #[cfg(feature = "tmux_2_3")]
     pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
         self.0.push_param(template);

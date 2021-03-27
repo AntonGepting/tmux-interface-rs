@@ -127,7 +127,7 @@ impl<'a> ChooseTree<'a> {
         self
     }
 
-    /// [template] - template
+    /// \[template\] - template
     #[cfg(feature = "tmux_2_6")]
     pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
         self.0.push_param(template);

@@ -96,7 +96,7 @@ impl<'a> ChooseBuffer<'a> {
         self
     }
 
-    /// [template] - specify the template
+    /// \[template\] - specify the template
     #[cfg(feature = "tmux_1_3")]
     pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
         self.0.push_param(template);

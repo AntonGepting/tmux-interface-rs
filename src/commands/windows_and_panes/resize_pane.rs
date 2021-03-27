@@ -109,7 +109,7 @@ impl<'a> ResizePane<'a> {
         self
     }
 
-    /// [adjustment] - adjustment
+    /// \[adjustment\] - adjustment
     #[cfg(feature = "tmux_0_9")]
     pub fn adjustment<S: Into<Cow<'a, str>>>(&mut self, adjustment: S) -> &mut Self {
         self.0.push_param(adjustment);
