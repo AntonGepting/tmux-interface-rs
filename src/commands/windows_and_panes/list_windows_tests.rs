@@ -31,7 +31,7 @@ fn list_windows() {
     #[cfg(feature = "tmux_1_6")]
     list_windows.format("1");
     #[cfg(feature = "tmux_0_8")]
-    list_windows.target_session("2");
+    list_windows.target_session(&target_session);
 
     #[cfg(not(feature = "use_cmd_alias"))]
     let cmd = "list-windows";

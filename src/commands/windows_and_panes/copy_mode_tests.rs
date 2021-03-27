@@ -31,9 +31,9 @@ fn copy_mode() {
     #[cfg(feature = "tmux_0_8")]
     copy_mode.page_up();
     #[cfg(feature = "tmux_1_0")]
-    copy_mode.target_pane("1");
+    copy_mode.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    copy_mode.target_window("1");
+    copy_mode.target_window(&target_pane);
 
     let cmd = "copy-mode";
 

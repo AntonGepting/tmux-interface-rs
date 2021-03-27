@@ -15,7 +15,7 @@ fn show_hooks() {
     #[cfg(feature = "tmux_2_2")]
     show_hooks.global();
     #[cfg(feature = "tmux_2_2")]
-    show_hooks.target_session("1");
+    show_hooks.target_session(&target_session);
 
     let cmd = "show-hooks";
 

@@ -30,7 +30,7 @@ fn kill_pane() {
     #[cfg(feature = "tmux_1_1")]
     kill_pane.all();
     #[cfg(feature = "tmux_1_0")]
-    kill_pane.target_pane("1");
+    kill_pane.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
     kill_pane.pane_index("2");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]

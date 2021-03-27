@@ -19,9 +19,9 @@ fn swap_window() {
     #[cfg(feature = "tmux_0_8")]
     swap_window.detached();
     #[cfg(feature = "tmux_0_8")]
-    swap_window.src_window("1");
+    swap_window.src_window(&src_window);
     #[cfg(feature = "tmux_0_8")]
-    swap_window.dst_window("2");
+    swap_window.dst_window(&dst_window);
 
     #[cfg(not(feature = "use_cmd_alias"))]
     let cmd = "swap-window";

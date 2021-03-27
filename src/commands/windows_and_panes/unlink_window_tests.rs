@@ -19,11 +19,12 @@ fn unlink_window() {
     // (alias: unlinkw)
     // ```
     let target_window = TargetWindow::Raw("1").to_string();
+
     let mut unlink_window = UnlinkWindow::new();
     #[cfg(feature = "tmux_0_8")]
     unlink_window.detach_other();
     #[cfg(feature = "tmux_0_8")]
-    unlink_window.target_window("1");
+    unlink_window.target_window(&target_window);
 
     #[cfg(not(feature = "use_cmd_alias"))]
     let cmd = "unlink-window";

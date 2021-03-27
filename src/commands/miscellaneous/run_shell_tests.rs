@@ -23,11 +23,12 @@ fn run_shell() {
     // (alias: run)
     // ```
     let target_pane = TargetPane::Raw("1").to_string();
+
     let mut run_shell = RunShell::new();
     #[cfg(feature = "tmux_1_8")]
     run_shell.backgroud();
     #[cfg(feature = "tmux_1_8")]
-    run_shell.target_pane("1");
+    run_shell.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_2")]
     run_shell.shell_command("2");
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]

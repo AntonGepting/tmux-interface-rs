@@ -12,11 +12,11 @@ fn rename_window() {
     // tmux rename-window [-t target-window] new-name
     // (alias: renamew)
     // ```
-
     let target_window = TargetWindow::Raw("1").to_string();
+
     let mut rename_window = RenameWindow::new();
     #[cfg(feature = "tmux_0_8")]
-    rename_window.target_window("1");
+    rename_window.target_window(&target_window);
     #[cfg(feature = "tmux_0_8")]
     rename_window.new_name("2");
 

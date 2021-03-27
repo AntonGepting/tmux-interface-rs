@@ -30,7 +30,7 @@ fn show_environment() {
     #[cfg(feature = "tmux_2_1")]
     show_environment.as_shell_commands();
     #[cfg(feature = "tmux_1_7")]
-    show_environment.target_session("1");
+    show_environment.target_session(&target_session);
     #[cfg(feature = "tmux_1_7")]
     show_environment.variable("2");
 

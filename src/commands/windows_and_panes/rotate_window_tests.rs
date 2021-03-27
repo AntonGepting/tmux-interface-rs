@@ -28,7 +28,7 @@ fn rotate_window() {
     #[cfg(feature = "tmux_3_1")]
     rotate_window.keep_zoomed();
     #[cfg(feature = "tmux_0_8")]
-    rotate_window.target_window("1");
+    rotate_window.target_window(&target_window);
 
     #[cfg(not(feature = "use_cmd_alias"))]
     let cmd = "rotate-window";

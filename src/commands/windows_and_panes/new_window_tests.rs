@@ -70,7 +70,7 @@ fn new_window() {
     #[cfg(feature = "tmux_0_8")]
     new_window.window_name("4");
     #[cfg(feature = "tmux_0_8")]
-    new_window.target_window("5");
+    new_window.target_window(&target_window);
     #[cfg(feature = "tmux_1_2")]
     new_window.shell_command("6");
 
