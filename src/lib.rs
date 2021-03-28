@@ -14,22 +14,22 @@
 //!
 //! This goal can be reached by splitting it into two separate tasks:
 //!
-//! 1. Providing wrapper functions for tmux subcommands (sending data). Wrapper functions are
+//! 1. Providing wrapper functions for tmux subcommands (which is sending data). Wrapper functions are
 //! structured like in tmux manual in few next categories:
 //!
-//!     - Clients and Sessions ([`clients_and_sessions`](crate::clients_and_sessions))
-//!     - Windows and Panes ([`windows_and_panes`](crate::windows_and_panes))
-//!     - Key Bindings ([`key_bindings`](crate::key_bindings))
-//!     - Options ([`options`](crate::options))
-//!     - Hooks ([`hooks`](crate::hooks))
-//!     - Global and Session Environment ([`global_and_session_environment`](crate::global_and_session_environment))
-//!     - Status Line ([`status_line`](crate::status_line))
-//!     - Buffers ([`buffers`](crate::buffers))
-//!     - Miscellaneous ([`miscellaneous`](crate::miscellaneous))
+//!     - Clients and Sessions ([`clients_and_sessions`](crate::commands::clients_and_sessions))
+//!     - Windows and Panes ([`windows_and_panes`](crate::commands::windows_and_panes))
+//!     - Key Bindings ([`key_bindings`](crate::commands::key_bindings))
+//!     - Options ([`options`](crate::commands::options))
+//!     - Hooks ([`hooks`](crate::commands::hooks))
+//!     - Global and Session Environment ([`global_and_session_environment`](crate::commands::global_and_session_environment))
+//!     - Status Line ([`status_line`](crate::commands::status_line))
+//!     - Buffers ([`buffers`](crate::commands::buffers))
+//!     - Miscellaneous ([`miscellaneous`](crate::commands::miscellaneous))
 //!
-//! Main structure is [`TmuxInterface`](crate::tmux_interface::TmuxInterface) wich has all these wrapper functions implementations.
+//! Main structure is [`TmuxCommand`](crate::TmuxCommand) wich has all these wrapper functions implementations.
 //!
-//! 2. Parsing functions for tmux output as rust structures (recieving data). Parsing function are
+//! 2. Parsing functions for tmux output as rust structures (which is recieving data). Parsing function are
 //! structured by objects they operate with:
 //!
 //!     - [`Sessions`](crate::Sessions)
@@ -39,37 +39,41 @@
 //!     - [`Panes`](crate::Panes)
 //!     - [`Pane`](crate::Pane)
 //!     - ...
-//!     - [`TmuxOption`](crate::TmuxOption)
 //!
 //! # Conventions
 //!
 //! Library Functions:
-//! 1. Function names and their grouping are inherited from tmux manual
-//! 2. Function arguments and their optionality inherited from tmux manual
-//! 3. Functions can have max. 4 arguments, otherwise a structure will be used
+//!     - Function names and their grouping are inherited from tmux manual
 //!
 //! # Examples
 //!
 //! ```
-//! use crate::tmux_interface::{AttachSession, NewSession, KillSession};
+//! use crate::tmux_interface::{AttachSession, NewSession, KillSession, TmuxCommand};
 //!
-//! // 1. Method - one-liner
-//! NewSession::new().detached().session_name("new_session_name1").output();
-//! AttachSession::new().target_session("new_session_name1").output();
-//! KillSession::new().target_session("new_session_name1").output();
+//! // 1. TmuxCommand
+//! let tmux = TmuxCommand::new();
 //!
-//! // 2. Method - multi-liner
+//! tmux.new_session().detached().session_name("new_session_name1").output().unwrap();
+//! tmux.attach_session().target_session("new_session_name1").output().unwrap();
+//! tmux.kill_session().target_session("new_session_name1").output().unwrap();
+//!
+//! // 2.a. One-liner
+//! NewSession::new().detached().session_name("new_session_name2a").output().unwrap();
+//! AttachSession::new().target_session("new_session_name2a").output().unwrap();
+//! KillSession::new().target_session("new_session_name2a").output().unwrap();
+//!
+//! // 2.b. Multi-Liner
 //! let mut new_session = NewSession::new();
 //! new_session.detached();
-//! new_session.session_name("new_session_name2");
-//! new_session.output();
+//! new_session.session_name("new_session_name2b");
+//! new_session.output().unwrap();
 //!
 //! let mut attach_session = AttachSession::new();
-//! attach_session.target_session("new_session_name2");
-//! attach_session.output();
+//! attach_session.target_session("new_session_name2b");
+//! attach_session.output().unwrap();
 //!
 //! let mut kill_session = KillSession::new();
-//! kill_session.target_session("new_session_name2").output();
+//! kill_session.target_session("new_session_name2b").output().unwrap();
 //! ```
 //!
 //!
@@ -107,10 +111,10 @@
 //! Create a new tmux session without any additional parameters (alternative to: `tmux new-session`)
 //!
 //! ```text
-//! use crate::tmux_interface::TmuxInterface;
+//! use crate::tmux_interface::TmuxCommand;
 //!
-//! let mut tmux = TmuxInterface::new();
-//! tmux.new_session(None).unwrap();
+//! let mut tmux = TmuxCommand::new();
+//! tmux.new_session().output().unwrap();
 //! ```
 //!
 //! ## Examples
@@ -123,7 +127,7 @@
 //!
 //! let mut tmux = TmuxCommand::new();
 //! tmux.new_session().detached().session_name("new_session_default").output();
-//! tmux.kill_session().target_session("new_session_builder").output();
+//! tmux.kill_session().target_session("new_session_default").output();
 //! ```
 //!
 //! using `std::default::Default` trait:
