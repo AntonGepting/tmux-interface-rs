@@ -8,22 +8,24 @@
 ## Description
 
 `tmux_interface` is a library for communication with
-[TMUX](https://github.com/tmux/tmux) via CLI written in [Rust programming
-language](https://www.rust-lang.org/). The crate documentation can be found on
-the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
+[TMUX](https://github.com/tmux/tmux) via CLI written in
+[Rust](https://www.rust-lang.org/) programming language. The crate
+documentation can be found on the
+[docs.rs](https://docs.rs/tmux_interface) page.
 
 
 ## Usage
 
 1. Add the new crate dependency in your `Cargo.toml`.
 
-    - Using **defaults** (`tmux 2.8`)
+    - Using **defaults** (by default `features = ["tmux_2_8"]` will be set)
         ```
         [dependencies]
         tmux_interface = "^0.1.0"
         ```
 
-    - Using **specified tmux version**:
+    - Using **user specified tmux version** (set custom tmux version
+      feature, used for conditional compilaton):
 
         There is an optional dependency parameter `features` in
         `Cargo.toml`, to specify the compatible version of tmux. Because
@@ -60,7 +62,8 @@ the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
         }
         ```
 
-    - Using library from remote repository:
+    - Using library from remote repository (for example using developing
+      branch):
         ```
         [dependencies]
         tmux_interface = {
@@ -71,39 +74,47 @@ the [docs.rs/tmux_interface](https://docs.rs/tmux_interface) page.
 
 2. Use library functions in your source file.
 
-    - Using direct structure initialization:
-        ```
-        use tmux_interface::{NewSession, TmuxInterface};
 
-        let mut tmux = TmuxInterface::new();
-        let new_session = NewSession {
-            name: "session_name",
-            ..Default::default(),
-        };
-        tmux.new_session(Some(&new_session)).unwrap();
+    - use methods of the parent structure (`TmuxCommand`):
         ```
+        use tmux_interface::TmuxCommand;
 
-    - Using builder pattern:
-        ```
-        use tmux_interface::{NewSessionBuilder, TmuxInterface};
+        let tmux = TmuxCommand::new();
 
-        let mut tmux = TmuxInterface::new();
-        let new_session = NewSessionBuilder::new().session_name("session_name").build();
-        tmux.new_session(Some(&new_session)).unwrap();
-        ```
-
-    - Using structure modification:
-        ```
-        use tmux_interface::{NewSession, TmuxInterface};
-
-        let mut tmux = TmuxInterface::new();
-        let mut new_session = NewSession {
-            ..Default::default(),
-        };
-        new_session.name = "";
-        tmux.new_session(Some(&new_session)).unwrap();
+        tmux.new_session()
+            .detached()
+            .session_name("example_1")
+            .output()
+            .unwrap();
+        tmux.has_session()
+            .target_session("example_1")
+            .output()
+            .unwrap();
+        tmux.kill_session()
+            .target_session("example_1")
+            .output()
+            .unwrap();
         ```
 
+    - use direct methods of the child structures (`NewSession`, `HasSession`,
+      `KillSession`, ...):
+        ```
+        use tmux_interface::{HasSession, KillSession, NewSession};
+
+        NewSession::new()
+            .detached()
+            .session_name("example_2")
+            .output()
+            .unwrap();
+        HasSession::new()
+            .target_session("example_2")
+            .output()
+            .unwrap();
+        KillSession::new()
+            .target_session("example_2")
+            .output()
+            .unwrap();
+        ```
 
 ## Testing
 
