@@ -1,7 +1,7 @@
 use crate::commands::constants::TMUX;
 use crate::{Error, TmuxOutput};
 use std::borrow::Cow;
-use std::process::{Command, Stdio};
+use std::process::{Child, Command, ExitStatus, Stdio};
 
 /// Standard tmux command line arguments syntax:
 /// ```text
@@ -53,13 +53,10 @@ impl<'a> TmuxCommand<'a> {
         self
     }
 
-    // if we are working with same type problems multiple traits methods mixing allowed (NewSession, DetachClient, chaining methods)
-
-    //// NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
-    //cmd.stdin(Stdio::inherit());
     /// run command
     pub fn output(&self) -> Result<TmuxOutput, Error> {
         let mut command = self.push_tmux_command();
+        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
         command.stdin(Stdio::inherit());
         let output = command.output()?;
         Ok(TmuxOutput(output))
@@ -89,10 +86,15 @@ impl<'a> TmuxCommand<'a> {
         command
     }
 
-    //pub fn spawn(&self) -> Result<Child> {
-    //let mut command = self.push_tmux_command();
-    //command.spawn()
-    //}
+    pub fn spawn(&self) -> Result<Child, Error> {
+        let mut command = self.push_tmux_command();
+        Ok(command.spawn()?)
+    }
+
+    pub fn status(&self) -> Result<ExitStatus, Error> {
+        let mut command = self.push_tmux_command();
+        Ok(command.status()?)
+    }
 
     // XXX: hard bound to cmd_args
     // if vec doesn't exist, creates it and appends with given arguments
