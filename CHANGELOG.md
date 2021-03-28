@@ -1,7 +1,33 @@
 # Changelog
 
 
-## tmux_interface vX.X.X
+<!--## tmux_interface vX.X.X-->
+
+## tmux_interface v0.0.8
+- introduce new architecture (massive incompatible changes with older versions)
+- refactor tmux command wrapper functions
+    - old simplified function call was:
+      ```
+      let mut tmux = TmuxInterface::new();
+      tmux.new_session(NewSessionBuilder::new().session_name(...));
+
+      // or
+      let mut tmux = TmuxInterface::new();
+      let new_session = NewSession {
+        detached: Some(true),
+        ..Default::default();
+      };
+      tmux.new_session(&new_session).unwrap();
+      ```
+
+    - change to simplified function call now:
+      ```
+      let mut tmux = TmuxCommand:new();
+      tmux.new_session().detached().session_name(...)...(...).output().unwrap();
+
+      // or directly
+      NewSession::new().detached().session_name(...)...(...).output().unwrap();
+      ```
 
 
 ## tmux_interface v0.0.7
