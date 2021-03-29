@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{TmuxCommand, TmuxOutput};
+use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Resize a window, up, down, left or right
@@ -66,7 +66,7 @@ impl<'a> ResizeWindow<'a> {
 
     /// [-t target-window] - target-window
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, start_directory);
+        self.0.push_option(t_KEY, target_window);
         self
     }
 
@@ -88,7 +88,7 @@ impl<'a> ResizeWindow<'a> {
         self
     }
 
-    pub fn output(&self) -> TmuxOutput {
+    pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
 }

@@ -118,7 +118,7 @@ impl<'a> RefreshClient<'a> {
     /// [-F flags] - set a comma-separated list of flags
     #[cfg(feature = "tmux_2_9a")]
     pub fn flags(&mut self, flags: &'a str) -> &mut Self {
-        self.0.push_option(F_KEY, start_directory);
+        self.0.push_option(F_KEY, flags);
         self
     }
 
@@ -132,7 +132,7 @@ impl<'a> RefreshClient<'a> {
     /// [adjustment] - moves the visible part up/down left/right by adjustment rows/columns
     #[cfg(feature = "tmux_2_9a")]
     pub fn adjustment(&mut self, adjustment: usize) -> &mut Self {
-        self.0.push_param(adjustment);
+        self.0.push_param(adjustment.to_string());
         self
     }
 

@@ -1,6 +1,6 @@
-use crate::error::Error;
-use crate::tmux_interface::*;
-use std::process::Output;
+use crate::commands::constants::*;
+use crate::{Error, TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 
 /// Structure for displaying a menu on target-client
 ///
@@ -11,15 +11,17 @@ use std::process::Output;
 /// tmux display-menu [-c target-client] [-t target-pane] [-T title]
 /// [-x position] [-y position] name key command ...
 /// ```
-#[derive(Default, Debug)]
+#[derive(Clone, Debug)]
 #[cfg(feature = "tmux_3_0")]
-pub struct DisplayMenu<'a> {
-    // name - name
-//pub name: &'a str,
-// key - key
-//pub key: &'a str,
-// command ... - command
-//pub command: &'a str,
+pub struct DisplayMenu<'a>(pub TmuxCommand<'a>);
+
+impl<'a> Default for DisplayMenu<'a> {
+    fn default() -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(DISPLAY_MENU)),
+            ..Default::default()
+        })
+    }
 }
 
 impl<'a> DisplayMenu<'a> {
@@ -68,16 +70,16 @@ impl<'a> DisplayMenu<'a> {
     }
 
     pub fn key<S: Into<Cow<'a, str>>>(&mut self, key: S) -> &mut Self {
-        self.0.push_param(name);
+        self.0.push_param(key);
         self
     }
 
-    pub fn name<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
+    pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
         self.0.push_param(command);
         self
     }
 
-    pub fn output(&self) -> TmuxOutput {
+    pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
 }

@@ -131,7 +131,7 @@ impl<'a> SetOption<'a> {
     /// [-t target-pane] - specify the target-pane
     #[cfg(feature = "tmux_3_0")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.target_pane = Some(target_pane);
+        self.0.push_option(t_KEY, target_pane);
         self
     }
 

@@ -157,20 +157,34 @@ pub enum TargetPaneToken {
     //Mouse,{last}            !    The last (previously active) pane
 }
 
-const TARGET_PANE_TOKEN_NEXT: &str = "+"; // {next}
-const TARGET_PANE_TOKEN_PREVIOUS: &str = "-"; // {previous}
-const TARGET_PANE_TOKEN_TOP: &str = "{top}"; // {top}
-const TARGET_PANE_TOKEN_BOTTOM: &str = "{bottom}"; // {bottom}
-const TARGET_PANE_TOKEN_LEFT: &str = "{left}"; // {left}
-const TARGET_PANE_TOKEN_RIGHT: &str = "{right}"; // {right}
-const TARGET_PANE_TOKEN_TOP_LEFT: &str = "{top-left}"; // {top-left}
-const TARGET_PANE_TOKEN_TOP_RIGHT: &str = "{top-right}"; // {top-right}
-const TARGET_PANE_TOKEN_BOTTOM_LEFT: &str = "{bottom-left}"; // {bottom-left}
-const TARGET_PANE_TOKEN_BOTTOM_RIGHT: &str = "{bottom-right}"; // {bottom-right}
-const TARGET_PANE_TOKEN_UP_OF: &str = "{up-of}"; // {up-of}
-const TARGET_PANE_TOKEN_DOWN_OF: &str = "{down-of}"; // {down-of}
-const TARGET_PANE_TOKEN_LEFT_OF: &str = "{left-of}"; // {left-of}
-const TARGET_PANE_TOKEN_RIGHT_OF: &str = "{right-of}"; // {right-of}
+// {next}
+const TARGET_PANE_TOKEN_NEXT: &str = "+";
+// {previous}
+const TARGET_PANE_TOKEN_PREVIOUS: &str = "-";
+// {top}
+const TARGET_PANE_TOKEN_TOP: &str = "{top}";
+// {bottom}
+const TARGET_PANE_TOKEN_BOTTOM: &str = "{bottom}";
+// {left}
+const TARGET_PANE_TOKEN_LEFT: &str = "{left}";
+// {right}
+const TARGET_PANE_TOKEN_RIGHT: &str = "{right}";
+// {top-left}
+const TARGET_PANE_TOKEN_TOP_LEFT: &str = "{top-left}";
+// {top-right}
+const TARGET_PANE_TOKEN_TOP_RIGHT: &str = "{top-right}";
+// {bottom-left}
+const TARGET_PANE_TOKEN_BOTTOM_LEFT: &str = "{bottom-left}";
+// {bottom-right}
+const TARGET_PANE_TOKEN_BOTTOM_RIGHT: &str = "{bottom-right}";
+// {up-of}
+const TARGET_PANE_TOKEN_UP_OF: &str = "{up-of}";
+// {down-of}
+const TARGET_PANE_TOKEN_DOWN_OF: &str = "{down-of}";
+// {left-of}
+const TARGET_PANE_TOKEN_LEFT_OF: &str = "{left-of}";
+// {right-of}
+const TARGET_PANE_TOKEN_RIGHT_OF: &str = "{right-of}";
 
 impl fmt::Display for TargetPaneToken {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

@@ -1,5 +1,5 @@
 use crate::{Error, Switch};
-use crate::{SetOptionBuilder, ShowOptionsBuilder, TmuxInterface};
+use crate::{SetOption, ShowOptions};
 use std::fmt;
 use std::str::FromStr;
 
@@ -94,9 +94,7 @@ pub struct PaneOptions {
 
 impl PaneOptions {
     pub fn get_all() -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
-        let show_options = ShowOptionsBuilder::new().global().build();
-        let s = tmux.show_options(Some(&show_options))?;
+        let s = ShowOptions::new().global().output()?.string();
         s.parse()
     }
 
@@ -104,29 +102,30 @@ impl PaneOptions {
     // XXX: bitmask is overkill now, mb later use for multiple select
     // NOTE: not allows selective get by bitmask
     pub fn get(bitflags: usize) -> Result<Self, Error> {
-        let mut tmux = TmuxInterface::new();
         let selected_option = PANE_OPTIONS
             .iter()
             .filter(|t| bitflags == t.3)
             .map(|t| format!("{}", t.0))
             .collect::<Vec<String>>()
             .join(" ");
-        let show_options = ShowOptionsBuilder::new()
+        let s = ShowOptions::new()
             .pane()
             .option(&selected_option)
-            .build();
-        let s = tmux.show_options(Some(&show_options))?;
+            .output()?
+            .string();
         s.parse()
     }
 
     // allows selective set by bitmask
     // NOTE: in tmux_2_6 not exists pane
     pub fn set(&self, bitflags: usize) -> Result<(), Error> {
-        let mut tmux = TmuxInterface::new();
         for selected_option in PANE_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
-                let set_option = SetOptionBuilder::new().pane().build();
-                tmux.set_option(Some(&set_option), selected_option.0, &selected_value)?;
+                SetOption::new()
+                    .pane()
+                    .option(selected_option.0)
+                    .value(&selected_value)
+                    .output()?;
             }
         }
         Ok(())
