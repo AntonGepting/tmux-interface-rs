@@ -92,6 +92,8 @@ fn choose_tree() {
     s.extend_from_slice(&["-O", "3"]);
     #[cfg(feature = "tmux_2_6")]
     s.extend_from_slice(&["-t", "4"]);
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
+    s.extend_from_slice(&["-t", "4"]);
     #[cfg(feature = "tmux_2_6")]
     s.push("5");
     let s = s.into_iter().map(|a| a.into()).collect();

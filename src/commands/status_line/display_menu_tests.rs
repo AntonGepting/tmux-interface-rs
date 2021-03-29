@@ -12,6 +12,8 @@ fn display_menu() {
     // tmux display-menu [-c target-client] [-t target-pane] [-T title]
     // [-x position] [-y position] name key command ...
     // ```
+    let target_pane = TargetPane::Raw("2").to_string();
+
     let mut display_menu = DisplayMenu::new();
     #[cfg(feature = "tmux_3_0")]
     display_menu.target_client("1");
@@ -23,8 +25,12 @@ fn display_menu() {
     display_menu.x(4);
     #[cfg(feature = "tmux_3_0")]
     display_menu.y(5);
-
-    let target_pane = TargetPane::Raw("2").to_string();
+    #[cfg(feature = "tmux_3_0")]
+    display_menu.name("6");
+    #[cfg(feature = "tmux_3_0")]
+    display_menu.key("7");
+    #[cfg(feature = "tmux_3_0")]
+    display_menu.command("8");
 
     let cmd = "display-menu";
 
@@ -39,8 +45,11 @@ fn display_menu() {
     s.extend_from_slice(&["-x", "4"]);
     #[cfg(feature = "tmux_3_0")]
     s.extend_from_slice(&["-y", "5"]);
+    #[cfg(feature = "tmux_3_0")]
     s.push("6");
+    #[cfg(feature = "tmux_3_0")]
     s.push("7");
+    #[cfg(feature = "tmux_3_0")]
     s.push("8");
     let s = s.into_iter().map(|a| a.into()).collect();
 

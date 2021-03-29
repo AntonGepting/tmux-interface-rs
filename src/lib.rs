@@ -288,11 +288,11 @@ pub use crate::options::session_options::SessionOptions;
 #[cfg(feature = "tmux_1_0")]
 pub use crate::options::session_options::SessionOptionsBuilder;
 // structures & enums
-#[cfg(feature = "tmux_0_8")]
+#[cfg(feature = "tmux_1_0")]
 pub use crate::options::session_options::Action;
-#[cfg(feature = "tmux_0_8")]
+#[cfg(feature = "tmux_1_0")]
 pub use crate::options::session_options::Activity;
-#[cfg(feature = "tmux_0_8")]
+#[cfg(feature = "tmux_1_0")]
 pub use crate::options::session_options::Status;
 #[cfg(feature = "tmux_1_0")]
 pub use crate::options::session_options::StatusJustify;
@@ -657,124 +657,119 @@ pub use self::commands::tmux_output::TmuxOutput;
 // buffers
 #[cfg(feature = "tmux_1_3")]
 pub use self::commands::buffers::choose_buffer::ChooseBuffer;
-
+#[cfg(feature = "tmux_0_9")]
 pub use self::commands::buffers::clear_history::ClearHistory;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::buffers::delete_buffer::DeleteBuffer;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::buffers::list_buffers::ListBuffers;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::buffers::load_buffer::LoadBuffer;
-
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::buffers::paste_buffer::PasteBuffer;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::buffers::save_buffer::SaveBuffer;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::buffers::set_buffer::SetBuffer;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::buffers::show_buffer::ShowBuffer;
 
 // clients and sessions
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::attach_session::AttachSession;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::detach_client::DetachClient;
 #[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::has_session::HasSession;
 #[cfg(feature = "tmux_0_8")]
-pub use self::commands::clients_and_sessions::list_sessions::ListSessions;
-
-pub use self::commands::clients_and_sessions::list_clients::ListClients;
-
-pub use self::commands::clients_and_sessions::kill_session::KillSession;
-
-pub use self::commands::clients_and_sessions::list_commands::ListCommands;
-
 pub use self::commands::clients_and_sessions::kill_server::KillServer;
-
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::clients_and_sessions::kill_session::KillSession;
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::clients_and_sessions::list_clients::ListClients;
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::clients_and_sessions::list_commands::ListCommands;
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::clients_and_sessions::list_sessions::ListSessions;
+#[cfg(feature = "tmux_1_1")]
 pub use self::commands::clients_and_sessions::lock_client::LockClient;
-
-pub use self::commands::clients_and_sessions::rename_session::RenameSession;
-
-pub use self::commands::clients_and_sessions::show_messages::ShowMessages;
-
-pub use self::commands::clients_and_sessions::source_file::SourceFile;
-
-pub use self::commands::clients_and_sessions::start_server::StartServer;
-
-pub use self::commands::clients_and_sessions::suspend_client::SuspendClient;
-
 #[cfg(feature = "tmux_1_1")]
 pub use self::commands::clients_and_sessions::lock_session::LockSession;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::new_session::NewSession;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::refresh_client::RefreshClient;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::clients_and_sessions::rename_session::RenameSession;
+#[cfg(feature = "tmux_1_2")]
+pub use self::commands::clients_and_sessions::show_messages::ShowMessages;
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::clients_and_sessions::source_file::SourceFile;
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::clients_and_sessions::start_server::StartServer;
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::clients_and_sessions::suspend_client::SuspendClient;
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::switch_client::SwitchClient;
 
 // global and session environment
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::global_and_session_environment::set_environment::SetEnvironment;
-
+#[cfg(feature = "tmux_1_0")]
 pub use self::commands::global_and_session_environment::show_environment::ShowEnvironment;
 
 // hooks
 #[cfg(feature = "tmux_2_2")]
 pub use self::commands::hooks::set_hook::SetHook;
-
+#[cfg(feature = "tmux_2_2")]
 pub use self::commands::hooks::show_hooks::ShowHooks;
 
 // key bindings
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::key_bindings::bind_key::BindKey;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::key_bindings::list_keys::ListKeys;
-
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::key_bindings::send_keys::SendKeys;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::key_bindings::send_prefix::SendPrefix;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::key_bindings::unbind_key::UnbindKey;
 
 // miscellaneous
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::miscellaneous::clock_mode::ClockMode;
-
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::miscellaneous::if_shell::IfShell;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::miscellaneous::lock_server::LockServer;
-
+#[cfg(feature = "tmux_1_1")]
 pub use self::commands::miscellaneous::run_shell::RunShell;
-
+#[cfg(feature = "tmux_1_8")]
 pub use self::commands::miscellaneous::wait_for::WaitFor;
 
 // options
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::options::set_option::SetOption;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::options::set_window_option::SetWindowOption;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::options::show_options::ShowOptions;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::options::show_window_options::ShowWindowOptions;
 
 // status line
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::status_line::command_prompt::CommandPrompt;
-
+#[cfg(feature = "tmux_0_9")]
 pub use self::commands::status_line::confirm_before::ConfirmBefore;
-
 #[cfg(feature = "tmux_3_0")]
 pub use self::commands::status_line::display_menu::DisplayMenu;
-
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::status_line::display_message::DisplayMessage;
 
 // windows and panes
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::break_pane::BreakPane;
 #[cfg(feature = "tmux_1_2")]
 pub use self::commands::windows_and_panes::capture_pane::CapturePane;
@@ -782,75 +777,69 @@ pub use self::commands::windows_and_panes::capture_pane::CapturePane;
 pub use self::commands::windows_and_panes::choose_client::ChooseClient;
 #[cfg(feature = "tmux_1_7")]
 pub use self::commands::windows_and_panes::choose_tree::ChooseTree;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::copy_mode::CopyMode;
-
-pub use self::commands::windows_and_panes::display_panes::DisplayPanes;
-
 #[cfg(feature = "tmux_1_0")]
+pub use self::commands::windows_and_panes::display_panes::DisplayPanes;
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::find_window::FindWindow;
 #[cfg(feature = "tmux_1_2")]
 pub use self::commands::windows_and_panes::join_pane::JoinPane;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::kill_pane::KillPane;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::kill_window::KillWindow;
-
+#[cfg(feature = "tmux_1_4")]
 pub use self::commands::windows_and_panes::last_pane::LastPane;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::last_window::LastWindow;
-
-pub use self::commands::windows_and_panes::list_panes::ListPanes;
-
-pub use self::commands::windows_and_panes::list_windows::ListWindows;
-
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::link_window::LinkWindow;
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::windows_and_panes::list_panes::ListPanes;
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::windows_and_panes::list_windows::ListWindows;
 #[cfg(feature = "tmux_1_7")]
 pub use self::commands::windows_and_panes::move_pane::MovePane;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::move_window::MoveWindow;
-
-pub use self::commands::windows_and_panes::next_layout::NextLayout;
-
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::new_window::NewWindow;
-
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::windows_and_panes::next_layout::NextLayout;
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::next_window::NextWindow;
-
 #[cfg(feature = "tmux_1_1")]
 pub use self::commands::windows_and_panes::pipe_pane::PipePane;
-
+#[cfg(feature = "tmux_1_3")]
 pub use self::commands::windows_and_panes::previous_layout::PreviousLayout;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::previous_window::PreviousWindow;
-
-#[cfg(feature = "tmux_1_0")]
-pub use self::commands::windows_and_panes::resize_pane::ResizePane;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::rename_window::RenameWindow;
-
-pub use self::commands::windows_and_panes::rotate_window::RotateWindow;
-
+#[cfg(feature = "tmux_0_9")]
+pub use self::commands::windows_and_panes::resize_pane::ResizePane;
 #[cfg(feature = "tmux_2_9")]
 pub use self::commands::windows_and_panes::resize_window::ResizeWindow;
 #[cfg(feature = "tmux_1_5")]
 pub use self::commands::windows_and_panes::respawn_pane::RespawnPane;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::respawn_window::RespawnWindow;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
+pub use self::commands::windows_and_panes::rotate_window::RotateWindow;
+#[cfg(feature = "tmux_0_9")]
 pub use self::commands::windows_and_panes::select_layout::SelectLayot;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::select_pane::SelectPane;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::select_window::SelectWindow;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::split_window::SplitWindow;
-#[cfg(feature = "tmux_1_0")]
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::swap_pane::SwapPane;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::swap_window::SwapWindow;
-
+#[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::unlink_window::UnlinkWindow;
 
 // enums

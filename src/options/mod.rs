@@ -29,6 +29,7 @@ use crate::options::session_options::SessionOptions;
 #[cfg(feature = "tmux_1_2")]
 use crate::options::window_options::WindowOptions;
 
+#[cfg(feature = "tmux_1_0")]
 pub struct Options {
     pub server_options: ServerOptions,
     pub session_options: SessionOptions,
@@ -92,6 +93,7 @@ impl fmt::Display for Switch {
 }
 
 // fn checks if vec already exists, if not creates it, and inserts an item at given index
+#[cfg(feature = "tmux_1_0")]
 fn create_insert_vec(
     v: Option<&mut Vec<String>>,
     i: Option<usize>,

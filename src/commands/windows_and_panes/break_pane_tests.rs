@@ -64,9 +64,9 @@ fn break_pane() {
     break_pane.dst_pane(&dst_pane);
     #[cfg(feature = "tmux_2_2")]
     break_pane.dst_window(&dst_pane);
-    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    break_pane.target_pane(&dst_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+    break_pane.target_pane(&dst_pane);
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     break_pane.target_window(&target_window);
 
     #[cfg(not(feature = "use_cmd_alias"))]
@@ -85,7 +85,13 @@ fn break_pane() {
     s.extend_from_slice(&["-n", "2"]);
     #[cfg(feature = "tmux_2_1")]
     s.extend_from_slice(&["-s", "3"]);
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+    s.extend_from_slice(&["-t", "4"]);
     #[cfg(feature = "tmux_2_2")]
+    s.extend_from_slice(&["-t", "4"]);
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+    s.extend_from_slice(&["-t", "4"]);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
     s.extend_from_slice(&["-t", "4"]);
     let s = s.into_iter().map(|a| a.into()).collect();
 

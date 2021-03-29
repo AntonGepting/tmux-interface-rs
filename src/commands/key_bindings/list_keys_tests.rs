@@ -56,12 +56,12 @@ fn list_keys() {
     s.push("-N");
     #[cfg(feature = "tmux_3_1")]
     s.extend_from_slice(&["-P", "1"]);
-    #[cfg(feature = "tmux_2_1")]
-    s.extend_from_slice(&["-T", "3"]);
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_4")))]
     s.extend_from_slice(&["-t", "2"]);
+    #[cfg(feature = "tmux_2_1")]
+    s.extend_from_slice(&["-T", "3"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-    s.extend_from_slice(&["-t", "4"]);
+    s.extend_from_slice(&["-t", "3"]);
     let s = s.into_iter().map(|a| a.into()).collect();
 
     assert_eq!(list_keys.0.bin, Cow::Borrowed("tmux"));

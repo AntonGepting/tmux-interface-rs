@@ -65,6 +65,8 @@ fn paste_buffer() {
     s.extend_from_slice(&["-s", "2"]);
     #[cfg(feature = "tmux_1_7")]
     s.extend_from_slice(&["-t", "3"]);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+    s.extend_from_slice(&["-t", "3"]);
     let s = s.into_iter().map(|a| a.into()).collect();
 
     assert_eq!(paste_buffer.0.bin, Cow::Borrowed("tmux"));

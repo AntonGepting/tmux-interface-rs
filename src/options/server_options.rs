@@ -246,12 +246,8 @@ pub const SERVER_OPTIONS: [(
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     (
         "detach-on-destroy",
-        |o, i, _s| o.detach_on_destroy = s.parse().ok(),
-        |o| {
-            o.detach_on_destroy
-                .as_ref()
-                .map(|v| v.join(" ").to_string())
-        },
+        |o, i, s| o.detach_on_destroy = s.parse().ok(),
+        |o| o.detach_on_destroy.as_ref().map(|v| v.to_string()),
         DETACH_ON_DESTROY,
     ),
 ];

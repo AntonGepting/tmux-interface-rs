@@ -27,7 +27,7 @@ fn save_buffer() {
     let mut save_buffer = SaveBuffer::new();
     #[cfg(feature = "tmux_0_8")]
     save_buffer.append();
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(feature = "tmux_2_0")]
     save_buffer.buffer_name("1");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
     save_buffer.buffer_index("2");
@@ -44,7 +44,7 @@ fn save_buffer() {
     let mut s = Vec::new();
     #[cfg(feature = "tmux_0_8")]
     s.push("-a");
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(feature = "tmux_2_0")]
     s.extend_from_slice(&["-b", "1"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
     s.extend_from_slice(&["-b", "2"]);

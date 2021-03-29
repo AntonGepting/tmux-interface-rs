@@ -1391,6 +1391,8 @@ pub struct SessionOptionsBuilder<'a> {
     pub bell_action: Option<Action>,
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
     pub bell_on_alert: Option<Switch>,
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
+    pub buffer_limit: Option<usize>,
     #[cfg(feature = "tmux_1_0")]
     pub default_command: Option<&'a str>,
     #[cfg(feature = "tmux_1_0")]
@@ -1856,6 +1858,8 @@ impl<'a> SessionOptionsBuilder<'a> {
             bell_action: self.bell_action.clone(),
             #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
             bell_on_alert: self.bell_on_alert.clone(),
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
+            buffer_limit: self.buffer_limit,
             #[cfg(feature = "tmux_1_0")]
             default_command: self.default_command.map(|s| s.to_string()),
             #[cfg(feature = "tmux_1_0")]
