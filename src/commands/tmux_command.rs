@@ -42,57 +42,37 @@ impl<'a> TmuxCommand<'a> {
         Default::default()
     }
 
+    /// set tmux binary name
     pub fn bin<S: Into<Cow<'a, str>>>(&mut self, bin: S) -> &mut Self {
         //self.tmux.bin = bin;
         self.bin = bin.into();
         self
     }
 
+    /// set tmux command name
     pub fn cmd<S: Into<Cow<'a, str>>>(&mut self, cmd: S) -> &mut Self {
         self.cmd = Some(cmd.into());
         self
     }
 
-    /// run command
+    /// run tmux command
     pub fn output(&self) -> Result<TmuxOutput, Error> {
-        let mut command = self.push_tmux_command();
+        let mut command = Command::from(self);
         // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
         command.stdin(Stdio::inherit());
         let output = command.output()?;
         Ok(TmuxOutput(output))
     }
 
-    pub fn push_tmux_command(&self) -> Command {
-        let mut command = Command::new(&self.bin.as_ref());
-
-        // XXX: ugly?
-        if let Some(s) = &self.bin_args {
-            for a in s {
-                command.arg(a.as_ref());
-            }
-        }
-
-        if let Some(s) = &self.cmd {
-            command.arg(s.as_ref());
-        }
-
-        // XXX: ugly?
-        if let Some(s) = &self.cmd_args {
-            for a in s {
-                command.arg(a.as_ref());
-            }
-        }
-
-        command
-    }
-
+    // XXX: really necessary?
     pub fn spawn(&self) -> Result<Child, Error> {
-        let mut command = self.push_tmux_command();
+        let mut command = Command::from(self);
         Ok(command.spawn()?)
     }
 
+    // XXX: really necessary?
     pub fn status(&self) -> Result<ExitStatus, Error> {
-        let mut command = self.push_tmux_command();
+        let mut command = Command::from(self);
         Ok(command.status()?)
     }
 
@@ -117,10 +97,6 @@ impl<'a> TmuxCommand<'a> {
 
     // if vec doesn't exist, creates it and appends with given arguments
     /// insert a single parameter (`[VALUE]`)
-    //pub fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self {
-    //self.cmd_args.get_or_insert(Vec::new()).push(param.into());
-    //self
-    //}
     pub fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self {
         self.cmd_args.push_param(param);
         self
@@ -130,29 +106,45 @@ impl<'a> TmuxCommand<'a> {
     //pub fn custom<S: Into<Cow<'a, str>>>(&self, ) -> &mut Self {
     //}
 
-    /// create `std::process::Command` from `Self` (consuming `Self`)
-    pub fn to_command(self) -> Command {
-        Command::from(self)
+    //// create `std::process::Command` from `Self` (consuming `Self`)
+    //pub fn to_command(&self) -> Command {
+    //Command::from(self)
+    //}
+}
+
+// create ready to exec `std::process::Command`
+// - create `std::process::Command`
+// - push binary arguments
+// - push command
+// - push command args
+impl<'a> From<TmuxCommand<'a>> for Command {
+    fn from(tmux: TmuxCommand) -> Self {
+        Command::from(&tmux)
     }
 }
 
-impl<'a> From<TmuxCommand<'a>> for Command {
-    fn from(tmux: TmuxCommand) -> Self {
+// create ready to exec `std::process::Command`
+// - create `std::process::Command`
+// - push binary arguments
+// - push command
+// - push command args
+impl<'a> From<&TmuxCommand<'a>> for Command {
+    fn from(tmux: &TmuxCommand) -> Self {
         let mut command = Command::new(tmux.bin.as_ref());
 
         // XXX: ugly?
-        if let Some(v) = tmux.bin_args {
+        if let Some(v) = &tmux.bin_args {
             for a in v {
                 command.arg(a.as_ref());
             }
         }
 
-        if let Some(s) = tmux.cmd {
+        if let Some(s) = &tmux.cmd {
             command.arg(s.as_ref());
         }
 
         // XXX: ugly?
-        if let Some(v) = tmux.cmd_args {
+        if let Some(v) = &tmux.cmd_args {
             for a in v {
                 command.arg(a.as_ref());
             }
