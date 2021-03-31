@@ -650,7 +650,6 @@ pub use crate::options::pane_options::PANE_OPTIONS_ALL;
 #[cfg(feature = "tmux_3_1")]
 pub use crate::options::pane_options::PANE_OPTIONS_NONE;
 
-pub use self::commands::tmux::Tmux;
 pub use self::commands::tmux_command::TmuxCommand;
 pub use self::commands::tmux_output::TmuxOutput;
 

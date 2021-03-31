@@ -1,4 +1,4 @@
-use crate::commands::constants::TMUX;
+use crate::commands::constants::*;
 use crate::{Error, TmuxOutput};
 use std::borrow::Cow;
 use std::process::{Child, Command, ExitStatus, Stdio};
@@ -100,7 +100,8 @@ impl<'a> TmuxCommand<'a> {
     // if vec doesn't exist, creates it and appends with given arguments
     /// insert a single flag (`-x`)
     pub fn push_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S) -> &mut Self {
-        self.push_param(flag.into())
+        self.cmd_args.push_param(flag.into());
+        self
     }
 
     // if vec doesn't exist, creates it and appends with given arguments
@@ -110,16 +111,18 @@ impl<'a> TmuxCommand<'a> {
         S: Into<Cow<'a, str>>,
         U: Into<Cow<'a, str>>,
     {
-        self.cmd_args
-            .get_or_insert(Vec::new())
-            .extend_from_slice(&[key.into(), option.into()]);
+        self.cmd_args.push_option(key, option);
         self
     }
 
     // if vec doesn't exist, creates it and appends with given arguments
     /// insert a single parameter (`[VALUE]`)
+    //pub fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self {
+    //self.cmd_args.get_or_insert(Vec::new()).push(param.into());
+    //self
+    //}
     pub fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self {
-        self.cmd_args.get_or_insert(Vec::new()).push(param.into());
+        self.cmd_args.push_param(param);
         self
     }
 
@@ -127,26 +130,64 @@ impl<'a> TmuxCommand<'a> {
     //pub fn custom<S: Into<Cow<'a, str>>>(&self, ) -> &mut Self {
     //}
 
-    //pub fn output(&self) -> Ou {
-    //}
+    /// create `std::process::Command` from `Self` (consuming `Self`)
+    pub fn to_command(self) -> Command {
+        Command::from(self)
+    }
+}
 
-    // prepared for run as std::process::Command()
-    pub fn to_command(&self) -> (String, Vec<String>) {
-        let bin = self.bin.to_string();
+impl<'a> From<TmuxCommand<'a>> for Command {
+    fn from(tmux: TmuxCommand) -> Self {
+        let mut command = Command::new(tmux.bin.as_ref());
 
-        let args = Vec::new();
-        //if let Some(v) = &self.bin_args {
-        //args.extend_from_slice(v.borrow());
-        //}
+        // XXX: ugly?
+        if let Some(v) = tmux.bin_args {
+            for a in v {
+                command.arg(a.as_ref());
+            }
+        }
 
-        //if let Some(s) = &self.cmd {
-        //args.push(s.to_string());
-        //}
+        if let Some(s) = tmux.cmd {
+            command.arg(s.as_ref());
+        }
 
-        //if let Some(v) = &self.cmd_args {
-        //args.extend_from_slice(v);
-        //}
+        // XXX: ugly?
+        if let Some(v) = tmux.cmd_args {
+            for a in v {
+                command.arg(a.as_ref());
+            }
+        }
 
-        (bin, args)
+        command
+    }
+}
+
+// trait used for bin_args and cmd_args
+pub trait Args<'a> {
+    fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S);
+    fn push_option<S, U>(&mut self, key: S, option: U)
+    where
+        S: Into<Cow<'a, str>>,
+        U: Into<Cow<'a, str>>;
+    fn push_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S);
+}
+
+// trait used for bin_args and cmd_args
+impl<'a> Args<'a> for Option<Vec<Cow<'a, str>>> {
+    fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) {
+        self.get_or_insert(Vec::new()).push(param.into());
+    }
+
+    fn push_option<S, U>(&mut self, key: S, option: U)
+    where
+        S: Into<Cow<'a, str>>,
+        U: Into<Cow<'a, str>>,
+    {
+        self.get_or_insert(Vec::new())
+            .extend_from_slice(&[key.into(), option.into()]);
+    }
+
+    fn push_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S) {
+        self.push_param(flag.into());
     }
 }
