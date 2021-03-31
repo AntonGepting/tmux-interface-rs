@@ -395,13 +395,13 @@
         - [`src/variables/pane`](src/variables/pane)
             - [`mod.rs`](src/variables/pane/mod.rs)
 
-            - [`pane.rs`](src/pane.rs) - parse a pane
-            - [`pane_tests.rs`](src/pane_tests.rs)
+            - [`pane.rs`](src/variables/pane.rs) - parse a pane
+            - [`pane_tests.rs`](src/variables/pane_tests.rs)
 
-            - [`panes.rs`](src/panes.rs) - parse a panes list
-            - [`panes_tests.rs`](src/panes_tests.rs)
+            - [`panes.rs`](src/variables/panes.rs) - parse a panes list
+            - [`panes_tests.rs`](src/variables/panes_tests.rs)
 
-            - [`pane_tabs.rs`](src/pane_tabs.rs) - pane tabs
+            - [`pane_tabs.rs`](src/variables/pane_tabs.rs) - pane tabs
 
 
 - [`tests/`](tests/) - crate integration tests (multiple functions):
@@ -410,18 +410,20 @@
     - [`sessions_tests.rs`](tests/sessions_tests.rs) - sessions tests
     - [`windows_tests.rs`](tests/windows_tests.rs) - windows tests
     - [`panes_tests.rs`](tests/panes_tests.rs) - panes tests
-    - [`tmux_error_mock.sh`](tests/tmux_error_mock.sh) - bash script for testing of tmux error handling functions
     - [`tmux_interface.rs`](tests/tmux_interface.rs)
+
+- [`scripts/`](scripts/) - scripts and variables:
+    - [`man_tmux/`](man_tmux/) scripts for tmux manual analysis:
+        - [`build_all.sh`](scripts/man_tmux/build_all.sh) - bash script for building library for all tmux versions
+        - [`generate_manpages.sh`](scripts/man_tmux/generate_manpages.sh) - bash script for generating man pages for all tmux versions
+        - [`grep_options.sh`](scripts/man_tmux/grep_options.sh) - bash script for extracting tmux options from man pages
+        - [`grep_variables.sh`](scripts/man_tmux/grep_variables.sh) - bash script for extracting tmux variables from man pages
+        - [`versions.var`](scripts/man_tmux/versions.var) - contains tmux versions variables for using in scripts
+    - [`tmux_error_mock.sh`](tests/tmux_error_mock.sh) - bash script for testing of tmux error handling functions
     - [`tmux_mock.sh`](tests/tmux_mock.sh) - bash script can be used instead of tmux binary, for simple logging
         (sniffing) intercommmunication between library functions and tmux
     - [`tmux_test.sh`](tests/tmux_test.sh) - bash script for output testing of tmux functions
-
-- [`scripts/`](scripts/) - scripts and variables:
-    - [`build_all.sh`](scripts/build_all.sh) - bash script for building library for all tmux versions
-    - [`generate_manpages.sh`](scripts/generate_manpages.sh) - bash script for generating man pages for all tmux versions
-    - [`grep_options.sh`](scripts/grep_options.sh) - bash script for extracting tmux options from man pages
-    - [`grep_variables.sh`](scripts/grep_variables.sh) - bash script for extracting tmux variables from man pages
-    - [`versions.var`](scripts/versions.var) - contains tmux versions variables for using in scripts
+    - [`tmux_variables_test.py`](tests/tmux_variables_test.py) - bash script for output testing of tmux functions
 
 - [`.editorconfig`](.editorconfig) - consistent coding style configuration ([File Format](https://editorconfig.org/#file-format-details))
 - [`Cargo.toml`](Cargo.toml) - crate configuration ([File Format](https://doc.rust-lang.org/cargo/reference/manifest.html))
