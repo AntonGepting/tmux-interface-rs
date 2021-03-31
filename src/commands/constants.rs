@@ -2,6 +2,8 @@
 pub const _1_KEY: &str = "-1";
 /// `-2`
 pub const _2_KEY: &str = "-2";
+/// `-8`
+pub const _8_KEY: &str = "-8";
 
 // constants for use as keys for subcommands
 /// `-a`

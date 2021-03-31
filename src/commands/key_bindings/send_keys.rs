@@ -69,14 +69,14 @@ impl<'a> SendKeys<'a> {
     /// [-F] - expand formats in arguments where appropriate
     #[cfg(feature = "tmux_3_1")]
     pub fn expand_formats(&mut self) -> &mut Self {
-        self.0.push_flag(F_KEY);
+        self.0.push_flag(F_UPPERCASE_KEY);
         self
     }
 
     /// [-H] - expect each key to be a hexadecimal number for an ASCII character
     #[cfg(feature = "tmux_3_0")]
     pub fn hex(&mut self) -> &mut Self {
-        self.0.push_flag(H_KEY);
+        self.0.push_flag(H_UPPERCASE_KEY);
         self
     }
 
@@ -126,7 +126,7 @@ impl<'a> SendKeys<'a> {
     /// [-t target-window] - specify the target window
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_window);
+        self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 

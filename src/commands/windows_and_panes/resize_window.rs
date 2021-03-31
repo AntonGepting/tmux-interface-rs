@@ -30,55 +30,55 @@ impl<'a> ResizeWindow<'a> {
 
     /// [-a] - set the size of the smallest session containing the window
     pub fn smallest(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+        self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
     /// [-A] - set the size of the largest session containing the window
     pub fn largest(&mut self) -> &mut Self {
-        self.0.push_flag(A_KEY);
+        self.0.push_flag(A_UPPERCASE_KEY);
         self
     }
 
     /// [-D] - resize down by adjustment
     pub fn down(&mut self) -> &mut Self {
-        self.0.push_flag(D_KEY);
+        self.0.push_flag(D_UPPERCASE_KEY);
         self
     }
 
     /// [-L] - resize left by adjustment
     pub fn left(&mut self) -> &mut Self {
-        self.0.push_flag(L_KEY);
+        self.0.push_flag(L_UPPERCASE_KEY);
         self
     }
 
     /// [-R] - resize right by adjustment
     pub fn right(&mut self) -> &mut Self {
-        self.0.push_flag(R_KEY);
+        self.0.push_flag(R_UPPERCASE_KEY);
         self
     }
 
     /// [-U] - resize up by adjustment
     pub fn up(&mut self) -> &mut Self {
-        self.0.push_flag(U_KEY);
+        self.0.push_flag(U_UPPERCASE_KEY);
         self
     }
 
     /// [-t target-window] - target-window
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_window);
+        self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 
     /// [-x width] - absolute size
     pub fn width(&mut self, width: usize) -> &mut Self {
-        self.0.push_option(x_KEY, width.to_string());
+        self.0.push_option(X_LOWERCASE_KEY, width.to_string());
         self
     }
 
     /// [-y height] - absolute size
     pub fn height(&mut self, height: usize) -> &mut Self {
-        self.0.push_option(y_KEY, height.to_string());
+        self.0.push_option(Y_LOWERCASE_KEY, height.to_string());
         self
     }
 

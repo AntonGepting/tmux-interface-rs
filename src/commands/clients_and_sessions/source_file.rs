@@ -42,19 +42,19 @@ impl<'a> SourceFile<'a> {
 
     #[cfg(feature = "tmux_3_0")]
     pub fn not_execute(&mut self) -> &mut Self {
-        self.0.push_flag(n_KEY);
+        self.0.push_flag(N_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_3_0")]
     pub fn quite(&mut self) -> &mut Self {
-        self.0.push_flag(q_KEY);
+        self.0.push_flag(Q_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_3_0")]
     pub fn verbose(&mut self) -> &mut Self {
-        self.0.push_flag(v_KEY);
+        self.0.push_flag(V_LOWERCASE_KEY);
         self
     }
 

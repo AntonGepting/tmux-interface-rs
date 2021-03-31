@@ -47,7 +47,7 @@ impl<'a> FindWindow<'a> {
     /// [-r] - regular expression
     #[cfg(feature = "tmux_3_0")]
     pub fn regex(&mut self) -> &mut Self {
-        self.0.push_flag(r_KEY);
+        self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 
@@ -75,7 +75,7 @@ impl<'a> FindWindow<'a> {
     /// [-Z] - zoom the pane
     #[cfg(feature = "tmux_3_0")]
     pub fn zoom(&mut self) -> &mut Self {
-        self.0.push_flag(Z_KEY);
+        self.0.push_flag(Z_UPPERCASE_KEY);
         self
     }
 

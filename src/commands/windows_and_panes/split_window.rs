@@ -113,7 +113,7 @@ impl<'a> SplitWindow<'a> {
     /// [-I] - create an empty pane and forward any output from stdin to it
     #[cfg(feature = "tmux_3_0")]
     pub fn stdin_forward(&mut self) -> &mut Self {
-        self.0.push_flag(I_KEY);
+        self.0.push_flag(I_UPPERCASE_KEY);
         self
     }
 
@@ -141,7 +141,7 @@ impl<'a> SplitWindow<'a> {
     /// [-e environment] - environment
     #[cfg(feature = "tmux_3_1")]
     pub fn environment<S: Into<Cow<'a, str>>>(&mut self, environment: S) -> &mut Self {
-        self.0.push_option(e_KEY, environment);
+        self.0.push_option(E_LOWERCASE_KEY, environment);
         self
     }
 
@@ -156,8 +156,8 @@ impl<'a> SplitWindow<'a> {
         };
         #[cfg(feature = "tmux_3_1")]
         match size {
-            PaneSize::Size(size) => self.0.push_option(l_KEY, size.to_string()),
-            PaneSize::Percentage(size) => self.0.push_option(p_KEY, size.to_string()),
+            PaneSize::Size(size) => self.0.push_option(L_LOWERCASE_KEY, size.to_string()),
+            PaneSize::Percentage(size) => self.0.push_option(P_LOWERCASE_KEY, size.to_string()),
         };
         self
     }

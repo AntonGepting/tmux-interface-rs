@@ -64,7 +64,7 @@ impl<'a> ChooseBuffer<'a> {
     /// [-r] - reverses the sort order
     #[cfg(feature = "tmux_3_1")]
     pub fn reverse_sort_order(&mut self) -> &mut Self {
-        self.0.push_flag(r_KEY);
+        self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 

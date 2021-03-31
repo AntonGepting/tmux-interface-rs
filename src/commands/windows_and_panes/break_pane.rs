@@ -98,7 +98,7 @@ impl<'a> BreakPane<'a> {
     /// [-t dst-pane] - dst-pane
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
     pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, dst_pane);
+        self.0.push_option(T_LOWERCASE_KEY, dst_pane);
         self
     }
 
@@ -112,17 +112,18 @@ impl<'a> BreakPane<'a> {
     /// [-t target-window] - target-window
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_window);
+        self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 
     /// [-t target-pane] - target-pane
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_pane);
+        self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
+    // FIXME:
     /// [-p pane-index] - pane-index
 
     pub fn output(&self) -> Result<TmuxOutput, Error> {

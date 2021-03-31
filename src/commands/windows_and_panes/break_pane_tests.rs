@@ -1,6 +1,6 @@
 #[test]
 fn break_pane() {
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     use crate::TargetWindow;
     use crate::{BreakPane, TargetPane};
     use std::borrow::Cow;
@@ -46,7 +46,7 @@ fn break_pane() {
     // ```
     let src_pane = TargetPane::Raw("3").to_string();
     let dst_pane = TargetPane::Raw("4").to_string();
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     let target_window = TargetWindow::Raw("4").to_string();
 
     let mut break_pane = BreakPane::new();

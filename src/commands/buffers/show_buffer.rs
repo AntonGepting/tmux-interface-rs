@@ -42,13 +42,13 @@ impl<'a> ShowBuffer<'a> {
 
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub fn buffer_index<S: Into<Cow<'a, str>>>(&mut self, buffer_index: S) -> &mut Self {
-        self.0.push_option(b_KEY, buffer_index);
+        self.0.push_option(B_LOWERCASE_KEY, buffer_index);
         self
     }
 
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_session);
+        self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
     pub fn output(&self) -> Result<TmuxOutput, Error> {

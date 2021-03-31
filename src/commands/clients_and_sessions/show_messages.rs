@@ -42,7 +42,7 @@ impl<'a> ShowMessages<'a> {
 
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
     pub fn server(&mut self) -> &mut Self {
-        self.0.push_flag(I_KEY);
+        self.0.push_flag(I_UPPERCASE_KEY);
         self
     }
 

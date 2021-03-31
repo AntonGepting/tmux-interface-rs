@@ -68,8 +68,8 @@ impl<'a> MovePane<'a> {
     pub fn size(&mut self, size: &'a PaneSize) -> &mut Self {
         #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
         match size {
-            PaneSize::Size(size) => self.0.push_option(l_KEY, size.to_string()),
-            PaneSize::Percentage(size) => self.0.push_option(l_KEY, format!("{}%", size)),
+            PaneSize::Size(size) => self.0.push_option(L_LOWERCASE_KEY, size.to_string()),
+            PaneSize::Percentage(size) => self.0.push_option(L_LOWERCASE_KEY, format!("{}%", size)),
         };
         #[cfg(feature = "tmux_2_6")]
         match size {

@@ -67,7 +67,7 @@ impl<'a> ChooseTree<'a> {
     /// [-r] - reverses the sort order
     #[cfg(feature = "tmux_3_1")]
     pub fn reverse_sort_order(&mut self) -> &mut Self {
-        self.0.push_flag(r_KEY);
+        self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 
@@ -123,7 +123,7 @@ impl<'a> ChooseTree<'a> {
     /// [-t target-window] - target-window
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_window);
+        self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 

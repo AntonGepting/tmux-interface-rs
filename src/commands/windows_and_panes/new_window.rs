@@ -104,7 +104,7 @@ impl<'a> NewWindow<'a> {
     /// [-e environment] - environment
     #[cfg(feature = "tmux_3_0")]
     pub fn environment<S: Into<Cow<'a, str>>>(&mut self, environment: S) -> &mut Self {
-        self.0.push_option(e_KEY, environment);
+        self.0.push_option(E_LOWERCASE_KEY, environment);
         self
     }
 

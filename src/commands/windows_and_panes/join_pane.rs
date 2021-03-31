@@ -89,8 +89,8 @@ impl<'a> JoinPane<'a> {
 
         #[cfg(feature = "tmux_3_1")]
         match size {
-            PaneSize::Size(size) => self.0.push_option(l_KEY, size.to_string()),
-            PaneSize::Percentage(size) => self.0.push_option(p_KEY, size.to_string()),
+            PaneSize::Size(size) => self.0.push_option(L_LOWERCASE_KEY, size.to_string()),
+            PaneSize::Percentage(size) => self.0.push_option(P_LOWERCASE_KEY, size.to_string()),
         };
 
         self

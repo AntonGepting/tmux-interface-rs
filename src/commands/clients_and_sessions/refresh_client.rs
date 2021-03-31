@@ -55,35 +55,35 @@ impl<'a> RefreshClient<'a> {
     /// [-c] - return to tracking the cursor automatically
     #[cfg(feature = "tmux_2_9a")]
     pub fn tracking_cursor(&mut self) -> &mut Self {
-        self.0.push_flag(c_KEY);
+        self.0.push_flag(C_LOWERCASE_KEY);
         self
     }
 
     /// [-D] - move the visible part of a window down by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
     pub fn down(&mut self) -> &mut Self {
-        self.0.push_flag(D_KEY);
+        self.0.push_flag(D_UPPERCASE_KEY);
         self
     }
 
     /// [-l] - request the clipboard from the client using the xterm(1) escape sequence
     #[cfg(feature = "tmux_2_9a")]
     pub fn request_clipboard(&mut self) -> &mut Self {
-        self.0.push_flag(l_KEY);
+        self.0.push_flag(L_LOWERCASE_KEY);
         self
     }
 
     /// [-L] - move the visible part of a window left by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
     pub fn left(&mut self) -> &mut Self {
-        self.0.push_flag(L_KEY);
+        self.0.push_flag(L_UPPERCASE_KEY);
         self
     }
 
     /// [-R] - move the visible part of a window right by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
     pub fn right(&mut self) -> &mut Self {
-        self.0.push_flag(R_KEY);
+        self.0.push_flag(R_UPPERCASE_KEY);
         self
     }
 
@@ -97,7 +97,7 @@ impl<'a> RefreshClient<'a> {
     /// [-U] - move the visible part of a window up by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
     pub fn up(&mut self) -> &mut Self {
-        self.0.push_flag(U_KEY);
+        self.0.push_flag(U_UPPERCASE_KEY);
         self
     }
 
@@ -118,7 +118,7 @@ impl<'a> RefreshClient<'a> {
     /// [-F flags] - set a comma-separated list of flags
     #[cfg(feature = "tmux_2_9a")]
     pub fn flags(&mut self, flags: &'a str) -> &mut Self {
-        self.0.push_option(F_KEY, flags);
+        self.0.push_option(F_UPPERCASE_KEY, flags);
         self
     }
 

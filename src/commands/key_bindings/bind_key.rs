@@ -81,7 +81,7 @@ impl<'a> BindKey<'a> {
     /// [-N note] - attaches note to the key
     #[cfg(feature = "tmux_3_1")]
     pub fn note<S: Into<Cow<'a, str>>>(&mut self, note: S) -> &mut Self {
-        self.0.push_option(N_KEY, note);
+        self.0.push_option(N_UPPERCASE_KEY, note);
         self
     }
 

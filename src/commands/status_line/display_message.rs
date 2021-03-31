@@ -55,28 +55,28 @@ impl<'a> DisplayMessage<'a> {
     /// [-a] - list the format variables and their values
     #[cfg(feature = "tmux_2_9a")]
     pub fn list_format_vars(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+        self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
     /// [-I] - forward any input read from stdin to the empty pane given by target-pane
     #[cfg(feature = "tmux_3_0")]
     pub fn forward_stdin(&mut self) -> &mut Self {
-        self.0.push_flag(I_KEY);
+        self.0.push_flag(I_UPPERCASE_KEY);
         self
     }
 
     /// [-p] - the output is printed to stdout
     #[cfg(feature = "tmux_2_9a")]
     pub fn print(&mut self) -> &mut Self {
-        self.0.push_flag(p_KEY);
+        self.0.push_flag(P_LOWERCASE_KEY);
         self
     }
 
     /// [-v] - print verbose logging as the format is parsed
     #[cfg(feature = "tmux_2_9a")]
     pub fn verbose(&mut self) -> &mut Self {
-        self.0.push_flag(v_KEY);
+        self.0.push_flag(V_LOWERCASE_KEY);
         self
     }
 

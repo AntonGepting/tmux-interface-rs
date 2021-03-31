@@ -120,7 +120,7 @@ impl<'a> NewSession<'a> {
     /// [-X] - send SIGHUP to the parent process, detaching the client
     #[cfg(feature = "tmux_3_0")]
     pub fn parent_sighup(&mut self) -> &mut Self {
-        self.0.push_flag(X_KEY);
+        self.0.push_flag(X_UPPERCASE_KEY);
         self
     }
 

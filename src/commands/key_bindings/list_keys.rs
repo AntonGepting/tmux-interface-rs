@@ -64,20 +64,20 @@ impl<'a> ListKeys<'a> {
 
     #[cfg(feature = "tmux_3_1")]
     pub fn prefix_string<S: Into<Cow<'a, str>>>(&mut self, prefix_string: S) -> &mut Self {
-        self.0.push_option(P_KEY, prefix_string);
+        self.0.push_option(P_UPPERCASE_KEY, prefix_string);
         self
     }
 
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_4")))]
     pub fn mode_table<S: Into<Cow<'a, str>>>(&mut self, mode_table: S) -> &mut Self {
-        self.0.push_option(t_KEY, mode_table);
+        self.0.push_option(T_LOWERCASE_KEY, mode_table);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
     pub fn key_table<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-        self.0.push_option(t_KEY, key_table);
+        self.0.push_option(T_LOWERCASE_KEY, key_table);
         #[cfg(feature = "tmux_2_1")]
         self.0.push_option(T_UPPERCASE_KEY, key_table);
         self

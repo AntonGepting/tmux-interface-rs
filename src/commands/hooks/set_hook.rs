@@ -44,7 +44,7 @@ impl<'a> SetHook<'a> {
 
     #[cfg(feature = "tmux_3_0")]
     pub fn append(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+        self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 

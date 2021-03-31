@@ -62,7 +62,7 @@ impl<'a> ShowOptions<'a> {
     /// [-A] - includes options inherited from a parent set of options
     #[cfg(feature = "tmux_3_0")]
     pub fn include_inherited(&mut self) -> &mut Self {
-        self.0.push_flag(A_KEY);
+        self.0.push_flag(A_UPPERCASE_KEY);
         self
     }
 
@@ -76,14 +76,14 @@ impl<'a> ShowOptions<'a> {
     /// [-H] - includes hooks (omitted by default)
     #[cfg(feature = "tmux_3_0")]
     pub fn hooks(&mut self) -> &mut Self {
-        self.0.push_flag(H_KEY);
+        self.0.push_flag(H_UPPERCASE_KEY);
         self
     }
 
     /// [-p] - show window options
     #[cfg(feature = "tmux_3_0")]
     pub fn pane(&mut self) -> &mut Self {
-        self.0.push_flag(p_KEY);
+        self.0.push_flag(P_LOWERCASE_KEY);
         self
     }
 

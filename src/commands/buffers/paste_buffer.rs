@@ -90,7 +90,7 @@ impl<'a> PasteBuffer<'a> {
     /// [-t target-window] - specify the target window
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_window);
+        self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 

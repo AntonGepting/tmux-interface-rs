@@ -49,7 +49,7 @@ impl<'a> DisplayPanes<'a> {
     /// [-b]
     #[cfg(feature = "tmux_2_9")]
     pub fn not_block(&mut self) -> &mut Self {
-        self.0.push_flag(b_KEY);
+        self.0.push_flag(B_LOWERCASE_KEY);
         self
     }
 

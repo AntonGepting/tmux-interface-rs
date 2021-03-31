@@ -64,7 +64,7 @@ impl<'a> UnbindKey<'a> {
 
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
     pub fn command_mode(&mut self) -> &mut Self {
-        self.0.push_flag(c_KEY);
+        self.0.push_flag(C_LOWERCASE_KEY);
         self
     }
 
@@ -76,14 +76,14 @@ impl<'a> UnbindKey<'a> {
 
     #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
     pub fn mode_key<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
-        self.0.push_option(t_KEY, key_table);
+        self.0.push_option(T_LOWERCASE_KEY, key_table);
         self
     }
 
     #[cfg(feature = "tmux_1_0")]
     pub fn key_table<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-        self.0.push_option(t_KEY, key_table);
+        self.0.push_option(T_LOWERCASE_KEY, key_table);
         #[cfg(feature = "tmux_2_4")]
         self.0.push_option(T_UPPERCASE_KEY, key_table);
         self

@@ -65,91 +65,91 @@ impl<'a> TmuxCommand<'a> {
     /// `[-d]` - indicates that tmux supports defaults colours
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
     pub fn default_colours(&mut self) -> &mut Self {
-        self.bin_args.push_flag(d_KEY);
+        self.bin_args.push_flag(D_LOWERCASE_KEY);
         self
     }
 
     /// `[-q]` - prevent the server sending various information messages
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
     pub fn prevent_msg(&mut self) -> &mut Self {
-        self.bin_args.push_flag(q_KEY);
+        self.bin_args.push_flag(Q_LOWERCASE_KEY);
         self
     }
 
     /// `[-C]` - Start in control mode
     #[cfg(feature = "tmux_1_8")]
     pub fn control_mode(&mut self) -> &mut Self {
-        self.bin_args.push_flag(C_KEY);
+        self.bin_args.push_flag(C_UPPERCASE_KEY);
         self
     }
 
     /// `[-CC]` - Disable echo
     #[cfg(feature = "tmux_1_8")]
     pub fn disable_echo(&mut self) -> &mut Self {
-        self.bin_args.push_flag(CC_KEY);
+        self.bin_args.push_flag(CC_UPPERCASE_KEY);
         self
     }
 
     /// `[-l]` - Behave as a login shell
     #[cfg(feature = "tmux_1_0")]
     pub fn login_shell(&mut self) -> &mut Self {
-        self.bin_args.push_flag(l_KEY);
+        self.bin_args.push_flag(L_LOWERCASE_KEY);
         self
     }
 
     /// `[-U]` - Unlock the server
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
     pub fn unlock(&mut self) -> &mut Self {
-        self.bin_args.push_flag(U_KEY);
+        self.bin_args.push_flag(U_UPPERCASE_KEY);
         self
     }
 
     /// `[-u]` - Write UTF-8 output to the terminal
     #[cfg(feature = "tmux_0_8")]
     pub fn force_utf8(&mut self) -> &mut Self {
-        self.bin_args.push_flag(u_KEY);
+        self.bin_args.push_flag(U_LOWERCASE_KEY);
         self
     }
 
     /// `[-v]` - Request verbose logging
     #[cfg(feature = "tmux_0_8")]
     pub fn verbose_logging(&mut self) -> &mut Self {
-        self.bin_args.push_flag(v_KEY);
+        self.bin_args.push_flag(V_LOWERCASE_KEY);
         self
     }
 
     /// `[-V]` - Report the tmux version
     #[cfg(feature = "tmux_0_8")]
     pub fn version(&mut self) -> &mut Self {
-        self.bin_args.push_flag(V_KEY);
+        self.bin_args.push_flag(V_UPPERCASE_KEY);
         self
     }
 
     /// `[-c shell-command]` - Execute shell-command using the default shell
     #[cfg(feature = "tmux_1_1")]
     pub fn shell_cmd<S: Into<Cow<'a, str>>>(&mut self, shell_cmd: S) -> &mut Self {
-        self.bin_args.push_option(c_KEY, shell_cmd);
+        self.bin_args.push_option(C_LOWERCASE_KEY, shell_cmd);
         self
     }
 
     /// `[-f file]` - Specify an alternative configuration file
     #[cfg(feature = "tmux_0_8")]
     pub fn file<S: Into<Cow<'a, str>>>(&mut self, file: S) -> &mut Self {
-        self.bin_args.push_option(f_KEY, file);
+        self.bin_args.push_option(F_LOWERCASE_KEY, file);
         self
     }
 
     /// `[-L socket-name]` - Allow a different socket name to be specified
     #[cfg(feature = "tmux_0_8")]
     pub fn socket_name<S: Into<Cow<'a, str>>>(&mut self, socket_name: S) -> &mut Self {
-        self.bin_args.push_option(L_KEY, socket_name);
+        self.bin_args.push_option(L_UPPERCASE_KEY, socket_name);
         self
     }
 
     /// `[-S socket-path]` - Specify a full alternative path to the server socket
     #[cfg(feature = "tmux_0_8")]
     pub fn socket_path<S: Into<Cow<'a, str>>>(&mut self, socket_path: S) -> &mut Self {
-        self.bin_args.push_option(S_KEY, socket_path);
+        self.bin_args.push_option(S_UPPERCASE_KEY, socket_path);
         self
     }
 }

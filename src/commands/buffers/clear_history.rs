@@ -42,13 +42,13 @@ impl<'a> ClearHistory<'a> {
 
     #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
     pub fn pane_index<S: Into<Cow<'a, str>>>(&mut self, pane_index: S) -> &mut Self {
-        self.0.push_option(p_KEY, pane_index);
+        self.0.push_option(P_LOWERCASE_KEY, pane_index);
         self
     }
 
     #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_window);
+        self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 

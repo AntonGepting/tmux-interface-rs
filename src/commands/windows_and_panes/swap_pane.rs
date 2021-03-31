@@ -64,7 +64,7 @@ impl<'a> SwapPane<'a> {
     /// [-Z] - keep the window zoomed if it was zoomed
     #[cfg(feature = "tmux_3_1")]
     pub fn keep_zoomed(&mut self) -> &mut Self {
-        self.0.push_flag(Z_KEY);
+        self.0.push_flag(Z_UPPERCASE_KEY);
         self
     }
 

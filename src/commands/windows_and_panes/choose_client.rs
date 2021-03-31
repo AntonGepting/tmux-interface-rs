@@ -57,14 +57,14 @@ impl<'a> ChooseClient<'a> {
     /// [-r] - reverse the sort order
     #[cfg(feature = "tmux_3_1")]
     pub fn reverse_sort_order(&mut self) -> &mut Self {
-        self.0.push_flag(r_KEY);
+        self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 
     /// [-Z] - zoom the pane
     #[cfg(feature = "tmux_3_1")]
     pub fn zoom(&mut self) -> &mut Self {
-        self.0.push_flag(Z_KEY);
+        self.0.push_flag(Z_UPPERCASE_KEY);
         self
     }
 
@@ -99,7 +99,7 @@ impl<'a> ChooseClient<'a> {
     /// [-t target-window] - target-window
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_window);
+        self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 

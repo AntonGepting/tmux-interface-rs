@@ -42,7 +42,7 @@ impl<'a> ListBuffers<'a> {
 
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_session);
+        self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
 

@@ -103,7 +103,7 @@ impl<'a> CapturePane<'a> {
     /// [-N] - preserves trailing spaces at each line's end
     #[cfg(feature = "tmux_3_1")]
     pub fn trailing_spaces(&mut self) -> &mut Self {
-        self.0.push_flag(N_KEY);
+        self.0.push_flag(N_UPPERCASE_KEY);
         self
     }
 

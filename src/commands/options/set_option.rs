@@ -96,7 +96,7 @@ impl<'a> SetOption<'a> {
     /// [-p] - set a pane option
     #[cfg(feature = "tmux_3_0")]
     pub fn pane(&mut self) -> &mut Self {
-        self.0.push_flag(p_KEY);
+        self.0.push_flag(P_LOWERCASE_KEY);
         self
     }
 
@@ -131,7 +131,7 @@ impl<'a> SetOption<'a> {
     /// [-t target-pane] - specify the target-pane
     #[cfg(feature = "tmux_3_0")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_pane);
+        self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
@@ -145,7 +145,7 @@ impl<'a> SetOption<'a> {
     /// [-t target-session]
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
     pub fn target_session(&mut self, target_session: &'a str) -> &mut Self {
-        self.0.push_option(t_KEY, target_session);
+        self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
 
