@@ -1185,7 +1185,7 @@ impl WindowOptions {
             .global()
             .window()
             .output()?
-            .string()
+            .to_string()
             .parse()
     }
 
@@ -1203,7 +1203,7 @@ impl WindowOptions {
             .server()
             .option(&selected_option)
             .output()?
-            .string()
+            .to_string()
             .parse()
     }
 

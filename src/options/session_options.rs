@@ -1273,7 +1273,7 @@ pub struct SessionOptions {
 
 impl SessionOptions {
     pub fn get_all() -> Result<Self, Error> {
-        let s = ShowOptions::new().global().output()?.string();
+        let s = ShowOptions::new().global().output()?.to_string();
         s.parse()
     }
 
@@ -1290,7 +1290,7 @@ impl SessionOptions {
         let s = ShowOptions::new()
             .option(&selected_option)
             .output()?
-            .string();
+            .to_string();
         s.parse()
     }
 
@@ -1306,7 +1306,7 @@ impl SessionOptions {
             .option(&selected_option)
             .global()
             .output()?
-            .string();
+            .to_string();
         s.parse()
     }
 
