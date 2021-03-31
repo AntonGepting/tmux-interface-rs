@@ -300,50 +300,11 @@ Parsing objects and supported tmux variables:
 - mb split tmux versions in different folders
 - mb split into different librarys (options, get, set objects)
 - mb all args as sructs because of versions diffs?
-- [ ] Travis CI test all supported tmux versions
-    - Rust:
-        - [x] stable
-        - [x] beta
-        - [x] nightly
-    - OS:
-        - [x] Linux
-        - [ ] Windows
-        - [ ] MacOS
-    - Tmux:
-        - [ ] 0.8 - `tmux_0_8` - tmux compilation error
-        - [ ] 0.9 - `tmux_0_9` - tmux compilation error
-        - [ ] 1.0 - `tmux_1_0` - tmux compilation error
-        - [ ] 1.1 - `tmux_1_1` - tmux compilation error
-        - [ ] 1.2 - `tmux_1_2` - tmux compilation error
-        - [ ] 1.3 - `tmux_1_3` - tmux compilation error
-        - [ ] 1.4 - `tmux_1_4` - tmux compilation error
-        - [ ] 1.5 - `tmux_1_5`
-        - [ ] 1.6 - `tmux_1_6`
-        - [x] 1.7 - `tmux_1_7`
-        - [x] 1.8 - `tmux_1_8`
-        - [x] 1.9 - `tmux_1_9`
-        - [x] 1.9a - `tmux_1_9b`
-        - [x] 2.0 - `tmux_2_0`
-        - [x] 2.1 - `tmux_2_1`
-        - [x] 2.2 - `tmux_2_2`
-        - [x] 2.3 - `tmux_2_3`
-        - [x] 2.4 - `tmux_2_4`
-        - [x] 2.5 - `tmux_2_5`
-        - [x] 2.6 - `tmux_2_6`
-        - [x] 2.7 - `tmux_2_7`
-        - [x] 2.8 - `tmux_2_8`
-        - [x] 2.9 - `tmux_2_9`
-        - [x] 2.9a - `tmux_2_9a`
-        - [x] 3.0 - `tmux_3_0`
-        - [x] 3.0a - `tmux_3_0a`
-        - [x] 3.1 - `tmux_3_1`
-        - [x] 3.1a - `tmux_3_1a`
-        - [x] 3.1b - `tmux_3_1b`
-        - [x] 3.1c - `tmux_3_1c`
-        - [x] master - `tmux_X_X`
 
-# Strategy
-strategy and decision making
+
+# Tiny ADR
+
+Simlified Architecture Decision Record for strategy and decision making.
 
 - tmux versions support (decision, not current state)
     - [ ] all
@@ -464,5 +425,82 @@ strategy and decision making
         ```
         - names not the same as in tmux, complete another model, mb better
           suitable for rust app
+
+
+- Wrap std::process::Command method:
+    - call Command::new() for every command
+    - single Command::new() and methods call, repeating previous command
+
+
+
+
+- Traits
+    - [ ] trait cant access parent struct fields, without extra implemetation
+      of get set method, `.output()` if we are working with same type problems
+      multiple traits methods mixing allowed (NewSession, DetachClient,
+      chaining methods)
+
+- Structs
+    - [ ] main `Tmux{bin, arg}`, wrapper `TmuxCommand {Tmux, cmd, arg}`, `NewSession(TmuxCommand)`
+            chain: `new() -> arg() -> exec()` for parent is broken,
+            can't access childs args, as parent, `Tmux::output() { Command::new,
+            Command.arg(arg???)`}
+    - [x] main `TmuxCommand{bin, bin_arg, cmd, cmd_arg}`, wrapper `NewSession(TmuxCommand)` `Tmux(TmuxCOmmand)`
+
+- Main struct
+    - [ ] newtype(Command) bc. Command contains args will not be flushed
+    - [x] struct containing bin, args, reusing, subclassing, editing possible
+
+- macro for fn generation
+    - [ ] yes, source size, unification calls
+    - [x] no, doc problem, needs capturing inside macro invokation, no profit
+      for method gen `target_name(name);`
+
+ 2. String for hooks and mutability
+ 1. bin and cmd must be in same struct?
+      [x] one struct, understanding~+
+      [ ] two structs, complexity~+, usability~-
+      call wrapping impossible cmd+args(tmux+args) != tmux args cmd args
+
+ - Check tmux order options flags matters?
+
+ - architecture:
+      [ ] trait, supertrait
+          multiple synonymous child traits, specifying needed:
+          `<TmuxCommand as NewSession>::new()` trait annotaion need
+          no bc.converting from to implementation?
+          no bc. all methods available for main type
+      [ ] struct wrapper
+            common trait, exec(), output()?
+      [ ] type alias
+            no, bc. all methods available, can not select
+
+ - exec vs run
+      [ ] exec
+      [ ] run
+      [x] output - same as `std::process:Command`
+
+  - String or str in struct
+      [ ] &str - cheap runtime
+      [ ] String - modification (by default?)
+      [x] Cow - both
+
+  - trait command methods exec
+      [x] no, fields inaccesible directly, only methods set get, implemetation  imol for needed,
+      same thing.
+      [ ] yes
+
+ - no need to set Option<bool>
+
+ - args/fns names
+      [ ] exact as original
+      [x] near the original
+      [ ] rename for consistance cwd, target, name (example: `new_session().session_name("")` better
+      `new_session().name("")`)
+
+  - consuming not consuming builder pattern?
+      [ ] self
+      [x] &mut self (preferred) but here?
+
 
 
