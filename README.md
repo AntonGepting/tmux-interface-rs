@@ -125,19 +125,50 @@ The library is still in experimental development stage (unstable).
 - almost all library documentation is missing at the moment
 - ...
 
-The library was tested under following conditions.
+The library was tested on Travis CI (under following conditions: all supported tmux versions features):
 
-Rust:
-- stable (manually, Travis CI)
-- beta (Travis CI)
-- nightly (Travis CI)
+- OS:
+    - [x] Linux (Ubuntu 16.04 Xenial Xerus, x64)
+    - [ ] Windows
+    - [ ] MacOS (10.13.6 High Sierra, x64)
 
-OS:
-- Debian 11 Bullseye, x64 (manually); tmux 3.0c
-- Ubuntu 16.04 Xenial Xerus, x64 (Travis CI); tmux 1.6 - 3.0c
-  (tmux 0.8 - 1.5 build fail)
-<!--- MacOS 10.13.6 High Sierra, x64 (Travis CI); tmux 3.0a-->
+- Rust:
+    - [x] stable
+    - [x] beta
+    - [x] nightly
 
+- Tmux:
+    - [ ] master - `tmux_X_X`
+    - [x] 3.1c - `tmux_3_1c`
+    - [x] 3.1b - `tmux_3_1b`
+    - [x] 3.1a - `tmux_3_1a`
+    - [x] 3.1 - `tmux_3_1`
+    - [x] 3.0a - `tmux_3_0a`
+    - [x] 3.0 - `tmux_3_0`
+    - [x] 2.9a - `tmux_2_9a`
+    - [x] 2.9 - `tmux_2_9`
+    - [x] 2.8 - `tmux_2_8`
+    - [x] 2.7 - `tmux_2_7`
+    - [x] 2.6 - `tmux_2_6`
+    - [x] 2.5 - `tmux_2_5`
+    - [x] 2.4 - `tmux_2_4`
+    - [x] 2.3 - `tmux_2_3`
+    - [x] 2.2 - `tmux_2_2`
+    - [x] 2.1 - `tmux_2_1`
+    - [x] 2.0 - `tmux_2_0`
+    - [x] 1.9a - `tmux_1_9a`
+    - [x] 1.9 - `tmux_1_9`
+    - [x] 1.8 - `tmux_1_8`
+    - [x] 1.7 - `tmux_1_7`
+    - [x] 1.6 - `tmux_1_6`
+    - [ ] 1.5 - `tmux_1_5`
+    - [ ] 1.4 - `tmux_1_4` - tmux compilation error
+    - [ ] 1.3 - `tmux_1_3` - tmux compilation error
+    - [ ] 1.2 - `tmux_1_2` - tmux compilation error
+    - [ ] 1.1 - `tmux_1_1` - tmux compilation error
+    - [ ] 1.0 - `tmux_1_0` - tmux compilation error
+    - [ ] 0.9 - `tmux_0_9` - tmux compilation error
+    - [ ] 0.8 - `tmux_0_8` - tmux compilation error
 
 ## License
 
