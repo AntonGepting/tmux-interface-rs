@@ -3,8 +3,6 @@ use crate::commands::tmux_command::Args;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
-/// This structure is used to store execution parameters of `tmux`, including binary
-/// name. Full description of fields can be found using `man tmux`.
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#DESCRIPTION)
 ///
 /// # Manual
