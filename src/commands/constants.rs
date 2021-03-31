@@ -1,66 +1,120 @@
 #![allow(non_upper_case_globals)]
+/// `-1`
 pub const _1_KEY: &str = "-1";
+/// `-2`
 pub const _2_KEY: &str = "-2";
 
 // constants for use as keys for subcommands
+/// `-a`
 pub const a_KEY: &str = "-a";
+/// `-b`
 pub const b_KEY: &str = "-b";
+/// `-c`
 pub const c_KEY: &str = "-c";
+/// `-d`
 pub const d_KEY: &str = "-d";
+/// `-e`
 pub const e_KEY: &str = "-e";
+/// `-f`
 pub const f_KEY: &str = "-f";
+/// `-g`
 pub const g_KEY: &str = "-g";
+/// `-h`
 pub const h_KEY: &str = "-h";
+/// `-i`
 pub const i_KEY: &str = "-i";
+// `-j]`
 //pub const j_KEY: &str = "-j";
+/// `-k`
 pub const k_KEY: &str = "-k";
+/// `-l`
 pub const l_KEY: &str = "-l";
+/// `-m`
 pub const m_KEY: &str = "-m";
+/// `-n`
 pub const n_KEY: &str = "-n";
+/// `-o`
 pub const o_KEY: &str = "-o";
+/// `-p`
 pub const p_KEY: &str = "-p";
+/// `-q`
 pub const q_KEY: &str = "-q";
+/// `-r`
 pub const r_KEY: &str = "-r";
+/// `-s`
 pub const s_KEY: &str = "-s";
+/// `-t`
 pub const t_KEY: &str = "-t";
+/// `-u`
 pub const u_KEY: &str = "-u";
+/// `-v`
 pub const v_KEY: &str = "-v";
+/// `-w`
 pub const w_KEY: &str = "-w";
+/// `-x`
 pub const x_KEY: &str = "-x";
+/// `-y`
 pub const y_KEY: &str = "-y";
+// `-z`
 //pub const z_KEY: &str = "-z";
 
 #[allow(non_upper_case_globals)]
+/// `-A`
 pub const A_KEY: &str = "-A";
+/// `-B`
 //pub const B_KEY: &str = "-B";
+// `-C`
 pub const C_KEY: &str = "-C";
+/// `-D`
 pub const D_KEY: &str = "-D";
+/// `-E`
 pub const E_KEY: &str = "-E";
+/// `-F`
 pub const F_KEY: &str = "-F";
+/// `-G`
 pub const G_KEY: &str = "-G";
+/// `-H`
 pub const H_KEY: &str = "-H";
+/// `-I`
 pub const I_KEY: &str = "-I";
+/// `-J`
 pub const J_KEY: &str = "-J";
+// `-K`
 //pub const K_KEY: &str = "-K";
+/// `-L`
 pub const L_KEY: &str = "-L";
+/// `-M`
 pub const M_KEY: &str = "-M";
+/// `-N`
 pub const N_KEY: &str = "-N";
+/// `-O`
 pub const O_KEY: &str = "-O";
+/// `-P`
 pub const P_KEY: &str = "-P";
+// `-Q`
 //pub const Q_KEY: &str = "-Q";
+/// `-R`
 pub const R_KEY: &str = "-R";
+/// `-S`
 pub const S_KEY: &str = "-S";
+/// `-T`
 pub const T_KEY: &str = "-T";
+/// `-U`
 pub const U_KEY: &str = "-U";
+/// `-V`
 pub const V_KEY: &str = "-V";
+// `-W`
 //pub const W_KEY: &str = "-W";
+/// `-X`
 pub const X_KEY: &str = "-X";
+// `-Y`
 //pub const Y_KEY: &str = "-Y";
+/// `-Z`
 pub const Z_KEY: &str = "-Z";
-
+/// `-CC`
 pub const CC_KEY: &str = "-CC";
 
-/// Default tmux binary name
+/// `tmux` - Default tmux binary name
 pub const TMUX: &str = "tmux";
 
 // XXX: mb CMD_ALIAS const
@@ -101,408 +155,564 @@ pub const TMUX: &str = "tmux";
 // - copy-mode
 
 // Buffers
-
+/// `choose-buffer`
 pub const CHOOSE_BUFFER: &str = "choose-buffer";
 
+/// `clear-history`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const CLEAR_HISTORY: &str = "clear-history";
+/// `clearhist`
 #[cfg(feature = "use_cmd_alias")]
 pub const CLEAR_HISTORY: &str = "clearhist";
 
+/// `delete-buffer`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const DELETE_BUFFER: &str = "delete-buffer";
+/// `deleteb`
 #[cfg(feature = "use_cmd_alias")]
 pub const DELETE_BUFFER: &str = "deleteb";
 
+/// `list-buffers`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LIST_BUFFERS: &str = "list-buffers";
+/// `lsb`
 #[cfg(feature = "use_cmd_alias")]
 pub const LIST_BUFFERS: &str = "lsb";
 
+/// `load-buffer`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LOAD_BUFFER: &str = "load-buffer";
+/// `loadb`
 #[cfg(feature = "use_cmd_alias")]
 pub const LOAD_BUFFER: &str = "loadb";
 
+/// `paste-buffer`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const PASTE_BUFFER: &str = "paste-buffer";
+///  `pasteb`
 #[cfg(feature = "use_cmd_alias")]
 pub const PASTE_BUFFER: &str = "pasteb";
 
+/// `save-buffer`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SAVE_BUFFER: &str = "save-buffer";
+/// `saveeb`
 #[cfg(feature = "use_cmd_alias")]
 pub const SAVE_BUFFER: &str = "saveb";
 
+/// `set-buffer`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SET_BUFFER: &str = "set-buffer";
+/// `setb`
 #[cfg(feature = "use_cmd_alias")]
 pub const SET_BUFFER: &str = "setb";
 
+/// `show-buffer`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SHOW_BUFFER: &str = "show-buffer";
+/// `showb`
 #[cfg(feature = "use_cmd_alias")]
 pub const SHOW_BUFFER: &str = "showb";
 
 // Clients and sessions
 
+/// `attach-session`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const ATTACH_SESSION: &str = "attach-session";
+/// `attach`
 #[cfg(feature = "use_cmd_alias")]
 pub const ATTACH_SESSION: &str = "attach";
 
+/// `detach-session`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const DETACH_CLIENT: &str = "detach-client";
+/// `detach`
 #[cfg(feature = "use_cmd_alias")]
 pub const DETACH_CLIENT: &str = "detach";
 
+/// `list-clients`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LIST_CLIENTS: &str = "list-clients";
+/// `lsc`
 #[cfg(feature = "use_cmd_alias")]
 pub const LIST_CLIENTS: &str = "lsc";
 
+/// `list-commands`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LIST_COMMANDS: &str = "list-commands";
+///  `lscm`
 #[cfg(feature = "use_cmd_alias")]
 pub const LIST_COMMANDS: &str = "lscm";
 
+/// `lock-client`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LOCK_CLIENT: &str = "lock-client";
+/// `lockc`
 #[cfg(feature = "use_cmd_alias")]
 pub const LOCK_CLIENT: &str = "lockc";
 
+/// `new-session`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const NEW_SESSION: &str = "new-session";
+/// `new`
 #[cfg(feature = "use_cmd_alias")]
 pub const NEW_SESSION: &str = "new";
 
+/// `list-sessions`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LIST_SESSIONS: &str = "list-sessions";
+/// `ls`
 #[cfg(feature = "use_cmd_alias")]
 pub const LIST_SESSIONS: &str = "ls";
 
+/// `refresh-client`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const REFRESH_CLIENT: &str = "refresh-client";
+/// `refresh`
 #[cfg(feature = "use_cmd_alias")]
 pub const REFRESH_CLIENT: &str = "refresh";
 
+/// `rename-session`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const RENAME_SESSION: &str = "rename-session";
+/// `rename`
 #[cfg(feature = "use_cmd_alias")]
 pub const RENAME_SESSION: &str = "rename";
 
+/// `show-messages`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SHOW_MESSAGES: &str = "show-messages";
+/// `showmsgs`
 #[cfg(feature = "use_cmd_alias")]
 pub const SHOW_MESSAGES: &str = "showmsgs";
 
+/// `source-file`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SOURCE_FILE: &str = "source-file";
+/// `source`
 #[cfg(feature = "use_cmd_alias")]
 pub const SOURCE_FILE: &str = "source";
 
+/// `start-server`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const START_SERVER: &str = "start-server";
+/// `start`
 #[cfg(feature = "use_cmd_alias")]
 pub const START_SERVER: &str = "start";
 
+/// `suspend-client`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SUSPEND_CLIENT: &str = "suspend-client";
+/// `suspendc`
 #[cfg(feature = "use_cmd_alias")]
 pub const SUSPEND_CLIENT: &str = "suspendc";
 
+/// `switch-client`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SWITCH_CLIENT: &str = "switch-client";
+/// `switchc`
 #[cfg(feature = "use_cmd_alias")]
 pub const SWITCH_CLIENT: &str = "switchc";
 
+/// `kill-server`
 pub const KILL_SERVER: &str = "kill-server";
 
+/// `kill-session`
 pub const KILL_SESSION: &str = "kill-session";
 
+/// `has-session`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const HAS_SESSION: &str = "has-session";
+/// `has`
 #[cfg(feature = "use_cmd_alias")]
 pub const HAS_SESSION: &str = "has";
 
+/// `lock-session`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LOCK_SESSION: &str = "lock-session";
+/// `locks`
 #[cfg(feature = "use_cmd_alias")]
 pub const LOCK_SESSION: &str = "locks";
 
 // Global and session environment
 
+/// `set-environment`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SET_ENVIRONMENT: &str = "set-environment";
+/// `setenv`
 #[cfg(feature = "use_cmd_alias")]
 pub const SET_ENVIRONMENT: &str = "setenv";
 
+/// `show-environment`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SHOW_ENVIRONMENT: &str = "show-environment";
+/// `showenv`
 #[cfg(feature = "use_cmd_alias")]
 pub const SHOW_ENVIRONMENT: &str = "showenv";
 
 // Hooks
-
+/// `set-hook`
 pub const SET_HOOK: &str = "set-hook";
 
+/// `show-hooks`
 pub const SHOW_HOOKS: &str = "show-hooks";
 
 // Key Bindings
 
+/// `bind-key`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const BIND_KEY: &str = "bind-key";
+/// `bind`
 #[cfg(feature = "use_cmd_alias")]
 pub const BIND_KEY: &str = "bind";
 
+/// `list-keys`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LIST_KEYS: &str = "list-keys";
+/// `lsk`
 #[cfg(feature = "use_cmd_alias")]
 pub const LIST_KEYS: &str = "lsk";
 
+/// `send-keys`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SEND_KEYS: &str = "send-keys";
+/// `send`
 #[cfg(feature = "use_cmd_alias")]
 pub const SEND_KEYS: &str = "send";
 
+/// `send-prefix`
 pub const SEND_PREFIX: &str = "send-prefix";
 
+/// `unbind-key`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const UNBIND_KEY: &str = "unbind-key";
+/// `unbind`
 #[cfg(feature = "use_cmd_alias")]
 pub const UNBIND_KEY: &str = "unbind";
 
 // Miscellaneous
 
+/// `clock-mode`
 pub const CLOCK_MODE: &str = "clock-mode";
 
+/// `lock-server`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LOCK_SERVER: &str = "lock-server";
+/// `lock`
 #[cfg(feature = "use_cmd_alias")]
 pub const LOCK_SERVER: &str = "lock";
 
+/// `run-shell`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const RUN_SHELL: &str = "run-shell";
+/// `run`
 #[cfg(feature = "use_cmd_alias")]
 pub const RUN_SHELL: &str = "run";
 
+/// `wait-for`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const WAIT_FOR: &str = "wait-for";
+/// `wait`
 #[cfg(feature = "use_cmd_alias")]
 pub const WAIT_FOR: &str = "wait";
 
+/// `if-shell`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const IF_SHELL: &str = "if-shell";
+/// `if`
 #[cfg(feature = "use_cmd_alias")]
 pub const IF_SHELL: &str = "if";
 
 // Options
 
+/// `set-option`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SET_OPTION: &str = "set-option";
+/// `set`
 #[cfg(feature = "use_cmd_alias")]
 pub const SET_OPTION: &str = "set";
 
+/// `set-window-option`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SET_WINDOW_OPTION: &str = "set-window-option";
+/// `setw`
 #[cfg(feature = "use_cmd_alias")]
 pub const SET_WINDOW_OPTION: &str = "setw";
 
+/// `show-options`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SHOW_OPTIONS: &str = "show-options";
+/// `show`
 #[cfg(feature = "use_cmd_alias")]
 pub const SHOW_OPTIONS: &str = "show";
 
+/// `show-window-options`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SHOW_WINDOW_OPTIONS: &str = "show-window-options";
+/// `showw`
 #[cfg(feature = "use_cmd_alias")]
 pub const SHOW_WINDOW_OPTIONS: &str = "showw";
 
 // Status Line
 
+/// `command-prompt`
 pub const COMMAND_PROMPT: &str = "command-prompt";
 
+/// `confirm-before`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const CONFIRM_BEFORE: &str = "confirm-before";
+/// `confirm`
 #[cfg(feature = "use_cmd_alias")]
 pub const CONFIRM_BEFORE: &str = "confirm";
 
+/// `display-menu`
 pub const DISPLAY_MENU: &str = "display-menu";
 
+/// `display-message`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const DISPLAY_MESSAGE: &str = "display-message";
+/// `display`
 #[cfg(feature = "use_cmd_alias")]
 pub const DISPLAY_MESSAGE: &str = "display";
 
 // Windows and panes
 
+/// `break-pane`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const BREAK_PANE: &str = "break-pane";
+/// `breakp`
 #[cfg(feature = "use_cmd_alias")]
 pub const BREAK_PANE: &str = "breakp";
 
+/// `capture-pane`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const CAPTURE_PANE: &str = "capture-pane";
+/// `capturep`
 #[cfg(feature = "use_cmd_alias")]
 pub const CAPTURE_PANE: &str = "capturep";
 
+/// `choose-client`
 pub const CHOOSE_CLIENT: &str = "choose-client";
 
+/// `choose-tree`
 pub const CHOOSE_TREE: &str = "choose-tree";
 
+/// `copy-mode`
 pub const COPY_MODE: &str = "copy-mode";
 
+/// `display-panes`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const DISPLAY_PANES: &str = "display-panes";
+/// `displayp`
 #[cfg(feature = "use_cmd_alias")]
 pub const DISPLAY_PANES: &str = "displayp";
 
+/// `find-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const FIND_WINDOW: &str = "find-window";
+/// `findw`
 #[cfg(feature = "use_cmd_alias")]
 pub const FIND_WINDOW: &str = "findw";
 
+/// `join-pane`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const JOIN_PANE: &str = "join-pane";
+/// `joinp`
 #[cfg(feature = "use_cmd_alias")]
 pub const JOIN_PANE: &str = "joinp";
 
+/// `kill-pane`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const KILL_PANE: &str = "kill-pane";
+/// `killp`
 #[cfg(feature = "use_cmd_alias")]
 pub const KILL_PANE: &str = "killp";
 
+/// `kill-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const KILL_WINDOW: &str = "kill-window";
+/// `killw`
 #[cfg(feature = "use_cmd_alias")]
 pub const KILL_WINDOW: &str = "killw";
 
+/// `last-pane`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LAST_PANE: &str = "last-pane";
+/// `lastp`
 #[cfg(feature = "use_cmd_alias")]
 pub const LAST_PANE: &str = "lastp";
 
+/// `last-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LAST_WINDOW: &str = "last-window";
+/// `last`
 #[cfg(feature = "use_cmd_alias")]
 pub const LAST_WINDOW: &str = "last";
 
+/// `link-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LINK_WINDOW: &str = "link-window";
+/// `linkw`
 #[cfg(feature = "use_cmd_alias")]
 pub const LINK_WINDOW: &str = "linkw";
 
+/// `list-panes`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LIST_PANES: &str = "list-panes";
+/// `lsp`
 #[cfg(feature = "use_cmd_alias")]
 pub const LIST_PANES: &str = "lsp";
 
+/// `list-windows`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const LIST_WINDOWS: &str = "list-windows";
+/// `lsw`
 #[cfg(feature = "use_cmd_alias")]
 pub const LIST_WINDOWS: &str = "lsw";
 
+/// `move-pane`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const MOVE_PANE: &str = "move-pane";
+/// `movep`
 #[cfg(feature = "use_cmd_alias")]
 pub const MOVE_PANE: &str = "movep";
 
+/// `move-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const MOVE_WINDOW: &str = "move-window";
+/// `movew`
 #[cfg(feature = "use_cmd_alias")]
 pub const MOVE_WINDOW: &str = "movew";
 
+/// `new-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const NEW_WINDOW: &str = "new-window";
+/// `neww`
 #[cfg(feature = "use_cmd_alias")]
 pub const NEW_WINDOW: &str = "neww";
 
+/// `next-layout`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const NEXT_LAYOUT: &str = "next-layout";
+/// `nextl`
 #[cfg(feature = "use_cmd_alias")]
 pub const NEXT_LAYOUT: &str = "nextl";
 
+/// `next-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const NEXT_WINDOW: &str = "next-window";
+/// `next`
 #[cfg(feature = "use_cmd_alias")]
 pub const NEXT_WINDOW: &str = "next";
 
+/// `pipe-pane`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const PIPE_PANE: &str = "pipe-pane";
+/// `pipep`
 #[cfg(feature = "use_cmd_alias")]
 pub const PIPE_PANE: &str = "pipep";
 
+/// `previous-layout`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const PREVIOUS_LAYOUT: &str = "previous-layout";
+/// `prevl`
 #[cfg(feature = "use_cmd_alias")]
 pub const PREVIOUS_LAYOUT: &str = "prevl";
 
+/// `previous-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const PREVIOUS_WINDOW: &str = "previous-window";
+/// `prev`
 #[cfg(feature = "use_cmd_alias")]
 pub const PREVIOUS_WINDOW: &str = "prev";
 
+/// `rename-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const RENAME_WINDOW: &str = "rename-window";
+/// `renamew`
 #[cfg(feature = "use_cmd_alias")]
 pub const RENAME_WINDOW: &str = "renamew";
 
+/// `resize-pane`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const RESIZE_PANE: &str = "resize-pane";
+/// `resizep`
 #[cfg(feature = "use_cmd_alias")]
 pub const RESIZE_PANE: &str = "resizep";
 
+/// `resize-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const RESIZE_WINDOW: &str = "resize-window";
+/// `resizew`
 #[cfg(feature = "use_cmd_alias")]
 pub const RESIZE_WINDOW: &str = "resizew";
 
+/// `respawn-pane`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const RESPAWN_PANE: &str = "respawn-pane";
+/// `respawnp`
 #[cfg(feature = "use_cmd_alias")]
 pub const RESPAWN_PANE: &str = "respawnp";
 
+/// `respawn-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const RESPAWN_WINDOW: &str = "respawn-window";
+/// `respawnw`
 #[cfg(feature = "use_cmd_alias")]
 pub const RESPAWN_WINDOW: &str = "respawnw";
 
+/// `rotate-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const ROTATE_WINDOW: &str = "rotate-window";
+/// `rotatew`
 #[cfg(feature = "use_cmd_alias")]
 pub const ROTATE_WINDOW: &str = "rotatew";
 
+/// `select-layout`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SELECT_LAYOUT: &str = "select-layout";
+/// `selectl`
 #[cfg(feature = "use_cmd_alias")]
 pub const SELECT_LAYOUT: &str = "selectl";
 
+/// `select-pane`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SELECT_PANE: &str = "select-pane";
+/// `selectp`
 #[cfg(feature = "use_cmd_alias")]
 pub const SELECT_PANE: &str = "selectp";
 
+/// `select-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SELECT_WINDOW: &str = "select-window";
+/// `selectw`
 #[cfg(feature = "use_cmd_alias")]
 pub const SELECT_WINDOW: &str = "selectw";
 
+/// `split-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SPLIT_WINDOW: &str = "split-window";
+/// `splitw`
 #[cfg(feature = "use_cmd_alias")]
 pub const SPLIT_WINDOW: &str = "splitw";
 
+/// `swap-pane`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SWAP_PANE: &str = "swap-pane";
+/// `swapp`
 #[cfg(feature = "use_cmd_alias")]
 pub const SWAP_PANE: &str = "swapp";
 
+/// `swap-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const SWAP_WINDOW: &str = "swap-window";
+/// `swapw`
 #[cfg(feature = "use_cmd_alias")]
 pub const SWAP_WINDOW: &str = "swapw";
 
+/// `unlink-window`
 #[cfg(not(feature = "use_cmd_alias"))]
 pub const UNLINK_WINDOW: &str = "unlink-window";
+/// `unlinkw`
 #[cfg(feature = "use_cmd_alias")]
 pub const UNLINK_WINDOW: &str = "unlinkw";
