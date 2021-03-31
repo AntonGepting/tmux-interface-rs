@@ -1,4 +1,3 @@
-#![allow(non_upper_case_globals)]
 /// `-1`
 pub const _1_KEY: &str = "-1";
 /// `-2`
@@ -58,7 +57,6 @@ pub const Y_LOWERCASE_KEY: &str = "-y";
 // `-z`
 //pub const Z_LOWERCASE_KEY: &str = "-z";
 
-#[allow(non_upper_case_globals)]
 /// `-A`
 pub const A_UPPERCASE_KEY: &str = "-A";
 /// `-B`
