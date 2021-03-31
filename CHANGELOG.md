@@ -3,7 +3,7 @@
 
 <!--## tmux_interface vX.X.X-->
 
-## tmux_interface v0.0.8
+## tmux_interface v0.1.0
 - introduce new architecture (massive incompatible changes with older versions)
 - refactor tmux command wrapper functions
     - old simplified function call was:
