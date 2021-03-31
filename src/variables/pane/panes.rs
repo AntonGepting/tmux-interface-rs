@@ -46,7 +46,7 @@ impl Panes {
             .format(&lsp_format)
             .target(&target_window_str)
             .output()?
-            .string();
+            .to_string();
         Panes::from_str(&panes_str, bitflags)
     }
 
@@ -62,7 +62,7 @@ impl Panes {
             .format(&lsp_format)
             .target(&target_session_str)
             .output()?
-            .string();
+            .to_string();
         Panes::from_str(&panes_str, bitflags)
     }
 

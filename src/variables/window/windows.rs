@@ -43,7 +43,7 @@ impl Windows {
             .format(&lsw_format)
             .target_session(&target_session_str)
             .output()?
-            .string();
+            .to_string();
         Windows::from_str(&windows_str, bitflags)
     }
 
