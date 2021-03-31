@@ -36,19 +36,19 @@ impl<'a> WaitFor<'a> {
 
     #[cfg(feature = "tmux_1_8")]
     pub fn locked(&mut self) -> &mut Self {
-        self.0.push_flag(L_KEY);
+        self.0.push_flag(L_UPPERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_8")]
     pub fn woken(&mut self) -> &mut Self {
-        self.0.push_flag(S_KEY);
+        self.0.push_flag(S_UPPERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_8")]
     pub fn unlocked(&mut self) -> &mut Self {
-        self.0.push_flag(U_KEY);
+        self.0.push_flag(U_UPPERCASE_KEY);
         self
     }
 

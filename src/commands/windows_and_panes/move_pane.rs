@@ -38,28 +38,28 @@ impl<'a> MovePane<'a> {
     /// [-b] - cause src-pane to be joined to left of or above dst-pane
     #[cfg(feature = "tmux_1_7")]
     pub fn left_above(&mut self) -> &mut Self {
-        self.0.push_flag(b_KEY);
+        self.0.push_flag(B_LOWERCASE_KEY);
         self
     }
 
     /// [-d] -
     #[cfg(feature = "tmux_1_7")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(d_KEY);
+        self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
     /// [-h] - full height
     #[cfg(feature = "tmux_1_7")]
     pub fn horizontal(&mut self) -> &mut Self {
-        self.0.push_flag(h_KEY);
+        self.0.push_flag(H_LOWERCASE_KEY);
         self
     }
 
     /// [-v] - full width
     #[cfg(feature = "tmux_1_7")]
     pub fn vertical(&mut self) -> &mut Self {
-        self.0.push_flag(v_KEY);
+        self.0.push_flag(V_LOWERCASE_KEY);
         self
     }
 
@@ -73,8 +73,8 @@ impl<'a> MovePane<'a> {
         };
         #[cfg(feature = "tmux_2_6")]
         match size {
-            PaneSize::Size(size) => self.0.push_option(l_KEY, size.to_string()),
-            PaneSize::Percentage(size) => self.0.push_option(p_KEY, size.to_string()),
+            PaneSize::Size(size) => self.0.push_option(L_LOWERCASE_KEY, size.to_string()),
+            PaneSize::Percentage(size) => self.0.push_option(P_LOWERCASE_KEY, size.to_string()),
         };
         self
     }
@@ -82,14 +82,14 @@ impl<'a> MovePane<'a> {
     /// [-s src-pane] - src-pane
     #[cfg(feature = "tmux_1_7")]
     pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
-        self.0.push_option(s_KEY, src_pane);
+        self.0.push_option(S_LOWERCASE_KEY, src_pane);
         self
     }
 
     /// [-t dst-pane] - dst-pane
     #[cfg(feature = "tmux_1_7")]
     pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, dst_pane);
+        self.0.push_option(T_LOWERCASE_KEY, dst_pane);
         self
     }
 

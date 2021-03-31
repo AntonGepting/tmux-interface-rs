@@ -40,19 +40,19 @@ impl<'a> ShowEnvironment<'a> {
 
     #[cfg(feature = "tmux_1_0")]
     pub fn global(&mut self) -> &mut Self {
-        self.0.push_flag(g_KEY);
+        self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_2_1")]
     pub fn as_shell_commands(&mut self) -> &mut Self {
-        self.0.push_flag(s_KEY);
+        self.0.push_flag(S_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_0")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_session);
+        self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
 

@@ -56,14 +56,14 @@ impl<'a> DisplayPanes<'a> {
     /// [-d duration]
     #[cfg(feature = "tmux_2_6")]
     pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, duration: S) -> &mut Self {
-        self.0.push_option(d_KEY, duration);
+        self.0.push_option(D_LOWERCASE_KEY, duration);
         self
     }
 
     /// [-d duration]
     #[cfg(feature = "tmux_1_0")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_client);
+        self.0.push_option(T_LOWERCASE_KEY, target_client);
         self
     }
 

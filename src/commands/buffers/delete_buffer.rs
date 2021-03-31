@@ -43,7 +43,7 @@ impl<'a> DeleteBuffer<'a> {
 
     #[cfg(feature = "tmux_0_8")]
     pub fn buffer_name<S: Into<Cow<'a, str>>>(&mut self, buffer_name: S) -> &mut Self {
-        self.0.push_option(b_KEY, buffer_name);
+        self.0.push_option(B_LOWERCASE_KEY, buffer_name);
         self
     }
 

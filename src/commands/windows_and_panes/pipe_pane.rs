@@ -43,28 +43,28 @@ impl<'a> PipePane<'a> {
     /// [-I] - stdin is connected
     #[cfg(feature = "tmux_2_7")]
     pub fn stdout(&mut self) -> &mut Self {
-        self.0.push_flag(I_KEY);
+        self.0.push_flag(I_UPPERCASE_KEY);
         self
     }
 
     /// [-O] - stdout is connected
     #[cfg(feature = "tmux_2_7")]
     pub fn stdin(&mut self) -> &mut Self {
-        self.0.push_flag(O_KEY);
+        self.0.push_flag(O_UPPERCASE_KEY);
         self
     }
 
     /// [-o] - only open a new pipe if no previous pipe exists
     #[cfg(feature = "tmux_1_1")]
     pub fn open(&mut self) -> &mut Self {
-        self.0.push_flag(o_KEY);
+        self.0.push_flag(O_LOWERCASE_KEY);
         self
     }
 
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_1_1")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_pane);
+        self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 

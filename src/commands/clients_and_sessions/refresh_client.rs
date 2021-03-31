@@ -90,7 +90,7 @@ impl<'a> RefreshClient<'a> {
     /// [-S] - only update the client's status line
     #[cfg(feature = "tmux_1_6")]
     pub fn status_line(&mut self) -> &mut Self {
-        self.0.push_flag(S_KEY);
+        self.0.push_flag(S_UPPERCASE_KEY);
         self
     }
 
@@ -111,7 +111,7 @@ impl<'a> RefreshClient<'a> {
         #[cfg(feature = "tmux_3_0")]
         let s = format!("{}x{}", size.0, size.1);
 
-        self.0.push_option(C_KEY, s);
+        self.0.push_option(C_UPPERCASE_KEY, s);
         self
     }
 
@@ -125,7 +125,7 @@ impl<'a> RefreshClient<'a> {
     /// [-t target-client] - specify the client
     #[cfg(feature = "tmux_0_8")]
     pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
-        self.0.push_option(t_KEY, target_client);
+        self.0.push_option(T_LOWERCASE_KEY, target_client);
         self
     }
 

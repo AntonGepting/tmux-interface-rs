@@ -37,7 +37,7 @@ impl<'a> SuspendClient<'a> {
     #[cfg(feature = "tmux_0_8")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
         #[cfg(feature = "tmux_1_5")]
-        self.0.push_option(t_KEY, target_client);
+        self.0.push_option(T_LOWERCASE_KEY, target_client);
         #[cfg(not(feature = "tmux_1_5"))]
         self.0.push_option(c_KEY, target_client);
         self

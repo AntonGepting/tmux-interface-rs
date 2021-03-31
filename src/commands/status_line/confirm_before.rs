@@ -34,13 +34,13 @@ impl<'a> ConfirmBefore<'a> {
 
     #[cfg(feature = "tmux_1_5")]
     pub fn prompt<S: Into<Cow<'a, str>>>(&mut self, prompt: S) -> &mut Self {
-        self.0.push_option(p_KEY, prompt);
+        self.0.push_option(P_LOWERCASE_KEY, prompt);
         self
     }
 
     #[cfg(feature = "tmux_0_9")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_client);
+        self.0.push_option(T_LOWERCASE_KEY, target_client);
         self
     }
 

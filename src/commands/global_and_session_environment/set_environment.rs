@@ -31,28 +31,28 @@ impl<'a> SetEnvironment<'a> {
     /// [-g] - make change in the global environment
     #[cfg(feature = "tmux_1_0")]
     pub fn global(&mut self) -> &mut Self {
-        self.0.push_flag(g_KEY);
+        self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
     /// [-r] - remove the variable from the environment before starting a new process
     #[cfg(feature = "tmux_1_0")]
     pub fn remove(&mut self) -> &mut Self {
-        self.0.push_flag(r_KEY);
+        self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 
     /// [-u] - unset a variable
     #[cfg(feature = "tmux_1_0")]
     pub fn unset(&mut self) -> &mut Self {
-        self.0.push_flag(u_KEY);
+        self.0.push_flag(U_LOWERCASE_KEY);
         self
     }
 
     /// [-t target-session] - target-session
     #[cfg(feature = "tmux_1_0")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_session);
+        self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
 

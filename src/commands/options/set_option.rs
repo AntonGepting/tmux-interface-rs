@@ -68,28 +68,28 @@ impl<'a> SetOption<'a> {
     /// [-a] - value is appended to the existing setting, if the option expects a string or a style
     #[cfg(feature = "tmux_1_0")]
     pub fn append(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+        self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
     /// [-F] - expand formats in the option value
     #[cfg(feature = "tmux_2_6")]
     pub fn format(&mut self) -> &mut Self {
-        self.0.push_flag(F_KEY);
+        self.0.push_flag(F_UPPERCASE_KEY);
         self
     }
 
     /// [-g] - the global session or window option is set
     #[cfg(feature = "tmux_0_8")]
     pub fn global(&mut self) -> &mut Self {
-        self.0.push_flag(g_KEY);
+        self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
     /// [-o] - prevents setting an option that is already set
     #[cfg(feature = "tmux_1_8")]
     pub fn not_overwrite(&mut self) -> &mut Self {
-        self.0.push_flag(o_KEY);
+        self.0.push_flag(O_LOWERCASE_KEY);
         self
     }
 
@@ -103,28 +103,28 @@ impl<'a> SetOption<'a> {
     /// [-q] - suppress errors about unknown or ambiguous options
     #[cfg(feature = "tmux_1_7")]
     pub fn quiet(&mut self) -> &mut Self {
-        self.0.push_flag(q_KEY);
+        self.0.push_flag(Q_LOWERCASE_KEY);
         self
     }
 
     /// [-s] - set a server option
     #[cfg(feature = "tmux_1_2")]
     pub fn server(&mut self) -> &mut Self {
-        self.0.push_flag(s_KEY);
+        self.0.push_flag(S_LOWERCASE_KEY);
         self
     }
 
     /// [-u] - unset an option, so a session inherits the option from the global options
     #[cfg(feature = "tmux_0_8")]
     pub fn unset(&mut self) -> &mut Self {
-        self.0.push_flag(u_KEY);
+        self.0.push_flag(U_LOWERCASE_KEY);
         self
     }
 
     /// [-w] - set a window option
     #[cfg(feature = "tmux_1_2")]
     pub fn window(&mut self) -> &mut Self {
-        self.0.push_flag(w_KEY);
+        self.0.push_flag(W_LOWERCASE_KEY);
         self
     }
 
@@ -138,7 +138,7 @@ impl<'a> SetOption<'a> {
     /// [-t target-session | target-window]
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     pub fn target(&mut self, target: &'a str) -> &mut Self {
-        self.0.push_option(t_KEY, target);
+        self.0.push_option(T_LOWERCASE_KEY, target);
         self
     }
 

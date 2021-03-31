@@ -83,14 +83,14 @@ impl<'a> DisplayMessage<'a> {
     /// [-c target-client] - target-client
     #[cfg(feature = "tmux_1_0")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
-        self.0.push_option(c_KEY, target_client);
+        self.0.push_option(C_LOWERCASE_KEY, target_client);
         self
     }
 
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_1_5")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_pane);
+        self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 

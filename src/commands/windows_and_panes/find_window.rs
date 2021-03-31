@@ -54,21 +54,21 @@ impl<'a> FindWindow<'a> {
     /// [-C] - match only visible window contents
     #[cfg(feature = "tmux_1_7")]
     pub fn only_visible(&mut self) -> &mut Self {
-        self.0.push_flag(C_KEY);
+        self.0.push_flag(C_UPPERCASE_KEY);
         self
     }
 
     /// [-N] - match only the window name
     #[cfg(feature = "tmux_1_7")]
     pub fn only_name(&mut self) -> &mut Self {
-        self.0.push_flag(N_KEY);
+        self.0.push_flag(N_UPPERCASE_KEY);
         self
     }
 
     /// [-T] - match only the window title
     #[cfg(feature = "tmux_1_7")]
     pub fn only_title(&mut self) -> &mut Self {
-        self.0.push_flag(T_KEY);
+        self.0.push_flag(T_UPPERCASE_KEY);
         self
     }
 
@@ -82,7 +82,7 @@ impl<'a> FindWindow<'a> {
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_0_8")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_pane);
+        self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 

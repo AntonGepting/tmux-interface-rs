@@ -43,14 +43,14 @@ impl<'a> RespawnPane<'a> {
     /// [-k] - any existing command is killed
     #[cfg(feature = "tmux_1_5")]
     pub fn kill(&mut self) -> &mut Self {
-        self.0.push_flag(k_KEY);
+        self.0.push_flag(K_LOWERCASE_KEY);
         self
     }
 
     /// [-c start-directory] - start-directory
     #[cfg(feature = "tmux_2_6")]
     pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, start_directory: S) -> &mut Self {
-        self.0.push_option(c_KEY, start_directory);
+        self.0.push_option(C_LOWERCASE_KEY, start_directory);
         self
     }
 
@@ -64,7 +64,7 @@ impl<'a> RespawnPane<'a> {
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_1_5")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_pane);
+        self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 

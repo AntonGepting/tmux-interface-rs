@@ -43,19 +43,19 @@ impl<'a> ListWindows<'a> {
 
     #[cfg(feature = "tmux_1_5")]
     pub fn all(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+        self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_6")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_KEY, format);
+        self.0.push_option(F_UPPERCASE_KEY, format);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_session);
+        self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
 

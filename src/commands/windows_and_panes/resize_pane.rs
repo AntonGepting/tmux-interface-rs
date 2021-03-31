@@ -49,63 +49,63 @@ impl<'a> ResizePane<'a> {
     /// [-D] - resize down by adjustment
     #[cfg(feature = "tmux_0_9")]
     pub fn down(&mut self) -> &mut Self {
-        self.0.push_flag(D_KEY);
+        self.0.push_flag(D_UPPERCASE_KEY);
         self
     }
 
     /// [-L] - resize left by adjustment
     #[cfg(feature = "tmux_1_8")]
     pub fn left(&mut self) -> &mut Self {
-        self.0.push_flag(L_KEY);
+        self.0.push_flag(L_UPPERCASE_KEY);
         self
     }
 
     /// [-M] - begin mouse resizing
     #[cfg(feature = "tmux_2_1")]
     pub fn mouse(&mut self) -> &mut Self {
-        self.0.push_flag(M_KEY);
+        self.0.push_flag(M_UPPERCASE_KEY);
         self
     }
 
     /// [-R] - resize right by adjustment
     #[cfg(feature = "tmux_1_8")]
     pub fn right(&mut self) -> &mut Self {
-        self.0.push_flag(R_KEY);
+        self.0.push_flag(R_UPPERCASE_KEY);
         self
     }
 
     /// [-U] - resize up by adjustment
     #[cfg(feature = "tmux_0_9")]
     pub fn up(&mut self) -> &mut Self {
-        self.0.push_flag(U_KEY);
+        self.0.push_flag(U_UPPERCASE_KEY);
         self
     }
 
     /// [-Z] - the active pane is toggled between zoomed and unzoomed
     #[cfg(feature = "tmux_1_8")]
     pub fn zoom(&mut self) -> &mut Self {
-        self.0.push_flag(Z_KEY);
+        self.0.push_flag(Z_UPPERCASE_KEY);
         self
     }
 
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_0_9")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_pane);
+        self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
     /// [-x width] - absolute size
     #[cfg(feature = "tmux_1_8")]
     pub fn width(&mut self, width: usize) -> &mut Self {
-        self.0.push_option(x_KEY, width.to_string());
+        self.0.push_option(X_LOWERCASE_KEY, width.to_string());
         self
     }
 
     /// [-y height] - absolute size
     #[cfg(feature = "tmux_1_8")]
     pub fn height(&mut self, height: usize) -> &mut Self {
-        self.0.push_option(y_KEY, height.to_string());
+        self.0.push_option(Y_LOWERCASE_KEY, height.to_string());
         self
     }
 

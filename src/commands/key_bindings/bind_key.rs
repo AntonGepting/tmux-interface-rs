@@ -67,14 +67,14 @@ impl<'a> BindKey<'a> {
     /// [-n] - an alias for -T root
     #[cfg(feature = "tmux_1_0")]
     pub fn root(&mut self) -> &mut Self {
-        self.0.push_flag(n_KEY);
+        self.0.push_flag(N_LOWERCASE_KEY);
         self
     }
 
     /// [-r] - this key may repeat
     #[cfg(feature = "tmux_0_8")]
     pub fn repeat(&mut self) -> &mut Self {
-        self.0.push_flag(r_KEY);
+        self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 
@@ -88,7 +88,7 @@ impl<'a> BindKey<'a> {
     /// [-T key-table] - key-table
     #[cfg(feature = "tmux_2_1")]
     pub fn key_table<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
-        self.0.push_option(T_KEY, key_table);
+        self.0.push_option(T_UPPERCASE_KEY, key_table);
         self
     }
 

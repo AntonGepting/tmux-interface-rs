@@ -58,7 +58,7 @@ impl<'a> UnbindKey<'a> {
 
     #[cfg(feature = "tmux_1_4")]
     pub fn all(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+        self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
@@ -70,7 +70,7 @@ impl<'a> UnbindKey<'a> {
 
     #[cfg(feature = "tmux_1_0")]
     pub fn root(&mut self) -> &mut Self {
-        self.0.push_flag(n_KEY);
+        self.0.push_flag(N_LOWERCASE_KEY);
         self
     }
 
@@ -85,7 +85,7 @@ impl<'a> UnbindKey<'a> {
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
         self.0.push_option(t_KEY, key_table);
         #[cfg(feature = "tmux_2_4")]
-        self.0.push_option(T_KEY, key_table);
+        self.0.push_option(T_UPPERCASE_KEY, key_table);
         self
     }
 

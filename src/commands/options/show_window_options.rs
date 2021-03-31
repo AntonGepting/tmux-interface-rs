@@ -51,19 +51,19 @@ impl<'a> ShowWindowOptions<'a> {
 
     #[cfg(feature = "tmux_1_0")]
     pub fn global(&mut self) -> &mut Self {
-        self.0.push_flag(g_KEY);
+        self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_8")]
     pub fn only_value(&mut self) -> &mut Self {
-        self.0.push_flag(v_KEY);
+        self.0.push_flag(V_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_window);
+        self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 

@@ -48,19 +48,19 @@ impl<'a> ShowMessages<'a> {
 
     #[cfg(feature = "tmux_1_9")]
     pub fn jobs(&mut self) -> &mut Self {
-        self.0.push_flag(J_KEY);
+        self.0.push_flag(J_UPPERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_9")]
     pub fn terminals(&mut self) -> &mut Self {
-        self.0.push_flag(T_KEY);
+        self.0.push_flag(T_UPPERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_2")]
     pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_client);
+        self.0.push_option(T_LOWERCASE_KEY, target_client);
         self
     }
 

@@ -30,19 +30,19 @@ impl<'a> SwapWindow<'a> {
 
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(d_KEY);
+        self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
     pub fn src_window<S: Into<Cow<'a, str>>>(&mut self, src_window: S) -> &mut Self {
-        self.0.push_option(s_KEY, src_window);
+        self.0.push_option(S_LOWERCASE_KEY, src_window);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
     pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, dst_window);
+        self.0.push_option(T_LOWERCASE_KEY, dst_window);
         self
     }
 

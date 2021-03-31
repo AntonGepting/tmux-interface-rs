@@ -63,35 +63,35 @@ impl<'a> BreakPane<'a> {
     /// [-d] - the new window does not become the current window
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(d_KEY);
+        self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
     /// [-P] - option prints information about the new window after it has been created
     #[cfg(feature = "tmux_1_7")]
     pub fn print(&mut self) -> &mut Self {
-        self.0.push_flag(P_KEY);
+        self.0.push_flag(P_UPPERCASE_KEY);
         self
     }
 
     /// [-F format] - specify format
     #[cfg(feature = "tmux_1_7")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_KEY, format);
+        self.0.push_option(F_UPPERCASE_KEY, format);
         self
     }
 
     /// [-n] - window-name
     #[cfg(feature = "tmux_2_4")]
     pub fn window_name<S: Into<Cow<'a, str>>>(&mut self, window_name: S) -> &mut Self {
-        self.0.push_option(n_KEY, window_name);
+        self.0.push_option(N_LOWERCASE_KEY, window_name);
         self
     }
 
     /// [-s src-pane] - src-pane
     #[cfg(feature = "tmux_2_1")]
     pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
-        self.0.push_option(s_KEY, src_pane);
+        self.0.push_option(S_LOWERCASE_KEY, src_pane);
         self
     }
 
@@ -105,7 +105,7 @@ impl<'a> BreakPane<'a> {
     /// [-t dst-window] - dst-window
     #[cfg(feature = "tmux_2_2")]
     pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, dst_window);
+        self.0.push_option(T_LOWERCASE_KEY, dst_window);
         self
     }
 

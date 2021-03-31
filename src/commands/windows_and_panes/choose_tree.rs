@@ -53,14 +53,14 @@ impl<'a> ChooseTree<'a> {
     /// [-G] - include all sessions in any session groups in the tree rather than only the first
     #[cfg(feature = "tmux_2_7")]
     pub fn all(&mut self) -> &mut Self {
-        self.0.push_flag(G_KEY);
+        self.0.push_flag(G_UPPERCASE_KEY);
         self
     }
 
     /// [-N] - start without the preview
     #[cfg(feature = "tmux_2_7")]
     pub fn without_preview(&mut self) -> &mut Self {
-        self.0.push_flag(N_KEY);
+        self.0.push_flag(N_UPPERCASE_KEY);
         self
     }
 
@@ -74,49 +74,49 @@ impl<'a> ChooseTree<'a> {
     /// [-s] - start with collapsed sessions
     #[cfg(feature = "tmux_1_7")]
     pub fn collapsed_sessions(&mut self) -> &mut Self {
-        self.0.push_flag(s_KEY);
+        self.0.push_flag(S_LOWERCASE_KEY);
         self
     }
 
     /// [-w] - start with collapsed windows
     #[cfg(feature = "tmux_1_8")]
     pub fn collapsed_windows(&mut self) -> &mut Self {
-        self.0.push_flag(w_KEY);
+        self.0.push_flag(W_LOWERCASE_KEY);
         self
     }
 
     /// [-Z] - zoom the pane
     #[cfg(feature = "tmux_2_7")]
     pub fn zoom(&mut self) -> &mut Self {
-        self.0.push_flag(Z_KEY);
+        self.0.push_flag(Z_UPPERCASE_KEY);
         self
     }
 
     /// [-F format] - format
     #[cfg(feature = "tmux_2_6")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_KEY, format);
+        self.0.push_option(F_UPPERCASE_KEY, format);
         self
     }
 
     /// [-f filter] - filter
     #[cfg(feature = "tmux_2_6")]
     pub fn filter<S: Into<Cow<'a, str>>>(&mut self, filter: S) -> &mut Self {
-        self.0.push_option(f_KEY, filter);
+        self.0.push_option(F_LOWERCASE_KEY, filter);
         self
     }
 
     /// [-O sort-order] - specifies the initial sort field
     #[cfg(feature = "tmux_2_6")]
     pub fn sort_order<S: Into<Cow<'a, str>>>(&mut self, sort_order: S) -> &mut Self {
-        self.0.push_option(O_KEY, sort_order);
+        self.0.push_option(O_UPPERCASE_KEY, sort_order);
         self
     }
 
     /// [-t target-pane] - target-pane
     #[cfg(feature = "tmux_2_6")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_pane);
+        self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 

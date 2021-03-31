@@ -43,21 +43,21 @@ impl<'a> SwapPane<'a> {
     /// [-d] - instruct tmux not to change the active pane
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(d_KEY);
+        self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
     /// [-D] - swap with the next pane
     #[cfg(feature = "tmux_0_8")]
     pub fn previous_pane(&mut self) -> &mut Self {
-        self.0.push_flag(D_KEY);
+        self.0.push_flag(D_UPPERCASE_KEY);
         self
     }
 
     /// [-U] - swap with the previous pane
     #[cfg(feature = "tmux_0_8")]
     pub fn next_pane(&mut self) -> &mut Self {
-        self.0.push_flag(U_KEY);
+        self.0.push_flag(U_UPPERCASE_KEY);
         self
     }
 
@@ -71,14 +71,14 @@ impl<'a> SwapPane<'a> {
     /// [-s src-pane] - src-pane
     #[cfg(feature = "tmux_1_0")]
     pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
-        self.0.push_option(s_KEY, src_pane);
+        self.0.push_option(S_LOWERCASE_KEY, src_pane);
         self
     }
 
     /// [-t dst-pane] - dst-pane
     #[cfg(feature = "tmux_1_0")]
     pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, dst_pane);
+        self.0.push_option(T_LOWERCASE_KEY, dst_pane);
         self
     }
 

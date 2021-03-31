@@ -44,14 +44,14 @@ impl<'a> LastPane<'a> {
     /// [-d]
     #[cfg(feature = "tmux_2_0")]
     pub fn disable(&mut self) -> &mut Self {
-        self.0.push_flag(d_KEY);
+        self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
     /// [-e]
     #[cfg(feature = "tmux_2_0")]
     pub fn enable(&mut self) -> &mut Self {
-        self.0.push_flag(e_KEY);
+        self.0.push_flag(E_LOWERCASE_KEY);
         self
     }
 
@@ -65,7 +65,7 @@ impl<'a> LastPane<'a> {
     /// [-t target-window]
     #[cfg(feature = "tmux_1_4")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_window);
+        self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 

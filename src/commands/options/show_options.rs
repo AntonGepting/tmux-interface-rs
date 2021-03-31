@@ -69,7 +69,7 @@ impl<'a> ShowOptions<'a> {
     /// [-g] - global session or window options are listed
     #[cfg(feature = "tmux_1_2")]
     pub fn global(&mut self) -> &mut Self {
-        self.0.push_flag(g_KEY);
+        self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
@@ -90,35 +90,35 @@ impl<'a> ShowOptions<'a> {
     /// [-q] - no error will be returned if `option` is unset
     #[cfg(feature = "tmux_1_8")]
     pub fn quiet(&mut self) -> &mut Self {
-        self.0.push_flag(q_KEY);
+        self.0.push_flag(Q_LOWERCASE_KEY);
         self
     }
 
     /// [-s] - show the server options
     #[cfg(feature = "tmux_1_2")]
     pub fn server(&mut self) -> &mut Self {
-        self.0.push_flag(s_KEY);
+        self.0.push_flag(S_LOWERCASE_KEY);
         self
     }
 
     /// [-v] - shows only the option value
     #[cfg(feature = "tmux_1_8")]
     pub fn value(&mut self) -> &mut Self {
-        self.0.push_flag(v_KEY);
+        self.0.push_flag(V_LOWERCASE_KEY);
         self
     }
 
     /// [-w] - show the window options
     #[cfg(feature = "tmux_1_2")]
     pub fn window(&mut self) -> &mut Self {
-        self.0.push_flag(w_KEY);
+        self.0.push_flag(W_LOWERCASE_KEY);
         self
     }
 
     /// [-t target-pane] - target session or window name
     //#[cfg(feature = "tmux_X_X")]
     pub fn target<S: Into<Cow<'a, str>>>(&mut self, target: S) -> &mut Self {
-        self.0.push_option(t_KEY, target);
+        self.0.push_option(T_LOWERCASE_KEY, target);
         self
     }
 

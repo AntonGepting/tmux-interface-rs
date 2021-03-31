@@ -39,25 +39,25 @@ impl<'a> CopyMode<'a> {
 
     #[cfg(feature = "tmux_2_1")]
     pub fn mouse_drag(&mut self) -> &mut Self {
-        self.0.push_flag(M_KEY);
+        self.0.push_flag(M_UPPERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_2_1")]
     pub fn bottom_exit(&mut self) -> &mut Self {
-        self.0.push_flag(e_KEY);
+        self.0.push_flag(E_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
     pub fn page_up(&mut self) -> &mut Self {
-        self.0.push_flag(u_KEY);
+        self.0.push_flag(U_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_1_0")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_pane);
+        self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 

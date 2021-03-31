@@ -40,21 +40,21 @@ impl<'a> KillSession<'a> {
     /// [-a]
     #[cfg(feature = "tmux_2_2")]
     pub fn all(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+        self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
     /// [-C]
     #[cfg(feature = "tmux_1_7")]
     pub fn clear_alerts(&mut self) -> &mut Self {
-        self.0.push_flag(C_KEY);
+        self.0.push_flag(C_UPPERCASE_KEY);
         self
     }
 
     /// [-t target-session]
     #[cfg(feature = "tmux_0_8")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_session);
+        self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
 

@@ -85,35 +85,35 @@ impl<'a> NewSession<'a> {
     /// [-A] - behave like `attach-session` if `session-name` already exists
     #[cfg(feature = "tmux_1_8")]
     pub fn attach(&mut self) -> &mut Self {
-        self.0.push_flag(A_KEY);
+        self.0.push_flag(A_UPPERCASE_KEY);
         self
     }
 
     /// [-d] - new session is not attached to the current terminal
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(d_KEY);
+        self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
     /// [-D] - any other clients attached to the session are detached
     #[cfg(feature = "tmux_1_8")]
     pub fn detach_other(&mut self) -> &mut Self {
-        self.0.push_flag(D_KEY);
+        self.0.push_flag(D_UPPERCASE_KEY);
         self
     }
 
     /// [-E] - `update-environment` option will not be applied
     #[cfg(feature = "tmux_2_1")]
     pub fn not_update_env(&mut self) -> &mut Self {
-        self.0.push_flag(E_KEY);
+        self.0.push_flag(E_UPPERCASE_KEY);
         self
     }
 
     /// [-P] - print information about the new session after it has been created
     #[cfg(feature = "tmux_1_8")]
     pub fn print(&mut self) -> &mut Self {
-        self.0.push_flag(P_KEY);
+        self.0.push_flag(P_UPPERCASE_KEY);
         self
     }
 
@@ -127,49 +127,49 @@ impl<'a> NewSession<'a> {
     /// [-c start-directory] - specify starting directory
     #[cfg(feature = "tmux_1_9")]
     pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, start_directory: S) -> &mut Self {
-        self.0.push_option(c_KEY, start_directory);
+        self.0.push_option(C_LOWERCASE_KEY, start_directory);
         self
     }
 
     /// [-F format] - specify different format
     #[cfg(feature = "tmux_1_8")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_KEY, format);
+        self.0.push_option(F_UPPERCASE_KEY, format);
         self
     }
 
     /// [-n window-name] - window name of the initial window
     #[cfg(feature = "tmux_0_8")]
     pub fn window_name<S: Into<Cow<'a, str>>>(&mut self, window_name: S) -> &mut Self {
-        self.0.push_option(n_KEY, window_name);
+        self.0.push_option(N_LOWERCASE_KEY, window_name);
         self
     }
 
     /// [-s session-name] - specify a session name
     #[cfg(feature = "tmux_0_8")]
     pub fn session_name<S: Into<Cow<'a, str>>>(&mut self, session_name: S) -> &mut Self {
-        self.0.push_option(s_KEY, session_name);
+        self.0.push_option(S_LOWERCASE_KEY, session_name);
         self
     }
 
     /// [-t group-name] - specify a session group
     #[cfg(feature = "tmux_2_4")]
     pub fn group_name<S: Into<Cow<'a, str>>>(&mut self, group_name: S) -> &mut Self {
-        self.0.push_option(t_KEY, group_name);
+        self.0.push_option(T_LOWERCASE_KEY, group_name);
         self
     }
 
     /// [-x width] - specify a different width
     #[cfg(feature = "tmux_1_6")]
     pub fn width(&mut self, width: usize) -> &mut Self {
-        self.0.push_option(x_KEY, width.to_string());
+        self.0.push_option(X_LOWERCASE_KEY, width.to_string());
         self
     }
 
     /// [-y height] - specify a different height
     #[cfg(feature = "tmux_1_6")]
     pub fn height(&mut self, height: usize) -> &mut Self {
-        self.0.push_option(y_KEY, height.to_string());
+        self.0.push_option(Y_LOWERCASE_KEY, height.to_string());
         self
     }
 

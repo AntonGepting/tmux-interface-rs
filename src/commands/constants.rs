@@ -6,113 +6,113 @@ pub const _2_KEY: &str = "-2";
 
 // constants for use as keys for subcommands
 /// `-a`
-pub const a_KEY: &str = "-a";
+pub const A_LOWERCASE_KEY: &str = "-a";
 /// `-b`
-pub const b_KEY: &str = "-b";
+pub const B_LOWERCASE_KEY: &str = "-b";
 /// `-c`
-pub const c_KEY: &str = "-c";
+pub const C_LOWERCASE_KEY: &str = "-c";
 /// `-d`
-pub const d_KEY: &str = "-d";
+pub const D_LOWERCASE_KEY: &str = "-d";
 /// `-e`
-pub const e_KEY: &str = "-e";
+pub const E_LOWERCASE_KEY: &str = "-e";
 /// `-f`
-pub const f_KEY: &str = "-f";
+pub const F_LOWERCASE_KEY: &str = "-f";
 /// `-g`
-pub const g_KEY: &str = "-g";
+pub const G_LOWERCASE_KEY: &str = "-g";
 /// `-h`
-pub const h_KEY: &str = "-h";
+pub const H_LOWERCASE_KEY: &str = "-h";
 /// `-i`
-pub const i_KEY: &str = "-i";
+pub const I_LOWERCASE_KEY: &str = "-i";
 // `-j]`
-//pub const j_KEY: &str = "-j";
+//pub const J_LOWERCASE_KEY: &str = "-j";
 /// `-k`
-pub const k_KEY: &str = "-k";
+pub const K_LOWERCASE_KEY: &str = "-k";
 /// `-l`
-pub const l_KEY: &str = "-l";
+pub const L_LOWERCASE_KEY: &str = "-l";
 /// `-m`
-pub const m_KEY: &str = "-m";
+pub const M_LOWERCASE_KEY: &str = "-m";
 /// `-n`
-pub const n_KEY: &str = "-n";
+pub const N_LOWERCASE_KEY: &str = "-n";
 /// `-o`
-pub const o_KEY: &str = "-o";
+pub const O_LOWERCASE_KEY: &str = "-o";
 /// `-p`
-pub const p_KEY: &str = "-p";
+pub const P_LOWERCASE_KEY: &str = "-p";
 /// `-q`
-pub const q_KEY: &str = "-q";
+pub const Q_LOWERCASE_KEY: &str = "-q";
 /// `-r`
-pub const r_KEY: &str = "-r";
+pub const R_LOWERCASE_KEY: &str = "-r";
 /// `-s`
-pub const s_KEY: &str = "-s";
+pub const S_LOWERCASE_KEY: &str = "-s";
 /// `-t`
-pub const t_KEY: &str = "-t";
+pub const T_LOWERCASE_KEY: &str = "-t";
 /// `-u`
-pub const u_KEY: &str = "-u";
+pub const U_LOWERCASE_KEY: &str = "-u";
 /// `-v`
-pub const v_KEY: &str = "-v";
+pub const V_LOWERCASE_KEY: &str = "-v";
 /// `-w`
-pub const w_KEY: &str = "-w";
+pub const W_LOWERCASE_KEY: &str = "-w";
 /// `-x`
-pub const x_KEY: &str = "-x";
+pub const X_LOWERCASE_KEY: &str = "-x";
 /// `-y`
-pub const y_KEY: &str = "-y";
+pub const Y_LOWERCASE_KEY: &str = "-y";
 // `-z`
-//pub const z_KEY: &str = "-z";
+//pub const Z_LOWERCASE_KEY: &str = "-z";
 
 #[allow(non_upper_case_globals)]
 /// `-A`
-pub const A_KEY: &str = "-A";
+pub const A_UPPERCASE_KEY: &str = "-A";
 /// `-B`
-//pub const B_KEY: &str = "-B";
+//pub const B_UPPERCASE_KEY: &str = "-B";
 // `-C`
-pub const C_KEY: &str = "-C";
+pub const C_UPPERCASE_KEY: &str = "-C";
 /// `-D`
-pub const D_KEY: &str = "-D";
+pub const D_UPPERCASE_KEY: &str = "-D";
 /// `-E`
-pub const E_KEY: &str = "-E";
+pub const E_UPPERCASE_KEY: &str = "-E";
 /// `-F`
-pub const F_KEY: &str = "-F";
+pub const F_UPPERCASE_KEY: &str = "-F";
 /// `-G`
-pub const G_KEY: &str = "-G";
+pub const G_UPPERCASE_KEY: &str = "-G";
 /// `-H`
-pub const H_KEY: &str = "-H";
+pub const H_UPPERCASE_KEY: &str = "-H";
 /// `-I`
-pub const I_KEY: &str = "-I";
+pub const I_UPPERCASE_KEY: &str = "-I";
 /// `-J`
-pub const J_KEY: &str = "-J";
+pub const J_UPPERCASE_KEY: &str = "-J";
 // `-K`
-//pub const K_KEY: &str = "-K";
+//pub const K_UPPERCASE_KEY: &str = "-K";
 /// `-L`
-pub const L_KEY: &str = "-L";
+pub const L_UPPERCASE_KEY: &str = "-L";
 /// `-M`
-pub const M_KEY: &str = "-M";
+pub const M_UPPERCASE_KEY: &str = "-M";
 /// `-N`
-pub const N_KEY: &str = "-N";
+pub const N_UPPERCASE_KEY: &str = "-N";
 /// `-O`
-pub const O_KEY: &str = "-O";
+pub const O_UPPERCASE_KEY: &str = "-O";
 /// `-P`
-pub const P_KEY: &str = "-P";
+pub const P_UPPERCASE_KEY: &str = "-P";
 // `-Q`
-//pub const Q_KEY: &str = "-Q";
+//pub const Q_UPPERCASE_KEY: &str = "-Q";
 /// `-R`
-pub const R_KEY: &str = "-R";
+pub const R_UPPERCASE_KEY: &str = "-R";
 /// `-S`
-pub const S_KEY: &str = "-S";
+pub const S_UPPERCASE_KEY: &str = "-S";
 /// `-T`
-pub const T_KEY: &str = "-T";
+pub const T_UPPERCASE_KEY: &str = "-T";
 /// `-U`
-pub const U_KEY: &str = "-U";
+pub const U_UPPERCASE_KEY: &str = "-U";
 /// `-V`
-pub const V_KEY: &str = "-V";
+pub const V_UPPERCASE_KEY: &str = "-V";
 // `-W`
-//pub const W_KEY: &str = "-W";
+//pub const W_UPPERCASE_KEY: &str = "-W";
 /// `-X`
-pub const X_KEY: &str = "-X";
+pub const X_UPPERCASE_KEY: &str = "-X";
 // `-Y`
-//pub const Y_KEY: &str = "-Y";
+//pub const Y_UPPERCASE_KEY: &str = "-Y";
 /// `-Z`
-pub const Z_KEY: &str = "-Z";
+pub const Z_UPPERCASE_KEY: &str = "-Z";
 /// `-CC`
-pub const CC_KEY: &str = "-CC";
+pub const CC_UPPERCASE_KEY: &str = "-CC";
 
 /// `tmux` - Default tmux binary name
 pub const TMUX: &str = "tmux";

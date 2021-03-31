@@ -53,21 +53,21 @@ impl<'a> CapturePane<'a> {
     /// [-a] - the alternate screen is used, and the history is not accessible
     #[cfg(feature = "tmux_1_8")]
     pub fn alternate_screen(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+        self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
     /// [-e] - the output includes escape sequences for text and background attributes
     #[cfg(feature = "tmux_1_8")]
     pub fn escape_sequences(&mut self) -> &mut Self {
-        self.0.push_flag(e_KEY);
+        self.0.push_flag(E_LOWERCASE_KEY);
         self
     }
 
     /// [-p] - the output goes to stdout
     #[cfg(feature = "tmux_1_8")]
     pub fn stdout(&mut self) -> &mut Self {
-        self.0.push_flag(p_KEY);
+        self.0.push_flag(P_LOWERCASE_KEY);
         self
     }
 
@@ -75,28 +75,28 @@ impl<'a> CapturePane<'a> {
     /// as-yet incomplete escape sequence
     #[cfg(feature = "tmux_1_8")]
     pub fn pane(&mut self) -> &mut Self {
-        self.0.push_flag(P_KEY);
+        self.0.push_flag(P_UPPERCASE_KEY);
         self
     }
 
     /// [-q] - quite
     #[cfg(feature = "tmux_1_8")]
     pub fn quite(&mut self) -> &mut Self {
-        self.0.push_flag(q_KEY);
+        self.0.push_flag(Q_LOWERCASE_KEY);
         self
     }
 
     /// [-C] - escape non-printable characters as octal \xxx
     #[cfg(feature = "tmux_2_4")]
     pub fn escape_non_printable(&mut self) -> &mut Self {
-        self.0.push_flag(C_KEY);
+        self.0.push_flag(C_UPPERCASE_KEY);
         self
     }
 
     /// [-J] - preserve trailing spaces and joins any wrapped lines
     #[cfg(feature = "tmux_2_4")]
     pub fn join(&mut self) -> &mut Self {
-        self.0.push_flag(J_KEY);
+        self.0.push_flag(J_UPPERCASE_KEY);
         self
     }
 
@@ -110,28 +110,28 @@ impl<'a> CapturePane<'a> {
     /// [-b buffer-name] - buffer-name
     #[cfg(feature = "tmux_1_8")]
     pub fn buffer_name<S: Into<Cow<'a, str>>>(&mut self, buffer_name: S) -> &mut Self {
-        self.0.push_option(b_KEY, buffer_name);
+        self.0.push_option(B_LOWERCASE_KEY, buffer_name);
         self
     }
 
     /// [-E end-line] - specify the ending line number
     #[cfg(feature = "tmux_1_5")]
     pub fn end_line<S: Into<Cow<'a, str>>>(&mut self, end_line: S) -> &mut Self {
-        self.0.push_option(E_KEY, end_line);
+        self.0.push_option(E_UPPERCASE_KEY, end_line);
         self
     }
 
     /// [-S start-line] - specify the starting line number
     #[cfg(feature = "tmux_1_5")]
     pub fn start_line<S: Into<Cow<'a, str>>>(&mut self, start_line: S) -> &mut Self {
-        self.0.push_option(S_KEY, start_line);
+        self.0.push_option(S_UPPERCASE_KEY, start_line);
         self
     }
 
     /// [-t target-pane] - specify target-pane
     #[cfg(feature = "tmux_1_2")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_pane);
+        self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 

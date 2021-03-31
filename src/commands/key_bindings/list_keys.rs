@@ -52,13 +52,13 @@ impl<'a> ListKeys<'a> {
 
     #[cfg(feature = "tmux_2_4")]
     pub fn command(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+        self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_2_4")]
     pub fn with_notes(&mut self) -> &mut Self {
-        self.0.push_flag(N_KEY);
+        self.0.push_flag(N_UPPERCASE_KEY);
         self
     }
 
@@ -79,7 +79,7 @@ impl<'a> ListKeys<'a> {
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
         self.0.push_option(t_KEY, key_table);
         #[cfg(feature = "tmux_2_1")]
-        self.0.push_option(T_KEY, key_table);
+        self.0.push_option(T_UPPERCASE_KEY, key_table);
         self
     }
 

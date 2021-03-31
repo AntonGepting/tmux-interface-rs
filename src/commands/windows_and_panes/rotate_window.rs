@@ -36,13 +36,13 @@ impl<'a> RotateWindow<'a> {
 
     #[cfg(feature = "tmux_0_8")]
     pub fn down(&mut self) -> &mut Self {
-        self.0.push_flag(D_KEY);
+        self.0.push_flag(D_UPPERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_0_8")]
     pub fn up(&mut self) -> &mut Self {
-        self.0.push_flag(U_KEY);
+        self.0.push_flag(U_UPPERCASE_KEY);
         self
     }
 
@@ -54,7 +54,7 @@ impl<'a> RotateWindow<'a> {
 
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_window);
+        self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 

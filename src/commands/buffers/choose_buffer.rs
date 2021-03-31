@@ -50,14 +50,14 @@ impl<'a> ChooseBuffer<'a> {
     /// [-N] - start without the preview
     #[cfg(feature = "tmux_2_6")]
     pub fn no_preview(&mut self) -> &mut Self {
-        self.0.push_flag(N_KEY);
+        self.0.push_flag(N_UPPERCASE_KEY);
         self
     }
 
     /// [-Z] - zoom the pane
     #[cfg(feature = "tmux_2_7")]
     pub fn zoom(&mut self) -> &mut Self {
-        self.0.push_flag(Z_KEY);
+        self.0.push_flag(Z_UPPERCASE_KEY);
         self
     }
 
@@ -71,28 +71,28 @@ impl<'a> ChooseBuffer<'a> {
     /// [-F format] - specify the format for each item in the list
     #[cfg(feature = "tmux_1_7")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_KEY, format);
+        self.0.push_option(F_UPPERCASE_KEY, format);
         self
     }
 
     /// [-f filter] - specify an initial filter
     #[cfg(feature = "tmux_2_6")]
     pub fn filter<S: Into<Cow<'a, str>>>(&mut self, filter: S) -> &mut Self {
-        self.0.push_option(f_KEY, filter);
+        self.0.push_option(F_LOWERCASE_KEY, filter);
         self
     }
 
     /// [-O sort-order] - specifies the initial sort field
     #[cfg(feature = "tmux_2_6")]
     pub fn sort_order<S: Into<Cow<'a, str>>>(&mut self, sort_order: S) -> &mut Self {
-        self.0.push_option(O_KEY, sort_order);
+        self.0.push_option(O_UPPERCASE_KEY, sort_order);
         self
     }
 
     /// [-t target-pane] - specify the target pane
     #[cfg(feature = "tmux_1_3")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, target_pane);
+        self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 

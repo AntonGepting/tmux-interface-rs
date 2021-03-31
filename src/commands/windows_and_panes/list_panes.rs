@@ -42,22 +42,22 @@ impl<'a> ListPanes<'a> {
     }
 
     pub fn all(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+        self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
     pub fn session(&mut self) -> &mut Self {
-        self.0.push_flag(s_KEY);
+        self.0.push_flag(S_LOWERCASE_KEY);
         self
     }
 
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_KEY, format);
+        self.0.push_option(F_UPPERCASE_KEY, format);
         self
     }
 
     pub fn target<S: Into<Cow<'a, str>>>(&mut self, target: S) -> &mut Self {
-        self.0.push_option(t_KEY, target);
+        self.0.push_option(T_LOWERCASE_KEY, target);
         self
     }
 

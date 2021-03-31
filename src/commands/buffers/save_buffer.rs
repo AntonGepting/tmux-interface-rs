@@ -42,13 +42,13 @@ impl<'a> SaveBuffer<'a> {
 
     #[cfg(feature = "tmux_0_8")]
     pub fn append(&mut self) -> &mut Self {
-        self.0.push_flag(a_KEY);
+        self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
     #[cfg(feature = "tmux_2_0")]
     pub fn buffer_name<S: Into<Cow<'a, str>>>(&mut self, buffer_name: S) -> &mut Self {
-        self.0.push_option(b_KEY, buffer_name);
+        self.0.push_option(B_LOWERCASE_KEY, buffer_name);
         self
     }
 

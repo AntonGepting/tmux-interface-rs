@@ -46,35 +46,35 @@ impl<'a> JoinPane<'a> {
     /// [-b] - cause src-pane to be joined to left of or above dst-pane
     #[cfg(feature = "tmux_2_6")]
     pub fn left_above(&mut self) -> &mut Self {
-        self.0.push_flag(b_KEY);
+        self.0.push_flag(B_LOWERCASE_KEY);
         self
     }
 
     /// [-d] -
     #[cfg(feature = "tmux_1_2")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(d_KEY);
+        self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
     /// [-f] - creates a new pane spanning the full window height/width
     #[cfg(feature = "tmux_2_6")]
     pub fn full_size(&mut self) -> &mut Self {
-        self.0.push_flag(f_KEY);
+        self.0.push_flag(F_LOWERCASE_KEY);
         self
     }
 
     /// [-h] - full height
     #[cfg(feature = "tmux_1_2")]
     pub fn horizontal(&mut self) -> &mut Self {
-        self.0.push_flag(h_KEY);
+        self.0.push_flag(H_LOWERCASE_KEY);
         self
     }
 
     /// [-v] - full width
     #[cfg(feature = "tmux_1_2")]
     pub fn vertical(&mut self) -> &mut Self {
-        self.0.push_flag(v_KEY);
+        self.0.push_flag(V_LOWERCASE_KEY);
         self
     }
 
@@ -83,8 +83,8 @@ impl<'a> JoinPane<'a> {
     pub fn size(&mut self, size: &PaneSize) -> &mut Self {
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_1")))]
         match size {
-            PaneSize::Size(size) => self.0.push_option(l_KEY, size.to_string()),
-            PaneSize::Percentage(size) => self.0.push_option(l_KEY, format!("{}%", size)),
+            PaneSize::Size(size) => self.0.push_option(L_LOWERCASE_KEY, size.to_string()),
+            PaneSize::Percentage(size) => self.0.push_option(L_LOWERCASE_KEY, format!("{}%", size)),
         };
 
         #[cfg(feature = "tmux_3_1")]
@@ -99,14 +99,14 @@ impl<'a> JoinPane<'a> {
     /// [-s src-pane] - src-pane
     #[cfg(feature = "tmux_1_2")]
     pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
-        self.0.push_option(s_KEY, src_pane);
+        self.0.push_option(S_LOWERCASE_KEY, src_pane);
         self
     }
 
     /// [-t dst-pane] - dst-pane
     #[cfg(feature = "tmux_1_2")]
     pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
-        self.0.push_option(t_KEY, dst_pane);
+        self.0.push_option(T_LOWERCASE_KEY, dst_pane);
         self
     }
 
