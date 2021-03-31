@@ -94,7 +94,7 @@ pub struct PaneOptions {
 
 impl PaneOptions {
     pub fn get_all() -> Result<Self, Error> {
-        let s = ShowOptions::new().global().output()?.string();
+        let s = ShowOptions::new().global().output()?.to_string();
         s.parse()
     }
 
@@ -112,7 +112,7 @@ impl PaneOptions {
             .pane()
             .option(&selected_option)
             .output()?
-            .string();
+            .to_string();
         s.parse()
     }
 
