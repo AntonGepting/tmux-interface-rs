@@ -29,9 +29,9 @@ fn delete_buffer() {
     let mut delete_buffer = DeleteBuffer::new();
     delete_buffer.buffer_name(buffer_name);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "delete-buffer";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "deleteb";
 
     let mut s = Vec::new();

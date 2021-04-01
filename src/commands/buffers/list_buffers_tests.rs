@@ -30,9 +30,9 @@ fn list_buffers() {
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     list_buffers.target_session("2");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-buffers";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "lsb";
 
     #[cfg(any(

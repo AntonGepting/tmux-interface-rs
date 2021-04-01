@@ -45,9 +45,9 @@ fn show_window_options() {
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
     show_window_options.value("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-window-options";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "showw";
 
     let mut s = Vec::new();

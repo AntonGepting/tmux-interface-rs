@@ -63,9 +63,9 @@ fn switch_client() {
     #[cfg(feature = "tmux_2_1")]
     switch_client.key_table("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "switch-client";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "switchc";
 
     let mut s = Vec::new();

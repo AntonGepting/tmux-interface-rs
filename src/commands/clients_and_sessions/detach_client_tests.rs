@@ -44,9 +44,9 @@ fn detach_client() {
     #[cfg(feature = "tmux_0_8")]
     detach_client.target_client("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "detach-client";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "detach";
 
     let mut s = Vec::new();

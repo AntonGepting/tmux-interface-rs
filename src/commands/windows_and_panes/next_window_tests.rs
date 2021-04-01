@@ -23,9 +23,9 @@ fn next_window() {
     #[cfg(feature = "tmux_0_8")]
     next_window.target_window("1");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "next-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "next";
 
     let mut s = Vec::new();

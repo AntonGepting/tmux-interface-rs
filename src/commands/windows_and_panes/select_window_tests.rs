@@ -38,9 +38,9 @@ fn select_window() {
     #[cfg(feature = "tmux_0_8")]
     select_window.target_window(&target_window);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "select-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "selectw";
 
     let mut s = Vec::new();

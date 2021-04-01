@@ -28,9 +28,9 @@ fn set_environment() {
     #[cfg(feature = "tmux_1_0")]
     set_environment.value("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "set-environment";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "setenv";
 
     let mut s = Vec::new();

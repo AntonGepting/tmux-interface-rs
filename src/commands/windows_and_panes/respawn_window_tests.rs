@@ -44,9 +44,9 @@ fn respawn_window() {
     #[cfg(feature = "tmux_1_2")]
     respawn_window.shell_command("4");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "respawn-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "respawnw";
 
     let mut s = Vec::new();

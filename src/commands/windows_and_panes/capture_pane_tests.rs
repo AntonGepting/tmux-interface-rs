@@ -64,9 +64,9 @@ fn capture_pane() {
     #[cfg(feature = "tmux_1_2")]
     capture_pane.target_pane(&target_pane);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "capture-pane";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "capturep";
 
     let mut s = Vec::new();

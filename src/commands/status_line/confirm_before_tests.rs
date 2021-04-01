@@ -24,9 +24,9 @@ fn confirm_before() {
     #[cfg(feature = "tmux_0_9")]
     confirm_before.command("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "confirm-before";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "confirm";
 
     let mut s = Vec::new();

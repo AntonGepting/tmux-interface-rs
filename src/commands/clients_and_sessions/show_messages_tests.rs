@@ -34,9 +34,9 @@ fn show_messages() {
     #[cfg(feature = "tmux_1_2")]
     show_messages.target_client("1");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-messages";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "showmsgs";
 
     let mut s = Vec::new();

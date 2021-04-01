@@ -26,9 +26,9 @@ fn wait_for() {
     #[cfg(feature = "tmux_1_8")]
     wait_for.channel("1");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "wait-for";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "wait";
 
     let mut s = Vec::new();

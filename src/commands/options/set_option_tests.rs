@@ -80,9 +80,9 @@ fn set_option() {
     #[cfg(feature = "tmux_0_8")]
     set_option.value("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "set-option";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "set";
 
     let mut s = Vec::new();

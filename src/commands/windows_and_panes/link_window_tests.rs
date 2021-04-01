@@ -33,9 +33,9 @@ fn link_window() {
     #[cfg(feature = "tmux_0_8")]
     link_window.dst_window(&dst_window);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "link-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "linkw";
 
     let mut s = Vec::new();

@@ -72,9 +72,9 @@ fn send_keys() {
     #[cfg(feature = "tmux_0_8")]
     send_keys.key("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "send-keys";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "send";
 
     let mut s = Vec::new();

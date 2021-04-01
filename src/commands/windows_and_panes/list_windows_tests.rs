@@ -33,9 +33,9 @@ fn list_windows() {
     #[cfg(feature = "tmux_0_8")]
     list_windows.target_session(&target_session);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-windows";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "lsw";
 
     let mut s = Vec::new();

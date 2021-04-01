@@ -68,7 +68,7 @@ tmux_latest = ["tmux_3_1c"]
 use_cmd_alias = []
 
 # enable default features for the library
-default = ["tmux_2_8", "use_cmd_alias"]
+default = ["tmux_2_8", "cmd_alias"]
 
 
 [dependencies]

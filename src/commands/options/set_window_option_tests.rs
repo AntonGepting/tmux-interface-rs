@@ -61,9 +61,9 @@ fn set_window_option() {
     #[cfg(feature = "tmux_0_8")]
     set_window_option.value("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "set-window-option";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "setw";
 
     let mut s = Vec::new();

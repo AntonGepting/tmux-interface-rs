@@ -69,9 +69,9 @@ fn break_pane() {
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     break_pane.target_window(&target_window);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "break-pane";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "breakp";
 
     let mut s = Vec::new();

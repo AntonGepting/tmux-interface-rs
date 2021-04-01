@@ -42,9 +42,9 @@ fn find_window() {
     #[cfg(feature = "tmux_0_8")]
     find_window.target_pane(&target_pane);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "find-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "findw";
 
     let mut s = Vec::new();

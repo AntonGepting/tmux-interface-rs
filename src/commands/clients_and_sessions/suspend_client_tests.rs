@@ -21,9 +21,9 @@ fn suspend_client() {
     let mut suspend_client = SuspendClient::new();
     suspend_client.target_client("1");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "suspend-client";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "suspendc";
 
     let mut s = Vec::new();

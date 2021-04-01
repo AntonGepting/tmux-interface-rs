@@ -22,9 +22,9 @@ fn list_commands() {
     #[cfg(feature = "tmux_2_3")]
     list_commands.format("1");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-commands";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "lscm";
 
     #[cfg(feature = "tmux_2_3")]

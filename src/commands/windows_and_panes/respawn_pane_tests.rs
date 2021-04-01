@@ -38,9 +38,9 @@ fn respawn_pane() {
     #[cfg(feature = "tmux_2_6")]
     respawn_pane.shell_command("4");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "respawn-pane";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "respawnp";
 
     let mut s = Vec::new();

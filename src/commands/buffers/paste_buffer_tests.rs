@@ -47,9 +47,9 @@ fn paste_buffer() {
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
     paste_buffer.target_window(&target_pane);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "paste-buffer";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "pasteb";
 
     let mut s = Vec::new();

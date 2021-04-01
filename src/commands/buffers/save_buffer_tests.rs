@@ -36,9 +36,9 @@ fn save_buffer() {
     #[cfg(feature = "tmux_0_8")]
     save_buffer.path("4");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "save-buffer";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "saveb";
 
     let mut s = Vec::new();

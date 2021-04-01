@@ -65,9 +65,9 @@ fn bind_key() {
     #[cfg(feature = "tmux_0_8")]
     bind_key.command("5");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "bind-key";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "bind";
 
     let mut s = Vec::new();

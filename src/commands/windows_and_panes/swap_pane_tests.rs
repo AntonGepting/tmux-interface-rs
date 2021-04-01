@@ -41,9 +41,9 @@ fn swap_pane() {
     #[cfg(feature = "tmux_1_0")]
     swap_pane.dst_pane(&dst_pane);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "swap-pane";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "swapp";
 
     let mut s = Vec::new();

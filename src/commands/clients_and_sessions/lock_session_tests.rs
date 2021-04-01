@@ -15,9 +15,9 @@ fn lock_session() {
     #[cfg(feature = "tmux_1_1")]
     lock_session.target_session("1");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "lock-session";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "locks";
 
     let mut s = Vec::new();

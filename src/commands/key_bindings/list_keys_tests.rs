@@ -42,9 +42,9 @@ fn list_keys() {
     #[cfg(feature = "tmux_0_8")]
     list_keys.key_table("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-keys";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "lsk";
 
     let mut s = Vec::new();

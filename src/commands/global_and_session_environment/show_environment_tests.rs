@@ -34,9 +34,9 @@ fn show_environment() {
     #[cfg(feature = "tmux_1_7")]
     show_environment.variable("2");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-environment";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "showenv";
 
     let mut s = Vec::new();

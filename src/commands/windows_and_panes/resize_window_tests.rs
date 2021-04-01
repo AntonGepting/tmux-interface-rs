@@ -35,9 +35,9 @@ fn resize_window() {
     #[cfg(feature = "tmux_2_9")]
     resize_window.adjustment("4");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "resize-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "resizew";
 
     let mut s = Vec::new();

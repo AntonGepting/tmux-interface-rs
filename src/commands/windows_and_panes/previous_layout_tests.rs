@@ -19,9 +19,9 @@ fn previous_layout() {
     #[cfg(feature = "tmux_1_3")]
     previous_layout.target_window(&target_window);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "previous-layout";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "prevl";
 
     let mut s = Vec::new();

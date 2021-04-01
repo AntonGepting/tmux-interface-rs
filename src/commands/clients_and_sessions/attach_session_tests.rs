@@ -52,9 +52,9 @@ fn attach_session() {
     #[cfg(feature = "tmux_0_8")]
     attach_session.target_session(&target_session);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "attach-session";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "attach";
 
     let mut s = Vec::new();

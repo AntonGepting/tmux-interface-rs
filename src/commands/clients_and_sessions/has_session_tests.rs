@@ -21,9 +21,9 @@ fn has_session() {
     s.extend_from_slice(&["-t", "1"]);
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "has-session";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "has";
 
     assert_eq!(has_session.0.bin, Cow::Borrowed("tmux"));

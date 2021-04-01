@@ -20,9 +20,9 @@ fn previous_window() {
     #[cfg(feature = "tmux_0_8")]
     previous_window.target_session("1");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "previous-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "prev";
 
     let mut s = Vec::new();

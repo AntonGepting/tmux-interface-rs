@@ -37,9 +37,9 @@ fn pipe_pane() {
     #[cfg(feature = "tmux_1_2")]
     pipe_pane.shell_command("2");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "pipe-pane";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "pipep";
 
     let mut s = Vec::new();

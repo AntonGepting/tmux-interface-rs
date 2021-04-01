@@ -48,9 +48,9 @@ fn move_window() {
     #[cfg(feature = "tmux_0_8")]
     move_window.dst_window(&dst_pane);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "move-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "movew";
 
     let mut s = Vec::new();

@@ -36,9 +36,9 @@ fn last_pane() {
     #[cfg(feature = "tmux_1_4")]
     last_pane.target_window(&target_window);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "last-pane";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "lastp";
 
     let mut s = Vec::new();

@@ -96,9 +96,9 @@ fn new_session() {
     #[cfg(feature = "tmux_1_2")]
     new_session.shell_command("8");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "new-session";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "new";
 
     let mut s = Vec::new();

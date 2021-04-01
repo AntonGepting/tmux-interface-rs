@@ -12,9 +12,9 @@ fn lock_server() {
     // ```
     let lock_server = LockServer::new();
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "lock-server";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "lock";
 
     assert_eq!(lock_server.0.bin, Cow::Borrowed("tmux"));

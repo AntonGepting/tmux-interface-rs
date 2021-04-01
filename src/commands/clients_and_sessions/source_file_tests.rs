@@ -34,9 +34,9 @@ fn source_file() {
     #[cfg(feature = "tmux_0_8")]
     source_file.path("1");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "source-file";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "source";
 
     let mut s = Vec::new();

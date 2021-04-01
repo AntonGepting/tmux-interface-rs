@@ -20,9 +20,9 @@ fn rename_window() {
     #[cfg(feature = "tmux_0_8")]
     rename_window.new_name("2");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "rename-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "renamew";
 
     let mut s = Vec::new();

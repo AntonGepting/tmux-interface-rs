@@ -34,9 +34,9 @@ fn run_shell() {
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
     run_shell.command("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "run-shell";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "run";
 
     let mut s = Vec::new();

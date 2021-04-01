@@ -34,9 +34,9 @@ fn list_panes() {
     #[cfg(feature = "tmux_0_8")]
     list_panes.target("2");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-panes";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "lsp";
 
     let mut s = Vec::new();

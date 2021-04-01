@@ -40,9 +40,9 @@ fn display_panes() {
     #[cfg(feature = "tmux_2_3")]
     display_panes.template("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "display-panes";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "displayp";
 
     let mut s = Vec::new();

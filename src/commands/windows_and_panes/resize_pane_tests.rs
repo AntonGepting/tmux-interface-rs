@@ -53,9 +53,9 @@ fn resize_pane() {
     #[cfg(feature = "tmux_0_9")]
     resize_pane.adjustment("4");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "resize-pane";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "resizep";
 
     let mut s = Vec::new();

@@ -52,9 +52,9 @@ fn display_message() {
     display_message.target_pane(&target_pane);
     display_message.message("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "display-message";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "display";
 
     let mut s = Vec::new();

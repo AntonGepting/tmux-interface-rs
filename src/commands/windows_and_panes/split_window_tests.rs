@@ -95,9 +95,9 @@ fn split_window() {
     #[cfg(feature = "tmux_1_7")]
     split_window.format("6");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "split-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "splitw";
 
     let mut s = Vec::new();

@@ -38,9 +38,9 @@ fn set_buffer() {
     #[cfg(feature = "tmux_0_8")]
     set_buffer.data("5");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "set-buffer";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "setb";
 
     let mut s = Vec::new();

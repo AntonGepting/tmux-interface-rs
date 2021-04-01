@@ -19,9 +19,9 @@ fn rename_session() {
     #[cfg(feature = "tmux_0_8")]
     rename_session.new_name("2");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "rename-session";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "rename";
 
     let mut s = Vec::new();

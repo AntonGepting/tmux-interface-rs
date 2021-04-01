@@ -46,9 +46,9 @@ fn if_shell() {
     #[cfg(feature = "tmux_0_8")]
     if_shell.command("4");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "if-shell";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "if";
 
     let mut s = Vec::new();

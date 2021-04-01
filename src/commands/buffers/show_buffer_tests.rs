@@ -28,9 +28,9 @@ fn show_buffer() {
 
     let mut s = Vec::new();
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-buffer";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "showb";
 
     #[cfg(feature = "tmux_1_5")]

@@ -22,9 +22,9 @@ fn clear_history() {
     let mut clear_history = ClearHistory::new();
     clear_history.target_pane(target_pane);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "clear-history";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "clearhist";
 
     let mut s = Vec::new();

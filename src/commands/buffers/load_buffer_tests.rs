@@ -34,9 +34,9 @@ fn load_buffer() {
     #[cfg(feature = "tmux_0_8")]
     load_buffer.path("2");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "load-buffer";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "loadb";
 
     let mut s = Vec::new();

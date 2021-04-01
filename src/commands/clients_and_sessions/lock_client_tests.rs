@@ -15,9 +15,9 @@ fn lock_client() {
     let mut lock_client = LockClient::new();
     lock_client.target_client("1");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "lock-client";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "lockc";
 
     let mut s = Vec::new();

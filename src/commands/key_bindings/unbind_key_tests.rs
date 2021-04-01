@@ -54,9 +54,9 @@ fn unbind_key() {
     #[cfg(feature = "tmux_0_8")]
     unbind_key.key("3");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "unbind-key";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "unbind";
 
     let mut s = Vec::new();

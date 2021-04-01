@@ -74,9 +74,9 @@ fn new_window() {
     #[cfg(feature = "tmux_1_2")]
     new_window.shell_command("6");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "new-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "neww";
 
     let mut s = Vec::new();

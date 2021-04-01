@@ -49,9 +49,9 @@ fn join_pane() {
     #[cfg(feature = "tmux_1_2")]
     join_pane.dst_pane(&dst_pane);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "join-pane";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "joinp";
 
     let mut s = Vec::new();

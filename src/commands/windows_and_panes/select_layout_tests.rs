@@ -52,9 +52,9 @@ fn select_layout() {
     #[cfg(feature = "tmux_1_0")]
     select_layout.layout_name("2");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "select-layout";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "selectl";
 
     let mut s = Vec::new();

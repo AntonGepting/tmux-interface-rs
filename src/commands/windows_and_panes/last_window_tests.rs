@@ -16,9 +16,9 @@ fn last_window() {
     #[cfg(feature = "tmux_0_8")]
     last_window.target_session("1");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "last-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "last";
 
     let mut s = Vec::new();

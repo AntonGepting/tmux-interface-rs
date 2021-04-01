@@ -21,9 +21,9 @@ fn list_sessions() {
     #[cfg(feature = "tmux_1_6")]
     list_sessions.format("1");
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-sessions";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "ls";
 
     let mut s = Vec::new();

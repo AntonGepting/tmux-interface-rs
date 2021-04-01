@@ -14,9 +14,9 @@ fn start_server() {
     // ```
     let start_server = StartServer::new();
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "start-server";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "start";
 
     assert_eq!(start_server.0.bin, Cow::Borrowed("tmux"));

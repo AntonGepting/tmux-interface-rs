@@ -25,9 +25,9 @@ fn kill_window() {
     #[cfg(feature = "tmux_0_8")]
     kill_pane.target_window(&target_window);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "kill-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "killw";
 
     let mut s = Vec::new();

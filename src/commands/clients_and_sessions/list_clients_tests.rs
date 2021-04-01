@@ -32,9 +32,9 @@ fn list_clients() {
     #[cfg(feature = "tmux_1_5")]
     list_clients.target_session(&target_session);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-clients";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "lsc";
 
     let mut s = Vec::new();

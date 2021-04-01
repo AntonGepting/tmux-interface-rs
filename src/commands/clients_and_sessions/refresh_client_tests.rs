@@ -60,9 +60,9 @@ fn refresh_client() {
     #[cfg(feature = "tmux_2_9a")]
     refresh_client.adjustment(5);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "refresh-client";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "refresh";
 
     let mut s = Vec::new();

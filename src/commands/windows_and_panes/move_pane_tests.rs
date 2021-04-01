@@ -37,9 +37,9 @@ fn move_pane() {
     #[cfg(feature = "tmux_1_7")]
     move_pane.dst_pane(&dst_pane);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "move-pane";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "movep";
 
     let mut s = Vec::new();

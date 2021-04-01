@@ -26,9 +26,9 @@ fn unlink_window() {
     #[cfg(feature = "tmux_0_8")]
     unlink_window.target_window(&target_window);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "unlink-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "unlinkw";
 
     let mut s = Vec::new();

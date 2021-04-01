@@ -23,9 +23,9 @@ fn swap_window() {
     #[cfg(feature = "tmux_0_8")]
     swap_window.dst_window(&dst_window);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "swap-window";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "swapw";
 
     let mut s = Vec::new();

@@ -18,9 +18,9 @@ fn next_layout() {
     #[cfg(feature = "tmux_0_8")]
     next_layout.target_window(&target_window);
 
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "next-layout";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "nextl";
 
     let mut s = Vec::new();

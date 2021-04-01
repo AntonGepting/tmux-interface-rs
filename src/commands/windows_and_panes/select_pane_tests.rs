@@ -54,9 +54,9 @@ fn select_pane() {
     // tmux select-pane [-p pane-index] [-t target-window]
     // (alias: selectp)
     // ```
-    #[cfg(not(feature = "use_cmd_alias"))]
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "select-pane";
-    #[cfg(feature = "use_cmd_alias")]
+    #[cfg(feature = "cmd_alias")]
     let cmd = "selectp";
 
     let mut s = Vec::new();
