@@ -40,7 +40,7 @@ fn set_hook() {
     #[cfg(feature = "tmux_2_2")]
     set_hook.target_session(&target_session);
     #[cfg(feature = "tmux_2_2")]
-    set_hook.name("2");
+    set_hook.hook_name("2");
     #[cfg(feature = "tmux_2_2")]
     set_hook.command("3");
 
