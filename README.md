@@ -18,7 +18,8 @@ documentation can be found on the
 
 1. Add the new crate dependency in your `Cargo.toml`.
 
-    - Using **defaults** (by default `features = ["tmux_2_8"]` will be set)
+
+    - Using **defaults** (by default: `default = ["tmux_2_8", "cmd_alias"]` will be set)
         ```
         [dependencies]
         tmux_interface = "^0.1.0"

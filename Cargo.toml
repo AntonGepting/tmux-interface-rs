@@ -65,7 +65,7 @@ tmux_latest = ["tmux_3_1c"]
 
 
 # use alias instead of full tmux command name (e.g. `list-sessions` -> `ls`)
-use_cmd_alias = []
+cmd_alias = []
 
 # enable default features for the library
 default = ["tmux_2_8", "cmd_alias"]
