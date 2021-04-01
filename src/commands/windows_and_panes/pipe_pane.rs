@@ -40,35 +40,35 @@ impl<'a> PipePane<'a> {
         Default::default()
     }
 
-    /// [-I] - stdin is connected
+    /// `[-I]` - stdin is connected
     #[cfg(feature = "tmux_2_7")]
     pub fn stdout(&mut self) -> &mut Self {
         self.0.push_flag(I_UPPERCASE_KEY);
         self
     }
 
-    /// [-O] - stdout is connected
+    /// `[-O]` - stdout is connected
     #[cfg(feature = "tmux_2_7")]
     pub fn stdin(&mut self) -> &mut Self {
         self.0.push_flag(O_UPPERCASE_KEY);
         self
     }
 
-    /// [-o] - only open a new pipe if no previous pipe exists
+    /// `[-o]` - only open a new pipe if no previous pipe exists
     #[cfg(feature = "tmux_1_1")]
     pub fn open(&mut self) -> &mut Self {
         self.0.push_flag(O_LOWERCASE_KEY);
         self
     }
 
-    /// [-t target-pane] - target-pane
+    /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_1_1")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
-    /// [shell-command] - shell-command
+    /// `[shell-command]` - shell-command
     #[cfg(feature = "tmux_1_2")]
     pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
         self.0.push_param(shell_command);

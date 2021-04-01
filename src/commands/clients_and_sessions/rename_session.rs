@@ -28,12 +28,14 @@ impl<'a> RenameSession<'a> {
         Default::default()
     }
 
+    /// `[-t target-session]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
 
+    /// `new-name`
     #[cfg(feature = "tmux_0_8")]
     pub fn new_name<S: Into<Cow<'a, str>>>(&mut self, new_name: S) -> &mut Self {
         self.0.push_param(new_name);

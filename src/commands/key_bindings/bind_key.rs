@@ -64,47 +64,49 @@ impl<'a> BindKey<'a> {
         Default::default()
     }
 
-    /// [-n] - an alias for -T root
+    /// `[-n]` - an alias for -T root
     #[cfg(feature = "tmux_1_0")]
     pub fn root(&mut self) -> &mut Self {
         self.0.push_flag(N_LOWERCASE_KEY);
         self
     }
 
-    /// [-r] - this key may repeat
+    /// `[-r]` - this key may repeat
     #[cfg(feature = "tmux_0_8")]
     pub fn repeat(&mut self) -> &mut Self {
         self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 
-    /// [-N note] - attaches note to the key
+    /// `[-N note]` - attaches note to the key
     #[cfg(feature = "tmux_3_1")]
     pub fn note<S: Into<Cow<'a, str>>>(&mut self, note: S) -> &mut Self {
         self.0.push_option(N_UPPERCASE_KEY, note);
         self
     }
 
-    /// [-T key-table] - key-table
+    /// `[-T key-table]` - key-table
     #[cfg(feature = "tmux_2_1")]
     pub fn key_table<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
         self.0.push_option(T_UPPERCASE_KEY, key_table);
         self
     }
 
-    /// \[arguments\] - arguments
+    /// `[arguments]` - arguments
     #[cfg(feature = "tmux_0_8")]
     pub fn arguments<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
         self.0.push_param(key_table);
         self
     }
 
+    /// `key`
     #[cfg(feature = "tmux_0_8")]
     pub fn key<S: Into<Cow<'a, str>>>(&mut self, key: S) -> &mut Self {
         self.0.push_param(key);
         self
     }
 
+    /// `command`
     #[cfg(feature = "tmux_0_8")]
     pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
         self.0.push_param(command);

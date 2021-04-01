@@ -40,24 +40,28 @@ impl<'a> SourceFile<'a> {
         Default::default()
     }
 
+    /// `[-n]`
     #[cfg(feature = "tmux_3_0")]
     pub fn not_execute(&mut self) -> &mut Self {
         self.0.push_flag(N_LOWERCASE_KEY);
         self
     }
 
+    /// `[-q]`
     #[cfg(feature = "tmux_3_0")]
     pub fn quite(&mut self) -> &mut Self {
         self.0.push_flag(Q_LOWERCASE_KEY);
         self
     }
 
+    /// `[-v]`
     #[cfg(feature = "tmux_3_0")]
     pub fn verbose(&mut self) -> &mut Self {
         self.0.push_flag(V_LOWERCASE_KEY);
         self
     }
 
+    /// `path`
     #[cfg(feature = "tmux_0_8")]
     pub fn path<S: Into<Cow<'a, str>>>(&mut self, path: S) -> &mut Self {
         self.0.push_param(path);

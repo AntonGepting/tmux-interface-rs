@@ -59,70 +59,70 @@ impl<'a> ShowOptions<'a> {
         Default::default()
     }
 
-    /// [-A] - includes options inherited from a parent set of options
+    /// `[-A]` - includes options inherited from a parent set of options
     #[cfg(feature = "tmux_3_0")]
     pub fn include_inherited(&mut self) -> &mut Self {
         self.0.push_flag(A_UPPERCASE_KEY);
         self
     }
 
-    /// [-g] - global session or window options are listed
+    /// `[-g]` - global session or window options are listed
     #[cfg(feature = "tmux_1_2")]
     pub fn global(&mut self) -> &mut Self {
         self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
-    /// [-H] - includes hooks (omitted by default)
+    /// `[-H]` - includes hooks (omitted by default)
     #[cfg(feature = "tmux_3_0")]
     pub fn hooks(&mut self) -> &mut Self {
         self.0.push_flag(H_UPPERCASE_KEY);
         self
     }
 
-    /// [-p] - show window options
+    /// `[-p]` - show window options
     #[cfg(feature = "tmux_3_0")]
     pub fn pane(&mut self) -> &mut Self {
         self.0.push_flag(P_LOWERCASE_KEY);
         self
     }
 
-    /// [-q] - no error will be returned if `option` is unset
+    /// `[-q]` - no error will be returned if `option` is unset
     #[cfg(feature = "tmux_1_8")]
     pub fn quiet(&mut self) -> &mut Self {
         self.0.push_flag(Q_LOWERCASE_KEY);
         self
     }
 
-    /// [-s] - show the server options
+    /// `[-s]` - show the server options
     #[cfg(feature = "tmux_1_2")]
     pub fn server(&mut self) -> &mut Self {
         self.0.push_flag(S_LOWERCASE_KEY);
         self
     }
 
-    /// [-v] - shows only the option value
+    /// `[-v]` - shows only the option value
     #[cfg(feature = "tmux_1_8")]
     pub fn value(&mut self) -> &mut Self {
         self.0.push_flag(V_LOWERCASE_KEY);
         self
     }
 
-    /// [-w] - show the window options
+    /// `[-w]` - show the window options
     #[cfg(feature = "tmux_1_2")]
     pub fn window(&mut self) -> &mut Self {
         self.0.push_flag(W_LOWERCASE_KEY);
         self
     }
 
-    /// [-t target-pane] - target session or window name
+    /// `[-t target-pane]` - target session or window name
     //#[cfg(feature = "tmux_X_X")]
     pub fn target<S: Into<Cow<'a, str>>>(&mut self, target: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target);
         self
     }
 
-    /// \[option\] - specify option name
+    /// `[option]` - specify option name
     #[cfg(feature = "tmux_1_7")]
     pub fn option<S: Into<Cow<'a, str>>>(&mut self, option: S) -> &mut Self {
         self.0.push_param(option);

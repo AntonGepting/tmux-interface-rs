@@ -40,24 +40,28 @@ impl<'a> KillPane<'a> {
         Default::default()
     }
 
+    /// `[-a]`
     #[cfg(feature = "tmux_1_1")]
     pub fn all(&mut self) -> &mut Self {
         self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
+    /// `[-t target-pane]`
     #[cfg(feature = "tmux_1_0")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
+    /// `[-p pane-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
     pub fn pane_index<S: Into<Cow<'a, str>>>(&mut self, pane_index: S) -> &mut Self {
         self.0.push_option(p_KEY, pane_index);
         self
     }
 
+    /// `[-t target-window]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.0.push_option(t_KEY, target_window);

@@ -66,49 +66,49 @@ impl<'a> SendKeys<'a> {
         Default::default()
     }
 
-    /// [-F] - expand formats in arguments where appropriate
+    /// `[-F]` - expand formats in arguments where appropriate
     #[cfg(feature = "tmux_3_1")]
     pub fn expand_formats(&mut self) -> &mut Self {
         self.0.push_flag(F_UPPERCASE_KEY);
         self
     }
 
-    /// [-H] - expect each key to be a hexadecimal number for an ASCII character
+    /// `[-H]` - expect each key to be a hexadecimal number for an ASCII character
     #[cfg(feature = "tmux_3_0")]
     pub fn hex(&mut self) -> &mut Self {
         self.0.push_flag(H_UPPERCASE_KEY);
         self
     }
 
-    /// [-l] - disable key name lookup and processes the keys as literal UTF-8 characters
+    /// `[-l]` - disable key name lookup and processes the keys as literal UTF-8 characters
     #[cfg(feature = "tmux_1_7")]
     pub fn disable_lookup(&mut self) -> &mut Self {
         self.0.push_flag(L_LOWERCASE_KEY);
         self
     }
 
-    /// [-M] - pass through a mouse event
+    /// `[-M]` - pass through a mouse event
     #[cfg(feature = "tmux_2_1")]
     pub fn mouse_event(&mut self) -> &mut Self {
         self.0.push_flag(M_UPPERCASE_KEY);
         self
     }
 
-    /// [-R] - cause the terminal state to be reset
+    /// `[-R]` - cause the terminal state to be reset
     #[cfg(feature = "tmux_1_6")]
     pub fn copy_mode(&mut self) -> &mut Self {
         self.0.push_flag(R_UPPERCASE_KEY);
         self
     }
 
-    /// [-X] - send a command into copy mode
+    /// `[-X]` - send a command into copy mode
     #[cfg(feature = "tmux_2_4")]
     pub fn reset(&mut self) -> &mut Self {
         self.0.push_flag(X_UPPERCASE_KEY);
         self
     }
 
-    /// [-N repeat-count] - specify a repeat count
+    /// `[-N repeat-count]` - specify a repeat count
     #[cfg(feature = "tmux_2_4")]
     pub fn repeat_count(&mut self, repeat_count: usize) -> &mut Self {
         self.0
@@ -116,20 +116,21 @@ impl<'a> SendKeys<'a> {
         self
     }
 
-    /// [-t target-pane] - specify the target pane
+    /// `[-t target-pane]` - specify the target pane
     #[cfg(feature = "tmux_1_6")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
-    /// [-t target-window] - specify the target window
+    /// `[-t target-window]` - specify the target window
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 
+    /// `key`
     #[cfg(feature = "tmux_0_8")]
     pub fn key<S: Into<Cow<'a, str>>>(&mut self, key: S) -> &mut Self {
         self.0.push_param(key);

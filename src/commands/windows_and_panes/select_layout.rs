@@ -52,42 +52,42 @@ impl<'a> SelectLayot<'a> {
         Default::default()
     }
 
-    /// [-E] - spread the current pane and any panes next to it out evenly
+    /// `[-E]` - spread the current pane and any panes next to it out evenly
     #[cfg(feature = "tmux_2_7")]
     pub fn spread(&mut self) -> &mut Self {
         self.0.push_flag(E_UPPERCASE_KEY);
         self
     }
 
-    /// [-n] - next-layout equivalent
+    /// `[-n]` - next-layout equivalent
     #[cfg(feature = "tmux_1_5")]
     pub fn next_layout(&mut self) -> &mut Self {
         self.0.push_flag(N_LOWERCASE_KEY);
         self
     }
 
-    /// [-o] - apply the last set layout if possible
+    /// `[-o]` - apply the last set layout if possible
     #[cfg(feature = "tmux_2_1")]
     pub fn last_layout(&mut self) -> &mut Self {
         self.0.push_flag(O_LOWERCASE_KEY);
         self
     }
 
-    /// [-p] - previous-layout equivalent
+    /// `[-p]` - previous-layout equivalent
     #[cfg(feature = "tmux_1_5")]
     pub fn previous_layout(&mut self) -> &mut Self {
         self.0.push_flag(P_LOWERCASE_KEY);
         self
     }
 
-    /// [-t target-pane] - target-pane
+    /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_0_9")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
-    /// [layout-name] - layout-name
+    /// `[layout-name]` - layout-name
     #[cfg(feature = "tmux_1_0")]
     pub fn layout_name<S: Into<Cow<'a, str>>>(&mut self, layout_name: S) -> &mut Self {
         self.0.push_param(layout_name);

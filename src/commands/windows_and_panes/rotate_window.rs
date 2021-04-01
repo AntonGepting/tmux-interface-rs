@@ -34,24 +34,28 @@ impl<'a> RotateWindow<'a> {
         Default::default()
     }
 
+    /// `[-D]`
     #[cfg(feature = "tmux_0_8")]
     pub fn down(&mut self) -> &mut Self {
         self.0.push_flag(D_UPPERCASE_KEY);
         self
     }
 
+    /// `[-U]`
     #[cfg(feature = "tmux_0_8")]
     pub fn up(&mut self) -> &mut Self {
         self.0.push_flag(U_UPPERCASE_KEY);
         self
     }
 
+    /// `[-Z]`
     #[cfg(feature = "tmux_3_1")]
     pub fn keep_zoomed(&mut self) -> &mut Self {
         self.0.push_flag(Z_UPPERCASE_KEY);
         self
     }
 
+    /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_window);

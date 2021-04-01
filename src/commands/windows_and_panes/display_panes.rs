@@ -46,28 +46,28 @@ impl<'a> DisplayPanes<'a> {
         Default::default()
     }
 
-    /// [-b]
+    /// `[-b]`
     #[cfg(feature = "tmux_2_9")]
     pub fn not_block(&mut self) -> &mut Self {
         self.0.push_flag(B_LOWERCASE_KEY);
         self
     }
 
-    /// [-d duration]
+    /// `[-d duration]`
     #[cfg(feature = "tmux_2_6")]
     pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, duration: S) -> &mut Self {
         self.0.push_option(D_LOWERCASE_KEY, duration);
         self
     }
 
-    /// [-d duration]
+    /// `[-d duration]`
     #[cfg(feature = "tmux_1_0")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_client);
         self
     }
 
-    /// \[template\]
+    /// `[template]`
     #[cfg(feature = "tmux_2_3")]
     pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
         self.0.push_param(template);

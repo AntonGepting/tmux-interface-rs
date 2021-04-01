@@ -34,6 +34,7 @@ impl<'a> SuspendClient<'a> {
         Default::default()
     }
 
+    /// `[-t target-client]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
         #[cfg(feature = "tmux_1_5")]

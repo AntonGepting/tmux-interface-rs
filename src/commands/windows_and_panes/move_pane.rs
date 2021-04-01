@@ -35,35 +35,35 @@ impl<'a> MovePane<'a> {
         Default::default()
     }
 
-    /// [-b] - cause src-pane to be joined to left of or above dst-pane
+    /// `[-b]` - cause src-pane to be joined to left of or above dst-pane
     #[cfg(feature = "tmux_1_7")]
     pub fn left_above(&mut self) -> &mut Self {
         self.0.push_flag(B_LOWERCASE_KEY);
         self
     }
 
-    /// [-d] -
+    /// `[-d]` -
     #[cfg(feature = "tmux_1_7")]
     pub fn detached(&mut self) -> &mut Self {
         self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
-    /// [-h] - full height
+    /// `[-h]` - full height
     #[cfg(feature = "tmux_1_7")]
     pub fn horizontal(&mut self) -> &mut Self {
         self.0.push_flag(H_LOWERCASE_KEY);
         self
     }
 
-    /// [-v] - full width
+    /// `[-v]` - full width
     #[cfg(feature = "tmux_1_7")]
     pub fn vertical(&mut self) -> &mut Self {
         self.0.push_flag(V_LOWERCASE_KEY);
         self
     }
 
-    /// [-l size] - specify the size of the new pane in lines/columns
+    /// `[-l size]` - specify the size of the new pane in lines/columns
     #[cfg(feature = "tmux_1_7")]
     pub fn size(&mut self, size: &'a PaneSize) -> &mut Self {
         #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
@@ -79,14 +79,14 @@ impl<'a> MovePane<'a> {
         self
     }
 
-    /// [-s src-pane] - src-pane
+    /// `[-s src-pane]` - src-pane
     #[cfg(feature = "tmux_1_7")]
     pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
         self.0.push_option(S_LOWERCASE_KEY, src_pane);
         self
     }
 
-    /// [-t dst-pane] - dst-pane
+    /// `[-t dst-pane]` - dst-pane
     #[cfg(feature = "tmux_1_7")]
     pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, dst_pane);

@@ -29,6 +29,7 @@ impl<'a> HasSession<'a> {
         Default::default()
     }
 
+    /// `[-t target-session]`
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_session);
         self

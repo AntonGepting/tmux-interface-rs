@@ -40,26 +40,30 @@ impl<'a> ShowMessages<'a> {
         Default::default()
     }
 
+    /// `[-I]`
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
     pub fn server(&mut self) -> &mut Self {
         self.0.push_flag(I_UPPERCASE_KEY);
         self
     }
 
+    /// `[-J]`
     #[cfg(feature = "tmux_1_9")]
     pub fn jobs(&mut self) -> &mut Self {
         self.0.push_flag(J_UPPERCASE_KEY);
         self
     }
 
+    /// `[-T]`
     #[cfg(feature = "tmux_1_9")]
     pub fn terminals(&mut self) -> &mut Self {
         self.0.push_flag(T_UPPERCASE_KEY);
         self
     }
 
+    /// `[-t target-client]`
     #[cfg(feature = "tmux_1_2")]
-    pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_client);
         self
     }

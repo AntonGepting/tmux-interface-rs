@@ -47,35 +47,35 @@ impl<'a> IfShell<'a> {
         Default::default()
     }
 
-    /// [-b] - run in the background
+    /// `[-b]` - run in the background
     #[cfg(feature = "tmux_1_8")]
     pub fn backgroud(&mut self) -> &mut Self {
         self.0.push_flag(B_LOWERCASE_KEY);
         self
     }
 
-    /// [-F] not execute but considered success if neither empty nor zero
+    /// `[-F]` not execute but considered success if neither empty nor zero
     #[cfg(feature = "tmux_2_0")]
     pub fn not_execute(&mut self) -> &mut Self {
         self.0.push_flag(F_UPPERCASE_KEY);
         self
     }
 
-    /// [-t target-pane] specify the target-pane
+    /// `[-t target-pane]` specify the target-pane
     #[cfg(feature = "tmux_1_8")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
-    /// [shell-command]
+    /// `[shell-command]`
     #[cfg(feature = "tmux_0_8")]
     pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
         self.0.push_param(shell_command);
         self
     }
 
-    /// \[command\] - specify the second command
+    /// `[command]` - specify the second command
     #[cfg(feature = "tmux_0_8")]
     pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
         self.0.push_param(command);

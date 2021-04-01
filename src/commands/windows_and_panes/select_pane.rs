@@ -70,98 +70,98 @@ impl<'a> SelectPane<'a> {
         Default::default()
     }
 
-    /// [-D] - pane below
+    /// `[-D]` - pane below
     #[cfg(feature = "tmux_1_3")]
     pub fn down(&mut self) -> &mut Self {
         self.0.push_flag(D_UPPERCASE_KEY);
         self
     }
 
-    /// [-d] - disable input
+    /// `[-d]` - disable input
     #[cfg(feature = "tmux_2_0")]
     pub fn disable(&mut self) -> &mut Self {
         self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
-    /// [-e] - enable input
+    /// `[-e]` - enable input
     #[cfg(feature = "tmux_2_0")]
     pub fn enable(&mut self) -> &mut Self {
         self.0.push_flag(E_LOWERCASE_KEY);
         self
     }
 
-    /// [-g] - show the current pane style
+    /// `[-g]` - show the current pane style
     #[cfg(feature = "tmux_2_1")]
     pub fn show_style(&mut self) -> &mut Self {
         self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
-    /// [-L] - pane left
+    /// `[-L]` - pane left
     #[cfg(feature = "tmux_1_3")]
     pub fn left(&mut self) -> &mut Self {
         self.0.push_flag(L_UPPERCASE_KEY);
         self
     }
 
-    /// [-l] - equivalent to last-pane command
+    /// `[-l]` - equivalent to last-pane command
     #[cfg(feature = "tmux_1_5")]
     pub fn last(&mut self) -> &mut Self {
         self.0.push_flag(L_LOWERCASE_KEY);
         self
     }
 
-    /// [-M] - clear marked pane
+    /// `[-M]` - clear marked pane
     #[cfg(feature = "tmux_2_1")]
     pub fn set_marked(&mut self) -> &mut Self {
         self.0.push_flag(M_UPPERCASE_KEY);
         self
     }
 
-    /// [-m] - set marked pane
+    /// `[-m]` - set marked pane
     #[cfg(feature = "tmux_2_1")]
     pub fn clear_marked(&mut self) -> &mut Self {
         self.0.push_flag(M_LOWERCASE_KEY);
         self
     }
 
-    /// [-R] - pane right
+    /// `[-R]` - pane right
     #[cfg(feature = "tmux_1_3")]
     pub fn right(&mut self) -> &mut Self {
         self.0.push_flag(R_UPPERCASE_KEY);
         self
     }
 
-    /// [-U] - pane above
+    /// `[-U]` - pane above
     #[cfg(feature = "tmux_1_3")]
     pub fn up(&mut self) -> &mut Self {
         self.0.push_flag(U_UPPERCASE_KEY);
         self
     }
 
-    /// [-Z] - keep the window zoomed if it was zoomed
+    /// `[-Z]` - keep the window zoomed if it was zoomed
     #[cfg(feature = "tmux_3_1")]
     pub fn keep_zoomed(&mut self) -> &mut Self {
         self.0.push_flag(Z_UPPERCASE_KEY);
         self
     }
 
-    /// [-P style] - set the style for a single pane
+    /// `[-P style]` - set the style for a single pane
     #[cfg(feature = "tmux_2_1")]
     pub fn style<S: Into<Cow<'a, str>>>(&mut self, style: S) -> &mut Self {
         self.0.push_option(P_UPPERCASE_KEY, style);
         self
     }
 
-    /// [-T title] - title
+    /// `[-T title]` - title
     #[cfg(feature = "tmux_2_6")]
     pub fn title<S: Into<Cow<'a, str>>>(&mut self, title: S) -> &mut Self {
         self.0.push_option(T_UPPERCASE_KEY, title);
         self
     }
 
-    /// [-t target-pane] - target-pane
+    /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_1_0")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);

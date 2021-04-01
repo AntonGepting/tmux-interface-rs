@@ -28,6 +28,7 @@ impl<'a> LockClient<'a> {
         Default::default()
     }
 
+    /// `[-t target-client]`
     #[cfg(feature = "tmux_1_1")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_client);

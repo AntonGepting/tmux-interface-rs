@@ -52,57 +52,57 @@ impl<'a> RefreshClient<'a> {
         Default::default()
     }
 
-    /// [-c] - return to tracking the cursor automatically
+    /// `[-c]` - return to tracking the cursor automatically
     #[cfg(feature = "tmux_2_9a")]
     pub fn tracking_cursor(&mut self) -> &mut Self {
         self.0.push_flag(C_LOWERCASE_KEY);
         self
     }
 
-    /// [-D] - move the visible part of a window down by `adjustment` rows
+    /// `[-D]` - move the visible part of a window down by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
     pub fn down(&mut self) -> &mut Self {
         self.0.push_flag(D_UPPERCASE_KEY);
         self
     }
 
-    /// [-l] - request the clipboard from the client using the xterm(1) escape sequence
+    /// `[-l]` - request the clipboard from the client using the xterm(1) escape sequence
     #[cfg(feature = "tmux_2_9a")]
     pub fn request_clipboard(&mut self) -> &mut Self {
         self.0.push_flag(L_LOWERCASE_KEY);
         self
     }
 
-    /// [-L] - move the visible part of a window left by `adjustment` columns
+    /// `[-L]` - move the visible part of a window left by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
     pub fn left(&mut self) -> &mut Self {
         self.0.push_flag(L_UPPERCASE_KEY);
         self
     }
 
-    /// [-R] - move the visible part of a window right by `adjustment` columns
+    /// `[-R]` - move the visible part of a window right by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
     pub fn right(&mut self) -> &mut Self {
         self.0.push_flag(R_UPPERCASE_KEY);
         self
     }
 
-    /// [-S] - only update the client's status line
+    /// `[-S]` - only update the client's status line
     #[cfg(feature = "tmux_1_6")]
     pub fn status_line(&mut self) -> &mut Self {
         self.0.push_flag(S_UPPERCASE_KEY);
         self
     }
 
-    /// [-U] - move the visible part of a window up by `adjustment` rows
+    /// `[-U]` - move the visible part of a window up by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
     pub fn up(&mut self) -> &mut Self {
         self.0.push_flag(U_UPPERCASE_KEY);
         self
     }
 
-    /// [-C X,Y] - set the width and height of a control client
-    /// [-C XxY] - set the width and height of a control client
+    /// `[-C X,Y]` - set the width and height of a control client
+    /// `[-C XxY]` - set the width and height of a control client
     #[cfg(feature = "tmux_2_4")]
     pub fn size(&mut self, size: (usize, usize)) -> &mut Self {
         #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_0")))]
@@ -115,21 +115,21 @@ impl<'a> RefreshClient<'a> {
         self
     }
 
-    /// [-F flags] - set a comma-separated list of flags
+    /// `[-F flags]` - set a comma-separated list of flags
     #[cfg(feature = "tmux_2_9a")]
     pub fn flags(&mut self, flags: &'a str) -> &mut Self {
         self.0.push_option(F_UPPERCASE_KEY, flags);
         self
     }
 
-    /// [-t target-client] - specify the client
+    /// `[-t target-client]` - specify the client
     #[cfg(feature = "tmux_0_8")]
     pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_client);
         self
     }
 
-    /// [adjustment] - moves the visible part up/down left/right by adjustment rows/columns
+    /// `[adjustment]` - moves the visible part up/down left/right by adjustment rows/columns
     #[cfg(feature = "tmux_2_9a")]
     pub fn adjustment(&mut self, adjustment: usize) -> &mut Self {
         self.0.push_param(adjustment.to_string());

@@ -52,42 +52,42 @@ impl<'a> AttachSession<'a> {
         Default::default()
     }
 
-    /// [-d] - any other clients attached to the session are detached
+    /// `[-d]` - any other clients attached to the session are detached
     #[cfg(feature = "tmux_0_8")]
     pub fn detach_other(&mut self) -> &mut Self {
         self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
-    /// [-E] - `update-environment` option will not be applied
+    /// `[-E]` - `update-environment` option will not be applied
     #[cfg(feature = "tmux_2_1")]
     pub fn not_update_env(&mut self) -> &mut Self {
         self.0.push_flag(E_UPPERCASE_KEY);
         self
     }
 
-    /// [-r] - signifies the client is read-only
+    /// `[-r]` - signifies the client is read-only
     #[cfg(feature = "tmux_1_2")]
     pub fn read_only(&mut self) -> &mut Self {
         self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 
-    /// [-x] - send SIGHUP to the parent process, detaching the client
+    /// `[-x]` - send SIGHUP to the parent process, detaching the client
     #[cfg(feature = "tmux_3_0")]
     pub fn parent_sighup(&mut self) -> &mut Self {
         self.0.push_flag(X_LOWERCASE_KEY);
         self
     }
 
-    /// [-c working-directory] - specify starting directory
+    /// `[-c working-directory]` - specify starting directory
     #[cfg(feature = "tmux_1_9")]
     pub fn working_directory<S: Into<Cow<'a, str>>>(&mut self, working_directory: S) -> &mut Self {
         self.0.push_option(C_LOWERCASE_KEY, working_directory);
         self
     }
 
-    /// [-t target-session] - specify target session name
+    /// `[-t target-session]` - specify target session name
     #[cfg(feature = "tmux_0_8")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_session);

@@ -46,48 +46,48 @@ impl<'a> PasteBuffer<'a> {
         Default::default()
     }
 
-    /// [-d] - delete the paste buffer
+    /// `[-d]` - delete the paste buffer
     pub fn delete(&mut self) -> &mut Self {
         self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
-    /// [-p] - paste bracket control codes are inserted around the buffer
+    /// `[-p]` - paste bracket control codes are inserted around the buffer
     #[cfg(feature = "tmux_1_7")]
     pub fn bracket_codes(&mut self) -> &mut Self {
         self.0.push_flag(P_LOWERCASE_KEY);
         self
     }
 
-    /// [-r] - do no replacement (equivalent to a separator of LF)
+    /// `[-r]` - do no replacement (equivalent to a separator of LF)
     #[cfg(feature = "tmux_1_0")]
     pub fn no_replacement(&mut self) -> &mut Self {
         self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 
-    /// [-b buffer-name] - specify the buffer mode
+    /// `[-b buffer-name]` - specify the buffer mode
     #[cfg(feature = "tmux_1_7")]
     pub fn buffer_name<S: Into<Cow<'a, str>>>(&mut self, buffer_name: S) -> &mut Self {
         self.0.push_option(B_LOWERCASE_KEY, buffer_name);
         self
     }
 
-    /// [-s separator] - specify a separator
+    /// `[-s separator]` - specify a separator
     #[cfg(feature = "tmux_1_3")]
     pub fn separator<S: Into<Cow<'a, str>>>(&mut self, separator: S) -> &mut Self {
         self.0.push_option(S_LOWERCASE_KEY, separator);
         self
     }
 
-    /// [-t target-pane] - specify the target pane
+    /// `[-t target-pane]` - specify the target pane
     #[cfg(feature = "tmux_1_7")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
-    /// [-t target-window] - specify the target window
+    /// `[-t target-window]` - specify the target window
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_window);

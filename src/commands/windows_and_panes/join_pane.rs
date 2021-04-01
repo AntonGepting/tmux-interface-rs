@@ -43,42 +43,42 @@ impl<'a> JoinPane<'a> {
         Default::default()
     }
 
-    /// [-b] - cause src-pane to be joined to left of or above dst-pane
+    /// `[-b]` - cause src-pane to be joined to left of or above dst-pane
     #[cfg(feature = "tmux_2_6")]
     pub fn left_above(&mut self) -> &mut Self {
         self.0.push_flag(B_LOWERCASE_KEY);
         self
     }
 
-    /// [-d] -
+    /// `[-d]` -
     #[cfg(feature = "tmux_1_2")]
     pub fn detached(&mut self) -> &mut Self {
         self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
-    /// [-f] - creates a new pane spanning the full window height/width
+    /// `[-f]` - creates a new pane spanning the full window height/width
     #[cfg(feature = "tmux_2_6")]
     pub fn full_size(&mut self) -> &mut Self {
         self.0.push_flag(F_LOWERCASE_KEY);
         self
     }
 
-    /// [-h] - full height
+    /// `[-h]` - full height
     #[cfg(feature = "tmux_1_2")]
     pub fn horizontal(&mut self) -> &mut Self {
         self.0.push_flag(H_LOWERCASE_KEY);
         self
     }
 
-    /// [-v] - full width
+    /// `[-v]` - full width
     #[cfg(feature = "tmux_1_2")]
     pub fn vertical(&mut self) -> &mut Self {
         self.0.push_flag(V_LOWERCASE_KEY);
         self
     }
 
-    /// [-l size] - specify the size of the new pane in lines/columns
+    /// `[-l size]` - specify the size of the new pane in lines/columns
     #[cfg(feature = "tmux_1_2")]
     pub fn size(&mut self, size: &PaneSize) -> &mut Self {
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_1")))]
@@ -96,14 +96,14 @@ impl<'a> JoinPane<'a> {
         self
     }
 
-    /// [-s src-pane] - src-pane
+    /// `[-s src-pane]` - src-pane
     #[cfg(feature = "tmux_1_2")]
     pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
         self.0.push_option(S_LOWERCASE_KEY, src_pane);
         self
     }
 
-    /// [-t dst-pane] - dst-pane
+    /// `[-t dst-pane]` - dst-pane
     #[cfg(feature = "tmux_1_2")]
     pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, dst_pane);

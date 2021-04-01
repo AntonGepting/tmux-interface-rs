@@ -44,42 +44,42 @@ impl<'a> FindWindow<'a> {
         Default::default()
     }
 
-    /// [-r] - regular expression
+    /// `[-r]` - regular expression
     #[cfg(feature = "tmux_3_0")]
     pub fn regex(&mut self) -> &mut Self {
         self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 
-    /// [-C] - match only visible window contents
+    /// `[-C]` - match only visible window contents
     #[cfg(feature = "tmux_1_7")]
     pub fn only_visible(&mut self) -> &mut Self {
         self.0.push_flag(C_UPPERCASE_KEY);
         self
     }
 
-    /// [-N] - match only the window name
+    /// `[-N]` - match only the window name
     #[cfg(feature = "tmux_1_7")]
     pub fn only_name(&mut self) -> &mut Self {
         self.0.push_flag(N_UPPERCASE_KEY);
         self
     }
 
-    /// [-T] - match only the window title
+    /// `[-T]` - match only the window title
     #[cfg(feature = "tmux_1_7")]
     pub fn only_title(&mut self) -> &mut Self {
         self.0.push_flag(T_UPPERCASE_KEY);
         self
     }
 
-    /// [-Z] - zoom the pane
+    /// `[-Z]` - zoom the pane
     #[cfg(feature = "tmux_3_0")]
     pub fn zoom(&mut self) -> &mut Self {
         self.0.push_flag(Z_UPPERCASE_KEY);
         self
     }
 
-    /// [-t target-pane] - target-pane
+    /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_0_8")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);

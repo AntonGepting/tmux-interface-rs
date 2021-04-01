@@ -65,95 +65,99 @@ impl<'a> SetOption<'a> {
         Default::default()
     }
 
-    /// [-a] - value is appended to the existing setting, if the option expects a string or a style
+    /// `[-a]` - value is appended to the existing setting, if the option expects a string or a style
     #[cfg(feature = "tmux_1_0")]
     pub fn append(&mut self) -> &mut Self {
         self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
-    /// [-F] - expand formats in the option value
+    /// `[-F]` - expand formats in the option value
     #[cfg(feature = "tmux_2_6")]
     pub fn format(&mut self) -> &mut Self {
         self.0.push_flag(F_UPPERCASE_KEY);
         self
     }
 
-    /// [-g] - the global session or window option is set
+    /// `[-g]` - the global session or window option is set
     #[cfg(feature = "tmux_0_8")]
     pub fn global(&mut self) -> &mut Self {
         self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
-    /// [-o] - prevents setting an option that is already set
+    /// `[-o]` - prevents setting an option that is already set
     #[cfg(feature = "tmux_1_8")]
     pub fn not_overwrite(&mut self) -> &mut Self {
         self.0.push_flag(O_LOWERCASE_KEY);
         self
     }
 
-    /// [-p] - set a pane option
+    /// `[-p]` - set a pane option
     #[cfg(feature = "tmux_3_0")]
     pub fn pane(&mut self) -> &mut Self {
         self.0.push_flag(P_LOWERCASE_KEY);
         self
     }
 
-    /// [-q] - suppress errors about unknown or ambiguous options
+    /// `[-q]` - suppress errors about unknown or ambiguous options
     #[cfg(feature = "tmux_1_7")]
     pub fn quiet(&mut self) -> &mut Self {
         self.0.push_flag(Q_LOWERCASE_KEY);
         self
     }
 
-    /// [-s] - set a server option
+    /// `[-s]` - set a server option
     #[cfg(feature = "tmux_1_2")]
     pub fn server(&mut self) -> &mut Self {
         self.0.push_flag(S_LOWERCASE_KEY);
         self
     }
 
-    /// [-u] - unset an option, so a session inherits the option from the global options
+    /// `[-u]` - unset an option, so a session inherits the option from the global options
     #[cfg(feature = "tmux_0_8")]
     pub fn unset(&mut self) -> &mut Self {
         self.0.push_flag(U_LOWERCASE_KEY);
         self
     }
 
-    /// [-w] - set a window option
+    /// `[-w]` - set a window option
     #[cfg(feature = "tmux_1_2")]
     pub fn window(&mut self) -> &mut Self {
         self.0.push_flag(W_LOWERCASE_KEY);
         self
     }
 
-    /// [-t target-pane] - specify the target-pane
+    /// `[-t target-pane]` - specify the target-pane
     #[cfg(feature = "tmux_3_0")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
-    /// [-t target-session | target-window]
+    /// `[-t target-session | target-window]`
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     pub fn target(&mut self, target: &'a str) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target);
         self
     }
 
-    /// [-t target-session]
+    /// `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
     pub fn target_session(&mut self, target_session: &'a str) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
 
+    // FIXME: option valuer pair in one fn
+
+    /// `option`
     pub fn option<S: Into<Cow<'a, str>>>(&mut self, option: S) -> &mut Self {
         self.0.push_param(option);
         self
     }
 
+    /// `value`
     pub fn value<S: Into<Cow<'a, str>>>(&mut self, value: S) -> &mut Self {
         self.0.push_param(value);
         self

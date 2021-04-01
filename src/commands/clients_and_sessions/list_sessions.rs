@@ -34,6 +34,7 @@ impl<'a> ListSessions<'a> {
         Default::default()
     }
 
+    /// `[-F format]`
     #[cfg(feature = "tmux_1_6")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
         self.0.push_option(F_UPPERCASE_KEY, format);

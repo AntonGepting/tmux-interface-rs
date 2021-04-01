@@ -32,18 +32,21 @@ impl<'a> ConfirmBefore<'a> {
         Default::default()
     }
 
+    /// `[-p prompt]`
     #[cfg(feature = "tmux_1_5")]
     pub fn prompt<S: Into<Cow<'a, str>>>(&mut self, prompt: S) -> &mut Self {
         self.0.push_option(P_LOWERCASE_KEY, prompt);
         self
     }
 
+    /// `[-t target-client]`
     #[cfg(feature = "tmux_0_9")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_client);
         self
     }
 
+    /// `command`
     #[cfg(feature = "tmux_0_9")]
     pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
         self.0.push_param(command);

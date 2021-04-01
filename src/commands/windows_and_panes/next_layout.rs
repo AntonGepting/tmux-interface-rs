@@ -28,6 +28,7 @@ impl<'a> NextLayout<'a> {
         Default::default()
     }
 
+    /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_window);

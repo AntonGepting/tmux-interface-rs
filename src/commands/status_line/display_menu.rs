@@ -29,46 +29,48 @@ impl<'a> DisplayMenu<'a> {
         Default::default()
     }
 
-    /// [-c target-client] - target-client
+    /// `[-c target-client]` - target-client
     #[cfg(feature = "tmux_3_0")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
         self.0.push_option(C_LOWERCASE_KEY, target_client);
         self
     }
 
-    /// [-t target-pane] - target-pane
+    /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_3_0")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
-    /// [-T title] - title
+    /// `[-T title]` - title
     #[cfg(feature = "tmux_3_0")]
     pub fn title<S: Into<Cow<'a, str>>>(&mut self, title: S) -> &mut Self {
         self.0.push_option(T_UPPERCASE_KEY, title);
         self
     }
 
-    /// [-x position] - x position of the menu
+    /// `[-x position]` - x position of the menu
     #[cfg(feature = "tmux_3_0")]
     pub fn x(&mut self, x: usize) -> &mut Self {
         self.0.push_option(X_LOWERCASE_KEY, x.to_string());
         self
     }
 
-    /// [-y position] - y position of the menu
+    /// `[-y position]` - y position of the menu
     #[cfg(feature = "tmux_3_0")]
     pub fn y(&mut self, y: usize) -> &mut Self {
         self.0.push_option(Y_LOWERCASE_KEY, y.to_string());
         self
     }
 
+    /// `name`
     pub fn name<S: Into<Cow<'a, str>>>(&mut self, name: S) -> &mut Self {
         self.0.push_param(name);
         self
     }
 
+    /// `key`
     pub fn key<S: Into<Cow<'a, str>>>(&mut self, key: S) -> &mut Self {
         self.0.push_param(key);
         self

@@ -38,24 +38,28 @@ impl<'a> ShowEnvironment<'a> {
         Default::default()
     }
 
+    /// `[-g]`
     #[cfg(feature = "tmux_1_0")]
     pub fn global(&mut self) -> &mut Self {
         self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
+    /// `[-s]`
     #[cfg(feature = "tmux_2_1")]
     pub fn as_shell_commands(&mut self) -> &mut Self {
         self.0.push_flag(S_LOWERCASE_KEY);
         self
     }
 
+    /// `[-t target-session]`
     #[cfg(feature = "tmux_1_0")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
 
+    /// `[variable]`
     #[cfg(feature = "tmux_1_7")]
     pub fn variable<S: Into<Cow<'a, str>>>(&mut self, variable: S) -> &mut Self {
         self.0.push_param(variable);

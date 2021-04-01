@@ -41,28 +41,28 @@ impl<'a> LastPane<'a> {
         Default::default()
     }
 
-    /// [-d]
+    /// `[-d]`
     #[cfg(feature = "tmux_2_0")]
     pub fn disable(&mut self) -> &mut Self {
         self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
-    /// [-e]
+    /// `[-e]`
     #[cfg(feature = "tmux_2_0")]
     pub fn enable(&mut self) -> &mut Self {
         self.0.push_flag(E_LOWERCASE_KEY);
         self
     }
 
-    /// [-Z]
+    /// `[-Z]`
     #[cfg(feature = "tmux_3_1")]
     pub fn keep_zoomed(&mut self) -> &mut Self {
         self.0.push_flag(Z_UPPERCASE_KEY);
         self
     }
 
-    /// [-t target-window]
+    /// `[-t target-window]`
     #[cfg(feature = "tmux_1_4")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_window);

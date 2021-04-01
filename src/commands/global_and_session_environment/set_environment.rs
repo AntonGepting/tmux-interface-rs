@@ -28,41 +28,42 @@ impl<'a> SetEnvironment<'a> {
         Default::default()
     }
 
-    /// [-g] - make change in the global environment
+    /// `[-g]` - make change in the global environment
     #[cfg(feature = "tmux_1_0")]
     pub fn global(&mut self) -> &mut Self {
         self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
-    /// [-r] - remove the variable from the environment before starting a new process
+    /// `[-r]` - remove the variable from the environment before starting a new process
     #[cfg(feature = "tmux_1_0")]
     pub fn remove(&mut self) -> &mut Self {
         self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 
-    /// [-u] - unset a variable
+    /// `[-u]` - unset a variable
     #[cfg(feature = "tmux_1_0")]
     pub fn unset(&mut self) -> &mut Self {
         self.0.push_flag(U_LOWERCASE_KEY);
         self
     }
 
-    /// [-t target-session] - target-session
+    /// `[-t target-session]` - target-session
     #[cfg(feature = "tmux_1_0")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
 
+    /// `name`
     #[cfg(feature = "tmux_1_0")]
     pub fn name<S: Into<Cow<'a, str>>>(&mut self, name: S) -> &mut Self {
         self.0.push_param(name);
         self
     }
 
-    /// \[value\] - specify the value
+    /// `[value]` - specify the value
     #[cfg(feature = "tmux_1_0")]
     pub fn value<S: Into<Cow<'a, str>>>(&mut self, value: S) -> &mut Self {
         self.0.push_param(value);

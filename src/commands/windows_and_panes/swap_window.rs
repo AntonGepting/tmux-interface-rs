@@ -28,18 +28,21 @@ impl<'a> SwapWindow<'a> {
         Default::default()
     }
 
+    /// `[-d]`
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
         self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
+    /// `[-s src-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn src_window<S: Into<Cow<'a, str>>>(&mut self, src_window: S) -> &mut Self {
         self.0.push_option(S_LOWERCASE_KEY, src_window);
         self
     }
 
+    /// `[-t dst-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, dst_window);

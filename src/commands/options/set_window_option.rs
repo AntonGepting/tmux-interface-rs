@@ -55,60 +55,62 @@ impl<'a> SetWindowOption<'a> {
         Default::default()
     }
 
-    /// [-a] -
+    /// `[-a]` -
     #[cfg(feature = "tmux_1_0")]
     pub fn append(&mut self) -> &mut Self {
         self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
-    /// [-F] -
+    /// `[-F]` -
     #[cfg(feature = "tmux_2_6")]
     pub fn format(&mut self) -> &mut Self {
         self.0.push_flag(F_UPPERCASE_KEY);
         self
     }
 
-    /// [-g] -
+    /// `[-g]` -
     #[cfg(feature = "tmux_0_8")]
     pub fn global(&mut self) -> &mut Self {
         self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
-    /// [-o] -
+    /// `[-o]` -
     #[cfg(feature = "tmux_1_9")]
     pub fn not_overwrite(&mut self) -> &mut Self {
         self.0.push_flag(O_LOWERCASE_KEY);
         self
     }
 
-    /// [-q] -
+    /// `[-q]` -
     #[cfg(feature = "tmux_1_7")]
     pub fn quiet(&mut self) -> &mut Self {
         self.0.push_flag(Q_LOWERCASE_KEY);
         self
     }
 
-    /// [-u] -
+    /// `[-u]` -
     #[cfg(feature = "tmux_0_8")]
     pub fn unset(&mut self) -> &mut Self {
         self.0.push_flag(U_LOWERCASE_KEY);
         self
     }
 
-    /// [-t target-window] -
+    /// `[-t target-window]` -
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 
+    /// `option`
     pub fn option<S: Into<Cow<'a, str>>>(&mut self, option: S) -> &mut Self {
         self.0.push_param(option);
         self
     }
 
+    /// `value`
     pub fn value<S: Into<Cow<'a, str>>>(&mut self, value: S) -> &mut Self {
         self.0.push_param(value);
         self

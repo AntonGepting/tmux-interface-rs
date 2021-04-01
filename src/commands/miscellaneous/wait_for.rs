@@ -34,24 +34,28 @@ impl<'a> WaitFor<'a> {
         Default::default()
     }
 
+    /// `[-L]`
     #[cfg(feature = "tmux_1_8")]
     pub fn locked(&mut self) -> &mut Self {
         self.0.push_flag(L_UPPERCASE_KEY);
         self
     }
 
+    /// `[-S]`
     #[cfg(feature = "tmux_1_8")]
     pub fn woken(&mut self) -> &mut Self {
         self.0.push_flag(S_UPPERCASE_KEY);
         self
     }
 
+    /// `[-U]`
     #[cfg(feature = "tmux_1_8")]
     pub fn unlocked(&mut self) -> &mut Self {
         self.0.push_flag(U_UPPERCASE_KEY);
         self
     }
 
+    /// `channel`
     #[cfg(feature = "tmux_1_8")]
     pub fn channel<S: Into<Cow<'a, str>>>(&mut self, channel: S) -> &mut Self {
         self.0.push_param(channel);

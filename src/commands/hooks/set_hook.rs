@@ -42,42 +42,49 @@ impl<'a> SetHook<'a> {
         Default::default()
     }
 
+    /// `[-a]`
     #[cfg(feature = "tmux_3_0")]
     pub fn append(&mut self) -> &mut Self {
         self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
+    /// `[-g]`
     #[cfg(feature = "tmux_2_2")]
     pub fn global(&mut self) -> &mut Self {
         self.0.push_flag(G_LOWERCASE_KEY);
         self
     }
 
+    /// `[-R]`
     #[cfg(feature = "tmux_2_8")]
     pub fn run(&mut self) -> &mut Self {
         self.0.push_flag(R_UPPERCASE_KEY);
         self
     }
 
+    /// `[-u]`
     #[cfg(feature = "tmux_2_4")]
     pub fn unset(&mut self) -> &mut Self {
         self.0.push_flag(U_LOWERCASE_KEY);
         self
     }
 
+    /// `[-t target-session]`
     #[cfg(feature = "tmux_2_2")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_session);
         self
     }
 
+    /// `hook-name`
     #[cfg(feature = "tmux_2_2")]
-    pub fn name<S: Into<Cow<'a, str>>>(&mut self, name: S) -> &mut Self {
+    pub fn hook_name<S: Into<Cow<'a, str>>>(&mut self, name: S) -> &mut Self {
         self.0.push_param(name);
         self
     }
 
+    /// `command`
     #[cfg(feature = "tmux_2_2")]
     pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
         self.0.push_param(command);

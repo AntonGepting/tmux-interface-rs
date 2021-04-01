@@ -60,63 +60,63 @@ impl<'a> BreakPane<'a> {
         Default::default()
     }
 
-    /// [-d] - the new window does not become the current window
+    /// `[-d]` - the new window does not become the current window
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
         self.0.push_flag(D_LOWERCASE_KEY);
         self
     }
 
-    /// [-P] - option prints information about the new window after it has been created
+    /// `[-P]` - option prints information about the new window after it has been created
     #[cfg(feature = "tmux_1_7")]
     pub fn print(&mut self) -> &mut Self {
         self.0.push_flag(P_UPPERCASE_KEY);
         self
     }
 
-    /// [-F format] - specify format
+    /// `[-F format]` - specify format
     #[cfg(feature = "tmux_1_7")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
         self.0.push_option(F_UPPERCASE_KEY, format);
         self
     }
 
-    /// [-n] - window-name
+    /// `[-n]` - window-name
     #[cfg(feature = "tmux_2_4")]
     pub fn window_name<S: Into<Cow<'a, str>>>(&mut self, window_name: S) -> &mut Self {
         self.0.push_option(N_LOWERCASE_KEY, window_name);
         self
     }
 
-    /// [-s src-pane] - src-pane
+    /// `[-s src-pane]` - src-pane
     #[cfg(feature = "tmux_2_1")]
     pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
         self.0.push_option(S_LOWERCASE_KEY, src_pane);
         self
     }
 
-    /// [-t dst-pane] - dst-pane
+    /// `[-t dst-pane]` - dst-pane
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
     pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, dst_pane);
         self
     }
 
-    /// [-t dst-window] - dst-window
+    /// `[-t dst-window]` - dst-window
     #[cfg(feature = "tmux_2_2")]
     pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, dst_window);
         self
     }
 
-    /// [-t target-window] - target-window
+    /// `[-t target-window]` - target-window
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 
-    /// [-t target-pane] - target-pane
+    /// `[-t target-pane]` - target-pane
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);
@@ -124,7 +124,7 @@ impl<'a> BreakPane<'a> {
     }
 
     // FIXME:
-    /// [-p pane-index] - pane-index
+    // `[-p pane-index]` - pane-index
 
     pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()

@@ -56,30 +56,36 @@ impl<'a> UnbindKey<'a> {
         Default::default()
     }
 
+    /// `[-a]`
     #[cfg(feature = "tmux_1_4")]
     pub fn all(&mut self) -> &mut Self {
         self.0.push_flag(A_LOWERCASE_KEY);
         self
     }
 
+    /// `[-c]`
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
     pub fn command_mode(&mut self) -> &mut Self {
         self.0.push_flag(C_LOWERCASE_KEY);
         self
     }
 
+    /// `[-n]`
     #[cfg(feature = "tmux_1_0")]
     pub fn root(&mut self) -> &mut Self {
         self.0.push_flag(N_LOWERCASE_KEY);
         self
     }
 
+    /// `[-t mode-key]`
     #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
     pub fn mode_key<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, key_table);
         self
     }
 
+    /// `[-t key-table]`
+    /// `[-T key-table]`
     #[cfg(feature = "tmux_1_0")]
     pub fn key_table<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
@@ -89,6 +95,7 @@ impl<'a> UnbindKey<'a> {
         self
     }
 
+    /// `key`
     #[cfg(feature = "tmux_0_8")]
     pub fn key<S: Into<Cow<'a, str>>>(&mut self, key: S) -> &mut Self {
         self.0.push_param(key);

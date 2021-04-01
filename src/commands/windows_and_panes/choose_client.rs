@@ -47,63 +47,63 @@ impl<'a> ChooseClient<'a> {
         Default::default()
     }
 
-    /// [-N] - start without the preview
+    /// `[-N]` - start without the preview
     #[cfg(feature = "tmux_2_6")]
     pub fn without_preview(&mut self) -> &mut Self {
         self.0.push_flag(N_UPPERCASE_KEY);
         self
     }
 
-    /// [-r] - reverse the sort order
+    /// `[-r]` - reverse the sort order
     #[cfg(feature = "tmux_3_1")]
     pub fn reverse_sort_order(&mut self) -> &mut Self {
         self.0.push_flag(R_LOWERCASE_KEY);
         self
     }
 
-    /// [-Z] - zoom the pane
+    /// `[-Z]` - zoom the pane
     #[cfg(feature = "tmux_3_1")]
     pub fn zoom(&mut self) -> &mut Self {
         self.0.push_flag(Z_UPPERCASE_KEY);
         self
     }
 
-    /// [-F format] - format
+    /// `[-F format]` - format
     #[cfg(feature = "tmux_1_7")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
         self.0.push_option(F_UPPERCASE_KEY, format);
         self
     }
 
-    /// [-f filter] - specify an initial filter
+    /// `[-f filter]` - specify an initial filter
     #[cfg(feature = "tmux_2_6")]
     pub fn filter<S: Into<Cow<'a, str>>>(&mut self, filter: S) -> &mut Self {
         self.0.push_option(F_LOWERCASE_KEY, filter);
         self
     }
 
-    /// [-O sort-order] - specify the initial sort field
+    /// `[-O sort-order]` - specify the initial sort field
     #[cfg(feature = "tmux_2_6")]
     pub fn sort_order<S: Into<Cow<'a, str>>>(&mut self, sort_order: S) -> &mut Self {
         self.0.push_option(O_UPPERCASE_KEY, sort_order);
         self
     }
 
-    /// [-t target-pane] - target-pane
+    /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_2_6")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_pane);
         self
     }
 
-    /// [-t target-window] - target-window
+    /// `[-t target-window]` - target-window
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.0.push_option(T_LOWERCASE_KEY, target_window);
         self
     }
 
-    /// \[template\] - template
+    /// `[template]` - template
     #[cfg(feature = "tmux_1_0")]
     pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
         self.0.push_param(template);
