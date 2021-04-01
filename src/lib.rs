@@ -230,8 +230,6 @@ pub mod variables;
 
 pub mod version;
 
-pub mod tmux_tests;
-
 // common options
 pub use crate::options::StatusKeys;
 pub use crate::options::Switch;
