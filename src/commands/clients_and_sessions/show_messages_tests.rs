@@ -32,7 +32,7 @@ fn show_messages() {
     #[cfg(feature = "tmux_1_9")]
     show_messages.terminals();
     #[cfg(feature = "tmux_1_2")]
-    show_messages.start_directory("1");
+    show_messages.target_client("1");
 
     #[cfg(not(feature = "use_cmd_alias"))]
     let cmd = "show-messages";
