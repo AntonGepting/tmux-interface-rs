@@ -28,7 +28,7 @@
       // or directly
       NewSession::new().detached().session_name(...)...(...).output().unwrap();
       ```
-
+    - rename crate feature `use_cmd_alias` -> `cmd_alias`
 
 ## tmux_interface v0.0.7
 - add cargo feature `use_cmd_alias` for alias support for tmux commands
