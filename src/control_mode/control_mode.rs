@@ -1,4 +1,5 @@
-use std::str::Lines;
+use std::io::BufRead;
+use std::io::Lines;
 
 /// `%begin`
 #[cfg(feature = "tmux_1_8")]
@@ -172,24 +173,24 @@ pub enum Response {
     WindowRenamed(String, String),
 }
 
-pub struct ControlModeOutput<'a> {
-    pub lines: Lines<'a>,
-}
+#[derive(Debug)]
+pub struct ControlModeOutput<B: BufRead>(pub Lines<B>);
 
-impl<'a> ControlModeOutput<'a> {
-    pub fn new(s: &'a str) -> Self {
-        ControlModeOutput { lines: s.lines() }
+impl<B: BufRead> ControlModeOutput<B> {
+    pub fn new(s: Lines<B>) -> Self {
+        ControlModeOutput(s)
     }
 
     // TODO: remove unwrap
-    pub fn check_main(lines: &mut Lines) -> Option<Response> {
+    pub fn check_main(lines: &mut Lines<B>) -> Option<Response> {
         let mut _time: usize = 0;
         let mut _num: usize = 0;
         let mut output_block = OutputBlock::default();
 
         // checking in loop, bc 3 parts block may be returned (`%begin ... data .. %end/%error`)
         for line in lines {
-            if let Some(output) = ControlModeOutput::check(line) {
+            let output = ControlModeOutput::<B>::check(line.unwrap());
+            if let Some(output) = output {
                 // check if output is part of output block?
                 match output {
                     // if output block detected combine it from parts (`%begin ... data ... %end/%error`)
@@ -232,12 +233,12 @@ impl<'a> ControlModeOutput<'a> {
     /// it just data line without any keyword
     // TODO: Result/Option parsing errors?
     // mb. option for fields too, if parse errors occur?
-    pub fn check(line: &'a str) -> Option<Response> {
-        match line {
+    pub fn check<S: AsRef<str> + std::fmt::Display>(line: S) -> Option<Response> {
+        match line.as_ref() {
             // start of output block
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(OUTPUT_BLOCK_BEGIN) => {
-                let v: Vec<_> = line.split(CONTROL_MODE_SEPARATOR).collect();
+                let v: Vec<_> = s.split(CONTROL_MODE_SEPARATOR).collect();
                 let time = v.get(1).unwrap().parse::<usize>().unwrap();
                 let num = v.get(2).unwrap().parse::<usize>().unwrap();
                 Some(Response::OutputBlockBegin(time, num))
@@ -246,7 +247,7 @@ impl<'a> ControlModeOutput<'a> {
             // end of output block (successed)
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(OUTPUT_BLOCK_END) => {
-                let v: Vec<_> = line.split(CONTROL_MODE_SEPARATOR).collect();
+                let v: Vec<_> = s.split(CONTROL_MODE_SEPARATOR).collect();
                 let time = v.get(1).unwrap().parse::<usize>().unwrap();
                 let num = v.get(2).unwrap().parse::<usize>().unwrap();
                 Some(Response::OutputBlockEnd(time, num))
@@ -255,7 +256,7 @@ impl<'a> ControlModeOutput<'a> {
             // end of output block (error)
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(OUTPUT_BLOCK_ERROR) => {
-                let v: Vec<_> = line.split(CONTROL_MODE_SEPARATOR).collect();
+                let v: Vec<_> = s.split(CONTROL_MODE_SEPARATOR).collect();
                 let time = v.get(1).unwrap().parse::<usize>().unwrap();
                 let num = v.get(2).unwrap().parse::<usize>().unwrap();
                 Some(Response::OutputBlockError(time, num))
@@ -469,16 +470,16 @@ impl<'a> ControlModeOutput<'a> {
     }
 }
 
-impl<'a> Iterator for ControlModeOutput<'a> {
+impl<B: BufRead> Iterator for ControlModeOutput<B> {
     type Item = Response;
 
     fn next(&mut self) -> Option<Self::Item> {
-        ControlModeOutput::check_main(&mut self.lines)
+        ControlModeOutput::check_main(&mut self.0)
     }
 }
 
-impl<'a> From<&'a str> for ControlModeOutput<'a> {
-    fn from(item: &'a str) -> Self {
-        ControlModeOutput::new(item)
-    }
-}
+//impl<'a> From<&'a str> for ControlModeOutput<'a> {
+//fn from(item: &'a str) -> Self {
+//ControlModeOutput::new(item)
+//}
+//}

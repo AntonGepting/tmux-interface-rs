@@ -109,7 +109,7 @@ fn next() {
 
     let s = "%begin 1618081916 17688 1\n0: 3 windows (created Sat Apr 10 13:01:08 2021) (attached)\n%end 1618081916 17688 1\n%session-changed $0 0";
 
-    let mut control_mode = ControlModeOutput::new(&s);
+    let mut control_mode = ControlModeOutput::new(s.lines());
     let output = control_mode.next().unwrap();
     dbg!(output);
     let output = control_mode.next().unwrap();
@@ -123,7 +123,7 @@ fn for_loop() {
     //let s = "%begin 1618060545 6300 0\n%end 1618060546 6300 0\n%session-changed $0 0";
     let s = "%begin 1618081916 17688 1\n0: 3 windows (created Sat Apr 10 13:01:08 2021) (attached)\n%end 1618081916 17688 1\n%session-changed $0 0";
 
-    let mut control_mode = ControlModeOutput::new(&s);
+    let mut control_mode = ControlModeOutput::new(s.lines());
     for output in control_mode {
         dbg!(output);
     }
