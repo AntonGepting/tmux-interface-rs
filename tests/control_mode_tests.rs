@@ -1,8 +1,9 @@
-use std::io::{BufRead, BufReader, Error, ErrorKind};
-use std::process::{Command, Stdio};
-
 #[test]
 fn control_mode() {
+    use std::io::{BufRead, BufReader, Error, ErrorKind};
+    use std::process::{Command, Stdio};
+    use tmux_interface::control_mode::control_mode::ControlModeOutput;
+
     let stdout = Command::new("tmux")
         .args(&["-C", "attach", "-t", "0"])
         .stdout(Stdio::piped())
@@ -14,8 +15,8 @@ fn control_mode() {
 
     let reader = BufReader::new(stdout);
 
-    reader
-        .lines()
-        .filter_map(|line| line.ok())
-        .for_each(|line| println!("{}", line));
+    let mut control_mode = ControlModeOutput::new(reader.lines());
+    for output in control_mode {
+        dbg!(output);
+    }
 }

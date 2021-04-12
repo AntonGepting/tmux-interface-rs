@@ -189,7 +189,7 @@ impl<B: BufRead> ControlModeOutput<B> {
 
         // checking in loop, bc 3 parts block may be returned (`%begin ... data .. %end/%error`)
         for line in lines {
-            let output = ControlModeOutput::<B>::check(line.unwrap());
+            let output = line.unwrap().control_mode_line();
             if let Some(output) = output {
                 // check if output is part of output block?
                 match output {
@@ -227,14 +227,30 @@ impl<B: BufRead> ControlModeOutput<B> {
         }
         None
     }
+}
 
+impl<B: BufRead> Iterator for ControlModeOutput<B> {
+    type Item = Response;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        ControlModeOutput::check_main(&mut self.0)
+    }
+}
+
+// single line process
+pub trait ControlModeLine {
+    fn control_mode_line(&self) -> Option<Response>;
+}
+
+//
+impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
     // TODO: remove unwrap()
     /// function takes one line and matches it against output block keywords, notifications, or is
     /// it just data line without any keyword
     // TODO: Result/Option parsing errors?
     // mb. option for fields too, if parse errors occur?
-    pub fn check<S: AsRef<str> + std::fmt::Display>(line: S) -> Option<Response> {
-        match line.as_ref() {
+    fn control_mode_line(&self) -> Option<Response> {
+        match self.as_ref() {
             // start of output block
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(OUTPUT_BLOCK_BEGIN) => {
@@ -465,16 +481,8 @@ impl<B: BufRead> ControlModeOutput<B> {
 
             // `...` - data inside `%begin ... %end`
             #[cfg(feature = "tmux_1_8")]
-            _ => Some(Response::OutputBlockData(line.to_string())),
+            _ => Some(Response::OutputBlockData(self.to_string())),
         }
-    }
-}
-
-impl<B: BufRead> Iterator for ControlModeOutput<B> {
-    type Item = Response;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        ControlModeOutput::check_main(&mut self.0)
     }
 }
 
