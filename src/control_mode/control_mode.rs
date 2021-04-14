@@ -97,7 +97,14 @@ pub struct OutputBlock {
 // str vs String
 impl OutputBlock {}
 
+// ADR: OutputBlock begin/end/error need some mid structure, this is output for user
+//enum ControlModeOutput {
+//OutputBlock(OutputBlock),
+//Notification<Notification>
+//}
+
 // XXX: rename
+// XXX: String -> &'a str?
 #[derive(Debug, PartialEq)]
 pub enum Response {
     /// %begin seconds-from-epoch command-number flags
@@ -113,6 +120,7 @@ pub enum Response {
     #[cfg(feature = "tmux_1_8")]
     OutputBlockData(String),
     /// not exist as one-line tmux output, combined from parts (`%begin ... data ... %end/%error`)
+    #[cfg(feature = "tmux_1_8")]
     OutputBlock(OutputBlock),
     /// `%client-detached client`
     #[cfg(feature = "tmux_2_2")]
@@ -185,6 +193,7 @@ impl<B: BufRead> ControlModeOutput<B> {
     }
 
     // TODO: remove unwrap
+    // TODO: rename
     pub fn check_main(lines: &mut Lines<B>) -> Option<Response> {
         let mut _time: usize = 0;
         let mut _num: usize = 0;
@@ -339,8 +348,8 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let v: Vec<_> = s
                     .splitn(2, CONTROL_MODE_EXTENDED_OUTPUT_SEPARATOR)
                     .collect();
-                let s = v.get(1).unwrap();
-                let value = v.get(2).unwrap();
+                let s = v.get(0).unwrap();
+                let value = v.get(1).unwrap();
 
                 // split first part using ' '
                 let v: Vec<_> = s
@@ -349,6 +358,7 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                     .collect();
                 let pane_id = v.get(1).unwrap();
                 let age = v.get(2).unwrap();
+
                 // XXX: if v[3] not exists?
                 let reserved = v[3..].to_vec();
                 Ok(Response::ExtendedOutput(
@@ -504,7 +514,6 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_WINDOW_RENAMED) => {
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
-                dbg!(&v);
                 let window_id = v.get(1).unwrap();
                 let name = v.get(2).unwrap();
                 Ok(Response::WindowRenamed(

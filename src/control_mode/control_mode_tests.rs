@@ -33,16 +33,18 @@ fn control_mode_line() {
     // %client-detached client
     #[cfg(feature = "tmux_2_2")]
     {
-        let output = "%client-detached 1".control_mode_line().unwrap();
-        assert_eq!(Response::ClientDetached("1".to_string()), output);
+        let output = "%client-detached 1 2".control_mode_line().unwrap();
+        assert_eq!(Response::ClientDetached("1 2".to_string()), output);
     }
 
     // %client-session-changed client session-id name
     #[cfg(feature = "tmux_2_4")]
     {
-        let output = "%client-session-changed 1 2 3".control_mode_line().unwrap();
+        let output = "%client-session-changed 1 2 3 4"
+            .control_mode_line()
+            .unwrap();
         assert_eq!(
-            Response::ClientSessionChanged("1".to_string(), "2".to_string(), "3".to_string()),
+            Response::ClientSessionChanged("1".to_string(), "2".to_string(), "3 4".to_string()),
             output
         );
     }
@@ -59,14 +61,22 @@ fn control_mode_line() {
     {
         let output = "%exit 1".control_mode_line().unwrap();
         assert_eq!(Response::Exit(Some("1".to_string())), output);
+
+        let output = "%exit".control_mode_line().unwrap();
+        assert_eq!(Response::Exit(None), output);
     }
 
     // `%extended-output pane-id age ... : value`
     #[cfg(feature = "tmux_X_X")]
     {
-        let output = "%extended-output 1 2 3".control_mode_line().unwrap();
+        let output = "%extended-output 1 2 3 : 4".control_mode_line().unwrap();
         assert_eq!(
-            Response::ExtendedOutput("1".to_string(), "2".to_string(), "3".to_string()),
+            Response::ExtendedOutput(
+                "1".to_string(),
+                "2".to_string(),
+                vec!["3".to_string()],
+                "4".to_string()
+            ),
             output
         );
     }
@@ -74,18 +84,18 @@ fn control_mode_line() {
     // tmux ^2.2 `%layout-change window-id window-layout window-visible-layout`
     #[cfg(feature = "tmux_2_2")]
     {
-        let output = "%layout-change 1 2 3".control_mode_line().unwrap();
+        let output = "%layout-change 1 2 3 4".control_mode_line().unwrap();
         assert_eq!(
-            Response::LayoutChange("1".to_string(), "2".to_string(), "3".to_string()),
+            Response::LayoutChange("1".to_string(), "2".to_string(), "3 4".to_string()),
             output
         );
     }
     // tmux ^1.8 `%layout-change window-id window-layout`
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2")))]
     {
-        let output = "%layout-change 1 2".control_mode_line().unwrap();
+        let output = "%layout-change 1 2 3".control_mode_line().unwrap();
         assert_eq!(
-            Response::LayoutChange("1".to_string(), "2".to_string()),
+            Response::LayoutChange("1".to_string(), "2 3".to_string()),
             output
         );
     }
@@ -95,8 +105,8 @@ fn control_mode_line() {
     // %output %2 \015\012test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s\015\012\015\012
     #[cfg(feature = "tmux_1_8")]
     {
-        let output = "%output 1 2".control_mode_line().unwrap();
-        assert_eq!(Response::Output("1".to_string(), "2".to_string()), output);
+        let output = "%output 1 2 3".control_mode_line().unwrap();
+        assert_eq!(Response::Output("1".to_string(), "2 3".to_string()), output);
     }
 
     // %pane-mode-changed pane-id
@@ -116,9 +126,9 @@ fn control_mode_line() {
     // %session-changed session-id name
     #[cfg(feature = "tmux_1_8")]
     {
-        let output = "%session-changed $1 2".control_mode_line().unwrap();
+        let output = "%session-changed $1 2 3".control_mode_line().unwrap();
         assert_eq!(
-            Response::SessionChanged("$1".to_string(), "2".to_string()),
+            Response::SessionChanged("$1".to_string(), "2 3".to_string()),
             output
         );
     }
@@ -126,8 +136,8 @@ fn control_mode_line() {
     // %session-renamed name
     #[cfg(feature = "tmux_1_8")]
     {
-        let output = "%session-renamed 1".control_mode_line().unwrap();
-        assert_eq!(Response::SessionRenamed("1".to_string()), output);
+        let output = "%session-renamed 1 2".control_mode_line().unwrap();
+        assert_eq!(Response::SessionRenamed("1 2".to_string()), output);
     }
 
     // %session-window-changed session-id window-id
@@ -196,9 +206,9 @@ fn control_mode_line() {
     // %window-renamed window-id name
     #[cfg(feature = "tmux_1_8")]
     {
-        let output = "%window-renamed 1 2".control_mode_line().unwrap();
+        let output = "%window-renamed 1 2 3".control_mode_line().unwrap();
         assert_eq!(
-            Response::WindowRenamed("1".to_string(), "2".to_string()),
+            Response::WindowRenamed("1".to_string(), "2 3".to_string()),
             output
         );
     }
@@ -206,7 +216,7 @@ fn control_mode_line() {
 
 #[test]
 fn next() {
-    use crate::control_mode::control_mode::ControlModeOutput;
+    use crate::control_mode::control_mode::{ControlModeOutput, OutputBlock, Response};
     use std::io::{BufRead, BufReader};
 
     let s = "%begin 1618081916 17688 1\n0: 3 windows (created Sat Apr 10 13:01:08 2021) (attached)\n%end 1618081916 17688 1\n%session-changed $0 0";
@@ -215,24 +225,36 @@ fn next() {
 
     let mut cm_mode_lines = ControlModeOutput::new(lines);
     let cm_mode_line = cm_mode_lines.next().unwrap();
-    dbg!(cm_mode_line);
+    let output_block = Response::OutputBlock(OutputBlock {
+        time: 1618081916,
+        num: 17688,
+        flags: 1,
+        success: true,
+        data: Some("0: 3 windows (created Sat Apr 10 13:01:08 2021) (attached)".to_string()),
+    });
+    assert_eq!(cm_mode_line, output_block);
+
     let cm_mode_line = cm_mode_lines.next().unwrap();
-    dbg!(cm_mode_line);
+    let output_block = Response::SessionChanged("$0".to_string(), "0".to_string());
+    assert_eq!(cm_mode_line, output_block);
 }
 
 #[test]
 fn for_loop() {
-    use crate::control_mode::control_mode::ControlModeOutput;
+    use crate::control_mode::control_mode::{ControlModeOutput, Response};
     use std::io::{BufRead, BufReader};
 
-    //let s = "%begin 1618060545 6300 0\n%end 1618060546 6300 0\n%session-changed $0 0";
-    let s = "%begin 1618081916 17688 1\n0: 3 windows (created Sat Apr 10 13:01:08 2021) (attached)\n%end 1618081916 17688 1\n%session-changed $0 0";
+    let s = "%begin 1618081916 17688 0\n%end 1618081916 17688 0\n%session-changed $0 0";
     let s = BufReader::new(s.as_bytes());
     let lines = s.lines();
 
     let cm_mode_lines = ControlModeOutput::new(lines);
     for cm_mode_line in cm_mode_lines {
-        dbg!(cm_mode_line);
+        match cm_mode_line {
+            Response::OutputBlock(_) => {}
+            Response::SessionChanged(_, _) => {}
+            _ => {}
+        }
     }
 }
 
