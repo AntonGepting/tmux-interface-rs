@@ -87,7 +87,6 @@ pub const CONTROL_MODE_EXTENDED_OUTPUT_SEPARATOR: &str = " : ";
 pub struct OutputBlock {
     pub time: usize,
     pub num: usize,
-    // NOTE: undocumented in tmux man, check later
     pub flags: usize,
     pub success: bool,
     pub data: Option<String>,
