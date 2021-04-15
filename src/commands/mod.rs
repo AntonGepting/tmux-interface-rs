@@ -3,6 +3,7 @@ pub mod tmux;
 pub mod tmux_command;
 pub mod tmux_output;
 
+pub mod tmux_command_tests;
 pub mod tmux_tests;
 
 pub mod buffers;
