@@ -232,6 +232,8 @@ pub mod version;
 
 pub mod control_mode;
 
+pub mod format;
+
 // common options
 pub use crate::options::StatusKeys;
 pub use crate::options::Switch;
