@@ -1,3 +1,4 @@
+#[cfg(feature = "tmux_2_5")]
 use std::fmt;
 
 // XXX: ? + - etc refactor in structure in future? split in enum and struct add fields
@@ -5,582 +6,582 @@ use std::fmt;
 #[derive(Debug)]
 pub enum Variable {
     //Custom(String)
-    /// alternate_on - if pane is in alternate screen
+    /// `alternate_on` - if pane is in alternate screen
     #[cfg(feature = "tmux_1_8")]
     AlternateOn,
-    /// alternate_saved_x - Saved cursor X in alternate screen
+    /// `alternate_saved_x` - Saved cursor X in alternate screen
     #[cfg(feature = "tmux_1_8")]
     AlternateSavedX,
-    /// alternate_saved_y - Saved cursor Y in alternate screen
+    /// `alternate_saved_y` - Saved cursor Y in alternate screen
     #[cfg(feature = "tmux_1_8")]
     AlternateSavedY,
 
     // Buffer
-    /// buffer_created - Time buffer created
+    /// `buffer_created` - Time buffer created
     #[cfg(feature = "tmux_2_6")]
     BufferCreated,
-    /// buffer_name - Name of buffer
+    /// `buffer_name` - Name of buffer
     #[cfg(feature = "tmux_2_3")]
     BufferName,
-    /// buffer_sample - First 50 characters from the specified buffer
+    /// `buffer_sample` - First 50 characters from the specified buffer
     #[cfg(feature = "tmux_1_7")]
     BufferSample,
-    /// buffer_size - Size of the specified buffer in bytes
+    /// `buffer_size` - Size of the specified buffer in bytes
     #[cfg(feature = "tmux_1_7")]
     BufferSize,
 
     // Client
-    /// client_activity - Integer time client last had activity
+    /// `client_activity` - Integer time client last had activity
     #[cfg(feature = "tmux_1_6")]
     ClientActivity,
-    /// client_cell_height - Height of each client cell in pixels
+    /// `client_cell_height` - Height of each client cell in pixels
     #[cfg(feature = "tmux_3_1")]
     ClientCellHeight,
-    /// client_cell_width - Width of each client cell in pixels
+    /// `client_cell_width` - Width of each client cell in pixels
     #[cfg(feature = "tmux_3_1")]
     ClientCellWidth,
-    /// client_activity_string - String time client last had activity
+    /// `client_activity_string` - Option<String> time client last had activity
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
     ClientActivityString,
-    /// client_created - Integer time client created
+    /// `client_created` - Integer time client created
     #[cfg(feature = "tmux_1_6")]
     ClientCreated,
-    /// client_created_string - String time client created
+    /// `client_created_string` - Option<String> time client created
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
     ClientCreatedString,
-    /// client_control_mode - 1 if client is in control mode
+    /// `client_control_mode` - 1 if client is in control mode
     #[cfg(feature = "tmux_2_1")]
     ClientControlMode,
-    /// client_discarded - Bytes discarded when client behind
+    /// `client_discarded` - Bytes discarded when client behind
     #[cfg(feature = "tmux_2_1")]
     ClientDiscarded,
-    /// client_cwd - Working directory of client
+    /// `client_cwd` - Working directory of client
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     ClientCwd,
-    /// client_height - Height of client
+    /// `client_height` - Height of client
     #[cfg(feature = "tmux_1_6")]
     ClientHeight,
-    /// client_key_table - Current key table
+    /// `client_key_table` - Current key table
     #[cfg(feature = "tmux_2_2")]
     ClientKeyTable,
-    /// client_last_session - Name of the client's last session
+    /// `client_last_session` - Name of the client's last session
     #[cfg(feature = "tmux_1_8")]
     ClientLastSession,
-    /// client_name - Name of client
+    /// `client_name` - Name of client
     #[cfg(feature = "tmux_2_4")]
     ClientName,
-    /// client_pid - PID of client process
+    /// `client_pid` - PID of client process
     #[cfg(feature = "tmux_2_1")]
     ClientPid,
-    /// client_prefix - 1 if prefix key has been pressed
+    /// `client_prefix` - 1 if prefix key has been pressed
     #[cfg(feature = "tmux_1_8")]
     ClientPrefix,
-    /// client_readonly - 1 if client is readonly
+    /// `client_readonly` - 1 if client is readonly
     #[cfg(feature = "tmux_1_6")]
     ClientReadonly,
-    /// client_session - Name of the client's session
+    /// `client_session` - Name of the client's session
     #[cfg(feature = "tmux_1_8")]
     ClientSession,
-    /// client_termname - Terminal name of client
+    /// `client_termname` - Terminal name of client
     #[cfg(feature = "tmux_1_6")]
     ClientTermname,
-    /// client_termtype - Terminal type of client
+    /// `client_termtype` - Terminal type of client
     #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_1")))]
     ClientTermtype,
-    /// client_tty - Pseudo terminal of client
+    /// `client_tty` - Pseudo terminal of client
     #[cfg(feature = "tmux_1_6")]
     ClientTty,
-    /// client_utf8 - 1 if client supports UTF-8
+    /// `client_utf8` - 1 if client supports UTF-8
     #[cfg(feature = "tmux_1_6")]
     ClientUtf8,
-    /// client_width - Width of client
+    /// `client_width` - Width of client
     #[cfg(feature = "tmux_1_6")]
     ClientWidth,
-    /// client_written - Bytes written to client
+    /// `client_written` - Bytes written to client
     #[cfg(feature = "tmux_2_4")]
     ClientWritten,
 
     // Command
-    /// command_hooked - Name of command hooked, if any
+    /// `command_hooked` - Name of command hooked, if any
     #[cfg(feature = "tmux_2_3")]
     CommandHooked,
-    /// command_name - Name of command in use, if any
+    /// `command_name` - Name of command in use, if any
     #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_2_4")))]
     CommandName,
-    /// command - Name of command in use, if any
+    /// `command` - Name of command in use, if any
     #[cfg(feature = "tmux_2_4")]
     Command,
-    /// command_list_name - Command name if listing commands
+    /// `command_list_name` - Command name if listing commands
     #[cfg(feature = "tmux_2_3")]
     CommandListName,
-    /// command_list_alias - Command alias if listing commands
+    /// `command_list_alias` - Command alias if listing commands
     #[cfg(feature = "tmux_2_3")]
     CommandListAlias,
-    /// command_list_usage - Command usage if listing commands
+    /// `command_list_usage` - Command usage if listing commands
     #[cfg(feature = "tmux_2_3")]
     CommandListUsage,
 
     // Cursor
-    /// cursor_flag - Pane cursor flag
+    /// `cursor_flag` - Pane cursor flag
     #[cfg(feature = "tmux_1_8")]
     CursorFlag,
-    /// cursor_character - Character at cursor in pane
+    /// `cursor_character` - Character at cursor in pane
     #[cfg(feature = "tmux_2_9")]
     CursorCharacter,
-    /// cursor_x - Cursor X position in pane
+    /// `cursor_x` - Cursor X position in pane
     #[cfg(feature = "tmux_1_8")]
     CursorX,
-    /// cursor_y - Cursor Y position in pane
+    /// `cursor_y` - Cursor Y position in pane
     #[cfg(feature = "tmux_1_8")]
     CursorY,
 
-    /// copy_cursor_line - Line the cursor is on in copy mode
+    /// `copy_cursor_line` - Line the cursor is on in copy mode
     #[cfg(feature = "tmux_3_1")]
     CopyCursorLine,
-    /// copy_cursor_word - Word under cursor in copy mode
+    /// `copy_cursor_word` - Word under cursor in copy mode
     #[cfg(feature = "tmux_3_1")]
     CopyCursorWord,
-    /// copy_cursor_x - Cursor X position in copy mode
+    /// `copy_cursor_x` - Cursor X position in copy mode
     #[cfg(feature = "tmux_3_1")]
     CopyCursorX,
-    /// copy_cursor_y - Cursor Y position in copy mode
+    /// `copy_cursor_y` - Cursor Y position in copy mode
     #[cfg(feature = "tmux_3_1")]
     CopyCursorY,
 
     // history
-    /// history_bytes             Number of bytes in window history
+    /// `history_bytes`             Number of bytes in window history
     #[cfg(feature = "tmux_1_7")]
     HistotyBytes,
-    /// history_limit             Maximum window history lines
+    /// `history_limit`             Maximum window history lines
     #[cfg(feature = "tmux_1_7")]
     HistotyLimit,
-    /// history_size              Size of history in bytes
+    /// `history_size`              Size of history in bytes
     #[cfg(feature = "tmux_1_7")]
     HistorySize,
 
     // hook
-    /// hook - Name of running hook, if any
+    /// `hook` - Name of running hook, if any
     #[cfg(feature = "tmux_2_4")]
     Hook,
-    /// hook_pane - ID of pane where hook was run, if any
+    /// `hook_pane` - ID of pane where hook was run, if any
     #[cfg(feature = "tmux_2_4")]
     HookPane,
-    /// hook_session - ID of session where hook was run, if any
+    /// `hook_session` - ID of session where hook was run, if any
     #[cfg(feature = "tmux_2_4")]
     HookSession,
-    /// hook_session_name - Name of session where hook was run, if any
+    /// `hook_session_name` - Name of session where hook was run, if any
     #[cfg(feature = "tmux_2_4")]
     HookSessionName,
-    /// hook_window - ID of window where hook was run, if any
+    /// `hook_window` - ID of window where hook was run, if any
     #[cfg(feature = "tmux_2_4")]
     HookWindow,
-    /// hook_window_name - Name of window where hook was run, if any
+    /// `hook_window_name` - Name of window where hook was run, if any
     #[cfg(feature = "tmux_2_4")]
     HookWindowName,
 
     // host
-    /// host - Hostname of local host
+    /// `host` - Hostname of local host
     #[cfg(feature = "tmux_1_6")]
     Host,
-    /// host_short - #h Hostname of local host (no domain name)
+    /// `host_short` - #h Hostname of local host (no domain name)
     #[cfg(feature = "tmux_1_9")]
     HostShort,
 
-    /// insert_flag - Pane insert flag
+    /// `insert_flag` - Pane insert flag
     #[cfg(feature = "tmux_1_8")]
     InsertFlag,
-    /// keypad_cursor_flag - Pane keypad cursor flag
+    /// `keypad_cursor_flag` - Pane keypad cursor flag
     #[cfg(feature = "tmux_1_8")]
     KeypadCursorFlag,
-    /// keypad_flag - Pane keypad flag
+    /// `keypad_flag` - Pane keypad flag
     #[cfg(feature = "tmux_1_8")]
     KeypadFlag,
 
-    /// line - Line number in the list
+    /// `line` - Line number in the list
     #[cfg(feature = "tmux_1_6")]
     Line,
 
-    /// mouse_all_flag - Pane mouse all flag
+    /// `mouse_all_flag` - Pane mouse all flag
     #[cfg(feature = "tmux_3_0")]
     MouseAllFlag,
-    /// mouse_any_flag - Pane mouse any flag
+    /// `mouse_any_flag` - Pane mouse any flag
     #[cfg(feature = "tmux_1_8")]
     MouseAnyFlag,
-    /// mouse_button_flag - Pane mouse button flag
+    /// `mouse_button_flag` - Pane mouse button flag
     #[cfg(feature = "tmux_1_8")]
     MouseButtonFlag,
-    /// mouse_line - Line under mouse, if any
+    /// `mouse_line` - Line under mouse, if any
     #[cfg(feature = "tmux_3_0")]
     MouseLine,
-    /// sgr_flag - Pane mouse SGR flag
+    /// `sgr_flag` - Pane mouse SGR flag
     #[cfg(feature = "tmux_3_0")]
     MouseSgrFlag,
-    /// mouse_standard_flag - Pane mouse standard flag
+    /// `mouse_standard_flag` - Pane mouse standard flag
     #[cfg(feature = "tmux_1_8")]
     MouseStandardFlag,
-    /// mouse_utf8_flag - Pane mouse UTF-8 flag
+    /// `mouse_utf8_flag` - Pane mouse UTF-8 flag
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2"), feature = "tmux_3_0"))]
     MouseUtf8Flag,
-    /// mouse_all_flag - Pane mouse all flag
+    /// `mouse_all_flag` - Pane mouse all flag
     #[cfg(feature = "tmux_2_4")]
     MouseAllFlag,
-    /// mouse_word - Word under mouse, if any
+    /// `mouse_word` - Word under mouse, if any
     #[cfg(feature = "tmux_3_0")]
     MouseWord,
-    /// mouse_x - Mouse X position, if any
+    /// `mouse_x` - Mouse X position, if any
     #[cfg(feature = "tmux_3_0")]
     MouseX,
-    /// mouse_y - Mouse Y position, if any
+    /// `mouse_y` - Mouse Y position, if any
     #[cfg(feature = "tmux_3_0")]
     MouseY,
-    /// origin_flag - Pane origin flag
+    /// `origin_flag` - Pane origin flag
     #[cfg(feature = "tmux_3_0")]
     OriginFlag,
 
     // pane
-    /// pane_active - 1 if active pane
+    /// `pane_active` - 1 if active pane
     #[cfg(feature = "tmux_1_6")]
     PaneActive,
-    /// pane_at_bottom - 1 if pane is at the bottom of window
+    /// `pane_at_bottom` - 1 if pane is at the bottom of window
     #[cfg(feature = "tmux_2_6")]
     PaneAtBottom,
-    /// pane_at_left - 1 if pane is at the left of window
+    /// `pane_at_left` - 1 if pane is at the left of window
     #[cfg(feature = "tmux_2_6")]
     PaneAtLeft,
-    /// pane_at_right - 1 if pane is at the right of window
+    /// `pane_at_right` - 1 if pane is at the right of window
     #[cfg(feature = "tmux_2_6")]
     PaneAtRight,
-    /// pane_at_top - 1 if pane is at the top of window
+    /// `pane_at_top` - 1 if pane is at the top of window
     #[cfg(feature = "tmux_2_6")]
     PaneAtTop,
-    /// pane_bottom - Bottom of pane
+    /// `pane_bottom` - Bottom of pane
     #[cfg(feature = "tmux_2_0")]
     PaneBottom,
-    /// pane_current_command - Current command if available
+    /// `pane_current_command` - Current command if available
     #[cfg(feature = "tmux_1_8")]
     PaneCurrentCommand,
-    /// pane_current_path - Current path if available
+    /// `pane_current_path` - Current path if available
     #[cfg(feature = "tmux_1_7")]
     PaneCurrentPath,
-    /// pane_dead - 1 if pane is dead
+    /// `pane_dead` - 1 if pane is dead
     #[cfg(feature = "tmux_1_6")]
     PaneDead,
-    /// pane_dead_status - Exit status of process in dead pane
+    /// `pane_dead_status` - Exit status of process in dead pane
     #[cfg(feature = "tmux_2_0")]
     PaneDeadStatus,
-    /// pane_format - 1 if format is for a pane
+    /// `pane_format` - 1 if format is for a pane
     #[cfg(feature = "tmux_2_6")]
     PaneFormat,
-    /// pane_height - Height of pane
+    /// `pane_height` - Height of pane
     #[cfg(feature = "tmux_1_6")]
     PaneHeight,
-    /// pane_id - #D Unique pane ID
+    /// `pane_id` - #D Unique pane ID
     #[cfg(feature = "tmux_1_6")]
     PaneId,
-    /// pane_in_mode - 1 if pane is in a mode
+    /// `pane_in_mode` - 1 if pane is in a mode
     #[cfg(feature = "tmux_1_8")]
     PaneInMode,
-    /// pane_index - #P Index of pane
+    /// `pane_index` - #P Index of pane
     #[cfg(feature = "tmux_1_7")]
     PaneIndex,
-    /// pane_input_off - 1 if input to pane is disabled
+    /// `pane_input_off` - 1 if input to pane is disabled
     #[cfg(feature = "tmux_2_0")]
     PaneInputOff,
-    /// pane_left - Left of pane
+    /// `pane_left` - Left of pane
     #[cfg(feature = "tmux_2_0")]
     PaneLeft,
-    /// pane_marked - 1 if this is the marked pane
+    /// `pane_marked` - 1 if this is the marked pane
     #[cfg(feature = "tmux_3_0")]
     PaneMarked,
-    /// pane_marked_set - 1 if a marked pane is set
+    /// `pane_marked_set` - 1 if a marked pane is set
     #[cfg(feature = "tmux_3_0")]
     PaneMarkedSet,
-    /// pane_mode - Name of pane mode, if any
+    /// `pane_mode` - Name of pane mode, if any
     #[cfg(feature = "tmux_2_5")]
     PaneMode,
-    /// pane_path - #T Path of pane (can be set by application)
+    /// `pane_path` - #T Path of pane (can be set by application)
     #[cfg(feature = "tmux_3_1")]
     PanePath,
-    /// pane_pid - PID of first process in pane
+    /// `pane_pid` - PID of first process in pane
     #[cfg(feature = "tmux_1_6")]
     PanePid,
-    /// pane_pipe - 1 if pane is being piped
+    /// `pane_pipe` - 1 if pane is being piped
     #[cfg(feature = "tmux_2_6")]
     PanePipe,
-    /// pane_right - Right of pane
+    /// `pane_right` - Right of pane
     #[cfg(feature = "tmux_2_0")]
     PaneRight,
-    /// pane_search_string - Last search string in copy mode
+    /// `Last` search Option<String> in copy mode
     #[cfg(feature = "tmux_2_5")]
     PaneSearchString,
-    /// pane_start_command - Command pane started with
+    /// `pane_start_command` - Command pane started with
     #[cfg(feature = "tmux_1_6")]
     PaneStartCommand,
-    /// pane_start_path - Path pane started with
+    /// `pane_start_path` - Path pane started with
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_0")))]
     PaneStartPath,
-    /// pane_synchronized - 1 if pane is synchronized
+    /// `pane_synchronized` - 1 if pane is synchronized
     #[cfg(feature = "tmux_1_9")]
     PaneSynchronized,
-    /// pane_tabs - Pane tab positions
+    /// `pane_tabs` - Pane tab positions
     #[cfg(feature = "tmux_1_8")]
     PaneTabs,
-    /// pane_title - #T Title of pane (can be set by application)
+    /// `pane_title` - #T Title of pane (can be set by application)
     #[cfg(feature = "tmux_1_6")]
     PaneTitle,
-    /// pane_top - Top of pane
+    /// `pane_top` - Top of pane
     #[cfg(feature = "tmux_2_0")]
     PaneTop,
-    /// pane_tty - Pseudo terminal of pane
+    /// `pane_tty` - Pseudo terminal of pane
     #[cfg(feature = "tmux_1_6")]
     PaneTty,
-    /// pane_width - Width of pane
+    /// `pane_width` - Width of pane
     #[cfg(feature = "tmux_1_6")]
     PaneWidth,
 
-    /// saved_cursor_x - Saved cursor X in pane
+    /// `saved_cursor_x` - Saved cursor X in pane
     #[cfg(any(feature = "tmux_1_8", not(feature = "tmux_2_1")))]
     SavedCursorX,
-    /// saved_cursor_y - Saved cursor Y in pane
+    /// `saved_cursor_y` - Saved cursor Y in pane
     #[cfg(any(feature = "tmux_1_8", not(feature = "tmux_2_1")))]
     SavedCursorY,
 
-    /// pid - Server PID
+    /// `pid` - Server PID
     #[cfg(feature = "tmux_2_1")]
     Pid,
-    /// rectangle_toggle - 1 if rectangle selection is activated
+    /// `rectangle_toggle` - 1 if rectangle selection is activated
     #[cfg(feature = "tmux_2_7")]
     RectangleToggle,
 
-    /// scroll_position - Scroll position in copy mode
+    /// `scroll_position` - Scroll position in copy mode
     #[cfg(feature = "tmux_2_2")]
     ScrollPosition,
-    /// scroll_region_lower - Bottom of scroll region in pane
+    /// `scroll_region_lower` - Bottom of scroll region in pane
     #[cfg(feature = "tmux_1_8")]
     ScrollRegionLower,
-    /// scroll_region_upper - Top of scroll region in pane
+    /// `scroll_region_upper` - Top of scroll region in pane
     #[cfg(feature = "tmux_1_8")]
     ScrollRegionUpper,
 
-    /// selection_active - 1 if selection started and changes with the curso
+    /// `selection_active` - 1 if selection started and changes with the curso
     #[cfg(feature = "tmux_3_1")]
     SelectionActive,
-    /// selection_end_x - X position of the end of the selection
+    /// `selection_end_x` - X position of the end of the selection
     #[cfg(feature = "tmux_3_1")]
     SelectionEndX,
-    /// selection_end_y - Y position of the end of the selection
+    /// `selection_end_y` - Y position of the end of the selection
     #[cfg(feature = "tmux_3_1")]
     SelectionEndY,
-    /// selection_present - 1 if selection started in copy mode
+    /// `selection_present` - 1 if selection started in copy mode
     #[cfg(feature = "tmux_2_6")]
     SelectionPresent,
-    /// selection_start_x - X position of the start of the selection
+    /// `selection_start_x` - X position of the start of the selection
     #[cfg(feature = "tmux_3_1")]
     SelectionStartX,
-    /// selection_start_y - Y position of the start of the selection
+    /// `selection_start_y` - Y position of the start of the selection
     #[cfg(feature = "tmux_3_1")]
     SelectionStartY,
 
     // Session
-    /// session_activity - Time of session last activity
+    /// `session_activity` - Time of session last activity
     #[cfg(feature = "tmux_2_1")]
     SessionActivity,
-    /// session_activity_string - String time of session last activity
+    /// `session_activity_string` - Option<String> time of session last activity
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
     SessionActivityString,
-    /// session_alerts - List of window indexes with alerts
+    /// `session_alerts` - List of window indexes with alerts
     #[cfg(feature = "tmux_2_1")]
     SessionAlerts,
-    /// session_attached - Number of clients session is attached to
+    /// `session_attached` - Number of clients session is attached to
     #[cfg(feature = "tmux_1_6")]
     SessionAttached,
-    /// session_attached_list - List of clients session is attached to
+    /// `session_attached_list` - List of clients session is attached to
     #[cfg(feature = "tmux_3_1")]
     SessionAttachedList,
-    /// session_created - Time session created
+    /// `session_created` - Time session created
     #[cfg(feature = "tmux_1_6")]
     SessionCreated,
-    /// session_created_string - String time session created
+    /// `session_created_string` - Option<String> time session created
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
     SessionCreatedString,
-    /// session_format - 1 if format is for a session (not assuming the current)
+    /// `session_format` - 1 if format is for a session (not assuming the current)
     #[cfg(feature = "tmux_2_6")]
     SessionFormat,
-    /// session_group - Name of session group
+    /// `session_group` - Name of session group
     #[cfg(feature = "tmux_1_6")]
     SessionGroup,
-    /// session_group_attached - Number of clients sessions in group are attached >
+    /// `session_group_attached` - Number of clients sessions in group are attached >
     #[cfg(feature = "tmux_3_1")]
     SessionGroupAttached,
-    /// session_group_attached_list - List of clients sessions in group are attached to
+    /// `session_group_attached_list` - List of clients sessions in group are attached to
     #[cfg(feature = "tmux_3_1")]
     SessionGroupAttachedList,
-    /// session_group_list - List of sessions in group
+    /// `session_group_list` - List of sessions in group
     #[cfg(feature = "tmux_2_7")]
     SessionGroupList,
-    /// session_group_many_attached - 1 if multiple clients attached to sessions in gro
+    /// `session_group_many_attached` - 1 if multiple clients attached to sessions in gro
     #[cfg(feature = "tmux_3_1")]
     SessionGroupManyAttached,
-    /// session_size - Size of session group
+    /// `session_size` - Size of session group
     #[cfg(feature = "tmux_2_7")]
     SessionGroupSize,
-    /// session_grouped - 1 if session in a group
+    /// `session_grouped` - 1 if session in a group
     #[cfg(feature = "tmux_1_6")]
     SessionGrouped,
-    /// session_height - Height of session
+    /// `session_height` - Height of session
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_9")))]
     SessionHeight,
-    /// session_width - Width of session
+    /// `session_width` - Width of session
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_9")))]
     SessionWidth,
-    /// session_id - Unique session ID
+    /// `session_id` - Unique session ID
     #[cfg(feature = "tmux_1_8")]
     SessionId,
-    /// session_last_attached - Time session last attached
+    /// `session_last_attached` - Time session last attached
     #[cfg(feature = "tmux_2_1")]
     SessionLastAttached,
-    /// session_last_attached_string - String time session last attached
+    /// `session_last_attached_string` - Option<String> time session last attached
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
     SessionLastAttachedString,
-    /// session_many_attached - 1 if multiple clients attached
+    /// `session_many_attached` - 1 if multiple clients attached
     #[cfg(feature = "tmux_2_0")]
     SessionManyAttached,
-    /// session_name - #S Name of session
+    /// `session_name` - #S Name of session
     #[cfg(feature = "tmux_1_6")]
     SessionName,
-    /// session_stack - Window indexes in most recent order
+    /// `session_stack` - Window indexes in most recent order
     #[cfg(feature = "tmux_2_5")]
     SessionStack,
-    /// session_windows - Number of windows in session
+    /// `session_windows` - Number of windows in session
     #[cfg(feature = "tmux_1_6")]
     SessionWindows,
 
-    /// socket_path - Server socket path
+    /// `socket_path` - Server socket path
     #[cfg(feature = "tmux_2_2")]
     SocketPath,
-    /// start_time - Server start time
+    /// `start_time` - Server start time
     #[cfg(feature = "tmux_2_2")]
     StartTime,
 
-    /// version - Server version
+    /// `version` - Server version
     #[cfg(feature = "tmux_2_4")]
     Version,
 
     // Window
     //
-    /// window_active - 1 if window active
+    /// `window_active` - 1 if window active
     #[cfg(feature = "tmux_1_6")]
     WindowActive,
-    /// window_active_clients - Number of clients viewing this window
+    /// `window_active_clients` - Number of clients viewing this window
     #[cfg(feature = "tmux_3_1")]
     WindowActiveClients,
-    /// window_active_clients_list - List of clients viewing this window
+    /// `window_active_clients_list` - List of clients viewing this window
     #[cfg(feature = "tmux_3_1")]
     WindowActiveClientsList,
-    /// window_active_sessions - Number of sessions on which this window is active
+    /// `window_active_sessions` - Number of sessions on which this window is active
     #[cfg(feature = "tmux_3_1")]
     WindowActiveSessions,
-    /// window_active_sessions_list - List of sessions on which this window is active
+    /// `window_active_sessions_list` - List of sessions on which this window is active
     #[cfg(feature = "tmux_3_1")]
     WindowActiveSessionsList,
-    /// window_activity - Time of window last activity
+    /// `window_activity` - Time of window last activity
     #[cfg(feature = "tmux_2_1")]
     WindowActivity,
-    /// session_activity_string - String time of session last activity
+    /// `session_activity_string` - Option<String> time of session last activity
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
     SessionActivityString,
-    /// window_activity_flag - 1 if window has activity
+    /// `window_activity_flag` - 1 if window has activity
     #[cfg(any(
         all(feature = "tmux_1_9", not(feature = "tmux_2_2")),
         feature = "tmux_2_3"
     ))]
     WindowActivityFlag,
-    /// window_bell_flag - 1 if window has bell
+    /// `window_bell_flag` - 1 if window has bell
     #[cfg(feature = "tmux_1_9")]
     WindowBellFlag,
-    /// window_content_flag - 1 if window has content alert
+    /// `window_content_flag` - 1 if window has content alert
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
     WindowContentflag,
-    /// window_bigger - 1 if window is larger than client
+    /// `window_bigger` - 1 if window is larger than client
     #[cfg(feature = "tmux_2_9")]
     WindowBigger,
-    /// window_cell_height - Height of each cell in pixels
+    /// `window_cell_height` - Height of each cell in pixels
     #[cfg(feature = "tmux_3_1")]
     WindowCellHeight,
-    /// window_cell_width - Width of each cell in pixels
+    /// `window_cell_width` - Width of each cell in pixels
     #[cfg(feature = "tmux_3_1")]
     WindowCellWidth,
-    /// window_end_flag - 1 if window has the highest index
+    /// `window_end_flag` - 1 if window has the highest index
     #[cfg(feature = "tmux_2_9")]
     WindowEndFlag,
-    /// window_find_matches - Matched data from the find-window command if available
+    /// `window_find_matches` - Matched data from the find-window command if available
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
     WindowFindMatches,
-    /// window_flags - #F Window flags
+    /// `window_flags` - #F Window flags
     #[cfg(feature = "tmux_1_6")]
     WindowFlags,
-    /// window_format - 1 if format is for a window
+    /// `window_format` - 1 if format is for a window
     #[cfg(feature = "tmux_2_6")]
     WindowFormat,
-    /// window_height - Height of window
+    /// `window_height` - Height of window
     #[cfg(feature = "tmux_1_6")]
     WindowHeight,
-    /// window_id - Unique window ID
+    /// `window_id` - Unique window ID
     #[cfg(feature = "tmux_1_7")]
     WindowId,
-    /// window_index - #I Index of window
+    /// `window_index` - #I Index of window
     #[cfg(feature = "tmux_1_6")]
     WindowIndex,
-    /// window_last_flag - 1 if window is the last used
+    /// `window_last_flag` - 1 if window is the last used
     #[cfg(feature = "tmux_2_0")]
     WindowLastFlag,
-    /// window_layout - Window layout description, ignoring zoomed window panes
+    /// `window_layout` - Window layout description, ignoring zoomed window panes
     #[cfg(feature = "tmux_1_6")]
     WindowLayout,
-    /// window_linked - 1 if window is linked across sessions
+    /// `window_linked` - 1 if window is linked across sessions
     #[cfg(feature = "tmux_2_1")]
     WindowLinked,
-    /// window_linked_sessions - Number of sessions this window is linked to
+    /// `window_linked_sessions` - Number of sessions this window is linked to
     #[cfg(feature = "tmux_3_1")]
     WindowLinkedSessions,
-    /// window_linked_sessions_list - List of sessions this window is linked to
+    /// `window_linked_sessions_list` - List of sessions this window is linked to
     #[cfg(feature = "tmux_3_1")]
     WindowLinkedSessionsList,
-    /// window_marked_flag - 1 if window contains the marked pane
+    /// `window_marked_flag` - 1 if window contains the marked pane
     #[cfg(feature = "tmux_3_1")]
     WindowMarkedFlag,
-    /// window_name - #W Name of window
+    /// `window_name` - #W Name of window
     #[cfg(feature = "tmux_1_6")]
     WindowName,
-    /// window_offset_x - X offset into window if larger than client
+    /// `window_offset_x` - X offset into window if larger than client
     #[cfg(feature = "tmux_2_9")]
     WindowOffsetX,
-    /// window_offset_y - Y offset into window if larger than client
+    /// `window_offset_y` - Y offset into window if larger than client
     #[cfg(feature = "tmux_2_9")]
     WindowOffsetY,
-    /// window_panes - Number of panes in window
+    /// `window_panes` - Number of panes in window
     #[cfg(feature = "tmux_1_7")]
     WindowPanes,
-    /// window_silence_flag - 1 if window has silence alert
+    /// `window_silence_flag` - 1 if window has silence alert
     #[cfg(feature = "tmux_1_9")]
     WindowSilenceFlag,
-    /// window_stack_index - Index in session most recent stack
+    /// `window_stack_index` - Index in session most recent stack
     #[cfg(feature = "tmux_2_5")]
     WindowStackIndex,
-    /// window_start_flag - 1 if window has the lowest index
+    /// `window_start_flag` - 1 if window has the lowest index
     #[cfg(feature = "tmux_2_9")]
     WindowStartFlag,
-    /// window_visible_layout - Window layout description, respecting zoomed window panes
+    /// `window_visible_layout` - Window layout description, respecting zoomed window panes
     #[cfg(feature = "tmux_2_2")]
     WindowVisibleLayout,
-    /// window_width - Width of window
+    /// `window_width` - Width of window
     #[cfg(feature = "tmux_1_6")]
     WindowWidth,
-    /// window_zoomed_flag - 1 if window is zoomed
+    /// `window_zoomed_flag` - 1 if window is zoomed
     #[cfg(feature = "tmux_2_0")]
     WindowZoomedFlag,
 
-    /// wrap_flag - Pane wrap flag
+    /// `wrap_flag` - Pane wrap flag
     #[cfg(feature = "tmux_1_8")]
     WrapFlag,
 }
@@ -622,13 +623,13 @@ impl fmt::Display for Variable {
             // client_cell_width - Width of each client cell in pixels
             #[cfg(feature = "tmux_3_1")]
             Self::ClientCellWidth => "client_cell_width",
-            // client_activity_string - String time client last had activity
+            // client_activity_string - Option<String> time client last had activity
             #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
             Self::ClientActivityString => "client_activity_string",
             // client_created - Integer time client created
             #[cfg(feature = "tmux_1_6")]
             Self::ClientCreated => "client_created",
-            // client_created_string - String time client created
+            // client_created_string - Option<String> time client created
             #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
             Self::ClientCreatedString => "client_created_string",
             // client_control_mode - 1 if client is in control mode
@@ -893,7 +894,7 @@ impl fmt::Display for Variable {
             // pane_right - Right of pane
             #[cfg(feature = "tmux_2_0")]
             Self::PaneRight => "pane_right",
-            // pane_search_string - Last search string in copy mode
+            // pane_search_string - Last search Option<String> in copy mode
             #[cfg(feature = "tmux_2_5")]
             Self::PaneSearchString => "pane_search_string",
             // pane_start_command - Command pane started with
@@ -968,7 +969,7 @@ impl fmt::Display for Variable {
             // session_activity - Time of session last activity
             #[cfg(feature = "tmux_2_1")]
             Self::SessionActivity => "session_activity",
-            // session_activity_string - String time of session last activity
+            // session_activity_string - Option<String> time of session last activity
             #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
             Self::SessionActivityString => "session_activity_string",
             // session_alerts - List of window indexes with alerts
@@ -983,7 +984,7 @@ impl fmt::Display for Variable {
             // session_created - Time session created
             #[cfg(feature = "tmux_1_6")]
             Self::SessionCreated => "session_created",
-            // session_created_string - String time session created
+            // session_created_string - Option<String> time session created
             #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
             Self::SessionCreatedString => "session_created_string",
             // session_format - 1 if format is for a session (not assuming the current)
@@ -1022,7 +1023,7 @@ impl fmt::Display for Variable {
             // session_last_attached - Time session last attached
             #[cfg(feature = "tmux_2_1")]
             Self::SessionLastAttached => "session_last_attached",
-            // session_last_attached_string - String time session last attached
+            // session_last_attached_string - Option<String> time session last attached
             #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
             Self::SessionLastAttachedString => "session_last_attached_string",
             // session_many_attached - 1 if multiple clients attached
@@ -1069,7 +1070,7 @@ impl fmt::Display for Variable {
             // window_activity - Time of window last activity
             #[cfg(feature = "tmux_2_1")]
             Self::WindowActivity => "window_activity",
-            // session_activity_string - String time of session last activity
+            // session_activity_string - Option<String> time of session last activity
             #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
             Self::SessionActivityString => "session_activity_string",
             // window_activity_flag - 1 if window has activity
@@ -1167,6 +1168,7 @@ impl fmt::Display for Variable {
             #[cfg(feature = "tmux_1_8")]
             Self::WrapFlag => "wrap_flag",
         };
+
         write!(f, "#{{{}}}", output)
     }
 }
