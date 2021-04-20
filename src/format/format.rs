@@ -1188,7 +1188,7 @@ impl Format {
     /// `window_flags` - #F Window flags
     #[cfg(feature = "tmux_1_6")]
     pub fn window_flags(&mut self) -> &mut Self {
-        self.push(Variable::Version);
+        self.push(Variable::WindowFlags);
         self
     }
 

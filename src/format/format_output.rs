@@ -2,6 +2,7 @@ use crate::format::variable_output::VariableOutput;
 use crate::Layout;
 use crate::PaneTabs;
 use crate::SessionStack;
+use crate::WindowFlag;
 
 #[derive(Debug)]
 pub struct FormatOutput<'a> {
@@ -1183,8 +1184,8 @@ impl<'a> FormatOutput<'a> {
 
     /// `window_flags` - #F Window flags
     #[cfg(feature = "tmux_1_6")]
-    pub fn window_flags(&mut self, v: &'a mut Option<String>) -> &mut Self {
-        self.push(VariableOutput::Version(v));
+    pub fn window_flags(&mut self, v: &'a mut Option<WindowFlag>) -> &mut Self {
+        self.push(VariableOutput::WindowFlags(v));
         self
     }
 

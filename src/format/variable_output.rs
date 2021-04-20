@@ -1135,7 +1135,7 @@ impl<'a> VariableOutput<'a> {
             Self::WindowHeight(v) => **v = s.parse::<usize>().ok(),
             // window_id - Unique window ID
             #[cfg(feature = "tmux_1_7")]
-            Self::WindowId(v) => **v = s.parse::<usize>().ok(),
+            Self::WindowId(v) => **v = s[1..].parse::<usize>().ok(),
             // window_index - #I Index of window
             #[cfg(feature = "tmux_1_6")]
             Self::WindowIndex(v) => **v = s.parse::<usize>().ok(),

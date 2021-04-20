@@ -1,6 +1,6 @@
 #[test]
 fn parse() {
-    use crate::{Windows, WINDOW_ALL};
+    use crate::Windows;
 
     //let windows_str = "
     // 1559064235'0'0'0''''1'64'@0'1'0'c3bd,177x64,0,0,0'0'bash'''1'0'2''c3bd,177x64,0,0,0'177'0\n\
@@ -235,7 +235,7 @@ fn parse() {
     let window0_str = window0_vec.join("'");
     let window1_str = window1_vec.join("'");
     let windows_str = format!("{}\n{}", window0_str, window1_str);
-    let windows = Windows::from_str(&windows_str, WINDOW_ALL).unwrap();
+    let windows = Windows::from_str(&windows_str).unwrap();
     #[cfg(feature = "tmux_1_7")]
     assert_eq!(windows[0].id, Some(0));
     #[cfg(feature = "tmux_1_7")]
@@ -244,7 +244,7 @@ fn parse() {
 
 #[test]
 fn parse2() {
-    use crate::{Windows, WINDOW_ALL};
+    use crate::Windows;
 
     //let windows_str = "
     //1559064235'0'0'0''''1'64'@0'1'0'c3bd,177x64,0,0,0'0'bash'''1'0'3''c3bd,177x64,0,0,0'177'0\n\
@@ -712,7 +712,7 @@ fn parse2() {
         "{}\n{}\n{}\n{}",
         window0_str, window1_str, window2_str, window3_str
     );
-    let windows = Windows::from_str(&windows_str, WINDOW_ALL).unwrap();
+    let windows = Windows::from_str(&windows_str).unwrap();
     #[cfg(feature = "tmux_1_7")]
     assert_eq!(windows[0].id, Some(0));
     #[cfg(feature = "tmux_1_7")]
