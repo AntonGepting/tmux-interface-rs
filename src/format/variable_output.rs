@@ -884,7 +884,7 @@ impl<'a> VariableOutput<'a> {
             Self::PaneHeight(v) => **v = s.parse::<usize>().ok(),
             // pane_id - #D Unique pane ID
             #[cfg(feature = "tmux_1_6")]
-            Self::PaneId(v) => **v = s.parse::<usize>().ok(),
+            Self::PaneId(v) => **v = s[1..].parse::<usize>().ok(),
             // pane_in_mode - 1 if pane is in a mode
             #[cfg(feature = "tmux_1_8")]
             Self::PaneInMode(v) => **v = Self::parse_option_bool(s),

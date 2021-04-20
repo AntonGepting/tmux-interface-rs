@@ -1,232 +1,9 @@
+use crate::format::format_output::FormatOutput;
 use crate::Error;
 #[cfg(feature = "tmux_1_8")]
 use crate::PaneTabs;
 
-pub const PANE_ACTIVE: u64 = 1;
-pub const PANE_AT_BOTTOM: u64 = 1 << 1;
-pub const PANE_AT_LEFT: u64 = 1 << 2;
-pub const PANE_AT_RIGHT: u64 = 1 << 3;
-pub const PANE_AT_TOP: u64 = 1 << 4;
-pub const PANE_BOTTOM: u64 = 1 << 5;
-pub const PANE_CURRENT_COMMAND: u64 = 1 << 6;
-pub const PANE_CURRENT_PATH: u64 = 1 << 7;
-pub const PANE_DEAD: u64 = 1 << 8;
-pub const PANE_DEAD_STATUS: u64 = 1 << 9;
-pub const PANE_FORMAT: u64 = 1 << 10;
-pub const PANE_HEIGHT: u64 = 1 << 11;
-pub const PANE_ID: u64 = 1 << 12;
-pub const PANE_IN_MODE: u64 = 1 << 13;
-pub const PANE_INDEX: u64 = 1 << 14;
-pub const PANE_INPUT_OFF: u64 = 1 << 15;
-pub const PANE_LEFT: u64 = 1 << 16;
-pub const PANE_MARKED: u64 = 1 << 17;
-pub const PANE_MARKED_SET: u64 = 1 << 18;
-pub const PANE_MODE: u64 = 1 << 19;
-pub const PANE_PATH: u64 = 1 << 20;
-pub const PANE_PID: u64 = 1 << 21;
-pub const PANE_PIPE: u64 = 1 << 22;
-pub const PANE_RIGHT: u64 = 1 << 23;
-pub const PANE_SEARCH_STRING: u64 = 1 << 24;
-pub const PANE_START_COMMMAND: u64 = 1 << 25;
-pub const PANE_START_PATH: u64 = 1 << 26;
-pub const PANE_SYNCHRONIZED: u64 = 1 << 27;
-pub const PANE_TABS: u64 = 1 << 28;
-pub const PANE_TITLE: u64 = 1 << 29;
-pub const PANE_TOP: u64 = 1 << 30;
-pub const PANE_TTY: u64 = 1 << 31;
-pub const PANE_WIDTH: u64 = 1 << 32;
-
-// XXX: number of all flags, needed for array init
-// NOTE: variables were first intoduced in tmux 1.6
-#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_7")))]
-pub const PANE_FLAGS_NUM: usize = 10;
-#[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
-pub const PANE_FLAGS_NUM: usize = 12;
-#[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-pub const PANE_FLAGS_NUM: usize = 15;
-#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_1_9a")))]
-pub const PANE_FLAGS_NUM: usize = 16;
-#[cfg(all(feature = "tmux_1_9a", not(feature = "tmux_2_0")))]
-pub const PANE_FLAGS_NUM: usize = 16;
-#[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_1")))]
-pub const PANE_FLAGS_NUM: usize = 21;
-#[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-pub const PANE_FLAGS_NUM: usize = 21;
-#[cfg(all(feature = "tmux_2_2", not(feature = "tmux_2_3")))]
-pub const PANE_FLAGS_NUM: usize = 21;
-#[cfg(all(feature = "tmux_2_3", not(feature = "tmux_2_4")))]
-pub const PANE_FLAGS_NUM: usize = 21;
-#[cfg(all(feature = "tmux_2_4", not(feature = "tmux_2_5")))]
-pub const PANE_FLAGS_NUM: usize = 21;
-#[cfg(all(feature = "tmux_2_5", not(feature = "tmux_2_6")))]
-pub const PANE_FLAGS_NUM: usize = 23;
-#[cfg(all(feature = "tmux_2_6", not(feature = "tmux_2_7")))]
-pub const PANE_FLAGS_NUM: usize = 29;
-#[cfg(all(feature = "tmux_2_7", not(feature = "tmux_2_8")))]
-pub const PANE_FLAGS_NUM: usize = 29;
-#[cfg(all(feature = "tmux_2_8", not(feature = "tmux_2_9")))]
-pub const PANE_FLAGS_NUM: usize = 29;
-#[cfg(all(feature = "tmux_2_9", not(feature = "tmux_2_9a")))]
-pub const PANE_FLAGS_NUM: usize = 29;
-#[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_0")))]
-pub const PANE_FLAGS_NUM: usize = 29;
-#[cfg(all(feature = "tmux_3_0", not(feature = "tmux_3_0a")))]
-pub const PANE_FLAGS_NUM: usize = 31;
-#[cfg(all(feature = "tmux_3_0a", not(feature = "tmux_3_1")))]
-pub const PANE_FLAGS_NUM: usize = 31;
-#[cfg(all(feature = "tmux_3_1", not(feature = "tmux_3_1a")))]
-pub const PANE_FLAGS_NUM: usize = 32;
-#[cfg(all(feature = "tmux_3_1a", not(feature = "tmux_3_1b")))]
-pub const PANE_FLAGS_NUM: usize = 32;
-#[cfg(all(feature = "tmux_3_1b", not(feature = "tmux_X_X")))]
-pub const PANE_FLAGS_NUM: usize = 32;
-#[cfg(feature = "tmux_X_X")]
-pub const PANE_FLAGS_NUM: usize = 32;
-
-pub const PANE_NONE: u64 = 0;
-//pub const PANE_DEFAULT: usize = PANE_ID | PANE_TITLE;
-pub const PANE_ALL: u64 = PANE_ACTIVE
-    | PANE_AT_BOTTOM
-    | PANE_AT_LEFT
-    | PANE_AT_RIGHT
-    | PANE_AT_TOP
-    | PANE_BOTTOM
-    | PANE_CURRENT_COMMAND
-    | PANE_CURRENT_PATH
-    | PANE_DEAD
-    | PANE_DEAD_STATUS
-    | PANE_FORMAT
-    | PANE_HEIGHT
-    | PANE_ID
-    | PANE_IN_MODE
-    | PANE_INDEX
-    | PANE_INPUT_OFF
-    | PANE_LEFT
-    | PANE_MARKED
-    | PANE_MARKED_SET
-    | PANE_MODE
-    | PANE_PATH
-    | PANE_PID
-    | PANE_PIPE
-    | PANE_RIGHT
-    | PANE_SEARCH_STRING
-    | PANE_START_COMMMAND
-    | PANE_START_PATH
-    | PANE_SYNCHRONIZED
-    | PANE_TABS
-    | PANE_TITLE
-    | PANE_TOP
-    | PANE_TTY
-    | PANE_WIDTH;
-
-pub const PANE_VARS_SEPARATOR: &str = "'";
-// FIXME: regex name can be anything, and other keys should be checked better
-pub const PANE_VARS: [(&str, u64, fn(p: &mut Pane, t: &str)); PANE_FLAGS_NUM] = [
-    #[cfg(feature = "tmux_1_6")]
-    ("pane_active", PANE_ACTIVE, |p, t| {
-        p.active = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_2_6")]
-    ("pane_at_bottom", PANE_AT_BOTTOM, |p, t| {
-        p.at_bottom = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_2_6")]
-    ("pane_at_left", PANE_AT_LEFT, |p, t| {
-        p.at_left = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_2_6")]
-    ("pane_at_right", PANE_AT_RIGHT, |p, t| {
-        p.at_right = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_2_6")]
-    ("pane_at_top", PANE_AT_TOP, |p, t| {
-        p.at_top = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_2_0")]
-    ("pane_bottom", PANE_BOTTOM, |p, t| p.bottom = t.parse().ok()),
-    #[cfg(feature = "tmux_1_8")]
-    ("pane_current_command", PANE_CURRENT_COMMAND, |p, t| {
-        p.current_command = t.parse().ok()
-    }),
-    #[cfg(feature = "tmux_1_7")]
-    ("pane_current_path", PANE_CURRENT_PATH, |p, t| {
-        p.current_path = t.parse().ok()
-    }),
-    #[cfg(feature = "tmux_1_6")]
-    ("pane_dead", PANE_DEAD, |p, t| {
-        p.dead = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_2_0")]
-    ("pane_dead_status", PANE_DEAD, |p, t| {
-        p.dead_status = t.parse().ok()
-    }),
-    #[cfg(feature = "tmux_2_6")]
-    ("pane_format", PANE_FORMAT, |p, t| {
-        p.format = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_1_6")]
-    ("pane_height", PANE_HEIGHT, |p, t| p.height = t.parse().ok()),
-    #[cfg(feature = "tmux_1_6")]
-    ("pane_id", PANE_ID, |p, t| p.id = t[1..].parse().ok()), // skip '%' char
-    #[cfg(feature = "tmux_1_8")]
-    ("pane_in_mode", PANE_IN_MODE, |p, t| {
-        p.in_mode = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_1_7")]
-    ("pane_index", PANE_INDEX, |p, t| p.index = t.parse().ok()),
-    #[cfg(feature = "tmux_2_0")]
-    ("pane_input_off", PANE_INPUT_OFF, |p, t| {
-        p.input_off = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_2_0")]
-    ("pane_left", PANE_LEFT, |p, t| p.left = t.parse().ok()),
-    #[cfg(feature = "tmux_3_0")]
-    ("pane_marked", PANE_MARKED, |p, t| {
-        p.marked = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_3_0")]
-    ("pane_marked_set", PANE_MARKED_SET, |p, t| {
-        p.marked_set = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_2_5")]
-    ("pane_mode", PANE_MODE, |p, t| p.mode = t.parse().ok()),
-    #[cfg(feature = "tmux_3_1")]
-    ("pane_path", PANE_PATH, |p, t| p.path = t.parse().ok()),
-    #[cfg(feature = "tmux_1_6")]
-    ("pane_pid", PANE_PID, |p, t| p.pid = t.parse().ok()),
-    #[cfg(feature = "tmux_2_6")]
-    ("pane_pipe", PANE_PIPE, |p, t| {
-        p.pipe = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_2_0")]
-    ("pane_right", PANE_RIGHT, |p, t| p.right = t.parse().ok()),
-    #[cfg(feature = "tmux_2_5")]
-    ("pane_search_string", PANE_SEARCH_STRING, |p, t| {
-        p.search_string = t.parse().ok()
-    }),
-    #[cfg(feature = "tmux_1_6")]
-    ("pane_start_command", PANE_START_COMMMAND, |p, t| {
-        p.start_command = t.parse().ok()
-    }),
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_0")))]
-    ("pane_start_path", PANE_START_PATH, |p, t| {
-        p.start_path = t.parse().ok()
-    }),
-    #[cfg(feature = "tmux_1_9")]
-    ("pane_synchronized", PANE_SYNCHRONIZED, |p, t| {
-        p.synchronized = t.parse::<usize>().map(|b| b == 1).ok()
-    }),
-    #[cfg(feature = "tmux_1_8")]
-    ("pane_tabs", PANE_TABS, |p, t| p.tabs = t.parse().ok()),
-    #[cfg(feature = "tmux_1_6")]
-    ("pane_title", PANE_TITLE, |p, t| p.title = t.parse().ok()),
-    #[cfg(feature = "tmux_2_0")]
-    ("pane_top", PANE_TOP, |p, t| p.top = t.parse().ok()),
-    #[cfg(feature = "tmux_1_6")]
-    ("pane_tty", PANE_TTY, |p, t| p.tty = t.parse().ok()),
-    #[cfg(feature = "tmux_1_6")]
-    ("pane_width", PANE_WIDTH, |p, t| p.width = t.parse().ok()),
-];
+pub const PANE_VARS_SEPARATOR: char = '\'';
 
 //pub fn get_fmt_string(bitflags: usize) -> String {
 //let lsp_format = PANE_VARS_REGEX_VEC
@@ -349,25 +126,79 @@ impl Pane {
         Default::default()
     }
 
-    pub fn from_str(pane_str: &str, bitflags: u64) -> Result<Self, Error> {
-        let pv: Vec<&str> = pane_str.split(PANE_VARS_SEPARATOR).collect();
-        let mut pv = pv.iter();
-        // XXX: optimize?
-        let mut p = Pane::new();
-        // for all bitflags
-        for var in PANE_VARS.iter() {
-            // is current bitflag given?
-            if bitflags & var.1 == var.1 {
-                // does vector element exist?
-                if let Some(part) = pv.next() {
-                    // is vector element not empty
-                    if !part.is_empty() {
-                        // call corresponding func from array
-                        var.2(&mut p, part);
-                    }
-                }
-            }
-        }
-        Ok(p)
+    pub fn from_str<S: AsRef<str>>(s: S) -> Result<Self, Error> {
+        let mut pane = Pane::new();
+        let mut format = FormatOutput::new();
+        format.separator(PANE_VARS_SEPARATOR);
+
+        #[cfg(feature = "tmux_1_6")]
+        format.pane_active(&mut pane.active);
+        #[cfg(feature = "tmux_2_6")]
+        format.pane_at_bottom(&mut pane.at_bottom);
+        #[cfg(feature = "tmux_2_6")]
+        format.pane_at_left(&mut pane.at_left);
+        #[cfg(feature = "tmux_2_6")]
+        format.pane_at_right(&mut pane.at_right);
+        #[cfg(feature = "tmux_2_6")]
+        format.pane_at_top(&mut pane.at_top);
+        #[cfg(feature = "tmux_2_0")]
+        format.pane_bottom(&mut pane.bottom);
+        #[cfg(feature = "tmux_1_8")]
+        format.pane_current_command(&mut pane.current_command);
+        #[cfg(feature = "tmux_1_7")]
+        format.pane_current_path(&mut pane.current_path);
+        #[cfg(feature = "tmux_1_6")]
+        format.pane_dead(&mut pane.dead);
+        #[cfg(feature = "tmux_2_0")]
+        format.pane_dead_status(&mut pane.dead_status);
+        #[cfg(feature = "tmux_2_6")]
+        format.pane_format(&mut pane.format);
+        #[cfg(feature = "tmux_1_6")]
+        format.pane_height(&mut pane.height);
+        #[cfg(feature = "tmux_1_6")]
+        format.pane_id(&mut pane.id);
+        #[cfg(feature = "tmux_1_8")]
+        format.pane_in_mode(&mut pane.in_mode);
+        #[cfg(feature = "tmux_1_7")]
+        format.pane_index(&mut pane.index);
+        #[cfg(feature = "tmux_2_0")]
+        format.pane_input_off(&mut pane.input_off);
+        #[cfg(feature = "tmux_2_0")]
+        format.pane_left(&mut pane.left);
+        #[cfg(feature = "tmux_3_0")]
+        format.pane_marked(&mut pane.marked);
+        #[cfg(feature = "tmux_3_0")]
+        format.pane_marked_set(&mut pane.marked_set);
+        #[cfg(feature = "tmux_2_5")]
+        format.pane_mode(&mut pane.mode);
+        #[cfg(feature = "tmux_3_1")]
+        format.pane_path(&mut pane.path);
+        #[cfg(feature = "tmux_1_6")]
+        format.pane_pid(&mut pane.pid);
+        #[cfg(feature = "tmux_2_6")]
+        format.pane_pipe(&mut pane.pipe);
+        #[cfg(feature = "tmux_2_0")]
+        format.pane_right(&mut pane.right);
+        #[cfg(feature = "tmux_2_5")]
+        format.pane_search_string(&mut pane.search_string);
+        #[cfg(feature = "tmux_1_6")]
+        format.pane_start_command(&mut pane.start_command);
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_0")))]
+        format.pane_start_path(&mut pane.start_path);
+        #[cfg(feature = "tmux_1_9")]
+        format.pane_synchronized(&mut pane.synchronized);
+        #[cfg(feature = "tmux_1_8")]
+        format.pane_tabs(&mut pane.tabs);
+        #[cfg(feature = "tmux_1_6")]
+        format.pane_title(&mut pane.title);
+        #[cfg(feature = "tmux_2_0")]
+        format.pane_top(&mut pane.top);
+        #[cfg(feature = "tmux_1_6")]
+        format.pane_tty(&mut pane.tty);
+        #[cfg(feature = "tmux_1_6")]
+        format.pane_width(&mut pane.width);
+
+        FormatOutput::from_string_ext(s.as_ref(), &mut format);
+        Ok(pane)
     }
 }

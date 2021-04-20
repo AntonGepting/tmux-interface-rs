@@ -130,7 +130,7 @@ impl Window {
     }
 
     // XXX: mb deserialize like serde something?
-    pub fn from_str(s: &str) -> Result<Self, Error> {
+    pub fn from_str<S: AsRef<str>>(s: S) -> Result<Self, Error> {
         let mut window = Window::new();
         let mut format = FormatOutput::new();
 
@@ -212,7 +212,7 @@ impl Window {
         #[cfg(feature = "tmux_2_0")]
         format.window_zoomed_flag(&mut window.zoomed_flag);
 
-        FormatOutput::from_string_ext(s, &mut format);
+        FormatOutput::from_string_ext(s.as_ref(), &mut format);
         Ok(window)
     }
 }

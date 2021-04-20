@@ -1,7 +1,6 @@
 #[cfg(feature = "tmux_1_6")]
 #[test]
 fn get_panes() {
-    use tmux_interface::PANE_ALL;
     use tmux_interface::{Panes, TargetSession, TargetWindowExt, TmuxCommand};
     use tmux_interface::{SessionOptionsBuilder, BASE_INDEX};
 
@@ -34,7 +33,7 @@ fn get_panes() {
         .unwrap();
     assert_eq!(has_session.success(), true);
 
-    let _panes = Panes::get(&target_window, PANE_ALL).unwrap();
+    let _panes = Panes::get(&target_window).unwrap();
 
     tmux.kill_session()
         .target_session(&target_session_str)

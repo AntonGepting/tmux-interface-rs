@@ -1,6 +1,6 @@
 use crate::format::format::Format;
 use crate::variables::window::window::WINDOW_VARS_SEPARATOR;
-use crate::{Error, ListWindows, TargetSession, Window};
+use crate::{Error, ListWindows, Window};
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -32,25 +32,25 @@ impl Windows {
         self.0.push(window);
     }
 
-    pub fn get(target_session: &TargetSession) -> Result<Self, Error> {
+    // XXX: generic
+    pub fn get<S: ToString>(target_session: S) -> Result<Self, Error> {
         let mut format = Format::new();
         format.separator(WINDOW_VARS_SEPARATOR);
 
-        let target_session_str = target_session.to_string();
         let lsw_format = format.to_string();
 
         let output = ListWindows::new()
             .format(&lsw_format)
-            .target_session(&target_session_str)
+            .target_session(target_session.to_string())
             .output()?
             .to_string();
 
         Windows::from_str(&output)
     }
 
-    pub fn from_str(windows_str: &str) -> Result<Self, Error> {
+    pub fn from_str<S: AsRef<str>>(windows_str: S) -> Result<Self, Error> {
         let mut windows = Windows::new();
-        for line in windows_str.lines() {
+        for line in windows_str.as_ref().lines() {
             windows.push(Window::from_str(line)?);
         }
         Ok(windows)

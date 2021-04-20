@@ -92,7 +92,7 @@ impl Session {
         Default::default()
     }
 
-    pub fn from_str(s: &str) -> Result<Self, Error> {
+    pub fn from_str<S: AsRef<str>>(s: S) -> Result<Self, Error> {
         let mut session = Session::new();
         let mut format = FormatOutput::new();
         format.separator(':');
@@ -146,7 +146,7 @@ impl Session {
         #[cfg(feature = "tmux_1_6")]
         format.session_windows(&mut session.windows);
 
-        FormatOutput::from_string_ext(s, &mut format);
+        FormatOutput::from_string_ext(s.as_ref(), &mut format);
         Ok(session)
     }
 

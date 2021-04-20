@@ -102,9 +102,9 @@ impl Sessions {
     //Sessions::from_str(&sessions_str, bitflags)
     //}
 
-    pub fn from_str(sessions_str: &str) -> Result<Self, Error> {
+    pub fn from_str<S: AsRef<str>>(sessions_str: S) -> Result<Self, Error> {
         let mut sessions = Sessions::new();
-        for line in sessions_str.lines() {
+        for line in sessions_str.as_ref().lines() {
             sessions.push(Session::from_str(line)?);
         }
         Ok(sessions)
