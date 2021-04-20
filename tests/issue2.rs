@@ -1,10 +1,10 @@
 // Window ID / Window Title / Pane number missing
 
-use tmux_interface::{Sessions, TargetSession, Windows, SESSION_ALL, WINDOW_ALL};
+use tmux_interface::{Sessions, TargetSession, Windows, WINDOW_ALL};
 
 #[test]
 fn issue2() {
-    let sessions = Sessions::get(SESSION_ALL).unwrap();
+    let sessions = Sessions::get().unwrap();
 
     for s in sessions {
         let session_name = s.name.unwrap().to_string();
