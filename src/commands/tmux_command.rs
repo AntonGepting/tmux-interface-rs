@@ -1,6 +1,7 @@
 use crate::commands::constants::*;
 use crate::{Error, TmuxOutput};
 use std::borrow::Cow;
+use std::fmt;
 use std::process::{Child, Command, ExitStatus, Stdio};
 
 /// Standard tmux command line arguments syntax:
@@ -24,6 +25,23 @@ pub struct TmuxCommand<'a> {
     pub cmd: Option<Cow<'a, str>>,
     /// Tmux command arguments (part IV)
     pub cmd_args: Option<Vec<Cow<'a, str>>>,
+}
+
+impl<'a> fmt::Display for TmuxCommand<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut output = String::new();
+        output.push_str(self.bin.as_ref());
+        if let Some(bin_args) = self.bin_args.as_ref() {
+            output.push_str(&bin_args.join(" "));
+        }
+        if let Some(cmd) = self.cmd.as_ref() {
+            output.push_str(&cmd);
+        }
+        if let Some(cmd_args) = self.cmd_args.as_ref() {
+            output.push_str(&cmd_args.join(" "));
+        }
+        write!(f, "{}", output)
+    }
 }
 
 impl<'a> Default for TmuxCommand<'a> {
@@ -109,6 +127,16 @@ impl<'a> TmuxCommand<'a> {
     //// create `std::process::Command` from `Self` (consuming `Self`)
     //pub fn to_command(&self) -> Command {
     //Command::from(self)
+    //}
+
+    //pub fn to_string(&self) -> String {
+    //let mut s = String::new();
+    //self.cmd.as_ref().and_then(|cmd| Some(s.push_str(cmd)));
+    //s.push(' ');
+    //self.cmd_args
+    //.as_ref()
+    //.and_then(|cmd_args| Some(s.push_str(&cmd_args.join(" "))));
+    //s
     //}
 }
 

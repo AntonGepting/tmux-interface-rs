@@ -9,18 +9,6 @@ fn show_generated_struct() {
 }
 
 #[test]
-fn bitflags() {
-    use crate::{PANE_ALL, PANE_NONE};
-    let bitflags =
-        // _31____________16_15_____________0
-        0b_11111111111111111_1111111111111111;
-    //println!("{:b}", PANE_ALL);
-    //println!("{:b}", &bitflags);
-    assert_eq!(bitflags, PANE_ALL);
-    assert_eq!(0, PANE_NONE);
-}
-
-#[test]
 fn bool() {
     //let c = "1".parse::<bool>().unwrap();
     //assert_eq!(c, true);
@@ -32,7 +20,6 @@ fn bool() {
 #[test]
 fn parse() {
     use crate::Pane;
-    use crate::PANE_ALL;
 
     //let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0'8,16,24,32,40,48,56,64,72,80,88,96,104,112,120,128,136,144,152,160,168,176'asus'0'/dev/pts/2'177";
 
@@ -139,7 +126,7 @@ fn parse() {
     ];
     //let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0''asus'0'/dev/pts/2'177";
     let pane_str = pane_vec.join("'");
-    let pane = Pane::from_str(&pane_str, PANE_ALL).unwrap();
+    let pane = Pane::from_str(&pane_str).unwrap();
     #[cfg(feature = "tmux_1_7")]
     assert_eq!(pane.current_path, Some("/home/user".to_string()));
     #[cfg(feature = "tmux_1_6")]
@@ -166,7 +153,6 @@ fn bitflag_operations() {
 #[test]
 fn parse2() {
     use crate::Pane;
-    use crate::PANE_ALL;
 
     let origin = Pane {
         #[cfg(feature = "tmux_1_6")]
@@ -341,7 +327,7 @@ fn parse2() {
     //let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0''asus'0'/dev/pts/2'177";
     //let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0'8,16,24,32,40,48,56,64,72,80,88,96,104,112,120,128,136,144,152,160,168,176'asus'0'/dev/pts/2'177";
     let pane_str = pane_vec.join("'");
-    let pane = Pane::from_str(&pane_str, PANE_ALL).unwrap();
+    let pane = Pane::from_str(&pane_str).unwrap();
     //assert_eq!(pane.current_path, Some("/home/user".to_string()));
     //assert_eq!(pane.tty, Some("/dev/pts/2".to_string()));
     assert_eq!(origin, pane);

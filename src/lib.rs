@@ -83,13 +83,10 @@
 //! ```
 //! use crate::tmux_interface::{Sessions, Session, Windows, Window, Pane, Panes, TargetSession,
 //! TargetWindowExt};
-//! use crate::tmux_interface::variables::session::session::SESSION_ALL;
-//! use crate::tmux_interface::variables::window::window::WINDOW_ALL;
-//! use crate::tmux_interface::variables::pane::pane::PANE_ALL;
 //!
-//! let sessions = Sessions::get(SESSION_ALL).unwrap();
-//! let windows = Windows::get(&TargetSession::Raw("0"), WINDOW_ALL).unwrap();
-//! let panes = Panes::get(&TargetWindowExt::raw("0:1"), PANE_ALL).unwrap();
+//! let sessions = Sessions::get().unwrap();
+//! let windows = Windows::get(&TargetSession::Raw("0")).unwrap();
+//! let panes = Panes::get(&TargetWindowExt::raw("0:1")).unwrap();
 //! ```
 //!
 //!
@@ -229,6 +226,10 @@ pub mod target;
 pub mod variables;
 
 pub mod version;
+
+pub mod control_mode;
+
+pub mod format;
 
 // common options
 pub use crate::options::StatusKeys;
@@ -883,215 +884,3 @@ pub use self::error::Error;
 //mod options_tests;
 //mod tmux_option_tests;
 mod version_tests;
-
-// consts
-// TODO: add all
-#[cfg(feature = "tmux_2_1")]
-pub use crate::variables::session::session::SESSION_ACTIVITY;
-#[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-pub use crate::variables::session::session::SESSION_ACTIVITY_STRING;
-#[cfg(feature = "tmux_2_1")]
-pub use crate::variables::session::session::SESSION_ALERTS;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::session::session::SESSION_ATTACHED;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::session::session::SESSION_ATTACHED_LIST;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::session::session::SESSION_CREATED;
-#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
-pub use crate::variables::session::session::SESSION_CREATED_STRING;
-#[cfg(feature = "tmux_2_6")]
-pub use crate::variables::session::session::SESSION_FORMAT;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::session::session::SESSION_GROUP;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::session::session::SESSION_GROUPED;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::session::session::SESSION_GROUP_ATTACHED;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::session::session::SESSION_GROUP_ATTACHED_LIST;
-#[cfg(feature = "tmux_2_7")]
-pub use crate::variables::session::session::SESSION_GROUP_LIST;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::session::session::SESSION_GROUP_MANY_ATTACHED;
-#[cfg(feature = "tmux_2_7")]
-pub use crate::variables::session::session::SESSION_GROUP_SIZE;
-#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_9")))]
-pub use crate::variables::session::session::SESSION_HEIGHT;
-#[cfg(feature = "tmux_1_8")]
-pub use crate::variables::session::session::SESSION_ID;
-#[cfg(feature = "tmux_2_1")]
-pub use crate::variables::session::session::SESSION_LAST_ATTACHED;
-#[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-pub use crate::variables::session::session::SESSION_LAST_ATTACHED_STRING;
-#[cfg(feature = "tmux_2_0")]
-pub use crate::variables::session::session::SESSION_MANY_ATTACHED;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::session::session::SESSION_NAME;
-#[cfg(feature = "tmux_2_5")]
-pub use crate::variables::session::session::SESSION_STACK;
-#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_9")))]
-pub use crate::variables::session::session::SESSION_WIDTH;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::session::session::SESSION_WINDOWS;
-
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::session::session::SESSION_NONE;
-//pub use crate::variables::session::session::SESSION_DEFAULT;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::session::session::SESSION_ALL;
-
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::window::window::WINDOW_ACTIVE;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::window::window::WINDOW_ACTIVE_CLIENTS;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::window::window::WINDOW_ACTIVE_CLIENTS_LIST;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::window::window::WINDOW_ACTIVE_SESSIONS;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::window::window::WINDOW_ACTIVE_SESSIONS_LIST;
-#[cfg(feature = "tmux_2_1")]
-pub use crate::variables::window::window::WINDOW_ACTIVITY;
-#[cfg(any(
-    all(feature = "tmux_1_9", not(feature = "tmux_2_2")),
-    feature = "tmux_2_3"
-))]
-pub use crate::variables::window::window::WINDOW_ACTIVITY_FLAG;
-#[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-pub use crate::variables::window::window::WINDOW_ACTIVITY_STRING;
-#[cfg(feature = "tmux_1_9")]
-pub use crate::variables::window::window::WINDOW_BELL_FLAG;
-#[cfg(feature = "tmux_2_9")]
-pub use crate::variables::window::window::WINDOW_BIGGER;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::window::window::WINDOW_CELL_HEIGHT;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::window::window::WINDOW_CELL_WIDTH;
-#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-pub use crate::variables::window::window::WINDOW_CONTENT_FLAG;
-#[cfg(feature = "tmux_2_9")]
-pub use crate::variables::window::window::WINDOW_END_FLAG;
-#[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-pub use crate::variables::window::window::WINDOW_FIND_MATCHES;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::window::window::WINDOW_FLAGS;
-#[cfg(feature = "tmux_2_6")]
-pub use crate::variables::window::window::WINDOW_FORMAT;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::window::window::WINDOW_HEIGHT;
-#[cfg(feature = "tmux_1_7")]
-pub use crate::variables::window::window::WINDOW_ID;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::window::window::WINDOW_INDEX;
-#[cfg(feature = "tmux_2_0")]
-pub use crate::variables::window::window::WINDOW_LAST_FLAG;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::window::window::WINDOW_LAYOUT;
-#[cfg(feature = "tmux_2_1")]
-pub use crate::variables::window::window::WINDOW_LINKED;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::window::window::WINDOW_LINKED_SESSIONS;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::window::window::WINDOW_LINKED_SESSIONS_LIST;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::window::window::WINDOW_MARKED_FLAG;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::window::window::WINDOW_NAME;
-#[cfg(feature = "tmux_2_9")]
-pub use crate::variables::window::window::WINDOW_OFFSET_X;
-#[cfg(feature = "tmux_2_9")]
-pub use crate::variables::window::window::WINDOW_OFFSET_Y;
-#[cfg(feature = "tmux_1_7")]
-pub use crate::variables::window::window::WINDOW_PANES;
-#[cfg(feature = "tmux_1_9")]
-pub use crate::variables::window::window::WINDOW_SILENCE_FLAG;
-#[cfg(feature = "tmux_2_5")]
-pub use crate::variables::window::window::WINDOW_STACK_INDEX;
-#[cfg(feature = "tmux_2_9")]
-pub use crate::variables::window::window::WINDOW_START_FLAG;
-#[cfg(feature = "tmux_2_2")]
-pub use crate::variables::window::window::WINDOW_VISIBLE_LAYOUT;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::window::window::WINDOW_WIDTH;
-#[cfg(feature = "tmux_2_0")]
-pub use crate::variables::window::window::WINDOW_ZOOMED_FLAG;
-
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::window::window::WINDOW_NONE;
-//pub use crate::variables::window::window::WINDOW_DEFAULT;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::window::window::WINDOW_ALL;
-
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::pane::pane::PANE_ACTIVE;
-#[cfg(feature = "tmux_2_6")]
-pub use crate::variables::pane::pane::PANE_AT_BOTTOM;
-#[cfg(feature = "tmux_2_6")]
-pub use crate::variables::pane::pane::PANE_AT_LEFT;
-#[cfg(feature = "tmux_2_6")]
-pub use crate::variables::pane::pane::PANE_AT_RIGHT;
-#[cfg(feature = "tmux_2_6")]
-pub use crate::variables::pane::pane::PANE_AT_TOP;
-#[cfg(feature = "tmux_2_0")]
-pub use crate::variables::pane::pane::PANE_BOTTOM;
-#[cfg(feature = "tmux_1_8")]
-pub use crate::variables::pane::pane::PANE_CURRENT_COMMAND;
-#[cfg(feature = "tmux_1_7")]
-pub use crate::variables::pane::pane::PANE_CURRENT_PATH;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::pane::pane::PANE_DEAD;
-#[cfg(feature = "tmux_2_0")]
-pub use crate::variables::pane::pane::PANE_DEAD_STATUS;
-#[cfg(feature = "tmux_2_6")]
-pub use crate::variables::pane::pane::PANE_FORMAT;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::pane::pane::PANE_HEIGHT;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::pane::pane::PANE_ID;
-#[cfg(feature = "tmux_1_7")]
-pub use crate::variables::pane::pane::PANE_INDEX;
-#[cfg(feature = "tmux_2_0")]
-pub use crate::variables::pane::pane::PANE_INPUT_OFF;
-#[cfg(feature = "tmux_1_8")]
-pub use crate::variables::pane::pane::PANE_IN_MODE;
-#[cfg(feature = "tmux_2_0")]
-pub use crate::variables::pane::pane::PANE_LEFT;
-#[cfg(feature = "tmux_3_0")]
-pub use crate::variables::pane::pane::PANE_MARKED;
-#[cfg(feature = "tmux_3_0")]
-pub use crate::variables::pane::pane::PANE_MARKED_SET;
-#[cfg(feature = "tmux_2_5")]
-pub use crate::variables::pane::pane::PANE_MODE;
-#[cfg(feature = "tmux_3_1")]
-pub use crate::variables::pane::pane::PANE_PATH;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::pane::pane::PANE_PID;
-#[cfg(feature = "tmux_2_6")]
-pub use crate::variables::pane::pane::PANE_PIPE;
-#[cfg(feature = "tmux_2_0")]
-pub use crate::variables::pane::pane::PANE_RIGHT;
-#[cfg(feature = "tmux_2_5")]
-pub use crate::variables::pane::pane::PANE_SEARCH_STRING;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::pane::pane::PANE_START_COMMMAND;
-#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_0")))]
-pub use crate::variables::pane::pane::PANE_START_PATH;
-#[cfg(feature = "tmux_1_9")]
-pub use crate::variables::pane::pane::PANE_SYNCHRONIZED;
-#[cfg(feature = "tmux_1_8")]
-pub use crate::variables::pane::pane::PANE_TABS;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::pane::pane::PANE_TITLE;
-#[cfg(feature = "tmux_2_0")]
-pub use crate::variables::pane::pane::PANE_TOP;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::pane::pane::PANE_TTY;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::pane::pane::PANE_WIDTH;
-
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::pane::pane::PANE_NONE;
-//pub use crate::variables::pane::pane::PANE_DEFAULT;
-#[cfg(feature = "tmux_1_6")]
-pub use crate::variables::pane::pane::PANE_ALL;

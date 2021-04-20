@@ -1,7 +1,6 @@
 #[cfg(feature = "tmux_1_6")]
 #[test]
 fn get_windows() {
-    use tmux_interface::WINDOW_ALL;
     use tmux_interface::{NewSession, TargetSession, TmuxCommand, Windows};
 
     const TARGET_SESSION: &str = "test_get_windows";
@@ -27,7 +26,7 @@ fn get_windows() {
         .unwrap();
     assert_eq!(has_session.0.status.success(), true);
 
-    let _windows = Windows::get(&target_session, WINDOW_ALL).unwrap();
+    let _windows = Windows::get(&target_session).unwrap();
 
     tmux.kill_session()
         .target_session(&target_session_str)

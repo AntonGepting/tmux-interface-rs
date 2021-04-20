@@ -1,6 +1,6 @@
 #[test]
 fn parse() {
-    use crate::{Panes, PANE_ALL};
+    use crate::Panes;
 
     //"1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0'8,16,24,\
     // 32,40,48,56,64,72,80,88,96,104,112,120,128,136,144,152,160,168,176'asus'0'\
@@ -213,6 +213,6 @@ fn parse() {
     let pane0_str = pane0_vec.join("'");
     let pane1_str = pane1_vec.join("'");
     let panes_str = format!("{}\n{}", pane0_str, pane1_str);
-    let panes = Panes::from_str(&panes_str, PANE_ALL).unwrap();
+    let panes = Panes::from_str(&panes_str).unwrap();
     assert_eq!(panes[0].id, Some(0));
 }

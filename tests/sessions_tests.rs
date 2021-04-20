@@ -1,7 +1,6 @@
 #[cfg(feature = "tmux_1_6")]
 #[test]
 fn get_sessions() {
-    use tmux_interface::SESSION_ALL;
     use tmux_interface::{Sessions, TargetSession, TmuxCommand};
 
     const TARGET_SESSION: &str = "test_get_sessions";
@@ -20,7 +19,7 @@ fn get_sessions() {
         .unwrap();
     assert_eq!(has_session.0.status.success(), true);
 
-    let _sessions = Sessions::get(SESSION_ALL).unwrap();
+    let _sessions = Sessions::get().unwrap();
 
     tmux.kill_session()
         .target_session(&target_session)

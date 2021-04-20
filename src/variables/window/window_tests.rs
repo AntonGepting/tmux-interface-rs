@@ -8,23 +8,10 @@ fn show_generated_struct() {
     //dbg!(_window);
 }
 
-#[test]
-fn bitflags() {
-    use crate::{WINDOW_ALL, WINDOW_NONE};
-    let bitflags =
-        // 35___31_____________1615_____________0
-        0b_1111_1111111111111111_1111111111111111;
-    //println!("{:b}", WINDOW_ALL);
-    //println!("{:b}", &bitflags);
-    assert_eq!(bitflags, WINDOW_ALL);
-    assert_eq!(0, WINDOW_NONE);
-}
-
 //let window_str = "1557947146'0'1'0'''*'1'64'@0'4'0'3484,177x64,0,0{88x64,0,0,3,88x64,89,0,18}'0'bash'''2'0'0''3484,177x64,0,0{88x64,0,0,3,88x64,89,0,18}'177'0";
 #[test]
 fn parse1() {
     use crate::Window;
-    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active
@@ -142,7 +129,7 @@ fn parse1() {
     let window_str = window_vec.join("'");
     //println!("{}", window_str);
 
-    let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    let window = Window::from_str(&window_str).unwrap();
     #[cfg(feature = "tmux_1_7")]
     assert_eq!(window.id, Some(0));
 }
@@ -151,7 +138,6 @@ fn parse1() {
 #[test]
 fn parse2() {
     use crate::Window;
-    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active
@@ -267,7 +253,7 @@ fn parse2() {
         "0",
     ];
     let window_str = window_vec.join("'");
-    let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    let window = Window::from_str(&window_str).unwrap();
     #[cfg(feature = "tmux_1_6")]
     assert_eq!(window.name, Some("bash".to_string()));
     #[cfg(feature = "tmux_1_7")]
@@ -278,7 +264,6 @@ fn parse2() {
 #[test]
 fn parse3() {
     use crate::Window;
-    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active
@@ -394,7 +379,7 @@ fn parse3() {
         "0",
     ];
     let window_str = window_vec.join("'");
-    let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    let window = Window::from_str(&window_str).unwrap();
     #[cfg(feature = "tmux_1_6")]
     assert_eq!(window.name, Some("bash".to_string()));
     #[cfg(feature = "tmux_1_7")]
@@ -405,7 +390,6 @@ fn parse3() {
 #[test]
 fn parse4() {
     use crate::Window;
-    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active
@@ -521,7 +505,7 @@ fn parse4() {
         "0",
     ];
     let window_str = window_vec.join("'");
-    let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    let window = Window::from_str(&window_str).unwrap();
     #[cfg(feature = "tmux_1_7")]
     assert_eq!(window.id, Some(3));
 }
@@ -530,7 +514,6 @@ fn parse4() {
 #[test]
 fn parse5() {
     use crate::Window;
-    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active
@@ -646,7 +629,7 @@ fn parse5() {
         "0",
     ];
     let window_str = window_vec.join("'");
-    let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    let window = Window::from_str(&window_str).unwrap();
     #[cfg(feature = "tmux_1_7")]
     assert_eq!(window.id, Some(4));
 }
@@ -655,7 +638,6 @@ fn parse5() {
 #[test]
 fn parse6() {
     use crate::Window;
-    use crate::WINDOW_ALL;
 
     let window_vec = vec![
         // window_active
@@ -771,7 +753,7 @@ fn parse6() {
         "0",
     ];
     let window_str = window_vec.join("'");
-    let window = Window::from_str(&window_str, WINDOW_ALL).unwrap();
+    let window = Window::from_str(&window_str).unwrap();
     #[cfg(feature = "tmux_1_7")]
     assert_eq!(window.id, Some(5));
 }

@@ -1,6 +1,5 @@
-use crate::variables::pane::pane::{PANE_VARS, PANE_VARS_SEPARATOR};
+use crate::format::format::Format;
 use crate::Error;
-use crate::TargetWindowExt;
 use crate::{ListPanes, Pane};
 use std::ops::Index;
 
@@ -34,42 +33,40 @@ impl Panes {
         self.0.push(pane);
     }
 
-    pub fn get(target_window: &TargetWindowExt, bitflags: u64) -> Result<Self, Error> {
-        let lsp_format = PANE_VARS
-            .iter()
-            .filter(|t| bitflags & t.1 == t.1)
-            .map(|t| format!("#{{{}}}", t.0))
-            .collect::<Vec<String>>()
-            .join(PANE_VARS_SEPARATOR);
-        let target_window_str = target_window.to_string();
-        let panes_str = ListPanes::new()
+    // XXX: generic
+    pub fn get<S: ToString>(target_window: S) -> Result<Self, Error> {
+        let mut format = Format::new();
+        format.separator(':');
+
+        let lsp_format = format.to_string();
+        let output = ListPanes::new()
             .format(&lsp_format)
-            .target(&target_window_str)
+            .target(target_window.to_string())
             .output()?
             .to_string();
-        Panes::from_str(&panes_str, bitflags)
+
+        Panes::from_str(&output)
     }
 
-    pub fn get_all(target_session: &TargetWindowExt, bitflags: u64) -> Result<Self, Error> {
-        let lsp_format = PANE_VARS
-            .iter()
-            .filter(|t| bitflags & t.1 == t.1)
-            .map(|t| format!("#{{{}}}", t.0))
-            .collect::<Vec<String>>()
-            .join(PANE_VARS_SEPARATOR);
-        let target_session_str = target_session.to_string();
-        let panes_str = ListPanes::new()
+    // XXX: generic
+    pub fn get_all<S: ToString>(target_session: S) -> Result<Self, Error> {
+        let mut format = Format::new();
+        format.separator(':');
+
+        let lsp_format = format.to_string();
+        let output = ListPanes::new()
             .format(&lsp_format)
-            .target(&target_session_str)
+            .target(target_session.to_string())
             .output()?
             .to_string();
-        Panes::from_str(&panes_str, bitflags)
+
+        Panes::from_str(&output)
     }
 
-    pub fn from_str(panes_str: &str, bitflags: u64) -> Result<Self, Error> {
+    pub fn from_str<S: AsRef<str>>(panes_str: S) -> Result<Self, Error> {
         let mut panes = Panes::new();
-        for line in panes_str.lines() {
-            panes.push(Pane::from_str(line, bitflags)?);
+        for line in panes_str.as_ref().lines() {
+            panes.push(Pane::from_str(line)?);
         }
         Ok(panes)
     }
