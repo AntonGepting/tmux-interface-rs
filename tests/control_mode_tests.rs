@@ -16,7 +16,7 @@ fn control_mode() {
     let reader = BufReader::new(stdout);
 
     let mut cm_mode_lines = ControlModeOutput::new(reader.lines());
-    for cm_mode_line in cm_mode_lines {
-        //dbg!(cm_mode_line);
-    }
+    //for cm_mode_line in cm_mode_lines {
+    //dbg!(cm_mode_line);
+    //}
 }
