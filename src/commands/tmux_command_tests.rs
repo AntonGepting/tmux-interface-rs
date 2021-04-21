@@ -1,7 +1,7 @@
 #[test]
 fn to_string() {
-    use crate::{Error, TmuxCommand, TmuxOutput};
+    use crate::TmuxCommand;
 
-    let mut tmux = TmuxCommand::new();
+    let tmux = TmuxCommand::new();
     assert_eq!(tmux.to_string(), "tmux");
 }

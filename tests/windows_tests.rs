@@ -1,7 +1,7 @@
 #[cfg(feature = "tmux_1_6")]
 #[test]
 fn get_windows() {
-    use tmux_interface::{NewSession, TargetSession, TmuxCommand, Windows};
+    use tmux_interface::{TargetSession, TmuxCommand, Windows};
 
     const TARGET_SESSION: &str = "test_get_windows";
     let target_session = TargetSession::Raw(TARGET_SESSION);
