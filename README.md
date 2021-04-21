@@ -1,6 +1,6 @@
 # tmux_interface
 
-[![Build Status](https://travis-ci.com/AntonGepting/tmux-interface-rs.svg?branch=master)](https://travis-ci.com/AntonGepting/tmux-interface-rs)
+[![Build Status](https://github.com/AntonGepting/tmux-interface-rs/actions/workflows/actions.yml/badge.svg)](https://github.com/AntonGepting/tmux-interface-rs/actions)
 [![Crates.io](https://img.shields.io/crates/v/tmux_interface.svg)](https://crates.io/crates/tmux_interface)
 [![Documentation](https://docs.rs/tmux_interface/badge.svg)](https://docs.rs/tmux_interface)
 

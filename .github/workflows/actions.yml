@@ -1,4 +1,4 @@
-name: tmux_interface github actions
+name: GitHub Actions
 
 on:
   push:
