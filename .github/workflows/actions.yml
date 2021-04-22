@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         versions:
           - { tmux: "0.8", feature: "tmux_0_8" }
