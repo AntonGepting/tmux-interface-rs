@@ -490,9 +490,9 @@ pub enum VariableOutput<'a> {
     /// `window_activity` - Time of window last activity
     #[cfg(feature = "tmux_2_1")]
     WindowActivity(&'a mut Option<usize>),
-    /// `session_activity_string` - Option<String> time of session last activity
+    /// `window_activity_string` - String time of window last activity
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-    SessionActivityString(&'a mut Option<String>),
+    WindowActivityString(&'a mut Option<String>),
     /// `window_activity_flag` - 1 if window has activity
     #[cfg(any(
         all(feature = "tmux_1_9", not(feature = "tmux_2_2")),
@@ -504,7 +504,7 @@ pub enum VariableOutput<'a> {
     WindowBellFlag(&'a mut Option<bool>),
     /// `window_content_flag` - 1 if window has content alert
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    WindowContentflag(&'a mut Option<bool>),
+    WindowContentFlag(&'a mut Option<bool>),
     /// `window_bigger` - 1 if window is larger than client
     #[cfg(feature = "tmux_2_9")]
     WindowBigger(&'a mut Option<bool>),
@@ -643,10 +643,10 @@ impl<'a> VariableOutput<'a> {
             Self::ClientActivity(v) => **v = s.parse::<u128>().ok(),
             // client_cell_height - Height of each client cell in pixels
             #[cfg(feature = "tmux_3_1")]
-            Self::ClientCellHeight(v) => **v = Self::parse_usize(s),
+            Self::ClientCellHeight(v) => **v = Self::parse_option_usize(s),
             // client_cell_width - Width of each client cell in pixels
             #[cfg(feature = "tmux_3_1")]
-            Self::ClientCellWidth(v) => **v = Self::parse_usize(s),
+            Self::ClientCellWidth(v) => **v = Self::parse_option_usize(s),
             // client_activity_string - Option<String> time client last had activity
             #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
             Self::ClientActivityString(v) => **v = Self::parse_option_string(s),
@@ -837,10 +837,10 @@ impl<'a> VariableOutput<'a> {
             Self::MouseWord(v) => **v = Self::parse_option_string(s),
             // mouse_x - Mouse X position, if any
             #[cfg(feature = "tmux_3_0")]
-            Self::MouseX(v) => **v = Self::parse_usize(s),
+            Self::MouseX(v) => **v = Self::parse_option_usize(s),
             // mouse_y - Mouse Y position, if any
             #[cfg(feature = "tmux_3_0")]
-            Self::MouseY(v) => **v = Self::parse_usize(s),
+            Self::MouseY(v) => **v = Self::parse_option_usize(s),
             // origin_flag - Pane origin flag
             #[cfg(feature = "tmux_3_0")]
             Self::OriginFlag(v) => **v = Self::parse_option_string(s),
@@ -899,10 +899,10 @@ impl<'a> VariableOutput<'a> {
             Self::PaneLeft(v) => **v = s.parse::<usize>().ok(),
             // pane_marked - 1 if this is the marked pane
             #[cfg(feature = "tmux_3_0")]
-            Self::PaneMarked(v) => **v = Self::parse_option_bool(),
+            Self::PaneMarked(v) => **v = Self::parse_option_bool(s),
             // pane_marked_set - 1 if a marked pane is set
             #[cfg(feature = "tmux_3_0")]
-            Self::PaneMarkedSet(v) => **v = Self::parse_option_bool(),
+            Self::PaneMarkedSet(v) => **v = Self::parse_option_bool(s),
             // pane_mode - Name of pane mode, if any
             #[cfg(feature = "tmux_2_5")]
             Self::PaneMode(v) => **v = s.parse::<usize>().ok(),
@@ -926,7 +926,7 @@ impl<'a> VariableOutput<'a> {
             Self::PaneStartCommand(v) => **v = s.parse::<usize>().ok(),
             // pane_start_path - Path pane started with
             #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_0")))]
-            Self::PaneStartPath(v) => **v = Self::parse_usize(s),
+            Self::PaneStartPath(v) => **v = Self::parse_option_usize(s),
             // pane_synchronized - 1 if pane is synchronized
             #[cfg(feature = "tmux_1_9")]
             Self::PaneSynchronized(v) => **v = Self::parse_option_bool(s),
@@ -972,22 +972,22 @@ impl<'a> VariableOutput<'a> {
 
             // selection_active - 1 if selection started and changes with the curso
             #[cfg(feature = "tmux_3_1")]
-            Self::SelectionActive(v) => **v = Self::parse_option_bool(),
+            Self::SelectionActive(v) => **v = Self::parse_option_bool(s),
             // selection_end_x - X position of the end of the selection
             #[cfg(feature = "tmux_3_1")]
-            Self::SelectionEndX(v) => **v = Self::parse_usize(s),
+            Self::SelectionEndX(v) => **v = Self::parse_option_usize(s),
             // selection_end_y - Y position of the end of the selection
             #[cfg(feature = "tmux_3_1")]
-            Self::SelectionEndY(v) => **v = Self::parse_usize(s),
+            Self::SelectionEndY(v) => **v = Self::parse_option_usize(s),
             // selection_present - 1 if selection started in copy mode
             #[cfg(feature = "tmux_2_6")]
             Self::SelectionPresent(v) => **v = Self::parse_option_bool(s),
             // selection_start_x - X position of the start of the selection
             #[cfg(feature = "tmux_3_1")]
-            Self::SelectionStartX(v) => **v = Self::parse_usize(s),
+            Self::SelectionStartX(v) => **v = Self::parse_option_usize(s),
             // selection_start_y - Y position of the start of the selection
             #[cfg(feature = "tmux_3_1")]
-            Self::SelectionStartY(v) => **v = Self::parse_usize(s),
+            Self::SelectionStartY(v) => **v = Self::parse_option_usize(s),
 
             // Session
             // session_activity - Time of session last activity
@@ -1004,7 +1004,7 @@ impl<'a> VariableOutput<'a> {
             Self::SessionAttached(v) => **v = s.parse::<usize>().ok(),
             // session_attached_list - List of clients session is attached to
             #[cfg(feature = "tmux_3_1")]
-            Self::SessionAttachedList(v) => **v = Self::parse_usize(s),
+            Self::SessionAttachedList(v) => **v = Self::parse_option_usize(s),
             // session_created - Time session created
             #[cfg(feature = "tmux_1_6")]
             Self::SessionCreated(v) => **v = Self::parse_option_usize(s),
@@ -1019,7 +1019,7 @@ impl<'a> VariableOutput<'a> {
             Self::SessionGroup(v) => **v = Self::parse_option_string(s),
             // session_group_attached - Number of clients sessions in group are attached >
             #[cfg(feature = "tmux_3_1")]
-            Self::SessionGroupAttached(v) => **v = Self::parse_usize(s),
+            Self::SessionGroupAttached(v) => **v = Self::parse_option_usize(s),
             // session_group_attached_list - List of clients sessions in group are attached to
             #[cfg(feature = "tmux_3_1")]
             Self::SessionGroupAttachedList(v) => **v = Self::parse_option_string(s),
@@ -1028,7 +1028,7 @@ impl<'a> VariableOutput<'a> {
             Self::SessionGroupList(v) => **v = Self::parse_option_string(s),
             // session_group_many_attached - 1 if multiple clients attached to sessions in gro
             #[cfg(feature = "tmux_3_1")]
-            Self::SessionGroupManyAttached(v) => **v = Self::parse_option_bool(),
+            Self::SessionGroupManyAttached(v) => **v = Self::parse_option_bool(s),
             // session_size - Size of session group
             #[cfg(feature = "tmux_2_7")]
             Self::SessionGroupSize(v) => **v = Self::parse_option_string(s),
@@ -1081,22 +1081,22 @@ impl<'a> VariableOutput<'a> {
             Self::WindowActive(v) => **v = Self::parse_option_bool(s),
             // window_active_clients - Number of clients viewing this window
             #[cfg(feature = "tmux_3_1")]
-            Self::WindowActiveClients(v) => **v = Self::parse_usize(s),
+            Self::WindowActiveClients(v) => **v = Self::parse_option_usize(s),
             // window_active_clients_list - List of clients viewing this window
             #[cfg(feature = "tmux_3_1")]
             Self::WindowActiveClientsList(v) => **v = Self::parse_option_string(s),
             // window_active_sessions - Number of sessions on which this window is active
             #[cfg(feature = "tmux_3_1")]
-            Self::WindowActiveSessions(v) => **v = Self::parse_usize(s),
+            Self::WindowActiveSessions(v) => **v = Self::parse_option_usize(s),
             // window_active_sessions_list - List of sessions on which this window is active
             #[cfg(feature = "tmux_3_1")]
             Self::WindowActiveSessionsList(v) => **v = Self::parse_option_string(s),
             // window_activity - Time of window last activity
             #[cfg(feature = "tmux_2_1")]
             Self::WindowActivity(v) => **v = s.parse::<usize>().ok(),
-            // session_activity_string - Option<String> time of session last activity
+            // window_activity_string - String time of window last activity
             #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-            Self::SessionActivityString(v) => **v = Self::parse_option_string(s),
+            Self::WindowActivityString(v) => **v = Self::parse_option_string(s),
             // window_activity_flag - 1 if window has activity
             #[cfg(any(
                 all(feature = "tmux_1_9", not(feature = "tmux_2_2")),
@@ -1108,19 +1108,19 @@ impl<'a> VariableOutput<'a> {
             Self::WindowBellFlag(v) => **v = Self::parse_option_bool(s),
             // window_content_flag - 1 if window has content alert
             #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-            Self::WindowContentflag(v) => **v = Self::parse_option_bool(),
+            Self::WindowContentFlag(v) => **v = Self::parse_option_bool(s),
             // window_bigger - 1 if window is larger than client
             #[cfg(feature = "tmux_2_9")]
-            Self::WindowBigger(v) => **v = Self::parse_option_bool(),
+            Self::WindowBigger(v) => **v = Self::parse_option_bool(s),
             // window_cell_height - Height of each cell in pixels
             #[cfg(feature = "tmux_3_1")]
-            Self::WindowCellHeight(v) => **v = Self::parse_usize(s),
+            Self::WindowCellHeight(v) => **v = Self::parse_option_usize(s),
             // window_cell_width - Width of each cell in pixels
             #[cfg(feature = "tmux_3_1")]
-            Self::WindowCellWidth(v) => **v = Self::parse_usize(s),
+            Self::WindowCellWidth(v) => **v = Self::parse_option_usize(s),
             // window_end_flag - 1 if window has the highest index
             #[cfg(feature = "tmux_2_9")]
-            Self::WindowEndFlag(v) => **v = Self::parse_option_bool(),
+            Self::WindowEndFlag(v) => **v = Self::parse_option_bool(s),
             // window_find_matches - Matched data from the find-window command if available
             #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
             Self::WindowFindMatches(v) => **v = Self::parse_option_string(s),
@@ -1150,22 +1150,22 @@ impl<'a> VariableOutput<'a> {
             Self::WindowLinked(v) => **v = Self::parse_option_bool(s),
             // window_linked_sessions - Number of sessions this window is linked to
             #[cfg(feature = "tmux_3_1")]
-            Self::WindowLinkedSessions(v) => **v = Self::parse_usize(s),
+            Self::WindowLinkedSessions(v) => **v = Self::parse_option_usize(s),
             // window_linked_sessions_list - List of sessions this window is linked to
             #[cfg(feature = "tmux_3_1")]
             Self::WindowLinkedSessionsList(v) => **v = Self::parse_option_string(s),
             // window_marked_flag - 1 if window contains the marked pane
             #[cfg(feature = "tmux_3_1")]
-            Self::WindowMarkedFlag(v) => **v = Self::parse_option_bool(),
+            Self::WindowMarkedFlag(v) => **v = Self::parse_option_bool(s),
             // window_name - #W Name of window
             #[cfg(feature = "tmux_1_6")]
             Self::WindowName(v) => **v = Self::parse_option_string(s),
             // window_offset_x - X offset into window if larger than client
             #[cfg(feature = "tmux_2_9")]
-            Self::WindowOffsetX(v) => **v = Self::parse_usize(s),
+            Self::WindowOffsetX(v) => **v = Self::parse_option_usize(s),
             // window_offset_y - Y offset into window if larger than client
             #[cfg(feature = "tmux_2_9")]
-            Self::WindowOffsetY(v) => **v = Self::parse_usize(s),
+            Self::WindowOffsetY(v) => **v = Self::parse_option_usize(s),
             // window_panes - Number of panes in window
             #[cfg(feature = "tmux_1_7")]
             Self::WindowPanes(v) => **v = s.parse::<usize>().ok(),

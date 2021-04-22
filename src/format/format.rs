@@ -1119,9 +1119,9 @@ impl Format {
         self
     }
 
-    /// `session_activity_string` - Option<String> time of session last activity
+    /// `window_activity_string` - String time of window last activity
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-    pub fn session_activity_string(&mut self) -> &mut Self {
+    pub fn window_activity_string(&mut self) -> &mut Self {
         self.push(Variable::SessionActivityString);
         self
     }

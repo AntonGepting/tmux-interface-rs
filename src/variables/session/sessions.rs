@@ -40,7 +40,7 @@ impl Sessions {
         #[cfg(feature = "tmux_2_1")]
         format.session_activity();
         #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-        format.session_activity_string(&mut session.activity_string);
+        format.session_activity_string();
         #[cfg(feature = "tmux_2_1")]
         format.session_alerts();
         #[cfg(feature = "tmux_1_6")]

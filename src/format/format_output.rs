@@ -272,7 +272,7 @@ impl<'a> FormatOutput<'a> {
 
     /// `command_name` - Name of command in use, if any
     #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_2_4")))]
-    pub fn command_name(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn command_name(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::CommandName(v));
         self
     }
@@ -1018,7 +1018,7 @@ impl<'a> FormatOutput<'a> {
 
     /// `session_last_attached_string` - Option<String> time session last attached
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-    pub fn session_last_attached_string(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn session_last_attached_string(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::SessionLastAttachedString(v));
         self
     }
@@ -1116,10 +1116,10 @@ impl<'a> FormatOutput<'a> {
         self
     }
 
-    /// `session_activity_string` - Option<String> time of session last activity
+    /// `window_activity_string` - String time of window last activity
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-    pub fn session_activity_string(&mut self, v: &'a mut Option<bool>) -> &mut Self {
-        self.push(VariableOutput::SessionActivityString(v));
+    pub fn window_activity_string(&mut self, v: &'a mut Option<String>) -> &mut Self {
+        self.push(VariableOutput::WindowActivityString(v));
         self
     }
 

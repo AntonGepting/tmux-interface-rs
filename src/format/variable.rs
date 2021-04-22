@@ -500,7 +500,7 @@ pub enum Variable {
     WindowBellFlag,
     /// `window_content_flag` - 1 if window has content alert
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    WindowContentflag,
+    WindowContentFlag,
     /// `window_bigger` - 1 if window is larger than client
     #[cfg(feature = "tmux_2_9")]
     WindowBigger,
@@ -1083,7 +1083,7 @@ impl fmt::Display for Variable {
             Self::WindowBellFlag => "window_bell_flag",
             // window_content_flag - 1 if window has content alert
             #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-            Self::WindowContentflag => "window_content_flag",
+            Self::WindowContentFlag => "window_content_flag",
             // window_bigger - 1 if window is larger than client
             #[cfg(feature = "tmux_2_9")]
             Self::WindowBigger => "window_bigger",
