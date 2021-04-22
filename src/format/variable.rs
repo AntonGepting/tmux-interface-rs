@@ -486,9 +486,9 @@ pub enum Variable {
     /// `window_activity` - Time of window last activity
     #[cfg(feature = "tmux_2_1")]
     WindowActivity,
-    /// `session_activity_string` - Option<String> time of session last activity
+    /// `window_activity_string` - String time of window last activity
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-    SessionActivityString,
+    WindowActivityString,
     /// `window_activity_flag` - 1 if window has activity
     #[cfg(any(
         all(feature = "tmux_1_9", not(feature = "tmux_2_2")),
@@ -1069,9 +1069,9 @@ impl fmt::Display for Variable {
             // window_activity - Time of window last activity
             #[cfg(feature = "tmux_2_1")]
             Self::WindowActivity => "window_activity",
-            // session_activity_string - Option<String> time of session last activity
+            // window_activity_string - String time of window last activity
             #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-            Self::SessionActivityString => "session_activity_string",
+            Self::WindowActivityString => "window_activity_string",
             // window_activity_flag - 1 if window has activity
             #[cfg(any(
                 all(feature = "tmux_1_9", not(feature = "tmux_2_2")),

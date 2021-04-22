@@ -137,7 +137,7 @@ impl<'a> FormatOutput<'a> {
 
     /// `client_created_string` - Option<String> time client created
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
-    pub fn client_created_string(&mut self, v: &'a mut Option<u128>) -> &mut Self {
+    pub fn client_created_string(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::ClientCreatedString(v));
         self
     }
@@ -927,7 +927,7 @@ impl<'a> FormatOutput<'a> {
 
     /// `session_created_string` - Option<String> time session created
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
-    pub fn session_created_string(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn session_created_string(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::SessionCreatedString(v));
         self
     }
