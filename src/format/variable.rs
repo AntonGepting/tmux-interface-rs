@@ -1,4 +1,3 @@
-#[cfg(feature = "tmux_2_5")]
 use std::fmt;
 
 // XXX: ? + - etc refactor in structure in future? split in enum and struct add fields

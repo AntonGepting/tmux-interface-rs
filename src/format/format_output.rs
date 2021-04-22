@@ -1177,7 +1177,7 @@ impl<'a> FormatOutput<'a> {
 
     /// `window_find_matches` - Matched data from the find-window command if available
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    pub fn window_find_matches(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn window_find_matches(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::WindowFindMatches(v));
         self
     }
