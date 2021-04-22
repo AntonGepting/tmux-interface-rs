@@ -76,8 +76,9 @@ jobs:
           cd ~
           tmux -V
 
-      - name: Build
-        run: cargo build --verbose
+      - name: Build with feature ${{ matrix.versions.feature }}
+        run: cargo build --features ${{ matrix.versions.feature }} --no-default-features --verbose
 
-      - name: Run tests
-        run: cargo test --verbose
+      - name: Run tests with feature ${{ matrix.versions.feature }}
+        run: cargo test --features ${{ matrix.versions.feature }} --no-default-features --verbose
+
