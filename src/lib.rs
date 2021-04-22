@@ -872,7 +872,7 @@ pub use self::variables::session::sessions::Sessions;
 #[cfg(feature = "tmux_1_6")]
 pub use self::variables::window::window::Window;
 #[cfg(feature = "tmux_1_6")]
-pub use self::variables::window::window_flag::WindowFlag;
+pub use self::variables::window::window_flag::WindowFlags;
 #[cfg(feature = "tmux_1_6")]
 pub use self::variables::window::windows::Windows;
 

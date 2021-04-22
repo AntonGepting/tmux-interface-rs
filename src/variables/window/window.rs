@@ -1,7 +1,7 @@
 use crate::format::format_output::FormatOutput;
 use crate::Error;
 use crate::Layout;
-use crate::WindowFlag;
+use crate::WindowFlags;
 
 // NOTE: variables were first intoduced in tmux 1.6
 
@@ -61,7 +61,7 @@ pub struct Window {
     pub find_matches: Option<String>,
     /// window_flags - #F Window flags
     #[cfg(feature = "tmux_1_6")]
-    pub flags: Option<WindowFlag>,
+    pub flags: Option<WindowFlags>,
     /// 1 if format is for a window
     #[cfg(feature = "tmux_2_6")]
     pub format: Option<bool>,

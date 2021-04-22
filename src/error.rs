@@ -9,7 +9,7 @@ pub enum Error {
     // options parse errors
     ParseStatusKeys,
     ParseVersion,
-    ParseWindowFlag,
+    ParseWindowFlags,
     ParseSwitch,
     ParseSetClipboard,
     ParseActivity,

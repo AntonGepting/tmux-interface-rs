@@ -11,19 +11,19 @@ const WINDOW_FLAG_MARKED: usize = 0b0010_0000;
 const WINDOW_FLAG_ZOOMED: usize = 0b0100_0000;
 
 #[derive(Clone, PartialEq, Debug)]
-pub struct WindowFlag(usize);
+pub struct WindowFlags(usize);
 
-impl Default for WindowFlag {
+impl Default for WindowFlags {
     fn default() -> Self {
-        WindowFlag(WINDOW_FLAG_DEFAULT)
+        WindowFlags(WINDOW_FLAG_DEFAULT)
     }
 }
 
-impl FromStr for WindowFlag {
+impl FromStr for WindowFlags {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut wf = WindowFlag(WINDOW_FLAG_DEFAULT);
+        let mut wf = WindowFlags(WINDOW_FLAG_DEFAULT);
         let chrs = s.chars();
         for c in chrs {
             match c {
@@ -35,7 +35,7 @@ impl FromStr for WindowFlag {
                 'M' => wf.0 += WINDOW_FLAG_MARKED,
                 'Z' => wf.0 += WINDOW_FLAG_ZOOMED,
                 // XXX: Error description
-                _ => return Err(Error::ParseWindowFlag),
+                _ => return Err(Error::ParseWindowFlags),
             }
         }
         Ok(wf)

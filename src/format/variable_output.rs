@@ -2,7 +2,7 @@ use crate::Layout;
 use crate::PaneTabs;
 #[cfg(feature = "tmux_2_5")]
 use crate::SessionStack;
-use crate::WindowFlag;
+use crate::WindowFlags;
 
 // XXX: ? + - etc refactor in structure in future? split in enum and struct add fields
 // XXX: options allowed too
@@ -522,7 +522,7 @@ pub enum VariableOutput<'a> {
     WindowFindMatches(&'a mut Option<String>),
     /// `window_flags` - #F Window flags
     #[cfg(feature = "tmux_1_6")]
-    WindowFlags(&'a mut Option<WindowFlag>),
+    WindowFlags(&'a mut Option<WindowFlags>),
     /// `window_format` - 1 if format is for a window
     #[cfg(feature = "tmux_2_6")]
     WindowFormat(&'a mut Option<bool>),
@@ -1126,7 +1126,7 @@ impl<'a> VariableOutput<'a> {
             Self::WindowFindMatches(v) => **v = Self::parse_option_string(s),
             // window_flags - #F Window flags
             #[cfg(feature = "tmux_1_6")]
-            Self::WindowFlags(v) => **v = s.parse::<WindowFlag>().ok(),
+            Self::WindowFlags(v) => **v = s.parse::<WindowFlags>().ok(),
             // window_format - 1 if format is for a window
             #[cfg(feature = "tmux_2_6")]
             Self::WindowFormat(v) => **v = Self::parse_option_bool(s),
