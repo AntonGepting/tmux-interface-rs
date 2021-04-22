@@ -158,7 +158,7 @@ impl<'a> FormatOutput<'a> {
 
     /// `client_cwd` - Working directory of client
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub fn client_cwd(&mut self, v: &'a mut Option<u128>) -> &mut Self {
+    pub fn client_cwd(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::ClientCwd(v));
         self
     }
@@ -316,7 +316,7 @@ impl<'a> FormatOutput<'a> {
 
     /// `cursor_character` - Character at cursor in pane
     #[cfg(feature = "tmux_2_9")]
-    pub fn cursor_character(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn cursor_character(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::CursorCharacter(v));
         self
     }
@@ -337,28 +337,28 @@ impl<'a> FormatOutput<'a> {
 
     /// `copy_cursor_line` - Line the cursor is on in copy mode
     #[cfg(feature = "tmux_3_1")]
-    pub fn copy_cursor_line(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn copy_cursor_line(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::CopyCursorLine(v));
         self
     }
 
     /// `copy_cursor_word` - Word under cursor in copy mode
     #[cfg(feature = "tmux_3_1")]
-    pub fn copy_cursor_word(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn copy_cursor_word(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::CopyCursorWord(v));
         self
     }
 
     /// `copy_cursor_x` - Cursor X position in copy mode
     #[cfg(feature = "tmux_3_1")]
-    pub fn copy_cursor_x(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn copy_cursor_x(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::CopyCursorX(v));
         self
     }
 
     /// `copy_cursor_y` - Cursor Y position in copy mode
     #[cfg(feature = "tmux_3_1")]
-    pub fn copy_cursor_y(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn copy_cursor_y(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::CopyCursorY(v));
         self
     }
@@ -474,12 +474,12 @@ impl<'a> FormatOutput<'a> {
         self
     }
 
-    /// `mouse_all_flag` - Pane mouse all flag
-    #[cfg(feature = "tmux_3_0")]
-    pub fn mouse_all_flag(&mut self, v: &'a mut Option<bool>) -> &mut Self {
-        self.push(VariableOutput::MouseAllFlag(v));
-        self
-    }
+    // `mouse_all_flag` - Pane mouse all flag
+    //#[cfg(feature = "tmux_3_0")]
+    //pub fn mouse_all_flag(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    //self.push(VariableOutput::MouseAllFlag(v));
+    //self
+    //}
 
     /// `mouse_any_flag` - Pane mouse any flag
     #[cfg(feature = "tmux_1_8")]
@@ -497,14 +497,14 @@ impl<'a> FormatOutput<'a> {
 
     /// `mouse_line` - Line under mouse, if any
     #[cfg(feature = "tmux_3_0")]
-    pub fn mouse_line(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn mouse_line(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::MouseLine(v));
         self
     }
 
     /// `sgr_flag` - Pane mouse SGR flag
     #[cfg(feature = "tmux_3_0")]
-    pub fn sgr_line(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn sgr_line(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::MouseSgrFlag(v));
         self
     }
@@ -532,28 +532,28 @@ impl<'a> FormatOutput<'a> {
 
     /// `mouse_word` - Word under mouse, if any
     #[cfg(feature = "tmux_3_0")]
-    pub fn mouse_word(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn mouse_word(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::MouseWord(v));
         self
     }
 
     /// `mouse_x` - Mouse X position, if any
     #[cfg(feature = "tmux_3_0")]
-    pub fn mouse_x(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn mouse_x(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::MouseX(v));
         self
     }
 
     /// `mouse_y` - Mouse Y position, if any
     #[cfg(feature = "tmux_3_0")]
-    pub fn mouse_y(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn mouse_y(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::MouseY(v));
         self
     }
 
     /// `origin_flag` - Pane origin flag
     #[cfg(feature = "tmux_3_0")]
-    pub fn origin_flag(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn origin_flag(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::OriginFlag(v));
         self
     }
@@ -702,7 +702,7 @@ impl<'a> FormatOutput<'a> {
 
     /// `pane_path` - #T Path of pane (can be set by application)
     #[cfg(feature = "tmux_3_1")]
-    pub fn pane_path(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn pane_path(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::PanePath(v));
         self
     }
@@ -849,14 +849,14 @@ impl<'a> FormatOutput<'a> {
 
     /// `selection_end_x` - X position of the end of the selection
     #[cfg(feature = "tmux_3_1")]
-    pub fn selection_end_x(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn selection_end_x(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::SelectionEndX(v));
         self
     }
 
     /// `selection_end_y` - Y position of the end of the selection
     #[cfg(feature = "tmux_3_1")]
-    pub fn selection_end_y(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn selection_end_y(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::SelectionEndY(v));
         self
     }
@@ -870,14 +870,14 @@ impl<'a> FormatOutput<'a> {
 
     /// `selection_start_x` - X position of the start of the selection
     #[cfg(feature = "tmux_3_1")]
-    pub fn selection_start_x(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn selection_start_x(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::SelectionStartX(v));
         self
     }
 
     /// `selection_start_y` - Y position of the start of the selection
     #[cfg(feature = "tmux_3_1")]
-    pub fn selection_start_y(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn selection_start_y(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::SelectionStartY(v));
         self
     }
@@ -913,7 +913,7 @@ impl<'a> FormatOutput<'a> {
 
     /// `session_attached_list` - List of clients session is attached to
     #[cfg(feature = "tmux_3_1")]
-    pub fn session_atached_list(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn session_attached_list(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::SessionAttachedList(v));
         self
     }
@@ -948,14 +948,14 @@ impl<'a> FormatOutput<'a> {
 
     /// `session_group_attached` - Number of clients sessions in group are attached >
     #[cfg(feature = "tmux_3_1")]
-    pub fn session_group_attached(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn session_group_attached(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::SessionGroupAttached(v));
         self
     }
 
     /// `session_group_attached_list` - List of clients sessions in group are attached to
     #[cfg(feature = "tmux_3_1")]
-    pub fn session_group_attached_list(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn session_group_attached_list(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::SessionGroupAttachedList(v));
         self
     }
@@ -1083,28 +1083,28 @@ impl<'a> FormatOutput<'a> {
 
     /// `window_active_clients` - Number of clients viewing this window
     #[cfg(feature = "tmux_3_1")]
-    pub fn window_active_clients(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn window_active_clients(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::WindowActiveClients(v));
         self
     }
 
     /// `window_active_clients_list` - List of clients viewing this window
     #[cfg(feature = "tmux_3_1")]
-    pub fn window_active_clients_list(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn window_active_clients_list(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::WindowActiveClientsList(v));
         self
     }
 
     /// `window_active_sessions` - Number of sessions on which this window is active
     #[cfg(feature = "tmux_3_1")]
-    pub fn window_active_sessions(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn window_active_sessions(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::WindowActiveSessions(v));
         self
     }
 
     /// `window_active_sessions_list` - List of sessions on which this window is active
     #[cfg(feature = "tmux_3_1")]
-    pub fn window_active_sessions_list(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn window_active_sessions_list(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::WindowActiveSessionsList(v));
         self
     }
@@ -1156,14 +1156,14 @@ impl<'a> FormatOutput<'a> {
 
     /// `window_cell_height` - Height of each cell in pixels
     #[cfg(feature = "tmux_3_1")]
-    pub fn window_cell_height(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn window_cell_height(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::WindowCellHeight(v));
         self
     }
 
     /// `window_cell_width` - Width of each cell in pixels
     #[cfg(feature = "tmux_3_1")]
-    pub fn window_cell_width(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn window_cell_width(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::WindowCellWidth(v));
         self
     }
@@ -1240,14 +1240,14 @@ impl<'a> FormatOutput<'a> {
 
     /// `window_linked_sessions` - Number of sessions this window is linked to
     #[cfg(feature = "tmux_3_1")]
-    pub fn window_linked_sessions(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn window_linked_sessions(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::WindowLinkedSessions(v));
         self
     }
 
     /// `window_linked_sessions_list` - List of sessions this window is linked to
     #[cfg(feature = "tmux_3_1")]
-    pub fn window_linked_sessions_list(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn window_linked_sessions_list(&mut self, v: &'a mut Option<String>) -> &mut Self {
         self.push(VariableOutput::WindowLinkedSessionsList(v));
         self
     }
@@ -1268,14 +1268,14 @@ impl<'a> FormatOutput<'a> {
 
     /// `window_offset_x` - X offset into window if larger than client
     #[cfg(feature = "tmux_2_9")]
-    pub fn window_offset_x(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn window_offset_x(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::WindowOffsetX(v));
         self
     }
 
     /// `window_offset_y` - Y offset into window if larger than client
     #[cfg(feature = "tmux_2_9")]
-    pub fn window_offset_y(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn window_offset_y(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::WindowOffsetY(v));
         self
     }

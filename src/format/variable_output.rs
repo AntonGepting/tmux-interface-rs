@@ -146,10 +146,10 @@ pub enum VariableOutput<'a> {
     CopyCursorWord(&'a mut Option<String>),
     /// `copy_cursor_x` - Cursor X position in copy mode
     #[cfg(feature = "tmux_3_1")]
-    CopyCursorX(&'a mut Option<String>),
+    CopyCursorX(&'a mut Option<usize>),
     /// `copy_cursor_y` - Cursor Y position in copy mode
     #[cfg(feature = "tmux_3_1")]
-    CopyCursorY(&'a mut Option<String>),
+    CopyCursorY(&'a mut Option<usize>),
 
     // history
     /// `history_bytes`             Number of bytes in window history
@@ -204,9 +204,9 @@ pub enum VariableOutput<'a> {
     #[cfg(feature = "tmux_1_6")]
     Line(&'a mut Option<usize>),
 
-    /// `mouse_all_flag` - Pane mouse all flag
-    #[cfg(feature = "tmux_3_0")]
-    MouseAllFlag(&'a mut Option<String>),
+    // `mouse_all_flag` - Pane mouse all flag
+    //#[cfg(feature = "tmux_3_0")]
+    //MouseAllFlag(&'a mut Option<String>),
     /// `mouse_any_flag` - Pane mouse any flag
     #[cfg(feature = "tmux_1_8")]
     MouseAnyFlag(&'a mut Option<String>),
@@ -744,16 +744,16 @@ impl<'a> VariableOutput<'a> {
 
             // copy_cursor_line - Line the cursor is on in copy mode
             #[cfg(feature = "tmux_3_1")]
-            Self::CursorCopyCursorLine(v) => **v = Self::parse_option_string(s),
+            Self::CopyCursorLine(v) => **v = Self::parse_option_string(s),
             // copy_cursor_word - Word under cursor in copy mode
             #[cfg(feature = "tmux_3_1")]
-            Self::CursorCopyCursorWord(v) => **v = Self::parse_option_string(s),
+            Self::CopyCursorWord(v) => **v = Self::parse_option_string(s),
             // copy_cursor_x - Cursor X position in copy mode
             #[cfg(feature = "tmux_3_1")]
-            Self::CursorCopyCursorX(v) => **v = Self::parse_option_string(s),
+            Self::CopyCursorX(v) => **v = s.parse::<usize>().ok(),
             // copy_cursor_y - Cursor Y position in copy mode
             #[cfg(feature = "tmux_3_1")]
-            Self::CursorCopyCursorY(v) => **v = Self::parse_option_string(s),
+            Self::CopyCursorY(v) => **v = s.parse::<usize>().ok(),
 
             // history
             // history_bytes             Number of bytes in window history

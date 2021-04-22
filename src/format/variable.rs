@@ -200,9 +200,9 @@ pub enum Variable {
     #[cfg(feature = "tmux_1_6")]
     Line,
 
-    /// `mouse_all_flag` - Pane mouse all flag
-    #[cfg(feature = "tmux_3_0")]
-    MouseAllFlag,
+    // `mouse_all_flag` - Pane mouse all flag
+    //#[cfg(feature = "tmux_3_0")]
+    //MouseAllFlag,
     /// `mouse_any_flag` - Pane mouse any flag
     #[cfg(feature = "tmux_1_8")]
     MouseAnyFlag,
@@ -719,16 +719,16 @@ impl fmt::Display for Variable {
 
             // copy_cursor_line - Line the cursor is on in copy mode
             #[cfg(feature = "tmux_3_1")]
-            Self::CursorCopyCursorLine => "copy_cursor_line",
+            Self::CopyCursorLine => "copy_cursor_line",
             // copy_cursor_word - Word under cursor in copy mode
             #[cfg(feature = "tmux_3_1")]
-            Self::CursorCopyCursorWord => "copy_cursor_word",
+            Self::CopyCursorWord => "copy_cursor_word",
             // copy_cursor_x - Cursor X position in copy mode
             #[cfg(feature = "tmux_3_1")]
-            Self::CursorCopyCursorX => "copy_cursor_x",
+            Self::CopyCursorX => "copy_cursor_x",
             // copy_cursor_y - Cursor Y position in copy mode
             #[cfg(feature = "tmux_3_1")]
-            Self::CursorCopyCursorY => "copy_cursor_y",
+            Self::CopyCursorY => "copy_cursor_y",
 
             // history
             // history_bytes             Number of bytes in window history

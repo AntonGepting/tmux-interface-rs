@@ -1,3 +1,4 @@
+#[cfg(feature = "tmux_1_8")]
 #[test]
 fn control_mode() {
     use std::io::{BufRead, BufReader, Error, ErrorKind};

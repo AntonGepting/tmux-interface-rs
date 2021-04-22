@@ -477,12 +477,12 @@ impl Format {
         self
     }
 
-    /// `mouse_all_flag` - Pane mouse all flag
-    #[cfg(feature = "tmux_3_0")]
-    pub fn mouse_all_flag(&mut self) -> &mut Self {
-        self.push(Variable::MouseAllFlag);
-        self
-    }
+    // `mouse_all_flag` - Pane mouse all flag
+    //#[cfg(feature = "tmux_3_0")]
+    //pub fn mouse_all_flag(&mut self) -> &mut Self {
+    //self.push(Variable::MouseAllFlag);
+    //self
+    //}
 
     /// `mouse_any_flag` - Pane mouse any flag
     #[cfg(feature = "tmux_1_8")]
@@ -916,7 +916,7 @@ impl Format {
 
     /// `session_attached_list` - List of clients session is attached to
     #[cfg(feature = "tmux_3_1")]
-    pub fn session_atached_list(&mut self) -> &mut Self {
+    pub fn session_attached_list(&mut self) -> &mut Self {
         self.push(Variable::SessionAttachedList);
         self
     }
