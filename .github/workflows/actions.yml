@@ -12,14 +12,14 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-    #runs-on: ${{ matrix.os }}
-
+    runs-on: ${{ matrix.os }}
     strategy:
+      # continue other builds if one fails
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
+        #os: [ubuntu-latest, macos-latest, windows-latest]
+        #rust: [stable, beta, nightly]
         versions:
           #- { tmux: "0.8", feature: "tmux_0_8" }
           #- { tmux: "0.9", feature: "tmux_0_9" }
