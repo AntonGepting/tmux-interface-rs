@@ -126,19 +126,20 @@ The library is still in experimental development stage (unstable).
 - almost all library documentation is missing at the moment
 - ...
 
-The library was tested on Travis CI (under following conditions: all supported tmux versions features):
+The library was tested using [GitHub Actions](https://github.com/AntonGepting/tmux-interface-rs/actions)
+under following conditions:
 
 - OS:
-    - [x] Linux (Ubuntu 16.04 Xenial Xerus, x64)
+    - [x] Linux (Ubuntu 20.04.2 LTS Focal Fossa, x64)
     - [ ] Windows
     - [ ] MacOS (10.13.6 High Sierra, x64)
 
 - Rust:
     - [x] stable
-    - [x] beta
-    - [x] nightly
+    - [ ] beta
+    - [ ] nightly
 
-- Tmux:
+- Tmux (covered tmux versions crate features):
     - [ ] master - `tmux_X_X`
     - [x] 3.1c - `tmux_3_1c`
     - [x] 3.1b - `tmux_3_1b`
