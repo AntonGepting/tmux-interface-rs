@@ -1,6 +1,41 @@
 use crate::commands::constants::*;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
+use std::fmt;
+
+//C        Both    The centre of the terminal
+//R        -x      The right side of the terminal
+//P        Both    The bottom left of the pane
+//M        Both    The mouse position
+//W        Both    The window position on the status line
+//S        -y      The line above or below the status line
+
+pub enum PositionX {
+    Num(usize),
+    Percent(usize),
+    TerminalCenter,
+    Right,
+    PaneBottom,
+    MousePosition,
+    StatusLineWindowPosition,
+    AboveBelowStatusLine,
+}
+
+impl fmt::Display for PositionX {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let output = match self {
+            Self::Num(n) => format!("{}", n),
+            Self::Percent(p) => format!("{}%", p),
+            Self::TerminalCenter => "C".to_string(),
+            Self::Right => "R".to_string(),
+            Self::PaneBottom => "P".to_string(),
+            Self::MousePosition => "M".to_string(),
+            Self::StatusLineWindowPosition => "W".to_string(),
+            Self::AboveBelowStatusLine => "S".to_string(),
+        };
+        write!(f, "#{{{}}}", output)
+    }
+}
 
 /// Structure for displaying a menu on target-client
 ///

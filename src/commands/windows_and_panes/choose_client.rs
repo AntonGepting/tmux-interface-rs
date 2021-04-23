@@ -6,6 +6,11 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux choose-client [-NrZ] [-F format] [-f filter] [-K key-format] [-O sort-order] [-t target-pane] [template]
+/// ```
+///
 /// tmux ^3.1:
 /// ```text
 /// tmux choose-client [-NrZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
@@ -79,6 +84,13 @@ impl<'a> ChooseClient<'a> {
     #[cfg(feature = "tmux_2_6")]
     pub fn filter<S: Into<Cow<'a, str>>>(&mut self, filter: S) -> &mut Self {
         self.0.push_option(F_LOWERCASE_KEY, filter);
+        self
+    }
+
+    /// `[-K key-format]` - format for each shortcut key
+    #[cfg(feature = "tmux_3_2")]
+    pub fn key_format<S: Into<Cow<'a, str>>>(&mut self, key_format: S) -> &mut Self {
+        self.0.push_option(K_UPPERCASE_KEY, key_format);
         self
     }
 

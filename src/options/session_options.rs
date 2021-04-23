@@ -203,6 +203,42 @@ impl fmt::Display for StatusPosition {
     }
 }
 
+#[cfg(feature = "tmux_1_4")]
+#[derive(PartialEq, Clone, Debug)]
+pub enum DetachOnDestroy {
+    On,
+    Off,
+    #[cfg(feature = "tmux_3_2")]
+    NoDetached,
+}
+
+#[cfg(feature = "tmux_1_4")]
+impl FromStr for DetachOnDestroy {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Error> {
+        match s {
+            "on" => Ok(Self::On),
+            "off" => Ok(Self::Off),
+            #[cfg(feature = "tmux_3_2")]
+            "no-detached" => Ok(Self::NoDetached),
+            _ => Err(Error::ParseAction),
+        }
+    }
+}
+
+#[cfg(feature = "tmux_1_4")]
+impl fmt::Display for DetachOnDestroy {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Self::On => write!(f, "on"),
+            Self::Off => write!(f, "off"),
+            #[cfg(feature = "tmux_3_2")]
+            Self::NoDetached => write!(f, "no-detached"),
+        }
+    }
+}
+
 // XXX: conditionals?
 // NOTE: total num: 81 (u128)
 pub const ACTIVITY_ACTION: u128 = 1;
@@ -1059,8 +1095,9 @@ pub struct SessionOptions {
     #[cfg(feature = "tmux_1_4")]
     pub destroy_unattached: Option<Switch>,
     //detach-on-destroy [on | off]
+    // tmux ^3.2 detach-on-destroy [on | off | no-detached]
     #[cfg(feature = "tmux_1_4")]
-    pub detach_on_destroy: Option<Switch>,
+    pub detach_on_destroy: Option<DetachOnDestroy>,
     //display-panes-active-colour colour
     #[cfg(feature = "tmux_1_2")]
     pub display_panes_active_colour: Option<String>,
@@ -1406,7 +1443,7 @@ pub struct SessionOptionsBuilder<'a> {
     #[cfg(feature = "tmux_1_4")]
     pub destroy_unattached: Option<Switch>,
     #[cfg(feature = "tmux_1_4")]
-    pub detach_on_destroy: Option<Switch>,
+    pub detach_on_destroy: Option<DetachOnDestroy>,
     #[cfg(feature = "tmux_1_2")]
     pub display_panes_active_colour: Option<&'a str>,
     #[cfg(feature = "tmux_1_0")]
@@ -1609,7 +1646,7 @@ impl<'a> SessionOptionsBuilder<'a> {
     }
 
     #[cfg(feature = "tmux_1_4")]
-    pub fn detach_on_destroy(&mut self, detach_on_destroy: Switch) -> &mut Self {
+    pub fn detach_on_destroy(&mut self, detach_on_destroy: DetachOnDestroy) -> &mut Self {
         self.detach_on_destroy = Some(detach_on_destroy);
         self
     }

@@ -7,9 +7,9 @@ fn choose_buffer() {
     //
     // # Manual
     //
-    // tmux X.X:
+    // tmux ^3.2:
     // ```text
-    // tmux choose-buffer [-NZr] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+    // tmux choose-buffer [-NZr] [-F format] [-f filter] [-K key-format] [-O sort-order] [-t target-pane] [template]
     // ```
     //
     // tmux ^3.1:
@@ -36,7 +36,7 @@ fn choose_buffer() {
     // ```text
     // tmux choose-buffer [-t target-pane] [template]
     // ```
-    let target_pane = TargetPane::Raw("4").to_string();
+    let target_pane = TargetPane::Raw("5").to_string();
 
     let mut choose_buffer = ChooseBuffer::new();
     #[cfg(feature = "tmux_2_6")]
@@ -49,12 +49,14 @@ fn choose_buffer() {
     choose_buffer.format("1");
     #[cfg(feature = "tmux_2_6")]
     choose_buffer.filter("2");
+    #[cfg(feature = "tmux_3_2")]
+    choose_buffer.key_format("3");
     #[cfg(feature = "tmux_2_6")]
-    choose_buffer.sort_order("3");
+    choose_buffer.sort_order("4");
     #[cfg(feature = "tmux_1_3")]
     choose_buffer.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_3")]
-    choose_buffer.template("5");
+    choose_buffer.template("6");
 
     let mut s = Vec::new();
     #[cfg(feature = "tmux_2_6")]
@@ -67,12 +69,14 @@ fn choose_buffer() {
     s.extend_from_slice(&["-F", "1"]);
     #[cfg(feature = "tmux_2_6")]
     s.extend_from_slice(&["-f", "2"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-K", "3"]);
     #[cfg(feature = "tmux_2_6")]
-    s.extend_from_slice(&["-O", "3"]);
+    s.extend_from_slice(&["-O", "4"]);
     #[cfg(feature = "tmux_1_3")]
-    s.extend_from_slice(&["-t", "4"]);
+    s.extend_from_slice(&["-t", "5"]);
     #[cfg(feature = "tmux_1_3")]
-    s.push("5");
+    s.push("6");
     let s = s.into_iter().map(|a| a.into()).collect();
 
     let cmd = "choose-buffer";

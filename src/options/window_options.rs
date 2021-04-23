@@ -308,10 +308,13 @@ pub const WINDOW_OPTIONS_NUM: usize = 31;
 pub const WINDOW_OPTIONS_NUM: usize = 31;
 #[cfg(all(feature = "tmux_3_1a", not(feature = "tmux_3_1b")))]
 pub const WINDOW_OPTIONS_NUM: usize = 31;
-#[cfg(all(feature = "tmux_3_1b", not(feature = "tmux_X_X")))]
+#[cfg(all(feature = "tmux_3_1b", not(feature = "tmux_3_1c")))]
 pub const WINDOW_OPTIONS_NUM: usize = 31;
-#[cfg(feature = "tmux_X_X")]
-pub const WINDOW_OPTIONS_NUM: usize = 31; // FIXME: must be 33? 2 added
+#[cfg(all(feature = "tmux_3_1c", not(feature = "tmux_3_2")))]
+pub const WINDOW_OPTIONS_NUM: usize = 31;
+#[cfg(feature = "tmux_3_2")]
+pub const WINDOW_OPTIONS_NUM: usize = 30;
+// FIXME: must be 33? 2 added
 
 // TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
 pub const WINDOW_OPTIONS: [(
@@ -568,7 +571,7 @@ pub const WINDOW_OPTIONS: [(
         |o| o.remain_on_exit.as_ref().map(|v| v.to_string()),
         REMAIN_ON_EXIT,
     ),
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
     (
         "synchronize-panes",
         |o, _, s| o.synchronize_panes = s.parse().ok(),
@@ -1062,7 +1065,7 @@ pub struct WindowOptions {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
     pub remain_on_exit: Option<Switch>,
     //synchronize-panes [on | off]
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
     pub synchronize_panes: Option<Switch>,
     //utf8 [on | off]
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
@@ -1330,7 +1333,7 @@ pub struct WindowOptionsBuilder<'a> {
     pub pane_border_style: Option<&'a str>,
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
     pub remain_on_exit: Option<Switch>,
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
     pub synchronize_panes: Option<Switch>,
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
     pub utf8: Option<Switch>,
@@ -1521,7 +1524,7 @@ impl<'a> WindowOptionsBuilder<'a> {
         self
     }
 
-    #[cfg(feature = "tmux_1_2")]
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
     pub fn synchronize_panes(&mut self, synchronize_panes: Switch) -> &mut Self {
         self.synchronize_panes = Some(synchronize_panes);
         self
@@ -1660,7 +1663,7 @@ impl<'a> WindowOptionsBuilder<'a> {
             pane_border_style: self.pane_border_style.map(|s| s.to_string()),
             #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
             remain_on_exit: self.remain_on_exit.clone(),
-            #[cfg(feature = "tmux_1_2")]
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
             synchronize_panes: self.synchronize_panes.clone(),
             #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
             utf8: self.utf8.clone(),

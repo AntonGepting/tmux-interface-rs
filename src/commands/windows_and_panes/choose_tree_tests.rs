@@ -12,6 +12,11 @@ fn choose_tree() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux choose-tree [-GNrswZ] [-F format] [-f filter] [-K key-format] [-O sort-order] [-t target-pane] [template]
+    // ```
+    //
     // tmux ^3.1:
     // ```text
     // tmux choose-tree [-GNrswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
@@ -39,9 +44,9 @@ fn choose_tree() {
     // [-t target-window]
     // ```
     #[cfg(feature = "tmux_2_6")]
-    let target_pane = TargetPane::Raw("4").to_string();
+    let target_pane = TargetPane::Raw("5").to_string();
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    let target_window = TargetWindow::Raw("4").to_string();
+    let target_window = TargetWindow::Raw("5").to_string();
 
     let mut choose_tree = ChooseTree::new();
     #[cfg(feature = "tmux_2_7")]
@@ -60,14 +65,16 @@ fn choose_tree() {
     choose_tree.format("1");
     #[cfg(feature = "tmux_2_6")]
     choose_tree.filter("2");
+    #[cfg(feature = "tmux_3_2")]
+    choose_tree.key_format("3");
     #[cfg(feature = "tmux_2_6")]
-    choose_tree.sort_order("3");
+    choose_tree.sort_order("4");
     #[cfg(feature = "tmux_2_6")]
     choose_tree.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
     choose_tree.target_window(&target_window);
     #[cfg(feature = "tmux_2_6")]
-    choose_tree.template("5");
+    choose_tree.template("6");
 
     let cmd = "choose-tree";
 
@@ -88,14 +95,16 @@ fn choose_tree() {
     s.extend_from_slice(&["-F", "1"]);
     #[cfg(feature = "tmux_2_6")]
     s.extend_from_slice(&["-f", "2"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-K", "3"]);
     #[cfg(feature = "tmux_2_6")]
-    s.extend_from_slice(&["-O", "3"]);
+    s.extend_from_slice(&["-O", "4"]);
     #[cfg(feature = "tmux_2_6")]
-    s.extend_from_slice(&["-t", "4"]);
+    s.extend_from_slice(&["-t", "5"]);
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    s.extend_from_slice(&["-t", "4"]);
+    s.extend_from_slice(&["-t", "5"]);
     #[cfg(feature = "tmux_2_6")]
-    s.push("5");
+    s.push("6");
     let s = s.into_iter().map(|a| a.into()).collect();
 
     assert_eq!(choose_tree.0.bin, Cow::Borrowed("tmux"));

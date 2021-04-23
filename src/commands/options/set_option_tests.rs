@@ -7,6 +7,12 @@ fn set_option() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux set-option [-aFgopqsuUw] [-t target-pane] option value
+    // (alias: set)
+    // ```
+    //
     // tmux ^3.0:
     // ```text
     // tmux set-option [-aFgopqsuw] [-t target-pane] option value
@@ -67,6 +73,8 @@ fn set_option() {
     set_option.server();
     #[cfg(feature = "tmux_0_8")]
     set_option.unset();
+    #[cfg(feature = "tmux_3_2")]
+    set_option.unset_on_all();
     #[cfg(feature = "tmux_1_2")]
     set_option.window();
     #[cfg(feature = "tmux_3_0")]
@@ -102,6 +110,8 @@ fn set_option() {
     s.push("-s");
     #[cfg(feature = "tmux_0_8")]
     s.push("-u");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-U");
     #[cfg(feature = "tmux_1_2")]
     s.push("-w");
     #[cfg(feature = "tmux_3_0")]

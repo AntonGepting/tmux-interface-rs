@@ -5,6 +5,12 @@ fn run_shell() {
 
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux run-shell [-bC] [-t target-pane] shell-command
+    // (alias: run)
+    // ```
+    //
     // tmux ^1.8:
     // ```text
     // tmux run-shell [-b] [-t target-pane] shell-command
@@ -27,6 +33,8 @@ fn run_shell() {
     let mut run_shell = RunShell::new();
     #[cfg(feature = "tmux_1_8")]
     run_shell.backgroud();
+    #[cfg(feature = "tmux_3_2")]
+    run_shell.tmux_command();
     #[cfg(feature = "tmux_1_8")]
     run_shell.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_2")]
@@ -42,6 +50,8 @@ fn run_shell() {
     let mut s = Vec::new();
     #[cfg(feature = "tmux_1_8")]
     s.push("-b");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-C");
     #[cfg(feature = "tmux_1_8")]
     s.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_1_2")]

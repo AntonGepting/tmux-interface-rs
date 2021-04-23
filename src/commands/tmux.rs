@@ -3,9 +3,15 @@ use crate::commands::tmux_command::Args;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+// NOTE: [-N] missing in man
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#DESCRIPTION)
 ///
 /// # Manual
+///
+/// tmux ^3.2:
+/// ```text
+/// tmux [-2CDluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [-T features] [command [flags]]
+/// ```
 ///
 /// tmux ^2.1:
 /// ```text
@@ -90,10 +96,24 @@ impl<'a> TmuxCommand<'a> {
         self
     }
 
+    /// `[-D]` - Do not start the tmux server as a daemon. This also turns the exit-empty option off.  With -D, command may not be specified.
+    #[cfg(feature = "tmux_3_2")]
+    pub fn no_daemon(&mut self) -> &mut Self {
+        self.bin_args.push_flag(D_UPPERCASE_KEY);
+        self
+    }
+
     /// `[-l]` - Behave as a login shell
     #[cfg(feature = "tmux_1_0")]
     pub fn login_shell(&mut self) -> &mut Self {
         self.bin_args.push_flag(L_LOWERCASE_KEY);
+        self
+    }
+
+    /// `[-N]` - Do not start the server even if the command would normally do so (for example new-session or start-server).
+    #[cfg(feature = "tmux_3_2")]
+    pub fn no_start(&mut self) -> &mut Self {
+        self.bin_args.push_flag(N_UPPERCASE_KEY);
         self
     }
 

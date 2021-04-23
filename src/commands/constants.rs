@@ -79,8 +79,8 @@ pub const H_UPPERCASE_KEY: &str = "-H";
 pub const I_UPPERCASE_KEY: &str = "-I";
 /// `-J`
 pub const J_UPPERCASE_KEY: &str = "-J";
-// `-K`
-//pub const K_UPPERCASE_KEY: &str = "-K";
+/// `-K`
+pub const K_UPPERCASE_KEY: &str = "-K";
 /// `-L`
 pub const L_UPPERCASE_KEY: &str = "-L";
 /// `-M`

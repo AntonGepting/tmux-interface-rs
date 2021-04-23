@@ -9,6 +9,11 @@ fn tmux() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux [-2CDluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [-T features] [command [flags]]
+    // ```
+    //
     // tmux ^2.1:
     // ```text
     // tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
@@ -61,8 +66,12 @@ fn tmux() {
     tmux.control_mode();
     #[cfg(feature = "tmux_1_8")]
     tmux.disable_echo();
+    #[cfg(feature = "tmux_3_2")]
+    tmux.no_daemon();
     #[cfg(feature = "tmux_1_0")]
     tmux.login_shell();
+    #[cfg(feature = "tmux_3_2")]
+    tmux.no_start();
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
     tmux.unlock();
     #[cfg(feature = "tmux_0_8")]
@@ -93,8 +102,12 @@ fn tmux() {
     s.push("-C");
     #[cfg(feature = "tmux_1_8")]
     s.push("-CC");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-D");
     #[cfg(feature = "tmux_1_0")]
     s.push("-l");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-N");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
     s.push("-U");
     #[cfg(feature = "tmux_0_8")]

@@ -31,7 +31,7 @@ fn control_mode_line() {
     }
 
     // %client-detached client
-    #[cfg(feature = "tmux_2_2")]
+    #[cfg(feature = "tmux_3_2")]
     {
         let output = "%client-detached 1 2".control_mode_line().unwrap();
         assert_eq!(Response::ClientDetached("1 2".to_string()), output);

@@ -146,6 +146,9 @@ pub enum Variable {
     /// `copy_cursor_y` - Cursor Y position in copy mode
     #[cfg(feature = "tmux_3_1")]
     CopyCursorY,
+    /// `current_file` - Current configuration file
+    #[cfg(feature = "tmux_3_2")]
+    CurrentFile,
 
     // history
     /// `history_bytes`             Number of bytes in window history
@@ -519,6 +522,10 @@ pub enum Variable {
     /// `window_flags` - #F Window flags
     #[cfg(feature = "tmux_1_6")]
     WindowFlags,
+    // TODO: WindowRawFlags
+    /// `window_raw_flags` - Window flags with nothing escaped
+    #[cfg(feature = "tmux_3_2")]
+    WindowRawFlags,
     /// `window_format` - 1 if format is for a window
     #[cfg(feature = "tmux_2_6")]
     WindowFormat,
@@ -729,6 +736,9 @@ impl fmt::Display for Variable {
             // copy_cursor_y - Cursor Y position in copy mode
             #[cfg(feature = "tmux_3_1")]
             Self::CopyCursorY => "copy_cursor_y",
+            // current_file - Current configuration file
+            #[cfg(feature = "tmux_3_2")]
+            Self::CurrentFile => "current_file",
 
             // history
             // history_bytes             Number of bytes in window history
@@ -1102,6 +1112,9 @@ impl fmt::Display for Variable {
             // window_flags - #F Window flags
             #[cfg(feature = "tmux_1_6")]
             Self::WindowFlags => "window_flags",
+            // window_raw_flags - Window flags with nothing escaped
+            #[cfg(feature = "tmux_3_2")]
+            Self::WindowRawFlags => "window_raw_flags",
             // window_format - 1 if format is for a window
             #[cfg(feature = "tmux_2_6")]
             Self::WindowFormat => "window_format",

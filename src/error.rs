@@ -20,6 +20,7 @@ pub enum Error {
     ParseStatusPosition,
     ParseClockModeStyle,
     ParsePaneBorderStatus,
+    ParseRemainOnExit,
 
     /// Tmux error message
     Tmux(String),

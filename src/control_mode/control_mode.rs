@@ -16,7 +16,7 @@ pub const OUTPUT_BLOCK_ERROR: &str = "%error";
 /// never occur inside an output block. (tmux man)
 ///
 /// `%client-detached client`
-#[cfg(feature = "tmux_2_2")]
+#[cfg(feature = "tmux_3_2")]
 pub const NOTIFICATION_CLIENT_DETACHED: &str = "%client-detached";
 /// `%client-session-changed client session-id name`
 #[cfg(feature = "tmux_2_4")]
@@ -122,7 +122,7 @@ pub enum Response {
     #[cfg(feature = "tmux_1_8")]
     OutputBlock(OutputBlock),
     /// `%client-detached client`
-    #[cfg(feature = "tmux_2_2")]
+    #[cfg(feature = "tmux_3_2")]
     ClientDetached(String),
     /// `%client-session-changed client session-id name`
     #[cfg(feature = "tmux_2_4")]
@@ -301,7 +301,7 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             }
 
             // `%client-detached client`
-            #[cfg(feature = "tmux_2_2")]
+            #[cfg(feature = "tmux_3_2")]
             s if s.starts_with(NOTIFICATION_CLIENT_DETACHED) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
                 let client = v.get(1).unwrap();

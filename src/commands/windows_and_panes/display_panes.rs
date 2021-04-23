@@ -6,6 +6,12 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux display-panes [-bN] [-d duration] [-t target-client] [template]
+/// (alias: displayp)
+/// ```
+///
 /// tmux ^2.9:
 /// ```text
 /// tmux display-panes [-b] [-d duration] [-t target-client] [template]
@@ -50,6 +56,13 @@ impl<'a> DisplayPanes<'a> {
     #[cfg(feature = "tmux_2_9")]
     pub fn not_block(&mut self) -> &mut Self {
         self.0.push_flag(B_LOWERCASE_KEY);
+        self
+    }
+
+    /// `[-N]`
+    #[cfg(feature = "tmux_3_2")]
+    pub fn ignore_keys(&mut self) -> &mut Self {
+        self.0.push_flag(N_UPPERCASE_KEY);
         self
     }
 

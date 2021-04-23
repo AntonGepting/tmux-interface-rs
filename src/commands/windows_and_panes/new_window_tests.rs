@@ -7,6 +7,13 @@ fn new_window() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux new-window [-abdkPS] [-c start-directory] [-e environment] [-F format] [-n window-name]
+    // [-t target-window] [shell-command]
+    // (alias: neww)
+    // ```
+    //
     // tmux ^3.0:
     // ```text
     // tmux new-window [-adkP] [-c start-directory] [-e environment] [-F format] [-n window-name] [-t
@@ -55,12 +62,16 @@ fn new_window() {
     let mut new_window = NewWindow::new();
     #[cfg(feature = "tmux_1_3")]
     new_window.add();
+    #[cfg(feature = "tmux_3_2")]
+    new_window.before();
     #[cfg(feature = "tmux_0_8")]
     new_window.detached();
     #[cfg(feature = "tmux_1_0")]
     new_window.kill();
     #[cfg(feature = "tmux_1_5")]
     new_window.print();
+    #[cfg(feature = "tmux_3_2")]
+    new_window.select();
     #[cfg(feature = "tmux_1_7")]
     new_window.start_directory("1");
     #[cfg(feature = "tmux_3_0")]
@@ -82,12 +93,16 @@ fn new_window() {
     let mut s = Vec::new();
     #[cfg(feature = "tmux_1_3")]
     s.push("-a");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-b");
     #[cfg(feature = "tmux_0_8")]
     s.push("-d");
     #[cfg(feature = "tmux_1_0")]
     s.push("-k");
     #[cfg(feature = "tmux_1_5")]
     s.push("-P");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-S");
     #[cfg(feature = "tmux_1_7")]
     s.extend_from_slice(&["-c", "1"]);
     #[cfg(feature = "tmux_3_0")]

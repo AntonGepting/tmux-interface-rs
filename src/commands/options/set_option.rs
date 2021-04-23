@@ -6,6 +6,12 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux set-option [-aFgopqsuUw] [-t target-pane] option value
+/// (alias: set)
+/// ```
+///
 /// tmux ^3.0:
 /// ```text
 /// tmux set-option [-aFgopqsuw] [-t target-pane] option value
@@ -118,6 +124,13 @@ impl<'a> SetOption<'a> {
     #[cfg(feature = "tmux_0_8")]
     pub fn unset(&mut self) -> &mut Self {
         self.0.push_flag(U_LOWERCASE_KEY);
+        self
+    }
+
+    /// `[-U]` - unsets an option (like -u) but if the option is a pane option also unsets the option on any panes in the window
+    #[cfg(feature = "tmux_3_2")]
+    pub fn unset_on_all(&mut self) -> &mut Self {
+        self.0.push_flag(U_UPPERCASE_KEY);
         self
     }
 

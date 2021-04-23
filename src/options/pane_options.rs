@@ -3,6 +3,42 @@ use crate::{SetOption, ShowOptions};
 use std::fmt;
 use std::str::FromStr;
 
+#[derive(PartialEq, Clone, Debug)]
+#[cfg(feature = "tmux_3_0")]
+pub enum RemainOnExit {
+    On,
+    Off,
+    #[cfg(feature = "tmux_3_2")]
+    Failed,
+}
+
+#[cfg(feature = "tmux_3_0")]
+impl fmt::Display for RemainOnExit {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Self::On => write!(f, "on"),
+            Self::Off => write!(f, "off"),
+            #[cfg(feature = "tmux_3_2")]
+            Self::Failed => write!(f, "failed"),
+        }
+    }
+}
+
+#[cfg(feature = "tmux_3_0")]
+impl FromStr for RemainOnExit {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Error> {
+        match s {
+            "on" => Ok(Self::On),
+            "off" => Ok(Self::Off),
+            #[cfg(feature = "tmux_3_2")]
+            "failed" => Ok(Self::Failed),
+            _ => Err(Error::ParseRemainOnExit),
+        }
+    }
+}
+
 // XXX: conditionals?
 // NOTE: total num: 5 (usize)
 pub const ALLOW_RENAME: usize = 1 << 0;
@@ -10,13 +46,18 @@ pub const ALTERNATE_SCREEN: usize = 1 << 1;
 pub const REMAIN_ON_EXIT: usize = 1 << 2;
 pub const WINDOW_ACTIVE_STYLE: usize = 1 << 3;
 pub const WINDOW_STYLE: usize = 1 << 4;
+#[cfg(feature = "tmux_3_2")]
+pub const SYNCHRONIZE_PANES: usize = 1 << 5;
 
 pub const PANE_OPTIONS_NONE: usize = 0;
 ////pub const PANE_OPTIONS_DEFAULT: usize = ;
 pub const PANE_OPTIONS_ALL: usize =
     ALLOW_RENAME | ALTERNATE_SCREEN | REMAIN_ON_EXIT | WINDOW_ACTIVE_STYLE | WINDOW_STYLE;
 
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_2")))]
 pub const PANE_OPTIONS_NUM: usize = 5;
+#[cfg(feature = "tmux_3_2")]
+pub const PANE_OPTIONS_NUM: usize = 6;
 
 // TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
 pub const PANE_OPTIONS: [(
@@ -39,6 +80,7 @@ pub const PANE_OPTIONS: [(
         |p| p.alternate_screen.as_ref().map(|v| v.to_string()),
         ALTERNATE_SCREEN,
     ),
+    // XXX: check lower versions
     #[cfg(feature = "tmux_3_0")]
     (
         "remain-on-exit",
@@ -68,6 +110,13 @@ pub const PANE_OPTIONS: [(
         },
         WINDOW_STYLE,
     ),
+    #[cfg(feature = "tmux_3_2")]
+    (
+        "synchronize-panes",
+        |p, _, s| p.synchronize_panes = s.parse().ok(),
+        |p| p.synchronize_panes.as_ref().map(|v| v.to_string()),
+        SYNCHRONIZE_PANES,
+    ),
 ];
 
 // TODO: check types
@@ -80,9 +129,10 @@ pub struct PaneOptions {
     //alternate-screen [on | off]
     #[cfg(feature = "tmux_3_0")]
     pub alternate_screen: Option<Switch>,
+    // tmux ^3.2: remain-on-exit [on | off | failed]
     //remain-on-exit [on | off]
     #[cfg(feature = "tmux_3_0")]
-    pub remain_on_exit: Option<Switch>,
+    pub remain_on_exit: Option<RemainOnExit>,
     //window-active-style style
     #[cfg(feature = "tmux_3_0")]
     pub window_active_style: Option<String>,
@@ -90,6 +140,9 @@ pub struct PaneOptions {
     #[cfg(feature = "tmux_3_0")]
     pub window_style: Option<String>,
     //pub user_options: Option<HashMap<String, String>>
+    //synchronize-panes [on | off]
+    #[cfg(feature = "tmux_3_2")]
+    pub synchronize_panes: Option<Switch>,
 }
 
 impl PaneOptions {
@@ -182,11 +235,13 @@ pub struct PaneOptionsBuilder<'a> {
     #[cfg(feature = "tmux_3_0")]
     pub alternate_screen: Option<Switch>,
     #[cfg(feature = "tmux_3_0")]
-    pub remain_on_exit: Option<Switch>,
+    pub remain_on_exit: Option<RemainOnExit>,
     #[cfg(feature = "tmux_3_0")]
     pub window_active_style: Option<&'a str>,
     #[cfg(feature = "tmux_3_0")]
     pub window_style: Option<&'a str>,
+    #[cfg(feature = "tmux_3_2")]
+    pub synchronize_panes: Option<Switch>,
 }
 
 impl<'a> PaneOptionsBuilder<'a> {
@@ -207,7 +262,7 @@ impl<'a> PaneOptionsBuilder<'a> {
     }
 
     #[cfg(feature = "tmux_3_0")]
-    pub fn remain_on_exit(&mut self, remain_on_exit: Switch) -> &mut Self {
+    pub fn remain_on_exit(&mut self, remain_on_exit: RemainOnExit) -> &mut Self {
         self.remain_on_exit = Some(remain_on_exit);
         self
     }
@@ -224,6 +279,12 @@ impl<'a> PaneOptionsBuilder<'a> {
         self
     }
 
+    #[cfg(feature = "tmux_3_2")]
+    pub fn synchronize_panes(&mut self, synchronize_panes: Switch) -> &mut Self {
+        self.synchronize_panes = Some(synchronize_panes);
+        self
+    }
+
     // XXX: clone rly needed?
     pub fn build(&self) -> PaneOptions {
         PaneOptions {
@@ -237,6 +298,8 @@ impl<'a> PaneOptionsBuilder<'a> {
             window_active_style: self.window_active_style.map(|s| s.to_string()),
             #[cfg(feature = "tmux_3_0")]
             window_style: self.window_style.map(|s| s.to_string()),
+            #[cfg(feature = "tmux_3_2")]
+            synchronize_panes: self.synchronize_panes.clone(),
         }
     }
 }

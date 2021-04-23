@@ -7,6 +7,12 @@ fn display_panes() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux display-panes [-bN] [-d duration] [-t target-client] [template]
+    // (alias: displayp)
+    // ```
+    //
     // tmux ^2.9:
     // ```text
     // tmux display-panes [-b] [-d duration] [-t target-client] [template]
@@ -33,6 +39,8 @@ fn display_panes() {
     let mut display_panes = DisplayPanes::new();
     #[cfg(feature = "tmux_2_9")]
     display_panes.not_block();
+    #[cfg(feature = "tmux_3_2")]
+    display_panes.ignore_keys();
     #[cfg(feature = "tmux_2_6")]
     display_panes.start_directory("1");
     #[cfg(feature = "tmux_1_0")]
@@ -48,6 +56,8 @@ fn display_panes() {
     let mut s = Vec::new();
     #[cfg(feature = "tmux_2_9")]
     s.push("-b");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-N");
     #[cfg(feature = "tmux_2_6")]
     s.extend_from_slice(&["-d", "1"]);
     #[cfg(feature = "tmux_1_0")]

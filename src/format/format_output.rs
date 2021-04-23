@@ -363,6 +363,13 @@ impl<'a> FormatOutput<'a> {
         self
     }
 
+    /// `current_file` - Current configuration file
+    #[cfg(feature = "tmux_3_2")]
+    pub fn current_file(&mut self, v: &'a mut Option<String>) -> &mut Self {
+        self.push(VariableOutput::CurrentFile(v));
+        self
+    }
+
     // history
 
     /// `history_bytes`             Number of bytes in window history
@@ -1186,6 +1193,14 @@ impl<'a> FormatOutput<'a> {
     #[cfg(feature = "tmux_1_6")]
     pub fn window_flags(&mut self, v: &'a mut Option<WindowFlags>) -> &mut Self {
         self.push(VariableOutput::WindowFlags(v));
+        self
+    }
+
+    // TODO: WindowRawFlags
+    /// `window_raw_flags` - Window flags with nothing escaped
+    #[cfg(feature = "tmux_3_2")]
+    pub fn window_raw_flags(&mut self, v: &'a mut Option<WindowFlags>) -> &mut Self {
+        self.push(VariableOutput::WindowRawFlags(v));
         self
     }
 

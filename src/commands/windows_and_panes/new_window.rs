@@ -6,6 +6,13 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux new-window [-abdkPS] [-c start-directory] [-e environment] [-F format] [-n window-name]
+/// [-t target-window] [shell-command]
+/// (alias: neww)
+/// ```
+///
 /// tmux ^3.0:
 /// ```text
 /// tmux new-window [-adkP] [-c start-directory] [-e environment] [-F format] [-n window-name] [-t
@@ -66,10 +73,18 @@ impl<'a> NewWindow<'a> {
         Default::default()
     }
 
+    // TODO: rename after()
     /// `[-a]` - new window is inserted at the next index up from the specified target-window
     #[cfg(feature = "tmux_1_3")]
     pub fn add(&mut self) -> &mut Self {
         self.0.push_flag(A_LOWERCASE_KEY);
+        self
+    }
+
+    /// `[-b]` - new window is inserted at the next index before the specified target-window
+    #[cfg(feature = "tmux_3_2")]
+    pub fn before(&mut self) -> &mut Self {
+        self.0.push_flag(B_LOWERCASE_KEY);
         self
     }
 
@@ -91,6 +106,13 @@ impl<'a> NewWindow<'a> {
     #[cfg(feature = "tmux_1_5")]
     pub fn print(&mut self) -> &mut Self {
         self.0.push_flag(P_UPPERCASE_KEY);
+        self
+    }
+
+    /// `[-S]` - is given and a window named window-name already exists, it is selected
+    #[cfg(feature = "tmux_3_2")]
+    pub fn select(&mut self) -> &mut Self {
+        self.0.push_flag(S_UPPERCASE_KEY);
         self
     }
 

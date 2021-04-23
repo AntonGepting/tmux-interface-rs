@@ -4,6 +4,12 @@ use std::borrow::Cow;
 
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux run-shell [-bC] [-t target-pane] shell-command
+/// (alias: run)
+/// ```
+///
 /// tmux ^1.8:
 /// ```text
 /// tmux run-shell [-b] [-t target-pane] shell-command
@@ -42,6 +48,13 @@ impl<'a> RunShell<'a> {
     #[cfg(feature = "tmux_1_8")]
     pub fn backgroud(&mut self) -> &mut Self {
         self.0.push_flag(B_LOWERCASE_KEY);
+        self
+    }
+
+    /// `[-C]` - execute tmux command
+    #[cfg(feature = "tmux_3_2")]
+    pub fn tmux_command(&mut self) -> &mut Self {
+        self.0.push_flag(C_UPPERCASE_KEY);
         self
     }
 
