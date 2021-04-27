@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-#[cfg(feature = "tmux_3_0")]
+#[cfg(feature = "tmux_2_9a")]
 use crate::ClientFlags;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;

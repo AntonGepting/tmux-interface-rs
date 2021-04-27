@@ -675,7 +675,7 @@ pub use self::commands::buffers::show_buffer::ShowBuffer;
 // clients and sessions
 #[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::attach_session::AttachSession;
-#[cfg(feature = "tmux_3_0")]
+#[cfg(feature = "tmux_2_9a")]
 pub use self::commands::clients_and_sessions::client_flags::ClientFlags;
 #[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::detach_client::DetachClient;

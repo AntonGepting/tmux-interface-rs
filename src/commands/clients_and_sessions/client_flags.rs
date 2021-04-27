@@ -1,9 +1,9 @@
 // TODO: parse from_str
 
-#[cfg(feature = "tmux_3_0")]
+#[cfg(feature = "tmux_2_9a")]
 use std::fmt;
 
-#[cfg(feature = "tmux_3_0")]
+#[cfg(feature = "tmux_2_9a")]
 #[derive(Default, Clone, Debug)]
 pub struct ClientFlags {
     /// `active-pane` the client has an independent active pane
@@ -20,7 +20,7 @@ pub struct ClientFlags {
     pub wait_exit: Option<bool>,
 }
 
-#[cfg(feature = "tmux_3_0")]
+#[cfg(feature = "tmux_2_9a")]
 impl ClientFlags {
     fn bool_to_flag<S: AsRef<str>>(value: bool, flag_name: S) -> String {
         if value {
@@ -38,7 +38,7 @@ const CLIENT_FLAG_PAUSE_AFTER: &str = "pause-after";
 const CLIENT_FLAG_READ_ONLY: &str = "read-only";
 const CLIENT_FLAG_WAIT_EXIT: &str = "wait-exit";
 
-#[cfg(feature = "tmux_3_0")]
+#[cfg(feature = "tmux_2_9a")]
 impl fmt::Display for ClientFlags {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut v = Vec::new();
