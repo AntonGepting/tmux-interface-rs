@@ -179,7 +179,7 @@ impl<'a> RefreshClient<'a> {
     // XXX: refactor vec?
     /// `[-F flags]` - set a comma-separated list of flags
     #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_2")))]
-    pub fn flags(&mut self, flags: Flags) -> &mut Self {
+    pub fn flags(&mut self, flags: ClientFlags) -> &mut Self {
         self.0.push_option(F_UPPERCASE_KEY, flags.to_string());
         self
     }
