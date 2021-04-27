@@ -6,6 +6,12 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux move-window [-abrdk] [-s src-window] [-t dst-window]
+/// (alias: movew)
+/// ```
+///
 /// tmux ^2.1:
 /// ```text
 /// tmux move-window [-ardk] [-s src-window] [-t dst-window]
@@ -48,8 +54,15 @@ impl<'a> MoveWindow<'a> {
 
     /// `[-a]` - the window is moved to the next index up
     #[cfg(feature = "tmux_2_1")]
-    pub fn add(&mut self) -> &mut Self {
+    pub fn after(&mut self) -> &mut Self {
         self.0.push_flag(A_LOWERCASE_KEY);
+        self
+    }
+
+    /// `[-b]` - the window is moved to the next index before
+    #[cfg(feature = "tmux_3_2")]
+    pub fn before(&mut self) -> &mut Self {
+        self.0.push_flag(B_LOWERCASE_KEY);
         self
     }
 

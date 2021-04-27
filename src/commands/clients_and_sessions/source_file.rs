@@ -6,6 +6,12 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux source-file [-Fnqv] path ...
+/// (alias: source)
+/// ```
+///
 /// tmux ^3.0:
 /// ```text
 /// tmux source-file [-nqv] path
@@ -38,6 +44,13 @@ impl<'a> Default for SourceFile<'a> {
 impl<'a> SourceFile<'a> {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    /// `[-F]` - value is expanded as a format
+    #[cfg(feature = "tmux_3_2")]
+    pub fn expand(&mut self) -> &mut Self {
+        self.0.push_flag(F_UPPERCASE_KEY);
+        self
     }
 
     /// `[-n]`

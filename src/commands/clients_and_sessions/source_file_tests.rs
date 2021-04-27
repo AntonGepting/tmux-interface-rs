@@ -7,6 +7,12 @@ fn source_file() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux source-file [-Fnqv] path ...
+    // (alias: source)
+    // ```
+    //
     // tmux ^3.0:
     // ```text
     // tmux source-file [-nqv] path
@@ -25,6 +31,8 @@ fn source_file() {
     // (alias: source)
     // ```
     let mut source_file = SourceFile::new();
+    #[cfg(feature = "tmux_3_2")]
+    source_file.expand();
     #[cfg(feature = "tmux_3_0")]
     source_file.not_execute();
     #[cfg(feature = "tmux_3_0")]
@@ -40,6 +48,8 @@ fn source_file() {
     let cmd = "source";
 
     let mut s = Vec::new();
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-F");
     #[cfg(feature = "tmux_3_0")]
     s.push("-n");
     #[cfg(feature = "tmux_3_0")]

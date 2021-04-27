@@ -4,8 +4,14 @@ use std::borrow::Cow;
 
 /// # Manual
 ///
+/// tmux ^3.2:
 /// ```text
+/// tmux unbind-key [-anq] [-T key-table] key
+/// (alias: unbind)
+/// ```
+///
 /// tmux ^2.4:
+/// ```text
 /// tmux unbind-key [-an] [-T key-table] key
 /// (alias: unbind)
 /// ```
@@ -74,6 +80,13 @@ impl<'a> UnbindKey<'a> {
     #[cfg(feature = "tmux_1_0")]
     pub fn root(&mut self) -> &mut Self {
         self.0.push_flag(N_LOWERCASE_KEY);
+        self
+    }
+
+    /// `[-q]`
+    #[cfg(feature = "tmux_3_2")]
+    pub fn quite(&mut self) -> &mut Self {
+        self.0.push_flag(Q_LOWERCASE_KEY);
         self
     }
 

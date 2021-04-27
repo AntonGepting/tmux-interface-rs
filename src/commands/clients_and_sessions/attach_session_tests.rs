@@ -1,11 +1,19 @@
 #[test]
 fn attach_session() {
+    #[cfg(feature = "tmux_3_2")]
+    use crate::ClientFlags;
     use crate::{AttachSession, TargetSession};
     use std::borrow::Cow;
 
     // Structure for attaching client to already existing session
     //
     // # Manual
+    //
+    // tmux ^3.2:
+    // ```text
+    // tmux attach-session [-dErx] [-c working-directory] [-f flags] [-t target-session]
+    // (alias: attach)
+    // ```
     //
     // tmux ^3.0:
     // ```text
@@ -49,6 +57,14 @@ fn attach_session() {
     attach_session.parent_sighup();
     #[cfg(feature = "tmux_1_9")]
     attach_session.working_directory("1");
+    #[cfg(feature = "tmux_3_2")]
+    {
+        let flags = ClientFlags {
+            active_pane: Some(true),
+            ..Default::default()
+        };
+        attach_session.flags(flags);
+    }
     #[cfg(feature = "tmux_0_8")]
     attach_session.target_session(&target_session);
 
@@ -68,6 +84,8 @@ fn attach_session() {
     s.push("-x");
     #[cfg(feature = "tmux_1_9")]
     s.extend_from_slice(&["-c", "1"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-f", "active-pane"]);
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "2"]);
     let s = s.into_iter().map(|a| a.into()).collect();

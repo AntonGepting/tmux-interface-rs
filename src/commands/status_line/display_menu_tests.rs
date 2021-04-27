@@ -15,6 +15,8 @@ fn display_menu() {
     let target_pane = TargetPane::Raw("2").to_string();
 
     let mut display_menu = DisplayMenu::new();
+    #[cfg(feature = "tmux_3_2")]
+    display_menu.not_close();
     #[cfg(feature = "tmux_3_0")]
     display_menu.target_client("1");
     #[cfg(feature = "tmux_3_0")]
@@ -35,6 +37,8 @@ fn display_menu() {
     let cmd = "display-menu";
 
     let mut s = Vec::new();
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-O");
     #[cfg(feature = "tmux_3_0")]
     s.extend_from_slice(&["-c", "1"]);
     #[cfg(feature = "tmux_3_0")]

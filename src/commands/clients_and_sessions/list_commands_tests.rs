@@ -7,6 +7,12 @@ fn list_commands() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux list-commands [-F format] [command]
+    // (alias: lscm)
+    // ```
+    //
     // tmux ^2.3:
     // ```text
     // tmux list-commands [-F format]
@@ -21,6 +27,8 @@ fn list_commands() {
     let mut list_commands = ListCommands::new();
     #[cfg(feature = "tmux_2_3")]
     list_commands.format("1");
+    #[cfg(feature = "tmux_3_2")]
+    list_commands.command("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-commands";
@@ -31,6 +39,8 @@ fn list_commands() {
     let mut s = Vec::new();
     #[cfg(feature = "tmux_2_3")]
     s.extend_from_slice(&["-F", "1"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.push("2");
     #[cfg(feature = "tmux_2_3")]
     let s = s.into_iter().map(|a| a.into()).collect();
 

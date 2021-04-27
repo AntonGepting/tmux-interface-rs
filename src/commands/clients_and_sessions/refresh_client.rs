@@ -1,10 +1,42 @@
 use crate::commands::constants::*;
+#[cfg(feature = "tmux_3_0")]
+use crate::ClientFlags;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
+#[cfg(feature = "tmux_3_2")]
+use std::fmt;
+
+#[derive(Debug, Clone)]
+#[cfg(feature = "tmux_3_2")]
+pub enum State {
+    On,
+    Off,
+    Continue,
+    Pause,
+}
+
+#[cfg(feature = "tmux_3_2")]
+impl fmt::Display for State {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let s = match self {
+            Self::On => "on",
+            Self::Off => "off",
+            Self::Continue => "continue",
+            Self::Pause => "pause",
+        };
+        write!(f, "{}", s)
+    }
+}
 
 /// Structure for refreshing the current client
 ///
 /// # Manual
+///
+/// tmux 3.2:
+/// ```text
+/// tmux refresh-client [-cDlLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags] [-t target-client] [adjustment]
+/// (alias: refresh)
+/// ```
 ///
 /// tmux 3.0:
 /// ```text
@@ -101,6 +133,35 @@ impl<'a> RefreshClient<'a> {
         self
     }
 
+    // TODO: accept target_pane
+    /// `[-A pane:state]` - allows a control mode client to trigger actions on a pane
+    #[cfg(feature = "tmux_3_2")]
+    pub fn allow_actions(&mut self, pane: usize, state: State) -> &mut Self {
+        self.0
+            .push_option(A_UPPERCASE_KEY, format!("%{}:{}", pane, state));
+        self
+    }
+
+    // TODO: refactor, accept target_pane, target_window and masks * ...
+    /// [-B name:what:format]
+    #[cfg(feature = "tmux_3_2")]
+    pub fn subscribe(
+        &mut self,
+        name: usize,
+        what: Option<String>,
+        format: Option<String>,
+    ) -> &mut Self {
+        let mut arg = format!("%{}", name);
+        if let Some(s) = what {
+            arg = format!("{}:{}", arg, s);
+            if let Some(s) = format {
+                arg = format!("{}:{}", arg, s);
+            }
+        }
+        self.0.push_option(B_UPPERCASE_KEY, arg);
+        self
+    }
+
     /// `[-C X,Y]` - set the width and height of a control client
     /// `[-C XxY]` - set the width and height of a control client
     #[cfg(feature = "tmux_2_4")]
@@ -115,10 +176,19 @@ impl<'a> RefreshClient<'a> {
         self
     }
 
+    // XXX: refactor vec?
     /// `[-F flags]` - set a comma-separated list of flags
-    #[cfg(feature = "tmux_2_9a")]
-    pub fn flags(&mut self, flags: &'a str) -> &mut Self {
-        self.0.push_option(F_UPPERCASE_KEY, flags);
+    #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_2")))]
+    pub fn flags(&mut self, flags: Flags) -> &mut Self {
+        self.0.push_option(F_UPPERCASE_KEY, flags.to_string());
+        self
+    }
+
+    // XXX: refactor vec?
+    /// `[-f flags]` - sets a comma-separated list of client flags
+    #[cfg(feature = "tmux_3_2")]
+    pub fn flags(&mut self, flags: ClientFlags) -> &mut Self {
+        self.0.push_option(F_LOWERCASE_KEY, flags.to_string());
         self
     }
 

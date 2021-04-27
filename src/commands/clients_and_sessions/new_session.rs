@@ -1,10 +1,19 @@
 use crate::commands::constants::*;
+#[cfg(feature = "tmux_3_2")]
+use crate::ClientFlags;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Structure for creating a new session
 ///
 /// # Manual
+///
+/// tmux 3.2:
+/// ```text
+/// tmux new-session [-AdDEPX] [-c start-directory] [-e environment] [-f flags] [-F format]
+/// [-n window-name] [-s session-name] [-t group-name] [-x width] [-y height] [shell-command]
+/// (alias: new)
+/// ```
 ///
 /// tmux 3.0:
 /// ```text
@@ -128,6 +137,23 @@ impl<'a> NewSession<'a> {
     #[cfg(feature = "tmux_1_9")]
     pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, start_directory: S) -> &mut Self {
         self.0.push_option(C_LOWERCASE_KEY, start_directory);
+        self
+    }
+
+    // XXX: mb. 2 args - var, value?
+    /// `[-e start-directory]` - takes the form ‘VARIABLE=value’ and sets an environment variable
+    /// for the newly created session; it may be specified multiple times.
+    #[cfg(feature = "tmux_3_2")]
+    pub fn environment<S: Into<Cow<'a, str>>>(&mut self, environment: S) -> &mut Self {
+        self.0.push_option(E_LOWERCASE_KEY, environment);
+        self
+    }
+
+    // XXX: refactor vec?
+    /// `[-f flags]` - sets a comma-separated list of client flags
+    #[cfg(feature = "tmux_3_2")]
+    pub fn flags(&mut self, flags: ClientFlags) -> &mut Self {
+        self.0.push_option(F_LOWERCASE_KEY, flags.to_string());
         self
     }
 

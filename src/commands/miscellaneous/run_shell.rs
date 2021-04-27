@@ -6,7 +6,7 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.2:
 /// ```text
-/// tmux run-shell [-bC] [-t target-pane] shell-command
+/// tmux run-shell [-bC] [-d delay] [-t target-pane] [shell-command]
 /// (alias: run)
 /// ```
 ///
@@ -55,6 +55,13 @@ impl<'a> RunShell<'a> {
     #[cfg(feature = "tmux_3_2")]
     pub fn tmux_command(&mut self) -> &mut Self {
         self.0.push_flag(C_UPPERCASE_KEY);
+        self
+    }
+
+    /// `[-d delay]`
+    #[cfg(feature = "tmux_1_8")]
+    pub fn delay(&mut self, delay: usize) -> &mut Self {
+        self.0.push_option(D_LOWERCASE_KEY, delay.to_string());
         self
     }
 

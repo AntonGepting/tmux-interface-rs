@@ -62,8 +62,8 @@ pub const Y_LOWERCASE_KEY: &str = "-y";
 /// `-A`
 pub const A_UPPERCASE_KEY: &str = "-A";
 /// `-B`
-//pub const B_UPPERCASE_KEY: &str = "-B";
-// `-C`
+pub const B_UPPERCASE_KEY: &str = "-B";
+/// `-C`
 pub const C_UPPERCASE_KEY: &str = "-C";
 /// `-D`
 pub const D_UPPERCASE_KEY: &str = "-D";
@@ -103,8 +103,8 @@ pub const T_UPPERCASE_KEY: &str = "-T";
 pub const U_UPPERCASE_KEY: &str = "-U";
 /// `-V`
 pub const V_UPPERCASE_KEY: &str = "-V";
-// `-W`
-//pub const W_UPPERCASE_KEY: &str = "-W";
+/// `-W`
+pub const W_UPPERCASE_KEY: &str = "-W";
 /// `-X`
 pub const X_UPPERCASE_KEY: &str = "-X";
 // `-Y`
@@ -466,7 +466,10 @@ pub const CONFIRM_BEFORE: &str = "confirm-before";
 pub const CONFIRM_BEFORE: &str = "confirm";
 
 /// `display-menu`
+#[cfg(not(feature = "cmd_alias"))]
 pub const DISPLAY_MENU: &str = "display-menu";
+#[cfg(feature = "cmd_alias")]
+pub const DISPLAY_MENU: &str = "menu";
 
 /// `display-message`
 #[cfg(not(feature = "cmd_alias"))]

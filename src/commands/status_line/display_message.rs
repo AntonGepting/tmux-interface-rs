@@ -6,6 +6,12 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux display-message [-aINpv] [-c target-client] [-d delay] [-t target-pane] [message]
+///  (alias: display)
+/// ```
+///
 /// tmux ^3.0:
 /// ```text
 /// tmux display-message [-aIpv] [-c target-client] [-t target-pane] [message]
@@ -66,6 +72,13 @@ impl<'a> DisplayMessage<'a> {
         self
     }
 
+    /// `[-N]` - ignores key presses and closes only after the delay expires
+    #[cfg(feature = "tmux_3_2")]
+    pub fn ignore_keys(&mut self) -> &mut Self {
+        self.0.push_flag(N_UPPERCASE_KEY);
+        self
+    }
+
     /// `[-p]` - the output is printed to stdout
     #[cfg(feature = "tmux_2_9a")]
     pub fn print(&mut self) -> &mut Self {
@@ -84,6 +97,13 @@ impl<'a> DisplayMessage<'a> {
     #[cfg(feature = "tmux_1_0")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
         self.0.push_option(C_LOWERCASE_KEY, target_client);
+        self
+    }
+
+    /// `[-d delay]` - delay
+    #[cfg(feature = "tmux_3_2")]
+    pub fn delay(&mut self, delay: usize) -> &mut Self {
+        self.0.push_option(D_LOWERCASE_KEY, delay.to_string());
         self
     }
 

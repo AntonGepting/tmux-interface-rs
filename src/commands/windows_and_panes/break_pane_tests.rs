@@ -9,6 +9,12 @@ fn break_pane() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux break-pane [-abdP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
+    // (alias: breakp)
+    // ```
+    //
     // tmux ^2.4:
     // ```text
     // tmux break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
@@ -50,6 +56,10 @@ fn break_pane() {
     let target_window = TargetWindow::Raw("4").to_string();
 
     let mut break_pane = BreakPane::new();
+    #[cfg(feature = "tmux_3_2")]
+    break_pane.after();
+    #[cfg(feature = "tmux_3_2")]
+    break_pane.before();
     #[cfg(feature = "tmux_0_8")]
     break_pane.detached();
     #[cfg(feature = "tmux_1_7")]
@@ -75,6 +85,10 @@ fn break_pane() {
     let cmd = "breakp";
 
     let mut s = Vec::new();
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-a");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-b");
     #[cfg(feature = "tmux_0_8")]
     s.push("-d");
     #[cfg(feature = "tmux_1_7")]

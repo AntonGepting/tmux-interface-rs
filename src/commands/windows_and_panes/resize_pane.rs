@@ -6,6 +6,12 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux resize-pane [-DLMRTUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+/// (alias: resizep)
+/// ```
+///
 /// tmux ^2.1:
 /// ```text
 /// tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
@@ -71,6 +77,13 @@ impl<'a> ResizePane<'a> {
     #[cfg(feature = "tmux_1_8")]
     pub fn right(&mut self) -> &mut Self {
         self.0.push_flag(R_UPPERCASE_KEY);
+        self
+    }
+
+    /// `[-T]` - trims all lines below the current cursor position
+    #[cfg(feature = "tmux_3_2")]
+    pub fn trim(&mut self) -> &mut Self {
+        self.0.push_flag(T_UPPERCASE_KEY);
         self
     }
 

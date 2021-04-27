@@ -4,6 +4,12 @@ use std::borrow::Cow;
 
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text:
+/// tmux show-environment [-hgs] [-t target-session] [variable]
+/// (alias: showenv)
+/// ```
+///
 /// tmux ^2.1:
 /// ```text
 /// tmux show-environment [-gs] [-t target-session] [variable]
@@ -36,6 +42,13 @@ impl<'a> Default for ShowEnvironment<'a> {
 impl<'a> ShowEnvironment<'a> {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    /// `[-h]`
+    #[cfg(feature = "tmux_3_2")]
+    pub fn hidden(&mut self) -> &mut Self {
+        self.0.push_flag(H_LOWERCASE_KEY);
+        self
     }
 
     /// `[-g]`

@@ -7,6 +7,12 @@ fn resize_pane() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux resize-pane [-DLMRTUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+    // (alias: resizep)
+    // ```
+    //
     // tmux ^2.1:
     // ```text
     // tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
@@ -40,6 +46,8 @@ fn resize_pane() {
     resize_pane.mouse();
     #[cfg(feature = "tmux_1_8")]
     resize_pane.right();
+    #[cfg(feature = "tmux_3_2")]
+    resize_pane.trim();
     #[cfg(feature = "tmux_0_9")]
     resize_pane.up();
     #[cfg(feature = "tmux_1_8")]
@@ -67,6 +75,8 @@ fn resize_pane() {
     s.push("-M");
     #[cfg(feature = "tmux_1_8")]
     s.push("-R");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-T");
     #[cfg(feature = "tmux_0_9")]
     s.push("-U");
     #[cfg(feature = "tmux_1_8")]

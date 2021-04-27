@@ -5,8 +5,14 @@ fn unbind_key() {
 
     // # Manual
     //
+    // tmux ^3.2:
     // ```text
+    // tmux unbind-key [-anq] [-T key-table] key
+    // (alias: unbind)
+    // ```
+    //
     // tmux ^2.4:
+    // ```text
     // tmux unbind-key [-an] [-T key-table] key
     // (alias: unbind)
     // ```
@@ -47,6 +53,8 @@ fn unbind_key() {
     unbind_key.command_mode();
     #[cfg(feature = "tmux_1_0")]
     unbind_key.root();
+    #[cfg(feature = "tmux_3_2")]
+    unbind_key.quite();
     #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
     unbind_key.mode_key("1");
     #[cfg(feature = "tmux_1_0")]
@@ -66,6 +74,8 @@ fn unbind_key() {
     s.push("-c");
     #[cfg(feature = "tmux_1_0")]
     s.push("-n");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-q");
     #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
     s.extend_from_slice(&["-t", "1"]);
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]

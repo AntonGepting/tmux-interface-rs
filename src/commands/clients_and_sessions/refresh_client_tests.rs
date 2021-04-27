@@ -1,11 +1,21 @@
 #[test]
 fn refresh_client() {
+    #[cfg(feature = "tmux_2_9a")]
+    use crate::ClientFlags;
     use crate::RefreshClient;
+    #[cfg(feature = "tmux_3_2")]
+    use crate::State;
     use std::borrow::Cow;
 
     // Structure for refreshing the current client
     //
     // # Manual
+    //
+    // tmux 3.2:
+    // ```text
+    // tmux refresh-client [-cDlLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags] [-t target-client] [adjustment]
+    // (alias: refresh)
+    // ```
     //
     // tmux 3.0:
     // ```text
@@ -51,10 +61,20 @@ fn refresh_client() {
     refresh_client.status_line();
     #[cfg(feature = "tmux_2_9a")]
     refresh_client.up();
+    #[cfg(feature = "tmux_3_2")]
+    refresh_client.allow_actions(0, State::On);
+    #[cfg(feature = "tmux_3_2")]
+    refresh_client.subscribe(0, None, None);
     #[cfg(feature = "tmux_2_4")]
     refresh_client.size((1, 2));
     #[cfg(feature = "tmux_2_9a")]
-    refresh_client.flags("3");
+    {
+        let flags = ClientFlags {
+            active_pane: Some(true),
+            ..Default::default()
+        };
+        refresh_client.flags(flags);
+    }
     #[cfg(feature = "tmux_0_8")]
     refresh_client.target_client("4");
     #[cfg(feature = "tmux_2_9a")]
@@ -80,12 +100,18 @@ fn refresh_client() {
     s.push("-S");
     #[cfg(feature = "tmux_2_9a")]
     s.push("-U");
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-A", "%0:on"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-B", "%0"]);
     #[cfg(feature = "tmux_3_0")]
     s.extend_from_slice(&["-C", "1x2"]);
     #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_0")))]
     s.extend_from_slice(&["-C", "1,2"]);
-    #[cfg(feature = "tmux_2_9a")]
-    s.extend_from_slice(&["-F", "3"]);
+    #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_2")))]
+    s.extend_from_slice(&["-F", "active-pane"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-f", "active-pane"]);
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "4"]);
     #[cfg(feature = "tmux_2_9a")]

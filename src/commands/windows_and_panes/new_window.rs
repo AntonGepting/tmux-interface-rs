@@ -73,10 +73,9 @@ impl<'a> NewWindow<'a> {
         Default::default()
     }
 
-    // TODO: rename after()
     /// `[-a]` - new window is inserted at the next index up from the specified target-window
     #[cfg(feature = "tmux_1_3")]
-    pub fn add(&mut self) -> &mut Self {
+    pub fn after(&mut self) -> &mut Self {
         self.0.push_flag(A_LOWERCASE_KEY);
         self
     }

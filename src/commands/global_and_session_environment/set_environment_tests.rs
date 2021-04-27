@@ -7,6 +7,12 @@ fn set_environment() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux set-environment [-Fhgru] [-t target-session] name [value]
+    // (alias: setenv)
+    // ```
+    //
     // tmux ^1.0:
     // ```text
     // tmux set-environment [-gru] [-t target-session] name [value]
@@ -15,8 +21,12 @@ fn set_environment() {
     let target_session = TargetSession::Raw("1").to_string();
 
     let mut set_environment = SetEnvironment::new();
+    #[cfg(feature = "tmux_3_2")]
+    set_environment.expand();
     #[cfg(feature = "tmux_1_0")]
     set_environment.global();
+    #[cfg(feature = "tmux_3_2")]
+    set_environment.hidden();
     #[cfg(feature = "tmux_1_0")]
     set_environment.remove();
     #[cfg(feature = "tmux_1_0")]
@@ -34,8 +44,12 @@ fn set_environment() {
     let cmd = "setenv";
 
     let mut s = Vec::new();
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-F");
     #[cfg(feature = "tmux_1_0")]
     s.push("-g");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-h");
     #[cfg(feature = "tmux_1_0")]
     s.push("-r");
     #[cfg(feature = "tmux_1_0")]

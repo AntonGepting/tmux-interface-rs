@@ -1,11 +1,20 @@
 #[test]
 fn new_session() {
+    #[cfg(feature = "tmux_3_2")]
+    use crate::ClientFlags;
     use crate::NewSession;
     use std::borrow::Cow;
 
     // Structure for creating a new session
     //
     // # Manual
+    //
+    // tmux 3.2:
+    // ```text
+    // tmux new-session [-AdDEPX] [-c start-directory] [-e environment] [-f flags] [-F format]
+    // [-n window-name] [-s session-name] [-t group-name] [-x width] [-y height] [shell-command]
+    // (alias: new)
+    // ```
     //
     // tmux 3.0:
     // ```text
@@ -81,20 +90,30 @@ fn new_session() {
     new_session.parent_sighup();
     #[cfg(feature = "tmux_1_9")]
     new_session.start_directory("1");
+    #[cfg(feature = "tmux_3_2")]
+    new_session.environment("2");
+    #[cfg(feature = "tmux_3_2")]
+    {
+        let flags = ClientFlags {
+            active_pane: Some(true),
+            ..Default::default()
+        };
+        new_session.flags(flags);
+    }
     #[cfg(feature = "tmux_1_8")]
-    new_session.format("2");
+    new_session.format("3");
     #[cfg(feature = "tmux_0_8")]
-    new_session.window_name("3");
+    new_session.window_name("4");
     #[cfg(feature = "tmux_0_8")]
-    new_session.session_name("4");
+    new_session.session_name("5");
     #[cfg(feature = "tmux_2_4")]
-    new_session.group_name("5");
+    new_session.group_name("6");
     #[cfg(feature = "tmux_1_6")]
-    new_session.width(6);
+    new_session.width(7);
     #[cfg(feature = "tmux_1_6")]
-    new_session.height(7);
+    new_session.height(8);
     #[cfg(feature = "tmux_1_2")]
-    new_session.shell_command("8");
+    new_session.shell_command("9");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "new-session";
@@ -116,20 +135,24 @@ fn new_session() {
     s.push("-X");
     #[cfg(feature = "tmux_1_9")]
     s.extend_from_slice(&["-c", "1"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-e", "2"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-f", "active-pane"]);
     #[cfg(feature = "tmux_1_8")]
-    s.extend_from_slice(&["-F", "2"]);
+    s.extend_from_slice(&["-F", "3"]);
     #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-n", "3"]);
+    s.extend_from_slice(&["-n", "4"]);
     #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-s", "4"]);
+    s.extend_from_slice(&["-s", "5"]);
     #[cfg(feature = "tmux_2_4")]
-    s.extend_from_slice(&["-t", "5"]);
+    s.extend_from_slice(&["-t", "6"]);
     #[cfg(feature = "tmux_1_6")]
-    s.extend_from_slice(&["-x", "6"]);
+    s.extend_from_slice(&["-x", "7"]);
     #[cfg(feature = "tmux_1_6")]
-    s.extend_from_slice(&["-y", "7"]);
+    s.extend_from_slice(&["-y", "8"]);
     #[cfg(feature = "tmux_1_2")]
-    s.push("8");
+    s.push("9");
     let s = s.into_iter().map(|a| a.into()).collect();
 
     assert_eq!(new_session.0.bin, Cow::Borrowed("tmux"));

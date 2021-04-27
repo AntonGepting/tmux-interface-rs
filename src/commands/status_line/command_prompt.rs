@@ -1,10 +1,14 @@
 use crate::commands::constants::*;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
-
 /// Structure for open the command prompt in a client
 ///
 /// # Manual
+///
+/// tmux ^3.2:
+/// ```text
+/// tmux command-prompt [-1ikNTW] [-I inputs] [-p prompts] [-t target-client] [template]
+/// ```
 ///
 /// tmux ^3.1:
 /// ```text
@@ -63,6 +67,34 @@ impl<'a> CommandPrompt<'a> {
     #[cfg(feature = "tmux_2_4")]
     pub fn on_input_change(&mut self) -> &mut Self {
         self.0.push_flag(I_LOWERCASE_KEY);
+        self
+    }
+
+    /// `[-k]` - the key press is translated to a key name
+    #[cfg(feature = "tmux_3_1")]
+    pub fn key_name(&mut self) -> &mut Self {
+        self.0.push_flag(K_LOWERCASE_KEY);
+        self
+    }
+
+    /// `[-N]` - makes the prompt only accept numeric key presses
+    #[cfg(feature = "tmux_3_1")]
+    pub fn numeric(&mut self) -> &mut Self {
+        self.0.push_flag(N_UPPERCASE_KEY);
+        self
+    }
+
+    /// `[-T]` - tells tmux that the prompt is for a target which affects what completions are offered when Tab is pressed
+    #[cfg(feature = "tmux_3_2")]
+    pub fn for_target(&mut self) -> &mut Self {
+        self.0.push_flag(T_UPPERCASE_KEY);
+        self
+    }
+
+    /// `[-W]` - indicates the prompt is for a window.
+    #[cfg(feature = "tmux_3_2")]
+    pub fn for_window(&mut self) -> &mut Self {
+        self.0.push_flag(W_UPPERCASE_KEY);
         self
     }
 

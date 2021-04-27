@@ -6,6 +6,12 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux load-buffer [-w] [-b buffer-name] [-t target-client] path
+/// (alias: loadb)
+/// ```
+///
 /// tmux ^2.0:
 /// ```text
 /// tmux load-buffer [-b buffer-name] path
@@ -40,10 +46,24 @@ impl<'a> LoadBuffer<'a> {
         Default::default()
     }
 
+    /// `[-w]`
+    #[cfg(feature = "tmux_3_2")]
+    pub fn send_to_clipboard(&mut self) -> &mut Self {
+        self.0.push_flag(W_LOWERCASE_KEY);
+        self
+    }
+
     /// `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
     pub fn buffer_name<S: Into<Cow<'a, str>>>(&mut self, buffer_name: S) -> &mut Self {
         self.0.push_option(B_LOWERCASE_KEY, buffer_name);
+        self
+    }
+
+    /// `[-t target-client]`
+    #[cfg(feature = "tmux_3_2")]
+    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+        self.0.push_option(T_LOWERCASE_KEY, target_client);
         self
     }
 

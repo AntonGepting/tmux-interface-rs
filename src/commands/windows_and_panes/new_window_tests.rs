@@ -61,7 +61,7 @@ fn new_window() {
 
     let mut new_window = NewWindow::new();
     #[cfg(feature = "tmux_1_3")]
-    new_window.add();
+    new_window.after();
     #[cfg(feature = "tmux_3_2")]
     new_window.before();
     #[cfg(feature = "tmux_0_8")]

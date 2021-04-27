@@ -6,6 +6,12 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux set-environment [-Fhgru] [-t target-session] name [value]
+/// (alias: setenv)
+/// ```
+///
 /// tmux ^1.0:
 /// ```text
 /// tmux set-environment [-gru] [-t target-session] name [value]
@@ -26,6 +32,20 @@ impl<'a> Default for SetEnvironment<'a> {
 impl<'a> SetEnvironment<'a> {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    /// `[-F]` - value is expanded as a format
+    #[cfg(feature = "tmux_3_2")]
+    pub fn expand(&mut self) -> &mut Self {
+        self.0.push_flag(F_UPPERCASE_KEY);
+        self
+    }
+
+    /// `[-h]` - marks the variable as hidden
+    #[cfg(feature = "tmux_3_2")]
+    pub fn hidden(&mut self) -> &mut Self {
+        self.0.push_flag(H_LOWERCASE_KEY);
+        self
     }
 
     /// `[-g]` - make change in the global environment

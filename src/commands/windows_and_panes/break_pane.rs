@@ -6,6 +6,12 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux break-pane [-abdP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
+/// (alias: breakp)
+/// ```
+///
 /// tmux ^2.4:
 /// ```text
 /// tmux break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
@@ -41,8 +47,6 @@ use std::borrow::Cow;
 /// tmux break-pane [-d] [-p pane-index] [-t target-window]
 /// (alias: breakp)
 /// ```
-// FIXME: phantom conditionals
-
 #[derive(Debug, Clone)]
 pub struct BreakPane<'a>(pub TmuxCommand<'a>);
 
@@ -58,6 +62,20 @@ impl<'a> Default for BreakPane<'a> {
 impl<'a> BreakPane<'a> {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    /// `[-a]` - the window is moved to the next index after
+    #[cfg(feature = "tmux_3_2")]
+    pub fn after(&mut self) -> &mut Self {
+        self.0.push_flag(A_LOWERCASE_KEY);
+        self
+    }
+
+    /// `[-b]` - the window is moved to the next index before
+    #[cfg(feature = "tmux_3_2")]
+    pub fn before(&mut self) -> &mut Self {
+        self.0.push_flag(B_LOWERCASE_KEY);
+        self
     }
 
     /// `[-d]` - the new window does not become the current window

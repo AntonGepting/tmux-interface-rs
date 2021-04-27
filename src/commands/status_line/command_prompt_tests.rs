@@ -7,6 +7,11 @@ fn command_prompt() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux command-prompt [-1ikNTW] [-I inputs] [-p prompts] [-t target-client] [template]
+    // ```
+    //
     // tmux ^3.1:
     // ```text
     // tmux command-prompt [-1ikN] [-I inputs] [-p prompts] [-t target-client] [template]
@@ -41,6 +46,14 @@ fn command_prompt() {
     command_prompt.one_keypress();
     #[cfg(feature = "tmux_2_4")]
     command_prompt.on_input_change();
+    #[cfg(feature = "tmux_3_1")]
+    command_prompt.key_name();
+    #[cfg(feature = "tmux_3_1")]
+    command_prompt.numeric();
+    #[cfg(feature = "tmux_3_2")]
+    command_prompt.for_target();
+    #[cfg(feature = "tmux_3_2")]
+    command_prompt.for_window();
     #[cfg(feature = "tmux_1_5")]
     command_prompt.inputs("1");
     #[cfg(feature = "tmux_1_0")]
@@ -57,6 +70,14 @@ fn command_prompt() {
     s.push("-1");
     #[cfg(feature = "tmux_2_4")]
     s.push("-i");
+    #[cfg(feature = "tmux_3_1")]
+    s.push("-k");
+    #[cfg(feature = "tmux_3_1")]
+    s.push("-N");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-T");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-W");
     #[cfg(feature = "tmux_1_5")]
     s.extend_from_slice(&["-I", "1"]);
     #[cfg(feature = "tmux_1_0")]

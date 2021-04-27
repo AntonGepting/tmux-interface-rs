@@ -6,6 +6,12 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux list-commands [-F format] [command]
+/// (alias: lscm)
+/// ```
+///
 /// tmux ^2.3:
 /// ```text
 /// tmux list-commands [-F format]
@@ -38,6 +44,13 @@ impl<'a> ListCommands<'a> {
     #[cfg(feature = "tmux_2_3")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
         self.0.push_option(F_UPPERCASE_KEY, format);
+        self
+    }
+
+    /// `[command]`
+    #[cfg(feature = "tmux_3_2")]
+    pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
+        self.0.push_param(command);
         self
     }
 

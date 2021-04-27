@@ -5,6 +5,12 @@ fn show_environment() {
 
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text:
+    // tmux show-environment [-hgs] [-t target-session] [variable]
+    // (alias: showenv)
+    // ```
+    //
     // tmux ^2.1:
     // ```text
     // tmux show-environment [-gs] [-t target-session] [variable]
@@ -25,6 +31,8 @@ fn show_environment() {
     let target_session = TargetSession::Raw("1").to_string();
 
     let mut show_environment = ShowEnvironment::new();
+    #[cfg(feature = "tmux_3_2")]
+    show_environment.hidden();
     #[cfg(feature = "tmux_1_0")]
     show_environment.global();
     #[cfg(feature = "tmux_2_1")]
@@ -40,6 +48,8 @@ fn show_environment() {
     let cmd = "showenv";
 
     let mut s = Vec::new();
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-h");
     #[cfg(feature = "tmux_1_0")]
     s.push("-g");
     #[cfg(feature = "tmux_2_1")]

@@ -88,6 +88,8 @@ fn tmux() {
     tmux.socket_name("3");
     #[cfg(feature = "tmux_0_8")]
     tmux.socket_path("4");
+    #[cfg(feature = "tmux_3_2")]
+    tmux.features("5");
 
     let mut s = Vec::new();
     #[cfg(feature = "tmux_0_8")]
@@ -124,6 +126,8 @@ fn tmux() {
     s.extend_from_slice(&["-L", "3"]);
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-S", "4"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-T", "5"]);
     let s = s.into_iter().map(|a| a.into()).collect();
 
     assert_eq!(tmux.bin, Cow::Borrowed("tmux"));

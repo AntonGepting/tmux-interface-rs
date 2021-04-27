@@ -7,6 +7,12 @@ fn move_window() {
     //
     // # Manual
     //
+    // tmux ^3.2:
+    // ```text
+    // tmux move-window [-abrdk] [-s src-window] [-t dst-window]
+    // (alias: movew)
+    // ```
+    //
     // tmux ^2.1:
     // ```text
     // tmux move-window [-ardk] [-s src-window] [-t dst-window]
@@ -36,7 +42,9 @@ fn move_window() {
 
     let mut move_window = MoveWindow::new();
     #[cfg(feature = "tmux_2_1")]
-    move_window.add();
+    move_window.after();
+    #[cfg(feature = "tmux_3_2")]
+    move_window.before();
     #[cfg(feature = "tmux_1_7")]
     move_window.renumber();
     #[cfg(feature = "tmux_0_8")]
@@ -56,6 +64,8 @@ fn move_window() {
     let mut s = Vec::new();
     #[cfg(feature = "tmux_2_1")]
     s.push("-a");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-b");
     #[cfg(feature = "tmux_1_7")]
     s.push("-r");
     #[cfg(feature = "tmux_0_8")]

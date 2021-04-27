@@ -172,4 +172,11 @@ impl<'a> TmuxCommand<'a> {
         self.bin_args.push_option(S_UPPERCASE_KEY, socket_path);
         self
     }
+
+    /// `[-T features]` - Set terminal features for the client
+    #[cfg(feature = "tmux_3_2")]
+    pub fn features<S: Into<Cow<'a, str>>>(&mut self, features: S) -> &mut Self {
+        self.bin_args.push_option(T_UPPERCASE_KEY, features);
+        self
+    }
 }

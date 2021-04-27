@@ -1,10 +1,18 @@
 use crate::commands::constants::*;
+#[cfg(feature = "tmux_3_2")]
+use crate::ClientFlags;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
 /// Structure for attaching client to already existing session
 ///
 /// # Manual
+///
+/// tmux ^3.2:
+/// ```text
+/// tmux attach-session [-dErx] [-c working-directory] [-f flags] [-t target-session]
+/// (alias: attach)
+/// ```
 ///
 /// tmux ^3.0:
 /// ```text
@@ -84,6 +92,14 @@ impl<'a> AttachSession<'a> {
     #[cfg(feature = "tmux_1_9")]
     pub fn working_directory<S: Into<Cow<'a, str>>>(&mut self, working_directory: S) -> &mut Self {
         self.0.push_option(C_LOWERCASE_KEY, working_directory);
+        self
+    }
+
+    // XXX: refactor vec?
+    /// `[-f flags]` - sets a comma-separated list of client flags
+    #[cfg(feature = "tmux_3_2")]
+    pub fn flags(&mut self, flags: ClientFlags) -> &mut Self {
+        self.0.push_option(F_LOWERCASE_KEY, flags.to_string());
         self
     }
 

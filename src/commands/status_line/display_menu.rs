@@ -1,50 +1,21 @@
 use crate::commands::constants::*;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
-use std::fmt;
-
-//C        Both    The centre of the terminal
-//R        -x      The right side of the terminal
-//P        Both    The bottom left of the pane
-//M        Both    The mouse position
-//W        Both    The window position on the status line
-//S        -y      The line above or below the status line
-
-pub enum PositionX {
-    Num(usize),
-    Percent(usize),
-    TerminalCenter,
-    Right,
-    PaneBottom,
-    MousePosition,
-    StatusLineWindowPosition,
-    AboveBelowStatusLine,
-}
-
-impl fmt::Display for PositionX {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let output = match self {
-            Self::Num(n) => format!("{}", n),
-            Self::Percent(p) => format!("{}%", p),
-            Self::TerminalCenter => "C".to_string(),
-            Self::Right => "R".to_string(),
-            Self::PaneBottom => "P".to_string(),
-            Self::MousePosition => "M".to_string(),
-            Self::StatusLineWindowPosition => "W".to_string(),
-            Self::AboveBelowStatusLine => "S".to_string(),
-        };
-        write!(f, "#{{{}}}", output)
-    }
-}
 
 /// Structure for displaying a menu on target-client
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux display-menu [-O] [-c target-client] [-t target-pane] [-T title] [-x position] [-y position] name key command ...
+/// alias: menu
+/// ```
+///
 /// tmux ^3.0:
 /// ```text
-/// tmux display-menu [-c target-client] [-t target-pane] [-T title]
-/// [-x position] [-y position] name key command ...
+/// tmux display-menu [-c target-client] [-t target-pane] [-T title] [-x position] [-y position] name key command ...
+/// alias: menu
 /// ```
 #[derive(Clone, Debug)]
 #[cfg(feature = "tmux_3_0")]
@@ -62,6 +33,13 @@ impl<'a> Default for DisplayMenu<'a> {
 impl<'a> DisplayMenu<'a> {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    /// `[-O]` - the menu does not close when the mouse button is released without an item selected
+    #[cfg(feature = "tmux_3_2")]
+    pub fn not_close(&mut self) -> &mut Self {
+        self.0.push_flag(O_UPPERCASE_KEY);
+        self
     }
 
     /// `[-c target-client]` - target-client
