@@ -762,7 +762,7 @@ impl<'a> VariableOutput<'a> {
             #[cfg(feature = "tmux_3_1")]
             Self::CopyCursorY(v) => **v = s.parse::<usize>().ok(),
             // current_file - Current configuration file
-            #[cfg(feature = "tmux_3_1")]
+            #[cfg(feature = "tmux_3_2")]
             Self::CurrentFile(v) => **v = Self::parse_option_string(s),
 
             // history
