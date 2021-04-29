@@ -10,6 +10,5 @@ fn to_string() {
     tmux.cmd("cmd");
     tmux.push_flag("-c");
     tmux.push_flag("-d");
-    //assert_eq!(tmux.to_string(), "bin -a -b cmd -c -d");
-    dbg!(tmux.to_string());
+    assert_eq!(tmux.to_string(), "bin -a -b cmd -c -d");
 }
