@@ -4,6 +4,7 @@ use std::borrow::Cow;
 use std::fmt;
 use std::process::{Child, Command, ExitStatus, Stdio};
 
+// XXX: environment
 /// Standard tmux command line arguments syntax:
 /// ```text
 /// tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
@@ -29,17 +30,18 @@ pub struct TmuxCommand<'a> {
 
 impl<'a> fmt::Display for TmuxCommand<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut output = String::new();
-        output.push_str(self.bin.as_ref());
-        if let Some(bin_args) = self.bin_args.as_ref() {
-            output.push_str(&bin_args.join(" "));
+        let mut v = Vec::new();
+        v.push(self.bin.as_ref());
+        if let Some(bin_args) = &self.bin_args {
+            bin_args.iter().for_each(|s| v.push(s.as_ref()));
         }
-        if let Some(cmd) = self.cmd.as_ref() {
-            output.push_str(&cmd);
+        if let Some(cmd) = &self.cmd {
+            v.push(&cmd);
         }
-        if let Some(cmd_args) = self.cmd_args.as_ref() {
-            output.push_str(&cmd_args.join(" "));
+        if let Some(cmd_args) = &self.cmd_args {
+            cmd_args.iter().for_each(|s| v.push(s.as_ref()));
         }
+        let output = v.join(" ");
         write!(f, "{}", output)
     }
 }
