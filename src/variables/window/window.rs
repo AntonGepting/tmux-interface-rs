@@ -156,7 +156,7 @@ pub const WINDOW_VARS: [(&str, u64, fn(w: &mut Window, p: &str)); WINDOW_FLAGS_N
     ),
     #[cfg(feature = "tmux_2_1")]
     ("window_activity", WINDOW_ACTIVITY, |w, p| {
-        w.activity = p.parse().ok().map(Duration::from_millis)
+        w.activity = p.parse().ok().map(Duration::from_secs)
     }),
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
     ("window_activity_string", WINDOW_ACTIVITY_STRING, |w, p| {
