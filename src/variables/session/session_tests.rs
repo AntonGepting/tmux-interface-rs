@@ -107,7 +107,7 @@ fn parse() {
     let session = Session::from_str(&session_str, SESSION_ALL).unwrap();
     let session_sample = Session {
         #[cfg(feature = "tmux_2_1")]
-        activity: Some(Duration::from_millis(1557947146)),
+        activity: Some(Duration::from_secs(1557947146)),
         #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
         activity_string: None,
         #[cfg(feature = "tmux_2_1")]
@@ -117,7 +117,7 @@ fn parse() {
         #[cfg(feature = "tmux_3_1")]
         attached_list: None,
         #[cfg(feature = "tmux_1_6")]
-        created: Some(Duration::from_millis(1557947146)),
+        created: Some(Duration::from_secs(1557947146)),
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
         created_string: None,
         #[cfg(feature = "tmux_2_6")]
@@ -143,7 +143,7 @@ fn parse() {
         #[cfg(feature = "tmux_1_8")]
         id: Some(0),
         #[cfg(feature = "tmux_2_1")]
-        last_attached: Some(Duration::from_millis(1557947146)),
+        last_attached: Some(Duration::from_secs(1557947146)),
         #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
         last_attached_string: None,
         #[cfg(feature = "tmux_2_0")]
@@ -177,7 +177,7 @@ fn parse2() {
     let session = Session::from_str(session_str, session_bitflag).unwrap();
     let origin = Session {
         #[cfg(feature = "tmux_2_1")]
-        activity: Some(Duration::from_millis(1557947146)),
+        activity: Some(Duration::from_secs(1557947146)),
         #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
         activity_string: None,
         #[cfg(feature = "tmux_2_1")]
@@ -187,7 +187,7 @@ fn parse2() {
         #[cfg(feature = "tmux_3_1")]
         attached_list: None,
         #[cfg(feature = "tmux_1_6")]
-        created: Some(Duration::from_millis(1557947146)),
+        created: Some(Duration::from_secs(1557947146)),
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
         created_string: None,
         #[cfg(feature = "tmux_2_6")]
@@ -213,7 +213,7 @@ fn parse2() {
         #[cfg(feature = "tmux_1_8")]
         id: None,
         #[cfg(feature = "tmux_2_1")]
-        last_attached: Some(Duration::from_millis(1557947146)),
+        last_attached: Some(Duration::from_secs(1557947146)),
         #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
         last_attached_string: None,
         #[cfg(feature = "tmux_2_0")]

@@ -110,7 +110,7 @@ pub const SESSION_VARS_SEPARATOR: &str = ":";
 pub const SESSION_VARS: [(&str, u32, fn(s: &mut Session, p: &str)); SESSION_FLAGS_NUM] = [
     #[cfg(feature = "tmux_2_1")]
     ("session_activity", SESSION_ACTIVITY, |s, p| {
-        s.activity = p.parse().ok().map(Duration::from_millis)
+        s.activity = p.parse().ok().map(Duration::from_secs)
     }),
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
     (
@@ -132,7 +132,7 @@ pub const SESSION_VARS: [(&str, u32, fn(s: &mut Session, p: &str)); SESSION_FLAG
     }),
     #[cfg(feature = "tmux_1_6")]
     ("session_created", SESSION_CREATED, |s, p| {
-        s.created = p.parse().ok().map(Duration::from_millis)
+        s.created = p.parse().ok().map(Duration::from_secs)
     }),
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
     ("session_created_string", SESSION_CREATED_STRING, |s, p| {
@@ -186,7 +186,7 @@ pub const SESSION_VARS: [(&str, u32, fn(s: &mut Session, p: &str)); SESSION_FLAG
     ("session_id", SESSION_ID, |s, p| s.id = p[1..].parse().ok()), // skip '$' char
     #[cfg(feature = "tmux_2_1")]
     ("session_last_attached", SESSION_LAST_ATTACHED, |s, p| {
-        s.last_attached = p.parse().ok().map(Duration::from_millis)
+        s.last_attached = p.parse().ok().map(Duration::from_secs)
     }),
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
     (
