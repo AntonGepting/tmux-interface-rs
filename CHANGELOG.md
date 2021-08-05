@@ -3,6 +3,10 @@
 
 <!--## tmux_interface vX.X.X-->
 
+## tmux_interface v0.2.0
+- fix parsing of time in Session and Window (`session_activity`,
+  `session_created`, `session_last_attached`, `window_activity`)
+
 ## tmux_interface v0.1.0
 - introduce new architecture (massive incompatible changes with older versions)
 - refactor tmux command wrapper functions
