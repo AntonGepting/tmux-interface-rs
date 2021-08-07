@@ -3,8 +3,11 @@
 
 <!--## tmux_interface vX.X.X-->
 
+## tmux_interface v0.2.1
+- fix #8 set globality before option name in `SessionOption::get_global()`
+
 ## tmux_interface v0.2.0
-- fix parsing of time in Session and Window (`session_activity`,
+- fix #5 parsing of time in Session and Window (`session_activity`,
   `session_created`, `session_last_attached`, `window_activity`)
 
 ## tmux_interface v0.1.0
