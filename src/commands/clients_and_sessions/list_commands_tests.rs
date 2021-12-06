@@ -44,11 +44,11 @@ fn list_commands() {
     #[cfg(feature = "tmux_2_3")]
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(list_commands.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(list_commands.0.bin_args, None);
+    //assert_eq!(list_commands.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(list_commands.0.bin_args, None);
     assert_eq!(list_commands.0.cmd, Some(Cow::Borrowed(cmd)));
     #[cfg(feature = "tmux_2_3")]
-    assert_eq!(list_commands.0.cmd_args, Some(s));
+    assert_eq!(list_commands.0.args, Some(s));
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_3")))]
-    assert_eq!(list_commands.0.cmd_args, None);
+    assert_eq!(list_commands.0.args, None);
 }

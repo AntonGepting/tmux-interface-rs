@@ -118,7 +118,6 @@ impl<'a> JoinPane<'a> {
 impl<'a> From<TmuxCommand<'a>> for JoinPane<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(JOIN_PANE)),
             ..Default::default()
         })
@@ -128,7 +127,6 @@ impl<'a> From<TmuxCommand<'a>> for JoinPane<'a> {
 impl<'a> From<&TmuxCommand<'a>> for JoinPane<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(JOIN_PANE)),
             ..Default::default()
         })

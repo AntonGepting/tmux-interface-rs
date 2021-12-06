@@ -43,7 +43,6 @@ impl<'a> PreviousLayout<'a> {
 impl<'a> From<TmuxCommand<'a>> for PreviousLayout<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(PREVIOUS_LAYOUT)),
             ..Default::default()
         })
@@ -53,7 +52,6 @@ impl<'a> From<TmuxCommand<'a>> for PreviousLayout<'a> {
 impl<'a> From<&TmuxCommand<'a>> for PreviousLayout<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(PREVIOUS_LAYOUT)),
             ..Default::default()
         })

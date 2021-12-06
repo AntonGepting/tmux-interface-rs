@@ -89,7 +89,6 @@ impl<'a> RespawnWindow<'a> {
 impl<'a> From<TmuxCommand<'a>> for RespawnWindow<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(RESPAWN_WINDOW)),
             ..Default::default()
         })
@@ -99,7 +98,6 @@ impl<'a> From<TmuxCommand<'a>> for RespawnWindow<'a> {
 impl<'a> From<&TmuxCommand<'a>> for RespawnWindow<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(RESPAWN_WINDOW)),
             ..Default::default()
         })

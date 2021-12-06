@@ -31,8 +31,8 @@ fn list_sessions() {
     s.extend_from_slice(&["-F", "1"]);
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(list_sessions.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(list_sessions.0.bin_args, None);
+    //assert_eq!(list_sessions.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(list_sessions.0.bin_args, None);
     assert_eq!(list_sessions.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(list_sessions.0.cmd_args, Some(s));
+    assert_eq!(list_sessions.0.args, Some(s));
 }

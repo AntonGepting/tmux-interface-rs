@@ -115,6 +115,8 @@ fn new_session() {
     #[cfg(feature = "tmux_1_2")]
     new_session.shell_command("9");
 
+    //let new = new_session.to_tmux_bin_command();
+
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "new-session";
     #[cfg(feature = "cmd_alias")]
@@ -155,8 +157,9 @@ fn new_session() {
     s.push("9");
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(new_session.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(new_session.0.bin_args, None);
-    assert_eq!(new_session.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(new_session.0.cmd_args, Some(s));
+    let new_session = new_session.to_tmux_bin_command();
+    assert_eq!(new_session.tmux.bin, Cow::Borrowed("tmux"));
+    assert_eq!(new_session.tmux.args, None);
+    assert_eq!(new_session.command.cmd, Some(Cow::Borrowed(cmd)));
+    assert_eq!(new_session.command.args, Some(s));
 }

@@ -145,7 +145,6 @@ impl<'a> SendKeys<'a> {
 impl<'a> From<TmuxCommand<'a>> for SendKeys<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(SEND_KEYS)),
             ..Default::default()
         })
@@ -155,7 +154,6 @@ impl<'a> From<TmuxCommand<'a>> for SendKeys<'a> {
 impl<'a> From<&TmuxCommand<'a>> for SendKeys<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SEND_KEYS)),
             ..Default::default()
         })

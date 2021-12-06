@@ -89,7 +89,6 @@ impl<'a> SourceFile<'a> {
 impl<'a> From<TmuxCommand<'a>> for SourceFile<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(SOURCE_FILE)),
             ..Default::default()
         })
@@ -99,7 +98,6 @@ impl<'a> From<TmuxCommand<'a>> for SourceFile<'a> {
 impl<'a> From<&TmuxCommand<'a>> for SourceFile<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SOURCE_FILE)),
             ..Default::default()
         })

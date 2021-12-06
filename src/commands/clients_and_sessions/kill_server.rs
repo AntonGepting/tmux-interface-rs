@@ -31,7 +31,6 @@ impl<'a> KillServer<'a> {
 impl<'a> From<TmuxCommand<'a>> for KillServer<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(KILL_SERVER)),
             ..Default::default()
         })
@@ -41,7 +40,6 @@ impl<'a> From<TmuxCommand<'a>> for KillServer<'a> {
 impl<'a> From<&TmuxCommand<'a>> for KillServer<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(KILL_SERVER)),
             ..Default::default()
         })

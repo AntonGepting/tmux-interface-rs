@@ -32,8 +32,8 @@ fn rename_window() {
     s.push("2");
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(rename_window.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(rename_window.0.bin_args, None);
+    //assert_eq!(rename_window.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(rename_window.0.bin_args, None);
     assert_eq!(rename_window.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(rename_window.0.cmd_args, Some(s));
+    assert_eq!(rename_window.0.args, Some(s));
 }

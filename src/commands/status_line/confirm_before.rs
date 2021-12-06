@@ -61,7 +61,6 @@ impl<'a> ConfirmBefore<'a> {
 impl<'a> From<TmuxCommand<'a>> for ConfirmBefore<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(CONFIRM_BEFORE)),
             ..Default::default()
         })
@@ -71,7 +70,6 @@ impl<'a> From<TmuxCommand<'a>> for ConfirmBefore<'a> {
 impl<'a> From<&TmuxCommand<'a>> for ConfirmBefore<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(CONFIRM_BEFORE)),
             ..Default::default()
         })

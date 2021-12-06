@@ -38,8 +38,8 @@ fn confirm_before() {
     s.push("3");
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(confirm_before.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(confirm_before.0.bin_args, None);
+    //assert_eq!(confirm_before.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(confirm_before.0.bin_args, None);
     assert_eq!(confirm_before.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(confirm_before.0.cmd_args, Some(s));
+    assert_eq!(confirm_before.0.args, Some(s));
 }

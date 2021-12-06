@@ -129,7 +129,6 @@ impl<'a> DisplayMessage<'a> {
 impl<'a> From<TmuxCommand<'a>> for DisplayMessage<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(DISPLAY_MESSAGE)),
             ..Default::default()
         })
@@ -139,7 +138,6 @@ impl<'a> From<TmuxCommand<'a>> for DisplayMessage<'a> {
 impl<'a> From<&TmuxCommand<'a>> for DisplayMessage<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(DISPLAY_MESSAGE)),
             ..Default::default()
         })

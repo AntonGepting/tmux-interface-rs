@@ -64,8 +64,8 @@ fn load_buffer() {
     s.push("5");
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(load_buffer.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(load_buffer.0.bin_args, None);
+    //assert_eq!(load_buffer.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(load_buffer.0.bin_args, None);
     assert_eq!(load_buffer.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(load_buffer.0.cmd_args, Some(s));
+    assert_eq!(load_buffer.0.args, Some(s));
 }

@@ -62,7 +62,6 @@ impl<'a> ListBuffers<'a> {
 impl<'a> From<TmuxCommand<'a>> for ListBuffers<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(LIST_BUFFERS)),
             ..Default::default()
         })
@@ -72,7 +71,6 @@ impl<'a> From<TmuxCommand<'a>> for ListBuffers<'a> {
 impl<'a> From<&TmuxCommand<'a>> for ListBuffers<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(LIST_BUFFERS)),
             ..Default::default()
         })

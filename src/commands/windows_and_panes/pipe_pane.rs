@@ -83,7 +83,6 @@ impl<'a> PipePane<'a> {
 impl<'a> From<TmuxCommand<'a>> for PipePane<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(PIPE_PANE)),
             ..Default::default()
         })
@@ -93,7 +92,6 @@ impl<'a> From<TmuxCommand<'a>> for PipePane<'a> {
 impl<'a> From<&TmuxCommand<'a>> for PipePane<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(PIPE_PANE)),
             ..Default::default()
         })

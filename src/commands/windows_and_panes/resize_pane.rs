@@ -137,7 +137,6 @@ impl<'a> ResizePane<'a> {
 impl<'a> From<TmuxCommand<'a>> for ResizePane<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(RESIZE_PANE)),
             ..Default::default()
         })
@@ -147,7 +146,6 @@ impl<'a> From<TmuxCommand<'a>> for ResizePane<'a> {
 impl<'a> From<&TmuxCommand<'a>> for ResizePane<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(RESIZE_PANE)),
             ..Default::default()
         })

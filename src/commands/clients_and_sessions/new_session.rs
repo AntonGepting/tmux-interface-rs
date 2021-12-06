@@ -4,6 +4,10 @@ use crate::ClientFlags;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
+use crate::commands::tmux_bin::TmuxBin;
+use crate::commands::tmux_bin_command::TmuxBinCommand;
+use crate::commands::tmux_commands::TmuxCommands;
+
 /// Structure for creating a new session
 ///
 /// # Manual
@@ -209,12 +213,23 @@ impl<'a> NewSession<'a> {
     pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
+
+    pub fn append_to(self, cmds: &mut TmuxCommands<'a>) {
+        self.0.append_to(cmds);
+    }
+
+    pub fn to_tmux_bin_command(self) -> TmuxBinCommand<'a> {
+        self.0.to_tmux_bin_command()
+    }
+
+    pub fn to_tmux_bin_command_ext(self, tmux: TmuxBin<'a>) -> TmuxBinCommand<'a> {
+        self.0.to_tmux_bin_command_ext(tmux)
+    }
 }
 
 impl<'a> From<TmuxCommand<'a>> for NewSession<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(NEW_SESSION)),
             ..Default::default()
         })
@@ -224,19 +239,17 @@ impl<'a> From<TmuxCommand<'a>> for NewSession<'a> {
 impl<'a> From<&TmuxCommand<'a>> for NewSession<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(NEW_SESSION)),
             ..Default::default()
         })
     }
 }
 
-//impl<'a> From<&mut TmuxCommand<'a>> for NewSession<'a> {
-//fn from(item: &mut TmuxCommand<'a>) -> Self {
-//Self(TmuxCommand {
-//bin: item.bin.clone(),
-//cmd: Some(Cow::Borrowed(NEW_SESSION)),
-//..Default::default()
-//})
-//}
-//}
+impl<'a> From<&mut TmuxBinCommand<'a>> for NewSession<'a> {
+    fn from(item: &mut TmuxBinCommand<'a>) -> Self {
+        Self(TmuxCommand {
+            cmd: Some(Cow::Borrowed(NEW_SESSION)),
+            ..Default::default()
+        })
+    }
+}

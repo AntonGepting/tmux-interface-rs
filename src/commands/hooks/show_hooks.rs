@@ -47,7 +47,6 @@ impl<'a> ShowHooks<'a> {
 impl<'a> From<TmuxCommand<'a>> for ShowHooks<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(SHOW_HOOKS)),
             ..Default::default()
         })
@@ -57,7 +56,6 @@ impl<'a> From<TmuxCommand<'a>> for ShowHooks<'a> {
 impl<'a> From<&TmuxCommand<'a>> for ShowHooks<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SHOW_HOOKS)),
             ..Default::default()
         })

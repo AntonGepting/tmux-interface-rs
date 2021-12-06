@@ -70,7 +70,6 @@ impl<'a> RotateWindow<'a> {
 impl<'a> From<TmuxCommand<'a>> for RotateWindow<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(ROTATE_WINDOW)),
             ..Default::default()
         })
@@ -80,7 +79,6 @@ impl<'a> From<TmuxCommand<'a>> for RotateWindow<'a> {
 impl<'a> From<&TmuxCommand<'a>> for RotateWindow<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(ROTATE_WINDOW)),
             ..Default::default()
         })

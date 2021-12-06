@@ -77,7 +77,6 @@ impl<'a> LinkWindow<'a> {
 impl<'a> From<TmuxCommand<'a>> for LinkWindow<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(LINK_WINDOW)),
             ..Default::default()
         })
@@ -87,7 +86,6 @@ impl<'a> From<TmuxCommand<'a>> for LinkWindow<'a> {
 impl<'a> From<&TmuxCommand<'a>> for LinkWindow<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(LINK_WINDOW)),
             ..Default::default()
         })

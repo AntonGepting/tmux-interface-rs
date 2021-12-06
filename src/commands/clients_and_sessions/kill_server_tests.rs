@@ -15,8 +15,8 @@ fn kill_server() {
 
     let cmd = "kill-server";
 
-    assert_eq!(kill_server.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(kill_server.0.bin_args, None);
+    //assert_eq!(kill_server.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(kill_server.0.bin_args, None);
     assert_eq!(kill_server.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(kill_server.0.cmd_args, None);
+    assert_eq!(kill_server.0.args, None);
 }

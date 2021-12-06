@@ -83,7 +83,6 @@ impl<'a> SelectWindow<'a> {
 impl<'a> From<TmuxCommand<'a>> for SelectWindow<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(SELECT_WINDOW)),
             ..Default::default()
         })
@@ -93,7 +92,6 @@ impl<'a> From<TmuxCommand<'a>> for SelectWindow<'a> {
 impl<'a> From<&TmuxCommand<'a>> for SelectWindow<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SELECT_WINDOW)),
             ..Default::default()
         })

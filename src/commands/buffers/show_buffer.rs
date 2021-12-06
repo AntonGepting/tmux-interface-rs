@@ -62,7 +62,6 @@ impl<'a> ShowBuffer<'a> {
 impl<'a> From<TmuxCommand<'a>> for ShowBuffer<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(SHOW_BUFFER)),
             ..Default::default()
         })
@@ -72,7 +71,6 @@ impl<'a> From<TmuxCommand<'a>> for ShowBuffer<'a> {
 impl<'a> From<&TmuxCommand<'a>> for ShowBuffer<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SHOW_BUFFER)),
             ..Default::default()
         })

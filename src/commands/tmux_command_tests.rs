@@ -4,11 +4,8 @@ fn to_string() {
     use crate::TmuxCommand;
 
     let mut tmux = TmuxCommand::new();
-    tmux.bin("bin");
-    tmux.bin_args.push_flag("-a");
-    tmux.bin_args.push_flag("-b");
     tmux.cmd("cmd");
     tmux.push_flag("-c");
     tmux.push_flag("-d");
-    assert_eq!(tmux.to_string(), "bin -a -b cmd -c -d");
+    assert_eq!(tmux.to_string(), "cmd -c -d");
 }

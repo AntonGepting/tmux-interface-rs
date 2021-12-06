@@ -50,14 +50,14 @@ fn list_buffers() {
     ))]
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(list_buffers.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(list_buffers.0.bin_args, None);
+    //assert_eq!(list_buffers.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(list_buffers.0.bin_args, None);
     assert_eq!(list_buffers.0.cmd, Some(Cow::Borrowed(cmd)));
     #[cfg(any(
         all(feature = "tmux_0_8", not(feature = "tmux_1_5")),
         feature = "tmux_1_7"
     ))]
-    assert_eq!(list_buffers.0.cmd_args, Some(s));
+    assert_eq!(list_buffers.0.args, Some(s));
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_1_7")))]
-    assert_eq!(list_buffers.0.cmd_args, None);
+    assert_eq!(list_buffers.0.args, None);
 }

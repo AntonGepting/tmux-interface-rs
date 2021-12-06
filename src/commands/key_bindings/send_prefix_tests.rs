@@ -29,8 +29,8 @@ fn send_prefix() {
     s.extend_from_slice(&["-t", "1"]);
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(send_prefix.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(send_prefix.0.bin_args, None);
+    //assert_eq!(send_prefix.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(send_prefix.0.bin_args, None);
     assert_eq!(send_prefix.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(send_prefix.0.cmd_args, Some(s));
+    assert_eq!(send_prefix.0.args, Some(s));
 }

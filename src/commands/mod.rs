@@ -1,9 +1,17 @@
 pub mod constants;
 pub mod tmux;
+pub mod tmux_bin;
+pub mod tmux_bin_command;
+pub mod tmux_bin_commands;
 pub mod tmux_command;
+pub mod tmux_commands;
 pub mod tmux_output;
 
+pub mod tmux_bin_command_tests;
+pub mod tmux_bin_commands_tests;
+//pub mod tmux_bin_tests;
 pub mod tmux_command_tests;
+pub mod tmux_commands_tests;
 pub mod tmux_tests;
 
 pub mod buffers;

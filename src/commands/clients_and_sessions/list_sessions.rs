@@ -49,7 +49,6 @@ impl<'a> ListSessions<'a> {
 impl<'a> From<TmuxCommand<'a>> for ListSessions<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(LIST_SESSIONS)),
             ..Default::default()
         })
@@ -59,7 +58,6 @@ impl<'a> From<TmuxCommand<'a>> for ListSessions<'a> {
 impl<'a> From<&TmuxCommand<'a>> for ListSessions<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(LIST_SESSIONS)),
             ..Default::default()
         })

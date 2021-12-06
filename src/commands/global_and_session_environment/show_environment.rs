@@ -87,7 +87,6 @@ impl<'a> ShowEnvironment<'a> {
 impl<'a> From<TmuxCommand<'a>> for ShowEnvironment<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(SHOW_ENVIRONMENT)),
             ..Default::default()
         })
@@ -97,7 +96,6 @@ impl<'a> From<TmuxCommand<'a>> for ShowEnvironment<'a> {
 impl<'a> From<&TmuxCommand<'a>> for ShowEnvironment<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SHOW_ENVIRONMENT)),
             ..Default::default()
         })

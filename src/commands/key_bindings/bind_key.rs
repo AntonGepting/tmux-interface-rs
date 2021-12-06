@@ -121,7 +121,6 @@ impl<'a> BindKey<'a> {
 impl<'a> From<TmuxCommand<'a>> for BindKey<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(BIND_KEY)),
             ..Default::default()
         })
@@ -131,7 +130,6 @@ impl<'a> From<TmuxCommand<'a>> for BindKey<'a> {
 impl<'a> From<&TmuxCommand<'a>> for BindKey<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(BIND_KEY)),
             ..Default::default()
         })

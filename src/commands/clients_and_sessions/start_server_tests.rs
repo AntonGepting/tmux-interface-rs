@@ -19,8 +19,8 @@ fn start_server() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "start";
 
-    assert_eq!(start_server.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(start_server.0.bin_args, None);
+    //assert_eq!(start_server.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(start_server.0.bin_args, None);
     assert_eq!(start_server.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(start_server.0.cmd_args, None);
+    assert_eq!(start_server.0.args, None);
 }

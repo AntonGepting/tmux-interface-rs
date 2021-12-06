@@ -83,7 +83,6 @@ impl<'a> SaveBuffer<'a> {
 impl<'a> From<TmuxCommand<'a>> for SaveBuffer<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(SAVE_BUFFER)),
             ..Default::default()
         })
@@ -93,7 +92,6 @@ impl<'a> From<TmuxCommand<'a>> for SaveBuffer<'a> {
 impl<'a> From<&TmuxCommand<'a>> for SaveBuffer<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SAVE_BUFFER)),
             ..Default::default()
         })

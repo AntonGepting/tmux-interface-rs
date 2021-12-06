@@ -98,7 +98,6 @@ impl<'a> ListKeys<'a> {
 impl<'a> From<TmuxCommand<'a>> for ListKeys<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(LIST_KEYS)),
             ..Default::default()
         })
@@ -108,7 +107,6 @@ impl<'a> From<TmuxCommand<'a>> for ListKeys<'a> {
 impl<'a> From<&TmuxCommand<'a>> for ListKeys<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(LIST_KEYS)),
             ..Default::default()
         })

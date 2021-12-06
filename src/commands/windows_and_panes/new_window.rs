@@ -165,7 +165,6 @@ impl<'a> NewWindow<'a> {
 impl<'a> From<TmuxCommand<'a>> for NewWindow<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(NEW_WINDOW)),
             ..Default::default()
         })
@@ -175,7 +174,6 @@ impl<'a> From<TmuxCommand<'a>> for NewWindow<'a> {
 impl<'a> From<&TmuxCommand<'a>> for NewWindow<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(NEW_WINDOW)),
             ..Default::default()
         })

@@ -77,7 +77,6 @@ impl<'a> LastPane<'a> {
 impl<'a> From<TmuxCommand<'a>> for LastPane<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(LAST_PANE)),
             ..Default::default()
         })
@@ -87,7 +86,6 @@ impl<'a> From<TmuxCommand<'a>> for LastPane<'a> {
 impl<'a> From<&TmuxCommand<'a>> for LastPane<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(LAST_PANE)),
             ..Default::default()
         })

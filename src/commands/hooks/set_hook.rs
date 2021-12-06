@@ -99,7 +99,6 @@ impl<'a> SetHook<'a> {
 impl<'a> From<TmuxCommand<'a>> for SetHook<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(SET_HOOK)),
             ..Default::default()
         })
@@ -109,7 +108,6 @@ impl<'a> From<TmuxCommand<'a>> for SetHook<'a> {
 impl<'a> From<&TmuxCommand<'a>> for SetHook<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SET_HOOK)),
             ..Default::default()
         })

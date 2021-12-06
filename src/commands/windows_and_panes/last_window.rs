@@ -42,7 +42,6 @@ impl<'a> LastWindow<'a> {
 impl<'a> From<TmuxCommand<'a>> for LastWindow<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(LAST_WINDOW)),
             ..Default::default()
         })
@@ -52,7 +51,6 @@ impl<'a> From<TmuxCommand<'a>> for LastWindow<'a> {
 impl<'a> From<&TmuxCommand<'a>> for LastWindow<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(LAST_WINDOW)),
             ..Default::default()
         })

@@ -63,7 +63,6 @@ impl<'a> ClearHistory<'a> {
 impl<'a> From<TmuxCommand<'a>> for ClearHistory<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(CLEAR_HISTORY)),
             ..Default::default()
         })
@@ -73,7 +72,6 @@ impl<'a> From<TmuxCommand<'a>> for ClearHistory<'a> {
 impl<'a> From<&TmuxCommand<'a>> for ClearHistory<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(CLEAR_HISTORY)),
             ..Default::default()
         })

@@ -51,8 +51,8 @@ fn link_window() {
     s.extend_from_slice(&["-t", "2"]);
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(link_window.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(link_window.0.bin_args, None);
+    //assert_eq!(link_window.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(link_window.0.bin_args, None);
     assert_eq!(link_window.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(link_window.0.cmd_args, Some(s));
+    assert_eq!(link_window.0.args, Some(s));
 }

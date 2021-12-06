@@ -29,8 +29,8 @@ fn previous_layout() {
     s.extend_from_slice(&["-t", "1"]);
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(previous_layout.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(previous_layout.0.bin_args, None);
+    //assert_eq!(previous_layout.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(previous_layout.0.bin_args, None);
     assert_eq!(previous_layout.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(previous_layout.0.cmd_args, Some(s));
+    assert_eq!(previous_layout.0.args, Some(s));
 }

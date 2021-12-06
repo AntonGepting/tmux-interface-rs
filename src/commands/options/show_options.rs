@@ -1,6 +1,9 @@
 use crate::commands::constants::*;
+use crate::commands::tmux_bin_command::TmuxBinCommand;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
+
+use crate::commands::tmux_commands::TmuxCommands;
 
 /// Structure for showing options
 ///
@@ -132,14 +135,21 @@ impl<'a> ShowOptions<'a> {
     pub fn output(&self) -> Result<TmuxOutput, Error> {
         self.0.output()
     }
+
+    pub fn append_to(self, cmds: &mut TmuxCommands<'a>) {
+        self.0.append_to(cmds)
+    }
+
+    pub fn to_command(self) -> TmuxCommand<'a> {
+        self.0
+    }
 }
 
 impl<'a> From<TmuxCommand<'a>> for ShowOptions<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(SHOW_OPTIONS)),
-            ..Default::default()
+            args: item.args,
         })
     }
 }
@@ -147,9 +157,8 @@ impl<'a> From<TmuxCommand<'a>> for ShowOptions<'a> {
 impl<'a> From<&TmuxCommand<'a>> for ShowOptions<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(SHOW_OPTIONS)),
-            ..Default::default()
+            args: item.args.clone(),
         })
     }
 }

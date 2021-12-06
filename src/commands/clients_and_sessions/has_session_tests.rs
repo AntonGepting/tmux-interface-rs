@@ -26,8 +26,8 @@ fn has_session() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "has";
 
-    assert_eq!(has_session.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(has_session.0.bin_args, None);
+    //assert_eq!(has_session.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(has_session.0.bin_args, None);
     assert_eq!(has_session.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(has_session.0.cmd_args, Some(s));
+    assert_eq!(has_session.0.args, Some(s));
 }

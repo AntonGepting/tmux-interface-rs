@@ -66,8 +66,8 @@ fn display_panes() {
     s.push("3");
     let s = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(display_panes.0.bin, Cow::Borrowed("tmux"));
-    assert_eq!(display_panes.0.bin_args, None);
+    //assert_eq!(display_panes.0.bin, Cow::Borrowed("tmux"));
+    //assert_eq!(display_panes.0.bin_args, None);
     assert_eq!(display_panes.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(display_panes.0.cmd_args, Some(s));
+    assert_eq!(display_panes.0.args, Some(s));
 }

@@ -65,7 +65,6 @@ impl<'a> DeleteBuffer<'a> {
 impl<'a> From<TmuxCommand<'a>> for DeleteBuffer<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin,
             cmd: Some(Cow::Borrowed(DELETE_BUFFER)),
             ..Default::default()
         })
@@ -75,7 +74,6 @@ impl<'a> From<TmuxCommand<'a>> for DeleteBuffer<'a> {
 impl<'a> From<&TmuxCommand<'a>> for DeleteBuffer<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
-            bin: item.bin.clone(),
             cmd: Some(Cow::Borrowed(DELETE_BUFFER)),
             ..Default::default()
         })
