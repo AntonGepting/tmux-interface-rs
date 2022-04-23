@@ -32,7 +32,7 @@ fn run_shell() {
 
     let mut run_shell = RunShell::new();
     #[cfg(feature = "tmux_1_8")]
-    run_shell.backgroud();
+    run_shell.background();
     #[cfg(feature = "tmux_3_2")]
     run_shell.tmux_command();
     #[cfg(feature = "tmux_3_2")]
