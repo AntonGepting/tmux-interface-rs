@@ -49,7 +49,7 @@ impl<'a> IfShell<'a> {
 
     /// `[-b]` - run in the background
     #[cfg(feature = "tmux_1_8")]
-    pub fn backgroud(&mut self) -> &mut Self {
+    pub fn background(&mut self) -> &mut Self {
         self.0.push_flag(B_LOWERCASE_KEY);
         self
     }

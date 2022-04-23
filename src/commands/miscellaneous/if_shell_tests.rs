@@ -34,7 +34,7 @@ fn if_shell() {
 
     let mut if_shell = IfShell::new();
     #[cfg(feature = "tmux_1_8")]
-    if_shell.backgroud();
+    if_shell.background();
     #[cfg(feature = "tmux_2_0")]
     if_shell.not_execute();
     #[cfg(feature = "tmux_1_8")]

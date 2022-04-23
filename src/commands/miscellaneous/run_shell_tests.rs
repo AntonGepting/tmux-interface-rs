@@ -26,7 +26,7 @@ fn run_shell() {
 
     let mut run_shell = RunShell::new();
     #[cfg(feature = "tmux_1_8")]
-    run_shell.backgroud();
+    run_shell.background();
     #[cfg(feature = "tmux_1_8")]
     run_shell.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_2")]
