@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - hotfix
   #pull_request:
     #branches:
     # - main
