@@ -1,6 +1,6 @@
 #[test]
 fn select_layout() {
-    use crate::{SelectLayot, TargetPane};
+    use crate::{SelectLayout, TargetPane};
     use std::borrow::Cow;
 
     // Choose a specific layout for a window
@@ -38,7 +38,7 @@ fn select_layout() {
     // ```
     let target_pane = TargetPane::Raw("1").to_string();
 
-    let mut select_layout = SelectLayot::new();
+    let mut select_layout = SelectLayout::new();
     #[cfg(feature = "tmux_2_7")]
     select_layout.spread();
     #[cfg(feature = "tmux_1_5")]

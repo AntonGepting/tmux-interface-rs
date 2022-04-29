@@ -20,7 +20,7 @@ use crate::{ChooseClient, DisplayPanes};
 #[cfg(feature = "tmux_1_7")]
 use crate::{ChooseTree, MovePane};
 #[cfg(feature = "tmux_0_9")]
-use crate::{ResizePane, SelectLayot};
+use crate::{ResizePane, SelectLayout};
 
 /// All functions from man tmux "Windows and Panes" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES))
@@ -317,8 +317,8 @@ impl<'a> TmuxCommand<'a> {
     }
 
     #[cfg(feature = "tmux_0_9")]
-    pub fn select_layout(&self) -> SelectLayot<'a> {
-        SelectLayot::from(self)
+    pub fn select_layout(&self) -> SelectLayout<'a> {
+        SelectLayout::from(self)
     }
 
     #[cfg(feature = "tmux_0_8")]
