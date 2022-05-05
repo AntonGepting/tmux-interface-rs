@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// List the global buffers.
@@ -23,16 +23,14 @@ use std::borrow::Cow;
 /// tmux list-buffers [-t target-session]
 /// (alias: lsb)
 /// ```
-#[derive(Debug, Clone)]
-pub struct ListBuffers<'a>(pub TmuxCommand<'a>);
-
-impl<'a> Default for ListBuffers<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_BUFFERS)),
-            ..Default::default()
-        })
-    }
+#[derive(Debug, Default, Clone)]
+pub struct ListBuffers<'a> {
+    /// `[-t target-session]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    pub target_session: Option<Cow<'a, str>>,
+    /// `[-F format]`
+    #[cfg(feature = "tmux_1_7")]
+    pub format: Option<Cow<'a, str>>,
 }
 
 impl<'a> ListBuffers<'a> {
@@ -43,36 +41,34 @@ impl<'a> ListBuffers<'a> {
     /// `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_session);
+        self.target_session = Some(target_session.into());
         self
     }
 
     /// `[-F format]`
     #[cfg(feature = "tmux_1_7")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_UPPERCASE_KEY, format);
+        self.format = Some(format.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for ListBuffers<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_BUFFERS)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(LIST_BUFFERS);
 
-impl<'a> From<&TmuxCommand<'a>> for ListBuffers<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_BUFFERS)),
-            ..Default::default()
-        })
+        // `[-t target-session]`
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+        if let Some(target_session) = &self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        }
+
+        // `[-F format]`
+        #[cfg(feature = "tmux_1_7")]
+        if let Some(format) = &self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        }
+
+        cmd
     }
 }
