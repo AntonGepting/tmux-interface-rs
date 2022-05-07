@@ -73,21 +73,3 @@ impl<'a> LastPane<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for LastPane<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LAST_PANE)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for LastPane<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LAST_PANE)),
-            ..Default::default()
-        })
-    }
-}

@@ -126,21 +126,3 @@ impl<'a> ChooseClient<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for ChooseClient<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(CHOOSE_CLIENT)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for ChooseClient<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(CHOOSE_CLIENT)),
-            ..Default::default()
-        })
-    }
-}

@@ -46,21 +46,3 @@ impl<'a> RenameWindow<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for RenameWindow<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RENAME_WINDOW)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for RenameWindow<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RENAME_WINDOW)),
-            ..Default::default()
-        })
-    }
-}

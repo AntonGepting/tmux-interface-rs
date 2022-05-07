@@ -148,21 +148,3 @@ impl<'a> BreakPane<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for BreakPane<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(BREAK_PANE)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for BreakPane<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(BREAK_PANE)),
-            ..Default::default()
-        })
-    }
-}

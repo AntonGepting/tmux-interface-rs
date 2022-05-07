@@ -90,21 +90,3 @@ impl<'a> RunShell<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for RunShell<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RUN_SHELL)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for RunShell<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RUN_SHELL)),
-            ..Default::default()
-        })
-    }
-}

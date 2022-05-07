@@ -1,5 +1,4 @@
 use crate::commands::constants::*;
-use crate::commands::tmux_bin_command::TmuxBinCommand;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 

@@ -139,21 +139,3 @@ impl<'a> CapturePane<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for CapturePane<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(CAPTURE_PANE)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for CapturePane<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(CAPTURE_PANE)),
-            ..Default::default()
-        })
-    }
-}

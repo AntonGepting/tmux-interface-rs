@@ -53,21 +53,3 @@ impl<'a> SwapWindow<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for SwapWindow<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SWAP_WINDOW)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for SwapWindow<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SWAP_WINDOW)),
-            ..Default::default()
-        })
-    }
-}

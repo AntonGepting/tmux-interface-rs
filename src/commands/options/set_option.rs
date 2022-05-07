@@ -180,21 +180,3 @@ impl<'a> SetOption<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for SetOption<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SET_OPTION)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for SetOption<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SET_OPTION)),
-            ..Default::default()
-        })
-    }
-}

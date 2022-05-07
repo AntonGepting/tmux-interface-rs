@@ -105,21 +105,3 @@ impl<'a> MoveWindow<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for MoveWindow<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(MOVE_WINDOW)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for MoveWindow<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(MOVE_WINDOW)),
-            ..Default::default()
-        })
-    }
-}

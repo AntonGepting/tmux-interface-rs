@@ -13,6 +13,7 @@ pub mod tmux_bin_commands_tests;
 pub mod tmux_command_tests;
 pub mod tmux_commands_tests;
 pub mod tmux_tests;
+pub mod tmux_bin_tests;
 
 pub mod buffers;
 pub mod clients_and_sessions;

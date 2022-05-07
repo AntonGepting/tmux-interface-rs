@@ -39,21 +39,3 @@ impl<'a> NextLayout<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for NextLayout<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEXT_LAYOUT)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for NextLayout<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEXT_LAYOUT)),
-            ..Default::default()
-        })
-    }
-}

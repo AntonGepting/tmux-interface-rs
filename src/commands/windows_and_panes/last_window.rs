@@ -38,21 +38,3 @@ impl<'a> LastWindow<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for LastWindow<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LAST_WINDOW)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for LastWindow<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LAST_WINDOW)),
-            ..Default::default()
-        })
-    }
-}

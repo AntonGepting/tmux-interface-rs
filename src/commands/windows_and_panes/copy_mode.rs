@@ -102,21 +102,3 @@ impl<'a> CopyMode<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for CopyMode<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(COPY_MODE)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for CopyMode<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(COPY_MODE)),
-            ..Default::default()
-        })
-    }
-}

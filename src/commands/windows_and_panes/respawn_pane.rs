@@ -79,21 +79,3 @@ impl<'a> RespawnPane<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for RespawnPane<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RESPAWN_PANE)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for RespawnPane<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RESPAWN_PANE)),
-            ..Default::default()
-        })
-    }
-}

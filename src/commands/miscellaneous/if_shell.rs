@@ -86,21 +86,3 @@ impl<'a> IfShell<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for IfShell<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(IF_SHELL)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for IfShell<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(IF_SHELL)),
-            ..Default::default()
-        })
-    }
-}

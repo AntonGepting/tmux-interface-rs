@@ -35,22 +35,22 @@ pub mod display_message_tests;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#STATUS_LINE))
 impl<'a> TmuxCommand<'a> {
     #[cfg(feature = "tmux_0_8")]
-    pub fn command_prompt(&self) -> CommandPrompt<'a> {
-        CommandPrompt::from(self)
+    pub fn command_prompt() -> CommandPrompt<'a> {
+        CommandPrompt::new()
     }
 
     #[cfg(feature = "tmux_0_9")]
-    pub fn confirm_before(&self) -> ConfirmBefore<'a> {
-        ConfirmBefore::from(self)
+    pub fn confirm_before() -> ConfirmBefore<'a> {
+        ConfirmBefore::new()
     }
 
     #[cfg(feature = "tmux_3_0")]
-    pub fn display_menu(&self) -> DisplayMenu<'a> {
-        DisplayMenu::from(self)
+    pub fn display_menu() -> DisplayMenu<'a> {
+        DisplayMenu::new()
     }
 
     #[cfg(feature = "tmux_1_0")]
-    pub fn display_message(&self) -> DisplayMessage<'a> {
-        DisplayMessage::from(self)
+    pub fn display_message() -> DisplayMessage<'a> {
+        DisplayMessage::new()
     }
 }

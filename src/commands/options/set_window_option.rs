@@ -120,21 +120,3 @@ impl<'a> SetWindowOption<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for SetWindowOption<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SET_WINDOW_OPTION)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for SetWindowOption<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SET_WINDOW_OPTION)),
-            ..Default::default()
-        })
-    }
-}

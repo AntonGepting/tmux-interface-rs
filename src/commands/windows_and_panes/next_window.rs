@@ -52,21 +52,3 @@ impl<'a> NextWindow<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for NextWindow<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEXT_WINDOW)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for NextWindow<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEXT_WINDOW)),
-            ..Default::default()
-        })
-    }
-}

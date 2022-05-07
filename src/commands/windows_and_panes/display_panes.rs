@@ -91,21 +91,3 @@ impl<'a> DisplayPanes<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for DisplayPanes<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(DISPLAY_PANES)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for DisplayPanes<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(DISPLAY_PANES)),
-            ..Default::default()
-        })
-    }
-}

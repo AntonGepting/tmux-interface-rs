@@ -48,21 +48,3 @@ impl<'a> ClockMode<'a> {
         self.0.output()
     }
 }
-
-impl<'a> From<TmuxCommand<'a>> for ClockMode<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(CLOCK_MODE)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> From<&TmuxCommand<'a>> for ClockMode<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(CLOCK_MODE)),
-            ..Default::default()
-        })
-    }
-}
