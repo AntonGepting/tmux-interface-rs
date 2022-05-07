@@ -33,19 +33,19 @@ use std::borrow::Cow;
 pub struct SourceFile<'a> {
     /// `[-F]` - value is expanded as a format
     #[cfg(feature = "tmux_3_2")]
-    pub expand: Option(bool),
+    pub expand: bool,
 
     /// `[-n]`
     #[cfg(feature = "tmux_3_0")]
-    pub not_execute: Option(bool),
+    pub not_execute: bool,
 
     /// `[-q]`
     #[cfg(feature = "tmux_3_0")]
-    pub quite: Option(bool),
+    pub quite: bool,
 
     /// `[-v]`
     #[cfg(feature = "tmux_3_0")]
-    pub verbose: Option(bool),
+    pub verbose: bool,
 
     /// `path`
     #[cfg(feature = "tmux_0_8")]
@@ -60,28 +60,28 @@ impl<'a> SourceFile<'a> {
     /// `[-F]` - value is expanded as a format
     #[cfg(feature = "tmux_3_2")]
     pub fn expand(&mut self) -> &mut Self {
-        self.expand = Some(true);
+        self.expand = true;
         self
     }
 
     /// `[-n]`
     #[cfg(feature = "tmux_3_0")]
     pub fn not_execute(&mut self) -> &mut Self {
-        self.not_execute = Some(true);
+        self.not_execute = true;
         self
     }
 
     /// `[-q]`
     #[cfg(feature = "tmux_3_0")]
     pub fn quite(&mut self) -> &mut Self {
-        self.quite = Some(true);
+        self.quite = true;
         self
     }
 
     /// `[-v]`
     #[cfg(feature = "tmux_3_0")]
     pub fn verbose(&mut self) -> &mut Self {
-        self.verbose = Some(true);
+        self.verbose = true;
         self
     }
 
@@ -99,25 +99,25 @@ impl<'a> SourceFile<'a> {
 
         // `[-F]` - value is expanded as a format
         #[cfg(feature = "tmux_3_2")]
-        if self.expand.is_some() {
+        if self.expand {
             cmd.push_flag(F_UPPERCASE_KEY);
         }
 
         // `[-n]`
         #[cfg(feature = "tmux_3_0")]
-        if self.not_execute.is_some() {
+        if self.not_execute {
             cmd.push_flag(N_LOWERCASE_KEY);
         }
 
         // `[-q]`
         #[cfg(feature = "tmux_3_0")]
-        if self.quite.is_some() {
+        if self.quite {
             cmd.push_flag(Q_LOWERCASE_KEY);
         }
 
         // `[-v]`
         #[cfg(feature = "tmux_3_0")]
-        if self.verbose.is_some() {
+        if self.verbose {
             cmd.push_flag(V_LOWERCASE_KEY);
         }
 

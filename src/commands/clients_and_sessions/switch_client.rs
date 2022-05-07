@@ -45,27 +45,27 @@ use std::borrow::Cow;
 pub struct SwitchClient<'a> {
     /// `[-E]` - update-environment option will not be applied
     #[cfg(feature = "tmux_2_1")]
-    pub not_update_env: Option<bool>,
+    pub not_update_env: bool,
 
     /// `[-l]` - move to the last session
     #[cfg(feature = "tmux_1_4")]
-    pub last_session: Option<bool>,
+    pub last_session: bool,
 
     /// `[-n]` - move to the next session
     #[cfg(feature = "tmux_1_4")]
-    pub next_session: Option<bool>,
+    pub next_session: bool,
 
     /// `[-p]` - move to the previous session
     #[cfg(feature = "tmux_1_4")]
-    pub previous_session: Option<bool>,
+    pub previous_session: bool,
 
     /// `[-r]` - toggle whether a client is read-only
     #[cfg(feature = "tmux_1_6")]
-    pub read_only: Option<bool>,
+    pub read_only: bool,
 
     /// `[-Z]` - keep the window zoomed if it was zoomed
     #[cfg(feature = "tmux_3_1")]
-    pub keep_zoomed: Option<bool>,
+    pub keep_zoomed: bool,
 
     /// `[-c target-client]` - specify the target-client
     #[cfg(feature = "tmux_1_0")]
@@ -88,42 +88,42 @@ impl<'a> SwitchClient<'a> {
     /// `[-E]` - update-environment option will not be applied
     #[cfg(feature = "tmux_2_1")]
     pub fn not_update_env(&mut self) -> &mut Self {
-        self.not_update_env = Some(true);
+        self.not_update_env = true;
         self
     }
 
     /// `[-l]` - move to the last session
     #[cfg(feature = "tmux_1_4")]
     pub fn last_session(&mut self) -> &mut Self {
-        self.last_session = Some(true);
+        self.last_session = true;
         self
     }
 
     /// `[-n]` - move to the next session
     #[cfg(feature = "tmux_1_4")]
     pub fn next_session(&mut self) -> &mut Self {
-        self.next_session = Some(true);
+        self.next_session = true;
         self
     }
 
     /// `[-p]` - move to the previous session
     #[cfg(feature = "tmux_1_4")]
     pub fn previous_session(&mut self) -> &mut Self {
-        self.previous_session = Some(true);
+        self.previous_session = true;
         self
     }
 
     /// `[-r]` - toggle whether a client is read-only
     #[cfg(feature = "tmux_1_6")]
     pub fn read_only(&mut self) -> &mut Self {
-        self.read_only = Some(true);
+        self.read_only = true;
         self
     }
 
     /// `[-Z]` - keep the window zoomed if it was zoomed
     #[cfg(feature = "tmux_3_1")]
     pub fn keep_zoomed(&mut self) -> &mut Self {
-        self.keep_zoomed = Some(true);
+        self.keep_zoomed = true;
         self
     }
 
@@ -155,37 +155,37 @@ impl<'a> SwitchClient<'a> {
 
         // `[-E]` - update-environment option will not be applied
         #[cfg(feature = "tmux_2_1")]
-        if self.not_update_env.is_some() {
+        if self.not_update_env {
             cmd.push_flag(E_UPPERCASE_KEY);
         }
 
         // `[-l]` - move to the last session
         #[cfg(feature = "tmux_1_4")]
-        if self.last_session.is_some() {
+        if self.last_session {
             cmd.push_flag(L_LOWERCASE_KEY);
         }
 
         // `[-n]` - move to the next session
         #[cfg(feature = "tmux_1_4")]
-        if self.next_session.is_some() {
+        if self.next_session {
             cmd.push_flag(N_LOWERCASE_KEY);
         }
 
         // `[-p]` - move to the previous session
         #[cfg(feature = "tmux_1_4")]
-        if self.previous_session.is_some() {
+        if self.previous_session {
             cmd.push_flag(P_LOWERCASE_KEY);
         }
 
         // `[-r]` - toggle whether a client is read-only
         #[cfg(feature = "tmux_1_6")]
-        if self.read_only.is_some() {
+        if self.read_only {
             cmd.push_flag(R_LOWERCASE_KEY);
         }
 
         // `[-Z]` - keep the window zoomed if it was zoomed
         #[cfg(feature = "tmux_3_1")]
-        if self.keep_zoomed.is_some() {
+        if self.keep_zoomed {
             cmd.push_flag(Z_UPPERCASE_KEY);
         }
 

@@ -27,13 +27,13 @@ use std::borrow::Cow;
 pub struct ShowMessages<'a> {
     /// `[-I]`
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
-    pub server: Option<bool>,
+    pub server: bool,
     /// `[-J]`
     #[cfg(feature = "tmux_1_9")]
-    pub jobs: Option<bool>,
+    pub jobs: bool,
     /// `[-T]`
     #[cfg(feature = "tmux_1_9")]
-    pub terminals: Option<bool>,
+    pub terminals: bool,
     /// `[-t target-client]`
     #[cfg(feature = "tmux_1_2")]
     pub target_client: Option<Cow<'a, str>>,
@@ -47,21 +47,21 @@ impl<'a> ShowMessages<'a> {
     /// `[-I]`
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
     pub fn server(&mut self) -> &mut Self {
-        self.server = Some(true);
+        self.server = true;
         self
     }
 
     /// `[-J]`
     #[cfg(feature = "tmux_1_9")]
     pub fn jobs(&mut self) -> &mut Self {
-        self.jobs = Some(true);
+        self.jobs = true;
         self
     }
 
     /// `[-T]`
     #[cfg(feature = "tmux_1_9")]
     pub fn terminals(&mut self) -> &mut Self {
-        self.terminals = Some(true);
+        self.terminals = true;
         self
     }
 
@@ -85,13 +85,13 @@ impl<'a> ShowMessages<'a> {
 
         // `[-J]`
         #[cfg(feature = "tmux_1_9")]
-        if self.jobs.is_some() {
+        if self.jobs {
             cmd.push_flag(J_UPPERCASE_KEY);
         }
 
         // `[-T]`
         #[cfg(feature = "tmux_1_9")]
-        if self.terminals.is_some() {
+        if self.terminals {
             cmd.push_flag(T_UPPERCASE_KEY);
         }
 

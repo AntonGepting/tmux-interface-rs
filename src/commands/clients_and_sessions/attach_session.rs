@@ -47,19 +47,19 @@ use std::borrow::Cow;
 pub struct AttachSession<'a> {
     /// `[-d]` - any other clients attached to the session are detached
     #[cfg(feature = "tmux_0_8")]
-    pub detach_other: Option<bool>,
+    pub detach_other: bool,
 
     /// `[-E]` - `update-environment` option will not be applied
     #[cfg(feature = "tmux_2_1")]
-    pub not_update_env: Option<bool>,
+    pub not_update_env: bool,
 
     /// `[-r]` - signifies the client is read-only
     #[cfg(feature = "tmux_1_2")]
-    pub read_only: Option<bool>,
+    pub read_only: bool,
 
     /// `[-x]` - send SIGHUP to the parent process, detaching the client
     #[cfg(feature = "tmux_3_0")]
-    pub parent_sighup: Option<bool>,
+    pub parent_sighup: bool,
 
     /// `[-c working-directory]` - specify starting directory
     #[cfg(feature = "tmux_1_9")]
@@ -82,28 +82,28 @@ impl<'a> AttachSession<'a> {
     /// `[-d]` - any other clients attached to the session are detached
     #[cfg(feature = "tmux_0_8")]
     pub fn detach_other(&mut self) -> &mut Self {
-        self.detach_other = Some(true);
+        self.detach_other = true;
         self
     }
 
     /// `[-E]` - `update-environment` option will not be applied
     #[cfg(feature = "tmux_2_1")]
     pub fn not_update_env(&mut self) -> &mut Self {
-        self.not_update_env = Some(true);
+        self.not_update_env = true;
         self
     }
 
     /// `[-r]` - signifies the client is read-only
     #[cfg(feature = "tmux_1_2")]
     pub fn read_only(&mut self) -> &mut Self {
-        self.read_only = Some(true);
+        self.read_only = true;
         self
     }
 
     /// `[-x]` - send SIGHUP to the parent process, detaching the client
     #[cfg(feature = "tmux_3_0")]
     pub fn parent_sighup(&mut self) -> &mut Self {
-        self.parent_sighup = Some(true);
+        self.parent_sighup = true;
         self
     }
 
@@ -137,25 +137,25 @@ impl<'a> AttachSession<'a> {
 
         // `[-d]` - any other clients attached to the session are detached
         #[cfg(feature = "tmux_0_8")]
-        if self.detach_other.is_some() {
+        if self.detach_other {
             cmd.push_flag(D_LOWERCASE_KEY);
         }
 
         // `[-E]` - `update-environment` option will not be applied
         #[cfg(feature = "tmux_2_1")]
-        if self.not_update_env.is_some() {
+        if self.not_update_env {
             cmd.push_flag(E_UPPERCASE_KEY);
         }
 
         // `[-r]` - signifies the client is read-only
         #[cfg(feature = "tmux_1_2")]
-        if self.read_only.is_some() {
+        if self.read_only {
             cmd.push_flag(R_LOWERCASE_KEY);
         }
 
         // `[-x]` - send SIGHUP to the parent process, detaching the client
         #[cfg(feature = "tmux_3_0")]
-        if self.parent_sighup.is_some() {
+        if self.parent_sighup {
             cmd.push_flag(X_LOWERCASE_KEY);
         }
 

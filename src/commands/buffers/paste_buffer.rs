@@ -33,15 +33,15 @@ use std::borrow::Cow;
 pub struct PasteBuffer<'a> {
     /// `[-d]` - delete the paste buffer
     #[cfg(feature = "tmux_0_8")]
-    pub delete: Option<bool>,
+    pub delete: bool,
 
     /// `[-p]` - paste bracket control codes are inserted around the buffer
     #[cfg(feature = "tmux_1_7")]
-    pub bracket_codes: Option<bool>,
+    pub bracket_codes: bool,
 
     /// `[-r]` - do no replacement (equivalent to a separator of LF)
     #[cfg(feature = "tmux_1_0")]
-    pub no_replacement: Option<bool>,
+    pub no_replacement: bool,
 
     /// `[-b buffer-name]` - specify the buffer mode
     #[cfg(feature = "tmux_1_7")]
@@ -68,21 +68,21 @@ impl<'a> PasteBuffer<'a> {
     /// `[-d]` - delete the paste buffer
     #[cfg(feature = "tmux_0_8")]
     pub fn delete(&mut self) -> &mut Self {
-        self.delete = Some(true);
+        self.delete = true;
         self
     }
 
     /// `[-p]` - paste bracket control codes are inserted around the buffer
     #[cfg(feature = "tmux_1_7")]
     pub fn bracket_codes(&mut self) -> &mut Self {
-        self.bracket_codes = Some(true);
+        self.bracket_codes = true;
         self
     }
 
     /// `[-r]` - do no replacement (equivalent to a separator of LF)
     #[cfg(feature = "tmux_1_0")]
     pub fn no_replacement(&mut self) -> &mut Self {
-        self.no_replacement = Some(true);
+        self.no_replacement = true;
         self
     }
 
@@ -121,19 +121,19 @@ impl<'a> PasteBuffer<'a> {
 
         // `[-d]` - delete the paste buffer
         #[cfg(feature = "tmux_0_8")]
-        if self.delete.is_some() {
+        if self.delete {
             cmd.push_flag(D_LOWERCASE_KEY);
         }
 
         // `[-p]` - paste bracket control codes are inserted around the buffer
         #[cfg(feature = "tmux_1_7")]
-        if self.bracket_codes.is_some() {
+        if self.bracket_codes {
             cmd.push_flag(P_LOWERCASE_KEY);
         }
 
         // `[-r]` - do no replacement (equivalent to a separator of LF)
         #[cfg(feature = "tmux_1_0")]
-        if self.no_replacement.is_some() {
+        if self.no_replacement {
             cmd.push_flag(R_LOWERCASE_KEY);
         }
 

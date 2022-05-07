@@ -39,15 +39,15 @@ use std::borrow::Cow;
 pub struct ChooseBuffer<'a> {
     /// [-N] - start without the preview
     #[cfg(feature = "tmux_2_6")]
-    pub no_preview: Option<bool>,
+    pub no_preview: bool,
 
     /// [-Z] - zoom the pane
     #[cfg(feature = "tmux_2_7")]
-    pub zoom: Option<bool>,
+    pub zoom: bool,
 
     /// [-r] - reverses the sort order
     #[cfg(feature = "tmux_3_1")]
-    pub reverse_sort_order: Option<bool>,
+    pub reverse_sort_order: bool,
 
     /// [-F] - specify the format for each item in the list
     #[cfg(feature = "tmux_1_7")]
@@ -78,21 +78,21 @@ impl<'a> ChooseBuffer<'a> {
     /// `[-N]` - start without the preview
     #[cfg(feature = "tmux_2_6")]
     pub fn no_preview(&mut self) -> &mut Self {
-        self.no_preview = Some(true);
+        self.no_preview = true;
         self
     }
 
     /// `[-Z]` - zoom the pane
     #[cfg(feature = "tmux_2_7")]
     pub fn zoom(&mut self) -> &mut Self {
-        self.zoom = Some(true);
+        self.zoom = true;
         self
     }
 
     /// `[-r]` - reverses the sort order
     #[cfg(feature = "tmux_3_1")]
     pub fn reverse_sort_order(&mut self) -> &mut Self {
-        self.reverse_sort_order = Some(true);
+        self.reverse_sort_order = true;
         self
     }
 
@@ -145,19 +145,19 @@ impl<'a> ChooseBuffer<'a> {
 
         // `[-N]` - start without the preview
         #[cfg(feature = "tmux_2_6")]
-        if self.no_preview.is_some() {
+        if self.no_preview {
             cmd.push_flag(N_UPPERCASE_KEY);
         }
 
         // `[-Z]` - zoom the pane
         #[cfg(feature = "tmux_2_7")]
-        if self.zoom.is_some() {
+        if self.zoom {
             cmd.push_flag(Z_UPPERCASE_KEY);
         }
 
         // `[-r]` - reverses the sort order
         #[cfg(feature = "tmux_3_1")]
-        if self.reverse_sort_order.is_some() {
+        if self.reverse_sort_order {
             cmd.push_flag(R_LOWERCASE_KEY);
         }
 

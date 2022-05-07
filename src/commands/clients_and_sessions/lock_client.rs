@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Lock `target-client`
@@ -35,7 +35,7 @@ impl<'a> LockClient<'a> {
 
         cmd.cmd(LOCK_CLIENT);
 
-        /// `[-t target-client]`
+        // `[-t target-client]`
         #[cfg(feature = "tmux_1_1")]
         if let Some(target_client) = &self.target_client {
             cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());

@@ -33,7 +33,7 @@ use std::borrow::Cow;
 pub struct LoadBuffer<'a> {
     /// `[-w]`
     #[cfg(feature = "tmux_3_2")]
-    pub send_to_clipboard: Option<bool>,
+    pub send_to_clipboard: bool,
 
     /// `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
@@ -64,7 +64,7 @@ impl<'a> LoadBuffer<'a> {
     /// `[-w]`
     #[cfg(feature = "tmux_3_2")]
     pub fn send_to_clipboard(&mut self) -> &mut Self {
-        self.path = Some(true);
+        self.path = true;
         self
     }
 
@@ -110,7 +110,7 @@ impl<'a> LoadBuffer<'a> {
 
         // `[-w]`
         #[cfg(feature = "tmux_3_2")]
-        if self.send_to_clipboard.is_some() {
+        if self.send_to_clipboard {
             cmd.push_flag(W_LOWERCASE_KEY);
         }
 

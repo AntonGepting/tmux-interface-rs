@@ -33,11 +33,11 @@ use std::borrow::Cow;
 pub struct SetBuffer<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_2_0")]
-    pub append: Option<bool>,
+    pub append: bool,
 
     /// `[-w]`
     #[cfg(feature = "tmux_3_2")]
-    pub send_to_clipboard: Option<bool>,
+    pub send_to_clipboard: bool,
 
     /// `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
@@ -72,14 +72,14 @@ impl<'a> SetBuffer<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_2_0")]
     pub fn append(&mut self) -> &mut Self {
-        self.append = Some(true);
+        self.append = true;
         self
     }
 
     /// `[-w]`
     #[cfg(feature = "tmux_3_2")]
     pub fn send_to_clipboard(&mut self) -> &mut Self {
-        self.send_to_clipboard = Some(true);
+        self.send_to_clipboard = true;
         self
     }
 
@@ -132,13 +132,13 @@ impl<'a> SetBuffer<'a> {
 
         // `[-a]`
         #[cfg(feature = "tmux_2_0")]
-        if self.append.is_some() {
+        if self.append {
             cmd.push_flag(A_LOWERCASE_KEY);
         }
 
         // `[-w]`
         #[cfg(feature = "tmux_3_2")]
-        if self.send_to_clipboard.is_some() {
+        if self.send_to_clipboard {
             cmd.push_flag(W_LOWERCASE_KEY);
         }
 

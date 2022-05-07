@@ -1,6 +1,5 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
-use std::borrow::Cow;
 
 /// Kill the tmux server and clients and destroy all sessions
 ///
@@ -11,7 +10,7 @@ use std::borrow::Cow;
 /// tmux kill-server
 /// ```
 #[derive(Debug, Default, Clone)]
-pub struct KillServer();
+pub struct KillServer;
 
 impl KillServer {
     pub fn new() -> Self {

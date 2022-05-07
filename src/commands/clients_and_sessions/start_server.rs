@@ -11,7 +11,7 @@ use crate::TmuxCommand;
 /// (alias: start)
 /// ```
 #[derive(Debug, Default, Clone)]
-pub struct StartServer();
+pub struct StartServer;
 
 impl StartServer {
     pub fn new() -> Self {

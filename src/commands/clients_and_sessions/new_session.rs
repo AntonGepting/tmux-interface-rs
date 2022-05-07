@@ -1,15 +1,8 @@
 use crate::commands::constants::*;
 #[cfg(feature = "tmux_3_2")]
 use crate::ClientFlags;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
-use std::ffi::OsStr;
-use std::fmt;
-
-use crate::commands::tmux_bin::TmuxBin;
-use crate::commands::tmux_bin_command::TmuxBinCommand;
-use crate::commands::tmux_command::OutputTrait;
-use crate::commands::tmux_commands::TmuxCommands;
 
 /// Structure for creating a new session
 ///
@@ -85,22 +78,22 @@ use crate::commands::tmux_commands::TmuxCommands;
 pub struct NewSession<'a> {
     /// [-A] - behave like `attach-session` if `session-name` already exists
     #[cfg(feature = "tmux_1_8")]
-    pub attach: Option<bool>,
+    pub attach: bool,
     /// [-d] - new session is not attached to the current terminal
     #[cfg(feature = "tmux_0_8")]
-    pub detached: Option<bool>,
+    pub detached: bool,
     /// [-D] - any other clients attached to the session are detached
     #[cfg(feature = "tmux_1_8")]
-    pub detach_other: Option<bool>,
+    pub detach_other: bool,
     /// [-E] - `update-environment` option will not be applied
     #[cfg(feature = "tmux_2_1")]
-    pub not_update_env: Option<bool>,
+    pub not_update_env: bool,
     /// [-P] - print information about the new session after it has been created
     #[cfg(feature = "tmux_1_8")]
-    pub print: Option<bool>,
+    pub print: bool,
     /// [-X] - send SIGHUP to the parent process, detaching the client
     #[cfg(feature = "tmux_3_0")]
-    pub parent_sighup: Option<bool>,
+    pub parent_sighup: bool,
     /// [-c start-directory] - specify starting directory
     #[cfg(feature = "tmux_1_9")]
     pub start_directory: Option<Cow<'a, str>>,
@@ -135,42 +128,42 @@ impl<'a> NewSession<'a> {
     /// `[-A]` - behave like `attach-session` if `session-name` already exists
     #[cfg(feature = "tmux_1_8")]
     pub fn attach(&mut self) -> &mut Self {
-        self.attach = Some(true);
+        self.attach = true;
         self
     }
 
     /// `[-d]` - new session is not attached to the current terminal
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
-        self.detached = Some(true);
+        self.detached = true;
         self
     }
 
     /// `[-D]` - any other clients attached to the session are detached
     #[cfg(feature = "tmux_1_8")]
     pub fn detach_other(&mut self) -> &mut Self {
-        self.detach_other = Some(true);
+        self.detach_other = true;
         self
     }
 
     /// `[-E]` - `update-environment` option will not be applied
     #[cfg(feature = "tmux_2_1")]
     pub fn not_update_env(&mut self) -> &mut Self {
-        self.not_update_env = Some(true);
+        self.not_update_env = true;
         self
     }
 
     /// `[-P]` - print information about the new session after it has been created
     #[cfg(feature = "tmux_1_8")]
     pub fn print(&mut self) -> &mut Self {
-        self.print = Some(true);
+        self.print = true;
         self
     }
 
     /// `[-X]` - send SIGHUP to the parent process, detaching the client
     #[cfg(feature = "tmux_3_0")]
     pub fn parent_sighup(&mut self) -> &mut Self {
-        self.parent_sighup = Some(true);
+        self.parent_sighup = true;
         self
     }
 
@@ -258,37 +251,37 @@ impl<'a> NewSession<'a> {
 
         // `[-A]` - behave like `attach-session` if `session-name` already exists
         #[cfg(feature = "tmux_1_8")]
-        if self.attach.is_some() {
+        if self.attach {
             cmd.push_flag(A_UPPERCASE_KEY);
         }
 
         // `[-d]` - new session is not attached to the current terminal
         #[cfg(feature = "tmux_0_8")]
-        if self.detached.is_some() {
+        if self.detached {
             cmd.push_flag(D_LOWERCASE_KEY);
         }
 
         // `[-D]` - any other clients attached to the session are detached
         #[cfg(feature = "tmux_1_8")]
-        if self.detach_other.is_some() {
+        if self.detach_other {
             cmd.push_flag(D_UPPERCASE_KEY);
         }
 
         // `[-E]` - `update-environment` option will not be applied
         #[cfg(feature = "tmux_2_1")]
-        if self.not_update_env.is_some() {
+        if self.not_update_env {
             cmd.push_flag(E_UPPERCASE_KEY);
         }
 
         // `[-P]` - print information about the new session after it has been created
         #[cfg(feature = "tmux_1_8")]
-        if self.print.is_some() {
+        if self.print {
             cmd.push_flag(P_UPPERCASE_KEY);
         }
 
         // `[-X]` - send SIGHUP to the parent process, detaching the client
         #[cfg(feature = "tmux_3_0")]
-        if self.parent_sighup.is_some() {
+        if self.parent_sighup {
             cmd.push_flag(X_UPPERCASE_KEY);
         }
 

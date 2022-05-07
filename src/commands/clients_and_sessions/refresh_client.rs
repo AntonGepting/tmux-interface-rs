@@ -71,31 +71,31 @@ impl fmt::Display for State {
 pub struct RefreshClient<'a> {
     /// `[-c]` - return to tracking the cursor automatically
     #[cfg(feature = "tmux_2_9a")]
-    pub tracking_cursor: Option<bool>,
+    pub tracking_cursor: bool,
 
     /// `[-D]` - move the visible part of a window down by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
-    pub down: Option<bool>,
+    pub down: bool,
 
     /// `[-l]` - request the clipboard from the client using the xterm(1) escape sequence
     #[cfg(feature = "tmux_2_9a")]
-    pub request_clipboard: Option<bool>,
+    pub request_clipboard: bool,
 
     /// `[-L]` - move the visible part of a window left by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
-    pub left: Option<bool>,
+    pub left: bool,
 
     /// `[-R]` - move the visible part of a window right by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
-    pub right: Option<bool>,
+    pub right: bool,
 
     /// `[-S]` - only update the client's status line
     #[cfg(feature = "tmux_1_6")]
-    pub status_line: Option<bool>,
+    pub status_line: bool,
 
     /// `[-U]` - move the visible part of a window up by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
-    pub up: Option<bool>,
+    pub up: bool,
 
     // TODO: accept target_pane
     /// `[-A pane:state]` - allows a control mode client to trigger actions on a pane
@@ -139,49 +139,49 @@ impl<'a> RefreshClient<'a> {
     /// `[-c]` - return to tracking the cursor automatically
     #[cfg(feature = "tmux_2_9a")]
     pub fn tracking_cursor(&mut self) -> &mut Self {
-        self.tracking_cursor = Some(true);
+        self.tracking_cursor = true;
         self
     }
 
     /// `[-D]` - move the visible part of a window down by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
     pub fn down(&mut self) -> &mut Self {
-        self.down = Some(true);
+        self.down = true;
         self
     }
 
     /// `[-l]` - request the clipboard from the client using the xterm(1) escape sequence
     #[cfg(feature = "tmux_2_9a")]
     pub fn request_clipboard(&mut self) -> &mut Self {
-        self.request_clipboard = Some(true);
+        self.request_clipboard = true;
         self
     }
 
     /// `[-L]` - move the visible part of a window left by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
     pub fn left(&mut self) -> &mut Self {
-        self.left = Some(true);
+        self.left = true;
         self
     }
 
     /// `[-R]` - move the visible part of a window right by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
     pub fn right(&mut self) -> &mut Self {
-        self.right = Some(true);
+        self.right = true;
         self
     }
 
     /// `[-S]` - only update the client's status line
     #[cfg(feature = "tmux_1_6")]
     pub fn status_line(&mut self) -> &mut Self {
-        self.status_line = Some(true);
+        self.status_line = true;
         self
     }
 
     /// `[-U]` - move the visible part of a window up by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
     pub fn up(&mut self) -> &mut Self {
-        self.up = Some(true);
+        self.up = true;
         self
     }
 
@@ -251,43 +251,43 @@ impl<'a> RefreshClient<'a> {
 
         // `[-c]` - return to tracking the cursor automatically
         #[cfg(feature = "tmux_2_9a")]
-        if self.tracking_cursor.is_some() {
+        if self.tracking_cursor {
             cmd.push_flag(C_LOWERCASE_KEY);
         }
 
         // `[-D]` - move the visible part of a window down by `adjustment` rows
         #[cfg(feature = "tmux_2_9a")]
-        if self.down.is_some() {
+        if self.down {
             cmd.push_flag(D_UPPERCASE_KEY);
         }
 
         // `[-l]` - request the clipboard from the client using the xterm(1) escape sequence
         #[cfg(feature = "tmux_2_9a")]
-        if self.request_clipboard.is_some() {
+        if self.request_clipboard {
             cmd.push_flag(L_LOWERCASE_KEY);
         }
 
         // `[-L]` - move the visible part of a window left by `adjustment` columns
         #[cfg(feature = "tmux_2_9a")]
-        if self.left.is_some() {
+        if self.left {
             cmd.push_flag(L_UPPERCASE_KEY);
         }
 
         // `[-R]` - move the visible part of a window right by `adjustment` columns
         #[cfg(feature = "tmux_2_9a")]
-        if self.right.is_some() {
+        if self.right {
             cmd.push_flag(R_UPPERCASE_KEY);
         }
 
         // `[-S]` - only update the client's status line
         #[cfg(feature = "tmux_1_6")]
-        if self.status_line.is_some() {
+        if self.status_line {
             cmd.push_flag(S_UPPERCASE_KEY);
         }
 
         // `[-U]` - move the visible part of a window up by `adjustment` rows
         #[cfg(feature = "tmux_2_9a")]
-        if self.up.is_some() {
+        if self.up {
             cmd.push_flag(U_UPPERCASE_KEY);
         }
 

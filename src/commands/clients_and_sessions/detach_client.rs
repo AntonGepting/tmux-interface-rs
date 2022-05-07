@@ -33,11 +33,11 @@ use std::borrow::Cow;
 pub struct DetachClient<'a> {
     /// `[-a]` - kill all but the client client given with `-t`
     #[cfg(feature = "tmux_2_2")]
-    pub all: Option<bool>,
+    pub all: bool,
 
     /// `[-P]` - send SIGHUP to the parent process of the client, typically causing it to exit
     #[cfg(feature = "tmux_1_5")]
-    pub parent_sighup: Option<bool>,
+    pub parent_sighup: bool,
 
     /// `[-E shell-command]` - run shell-command to replace the client
     #[cfg(feature = "tmux_2_4")]
@@ -60,14 +60,14 @@ impl<'a> DetachClient<'a> {
     /// `[-a]` - kill all but the client client given with `-t`
     #[cfg(feature = "tmux_2_2")]
     pub fn all(&mut self) -> &mut Self {
-        self.all = Some(true);
+        self.all = true;
         self
     }
 
     /// `[-P]` - send SIGHUP to the parent process of the client, typically causing it to exit
     #[cfg(feature = "tmux_1_5")]
     pub fn parent_sighup(&mut self) -> &mut Self {
-        self.parent_sighup = Some(true);
+        self.parent_sighup = true;
         self
     }
 
@@ -99,13 +99,13 @@ impl<'a> DetachClient<'a> {
 
         // `[-a]` - kill all but the client client given with `-t`
         #[cfg(feature = "tmux_2_2")]
-        if self.all.is_some() {
+        if self.all {
             cmd.push_flag(A_LOWERCASE_KEY);
         }
 
         // `[-P]` - send SIGHUP to the parent process of the client, typically causing it to exit
         #[cfg(feature = "tmux_1_5")]
-        if self.parent_sighup.is_some() {
+        if self.parent_sighup {
             cmd.push_flag(P_UPPERCASE_KEY);
         }
 

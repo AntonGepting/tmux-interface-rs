@@ -27,7 +27,7 @@ use std::borrow::Cow;
 pub struct SaveBuffer<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_0_8")]
-    pub append: Option<bool>,
+    pub append: bool,
 
     /// `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
@@ -54,7 +54,7 @@ impl<'a> SaveBuffer<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_0_8")]
     pub fn append(&mut self) -> &mut Self {
-        self.append = Some(true);
+        self.append = true;
         self
     }
 
@@ -93,7 +93,7 @@ impl<'a> SaveBuffer<'a> {
 
         // `[-a]`
         #[cfg(feature = "tmux_0_8")]
-        if self.append.is_some() {
+        if self.append {
             cmd.push_flag(A_LOWERCASE_KEY);
         }
 
