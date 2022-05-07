@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Load the contents of the specified paste buffer from path.

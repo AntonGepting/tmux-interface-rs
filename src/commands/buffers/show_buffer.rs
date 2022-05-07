@@ -80,5 +80,7 @@ impl<'a> ShowBuffer<'a> {
         if let Some(target_session) = &self.target_session {
             cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
         }
+
+        cmd
     }
 }

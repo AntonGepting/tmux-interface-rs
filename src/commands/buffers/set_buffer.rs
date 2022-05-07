@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Set the contents of the specified buffer to data.
@@ -160,19 +160,19 @@ impl<'a> SetBuffer<'a> {
             cmd.push_option(N_LOWERCASE_KEY, new_buffer_name.as_ref());
         }
 
-        /// `data`
+        // `data`
         #[cfg(feature = "tmux_0_8")]
         if let Some(data) = &self.data {
             cmd.push_param(data.as_ref());
         }
 
-        /// `[-b buffer-index]`
+        // `[-b buffer-index]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
         if let Some(buffer_index) = &self.buffer_index {
             cmd.push_option(B_LOWERCASE_KEY, buffer_index.as_ref());
         }
 
-        /// `[-t target-session]`
+        // `[-t target-session]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
         if let Some(target_session) = &self.target_session {
             cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
