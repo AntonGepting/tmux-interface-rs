@@ -30,27 +30,27 @@ pub mod unbind_key_tests;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#KEY_BINDINGS))
 impl<'a> TmuxCommand<'a> {
     #[cfg(feature = "tmux_0_8")]
-    pub fn bind_key(&self) -> BindKey<'a> {
-        BindKey::from(self)
+    pub fn bind_key() -> BindKey<'a> {
+        BindKey::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn list_keys(&self) -> ListKeys<'a> {
-        ListKeys::from(self)
+    pub fn list_keys() -> ListKeys<'a> {
+        ListKeys::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn send_keys(&self) -> SendKeys<'a> {
-        SendKeys::from(self)
+    pub fn send_keys() -> SendKeys<'a> {
+        SendKeys::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn send_prefix(&self) -> SendPrefix<'a> {
-        SendPrefix::from(self)
+    pub fn send_prefix() -> SendPrefix<'a> {
+        SendPrefix::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn unbind_key(&self) -> UnbindKey<'a> {
-        UnbindKey::from(self)
+    pub fn unbind_key() -> UnbindKey<'a> {
+        UnbindKey::new()
     }
 }

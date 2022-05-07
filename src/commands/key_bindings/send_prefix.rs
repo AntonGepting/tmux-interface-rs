@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// # Manual
@@ -13,16 +13,15 @@ use std::borrow::Cow;
 /// ```text
 /// tmux send-prefix [-t target-pane]
 /// ```
-#[derive(Debug, Clone)]
-pub struct SendPrefix<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct SendPrefix<'a> {
+    /// `[-2]`
+    #[cfg(feature = "tmux_1_6")]
+    pub secondary: bool,
 
-impl<'a> Default for SendPrefix<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SEND_PREFIX)),
-            ..Default::default()
-        })
-    }
+    /// `[-t target-pane]`
+    #[cfg(feature = "tmux_0_8")]
+    pub target_pane: Option<Cow<'a, str>>,
 }
 
 impl<'a> SendPrefix<'a> {
@@ -33,36 +32,34 @@ impl<'a> SendPrefix<'a> {
     /// `[-2]`
     #[cfg(feature = "tmux_1_6")]
     pub fn secondary(&mut self) -> &mut Self {
-        self.0.push_flag(_2_KEY);
+        self.secondary = true;
         self
     }
 
     /// `[-t target-pane]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_pane);
+        self.target_pane = Some(target_pane.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for SendPrefix<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SEND_KEYS)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(SEND_PREFIX);
 
-impl<'a> From<&TmuxCommand<'a>> for SendPrefix<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SEND_KEYS)),
-            ..Default::default()
-        })
+        // `[-2]`
+        #[cfg(feature = "tmux_1_6")]
+        if self.secondary {
+            cmd.push_flag(_2_KEY);
+        }
+
+        // `[-t target-pane]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_pane) = &self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        }
+
+        cmd
     }
 }

@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// # Manual
@@ -8,16 +8,15 @@ use std::borrow::Cow;
 /// ```text
 /// tmux show-hooks [-g] [-t target-session]
 /// ```
-#[derive(Debug, Clone)]
-pub struct ShowHooks<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct ShowHooks<'a> {
+    /// `[-g]`
+    #[cfg(feature = "tmux_2_2")]
+    pub global: bool,
 
-impl<'a> Default for ShowHooks<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_HOOKS)),
-            ..Default::default()
-        })
-    }
+    /// `[-t target-session]`
+    #[cfg(feature = "tmux_2_2")]
+    pub target_session: Option<Cow<'a, str>>,
 }
 
 impl<'a> ShowHooks<'a> {
@@ -28,36 +27,34 @@ impl<'a> ShowHooks<'a> {
     /// `[-g]`
     #[cfg(feature = "tmux_2_2")]
     pub fn global(&mut self) -> &mut Self {
-        self.0.push_flag(G_LOWERCASE_KEY);
+        self.global = true;
         self
     }
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_2_2")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_session);
+        self.target_session = Some(target_session.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for ShowHooks<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_HOOKS)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(SHOW_HOOKS);
 
-impl<'a> From<&TmuxCommand<'a>> for ShowHooks<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_HOOKS)),
-            ..Default::default()
-        })
+        // `[-g]`
+        #[cfg(feature = "tmux_2_2")]
+        if self.global {
+            cmd.push_flag(G_LOWERCASE_KEY);
+        }
+
+        // `[-t target-session]`
+        #[cfg(feature = "tmux_2_2")]
+        if let Some(target_session) = &self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        }
+
+        cmd
     }
 }
