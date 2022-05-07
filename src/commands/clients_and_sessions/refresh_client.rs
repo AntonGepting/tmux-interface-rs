@@ -1,7 +1,7 @@
 use crate::commands::constants::*;
 #[cfg(feature = "tmux_2_9a")]
 use crate::ClientFlags;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 #[cfg(feature = "tmux_3_2")]
 use std::fmt;
@@ -67,16 +67,68 @@ impl fmt::Display for State {
 /// tmux refresh-client [-t target-client]
 /// (alias: refresh)
 /// ```
-#[derive(Debug, Clone)]
-pub struct RefreshClient<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct RefreshClient<'a> {
+    /// `[-c]` - return to tracking the cursor automatically
+    #[cfg(feature = "tmux_2_9a")]
+    pub tracking_cursor: Option<bool>,
 
-impl<'a> Default for RefreshClient<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(REFRESH_CLIENT)),
-            ..Default::default()
-        })
-    }
+    /// `[-D]` - move the visible part of a window down by `adjustment` rows
+    #[cfg(feature = "tmux_2_9a")]
+    pub down: Option<bool>,
+
+    /// `[-l]` - request the clipboard from the client using the xterm(1) escape sequence
+    #[cfg(feature = "tmux_2_9a")]
+    pub request_clipboard: Option<bool>,
+
+    /// `[-L]` - move the visible part of a window left by `adjustment` columns
+    #[cfg(feature = "tmux_2_9a")]
+    pub left: Option<bool>,
+
+    /// `[-R]` - move the visible part of a window right by `adjustment` columns
+    #[cfg(feature = "tmux_2_9a")]
+    pub right: Option<bool>,
+
+    /// `[-S]` - only update the client's status line
+    #[cfg(feature = "tmux_1_6")]
+    pub status_line: Option<bool>,
+
+    /// `[-U]` - move the visible part of a window up by `adjustment` rows
+    #[cfg(feature = "tmux_2_9a")]
+    pub up: Option<bool>,
+
+    // TODO: accept target_pane
+    /// `[-A pane:state]` - allows a control mode client to trigger actions on a pane
+    #[cfg(feature = "tmux_3_2")]
+    pub allow_actions: Option<usize, State>,
+
+    // TODO: refactor, accept target_pane, target_window and masks * ...
+    /// [-B name:what:format]
+    #[cfg(feature = "tmux_3_2")]
+    pub subscribe: Option<(usize, usize)>,
+
+    /// `[-C X,Y]` - set the width and height of a control client
+    /// `[-C XxY]` - set the width and height of a control client
+    #[cfg(feature = "tmux_2_4")]
+    pub size: Option<(usize, usize)>,
+
+    // XXX: refactor vec?
+    /// `[-F flags]` - set a comma-separated list of flags
+    #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_2")))]
+    pub flags: Option<ClientFlags>,
+
+    // XXX: refactor vec?
+    /// `[-f flags]` - sets a comma-separated list of client flags
+    #[cfg(feature = "tmux_3_2")]
+    pub flags: Option<ClientFlags>,
+
+    /// `[-t target-client]` - specify the client
+    #[cfg(feature = "tmux_0_8")]
+    pub target_client: Option<Cow<'a, str>>,
+
+    /// `[adjustment]` - moves the visible part up/down left/right by adjustment rows/columns
+    #[cfg(feature = "tmux_2_9a")]
+    pub adjustment: Option<usize>,
 }
 
 impl<'a> RefreshClient<'a> {
@@ -87,49 +139,49 @@ impl<'a> RefreshClient<'a> {
     /// `[-c]` - return to tracking the cursor automatically
     #[cfg(feature = "tmux_2_9a")]
     pub fn tracking_cursor(&mut self) -> &mut Self {
-        self.0.push_flag(C_LOWERCASE_KEY);
+        self.tracking_cursor = Some(true);
         self
     }
 
     /// `[-D]` - move the visible part of a window down by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
     pub fn down(&mut self) -> &mut Self {
-        self.0.push_flag(D_UPPERCASE_KEY);
+        self.down = Some(true);
         self
     }
 
     /// `[-l]` - request the clipboard from the client using the xterm(1) escape sequence
     #[cfg(feature = "tmux_2_9a")]
     pub fn request_clipboard(&mut self) -> &mut Self {
-        self.0.push_flag(L_LOWERCASE_KEY);
+        self.request_clipboard = Some(true);
         self
     }
 
     /// `[-L]` - move the visible part of a window left by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
     pub fn left(&mut self) -> &mut Self {
-        self.0.push_flag(L_UPPERCASE_KEY);
+        self.left = Some(true);
         self
     }
 
     /// `[-R]` - move the visible part of a window right by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
     pub fn right(&mut self) -> &mut Self {
-        self.0.push_flag(R_UPPERCASE_KEY);
+        self.right = Some(true);
         self
     }
 
     /// `[-S]` - only update the client's status line
     #[cfg(feature = "tmux_1_6")]
     pub fn status_line(&mut self) -> &mut Self {
-        self.0.push_flag(S_UPPERCASE_KEY);
+        self.status_line = Some(true);
         self
     }
 
     /// `[-U]` - move the visible part of a window up by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
     pub fn up(&mut self) -> &mut Self {
-        self.0.push_flag(U_UPPERCASE_KEY);
+        self.up = Some(true);
         self
     }
 
@@ -137,8 +189,7 @@ impl<'a> RefreshClient<'a> {
     /// `[-A pane:state]` - allows a control mode client to trigger actions on a pane
     #[cfg(feature = "tmux_3_2")]
     pub fn allow_actions(&mut self, pane: usize, state: State) -> &mut Self {
-        self.0
-            .push_option(A_UPPERCASE_KEY, format!("%{}:{}", pane, state));
+        self.allow_actions = Some((pane, state));
         self
     }
 
@@ -151,14 +202,7 @@ impl<'a> RefreshClient<'a> {
         what: Option<String>,
         format: Option<String>,
     ) -> &mut Self {
-        let mut arg = format!("%{}", name);
-        if let Some(s) = what {
-            arg = format!("{}:{}", arg, s);
-            if let Some(s) = format {
-                arg = format!("{}:{}", arg, s);
-            }
-        }
-        self.0.push_option(B_UPPERCASE_KEY, arg);
+        self.subscribe = Some((name, what, format));
         self
     }
 
@@ -166,13 +210,7 @@ impl<'a> RefreshClient<'a> {
     /// `[-C XxY]` - set the width and height of a control client
     #[cfg(feature = "tmux_2_4")]
     pub fn size(&mut self, size: (usize, usize)) -> &mut Self {
-        #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_0")))]
-        let s = format!("{},{}", size.0, size.1);
-        // FIXME: multiple incompatible def's
-        #[cfg(feature = "tmux_3_0")]
-        let s = format!("{}x{}", size.0, size.1);
-
-        self.0.push_option(C_UPPERCASE_KEY, s);
+        self.size = Some(size);
         self
     }
 
@@ -180,7 +218,7 @@ impl<'a> RefreshClient<'a> {
     /// `[-F flags]` - set a comma-separated list of flags
     #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_2")))]
     pub fn flags(&mut self, flags: ClientFlags) -> &mut Self {
-        self.0.push_option(F_UPPERCASE_KEY, flags.to_string());
+        self.flags = Some(flags);
         self
     }
 
@@ -188,43 +226,131 @@ impl<'a> RefreshClient<'a> {
     /// `[-f flags]` - sets a comma-separated list of client flags
     #[cfg(feature = "tmux_3_2")]
     pub fn flags(&mut self, flags: ClientFlags) -> &mut Self {
-        self.0.push_option(F_LOWERCASE_KEY, flags.to_string());
+        self.flags = Some(flags);
         self
     }
 
     /// `[-t target-client]` - specify the client
     #[cfg(feature = "tmux_0_8")]
     pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_client);
+        self.target_client = Some(target_client.into());
         self
     }
 
     /// `[adjustment]` - moves the visible part up/down left/right by adjustment rows/columns
     #[cfg(feature = "tmux_2_9a")]
     pub fn adjustment(&mut self, adjustment: usize) -> &mut Self {
-        self.0.push_param(adjustment.to_string());
+        self.adjustment = Some(adjustment);
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for RefreshClient<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(REFRESH_CLIENT)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(REFRESH_CLIENT);
 
-impl<'a> From<&TmuxCommand<'a>> for RefreshClient<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(REFRESH_CLIENT)),
-            ..Default::default()
-        })
+        // `[-c]` - return to tracking the cursor automatically
+        #[cfg(feature = "tmux_2_9a")]
+        if self.tracking_cursor.is_some() {
+            cmd.push_flag(C_LOWERCASE_KEY);
+        }
+
+        // `[-D]` - move the visible part of a window down by `adjustment` rows
+        #[cfg(feature = "tmux_2_9a")]
+        if self.down.is_some() {
+            cmd.push_flag(D_UPPERCASE_KEY);
+        }
+
+        // `[-l]` - request the clipboard from the client using the xterm(1) escape sequence
+        #[cfg(feature = "tmux_2_9a")]
+        if self.request_clipboard.is_some() {
+            cmd.push_flag(L_LOWERCASE_KEY);
+        }
+
+        // `[-L]` - move the visible part of a window left by `adjustment` columns
+        #[cfg(feature = "tmux_2_9a")]
+        if self.left.is_some() {
+            cmd.push_flag(L_UPPERCASE_KEY);
+        }
+
+        // `[-R]` - move the visible part of a window right by `adjustment` columns
+        #[cfg(feature = "tmux_2_9a")]
+        if self.right.is_some() {
+            cmd.push_flag(R_UPPERCASE_KEY);
+        }
+
+        // `[-S]` - only update the client's status line
+        #[cfg(feature = "tmux_1_6")]
+        if self.status_line.is_some() {
+            cmd.push_flag(S_UPPERCASE_KEY);
+        }
+
+        // `[-U]` - move the visible part of a window up by `adjustment` rows
+        #[cfg(feature = "tmux_2_9a")]
+        if self.up.is_some() {
+            cmd.push_flag(U_UPPERCASE_KEY);
+        }
+
+        // TODO: accept target_pane
+        // `[-A pane:state]` - allows a control mode client to trigger actions on a pane
+        #[cfg(feature = "tmux_3_2")]
+        if let Some(allow_actions) = self.allow_actions {
+            cmd.push_option(A_UPPERCASE_KEY, format!("%{}:{}", pane, state));
+        }
+
+        // TODO: refactor, accept target_pane, target_window and masks * ...
+        // [-B name:what:format]
+        #[cfg(feature = "tmux_3_2")]
+        if let Some(subscribe) = self.subscribe {
+            let mut arg = format!("%{}", name);
+            if let Some(s) = what {
+                arg = format!("{}:{}", arg, s);
+                if let Some(s) = format {
+                    arg = format!("{}:{}", arg, s);
+                }
+            }
+            cmd.push_option(B_UPPERCASE_KEY, arg);
+        }
+
+        // `[-C X,Y]` - set the width and height of a control client
+        // `[-C XxY]` - set the width and height of a control client
+        #[cfg(feature = "tmux_2_4")]
+        if let Some(size) = self.size {
+            #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_0")))]
+            let s = format!("{},{}", size.0, size.1);
+            // FIXME: multiple incompatible def's
+            #[cfg(feature = "tmux_3_0")]
+            let s = format!("{}x{}", size.0, size.1);
+
+            cmd.push_option(C_UPPERCASE_KEY, s);
+        }
+
+        // XXX: refactor vec?
+        // `[-F flags]` - set a comma-separated list of flags
+        #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_2")))]
+        if let Some(flags) = self.flags {
+            cmd.push_option(F_UPPERCASE_KEY, flags.to_string());
+        }
+
+        // XXX: refactor vec?
+        // `[-f flags]` - sets a comma-separated list of client flags
+        #[cfg(feature = "tmux_3_2")]
+        if let Some(flags) = self.flags {
+            cmd.push_option(F_LOWERCASE_KEY, flags.to_string());
+        }
+
+        // `[-t target-client]` - specify the client
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_client) = &self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        }
+
+        // `[adjustment]` - moves the visible part up/down left/right by adjustment rows/columns
+        #[cfg(feature = "tmux_2_9a")]
+        if let Some(adjustment) = self.adjustment {
+            cmd.push_param(adjustment.to_string());
+        }
+
+        cmd
     }
 }

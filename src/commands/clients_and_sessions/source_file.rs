@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Execute commands from path
@@ -29,16 +29,27 @@ use std::borrow::Cow;
 /// tmux source-file path
 /// (alias: source)
 /// ```
-#[derive(Debug, Clone)]
-pub struct SourceFile<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct SourceFile<'a> {
+    /// `[-F]` - value is expanded as a format
+    #[cfg(feature = "tmux_3_2")]
+    pub expand: Option(bool),
 
-impl<'a> Default for SourceFile<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SOURCE_FILE)),
-            ..Default::default()
-        })
-    }
+    /// `[-n]`
+    #[cfg(feature = "tmux_3_0")]
+    pub not_execute: Option(bool),
+
+    /// `[-q]`
+    #[cfg(feature = "tmux_3_0")]
+    pub quite: Option(bool),
+
+    /// `[-v]`
+    #[cfg(feature = "tmux_3_0")]
+    pub verbose: Option(bool),
+
+    /// `path`
+    #[cfg(feature = "tmux_0_8")]
+    pub path: Option<Cow<'a, str>>,
 }
 
 impl<'a> SourceFile<'a> {
@@ -49,57 +60,73 @@ impl<'a> SourceFile<'a> {
     /// `[-F]` - value is expanded as a format
     #[cfg(feature = "tmux_3_2")]
     pub fn expand(&mut self) -> &mut Self {
-        self.0.push_flag(F_UPPERCASE_KEY);
+        self.expand = Some(true);
         self
     }
 
     /// `[-n]`
     #[cfg(feature = "tmux_3_0")]
     pub fn not_execute(&mut self) -> &mut Self {
-        self.0.push_flag(N_LOWERCASE_KEY);
+        self.not_execute = Some(true);
         self
     }
 
     /// `[-q]`
     #[cfg(feature = "tmux_3_0")]
     pub fn quite(&mut self) -> &mut Self {
-        self.0.push_flag(Q_LOWERCASE_KEY);
+        self.quite = Some(true);
         self
     }
 
     /// `[-v]`
     #[cfg(feature = "tmux_3_0")]
     pub fn verbose(&mut self) -> &mut Self {
-        self.0.push_flag(V_LOWERCASE_KEY);
+        self.verbose = Some(true);
         self
     }
 
     /// `path`
     #[cfg(feature = "tmux_0_8")]
     pub fn path<S: Into<Cow<'a, str>>>(&mut self, path: S) -> &mut Self {
-        self.0.push_param(path);
+        self.path = Some(path.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for SourceFile<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SOURCE_FILE)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(SOURCE_FILE);
 
-impl<'a> From<&TmuxCommand<'a>> for SourceFile<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SOURCE_FILE)),
-            ..Default::default()
-        })
+        // `[-F]` - value is expanded as a format
+        #[cfg(feature = "tmux_3_2")]
+        if self.expand.is_some() {
+            cmd.push_flag(F_UPPERCASE_KEY);
+        }
+
+        // `[-n]`
+        #[cfg(feature = "tmux_3_0")]
+        if self.not_execute.is_some() {
+            cmd.push_flag(N_LOWERCASE_KEY);
+        }
+
+        // `[-q]`
+        #[cfg(feature = "tmux_3_0")]
+        if self.quite.is_some() {
+            cmd.push_flag(Q_LOWERCASE_KEY);
+        }
+
+        // `[-v]`
+        #[cfg(feature = "tmux_3_0")]
+        if self.verbose.is_some() {
+            cmd.push_flag(V_LOWERCASE_KEY);
+        }
+
+        // `path`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(path) = &self.path {
+            cmd.push_param(path.as_ref());
+        }
+
+        cmd
     }
 }

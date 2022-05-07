@@ -3,9 +3,12 @@ use crate::commands::constants::*;
 use crate::ClientFlags;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
+use std::ffi::OsStr;
+use std::fmt;
 
 use crate::commands::tmux_bin::TmuxBin;
 use crate::commands::tmux_bin_command::TmuxBinCommand;
+use crate::commands::tmux_command::OutputTrait;
 use crate::commands::tmux_commands::TmuxCommands;
 
 /// Structure for creating a new session
@@ -78,16 +81,50 @@ use crate::commands::tmux_commands::TmuxCommands;
 /// tmux new-session [-d] [-n window-name] [-s session-name] [command]
 /// (alias: new)
 /// ```
-#[derive(Debug, Clone)]
-pub struct NewSession<'a>(pub TmuxCommand<'a>);
-
-impl<'a> Default for NewSession<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEW_SESSION)),
-            ..Default::default()
-        })
-    }
+#[derive(Debug, Default, Clone)]
+pub struct NewSession<'a> {
+    /// [-A] - behave like `attach-session` if `session-name` already exists
+    #[cfg(feature = "tmux_1_8")]
+    pub attach: Option<bool>,
+    /// [-d] - new session is not attached to the current terminal
+    #[cfg(feature = "tmux_0_8")]
+    pub detached: Option<bool>,
+    /// [-D] - any other clients attached to the session are detached
+    #[cfg(feature = "tmux_1_8")]
+    pub detach_other: Option<bool>,
+    /// [-E] - `update-environment` option will not be applied
+    #[cfg(feature = "tmux_2_1")]
+    pub not_update_env: Option<bool>,
+    /// [-P] - print information about the new session after it has been created
+    #[cfg(feature = "tmux_1_8")]
+    pub print: Option<bool>,
+    /// [-X] - send SIGHUP to the parent process, detaching the client
+    #[cfg(feature = "tmux_3_0")]
+    pub parent_sighup: Option<bool>,
+    /// [-c start-directory] - specify starting directory
+    #[cfg(feature = "tmux_1_9")]
+    pub start_directory: Option<Cow<'a, str>>,
+    /// [-F format] - specify different format
+    #[cfg(feature = "tmux_1_8")]
+    pub format: Option<Cow<'a, str>>,
+    /// [-n window-name] - window name of the initial window
+    #[cfg(feature = "tmux_0_8")]
+    pub window_name: Option<Cow<'a, str>>,
+    /// [-s session-name] - specify a session name
+    #[cfg(feature = "tmux_0_8")]
+    pub session_name: Option<Cow<'a, str>>,
+    /// [-t group-name] - specify a session group
+    #[cfg(feature = "tmux_2_4")]
+    pub group_name: Option<Cow<'a, str>>,
+    /// [-x width] - specify a different width
+    #[cfg(feature = "tmux_1_6")]
+    pub width: Option<usize>,
+    /// [-y height] - specify a different height
+    #[cfg(feature = "tmux_1_6")]
+    pub height: Option<usize>,
+    /// [shell-command] - shell command to execute in the initial window
+    #[cfg(feature = "tmux_1_2")]
+    pub shell_command: Option<Cow<'a, str>>,
 }
 
 impl<'a> NewSession<'a> {
@@ -98,49 +135,49 @@ impl<'a> NewSession<'a> {
     /// `[-A]` - behave like `attach-session` if `session-name` already exists
     #[cfg(feature = "tmux_1_8")]
     pub fn attach(&mut self) -> &mut Self {
-        self.0.push_flag(A_UPPERCASE_KEY);
+        self.attach = Some(true);
         self
     }
 
     /// `[-d]` - new session is not attached to the current terminal
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(D_LOWERCASE_KEY);
+        self.detached = Some(true);
         self
     }
 
     /// `[-D]` - any other clients attached to the session are detached
     #[cfg(feature = "tmux_1_8")]
     pub fn detach_other(&mut self) -> &mut Self {
-        self.0.push_flag(D_UPPERCASE_KEY);
+        self.detach_other = Some(true);
         self
     }
 
     /// `[-E]` - `update-environment` option will not be applied
     #[cfg(feature = "tmux_2_1")]
     pub fn not_update_env(&mut self) -> &mut Self {
-        self.0.push_flag(E_UPPERCASE_KEY);
+        self.not_update_env = Some(true);
         self
     }
 
     /// `[-P]` - print information about the new session after it has been created
     #[cfg(feature = "tmux_1_8")]
     pub fn print(&mut self) -> &mut Self {
-        self.0.push_flag(P_UPPERCASE_KEY);
+        self.print = Some(true);
         self
     }
 
     /// `[-X]` - send SIGHUP to the parent process, detaching the client
     #[cfg(feature = "tmux_3_0")]
     pub fn parent_sighup(&mut self) -> &mut Self {
-        self.0.push_flag(X_UPPERCASE_KEY);
+        self.parent_sighup = Some(true);
         self
     }
 
     /// `[-c start-directory]` - specify starting directory
     #[cfg(feature = "tmux_1_9")]
     pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, start_directory: S) -> &mut Self {
-        self.0.push_option(C_LOWERCASE_KEY, start_directory);
+        self.start_directory = Some(start_directory.into());
         self
     }
 
@@ -149,7 +186,7 @@ impl<'a> NewSession<'a> {
     /// for the newly created session; it may be specified multiple times.
     #[cfg(feature = "tmux_3_2")]
     pub fn environment<S: Into<Cow<'a, str>>>(&mut self, environment: S) -> &mut Self {
-        self.0.push_option(E_LOWERCASE_KEY, environment);
+        self.environment = Some(environment.into());
         self
     }
 
@@ -157,99 +194,193 @@ impl<'a> NewSession<'a> {
     /// `[-f flags]` - sets a comma-separated list of client flags
     #[cfg(feature = "tmux_3_2")]
     pub fn flags(&mut self, flags: ClientFlags) -> &mut Self {
-        self.0.push_option(F_LOWERCASE_KEY, flags.to_string());
+        self.flags = Some(flags.into());
         self
     }
 
     /// `[-F format]` - specify different format
     #[cfg(feature = "tmux_1_8")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_UPPERCASE_KEY, format);
+        self.format = Some(format.into());
         self
     }
 
     /// `[-n window-name]` - window name of the initial window
     #[cfg(feature = "tmux_0_8")]
     pub fn window_name<S: Into<Cow<'a, str>>>(&mut self, window_name: S) -> &mut Self {
-        self.0.push_option(N_LOWERCASE_KEY, window_name);
+        self.window_name = Some(window_name.into());
         self
     }
 
     /// `[-s session-name]` - specify a session name
     #[cfg(feature = "tmux_0_8")]
     pub fn session_name<S: Into<Cow<'a, str>>>(&mut self, session_name: S) -> &mut Self {
-        self.0.push_option(S_LOWERCASE_KEY, session_name);
+        self.session_name = Some(session_name.into());
         self
     }
 
     /// `[-t group-name]` - specify a session group
     #[cfg(feature = "tmux_2_4")]
     pub fn group_name<S: Into<Cow<'a, str>>>(&mut self, group_name: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, group_name);
+        self.group_name = Some(group_name.into());
         self
     }
 
     /// `[-x width]` - specify a different width
     #[cfg(feature = "tmux_1_6")]
     pub fn width(&mut self, width: usize) -> &mut Self {
-        self.0.push_option(X_LOWERCASE_KEY, width.to_string());
+        self.width = Some(width.into());
         self
     }
 
     /// `[-y height]` - specify a different height
     #[cfg(feature = "tmux_1_6")]
     pub fn height(&mut self, height: usize) -> &mut Self {
-        self.0.push_option(Y_LOWERCASE_KEY, height.to_string());
+        self.height = Some(height.into());
         self
     }
 
     /// `[shell-command]` - shell command to execute in the initial window
     #[cfg(feature = "tmux_1_2")]
     pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
-        self.0.push_param(shell_command);
+        self.shell_command = Some(shell_command.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
+    // NOTE: old: NewSession::new()
+    //      new: NewSessionBin::new()? or only TmuxCommand::new_session()
+    //      TmuxBinCommand::new_session()
+    //
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
+
+        cmd.cmd(NEW_SESSION);
+
+        // `[-A]` - behave like `attach-session` if `session-name` already exists
+        #[cfg(feature = "tmux_1_8")]
+        if self.attach.is_some() {
+            cmd.push_flag(A_UPPERCASE_KEY);
+        }
+
+        // `[-d]` - new session is not attached to the current terminal
+        #[cfg(feature = "tmux_0_8")]
+        if self.detached.is_some() {
+            cmd.push_flag(D_LOWERCASE_KEY);
+        }
+
+        // `[-D]` - any other clients attached to the session are detached
+        #[cfg(feature = "tmux_1_8")]
+        if self.detach_other.is_some() {
+            cmd.push_flag(D_UPPERCASE_KEY);
+        }
+
+        // `[-E]` - `update-environment` option will not be applied
+        #[cfg(feature = "tmux_2_1")]
+        if self.not_update_env.is_some() {
+            cmd.push_flag(E_UPPERCASE_KEY);
+        }
+
+        // `[-P]` - print information about the new session after it has been created
+        #[cfg(feature = "tmux_1_8")]
+        if self.print.is_some() {
+            cmd.push_flag(P_UPPERCASE_KEY);
+        }
+
+        // `[-X]` - send SIGHUP to the parent process, detaching the client
+        #[cfg(feature = "tmux_3_0")]
+        if self.parent_sighup.is_some() {
+            cmd.push_flag(X_UPPERCASE_KEY);
+        }
+
+        // `[-c start-directory]` - specify starting directory
+        #[cfg(feature = "tmux_1_9")]
+        if let Some(start_directory) = &self.start_directory {
+            cmd.push_option(C_LOWERCASE_KEY, start_directory.as_ref());
+        }
+
+        // XXX: mb. 2 args - var, value?
+        // `[-e start-directory]` - takes the form ‘VARIABLE=value’ and sets an environment variable
+        // for the newly created session; it may be specified multiple times.
+        #[cfg(feature = "tmux_3_2")]
+        if let Some(environment) = &self.environment {
+            cmd.push_option(E_LOWERCASE_KEY, environment.as_ref());
+        }
+
+        // XXX: refactor vec?
+        // `[-f flags]` - sets a comma-separated list of client flags
+        #[cfg(feature = "tmux_3_2")]
+        if let Some(flags) = &self.flags {
+            cmd.push_option(F_LOWERCASE_KEY, flags.to_string());
+        }
+
+        // `[-F format]` - specify different format
+        #[cfg(feature = "tmux_1_8")]
+        if let Some(format) = &self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        }
+
+        // `[-n window-name]` - window name of the initial window
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(window_name) = &self.window_name {
+            cmd.push_option(N_LOWERCASE_KEY, window_name.as_ref());
+        }
+
+        // `[-s session-name]` - specify a session name
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(session_name) = &self.session_name {
+            cmd.push_option(S_LOWERCASE_KEY, session_name.as_ref());
+        }
+
+        // `[-t group-name]` - specify a session group
+        #[cfg(feature = "tmux_2_4")]
+        if let Some(group_name) = &self.group_name {
+            cmd.push_option(T_LOWERCASE_KEY, group_name.as_ref());
+        }
+
+        // `[-x width]` - specify a different width
+        #[cfg(feature = "tmux_1_6")]
+        if let Some(width) = &self.width {
+            cmd.push_option(X_LOWERCASE_KEY, width.to_string());
+        }
+
+        // `[-y height]` - specify a different height
+        #[cfg(feature = "tmux_1_6")]
+        if let Some(height) = &self.height {
+            cmd.push_option(Y_LOWERCASE_KEY, height.to_string());
+        }
+
+        // `[shell-command]` - shell command to execute in the initial window
+        #[cfg(feature = "tmux_1_2")]
+        if let Some(shell_command) = &self.shell_command {
+            cmd.push_param(shell_command.as_ref());
+        }
+
+        cmd
     }
 
-    pub fn append_to(self, cmds: &mut TmuxCommands<'a>) {
-        self.0.append_to(cmds);
-    }
+    //pub fn append_to(self, cmds: &mut TmuxCommands<'a>) {
+    //self.0.append_to(cmds);
+    //}
 
-    pub fn to_tmux_bin_command(self) -> TmuxBinCommand<'a> {
-        self.0.to_tmux_bin_command()
-    }
+    //pub fn into_inner(self) -> TmuxCommand<'a> {
+    //self.0
+    //}
 
-    pub fn to_tmux_bin_command_ext(self, tmux: TmuxBin<'a>) -> TmuxBinCommand<'a> {
-        self.0.to_tmux_bin_command_ext(tmux)
-    }
-}
+    //// ?
+    //pub fn as_ref(&self) -> &TmuxCommand<'a> {
+    //&self.0
+    //}
 
-impl<'a> From<TmuxCommand<'a>> for NewSession<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEW_SESSION)),
-            ..Default::default()
-        })
-    }
-}
+    //// ?
+    //pub fn as_mut(&mut self) -> &mut TmuxCommand<'a> {
+    //&mut self.0
+    //}
 
-impl<'a> From<&TmuxCommand<'a>> for NewSession<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEW_SESSION)),
-            ..Default::default()
-        })
-    }
-}
+    //pub fn into_tmux_bin_command(self) -> TmuxBinCommand<'a> {
+    //self.0.into_tmux_bin_command()
+    //}
 
-impl<'a> From<&mut TmuxBinCommand<'a>> for NewSession<'a> {
-    fn from(item: &mut TmuxBinCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEW_SESSION)),
-            ..Default::default()
-        })
-    }
+    //pub fn into_tmux_bin_command_ext(self, tmux: TmuxBin<'a>) -> TmuxBinCommand<'a> {
+    //self.0.into_tmux_bin_command_ext(tmux)
+    //}
 }

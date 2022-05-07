@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// List the syntax of all commands supported by tmux
@@ -23,16 +23,15 @@ use std::borrow::Cow;
 /// tmux list-commands
 /// (alias: lscm)
 /// ```
-#[derive(Debug, Clone)]
-pub struct ListCommands<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct ListCommands<'a> {
+    /// `[-F format]`
+    #[cfg(feature = "tmux_2_3")]
+    pub format: Option<Cow<'a, str>>,
 
-impl<'a> Default for ListCommands<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_COMMANDS)),
-            ..Default::default()
-        })
-    }
+    /// `[command]`
+    #[cfg(feature = "tmux_3_2")]
+    pub command: Option<Cow<'a, str>>,
 }
 
 impl<'a> ListCommands<'a> {
@@ -43,36 +42,34 @@ impl<'a> ListCommands<'a> {
     /// `[-F format]`
     #[cfg(feature = "tmux_2_3")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_UPPERCASE_KEY, format);
+        self.format = Some(format.into());
         self
     }
 
     /// `[command]`
     #[cfg(feature = "tmux_3_2")]
     pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
-        self.0.push_param(command);
+        self.command = Some(command.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for ListCommands<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_COMMANDS)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(LIST_COMMANDS);
 
-impl<'a> From<&TmuxCommand<'a>> for ListCommands<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_COMMANDS)),
-            ..Default::default()
-        })
+        // `[-F format]`
+        #[cfg(feature = "tmux_2_3")]
+        if let Some(format) = &self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        }
+
+        // `[command]`
+        #[cfg(feature = "tmux_3_2")]
+        if let Some(command) = &self.command {
+            cmd.push_param(command.as_ref());
+        }
+
+        cmd
     }
 }

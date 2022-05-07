@@ -11,16 +11,11 @@ use std::borrow::Cow;
 /// tmux lock-client [-t target-client]
 /// (alias: lockc)
 /// ```
-#[derive(Debug, Clone)]
-pub struct LockClient<'a>(pub TmuxCommand<'a>);
-
-impl<'a> Default for LockClient<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LOCK_CLIENT)),
-            ..Default::default()
-        })
-    }
+#[derive(Debug, Default, Clone)]
+pub struct LockClient<'a> {
+    /// `[-t target-client]`
+    #[cfg(feature = "tmux_1_1")]
+    pub target_client: Option<Cow<'a, str>>,
 }
 
 impl<'a> LockClient<'a> {
@@ -31,29 +26,21 @@ impl<'a> LockClient<'a> {
     /// `[-t target-client]`
     #[cfg(feature = "tmux_1_1")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_client);
+        self.target_client = Some(target_client.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn output(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for LockClient<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LOCK_CLIENT)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(LOCK_CLIENT);
 
-impl<'a> From<&TmuxCommand<'a>> for LockClient<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LOCK_CLIENT)),
-            ..Default::default()
-        })
+        /// `[-t target-client]`
+        #[cfg(feature = "tmux_1_1")]
+        if let Some(target_client) = &self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        }
+
+        cmd
     }
 }

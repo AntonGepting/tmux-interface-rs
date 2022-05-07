@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Suspend a client by sending SIGTSTP (tty stop)
@@ -17,16 +17,11 @@ use std::borrow::Cow;
 /// tmux suspend-client [-c target-client]
 /// (alias: suspendc)
 /// ```
-#[derive(Debug, Clone)]
-pub struct SuspendClient<'a>(pub TmuxCommand<'a>);
-
-impl<'a> Default for SuspendClient<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SUSPEND_CLIENT)),
-            ..Default::default()
-        })
-    }
+#[derive(Debug, Default, Clone)]
+pub struct SuspendClient<'a> {
+    /// `[-t target-client]`
+    #[cfg(feature = "tmux_0_8")]
+    pub target_client: Option<Cow<'a, str>>,
 }
 
 impl<'a> SuspendClient<'a> {
@@ -37,32 +32,24 @@ impl<'a> SuspendClient<'a> {
     /// `[-t target-client]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
-        #[cfg(feature = "tmux_1_5")]
-        self.0.push_option(T_LOWERCASE_KEY, target_client);
-        #[cfg(not(feature = "tmux_1_5"))]
-        self.0.push_option(C_LOWERCASE_KEY, target_client);
+        self.target_client = Some(target_client.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for SuspendClient<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SUSPEND_CLIENT)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(SUSPEND_CLIENT);
 
-impl<'a> From<&TmuxCommand<'a>> for SuspendClient<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SUSPEND_CLIENT)),
-            ..Default::default()
-        })
+        // `[-t target-client]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_client) = &self.target_client {
+            #[cfg(feature = "tmux_1_5")]
+            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+            #[cfg(not(feature = "tmux_1_5"))]
+            cmd.push_option(C_LOWERCASE_KEY, target_client.as_ref());
+        }
+
+        cmd
     }
 }
