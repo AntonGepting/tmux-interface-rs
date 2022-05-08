@@ -53,7 +53,7 @@ impl<'a> TmuxCommand<'a> {
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn lock_server() -> LockServer<'a> {
+    pub fn lock_server() -> LockServer {
         LockServer::new()
     }
 

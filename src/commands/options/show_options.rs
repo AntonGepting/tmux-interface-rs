@@ -1,8 +1,8 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
-use crate::commands::tmux_commands::TmuxCommands;
+//use crate::commands::tmux_commands::TmuxCommands;
 
 /// Structure for showing options
 ///
@@ -44,16 +44,47 @@ use crate::commands::tmux_commands::TmuxCommands;
 /// (alias: show)
 /// ```
 // XXX: better result type?
-#[derive(Debug, Clone)]
-pub struct ShowOptions<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct ShowOptions<'a> {
+    /// `[-A]` - includes options inherited from a parent set of options
+    #[cfg(feature = "tmux_3_0")]
+    pub include_inherited: bool,
 
-impl<'a> Default for ShowOptions<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_OPTIONS)),
-            ..Default::default()
-        })
-    }
+    /// `[-g]` - global session or window options are listed
+    #[cfg(feature = "tmux_1_2")]
+    pub global: bool,
+
+    /// `[-H]` - includes hooks (omitted by default)
+    #[cfg(feature = "tmux_3_0")]
+    pub hooks: bool,
+
+    /// `[-p]` - show window options
+    #[cfg(feature = "tmux_3_0")]
+    pub pane: bool,
+
+    /// `[-q]` - no error will be returned if `option` is unset
+    #[cfg(feature = "tmux_1_8")]
+    pub quiet: bool,
+
+    /// `[-s]` - show the server options
+    #[cfg(feature = "tmux_1_2")]
+    pub server: bool,
+
+    /// `[-v]` - shows only the option value
+    #[cfg(feature = "tmux_1_8")]
+    pub value: bool,
+
+    /// `[-w]` - show the window options
+    #[cfg(feature = "tmux_1_2")]
+    pub window: bool,
+
+    /// `[-t target-pane]` - target session or window name
+    //#[cfg(feature = "tmux_X_X")]
+    pub target: Option<Cow<'a, str>>,
+
+    /// `[option]` - specify option name
+    #[cfg(feature = "tmux_1_7")]
+    pub option: Option<Cow<'a, str>>,
 }
 
 impl<'a> ShowOptions<'a> {
@@ -64,100 +95,138 @@ impl<'a> ShowOptions<'a> {
     /// `[-A]` - includes options inherited from a parent set of options
     #[cfg(feature = "tmux_3_0")]
     pub fn include_inherited(&mut self) -> &mut Self {
-        self.0.push_flag(A_UPPERCASE_KEY);
+        self.include_inherited = true;
         self
     }
 
     /// `[-g]` - global session or window options are listed
     #[cfg(feature = "tmux_1_2")]
     pub fn global(&mut self) -> &mut Self {
-        self.0.push_flag(G_LOWERCASE_KEY);
+        self.global = true;
         self
     }
 
     /// `[-H]` - includes hooks (omitted by default)
     #[cfg(feature = "tmux_3_0")]
     pub fn hooks(&mut self) -> &mut Self {
-        self.0.push_flag(H_UPPERCASE_KEY);
+        self.hooks = true;
         self
     }
 
     /// `[-p]` - show window options
     #[cfg(feature = "tmux_3_0")]
     pub fn pane(&mut self) -> &mut Self {
-        self.0.push_flag(P_LOWERCASE_KEY);
+        self.pane = true;
         self
     }
 
     /// `[-q]` - no error will be returned if `option` is unset
     #[cfg(feature = "tmux_1_8")]
     pub fn quiet(&mut self) -> &mut Self {
-        self.0.push_flag(Q_LOWERCASE_KEY);
+        self.quiet = true;
         self
     }
 
     /// `[-s]` - show the server options
     #[cfg(feature = "tmux_1_2")]
     pub fn server(&mut self) -> &mut Self {
-        self.0.push_flag(S_LOWERCASE_KEY);
+        self.server = true;
         self
     }
 
     /// `[-v]` - shows only the option value
     #[cfg(feature = "tmux_1_8")]
     pub fn value(&mut self) -> &mut Self {
-        self.0.push_flag(V_LOWERCASE_KEY);
+        self.value = true;
         self
     }
 
     /// `[-w]` - show the window options
     #[cfg(feature = "tmux_1_2")]
     pub fn window(&mut self) -> &mut Self {
-        self.0.push_flag(W_LOWERCASE_KEY);
+        self.window = true;
         self
     }
 
     /// `[-t target-pane]` - target session or window name
     //#[cfg(feature = "tmux_X_X")]
     pub fn target<S: Into<Cow<'a, str>>>(&mut self, target: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target);
+        self.target = Some(target.into());
         self
     }
 
     /// `[option]` - specify option name
     #[cfg(feature = "tmux_1_7")]
     pub fn option<S: Into<Cow<'a, str>>>(&mut self, option: S) -> &mut Self {
-        self.0.push_param(option);
+        self.option = Some(option.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-    pub fn append_to(self, cmds: &mut TmuxCommands<'a>) {
-        self.0.append_to(cmds)
-    }
+        cmd.cmd(SHOW_OPTIONS);
 
-    pub fn to_command(self) -> TmuxCommand<'a> {
-        self.0
-    }
-}
+        // `[-A]` - includes options inherited from a parent set of options
+        #[cfg(feature = "tmux_3_0")]
+        if self.include_inherited {
+            cmd.push_flag(A_UPPERCASE_KEY);
+        }
 
-impl<'a> From<TmuxCommand<'a>> for ShowOptions<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_OPTIONS)),
-            args: item.args,
-        })
-    }
-}
+        // `[-g]` - global session or window options are listed
+        #[cfg(feature = "tmux_1_2")]
+        if self.global {
+            cmd.push_flag(G_LOWERCASE_KEY);
+        }
 
-impl<'a> From<&TmuxCommand<'a>> for ShowOptions<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_OPTIONS)),
-            args: item.args.clone(),
-        })
+        // `[-H]` - includes hooks (omitted by default)
+        #[cfg(feature = "tmux_3_0")]
+        if self.hooks {
+            cmd.push_flag(H_UPPERCASE_KEY);
+        }
+
+        // `[-p]` - show window options
+        #[cfg(feature = "tmux_3_0")]
+        if self.pane {
+            cmd.push_flag(P_LOWERCASE_KEY);
+        }
+
+        // `[-q]` - no error will be returned if `option` is unset
+        #[cfg(feature = "tmux_1_8")]
+        if self.quiet {
+            cmd.push_flag(Q_LOWERCASE_KEY);
+        }
+
+        // `[-s]` - show the server options
+        #[cfg(feature = "tmux_1_2")]
+        if self.server {
+            cmd.push_flag(S_LOWERCASE_KEY);
+        }
+
+        // `[-v]` - shows only the option value
+        #[cfg(feature = "tmux_1_8")]
+        if self.value {
+            cmd.push_flag(V_LOWERCASE_KEY);
+        }
+
+        // `[-w]` - show the window options
+        #[cfg(feature = "tmux_1_2")]
+        if self.window {
+            cmd.push_flag(W_LOWERCASE_KEY);
+        }
+
+        // `[-t target-pane]` - target session or window name
+        //#[cfg(feature = "tmux_X_X")]
+        if let Some(target) = &self.target {
+            cmd.push_option(T_LOWERCASE_KEY, target.as_ref());
+        }
+
+        // `[option]` - specify option name
+        #[cfg(feature = "tmux_1_7")]
+        if let Some(option) = &self.option {
+            cmd.push_param(option.as_ref());
+        }
+
+        cmd
     }
 }
