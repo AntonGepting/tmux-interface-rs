@@ -32,7 +32,7 @@ use std::borrow::Cow;
 /// tmux show-window-options [-t target-window] option value
 /// (alias: showw)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ShowWindowOptions<'a> {
     /// `[-g]`
     #[cfg(feature = "tmux_1_0")]

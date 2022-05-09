@@ -17,7 +17,7 @@ use std::borrow::Cow;
 /// tmux list-sessions
 /// (alias: ls)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ListSessions<'a> {
     /// `[-F format]`
     #[cfg(feature = "tmux_1_6")]

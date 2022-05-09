@@ -47,7 +47,7 @@ use std::borrow::Cow;
 /// tmux bind-key [-r] key command [arguments]
 /// (alias: bind)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct BindKey<'a> {
     /// `[-n]` - an alias for -T root
     #[cfg(feature = "tmux_1_0")]

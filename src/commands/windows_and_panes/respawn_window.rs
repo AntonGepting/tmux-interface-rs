@@ -29,7 +29,7 @@ use std::borrow::Cow;
 /// tmux respawn-window [-k] [-t target-window] [command]
 /// (alias: respawnw)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct RespawnWindow<'a> {
     /// `[-k]` - any existing command is killed
     #[cfg(feature = "tmux_0_8")]

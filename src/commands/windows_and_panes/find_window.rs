@@ -27,7 +27,7 @@ use std::borrow::Cow;
 /// tmux find-window [-t target-pane] match-string
 /// (alias: findw)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct FindWindow<'a> {
     /// `[-r]` - regular expression
     #[cfg(feature = "tmux_3_0")]

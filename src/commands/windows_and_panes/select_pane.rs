@@ -53,7 +53,7 @@ use std::borrow::Cow;
 /// tmux select-pane [-p pane-index] [-t target-window]
 /// (alias: selectp)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SelectPane<'a> {
     /// `[-D]` - pane below
     #[cfg(feature = "tmux_1_3")]

@@ -17,7 +17,7 @@ use std::borrow::Cow;
 /// tmux suspend-client [-c target-client]
 /// (alias: suspendc)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SuspendClient<'a> {
     /// `[-t target-client]`
     #[cfg(feature = "tmux_0_8")]

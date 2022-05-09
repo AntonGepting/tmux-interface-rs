@@ -8,7 +8,7 @@ use crate::TmuxCommand;
 /// tmux lock-server
 /// (alias: lock)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct LockServer;
 
 impl LockServer {

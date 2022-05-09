@@ -23,7 +23,7 @@ use std::borrow::Cow;
 /// tmux pipe-pane [-o] [-t target-pane] [command]
 /// (alias: pipep)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct PipePane<'a> {
     /// `[-I]` - stdin is connected
     #[cfg(feature = "tmux_2_7")]

@@ -74,7 +74,7 @@ use std::borrow::Cow;
 /// tmux new-session [-d] [-n window-name] [-s session-name] [command]
 /// (alias: new)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct NewSession<'a> {
     /// [-A] - behave like `attach-session` if `session-name` already exists
     #[cfg(feature = "tmux_1_8")]

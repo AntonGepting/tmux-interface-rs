@@ -11,7 +11,7 @@ use std::borrow::Cow;
 /// tmux swap-window [-d] [-s src-window] [-t dst-window]
 /// (alias: swapw)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SwapWindow<'a> {
     /// `[-d]`
     #[cfg(feature = "tmux_0_8")]

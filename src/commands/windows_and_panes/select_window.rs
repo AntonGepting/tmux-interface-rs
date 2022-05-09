@@ -23,7 +23,7 @@ use std::borrow::Cow;
 /// tmux select-window [-t target-window]
 /// (alias: selectw)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SelectWindow<'a> {
     /// `[-l]` - equivalent to last-window
     #[cfg(feature = "tmux_1_5")]

@@ -18,7 +18,7 @@ use std::borrow::Cow;
 /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: movep)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct MovePane<'a> {
     /// `[-b]` - cause src-pane to be joined to left of or above dst-pane
     #[cfg(feature = "tmux_1_7")]

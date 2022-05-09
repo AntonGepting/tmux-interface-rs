@@ -27,7 +27,7 @@ use std::borrow::Cow;
 /// tmux run-shell command
 /// (alias: run)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct RunShell<'a> {
     /// `[-b]`
     #[cfg(feature = "tmux_1_8")]

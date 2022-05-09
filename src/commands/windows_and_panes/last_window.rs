@@ -11,7 +11,7 @@ use std::borrow::Cow;
 /// tmux last-window [-t target-session]
 /// (alias: last)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct LastWindow<'a> {
     /// `[-t target-session]`
     pub target_session: Option<Cow<'a, str>>,

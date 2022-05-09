@@ -25,7 +25,7 @@ use std::borrow::Cow;
 /// ```text
 /// tmux copy-mode [-u] [-t target-window]
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct CopyMode<'a> {
     /// `[-e]`
     #[cfg(feature = "tmux_2_1")]

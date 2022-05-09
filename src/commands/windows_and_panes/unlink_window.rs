@@ -17,7 +17,7 @@ use std::borrow::Cow;
 /// tmux unlink-window [-t target-window]
 /// (alias: unlinkw)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct UnlinkWindow<'a> {
     /// `[-k]`
     #[cfg(feature = "tmux_1_0")]

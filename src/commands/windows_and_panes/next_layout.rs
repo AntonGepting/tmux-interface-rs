@@ -11,7 +11,7 @@ use std::borrow::Cow;
 /// tmux next-layout [-t target-window]
 /// (alias: nextl)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct NextLayout<'a> {
     /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]

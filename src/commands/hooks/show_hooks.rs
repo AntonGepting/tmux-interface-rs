@@ -8,7 +8,7 @@ use std::borrow::Cow;
 /// ```text
 /// tmux show-hooks [-g] [-t target-session]
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ShowHooks<'a> {
     /// `[-g]`
     #[cfg(feature = "tmux_2_2")]

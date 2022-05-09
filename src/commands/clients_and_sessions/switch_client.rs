@@ -41,7 +41,7 @@ use std::borrow::Cow;
 /// tmux switch-client [-c target-client -t target-session]
 /// (alias: switchc)
 /// ```
-#[derive(Debug, Clone, Default)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SwitchClient<'a> {
     /// `[-E]` - update-environment option will not be applied
     #[cfg(feature = "tmux_2_1")]

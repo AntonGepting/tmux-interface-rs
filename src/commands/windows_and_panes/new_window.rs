@@ -56,7 +56,7 @@ use std::borrow::Cow;
 /// tmux new-window [-d] [-n window-name] [-t target-window] [command]
 /// (alias: neww)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct NewWindow<'a> {
     /// `[-a]` - new window is inserted at the next index up from the specified target-window
     #[cfg(feature = "tmux_1_3")]

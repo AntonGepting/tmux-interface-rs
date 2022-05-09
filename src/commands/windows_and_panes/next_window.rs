@@ -17,7 +17,7 @@ use std::borrow::Cow;
 /// tmux next-window [-t target-session]
 /// (alias: next)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct NextWindow<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_0_9")]

@@ -9,7 +9,7 @@ use crate::TmuxCommand;
 /// ```text
 /// tmux kill-server
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct KillServer;
 
 impl KillServer {

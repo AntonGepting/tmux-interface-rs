@@ -24,7 +24,7 @@ use std::borrow::Cow;
 /// tmux list-panes [-t target]
 /// (alias: lsp)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ListPanes<'a> {
     /// `[-a]`
     pub all: bool,

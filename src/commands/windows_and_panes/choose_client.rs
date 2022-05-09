@@ -35,7 +35,7 @@ use std::borrow::Cow;
 /// ```text
 /// tmux choose-client  [-t target-window] [template]
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ChooseClient<'a> {
     /// `[-N]` - start without the preview
     #[cfg(feature = "tmux_2_6")]

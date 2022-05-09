@@ -65,7 +65,7 @@ use std::borrow::Cow;
 /// tmux split-window [-d] [-l size | -p percentage] [-t target-window] [command]
 /// (alias: splitw)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SplitWindow<'a> {
     /// `[-b]` - cause the new pane to be created to the left of or above target-pane
     #[cfg(feature = "tmux_2_4")]

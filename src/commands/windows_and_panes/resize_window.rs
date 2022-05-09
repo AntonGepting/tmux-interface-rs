@@ -11,7 +11,7 @@ use std::borrow::Cow;
 /// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
 /// (alias: resizew)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ResizeWindow<'a> {
     /// `[-a]` - set the size of the smallest session containing the window
     pub smallest: bool,

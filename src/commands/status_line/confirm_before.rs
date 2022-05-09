@@ -15,7 +15,7 @@ use std::borrow::Cow;
 /// tmux confirm-before [-t target-client] command
 /// (alias: confirm)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ConfirmBefore<'a> {
     /// `[-p prompt]`
     #[cfg(feature = "tmux_1_5")]

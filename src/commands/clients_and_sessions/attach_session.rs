@@ -43,7 +43,7 @@ use std::borrow::Cow;
 /// tmux attach-session [-d] [-t target-session]
 /// (alias: attach)
 /// ```
-#[derive(Default, Clone, Debug)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct AttachSession<'a> {
     /// `[-d]` - any other clients attached to the session are detached
     #[cfg(feature = "tmux_0_8")]

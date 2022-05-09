@@ -26,7 +26,7 @@ pub mod status_line;
 pub mod windows_and_panes;
 
 // common for mod
-#[derive(Debug, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum PaneSize {
     Size(usize),
     Percentage(usize),

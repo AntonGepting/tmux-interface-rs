@@ -23,7 +23,7 @@ use std::borrow::Cow;
 /// tmux kill-pane [-p pane-index] [-t target-window]
 /// (alias: killp)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct KillPane<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_1_1")]

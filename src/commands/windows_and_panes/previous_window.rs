@@ -17,7 +17,7 @@ use std::borrow::Cow;
 /// tmux previous-window [-t target-session]
 /// (alias: prev)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct PreviousWindow<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_0_9")]

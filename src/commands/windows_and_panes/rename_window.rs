@@ -11,7 +11,7 @@ use std::borrow::Cow;
 /// tmux rename-window [-t target-window] new-name
 /// (alias: renamew)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct RenameWindow<'a> {
     /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]

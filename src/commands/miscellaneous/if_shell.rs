@@ -29,8 +29,7 @@ use std::borrow::Cow;
 /// tmux if-shell shell-command command
 /// (alias: if)
 /// ```
-
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct IfShell<'a> {
     /// `[-b]` - run in the background
     #[cfg(feature = "tmux_1_8")]

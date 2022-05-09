@@ -29,7 +29,7 @@ use std::borrow::Cow;
 /// tmux load-buffer [-b buffer-index] [-t target-session] path
 /// (alias: loadb)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct LoadBuffer<'a> {
     /// `[-w]`
     #[cfg(feature = "tmux_3_2")]

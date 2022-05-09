@@ -35,7 +35,7 @@ use std::borrow::Cow;
 /// tmux select-layout [-t target-pane] layout-name
 /// (alias: selectl)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SelectLayot<'a> {
     /// `[-E]` - spread the current pane and any panes next to it out evenly
     #[cfg(feature = "tmux_2_7")]

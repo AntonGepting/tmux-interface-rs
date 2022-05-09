@@ -47,8 +47,7 @@ use std::borrow::Cow;
 /// tmux send-keys [-t target-window] key ...
 /// (alias: send)
 /// ```
-
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SendKeys<'a> {
     /// `[-F]` - expand formats in arguments where appropriate
     #[cfg(feature = "tmux_3_1")]

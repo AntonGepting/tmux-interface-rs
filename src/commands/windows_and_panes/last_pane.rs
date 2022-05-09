@@ -24,7 +24,7 @@ use std::borrow::Cow;
 /// (alias: lastp)
 /// ```
 // FIXME: versions and function parameters
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct LastPane<'a> {
     /// `[-d]`
     #[cfg(feature = "tmux_2_0")]

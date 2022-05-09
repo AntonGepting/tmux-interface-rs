@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// ```text
 /// tmux send-prefix [-t target-pane]
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SendPrefix<'a> {
     /// `[-2]`
     #[cfg(feature = "tmux_1_6")]

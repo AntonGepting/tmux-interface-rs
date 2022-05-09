@@ -41,7 +41,7 @@ use std::borrow::Cow;
 /// tmux display-message [-t target-client] [message]
 ///  (alias: display)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct DisplayMessage<'a> {
     /// `[-a]` - list the format variables and their values
     #[cfg(feature = "tmux_2_9a")]

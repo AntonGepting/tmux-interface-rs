@@ -23,7 +23,7 @@ use std::borrow::Cow;
 /// tmux save-buffer [-a] [-b buffer-index] [-t target-session] path
 /// (alias: saveb)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SaveBuffer<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_0_8")]

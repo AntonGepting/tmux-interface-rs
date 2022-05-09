@@ -4,7 +4,7 @@
 use std::fmt;
 
 #[cfg(feature = "tmux_2_9a")]
-#[derive(Default, Clone, Debug)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ClientFlags {
     /// `active-pane` the client has an independent active pane
     pub active_pane: Option<bool>,

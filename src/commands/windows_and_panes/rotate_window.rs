@@ -17,7 +17,7 @@ use std::borrow::Cow;
 /// tmux rotate-window [-DU] [-t target-window]
 /// (alias: rotatew)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct RotateWindow<'a> {
     /// `[-D]`
     #[cfg(feature = "tmux_0_8")]

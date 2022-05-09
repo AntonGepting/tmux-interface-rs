@@ -12,7 +12,7 @@ use std::borrow::Cow;
 /// tmux has-session [-t target-session]
 /// (alias: has)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct HasSession<'a> {
     /// `[-t target-session]`
     pub target_session: Option<Cow<'a, str>>,

@@ -17,7 +17,7 @@ use std::borrow::Cow;
 /// tmux set-environment [-gru] [-t target-session] name [value]
 /// (alias: setenv)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SetEnvironment<'a> {
     /// `[-F]` - value is expanded as a format
     #[cfg(feature = "tmux_3_2")]

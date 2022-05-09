@@ -11,7 +11,7 @@ use std::borrow::Cow;
 /// tmux previous-layout [-t target-window]
 /// (alias: prevl)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct PreviousLayout<'a> {
     /// `[-t target-window]`
     #[cfg(feature = "tmux_1_3")]

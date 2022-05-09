@@ -24,7 +24,7 @@ use std::borrow::Cow;
 /// tmux delete-buffer [-b buffer-index] [-t target-session]
 /// (alias: deleteb)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct DeleteBuffer<'a> {
     /// `[-b buffer-name]`
     #[cfg(feature = "tmux_0_8")]

@@ -35,7 +35,7 @@ use std::borrow::Cow;
 /// tmux display-panes [-t target-client]
 /// (alias: displayp)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct DisplayPanes<'a> {
     // `[-b]`
     #[cfg(feature = "tmux_2_9")]

@@ -38,7 +38,7 @@ use std::borrow::Cow;
 /// tmux choose-tree [-sw] [-b session-template] [-c window-template] [-S format] [-W format]
 /// [-t target-window]
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ChooseTree<'a> {
     /// `[-G]` - include all sessions in any session groups in the tree rather than only the first
     #[cfg(feature = "tmux_2_7")]

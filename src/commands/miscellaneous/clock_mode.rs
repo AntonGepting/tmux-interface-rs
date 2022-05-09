@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// ```text
 /// tmux clock-mode [-t target-window]
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ClockMode<'a> {
     /// `[-t target-pane]`
     #[cfg(feature = "tmux_1_0")]

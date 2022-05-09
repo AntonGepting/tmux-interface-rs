@@ -27,7 +27,7 @@ use std::borrow::Cow;
 /// tmux list-keys [-t key-table]
 /// (alias: lsk)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ListKeys<'a> {
     /// `[-1]`
     #[cfg(feature = "tmux_2_4")]

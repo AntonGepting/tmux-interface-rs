@@ -3,6 +3,7 @@ use crate::TmuxCommand;
 use std::borrow::Cow;
 
 // TODO: enum for arg
+// FIXME: not multiple, only one choice
 /// # Manual
 ///
 /// tmux ^1.9:
@@ -16,8 +17,7 @@ use std::borrow::Cow;
 /// tmux wait-for -LSU channel
 /// (alias: wait)
 /// ```
-// FIXME: not multiple, only one choice
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct WaitFor<'a> {
     /// `[-L]`
     #[cfg(feature = "tmux_1_8")]

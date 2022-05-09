@@ -29,7 +29,7 @@ use std::borrow::Cow;
 /// tmux paste-buffer [-d] [-b buffer-index] [-t target-window]
 /// (alias: pasteb)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct PasteBuffer<'a> {
     /// `[-d]` - delete the paste buffer
     #[cfg(feature = "tmux_0_8")]

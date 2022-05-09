@@ -23,7 +23,7 @@ use std::borrow::Cow;
 /// tmux show-messages [-t target-client]
 /// (alias: showmsgs)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ShowMessages<'a> {
     /// `[-I]`
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]

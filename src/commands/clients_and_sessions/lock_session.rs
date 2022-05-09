@@ -10,7 +10,7 @@ use std::borrow::Cow;
 /// tmux lock-session [-t target-session]
 /// (alias: locks)
 /// ```
-#[derive(Clone, Default, Debug)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct LockSession<'a> {
     /// `[-t target-session]`
     pub target_session: Option<Cow<'a, str>>,

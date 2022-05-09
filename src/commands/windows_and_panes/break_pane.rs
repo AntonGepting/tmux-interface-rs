@@ -47,7 +47,7 @@ use std::borrow::Cow;
 /// tmux break-pane [-d] [-p pane-index] [-t target-window]
 /// (alias: breakp)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct BreakPane<'a> {
     /// `[-a]` - the window is moved to the next index after
     #[cfg(feature = "tmux_3_2")]

@@ -29,7 +29,7 @@ use std::borrow::Cow;
 /// tmux source-file path
 /// (alias: source)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SourceFile<'a> {
     /// `[-F]` - value is expanded as a format
     #[cfg(feature = "tmux_3_2")]

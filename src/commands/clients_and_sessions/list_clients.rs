@@ -23,7 +23,7 @@ use std::borrow::Cow;
 /// tmux list-clients
 /// (alias: lsc)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ListClients<'a> {
     /// `[-F format]`
     #[cfg(feature = "tmux_1_6")]

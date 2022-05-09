@@ -33,7 +33,7 @@ use std::borrow::Cow;
 /// tmux capture-pane [-b buffer-index] [-t target-pane]
 /// (alias: capturep)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct CapturePane<'a> {
     /// `[-a]` - the alternate screen is used, and the history is not accessible
     #[cfg(feature = "tmux_1_8")]

@@ -17,7 +17,7 @@ use std::borrow::Cow;
 /// tmux display-menu [-c target-client] [-t target-pane] [-T title] [-x position] [-y position] name key command ...
 /// alias: menu
 /// ```
-#[derive(Clone, Default, Debug)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 #[cfg(feature = "tmux_3_0")]
 pub struct DisplayMenu<'a> {
     /// `[-O]` - the menu does not close when the mouse button is released without an item selected

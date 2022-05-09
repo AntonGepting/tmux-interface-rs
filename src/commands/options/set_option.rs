@@ -53,8 +53,7 @@ use std::borrow::Cow;
 /// tmux set-option [-gu] [-t target-session] option value
 /// (alias: set)
 /// ```
-
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SetOption<'a> {
     /// `[-a]` - value is appended to the existing setting, if the option expects a string or a style
     #[cfg(feature = "tmux_1_0")]

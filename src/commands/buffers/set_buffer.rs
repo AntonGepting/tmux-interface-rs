@@ -29,7 +29,7 @@ use std::borrow::Cow;
 /// tmux set-buffer [-b buffer-index] [-t target-session] data
 /// (alias: setb)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SetBuffer<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_2_0")]

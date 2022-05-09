@@ -24,7 +24,7 @@ use std::borrow::Cow;
 /// tmux list-windows [-t target-session]
 /// (alias: lsw)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ListWindows<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_1_5")]

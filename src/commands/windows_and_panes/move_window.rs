@@ -35,7 +35,7 @@ use std::borrow::Cow;
 /// tmux move-window [-d] [-s src-window] [-t dst-window]
 /// (alias: movew)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct MoveWindow<'a> {
     /// `[-a]` - the window is moved to the next index up
     #[cfg(feature = "tmux_2_1")]

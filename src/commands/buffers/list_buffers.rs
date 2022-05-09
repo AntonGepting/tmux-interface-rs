@@ -23,7 +23,7 @@ use std::borrow::Cow;
 /// tmux list-buffers [-t target-session]
 /// (alias: lsb)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ListBuffers<'a> {
     /// `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]

@@ -45,7 +45,7 @@ use std::borrow::Cow;
 /// tmux unbind-key key
 /// (alias: unbind)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct UnbindKey<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_1_4")]

@@ -11,7 +11,7 @@ use std::borrow::Cow;
 /// tmux rename-session [-t target-session] new-name
 /// (alias: rename)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct RenameSession<'a> {
     /// `[-t target-session]`
     #[cfg(feature = "tmux_0_8")]

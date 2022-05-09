@@ -25,8 +25,7 @@ use std::borrow::Cow;
 /// tmux join-pane [-dhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
-
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct JoinPane<'a> {
     /// `[-b]` - cause src-pane to be joined to left of or above dst-pane
     #[cfg(feature = "tmux_2_6")]

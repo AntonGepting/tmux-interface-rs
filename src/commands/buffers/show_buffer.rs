@@ -17,7 +17,7 @@ use std::borrow::Cow;
 /// tmux show-buffer [-b buffer-index] [-t target-session]
 /// (alias: showb)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ShowBuffer<'a> {
     /// `[-b buffer-name]`
     #[cfg(feature = "tmux_1_5")]

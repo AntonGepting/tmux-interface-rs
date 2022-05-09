@@ -38,7 +38,7 @@ use std::borrow::Cow;
 /// tmux set-window-option [-gu] [-t target-window] option value
 /// (alias: setw)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SetWindowOption<'a> {
     /// `[-a]` -
     #[cfg(feature = "tmux_1_0")]

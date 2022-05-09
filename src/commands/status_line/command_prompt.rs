@@ -40,7 +40,7 @@ use std::borrow::Cow;
 /// ```text
 /// tmux command-prompt [-t target-client] [template]
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct CommandPrompt<'a> {
     /// `[-1]` makesthe prompt only accept one key press
     #[cfg(feature = "tmux_2_4")]

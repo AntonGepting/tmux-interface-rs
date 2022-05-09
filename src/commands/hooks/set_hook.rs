@@ -25,7 +25,7 @@ use std::borrow::Cow;
 /// ```text
 /// tmux set-hook [-g] [-t target-session] hook-name command
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SetHook<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_3_0")]

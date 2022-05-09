@@ -6,7 +6,7 @@ use std::borrow::Cow;
 #[cfg(feature = "tmux_3_2")]
 use std::fmt;
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 #[cfg(feature = "tmux_3_2")]
 pub enum State {
     On,
@@ -67,7 +67,7 @@ impl fmt::Display for State {
 /// tmux refresh-client [-t target-client]
 /// (alias: refresh)
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct RefreshClient<'a> {
     /// `[-c]` - return to tracking the cursor automatically
     #[cfg(feature = "tmux_2_9a")]
