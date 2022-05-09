@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Select the last (previously selected) pane
@@ -24,16 +24,23 @@ use std::borrow::Cow;
 /// (alias: lastp)
 /// ```
 // FIXME: versions and function parameters
-#[derive(Debug, Clone)]
-pub struct LastPane<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct LastPane<'a> {
+    /// `[-d]`
+    #[cfg(feature = "tmux_2_0")]
+    pub disable: bool,
 
-impl<'a> Default for LastPane<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LAST_PANE)),
-            ..Default::default()
-        })
-    }
+    /// `[-e]`
+    #[cfg(feature = "tmux_2_0")]
+    pub enable: bool,
+
+    /// `[-Z]`
+    #[cfg(feature = "tmux_3_1")]
+    pub keep_zoomed: bool,
+
+    /// `[-t target-window]`
+    #[cfg(feature = "tmux_1_4")]
+    pub target_window: Option<Cow<'a, str>>,
 }
 
 impl<'a> LastPane<'a> {
@@ -44,32 +51,60 @@ impl<'a> LastPane<'a> {
     /// `[-d]`
     #[cfg(feature = "tmux_2_0")]
     pub fn disable(&mut self) -> &mut Self {
-        self.0.push_flag(D_LOWERCASE_KEY);
+        self.disable = true;
         self
     }
 
     /// `[-e]`
     #[cfg(feature = "tmux_2_0")]
     pub fn enable(&mut self) -> &mut Self {
-        self.0.push_flag(E_LOWERCASE_KEY);
+        self.enable = true;
         self
     }
 
     /// `[-Z]`
     #[cfg(feature = "tmux_3_1")]
     pub fn keep_zoomed(&mut self) -> &mut Self {
-        self.0.push_flag(Z_UPPERCASE_KEY);
+        self.keep_zoomed = true;
         self
     }
 
     /// `[-t target-window]`
     #[cfg(feature = "tmux_1_4")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_window);
+        self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
+
+        cmd.cmd(LAST_PANE);
+
+        // `[-d]`
+        #[cfg(feature = "tmux_2_0")]
+        if self.disable {
+            cmd.push_flag(D_LOWERCASE_KEY);
+        }
+
+        // `[-e]`
+        #[cfg(feature = "tmux_2_0")]
+        if self.enable {
+            cmd.push_flag(E_LOWERCASE_KEY);
+        }
+
+        // `[-Z]`
+        #[cfg(feature = "tmux_3_1")]
+        if self.keep_zoomed {
+            cmd.push_flag(Z_UPPERCASE_KEY);
+        }
+
+        // `[-t target-window]`
+        #[cfg(feature = "tmux_1_4")]
+        if let Some(target_window) = &self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        }
+
+        cmd
     }
 }

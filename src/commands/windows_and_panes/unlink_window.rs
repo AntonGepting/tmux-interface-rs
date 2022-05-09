@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Unlink `target-window`
@@ -17,16 +17,15 @@ use std::borrow::Cow;
 /// tmux unlink-window [-t target-window]
 /// (alias: unlinkw)
 /// ```
-#[derive(Debug, Clone)]
-pub struct UnlinkWindow<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct UnlinkWindow<'a> {
+    /// `[-k]`
+    #[cfg(feature = "tmux_1_0")]
+    pub detach_other: bool,
 
-impl<'a> Default for UnlinkWindow<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(UNLINK_WINDOW)),
-            ..Default::default()
-        })
-    }
+    /// `[-t target-window]`
+    #[cfg(feature = "tmux_0_8")]
+    pub target_window: Option<Cow<'a, str>>,
 }
 
 impl<'a> UnlinkWindow<'a> {
@@ -37,18 +36,34 @@ impl<'a> UnlinkWindow<'a> {
     /// `[-k]`
     #[cfg(feature = "tmux_1_0")]
     pub fn detach_other(&mut self) -> &mut Self {
-        self.0.push_flag(K_LOWERCASE_KEY);
+        self.detach_other = true;
         self
     }
 
     /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_window);
+        self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
+
+        cmd.cmd(SWAP_WINDOW);
+
+        // `[-k]`
+        #[cfg(feature = "tmux_1_0")]
+        if self.detach_other {
+            cmd.push_flag(K_LOWERCASE_KEY);
+        }
+
+        // `[-t target-window]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_window) = &self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        }
+
+        cmd
     }
 }

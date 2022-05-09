@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Select the window at target-window.
@@ -23,16 +23,27 @@ use std::borrow::Cow;
 /// tmux select-window [-t target-window]
 /// (alias: selectw)
 /// ```
-#[derive(Debug, Clone)]
-pub struct SelectWindow<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct SelectWindow<'a> {
+    /// `[-l]` - equivalent to last-window
+    #[cfg(feature = "tmux_1_5")]
+    pub last: bool,
 
-impl<'a> Default for SelectWindow<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SELECT_WINDOW)),
-            ..Default::default()
-        })
-    }
+    /// `[-n]` - equivalent to next-window
+    #[cfg(feature = "tmux_1_5")]
+    pub next: bool,
+
+    /// `[-p]` - equivalent to previous-window
+    #[cfg(feature = "tmux_1_5")]
+    pub previous: bool,
+
+    /// `[-T]` - if the selected window is already the current window, behave like last-window
+    #[cfg(feature = "tmux_1_8")]
+    pub switch: bool,
+
+    /// `[-t target-window]` - target-window
+    #[cfg(feature = "tmux_0_8")]
+    pub target_window: Option<Cow<'a, str>>,
 }
 
 impl<'a> SelectWindow<'a> {
@@ -43,39 +54,73 @@ impl<'a> SelectWindow<'a> {
     /// `[-l]` - equivalent to last-window
     #[cfg(feature = "tmux_1_5")]
     pub fn last(&mut self) -> &mut Self {
-        self.0.push_flag(L_LOWERCASE_KEY);
+        self.last = true;
         self
     }
 
     /// `[-n]` - equivalent to next-window
     #[cfg(feature = "tmux_1_5")]
     pub fn next(&mut self) -> &mut Self {
-        self.0.push_flag(N_LOWERCASE_KEY);
+        self.next = true;
         self
     }
 
     /// `[-p]` - equivalent to previous-window
     #[cfg(feature = "tmux_1_5")]
     pub fn previous(&mut self) -> &mut Self {
-        self.0.push_flag(P_LOWERCASE_KEY);
+        self.previous = true;
         self
     }
 
     /// `[-T]` - if the selected window is already the current window, behave like last-window
     #[cfg(feature = "tmux_1_8")]
     pub fn switch(&mut self) -> &mut Self {
-        self.0.push_flag(T_UPPERCASE_KEY);
+        self.switch = true;
         self
     }
 
     /// `[-t target-window]` - target-window
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_window);
+        self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
+
+        cmd.cmd(SELECT_WINDOW);
+
+        // `[-l]` - equivalent to last-window
+        #[cfg(feature = "tmux_1_5")]
+        if self.last {
+            cmd.push_flag(L_LOWERCASE_KEY);
+        }
+
+        // `[-n]` - equivalent to next-window
+        #[cfg(feature = "tmux_1_5")]
+        if self.next {
+            cmd.push_flag(N_LOWERCASE_KEY);
+        }
+
+        // `[-p]` - equivalent to previous-window
+        #[cfg(feature = "tmux_1_5")]
+        if self.previous {
+            cmd.push_flag(P_LOWERCASE_KEY);
+        }
+
+        // `[-T]` - if the selected window is already the current window, behave like last-window
+        #[cfg(feature = "tmux_1_8")]
+        if self.switch {
+            cmd.push_flag(T_UPPERCASE_KEY);
+        }
+
+        // `[-t target-window]` - target-window
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_window) = &self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        }
+
+        cmd
     }
 }

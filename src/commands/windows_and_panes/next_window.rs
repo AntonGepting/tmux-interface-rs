@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Move to the next window in the session
@@ -17,16 +17,15 @@ use std::borrow::Cow;
 /// tmux next-window [-t target-session]
 /// (alias: next)
 /// ```
-#[derive(Debug, Clone)]
-pub struct NextWindow<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct NextWindow<'a> {
+    /// `[-a]`
+    #[cfg(feature = "tmux_0_9")]
+    pub attach: bool,
 
-impl<'a> Default for NextWindow<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEXT_WINDOW)),
-            ..Default::default()
-        })
-    }
+    /// `[-t target-session]`
+    #[cfg(feature = "tmux_0_8")]
+    pub target_window: Option<Cow<'a, str>>,
 }
 
 impl<'a> NextWindow<'a> {
@@ -37,18 +36,34 @@ impl<'a> NextWindow<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_0_9")]
     pub fn attach(&mut self) -> &mut Self {
-        self.0.push_flag(A_LOWERCASE_KEY);
+        self.attach = true;
         self
     }
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_window);
+        self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
+
+        cmd.cmd(NEXT_WINDOW);
+
+        // `[-a]`
+        #[cfg(feature = "tmux_0_9")]
+        if self.attach {
+            cmd.push_flag(A_LOWERCASE_KEY);
+        }
+
+        // `[-t target-session]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_window) = &self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        }
+
+        cmd
     }
 }

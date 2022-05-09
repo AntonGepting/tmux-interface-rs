@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Pipe output sent by the program in target-pane to a shell command or vice versa
@@ -23,16 +23,27 @@ use std::borrow::Cow;
 /// tmux pipe-pane [-o] [-t target-pane] [command]
 /// (alias: pipep)
 /// ```
-#[derive(Debug, Clone)]
-pub struct PipePane<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct PipePane<'a> {
+    /// `[-I]` - stdin is connected
+    #[cfg(feature = "tmux_2_7")]
+    pub stdout: bool,
 
-impl<'a> Default for PipePane<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(PIPE_PANE)),
-            ..Default::default()
-        })
-    }
+    /// `[-O]` - stdout is connected
+    #[cfg(feature = "tmux_2_7")]
+    pub stdin: bool,
+
+    /// `[-o]` - only open a new pipe if no previous pipe exists
+    #[cfg(feature = "tmux_1_1")]
+    pub open: bool,
+
+    /// `[-t target-pane]` - target-pane
+    #[cfg(feature = "tmux_1_1")]
+    pub target_pane: Option<Cow<'a, str>>,
+
+    /// `[shell-command]` - shell-command
+    #[cfg(feature = "tmux_1_2")]
+    pub shell_command: Option<Cow<'a, str>>,
 }
 
 impl<'a> PipePane<'a> {
@@ -43,39 +54,73 @@ impl<'a> PipePane<'a> {
     /// `[-I]` - stdin is connected
     #[cfg(feature = "tmux_2_7")]
     pub fn stdout(&mut self) -> &mut Self {
-        self.0.push_flag(I_UPPERCASE_KEY);
+        self.stdout = true;
         self
     }
 
     /// `[-O]` - stdout is connected
     #[cfg(feature = "tmux_2_7")]
     pub fn stdin(&mut self) -> &mut Self {
-        self.0.push_flag(O_UPPERCASE_KEY);
+        self.stdin = true;
         self
     }
 
     /// `[-o]` - only open a new pipe if no previous pipe exists
     #[cfg(feature = "tmux_1_1")]
     pub fn open(&mut self) -> &mut Self {
-        self.0.push_flag(O_LOWERCASE_KEY);
+        self.open = true;
         self
     }
 
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_1_1")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_pane);
+        self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[shell-command]` - shell-command
     #[cfg(feature = "tmux_1_2")]
     pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
-        self.0.push_param(shell_command);
+        self.shell_command = Some(shell_command.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
+
+        cmd.cmd(PIPE_PANE);
+
+        // `[-I]` - stdin is connected
+        #[cfg(feature = "tmux_2_7")]
+        if self.stdout {
+            cmd.push_flag(I_UPPERCASE_KEY);
+        }
+
+        // `[-O]` - stdout is connected
+        #[cfg(feature = "tmux_2_7")]
+        if self.stdin {
+            cmd.push_flag(O_UPPERCASE_KEY);
+        }
+
+        // `[-o]` - only open a new pipe if no previous pipe exists
+        #[cfg(feature = "tmux_1_1")]
+        if self.open {
+            cmd.push_flag(O_LOWERCASE_KEY);
+        }
+
+        // `[-t target-pane]` - target-pane
+        #[cfg(feature = "tmux_1_1")]
+        if let Some(target_pane) = &self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        }
+
+        // `[shell-command]` - shell-command
+        #[cfg(feature = "tmux_1_2")]
+        if let Some(shell_command) = &self.shell_command {
+            cmd.push_param(shell_command.as_ref());
+        }
+
+        cmd
     }
 }

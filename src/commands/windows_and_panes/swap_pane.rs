@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Swap two panes
@@ -23,16 +23,31 @@ use std::borrow::Cow;
 /// tmux swap-pane [-dDU] [-p src-index] [-t target-window] [-q dst-index]
 /// (alias: swapp)
 /// ```
-#[derive(Debug, Clone)]
-pub struct SwapPane<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct SwapPane<'a> {
+    /// `[-d]` - instruct tmux not to change the active pane
+    #[cfg(feature = "tmux_0_8")]
+    pub detached: bool,
 
-impl<'a> Default for SwapPane<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SWAP_PANE)),
-            ..Default::default()
-        })
-    }
+    /// `[-D]` - swap with the next pane
+    #[cfg(feature = "tmux_0_8")]
+    pub previous_pane: bool,
+
+    /// `[-U]` - swap with the previous pane
+    #[cfg(feature = "tmux_0_8")]
+    pub next_pane: bool,
+
+    /// `[-Z]` - keep the window zoomed if it was zoomed
+    #[cfg(feature = "tmux_3_1")]
+    pub keep_zoomed: bool,
+
+    /// `[-s src-pane]` - src-pane
+    #[cfg(feature = "tmux_1_0")]
+    pub src_pane: Option<Cow<'a, str>>,
+
+    /// `[-t dst-pane]` - dst-pane
+    #[cfg(feature = "tmux_1_0")]
+    pub dst_pane: Option<Cow<'a, str>>,
 }
 
 impl<'a> SwapPane<'a> {
@@ -43,46 +58,86 @@ impl<'a> SwapPane<'a> {
     /// `[-d]` - instruct tmux not to change the active pane
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(D_LOWERCASE_KEY);
+        self.detached = true;
         self
     }
 
     /// `[-D]` - swap with the next pane
     #[cfg(feature = "tmux_0_8")]
     pub fn previous_pane(&mut self) -> &mut Self {
-        self.0.push_flag(D_UPPERCASE_KEY);
+        self.previous_pane = true;
         self
     }
 
     /// `[-U]` - swap with the previous pane
     #[cfg(feature = "tmux_0_8")]
     pub fn next_pane(&mut self) -> &mut Self {
-        self.0.push_flag(U_UPPERCASE_KEY);
+        self.next_pane = true;
         self
     }
 
     /// `[-Z]` - keep the window zoomed if it was zoomed
     #[cfg(feature = "tmux_3_1")]
     pub fn keep_zoomed(&mut self) -> &mut Self {
-        self.0.push_flag(Z_UPPERCASE_KEY);
+        self.keep_zoomed = true;
         self
     }
 
     /// `[-s src-pane]` - src-pane
     #[cfg(feature = "tmux_1_0")]
     pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
-        self.0.push_option(S_LOWERCASE_KEY, src_pane);
+        self.src_pane = Some(src_pane.into());
         self
     }
 
     /// `[-t dst-pane]` - dst-pane
     #[cfg(feature = "tmux_1_0")]
     pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, dst_pane);
+        self.dst_pane = Some(dst_pane.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
+
+        cmd.cmd(SWAP_PANE);
+
+        // `[-d]` - instruct tmux not to change the active pane
+        #[cfg(feature = "tmux_0_8")]
+        if self.detached {
+            cmd.push_flag(D_LOWERCASE_KEY);
+        }
+
+        // `[-D]` - swap with the next pane
+        #[cfg(feature = "tmux_0_8")]
+        if self.previous_pane {
+            cmd.push_flag(D_UPPERCASE_KEY);
+        }
+
+        // `[-U]` - swap with the previous pane
+        #[cfg(feature = "tmux_0_8")]
+        if self.next_pane {
+            cmd.push_flag(U_UPPERCASE_KEY);
+        }
+
+        // `[-Z]` - keep the window zoomed if it was zoomed
+        #[cfg(feature = "tmux_3_1")]
+        if self.keep_zoomed {
+            cmd.push_flag(Z_UPPERCASE_KEY);
+        }
+
+        // `[-s src-pane]` - src-pane
+        #[cfg(feature = "tmux_1_0")]
+        if let Some(src_pane) = &self.src_pane {
+            cmd.push_option(S_LOWERCASE_KEY, src_pane.as_ref());
+        }
+
+        // `[-t dst-pane]` - dst-pane
+        #[cfg(feature = "tmux_1_0")]
+        if let Some(dst_pane) = &self.dst_pane {
+            cmd.push_option(T_LOWERCASE_KEY, dst_pane.as_ref());
+        }
+
+        cmd
     }
 }

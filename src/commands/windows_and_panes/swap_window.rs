@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// This is similar to link-window, except the source and destination windows are swapped
@@ -11,16 +11,19 @@ use std::borrow::Cow;
 /// tmux swap-window [-d] [-s src-window] [-t dst-window]
 /// (alias: swapw)
 /// ```
-#[derive(Debug, Clone)]
-pub struct SwapWindow<'a>(pub TmuxCommand<'a>);
+#[derive(Debug, Default, Clone)]
+pub struct SwapWindow<'a> {
+    /// `[-d]`
+    #[cfg(feature = "tmux_0_8")]
+    pub detached: bool,
 
-impl<'a> Default for SwapWindow<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SWAP_WINDOW)),
-            ..Default::default()
-        })
-    }
+    /// `[-s src-window]`
+    #[cfg(feature = "tmux_0_8")]
+    pub src_window: Option<Cow<'a, str>>,
+
+    /// `[-t dst-window]`
+    #[cfg(feature = "tmux_0_8")]
+    pub dst_window: Option<Cow<'a, str>>,
 }
 
 impl<'a> SwapWindow<'a> {
@@ -31,25 +34,47 @@ impl<'a> SwapWindow<'a> {
     /// `[-d]`
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(D_LOWERCASE_KEY);
+        self.detached = true;
         self
     }
 
     /// `[-s src-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn src_window<S: Into<Cow<'a, str>>>(&mut self, src_window: S) -> &mut Self {
-        self.0.push_option(S_LOWERCASE_KEY, src_window);
+        self.src_window = Some(src_window.into());
         self
     }
 
     /// `[-t dst-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, dst_window);
+        self.dst_window = Some(dst_window.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
+
+        cmd.cmd(SWAP_WINDOW);
+
+        // `[-d]`
+        #[cfg(feature = "tmux_0_8")]
+        if self.detached {
+            cmd.push_flag(D_LOWERCASE_KEY);
+        }
+
+        // `[-s src-window]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(src_window) = &self.src_window {
+            cmd.push_option(S_LOWERCASE_KEY, src_window.as_ref());
+        }
+
+        // `[-t dst-window]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(dst_window) = &self.dst_window {
+            cmd.push_option(T_LOWERCASE_KEY, dst_window.as_ref());
+        }
+
+        cmd
     }
 }
