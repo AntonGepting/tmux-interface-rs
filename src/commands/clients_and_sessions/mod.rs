@@ -96,92 +96,92 @@ pub mod switch_client_tests;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#CLIENTS_AND_SESSIONS))
 impl<'a> TmuxCommand<'a> {
     #[cfg(feature = "tmux_0_8")]
-    pub fn attach_session(&self) -> AttachSession<'a> {
-        AttachSession::from(self)
+    pub fn attach_session() -> AttachSession<'a> {
+        AttachSession::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn detach_client(&self) -> DetachClient<'a> {
-        DetachClient::from(self)
+    pub fn detach_client() -> DetachClient<'a> {
+        DetachClient::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn has_session(&self) -> HasSession<'a> {
-        HasSession::from(self)
+    pub fn has_session() -> HasSession<'a> {
+        HasSession::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn kill_server(&self) -> KillServer<'a> {
-        KillServer::from(self)
+    pub fn kill_server() -> KillServer {
+        KillServer::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn kill_session(&self) -> KillSession<'a> {
-        KillSession::from(self)
+    pub fn kill_session() -> KillSession<'a> {
+        KillSession::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn list_clients(&self) -> ListClients<'a> {
-        ListClients::from(self)
+    pub fn list_clients() -> ListClients<'a> {
+        ListClients::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn list_commands(&self) -> ListCommands<'a> {
-        ListCommands::from(self)
+    pub fn list_commands() -> ListCommands<'a> {
+        ListCommands::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn list_sessions(&self) -> ListSessions<'a> {
-        ListSessions::from(self)
+    pub fn list_sessions() -> ListSessions<'a> {
+        ListSessions::new()
     }
 
     #[cfg(feature = "tmux_1_1")]
-    pub fn lock_client(&self) -> LockClient<'a> {
-        LockClient::from(self)
+    pub fn lock_client() -> LockClient<'a> {
+        LockClient::new()
     }
 
     #[cfg(feature = "tmux_1_1")]
-    pub fn lock_session(&self) -> LockSession<'a> {
-        LockSession::from(self)
+    pub fn lock_session() -> LockSession<'a> {
+        LockSession::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn new_session(&self) -> NewSession<'a> {
-        NewSession::from(self)
+    pub fn new_session() -> NewSession<'a> {
+        NewSession::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn refresh_client(&self) -> RefreshClient<'a> {
-        RefreshClient::from(self)
+    pub fn refresh_client() -> RefreshClient<'a> {
+        RefreshClient::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn rename_session(&self) -> RenameSession<'a> {
-        RenameSession::from(self)
+    pub fn rename_session() -> RenameSession<'a> {
+        RenameSession::new()
     }
 
     #[cfg(feature = "tmux_1_2")]
-    pub fn show_messages(&self) -> ShowMessages<'a> {
-        ShowMessages::from(self)
+    pub fn show_messages() -> ShowMessages<'a> {
+        ShowMessages::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn source_file(&self) -> SourceFile<'a> {
-        SourceFile::from(self)
+    pub fn source_file() -> SourceFile<'a> {
+        SourceFile::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn start_server(&self) -> StartServer<'a> {
-        StartServer::from(self)
+    pub fn start_server() -> StartServer {
+        StartServer::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn suspend_client(&self) -> SuspendClient<'a> {
-        SuspendClient::from(self)
+    pub fn suspend_client() -> SuspendClient<'a> {
+        SuspendClient::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn switch_client(&self) -> SwitchClient<'a> {
-        SwitchClient::from(self)
+    pub fn switch_client() -> SwitchClient<'a> {
+        SwitchClient::new()
     }
 }

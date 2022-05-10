@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 // XXX: better return type
@@ -24,16 +24,19 @@ use std::borrow::Cow;
 /// tmux list-windows [-t target-session]
 /// (alias: lsw)
 /// ```
-#[derive(Debug, Clone)]
-pub struct ListWindows<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct ListWindows<'a> {
+    /// `[-a]`
+    #[cfg(feature = "tmux_1_5")]
+    pub all: bool,
 
-impl<'a> Default for ListWindows<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_WINDOWS)),
-            ..Default::default()
-        })
-    }
+    /// `[-F format]`
+    #[cfg(feature = "tmux_1_6")]
+    pub format: Option<Cow<'a, str>>,
+
+    /// `[-t target-session]`
+    #[cfg(feature = "tmux_0_8")]
+    pub target_session: Option<Cow<'a, str>>,
 }
 
 impl<'a> ListWindows<'a> {
@@ -44,43 +47,47 @@ impl<'a> ListWindows<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_1_5")]
     pub fn all(&mut self) -> &mut Self {
-        self.0.push_flag(A_LOWERCASE_KEY);
+        self.all = true;
         self
     }
 
     /// `[-F format]`
     #[cfg(feature = "tmux_1_6")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_UPPERCASE_KEY, format);
+        self.format = Some(format.into());
         self
     }
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_session);
+        self.target_session = Some(target_session.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for ListWindows<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_WINDOWS)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(LIST_WINDOWS);
 
-impl<'a> From<&TmuxCommand<'a>> for ListWindows<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_WINDOWS)),
-            ..Default::default()
-        })
+        // `[-a]`
+        #[cfg(feature = "tmux_1_5")]
+        if self.all {
+            cmd.push_flag(A_LOWERCASE_KEY);
+        }
+
+        // `[-F format]`
+        #[cfg(feature = "tmux_1_6")]
+        if let Some(format) = &self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        }
+
+        // `[-t target-session]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_session) = &self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        }
+
+        cmd
     }
 }

@@ -87,7 +87,11 @@ impl Sessions {
         format.session_windows();
 
         let ls_format = format.to_string();
-        let output = ListSessions::new().format(&ls_format).output()?.to_string();
+        let output = ListSessions::new()
+            .format(&ls_format)
+            .build()
+            .output()?
+            .to_string();
         Sessions::from_str(&output)
     }
 

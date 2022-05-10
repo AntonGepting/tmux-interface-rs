@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// # Manual
@@ -27,16 +27,27 @@ use std::borrow::Cow;
 /// tmux show-environment [-g] [-t target-session]
 /// (alias: showenv)
 /// ```
-#[derive(Debug, Clone)]
-pub struct ShowEnvironment<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct ShowEnvironment<'a> {
+    /// `[-h]`
+    #[cfg(feature = "tmux_3_2")]
+    pub hidden: bool,
 
-impl<'a> Default for ShowEnvironment<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_ENVIRONMENT)),
-            ..Default::default()
-        })
-    }
+    /// `[-g]`
+    #[cfg(feature = "tmux_1_0")]
+    pub global: bool,
+
+    /// `[-s]`
+    #[cfg(feature = "tmux_2_1")]
+    pub as_shell_commands: bool,
+
+    /// `[-t target-session]`
+    #[cfg(feature = "tmux_1_0")]
+    pub target_session: Option<Cow<'a, str>>,
+
+    /// `[variable]`
+    #[cfg(feature = "tmux_1_7")]
+    pub variable: Option<Cow<'a, str>>,
 }
 
 impl<'a> ShowEnvironment<'a> {
@@ -47,57 +58,73 @@ impl<'a> ShowEnvironment<'a> {
     /// `[-h]`
     #[cfg(feature = "tmux_3_2")]
     pub fn hidden(&mut self) -> &mut Self {
-        self.0.push_flag(H_LOWERCASE_KEY);
+        self.hidden = true;
         self
     }
 
     /// `[-g]`
     #[cfg(feature = "tmux_1_0")]
     pub fn global(&mut self) -> &mut Self {
-        self.0.push_flag(G_LOWERCASE_KEY);
+        self.global = true;
         self
     }
 
     /// `[-s]`
     #[cfg(feature = "tmux_2_1")]
     pub fn as_shell_commands(&mut self) -> &mut Self {
-        self.0.push_flag(S_LOWERCASE_KEY);
+        self.as_shell_commands = true;
         self
     }
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_1_0")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_session);
+        self.target_session = Some(target_session.into());
         self
     }
 
     /// `[variable]`
     #[cfg(feature = "tmux_1_7")]
     pub fn variable<S: Into<Cow<'a, str>>>(&mut self, variable: S) -> &mut Self {
-        self.0.push_param(variable);
+        self.variable = Some(variable.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for ShowEnvironment<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_ENVIRONMENT)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(SHOW_ENVIRONMENT);
 
-impl<'a> From<&TmuxCommand<'a>> for ShowEnvironment<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_ENVIRONMENT)),
-            ..Default::default()
-        })
+        // `[-h]`
+        #[cfg(feature = "tmux_3_2")]
+        if self.hidden {
+            cmd.push_flag(H_LOWERCASE_KEY);
+        }
+
+        // `[-g]`
+        #[cfg(feature = "tmux_1_0")]
+        if self.global {
+            cmd.push_flag(G_LOWERCASE_KEY);
+        }
+
+        // `[-s]`
+        #[cfg(feature = "tmux_2_1")]
+        if self.as_shell_commands {
+            cmd.push_flag(S_LOWERCASE_KEY);
+        }
+
+        // `[-t target-session]`
+        #[cfg(feature = "tmux_1_0")]
+        if let Some(target_session) = &self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        }
+
+        // `[variable]`
+        #[cfg(feature = "tmux_1_7")]
+        if let Some(variable) = &self.variable {
+            cmd.push_param(variable.as_ref());
+        }
+
+        cmd
     }
 }

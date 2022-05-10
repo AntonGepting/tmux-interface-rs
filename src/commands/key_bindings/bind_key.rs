@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Structure binding key `key` to command
@@ -47,16 +47,35 @@ use std::borrow::Cow;
 /// tmux bind-key [-r] key command [arguments]
 /// (alias: bind)
 /// ```
-#[derive(Debug, Clone)]
-pub struct BindKey<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct BindKey<'a> {
+    /// `[-n]` - an alias for -T root
+    #[cfg(feature = "tmux_1_0")]
+    pub root: bool,
 
-impl<'a> Default for BindKey<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(BIND_KEY)),
-            ..Default::default()
-        })
-    }
+    /// `[-r]` - this key may repeat
+    #[cfg(feature = "tmux_0_8")]
+    pub repeat: bool,
+
+    /// `[-N note]` - attaches note to the key
+    #[cfg(feature = "tmux_3_1")]
+    pub note: Option<Cow<'a, str>>,
+
+    /// `[-T key-table]` - key-table
+    #[cfg(feature = "tmux_2_1")]
+    pub key_table: Option<Cow<'a, str>>,
+
+    /// `[arguments]` - arguments
+    #[cfg(feature = "tmux_0_8")]
+    pub arguments: Option<Cow<'a, str>>,
+
+    /// `key`
+    #[cfg(feature = "tmux_0_8")]
+    pub key: Option<Cow<'a, str>>,
+
+    /// `command`
+    #[cfg(feature = "tmux_0_8")]
+    pub command: Option<Cow<'a, str>>,
 }
 
 impl<'a> BindKey<'a> {
@@ -67,71 +86,99 @@ impl<'a> BindKey<'a> {
     /// `[-n]` - an alias for -T root
     #[cfg(feature = "tmux_1_0")]
     pub fn root(&mut self) -> &mut Self {
-        self.0.push_flag(N_LOWERCASE_KEY);
+        self.root = true;
         self
     }
 
     /// `[-r]` - this key may repeat
     #[cfg(feature = "tmux_0_8")]
     pub fn repeat(&mut self) -> &mut Self {
-        self.0.push_flag(R_LOWERCASE_KEY);
+        self.repeat = true;
         self
     }
 
     /// `[-N note]` - attaches note to the key
     #[cfg(feature = "tmux_3_1")]
     pub fn note<S: Into<Cow<'a, str>>>(&mut self, note: S) -> &mut Self {
-        self.0.push_option(N_UPPERCASE_KEY, note);
+        self.note = Some(note.into());
         self
     }
 
     /// `[-T key-table]` - key-table
     #[cfg(feature = "tmux_2_1")]
     pub fn key_table<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
-        self.0.push_option(T_UPPERCASE_KEY, key_table);
+        self.key_table = Some(key_table.into());
         self
     }
 
     /// `[arguments]` - arguments
     #[cfg(feature = "tmux_0_8")]
     pub fn arguments<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
-        self.0.push_param(key_table);
+        self.arguments = Some(key_table.into());
         self
     }
 
     /// `key`
     #[cfg(feature = "tmux_0_8")]
     pub fn key<S: Into<Cow<'a, str>>>(&mut self, key: S) -> &mut Self {
-        self.0.push_param(key);
+        self.key = Some(key.into());
         self
     }
 
     /// `command`
     #[cfg(feature = "tmux_0_8")]
     pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
-        self.0.push_param(command);
+        self.command(command.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for BindKey<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(BIND_KEY)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(BIND_KEY);
 
-impl<'a> From<&TmuxCommand<'a>> for BindKey<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(BIND_KEY)),
-            ..Default::default()
-        })
+        // `[-n]` - an alias for -T root
+        #[cfg(feature = "tmux_1_0")]
+        if self.root {
+            cmd.push_flag(N_LOWERCASE_KEY);
+        }
+
+        // `[-r]` - this key may repeat
+        #[cfg(feature = "tmux_0_8")]
+        if self.repeat {
+            cmd.push_flag(R_LOWERCASE_KEY);
+        }
+
+        // `[-N note]` - attaches note to the key
+        #[cfg(feature = "tmux_3_1")]
+        if let Some(note) = &self.note {
+            cmd.push_option(N_UPPERCASE_KEY, note.as_ref());
+        }
+
+        // `[-T key-table]` - key-table
+        #[cfg(feature = "tmux_2_1")]
+        if let Some(key_table) = &self.key_table {
+            cmd.push_option(T_UPPERCASE_KEY, key_table.as_ref());
+        }
+
+        // `[arguments]` - arguments
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(arguments) = &self.arguments {
+            cmd.push_param(arguments.as_ref());
+        }
+
+        // `key`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(key) = &self.key {
+            cmd.push_param(key.as_ref());
+        }
+
+        // `command`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(command) = &self.command {
+            cmd.push_param(command.as_ref());
+        }
+
+        cmd
     }
 }

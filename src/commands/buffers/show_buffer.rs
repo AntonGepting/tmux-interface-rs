@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Display the contents of the specified buffer.
@@ -17,16 +17,19 @@ use std::borrow::Cow;
 /// tmux show-buffer [-b buffer-index] [-t target-session]
 /// (alias: showb)
 /// ```
-#[derive(Debug, Clone)]
-pub struct ShowBuffer<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct ShowBuffer<'a> {
+    /// `[-b buffer-name]`
+    #[cfg(feature = "tmux_1_5")]
+    pub buffer_name: Option<Cow<'a, str>>,
 
-impl<'a> Default for ShowBuffer<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_BUFFER)),
-            ..Default::default()
-        })
-    }
+    /// `[-b buffer-index]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    pub buffer_index: Option<Cow<'a, str>>,
+
+    /// `[-t target-session]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    pub target_session: Option<Cow<'a, str>>,
 }
 
 impl<'a> ShowBuffer<'a> {
@@ -37,42 +40,47 @@ impl<'a> ShowBuffer<'a> {
     /// `[-b buffer-name]`
     #[cfg(feature = "tmux_1_5")]
     pub fn buffer_name<S: Into<Cow<'a, str>>>(&mut self, buffer_name: S) -> &mut Self {
-        self.0.push_option(B_LOWERCASE_KEY, buffer_name);
+        self.buffer_name = Some(buffer_name.into());
         self
     }
 
     /// `[-b buffer-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub fn buffer_index<S: Into<Cow<'a, str>>>(&mut self, buffer_index: S) -> &mut Self {
-        self.0.push_option(B_LOWERCASE_KEY, buffer_index);
+        self.buffer_index = Some(buffer_index.into());
         self
     }
 
     /// `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_session);
+        self.target_session = Some(target_session.into());
         self
     }
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
 
-impl<'a> From<TmuxCommand<'a>> for ShowBuffer<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_BUFFER)),
-            ..Default::default()
-        })
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<&TmuxCommand<'a>> for ShowBuffer<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_BUFFER)),
-            ..Default::default()
-        })
+        cmd.cmd(SHOW_BUFFER);
+
+        // `[-b buffer-name]`
+        #[cfg(feature = "tmux_1_5")]
+        if let Some(buffer_name) = &self.buffer_name {
+            cmd.push_option(B_LOWERCASE_KEY, buffer_name.as_ref());
+        }
+
+        // `[-b buffer-index]`
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+        if let Some(buffer_index) = &self.buffer_index {
+            cmd.push_option(B_LOWERCASE_KEY, buffer_index.as_ref());
+        }
+
+        // `[-t target-session]`
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+        if let Some(target_session) = &self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        }
+
+        cmd
     }
 }

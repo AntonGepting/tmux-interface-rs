@@ -1,6 +1,7 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
+
 /// Structure for open the command prompt in a client
 ///
 /// # Manual
@@ -39,16 +40,47 @@ use std::borrow::Cow;
 /// ```text
 /// tmux command-prompt [-t target-client] [template]
 /// ```
-#[derive(Debug, Clone)]
-pub struct CommandPrompt<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct CommandPrompt<'a> {
+    /// `[-1]` makesthe prompt only accept one key press
+    #[cfg(feature = "tmux_2_4")]
+    pub one_keypress: bool,
 
-impl<'a> Default for CommandPrompt<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(COMMAND_PROMPT)),
-            ..Default::default()
-        })
-    }
+    /// `[-i]` execute the command every time the prompt input changes
+    #[cfg(feature = "tmux_2_4")]
+    pub on_input_change: bool,
+
+    /// `[-k]` - the key press is translated to a key name
+    #[cfg(feature = "tmux_3_1")]
+    pub key_name: bool,
+
+    /// `[-N]` - makes the prompt only accept numeric key presses
+    #[cfg(feature = "tmux_3_1")]
+    pub numeric: bool,
+
+    /// `[-T]` - tells tmux that the prompt is for a target which affects what completions are offered when Tab is pressed
+    #[cfg(feature = "tmux_3_2")]
+    pub for_target: bool,
+
+    /// `[-W]` - indicates the prompt is for a window.
+    #[cfg(feature = "tmux_3_2")]
+    pub for_window: bool,
+
+    /// `[-I inputs]` - comma-separated list of the initial text for each prompt
+    #[cfg(feature = "tmux_1_5")]
+    pub inputs: Option<Cow<'a, str>>,
+
+    /// `[-p prompts]` - prompts is a comma-separated list of prompts which are displayed in order
+    #[cfg(feature = "tmux_1_0")]
+    pub prompts: Option<Cow<'a, str>>,
+
+    /// `[-t target-client]` - target-client
+    #[cfg(feature = "tmux_0_8")]
+    pub target_client: Option<Cow<'a, str>>,
+
+    /// `[template]` - template
+    #[cfg(feature = "tmux_0_8")]
+    pub template: Option<Cow<'a, str>>,
 }
 
 impl<'a> CommandPrompt<'a> {
@@ -59,92 +91,138 @@ impl<'a> CommandPrompt<'a> {
     /// `[-1]` makesthe prompt only accept one key press
     #[cfg(feature = "tmux_2_4")]
     pub fn one_keypress(&mut self) -> &mut Self {
-        self.0.push_flag(_1_KEY);
+        self.one_keypress = true;
         self
     }
 
     /// `[-i]` execute the command every time the prompt input changes
     #[cfg(feature = "tmux_2_4")]
     pub fn on_input_change(&mut self) -> &mut Self {
-        self.0.push_flag(I_LOWERCASE_KEY);
+        self.on_input_change = true;
         self
     }
 
     /// `[-k]` - the key press is translated to a key name
     #[cfg(feature = "tmux_3_1")]
     pub fn key_name(&mut self) -> &mut Self {
-        self.0.push_flag(K_LOWERCASE_KEY);
+        self.key_name = true;
         self
     }
 
     /// `[-N]` - makes the prompt only accept numeric key presses
     #[cfg(feature = "tmux_3_1")]
     pub fn numeric(&mut self) -> &mut Self {
-        self.0.push_flag(N_UPPERCASE_KEY);
+        self.numeric = true;
         self
     }
 
     /// `[-T]` - tells tmux that the prompt is for a target which affects what completions are offered when Tab is pressed
     #[cfg(feature = "tmux_3_2")]
     pub fn for_target(&mut self) -> &mut Self {
-        self.0.push_flag(T_UPPERCASE_KEY);
+        self.for_target = true;
         self
     }
 
     /// `[-W]` - indicates the prompt is for a window.
     #[cfg(feature = "tmux_3_2")]
     pub fn for_window(&mut self) -> &mut Self {
-        self.0.push_flag(W_UPPERCASE_KEY);
+        self.for_window = true;
         self
     }
 
     /// `[-I inputs]` - comma-separated list of the initial text for each prompt
     #[cfg(feature = "tmux_1_5")]
     pub fn inputs<S: Into<Cow<'a, str>>>(&mut self, inputs: S) -> &mut Self {
-        self.0.push_option(I_UPPERCASE_KEY, inputs);
+        self.inputs = Some(inputs.into());
         self
     }
 
     /// `[-p prompts]` - prompts is a comma-separated list of prompts which are displayed in order
     #[cfg(feature = "tmux_1_0")]
     pub fn prompts<S: Into<Cow<'a, str>>>(&mut self, prompts: S) -> &mut Self {
-        self.0.push_option(P_LOWERCASE_KEY, prompts);
+        self.prompts = Some(prompts.into());
         self
     }
 
     /// `[-t target-client]` - target-client
     #[cfg(feature = "tmux_0_8")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_client);
+        self.target_client = Some(target_client.into());
         self
     }
 
     /// `[template]` - template
     #[cfg(feature = "tmux_0_8")]
     pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
-        self.0.push_param(template);
+        self.template = Some(template.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for CommandPrompt<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(COMMAND_PROMPT)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(COMMAND_PROMPT);
 
-impl<'a> From<&TmuxCommand<'a>> for CommandPrompt<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(COMMAND_PROMPT)),
-            ..Default::default()
-        })
+        // `[-1]` makesthe prompt only accept one key press
+        #[cfg(feature = "tmux_2_4")]
+        if self.one_keypress {
+            cmd.push_flag(_1_KEY);
+        }
+
+        // `[-i]` execute the command every time the prompt input changes
+        #[cfg(feature = "tmux_2_4")]
+        if self.on_input_change {
+            cmd.push_flag(I_LOWERCASE_KEY);
+        }
+
+        // `[-k]` - the key press is translated to a key name
+        #[cfg(feature = "tmux_3_1")]
+        if self.key_name {
+            cmd.push_flag(K_LOWERCASE_KEY);
+        }
+
+        // `[-N]` - makes the prompt only accept numeric key presses
+        #[cfg(feature = "tmux_3_1")]
+        if self.numeric {
+            cmd.push_flag(N_UPPERCASE_KEY);
+        }
+
+        // `[-T]` - tells tmux that the prompt is for a target which affects what completions are offered when Tab is pressed
+        #[cfg(feature = "tmux_3_2")]
+        if self.for_target {
+            cmd.push_flag(T_UPPERCASE_KEY);
+        }
+
+        // `[-W]` - indicates the prompt is for a window.
+        #[cfg(feature = "tmux_3_2")]
+        if self.for_window {
+            cmd.push_flag(W_UPPERCASE_KEY);
+        }
+
+        // `[-I inputs]` - comma-separated list of the initial text for each prompt
+        #[cfg(feature = "tmux_1_5")]
+        if let Some(inputs) = &self.inputs {
+            cmd.push_option(I_UPPERCASE_KEY, inputs.as_ref());
+        }
+
+        // `[-p prompts]` - prompts is a comma-separated list of prompts which are displayed in order
+        #[cfg(feature = "tmux_1_0")]
+        if let Some(prompts) = &self.prompts {
+            cmd.push_option(P_LOWERCASE_KEY, prompts.as_ref());
+        }
+
+        // `[-t target-client]` - target-client
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_client) = &self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        }
+
+        // `[template]` - template
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(template) = &self.template {
+            cmd.push_param(template.as_ref());
+        }
+
+        cmd
     }
 }

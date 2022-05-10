@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Rename the current window, or the window at target-window if specified, to new-name
@@ -11,16 +11,15 @@ use std::borrow::Cow;
 /// tmux rename-window [-t target-window] new-name
 /// (alias: renamew)
 /// ```
-#[derive(Debug, Clone)]
-pub struct RenameWindow<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct RenameWindow<'a> {
+    /// `[-t target-window]`
+    #[cfg(feature = "tmux_0_8")]
+    pub target_window: Option<Cow<'a, str>>,
 
-impl<'a> Default for RenameWindow<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RENAME_WINDOW)),
-            ..Default::default()
-        })
-    }
+    /// `new-name`
+    #[cfg(feature = "tmux_0_8")]
+    pub new_name: Option<Cow<'a, str>>,
 }
 
 impl<'a> RenameWindow<'a> {
@@ -31,36 +30,33 @@ impl<'a> RenameWindow<'a> {
     /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_window);
+        self.target_window = Some(target_window.into());
         self
     }
 
     /// `new-name`
     #[cfg(feature = "tmux_0_8")]
     pub fn new_name<S: Into<Cow<'a, str>>>(&mut self, new_name: S) -> &mut Self {
-        self.0.push_param(new_name);
+        self.new_name = Some(new_name.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for RenameWindow<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RENAME_WINDOW)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(RENAME_WINDOW);
 
-impl<'a> From<&TmuxCommand<'a>> for RenameWindow<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RENAME_WINDOW)),
-            ..Default::default()
-        })
+        // `[-t target-window]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_window) = &self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        }
+
+        // `new-name`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(new_name) = &self.new_name {
+            cmd.push_param(new_name.as_ref());
+        }
+        cmd
     }
 }

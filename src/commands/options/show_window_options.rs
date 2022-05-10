@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// # Manual
@@ -32,16 +32,27 @@ use std::borrow::Cow;
 /// tmux show-window-options [-t target-window] option value
 /// (alias: showw)
 /// ```
-#[derive(Debug, Clone)]
-pub struct ShowWindowOptions<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct ShowWindowOptions<'a> {
+    /// `[-g]`
+    #[cfg(feature = "tmux_1_0")]
+    pub global: bool,
 
-impl<'a> Default for ShowWindowOptions<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_WINDOW_OPTIONS)),
-            ..Default::default()
-        })
-    }
+    /// `[-v]`
+    #[cfg(feature = "tmux_1_8")]
+    pub only_value: bool,
+
+    /// `[-t target-window]`
+    #[cfg(feature = "tmux_0_8")]
+    pub target_window: Option<Cow<'a, str>>,
+
+    /// `option`
+    #[cfg(feature = "tmux_0_8")]
+    pub option: Option<Cow<'a, str>>,
+
+    /// `value`
+    #[cfg(feature = "tmux_0_8")]
+    pub value: Option<Cow<'a, str>>,
 }
 
 impl<'a> ShowWindowOptions<'a> {
@@ -52,57 +63,73 @@ impl<'a> ShowWindowOptions<'a> {
     /// `[-g]`
     #[cfg(feature = "tmux_1_0")]
     pub fn global(&mut self) -> &mut Self {
-        self.0.push_flag(G_LOWERCASE_KEY);
+        self.global = true;
         self
     }
 
     /// `[-v]`
     #[cfg(feature = "tmux_1_8")]
     pub fn only_value(&mut self) -> &mut Self {
-        self.0.push_flag(V_LOWERCASE_KEY);
+        self.only_value = true;
         self
     }
 
     /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_window);
+        self.target_window = Some(target_window.into());
         self
     }
 
     /// `option`
     #[cfg(feature = "tmux_0_8")]
     pub fn option<S: Into<Cow<'a, str>>>(&mut self, option: S) -> &mut Self {
-        self.0.push_param(option);
+        self.option = Some(option.into());
         self
     }
 
     /// `value`
     #[cfg(feature = "tmux_0_8")]
     pub fn value<S: Into<Cow<'a, str>>>(&mut self, value: S) -> &mut Self {
-        self.0.push_param(value);
+        self.value = Some(value.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for ShowWindowOptions<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_WINDOW_OPTIONS)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(SHOW_WINDOW_OPTIONS);
 
-impl<'a> From<&TmuxCommand<'a>> for ShowWindowOptions<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_WINDOW_OPTIONS)),
-            ..Default::default()
-        })
+        // `[-g]`
+        #[cfg(feature = "tmux_1_0")]
+        if self.global {
+            cmd.push_flag(G_LOWERCASE_KEY);
+        }
+
+        // `[-v]`
+        #[cfg(feature = "tmux_1_8")]
+        if self.only_value {
+            cmd.push_flag(V_LOWERCASE_KEY);
+        }
+
+        // `[-t target-window]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_window) = &self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        }
+
+        // `option`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(option) = &self.option {
+            cmd.push_param(option.as_ref());
+        }
+
+        // `value`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(value) = &self.value {
+            cmd.push_param(value.as_ref());
+        }
+
+        cmd
     }
 }

@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 // XXX: better result return?
@@ -17,16 +17,11 @@ use std::borrow::Cow;
 /// tmux list-sessions
 /// (alias: ls)
 /// ```
-#[derive(Debug, Clone)]
-pub struct ListSessions<'a>(pub TmuxCommand<'a>);
-
-impl<'a> Default for ListSessions<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_SESSIONS)),
-            ..Default::default()
-        })
-    }
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct ListSessions<'a> {
+    /// `[-F format]`
+    #[cfg(feature = "tmux_1_6")]
+    pub format: Option<Cow<'a, str>>,
 }
 
 impl<'a> ListSessions<'a> {
@@ -37,29 +32,21 @@ impl<'a> ListSessions<'a> {
     /// `[-F format]`
     #[cfg(feature = "tmux_1_6")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_UPPERCASE_KEY, format);
+        self.format = Some(format.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for ListSessions<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_SESSIONS)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(LIST_SESSIONS);
 
-impl<'a> From<&TmuxCommand<'a>> for ListSessions<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_SESSIONS)),
-            ..Default::default()
-        })
+        // `[-F format]`
+        #[cfg(feature = "tmux_1_6")]
+        if let Some(format) = &self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        }
+
+        cmd
     }
 }

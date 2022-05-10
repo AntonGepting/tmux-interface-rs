@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Reactivate a window in which the command has exited
@@ -29,16 +29,27 @@ use std::borrow::Cow;
 /// tmux respawn-window [-k] [-t target-window] [command]
 /// (alias: respawnw)
 /// ```
-#[derive(Debug, Clone)]
-pub struct RespawnWindow<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct RespawnWindow<'a> {
+    /// `[-k]` - any existing command is killed
+    #[cfg(feature = "tmux_0_8")]
+    pub kill: bool,
 
-impl<'a> Default for RespawnWindow<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RESPAWN_WINDOW)),
-            ..Default::default()
-        })
-    }
+    /// `[-c start-directory]` - start-directory
+    #[cfg(feature = "tmux_2_6")]
+    pub start_directory: Option<Cow<'a, str>>,
+
+    /// `[-e environment]` - environment
+    #[cfg(feature = "tmux_3_0")]
+    pub environment: Option<Cow<'a, str>>,
+
+    /// `[-t target-pane]` - target-pane
+    #[cfg(feature = "tmux_0_8")]
+    pub target_window: Option<Cow<'a, str>>,
+
+    /// `[shell-command]` - shell-command
+    #[cfg(feature = "tmux_1_2")]
+    pub shell_command: Option<Cow<'a, str>>,
 }
 
 impl<'a> RespawnWindow<'a> {
@@ -49,57 +60,73 @@ impl<'a> RespawnWindow<'a> {
     /// `[-k]` - any existing command is killed
     #[cfg(feature = "tmux_0_8")]
     pub fn kill(&mut self) -> &mut Self {
-        self.0.push_flag(K_LOWERCASE_KEY);
+        self.kill = true;
         self
     }
 
     /// `[-c start-directory]` - start-directory
     #[cfg(feature = "tmux_2_6")]
     pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, start_directory: S) -> &mut Self {
-        self.0.push_option(C_LOWERCASE_KEY, start_directory);
+        self.start_directory = Some(start_directory.into());
         self
     }
 
     /// `[-e environment]` - environment
     #[cfg(feature = "tmux_3_0")]
     pub fn environment<S: Into<Cow<'a, str>>>(&mut self, environment: S) -> &mut Self {
-        self.0.push_option(E_LOWERCASE_KEY, environment);
+        self.environment = Some(environment.into());
         self
     }
 
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_window);
+        self.target_window = Some(target_window.into());
         self
     }
 
     /// `[shell-command]` - shell-command
     #[cfg(feature = "tmux_1_2")]
     pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
-        self.0.push_param(shell_command);
+        self.shell_command = Some(shell_command.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for RespawnWindow<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RESPAWN_WINDOW)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(RESPAWN_WINDOW);
 
-impl<'a> From<&TmuxCommand<'a>> for RespawnWindow<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(RESPAWN_WINDOW)),
-            ..Default::default()
-        })
+        // `[-k]` - any existing command is killed
+        #[cfg(feature = "tmux_0_8")]
+        if self.kill {
+            cmd.push_flag(K_LOWERCASE_KEY);
+        }
+
+        // `[-c start-directory]` - start-directory
+        #[cfg(feature = "tmux_2_6")]
+        if let Some(start_directory) = &self.start_directory {
+            cmd.push_option(C_LOWERCASE_KEY, start_directory.as_ref());
+        }
+
+        // `[-e environment]` - environment
+        #[cfg(feature = "tmux_3_0")]
+        if let Some(environment) = &self.environment {
+            cmd.push_option(E_LOWERCASE_KEY, environment.as_ref());
+        }
+
+        // `[-t target-pane]` - target-pane
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_window) = &self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        }
+
+        // `[shell-command]` - shell-command
+        #[cfg(feature = "tmux_1_2")]
+        if let Some(shell_command) = &self.shell_command {
+            cmd.push_param(shell_command.as_ref());
+        }
+
+        cmd
     }
 }

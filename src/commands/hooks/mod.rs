@@ -18,12 +18,12 @@ pub mod show_hooks_tests;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#HOOKS))
 impl<'a> TmuxCommand<'a> {
     #[cfg(feature = "tmux_2_2")]
-    pub fn set_hook(&self) -> SetHook<'a> {
-        SetHook::from(self)
+    pub fn set_hook() -> SetHook<'a> {
+        SetHook::new()
     }
 
     #[cfg(feature = "tmux_2_2")]
-    pub fn show_hooks(&self) -> ShowHooks<'a> {
-        ShowHooks::from(self)
+    pub fn show_hooks() -> ShowHooks<'a> {
+        ShowHooks::new()
     }
 }

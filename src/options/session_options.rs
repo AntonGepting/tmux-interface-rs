@@ -1,5 +1,9 @@
 use super::create_insert_vec;
+use crate::commands::tmux_bin_command::TmuxBinCommand;
+use crate::commands::tmux_bin_commands::TmuxBinCommands;
+use crate::commands::tmux_commands::TmuxCommands;
 use crate::options::StatusKeys;
+use crate::TmuxCommand;
 use crate::{Error, SetOption, ShowOptions, Switch};
 use std::fmt;
 use std::str::FromStr;
@@ -1308,28 +1312,93 @@ pub struct SessionOptions {
     //pub user_options: Option<HashMap<String, String>>
 }
 
+//pub struct TmuxOptions<'a> {
+//pub cmd: TmuxBinCommands<'a>,
+//}
+
+//impl<'a> TmuxOptions<'a> {
+//pub fn new() -> Self {
+//Self {
+//cmd: TmuxBinCommands::new(),
+//}
+//}
+
+//pub fn get_all_session_options() -> Result<SessionOptions, Error> {
+//let s = ShowOptions::from().global().output()?.to_string();
+//s.parse()
+//}
+//}
+//
+pub enum TmuxCommandVariant<'a> {
+    None,
+    // stdin handle needed
+    Single(TmuxCommand<'a>),
+    // stdin handle needed
+    Multiple(TmuxCommands<'a>),
+    SingleBin(TmuxBinCommand<'a>),
+    MultipleBin(TmuxBinCommands<'a>),
+}
+
 impl SessionOptions {
-    pub fn get_all() -> Result<Self, Error> {
-        let s = ShowOptions::new().global().output()?.to_string();
+    // FIXME: review, same arms
+    pub fn get_all(cmd: Option<&TmuxCommand>) -> Result<Self, Error> {
+        let mut show_options = match cmd {
+            Some(cmd) => ShowOptions::new(),
+            None => ShowOptions::new(),
+        };
+        let s = show_options.global().build().output()?.to_string();
         s.parse()
     }
 
     // XXX: bitmask is overkill now, mb later use for multiple select
     // NOTE: not allows selective get by bitmask
+    // FIXME: review, same arms
     #[cfg(feature = "tmux_1_7")]
-    pub fn get(bitflags: u128) -> Result<Self, Error> {
+    pub fn get(cmd: Option<&TmuxCommand>, bitflags: u128) -> Result<Self, Error> {
+        let show_options = match cmd {
+            Some(cmd) => ShowOptions::new(),
+            None => ShowOptions::new(),
+        };
+        Self::get_ext(None, bitflags)
+    }
+
+    // extended
+    //
+    // FIXME: review, arms
+    // XXX: bitmask is overkill now, mb later use for multiple select
+    // NOTE: not allows selective get by bitmask
+    #[cfg(feature = "tmux_1_7")]
+    pub fn get_ext(cmds: Option<&mut TmuxBinCommands>, bitflags: u128) -> Result<Self, Error> {
         let selected_option = SESSION_OPTIONS
             .iter()
             .filter(|t| bitflags == t.3)
             .map(|t| t.0.to_string())
             .collect::<Vec<String>>()
             .join(" ");
-        let s = ShowOptions::new()
-            .option(&selected_option)
-            .output()?
-            .to_string();
-        s.parse()
+
+        let mut show_options = ShowOptions::new();
+        show_options.option(selected_option);
+
+        let result = match cmds {
+            Some(cmds) => {
+                //cmds.push(show_options);
+                cmds.output()?.to_string()
+            }
+            None => show_options.build().output()?.to_string(),
+        };
+
+        result.parse()
     }
+
+    // do not create anything, just get option from tmux
+    //pub fn get_from_new_server(bitflags: u128) -> Result<Self, Error> {
+    //let mut cmds = TmuxBinCommands::default();
+
+    //let start_server = StartServer::new();
+    //cmds.push(start_server);
+
+    //Self::get_ext(Some(&mut cmds), bitflags)
+    //}
 
     #[cfg(feature = "tmux_1_7")]
     pub fn get_global(bitflags: u128) -> Result<Self, Error> {
@@ -1342,6 +1411,7 @@ impl SessionOptions {
         let s = ShowOptions::new()
             .global()
             .option(&selected_option)
+            .build()
             .output()?
             .to_string();
         s.parse()

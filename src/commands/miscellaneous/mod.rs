@@ -43,27 +43,27 @@ pub mod wait_for_tests;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#MISCELLANEOUS))
 impl<'a> TmuxCommand<'a> {
     #[cfg(feature = "tmux_0_8")]
-    pub fn clock_mode(&self) -> ClockMode<'a> {
-        ClockMode::from(self)
+    pub fn clock_mode() -> ClockMode<'a> {
+        ClockMode::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn if_shell(&self) -> IfShell<'a> {
-        IfShell::from(self)
+    pub fn if_shell() -> IfShell<'a> {
+        IfShell::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn lock_server(&self) -> LockServer<'a> {
-        LockServer::from(self)
+    pub fn lock_server() -> LockServer {
+        LockServer::new()
     }
 
     #[cfg(feature = "tmux_1_1")]
-    pub fn run_shell(&self) -> RunShell<'a> {
-        RunShell::from(self)
+    pub fn run_shell() -> RunShell<'a> {
+        RunShell::new()
     }
 
     #[cfg(feature = "tmux_1_8")]
-    pub fn wait_for(&self) -> WaitFor<'a> {
-        WaitFor::from(self)
+    pub fn wait_for() -> WaitFor<'a> {
+        WaitFor::new()
     }
 }

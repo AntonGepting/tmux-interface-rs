@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Move to the previous window in the session
@@ -17,16 +17,15 @@ use std::borrow::Cow;
 /// tmux previous-window [-t target-session]
 /// (alias: prev)
 /// ```
-#[derive(Debug, Clone)]
-pub struct PreviousWindow<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct PreviousWindow<'a> {
+    /// `[-a]`
+    #[cfg(feature = "tmux_0_9")]
+    pub parent_sighup: bool,
 
-impl<'a> Default for PreviousWindow<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(PREVIOUS_WINDOW)),
-            ..Default::default()
-        })
-    }
+    /// `[-t target-session]`
+    #[cfg(feature = "tmux_0_8")]
+    pub target_session: Option<Cow<'a, str>>,
 }
 
 impl<'a> PreviousWindow<'a> {
@@ -37,36 +36,34 @@ impl<'a> PreviousWindow<'a> {
     /// `[-a]`
     #[cfg(feature = "tmux_0_9")]
     pub fn parent_sighup(&mut self) -> &mut Self {
-        self.0.push_flag(A_LOWERCASE_KEY);
+        self.parent_sighup = true;
         self
     }
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_session);
+        self.target_session = Some(target_session.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for PreviousWindow<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(PREVIOUS_WINDOW)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(PREVIOUS_WINDOW);
 
-impl<'a> From<&TmuxCommand<'a>> for PreviousWindow<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(PREVIOUS_WINDOW)),
-            ..Default::default()
-        })
+        // `[-a]`
+        #[cfg(feature = "tmux_0_9")]
+        if self.parent_sighup {
+            cmd.push_flag(A_LOWERCASE_KEY);
+        }
+
+        // `[-t target-session]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_session) = &self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        }
+
+        cmd
     }
 }

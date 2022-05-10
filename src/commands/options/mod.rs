@@ -26,22 +26,22 @@ pub mod show_window_options_tests;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#OPTIONS))
 impl<'a> TmuxCommand<'a> {
     #[cfg(feature = "tmux_0_8")]
-    pub fn set_option(&self) -> SetOption<'a> {
-        SetOption::from(self)
+    pub fn set_option() -> SetOption<'a> {
+        SetOption::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn set_window_option(&self) -> SetWindowOption<'a> {
-        SetWindowOption::from(self)
+    pub fn set_window_option() -> SetWindowOption<'a> {
+        SetWindowOption::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn show_options(&self) -> ShowOptions<'a> {
-        ShowOptions::from(self)
+    pub fn show_options() -> ShowOptions<'a> {
+        ShowOptions::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn show_window_options(&self) -> ShowWindowOptions<'a> {
-        ShowWindowOptions::from(self)
+    pub fn show_window_options() -> ShowWindowOptions<'a> {
+        ShowWindowOptions::new()
     }
 }

@@ -1,6 +1,5 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
-use std::borrow::Cow;
 
 /// Kill the tmux server and clients and destroy all sessions
 ///
@@ -10,38 +9,19 @@ use std::borrow::Cow;
 /// ```text
 /// tmux kill-server
 /// ```
-#[derive(Debug, Clone)]
-pub struct KillServer<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct KillServer;
 
-impl<'a> Default for KillServer<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(KILL_SERVER)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> KillServer<'a> {
+impl KillServer {
     pub fn new() -> Self {
         Default::default()
     }
-}
 
-impl<'a> From<TmuxCommand<'a>> for KillServer<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(KILL_SERVER)),
-            ..Default::default()
-        })
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<&TmuxCommand<'a>> for KillServer<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(KILL_SERVER)),
-            ..Default::default()
-        })
+        cmd.cmd(KILL_SERVER);
+
+        cmd
     }
 }

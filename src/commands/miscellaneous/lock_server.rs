@@ -1,6 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
-use std::borrow::Cow;
+use crate::TmuxCommand;
 
 /// # Manual
 ///
@@ -9,42 +8,19 @@ use std::borrow::Cow;
 /// tmux lock-server
 /// (alias: lock)
 /// ```
-#[derive(Debug, Clone)]
-pub struct LockServer<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct LockServer;
 
-impl<'a> Default for LockServer<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LOCK_SERVER)),
-            ..Default::default()
-        })
-    }
-}
-
-impl<'a> LockServer<'a> {
+impl LockServer {
     pub fn new() -> Self {
         Default::default()
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for LockServer<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LOCK_SERVER)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(LOCK_SERVER);
 
-impl<'a> From<&TmuxCommand<'a>> for LockServer<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LOCK_SERVER)),
-            ..Default::default()
-        })
+        cmd
     }
 }

@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 // XXX: better result return?
@@ -12,16 +12,10 @@ use std::borrow::Cow;
 /// tmux has-session [-t target-session]
 /// (alias: has)
 /// ```
-#[derive(Debug)]
-pub struct HasSession<'a>(pub TmuxCommand<'a>);
-
-impl<'a> Default for HasSession<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(HAS_SESSION)),
-            ..Default::default()
-        })
-    }
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct HasSession<'a> {
+    /// `[-t target-session]`
+    pub target_session: Option<Cow<'a, str>>,
 }
 
 impl<'a> HasSession<'a> {
@@ -31,30 +25,20 @@ impl<'a> HasSession<'a> {
 
     /// `[-t target-session]`
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_session);
+        self.target_session = Some(target_session.into());
         self
     }
 
-    /// run command
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for HasSession<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(HAS_SESSION)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(HAS_SESSION);
 
-impl<'a> From<&TmuxCommand<'a>> for HasSession<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(HAS_SESSION)),
-            ..Default::default()
-        })
+        // `[-t target-session]`
+        if let Some(target_session) = &self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        }
+
+        cmd
     }
 }

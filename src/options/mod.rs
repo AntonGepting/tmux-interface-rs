@@ -1,3 +1,5 @@
+// mb separated crate later, and tmux_interface as underlying layer
+//
 use crate::Error;
 use std::fmt;
 use std::str::FromStr;

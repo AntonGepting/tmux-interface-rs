@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Rotate the positions of the panes within a window
@@ -17,16 +17,23 @@ use std::borrow::Cow;
 /// tmux rotate-window [-DU] [-t target-window]
 /// (alias: rotatew)
 /// ```
-#[derive(Debug, Clone)]
-pub struct RotateWindow<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct RotateWindow<'a> {
+    /// `[-D]`
+    #[cfg(feature = "tmux_0_8")]
+    pub down: bool,
 
-impl<'a> Default for RotateWindow<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(ROTATE_WINDOW)),
-            ..Default::default()
-        })
-    }
+    /// `[-U]`
+    #[cfg(feature = "tmux_0_8")]
+    pub up: bool,
+
+    /// `[-Z]`
+    #[cfg(feature = "tmux_3_1")]
+    pub keep_zoomed: bool,
+
+    /// `[-t target-window]`
+    #[cfg(feature = "tmux_0_8")]
+    pub target_window: Option<Cow<'a, str>>,
 }
 
 impl<'a> RotateWindow<'a> {
@@ -37,50 +44,60 @@ impl<'a> RotateWindow<'a> {
     /// `[-D]`
     #[cfg(feature = "tmux_0_8")]
     pub fn down(&mut self) -> &mut Self {
-        self.0.push_flag(D_UPPERCASE_KEY);
+        self.down = true;
         self
     }
 
     /// `[-U]`
     #[cfg(feature = "tmux_0_8")]
     pub fn up(&mut self) -> &mut Self {
-        self.0.push_flag(U_UPPERCASE_KEY);
+        self.up = true;
         self
     }
 
     /// `[-Z]`
     #[cfg(feature = "tmux_3_1")]
     pub fn keep_zoomed(&mut self) -> &mut Self {
-        self.0.push_flag(Z_UPPERCASE_KEY);
+        self.keep_zoomed = true;
         self
     }
 
     /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_window);
+        self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for RotateWindow<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(ROTATE_WINDOW)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(ROTATE_WINDOW);
 
-impl<'a> From<&TmuxCommand<'a>> for RotateWindow<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(ROTATE_WINDOW)),
-            ..Default::default()
-        })
+        // `[-D]`
+        #[cfg(feature = "tmux_0_8")]
+        if self.down {
+            cmd.push_flag(D_UPPERCASE_KEY);
+        }
+
+        // `[-U]`
+        #[cfg(feature = "tmux_0_8")]
+        if self.up {
+            cmd.push_flag(U_UPPERCASE_KEY);
+        }
+
+        // `[-Z]`
+        #[cfg(feature = "tmux_3_1")]
+        if self.keep_zoomed {
+            cmd.push_flag(Z_UPPERCASE_KEY);
+        }
+
+        // `[-t target-window]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_window) = &self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        }
+
+        cmd
     }
 }

@@ -1,8 +1,9 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 // TODO: enum for arg
+// FIXME: not multiple, only one choice
 /// # Manual
 ///
 /// tmux ^1.9:
@@ -16,17 +17,23 @@ use std::borrow::Cow;
 /// tmux wait-for -LSU channel
 /// (alias: wait)
 /// ```
-// FIXME: not multiple, only one choice
-#[derive(Debug, Clone)]
-pub struct WaitFor<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct WaitFor<'a> {
+    /// `[-L]`
+    #[cfg(feature = "tmux_1_8")]
+    pub locked: bool,
 
-impl<'a> Default for WaitFor<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(WAIT_FOR)),
-            ..Default::default()
-        })
-    }
+    /// `[-S]`
+    #[cfg(feature = "tmux_1_8")]
+    pub woken: bool,
+
+    /// `[-U]`
+    #[cfg(feature = "tmux_1_8")]
+    pub unlocked: bool,
+
+    /// `channel`
+    #[cfg(feature = "tmux_1_8")]
+    pub channel: Option<Cow<'a, str>>,
 }
 
 impl<'a> WaitFor<'a> {
@@ -37,50 +44,59 @@ impl<'a> WaitFor<'a> {
     /// `[-L]`
     #[cfg(feature = "tmux_1_8")]
     pub fn locked(&mut self) -> &mut Self {
-        self.0.push_flag(L_UPPERCASE_KEY);
+        self.locked = true;
         self
     }
 
     /// `[-S]`
     #[cfg(feature = "tmux_1_8")]
     pub fn woken(&mut self) -> &mut Self {
-        self.0.push_flag(S_UPPERCASE_KEY);
+        self.woken = true;
         self
     }
 
     /// `[-U]`
     #[cfg(feature = "tmux_1_8")]
     pub fn unlocked(&mut self) -> &mut Self {
-        self.0.push_flag(U_UPPERCASE_KEY);
+        self.unlocked = true;
         self
     }
 
     /// `channel`
     #[cfg(feature = "tmux_1_8")]
     pub fn channel<S: Into<Cow<'a, str>>>(&mut self, channel: S) -> &mut Self {
-        self.0.push_param(channel);
+        self.channel = Some(channel.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for WaitFor<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(WAIT_FOR)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(WAIT_FOR);
 
-impl<'a> From<&TmuxCommand<'a>> for WaitFor<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(WAIT_FOR)),
-            ..Default::default()
-        })
+        // `[-L]`
+        #[cfg(feature = "tmux_1_8")]
+        if self.locked {
+            cmd.push_flag(L_UPPERCASE_KEY);
+        }
+
+        // `[-S]`
+        #[cfg(feature = "tmux_1_8")]
+        if self.woken {
+            cmd.push_flag(S_UPPERCASE_KEY);
+        }
+
+        // `[-U]`
+        #[cfg(feature = "tmux_1_8")]
+        if self.unlocked {
+            cmd.push_flag(U_UPPERCASE_KEY);
+        }
+
+        // `channel`
+        #[cfg(feature = "tmux_1_8")]
+        if let Some(channel) = &self.channel {
+            cmd.push_param(channel.as_ref());
+        }
+        cmd
     }
 }

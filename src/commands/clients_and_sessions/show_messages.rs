@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Show client messages or server information
@@ -23,16 +23,20 @@ use std::borrow::Cow;
 /// tmux show-messages [-t target-client]
 /// (alias: showmsgs)
 /// ```
-#[derive(Debug, Clone)]
-pub struct ShowMessages<'a>(pub TmuxCommand<'a>);
-
-impl<'a> Default for ShowMessages<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_MESSAGES)),
-            ..Default::default()
-        })
-    }
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct ShowMessages<'a> {
+    /// `[-I]`
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
+    pub server: bool,
+    /// `[-J]`
+    #[cfg(feature = "tmux_1_9")]
+    pub jobs: bool,
+    /// `[-T]`
+    #[cfg(feature = "tmux_1_9")]
+    pub terminals: bool,
+    /// `[-t target-client]`
+    #[cfg(feature = "tmux_1_2")]
+    pub target_client: Option<Cow<'a, str>>,
 }
 
 impl<'a> ShowMessages<'a> {
@@ -43,50 +47,60 @@ impl<'a> ShowMessages<'a> {
     /// `[-I]`
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
     pub fn server(&mut self) -> &mut Self {
-        self.0.push_flag(I_UPPERCASE_KEY);
+        self.server = true;
         self
     }
 
     /// `[-J]`
     #[cfg(feature = "tmux_1_9")]
     pub fn jobs(&mut self) -> &mut Self {
-        self.0.push_flag(J_UPPERCASE_KEY);
+        self.jobs = true;
         self
     }
 
     /// `[-T]`
     #[cfg(feature = "tmux_1_9")]
     pub fn terminals(&mut self) -> &mut Self {
-        self.0.push_flag(T_UPPERCASE_KEY);
+        self.terminals = true;
         self
     }
 
     /// `[-t target-client]`
     #[cfg(feature = "tmux_1_2")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_client);
+        self.target_client = Some(target_client.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for ShowMessages<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_MESSAGES)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(SHOW_MESSAGES);
 
-impl<'a> From<&TmuxCommand<'a>> for ShowMessages<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(SHOW_MESSAGES)),
-            ..Default::default()
-        })
+        // `[-I]`
+        #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
+        if self.server.is_some() {
+            cmd.push_flag(I_UPPERCASE_KEY);
+        }
+
+        // `[-J]`
+        #[cfg(feature = "tmux_1_9")]
+        if self.jobs {
+            cmd.push_flag(J_UPPERCASE_KEY);
+        }
+
+        // `[-T]`
+        #[cfg(feature = "tmux_1_9")]
+        if self.terminals {
+            cmd.push_flag(T_UPPERCASE_KEY);
+        }
+
+        // `[-t target-client]`
+        #[cfg(feature = "tmux_1_2")]
+        if let Some(target_client) = &self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        }
+
+        cmd
     }
 }

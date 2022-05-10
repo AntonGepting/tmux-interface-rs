@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Break `src-pane` off from its containing window to make it the only pane in `dst-window`
@@ -47,16 +47,53 @@ use std::borrow::Cow;
 /// tmux break-pane [-d] [-p pane-index] [-t target-window]
 /// (alias: breakp)
 /// ```
-#[derive(Debug, Clone)]
-pub struct BreakPane<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct BreakPane<'a> {
+    /// `[-a]` - the window is moved to the next index after
+    #[cfg(feature = "tmux_3_2")]
+    pub after: bool,
 
-impl<'a> Default for BreakPane<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(BREAK_PANE)),
-            ..Default::default()
-        })
-    }
+    /// `[-b]` - the window is moved to the next index before
+    #[cfg(feature = "tmux_3_2")]
+    pub before: bool,
+
+    /// `[-d]` - the new window does not become the current window
+    #[cfg(feature = "tmux_0_8")]
+    pub detached: bool,
+
+    /// `[-P]` - option prints information about the new window after it has been created
+    #[cfg(feature = "tmux_1_7")]
+    pub print: bool,
+
+    /// `[-F format]` - specify format
+    #[cfg(feature = "tmux_1_7")]
+    pub format: Option<Cow<'a, str>>,
+
+    /// `[-n window-name]` - window-name
+    #[cfg(feature = "tmux_2_4")]
+    pub window_name: Option<Cow<'a, str>>,
+
+    /// `[-s src-pane]` - src-pane
+    #[cfg(feature = "tmux_2_1")]
+    pub src_pane: Option<Cow<'a, str>>,
+
+    /// `[-t dst-pane]` - dst-pane
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+    pub dst_pane: Option<Cow<'a, str>>,
+
+    /// `[-t dst-window]` - dst-window
+    #[cfg(feature = "tmux_2_2")]
+    pub dst_window: Option<Cow<'a, str>>,
+
+    /// `[-t target-window]` - target-window
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+    pub target_window: Option<Cow<'a, str>>,
+
+    /// `[-t target-pane]` - target-pane
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+    pub target_pane: Option<Cow<'a, str>>,
+    // FIXME:
+    // `[-p pane-index]` - pane-index
 }
 
 impl<'a> BreakPane<'a> {
@@ -67,102 +104,157 @@ impl<'a> BreakPane<'a> {
     /// `[-a]` - the window is moved to the next index after
     #[cfg(feature = "tmux_3_2")]
     pub fn after(&mut self) -> &mut Self {
-        self.0.push_flag(A_LOWERCASE_KEY);
+        self.after = true;
         self
     }
 
     /// `[-b]` - the window is moved to the next index before
     #[cfg(feature = "tmux_3_2")]
     pub fn before(&mut self) -> &mut Self {
-        self.0.push_flag(B_LOWERCASE_KEY);
+        self.before = true;
         self
     }
 
     /// `[-d]` - the new window does not become the current window
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(D_LOWERCASE_KEY);
+        self.detached = true;
         self
     }
 
     /// `[-P]` - option prints information about the new window after it has been created
     #[cfg(feature = "tmux_1_7")]
     pub fn print(&mut self) -> &mut Self {
-        self.0.push_flag(P_UPPERCASE_KEY);
+        self.print = true;
         self
     }
 
     /// `[-F format]` - specify format
     #[cfg(feature = "tmux_1_7")]
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_UPPERCASE_KEY, format);
+        self.format = Some(format.into());
         self
     }
 
-    /// `[-n]` - window-name
+    /// `[-n window-name]` - window-name
     #[cfg(feature = "tmux_2_4")]
     pub fn window_name<S: Into<Cow<'a, str>>>(&mut self, window_name: S) -> &mut Self {
-        self.0.push_option(N_LOWERCASE_KEY, window_name);
+        self.window_name = Some(window_name.into());
         self
     }
 
     /// `[-s src-pane]` - src-pane
     #[cfg(feature = "tmux_2_1")]
     pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
-        self.0.push_option(S_LOWERCASE_KEY, src_pane);
+        self.src_pane = Some(src_pane.into());
         self
     }
 
     /// `[-t dst-pane]` - dst-pane
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
     pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, dst_pane);
+        self.dst_pane = Some(dst_pane.into());
         self
     }
 
     /// `[-t dst-window]` - dst-window
     #[cfg(feature = "tmux_2_2")]
     pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, dst_window);
+        self.dst_window = Some(dst_window.into());
         self
     }
 
     /// `[-t target-window]` - target-window
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_window);
+        self.target_window = Some(target_window.into());
         self
     }
 
     /// `[-t target-pane]` - target-pane
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_pane);
+        self.target_pane = Some(target_pane.into());
         self
     }
 
     // FIXME:
     // `[-p pane-index]` - pane-index
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for BreakPane<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(BREAK_PANE)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(BREAK_PANE);
 
-impl<'a> From<&TmuxCommand<'a>> for BreakPane<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(BREAK_PANE)),
-            ..Default::default()
-        })
+        // `[-a]` - the window is moved to the next index after
+        #[cfg(feature = "tmux_3_2")]
+        if self.after {
+            cmd.push_flag(A_LOWERCASE_KEY);
+        }
+
+        // `[-b]` - the window is moved to the next index before
+        #[cfg(feature = "tmux_3_2")]
+        if self.before {
+            cmd.push_flag(B_LOWERCASE_KEY);
+        }
+
+        // `[-d]` - the new window does not become the current window
+        #[cfg(feature = "tmux_0_8")]
+        if self.detached {
+            cmd.push_flag(D_LOWERCASE_KEY);
+        }
+
+        // `[-P]` - option prints information about the new window after it has been created
+        #[cfg(feature = "tmux_1_7")]
+        if self.print {
+            cmd.push_flag(P_UPPERCASE_KEY);
+        }
+
+        // `[-F format]` - specify format
+        #[cfg(feature = "tmux_1_7")]
+        if let Some(format) = &self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        }
+
+        // `[-n]` - window-name
+        #[cfg(feature = "tmux_2_4")]
+        if let Some(window_name) = &self.window_name {
+            cmd.push_option(N_LOWERCASE_KEY, window_name.as_ref());
+        }
+
+        // `[-s src-pane]` - src-pane
+        #[cfg(feature = "tmux_2_1")]
+        if let Some(src_pane) = &self.src_pane {
+            cmd.push_option(S_LOWERCASE_KEY, src_pane.as_ref());
+        }
+
+        // `[-t dst-pane]` - dst-pane
+        #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+        if let Some(dst_pane) = &self.dst_pane {
+            cmd.push_option(T_LOWERCASE_KEY, dst_pane.as_ref());
+        }
+
+        // `[-t dst-window]` - dst-window
+        #[cfg(feature = "tmux_2_2")]
+        if let Some(dst_window) = &self.dst_window {
+            cmd.push_option(T_LOWERCASE_KEY, dst_window.as_ref());
+        }
+
+        // `[-t target-window]` - target-window
+        #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+        if let Some(target_window) = &self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        }
+
+        // `[-t target-pane]` - target-pane
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+        if let Some(target_pane) = &self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        }
+
+        // FIXME:
+        // `[-p pane-index]` - pane-index
+
+        cmd
     }
 }

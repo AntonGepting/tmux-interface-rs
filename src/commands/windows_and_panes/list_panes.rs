@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 // XXX: better return type
@@ -24,16 +24,19 @@ use std::borrow::Cow;
 /// tmux list-panes [-t target]
 /// (alias: lsp)
 /// ```
-#[derive(Debug, Clone)]
-pub struct ListPanes<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct ListPanes<'a> {
+    /// `[-a]`
+    pub all: bool,
 
-impl<'a> Default for ListPanes<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_PANES)),
-            ..Default::default()
-        })
-    }
+    /// `[-s]`
+    pub session: bool,
+
+    /// `[-F format]`
+    pub format: Option<Cow<'a, str>>,
+
+    /// `[-t target]`
+    pub target: Option<Cow<'a, str>>,
 }
 
 impl<'a> ListPanes<'a> {
@@ -43,47 +46,53 @@ impl<'a> ListPanes<'a> {
 
     /// `[-a]`
     pub fn all(&mut self) -> &mut Self {
-        self.0.push_flag(A_LOWERCASE_KEY);
+        self.all = true;
         self
     }
 
     /// `[-s]`
     pub fn session(&mut self) -> &mut Self {
-        self.0.push_flag(S_LOWERCASE_KEY);
+        self.session = true;
         self
     }
 
     /// `[-F format]`
     pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
-        self.0.push_option(F_UPPERCASE_KEY, format);
+        self.format = Some(format.into());
         self
     }
 
     /// `[-t target]`
     pub fn target<S: Into<Cow<'a, str>>>(&mut self, target: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target);
+        self.target = Some(target.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for ListPanes<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_PANES)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(LIST_PANES);
 
-impl<'a> From<&TmuxCommand<'a>> for ListPanes<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LIST_PANES)),
-            ..Default::default()
-        })
+        // `[-a]`
+        if self.all {
+            cmd.push_flag(A_LOWERCASE_KEY);
+        }
+
+        // `[-s]`
+        if self.session {
+            cmd.push_flag(S_LOWERCASE_KEY);
+        }
+
+        // `[-F format]`
+        if let Some(format) = &self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        }
+
+        // `[-t target]`
+        if let Some(target) = &self.target {
+            cmd.push_option(T_LOWERCASE_KEY, target.as_ref());
+        }
+
+        cmd
     }
 }

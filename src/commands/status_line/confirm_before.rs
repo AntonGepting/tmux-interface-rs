@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// # Manual
@@ -15,16 +15,19 @@ use std::borrow::Cow;
 /// tmux confirm-before [-t target-client] command
 /// (alias: confirm)
 /// ```
-#[derive(Debug, Clone)]
-pub struct ConfirmBefore<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct ConfirmBefore<'a> {
+    /// `[-p prompt]`
+    #[cfg(feature = "tmux_1_5")]
+    pub prompt: Option<Cow<'a, str>>,
 
-impl<'a> Default for ConfirmBefore<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(CONFIRM_BEFORE)),
-            ..Default::default()
-        })
-    }
+    /// `[-t target-client]`
+    #[cfg(feature = "tmux_0_9")]
+    pub target_client: Option<Cow<'a, str>>,
+
+    /// `command`
+    #[cfg(feature = "tmux_0_9")]
+    pub command: Option<Cow<'a, str>>,
 }
 
 impl<'a> ConfirmBefore<'a> {
@@ -35,43 +38,47 @@ impl<'a> ConfirmBefore<'a> {
     /// `[-p prompt]`
     #[cfg(feature = "tmux_1_5")]
     pub fn prompt<S: Into<Cow<'a, str>>>(&mut self, prompt: S) -> &mut Self {
-        self.0.push_option(P_LOWERCASE_KEY, prompt);
+        self.prompt = Some(prompt.into());
         self
     }
 
     /// `[-t target-client]`
     #[cfg(feature = "tmux_0_9")]
     pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_client);
+        self.target_client = Some(target_client.into());
         self
     }
 
     /// `command`
     #[cfg(feature = "tmux_0_9")]
     pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
-        self.0.push_param(command);
+        self.command = Some(command.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for ConfirmBefore<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(CONFIRM_BEFORE)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(CONFIRM_BEFORE);
 
-impl<'a> From<&TmuxCommand<'a>> for ConfirmBefore<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(CONFIRM_BEFORE)),
-            ..Default::default()
-        })
+        // `[-p prompt]`
+        #[cfg(feature = "tmux_1_5")]
+        if let Some(prompt) = &self.prompt {
+            cmd.push_option(P_LOWERCASE_KEY, prompt.as_ref());
+        }
+
+        // `[-t target-client]`
+        #[cfg(feature = "tmux_0_9")]
+        if let Some(target_client) = &self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        }
+
+        // `command`
+        #[cfg(feature = "tmux_0_9")]
+        if let Some(command) = &self.command {
+            cmd.push_param(command.as_ref());
+        }
+
+        cmd
     }
 }

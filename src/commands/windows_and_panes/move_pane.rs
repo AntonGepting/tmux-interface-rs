@@ -1,6 +1,6 @@
 use crate::commands::constants::*;
 use crate::PaneSize;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Like join-pane, but `src-pane` and `dst-pane` may belong to the same window
@@ -18,16 +18,35 @@ use std::borrow::Cow;
 /// tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: movep)
 /// ```
-#[derive(Debug, Clone)]
-pub struct MovePane<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct MovePane<'a> {
+    /// `[-b]` - cause src-pane to be joined to left of or above dst-pane
+    #[cfg(feature = "tmux_1_7")]
+    pub left_above: bool,
 
-impl<'a> Default for MovePane<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(MOVE_PANE)),
-            ..Default::default()
-        })
-    }
+    /// `[-d]` -
+    #[cfg(feature = "tmux_1_7")]
+    pub detached: bool,
+
+    /// `[-h]` - full height
+    #[cfg(feature = "tmux_1_7")]
+    pub horizontal: bool,
+
+    /// `[-v]` - full width
+    #[cfg(feature = "tmux_1_7")]
+    pub vertical: bool,
+
+    /// `[-l size]` - specify the size of the new pane in lines/columns
+    #[cfg(feature = "tmux_1_7")]
+    pub size: Option<&'a PaneSize>,
+
+    /// `[-s src-pane]` - src-pane
+    #[cfg(feature = "tmux_1_7")]
+    pub src_pane: Option<Cow<'a, str>>,
+
+    /// `[-t dst-pane]` - dst-pane
+    #[cfg(feature = "tmux_1_7")]
+    pub dst_pane: Option<Cow<'a, str>>,
 }
 
 impl<'a> MovePane<'a> {
@@ -38,80 +57,110 @@ impl<'a> MovePane<'a> {
     /// `[-b]` - cause src-pane to be joined to left of or above dst-pane
     #[cfg(feature = "tmux_1_7")]
     pub fn left_above(&mut self) -> &mut Self {
-        self.0.push_flag(B_LOWERCASE_KEY);
+        self.left_above = true;
         self
     }
 
     /// `[-d]` -
     #[cfg(feature = "tmux_1_7")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(D_LOWERCASE_KEY);
+        self.detached = true;
         self
     }
 
     /// `[-h]` - full height
     #[cfg(feature = "tmux_1_7")]
     pub fn horizontal(&mut self) -> &mut Self {
-        self.0.push_flag(H_LOWERCASE_KEY);
+        self.horizontal = true;
         self
     }
 
     /// `[-v]` - full width
     #[cfg(feature = "tmux_1_7")]
     pub fn vertical(&mut self) -> &mut Self {
-        self.0.push_flag(V_LOWERCASE_KEY);
+        self.vertical = true;
         self
     }
 
     /// `[-l size]` - specify the size of the new pane in lines/columns
     #[cfg(feature = "tmux_1_7")]
     pub fn size(&mut self, size: &'a PaneSize) -> &mut Self {
-        #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-        match size {
-            PaneSize::Size(size) => self.0.push_option(L_LOWERCASE_KEY, size.to_string()),
-            PaneSize::Percentage(size) => self.0.push_option(L_LOWERCASE_KEY, format!("{}%", size)),
-        };
-        #[cfg(feature = "tmux_2_6")]
-        match size {
-            PaneSize::Size(size) => self.0.push_option(L_LOWERCASE_KEY, size.to_string()),
-            PaneSize::Percentage(size) => self.0.push_option(P_LOWERCASE_KEY, size.to_string()),
-        };
+        self.size = Some(size);
         self
     }
 
     /// `[-s src-pane]` - src-pane
     #[cfg(feature = "tmux_1_7")]
     pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
-        self.0.push_option(S_LOWERCASE_KEY, src_pane);
+        self.src_pane = Some(src_pane.into());
         self
     }
 
     /// `[-t dst-pane]` - dst-pane
     #[cfg(feature = "tmux_1_7")]
     pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, dst_pane);
+        self.dst_pane = Some(dst_pane.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for MovePane<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(MOVE_PANE)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(MOVE_PANE);
 
-impl<'a> From<&TmuxCommand<'a>> for MovePane<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(MOVE_PANE)),
-            ..Default::default()
-        })
+        // `[-b]` - cause src-pane to be joined to left of or above dst-pane
+        #[cfg(feature = "tmux_1_7")]
+        if self.left_above {
+            cmd.push_flag(B_LOWERCASE_KEY);
+        }
+
+        // `[-d]` -
+        #[cfg(feature = "tmux_1_7")]
+        if self.detached {
+            cmd.push_flag(D_LOWERCASE_KEY);
+        }
+
+        // `[-h]` - full height
+        #[cfg(feature = "tmux_1_7")]
+        if self.horizontal {
+            cmd.push_flag(H_LOWERCASE_KEY);
+        }
+
+        // `[-v]` - full width
+        #[cfg(feature = "tmux_1_7")]
+        if self.vertical {
+            cmd.push_flag(V_LOWERCASE_KEY);
+        }
+
+        // `[-l size]` - specify the size of the new pane in lines/columns
+        #[cfg(feature = "tmux_1_7")]
+        if let Some(size) = &self.size {
+            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
+            match size {
+                PaneSize::Size(size) => cmd.push_option(L_LOWERCASE_KEY, size.to_string()),
+                PaneSize::Percentage(size) => {
+                    cmd.push_option(L_LOWERCASE_KEY, format!("{}%", size))
+                }
+            };
+            #[cfg(feature = "tmux_2_6")]
+            match size {
+                PaneSize::Size(size) => cmd.push_option(L_LOWERCASE_KEY, size.to_string()),
+                PaneSize::Percentage(size) => cmd.push_option(P_LOWERCASE_KEY, size.to_string()),
+            };
+        }
+
+        // `[-s src-pane]` - src-pane
+        #[cfg(feature = "tmux_1_7")]
+        if let Some(src_pane) = &self.src_pane {
+            cmd.push_option(S_LOWERCASE_KEY, src_pane.as_ref());
+        }
+
+        // `[-t dst-pane]` - dst-pane
+        #[cfg(feature = "tmux_1_7")]
+        if let Some(dst_pane) = &self.dst_pane {
+            cmd.push_option(T_LOWERCASE_KEY, dst_pane.as_ref());
+        }
+
+        cmd
     }
 }

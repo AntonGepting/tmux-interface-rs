@@ -182,172 +182,172 @@ pub mod unlink_window_tests;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES))
 impl<'a> TmuxCommand<'a> {
     #[cfg(feature = "tmux_0_8")]
-    pub fn break_pane(&self) -> BreakPane<'a> {
-        BreakPane::from(self)
+    pub fn break_pane() -> BreakPane<'a> {
+        BreakPane::new()
     }
 
     #[cfg(feature = "tmux_1_2")]
-    pub fn capture_pane(&self) -> CapturePane<'a> {
-        CapturePane::from(self)
+    pub fn capture_pane() -> CapturePane<'a> {
+        CapturePane::new()
     }
 
     #[cfg(feature = "tmux_1_0")]
-    pub fn choose_client(&self) -> ChooseClient<'a> {
-        ChooseClient::from(self)
+    pub fn choose_client() -> ChooseClient<'a> {
+        ChooseClient::new()
     }
 
     #[cfg(feature = "tmux_1_7")]
-    pub fn choose_tree(&self) -> ChooseTree<'a> {
-        ChooseTree::from(self)
+    pub fn choose_tree() -> ChooseTree<'a> {
+        ChooseTree::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn copy_mode(&self) -> CopyMode<'a> {
-        CopyMode::from(self)
+    pub fn copy_mode() -> CopyMode<'a> {
+        CopyMode::new()
     }
 
     #[cfg(feature = "tmux_1_0")]
-    pub fn display_panes(&self) -> DisplayPanes<'a> {
-        DisplayPanes::from(self)
+    pub fn display_panes() -> DisplayPanes<'a> {
+        DisplayPanes::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn find_window(&self) -> FindWindow<'a> {
-        FindWindow::from(self)
+    pub fn find_window() -> FindWindow<'a> {
+        FindWindow::new()
     }
 
     #[cfg(feature = "tmux_1_2")]
-    pub fn join_pane(&self) -> JoinPane<'a> {
-        JoinPane::from(self)
+    pub fn join_pane() -> JoinPane<'a> {
+        JoinPane::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn kill_pane(&self) -> KillPane<'a> {
-        KillPane::from(self)
+    pub fn kill_pane() -> KillPane<'a> {
+        KillPane::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn kill_window(&self) -> KillWindow<'a> {
-        KillWindow::from(self)
+    pub fn kill_window() -> KillWindow<'a> {
+        KillWindow::new()
     }
 
     #[cfg(feature = "tmux_1_4")]
-    pub fn last_pane(&self) -> LastPane<'a> {
-        LastPane::from(self)
+    pub fn last_pane() -> LastPane<'a> {
+        LastPane::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn last_window(&self) -> LastWindow<'a> {
-        LastWindow::from(self)
+    pub fn last_window() -> LastWindow<'a> {
+        LastWindow::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn link_window(&self) -> LinkWindow<'a> {
-        LinkWindow::from(self)
+    pub fn link_window() -> LinkWindow<'a> {
+        LinkWindow::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn list_panes(&self) -> ListPanes<'a> {
-        ListPanes::from(self)
+    pub fn list_panes() -> ListPanes<'a> {
+        ListPanes::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn list_windows(&self) -> ListWindows<'a> {
-        ListWindows::from(self)
+    pub fn list_windows() -> ListWindows<'a> {
+        ListWindows::new()
     }
 
     #[cfg(feature = "tmux_1_7")]
-    pub fn move_pane(&self) -> MovePane<'a> {
-        MovePane::from(self)
+    pub fn move_pane() -> MovePane<'a> {
+        MovePane::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn move_window(&self) -> MoveWindow<'a> {
-        MoveWindow::from(self)
+    pub fn move_window() -> MoveWindow<'a> {
+        MoveWindow::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn new_window(&self) -> NewWindow<'a> {
-        NewWindow::from(self)
+    pub fn new_window() -> NewWindow<'a> {
+        NewWindow::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn next_layout(&self) -> NextLayout<'a> {
-        NextLayout::from(self)
+    pub fn next_layout() -> NextLayout<'a> {
+        NextLayout::new()
     }
 
     #[cfg(feature = "tmux_1_1")]
-    pub fn pipe_pane(&self) -> PipePane<'a> {
-        PipePane::from(self)
+    pub fn pipe_pane() -> PipePane<'a> {
+        PipePane::new()
     }
 
     #[cfg(feature = "tmux_1_3")]
-    pub fn previous_layout(&self) -> PreviousLayout<'a> {
-        PreviousLayout::from(self)
+    pub fn previous_layout() -> PreviousLayout<'a> {
+        PreviousLayout::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn previous_window(&self) -> PreviousWindow<'a> {
-        PreviousWindow::from(self)
+    pub fn previous_window() -> PreviousWindow<'a> {
+        PreviousWindow::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn rename_window(&self) -> RenameWindow<'a> {
-        RenameWindow::from(self)
+    pub fn rename_window() -> RenameWindow<'a> {
+        RenameWindow::new()
     }
 
     #[cfg(feature = "tmux_0_9")]
-    pub fn resize_pane(&self) -> ResizePane<'a> {
-        ResizePane::from(self)
+    pub fn resize_pane() -> ResizePane<'a> {
+        ResizePane::new()
     }
 
     #[cfg(feature = "tmux_2_9")]
-    pub fn resize_window(&self) -> ResizeWindow<'a> {
-        ResizeWindow::from(self)
+    pub fn resize_window() -> ResizeWindow<'a> {
+        ResizeWindow::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn respawn_window(&self) -> RespawnWindow<'a> {
-        RespawnWindow::from(self)
+    pub fn respawn_window() -> RespawnWindow<'a> {
+        RespawnWindow::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn rotate_window(&self) -> RotateWindow<'a> {
-        RotateWindow::from(self)
+    pub fn rotate_window() -> RotateWindow<'a> {
+        RotateWindow::new()
     }
 
     #[cfg(feature = "tmux_0_9")]
-    pub fn select_layout(&self) -> SelectLayout<'a> {
-        SelectLayout::from(self)
+    pub fn select_layout() -> SelectLayout<'a> {
+        SelectLayout::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn select_pane(&self) -> SelectPane<'a> {
-        SelectPane::from(self)
+    pub fn select_pane() -> SelectPane<'a> {
+        SelectPane::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn select_window(&self) -> SelectWindow<'a> {
-        SelectWindow::from(self)
+    pub fn select_window() -> SelectWindow<'a> {
+        SelectWindow::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn split_window(&self) -> SplitWindow<'a> {
-        SplitWindow::from(self)
+    pub fn split_window() -> SplitWindow<'a> {
+        SplitWindow::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn swap_pane(&self) -> SwapPane<'a> {
-        SwapPane::from(self)
+    pub fn swap_pane() -> SwapPane<'a> {
+        SwapPane::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn swap_window(&self) -> SwapWindow<'a> {
-        SwapWindow::from(self)
+    pub fn swap_window() -> SwapWindow<'a> {
+        SwapWindow::new()
     }
 
     #[cfg(feature = "tmux_0_8")]
-    pub fn unlink_window(&self) -> UnlinkWindow<'a> {
-        UnlinkWindow::from(self)
+    pub fn unlink_window() -> UnlinkWindow<'a> {
+        UnlinkWindow::new()
     }
 }

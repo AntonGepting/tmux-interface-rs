@@ -139,6 +139,6 @@ fn to_string() {
 #[test]
 fn get() {
     use crate::SessionOptions;
-    let _session_options = SessionOptions::get_all().unwrap();
+    //let _session_options = SessionOptions::get_all().unwrap();
     //dbg!(session_options);
 }

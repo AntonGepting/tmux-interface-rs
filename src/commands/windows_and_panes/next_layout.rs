@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Move a window to the next layout and rearrange the panes to fit
@@ -11,16 +11,11 @@ use std::borrow::Cow;
 /// tmux next-layout [-t target-window]
 /// (alias: nextl)
 /// ```
-#[derive(Debug, Clone)]
-pub struct NextLayout<'a>(pub TmuxCommand<'a>);
-
-impl<'a> Default for NextLayout<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEXT_LAYOUT)),
-            ..Default::default()
-        })
-    }
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct NextLayout<'a> {
+    /// `[-t target-window]`
+    #[cfg(feature = "tmux_0_8")]
+    pub target_window: Option<Cow<'a, str>>,
 }
 
 impl<'a> NextLayout<'a> {
@@ -31,29 +26,21 @@ impl<'a> NextLayout<'a> {
     /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_window);
+        self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for NextLayout<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEXT_LAYOUT)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(NEXT_LAYOUT);
 
-impl<'a> From<&TmuxCommand<'a>> for NextLayout<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(NEXT_LAYOUT)),
-            ..Default::default()
-        })
+        // `[-t target-window]`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_window) = &self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        }
+
+        cmd
     }
 }

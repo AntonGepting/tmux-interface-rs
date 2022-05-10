@@ -1,7 +1,7 @@
 use crate::commands::constants::*;
 #[cfg(feature = "tmux_3_2")]
 use crate::ClientFlags;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Structure for attaching client to already existing session
@@ -43,16 +43,35 @@ use std::borrow::Cow;
 /// tmux attach-session [-d] [-t target-session]
 /// (alias: attach)
 /// ```
-#[derive(Clone, Debug)]
-pub struct AttachSession<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct AttachSession<'a> {
+    /// `[-d]` - any other clients attached to the session are detached
+    #[cfg(feature = "tmux_0_8")]
+    pub detach_other: bool,
 
-impl<'a> Default for AttachSession<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(ATTACH_SESSION)),
-            ..Default::default()
-        })
-    }
+    /// `[-E]` - `update-environment` option will not be applied
+    #[cfg(feature = "tmux_2_1")]
+    pub not_update_env: bool,
+
+    /// `[-r]` - signifies the client is read-only
+    #[cfg(feature = "tmux_1_2")]
+    pub read_only: bool,
+
+    /// `[-x]` - send SIGHUP to the parent process, detaching the client
+    #[cfg(feature = "tmux_3_0")]
+    pub parent_sighup: bool,
+
+    /// `[-c working-directory]` - specify starting directory
+    #[cfg(feature = "tmux_1_9")]
+    pub working_directory: Option<Cow<'a, str>>,
+
+    /// `[-f flags]` - sets a comma-separated list of client flags
+    #[cfg(feature = "tmux_3_2")]
+    pub flags: Option<ClientFlags>,
+
+    /// `[-t target-session]` - specify target session name
+    #[cfg(feature = "tmux_0_8")]
+    pub target_session: Option<Cow<'a, str>>,
 }
 
 impl<'a> AttachSession<'a> {
@@ -63,35 +82,35 @@ impl<'a> AttachSession<'a> {
     /// `[-d]` - any other clients attached to the session are detached
     #[cfg(feature = "tmux_0_8")]
     pub fn detach_other(&mut self) -> &mut Self {
-        self.0.push_flag(D_LOWERCASE_KEY);
+        self.detach_other = true;
         self
     }
 
     /// `[-E]` - `update-environment` option will not be applied
     #[cfg(feature = "tmux_2_1")]
     pub fn not_update_env(&mut self) -> &mut Self {
-        self.0.push_flag(E_UPPERCASE_KEY);
+        self.not_update_env = true;
         self
     }
 
     /// `[-r]` - signifies the client is read-only
     #[cfg(feature = "tmux_1_2")]
     pub fn read_only(&mut self) -> &mut Self {
-        self.0.push_flag(R_LOWERCASE_KEY);
+        self.read_only = true;
         self
     }
 
     /// `[-x]` - send SIGHUP to the parent process, detaching the client
     #[cfg(feature = "tmux_3_0")]
     pub fn parent_sighup(&mut self) -> &mut Self {
-        self.0.push_flag(X_LOWERCASE_KEY);
+        self.parent_sighup = true;
         self
     }
 
     /// `[-c working-directory]` - specify starting directory
     #[cfg(feature = "tmux_1_9")]
     pub fn working_directory<S: Into<Cow<'a, str>>>(&mut self, working_directory: S) -> &mut Self {
-        self.0.push_option(C_LOWERCASE_KEY, working_directory);
+        self.working_directory = Some(working_directory.into());
         self
     }
 
@@ -99,36 +118,65 @@ impl<'a> AttachSession<'a> {
     /// `[-f flags]` - sets a comma-separated list of client flags
     #[cfg(feature = "tmux_3_2")]
     pub fn flags(&mut self, flags: ClientFlags) -> &mut Self {
-        self.0.push_option(F_LOWERCASE_KEY, flags.to_string());
+        self.flags = Some(flags);
         self
     }
 
     /// `[-t target-session]` - specify target session name
     #[cfg(feature = "tmux_0_8")]
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_session);
+        self.target_session = Some(target_session.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    /// build command with arguments in right order
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for AttachSession<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(ATTACH_SESSION)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(ATTACH_SESSION);
 
-impl<'a> From<&TmuxCommand<'a>> for AttachSession<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(ATTACH_SESSION)),
-            ..Default::default()
-        })
+        // `[-d]` - any other clients attached to the session are detached
+        #[cfg(feature = "tmux_0_8")]
+        if self.detach_other {
+            cmd.push_flag(D_LOWERCASE_KEY);
+        }
+
+        // `[-E]` - `update-environment` option will not be applied
+        #[cfg(feature = "tmux_2_1")]
+        if self.not_update_env {
+            cmd.push_flag(E_UPPERCASE_KEY);
+        }
+
+        // `[-r]` - signifies the client is read-only
+        #[cfg(feature = "tmux_1_2")]
+        if self.read_only {
+            cmd.push_flag(R_LOWERCASE_KEY);
+        }
+
+        // `[-x]` - send SIGHUP to the parent process, detaching the client
+        #[cfg(feature = "tmux_3_0")]
+        if self.parent_sighup {
+            cmd.push_flag(X_LOWERCASE_KEY);
+        }
+
+        // `[-c working-directory]` - specify starting directory
+        #[cfg(feature = "tmux_1_9")]
+        if let Some(working_directory) = &self.working_directory {
+            cmd.push_option(C_LOWERCASE_KEY, working_directory.as_ref());
+        }
+
+        // `[-f flags]` - sets a comma-separated list of client flags
+        #[cfg(feature = "tmux_3_2")]
+        if let Some(flags) = self.flags {
+            cmd.push_option(F_LOWERCASE_KEY, flags.to_string());
+        }
+
+        // `[-t target-session]` - specify target session name
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(target_session) = &self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        }
+
+        cmd
     }
 }

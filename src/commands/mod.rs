@@ -10,6 +10,7 @@ pub mod tmux_output;
 pub mod tmux_bin_command_tests;
 pub mod tmux_bin_commands_tests;
 //pub mod tmux_bin_tests;
+pub mod tmux_bin_tests;
 pub mod tmux_command_tests;
 pub mod tmux_commands_tests;
 pub mod tmux_tests;
@@ -25,7 +26,7 @@ pub mod status_line;
 pub mod windows_and_panes;
 
 // common for mod
-#[derive(Debug)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum PaneSize {
     Size(usize),
     Percentage(usize),

@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// This is similar to link-window, except the window at `src-window` is moved to `dst-window`
@@ -35,16 +35,35 @@ use std::borrow::Cow;
 /// tmux move-window [-d] [-s src-window] [-t dst-window]
 /// (alias: movew)
 /// ```
-#[derive(Debug, Clone)]
-pub struct MoveWindow<'a>(pub TmuxCommand<'a>);
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct MoveWindow<'a> {
+    /// `[-a]` - the window is moved to the next index up
+    #[cfg(feature = "tmux_2_1")]
+    pub after: bool,
 
-impl<'a> Default for MoveWindow<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(MOVE_WINDOW)),
-            ..Default::default()
-        })
-    }
+    /// `[-b]` - the window is moved to the next index before
+    #[cfg(feature = "tmux_3_2")]
+    pub before: bool,
+
+    /// `[-r]` - all windows in the session are renumbered in sequential order
+    #[cfg(feature = "tmux_1_7")]
+    pub renumber: bool,
+
+    /// `[-d]` - the newly linked window is not selected
+    #[cfg(feature = "tmux_0_8")]
+    pub detached: bool,
+
+    /// `[-k]` - if dst-window exists, it is killed, otherwise an error is generated
+    #[cfg(feature = "tmux_1_3")]
+    pub kill: bool,
+
+    /// `[-s src-window]` - src-window
+    #[cfg(feature = "tmux_0_8")]
+    pub src_window: Option<Cow<'a, str>>,
+
+    /// `[-t dst-window]` - dst-window
+    #[cfg(feature = "tmux_0_8")]
+    pub dst_window: Option<Cow<'a, str>>,
 }
 
 impl<'a> MoveWindow<'a> {
@@ -55,71 +74,99 @@ impl<'a> MoveWindow<'a> {
     /// `[-a]` - the window is moved to the next index up
     #[cfg(feature = "tmux_2_1")]
     pub fn after(&mut self) -> &mut Self {
-        self.0.push_flag(A_LOWERCASE_KEY);
+        self.after = true;
         self
     }
 
     /// `[-b]` - the window is moved to the next index before
     #[cfg(feature = "tmux_3_2")]
     pub fn before(&mut self) -> &mut Self {
-        self.0.push_flag(B_LOWERCASE_KEY);
+        self.before = true;
         self
     }
 
     /// `[-r]` - all windows in the session are renumbered in sequential order
     #[cfg(feature = "tmux_1_7")]
     pub fn renumber(&mut self) -> &mut Self {
-        self.0.push_flag(R_LOWERCASE_KEY);
+        self.renumber = true;
         self
     }
 
     /// `[-d]` - the newly linked window is not selected
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(&mut self) -> &mut Self {
-        self.0.push_flag(D_LOWERCASE_KEY);
+        self.detached = true;
         self
     }
 
     /// `[-k]` - if dst-window exists, it is killed, otherwise an error is generated
     #[cfg(feature = "tmux_1_3")]
     pub fn kill(&mut self) -> &mut Self {
-        self.0.push_flag(K_LOWERCASE_KEY);
+        self.kill = true;
         self
     }
 
     /// `[-s src-window]` - src-window
     #[cfg(feature = "tmux_0_8")]
     pub fn src_window<S: Into<Cow<'a, str>>>(&mut self, src_window: S) -> &mut Self {
-        self.0.push_option(S_LOWERCASE_KEY, src_window);
+        self.src_window = Some(src_window.into());
         self
     }
 
     /// `[-t dst-window]` - dst-window
     #[cfg(feature = "tmux_0_8")]
     pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, dst_window);
+        self.dst_window = Some(dst_window.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for MoveWindow<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(MOVE_WINDOW)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(MOVE_WINDOW);
 
-impl<'a> From<&TmuxCommand<'a>> for MoveWindow<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(MOVE_WINDOW)),
-            ..Default::default()
-        })
+        // `[-a]` - the window is moved to the next index up
+        #[cfg(feature = "tmux_2_1")]
+        if self.after {
+            cmd.push_flag(A_LOWERCASE_KEY);
+        }
+
+        // `[-b]` - the window is moved to the next index before
+        #[cfg(feature = "tmux_3_2")]
+        if self.before {
+            cmd.push_flag(B_LOWERCASE_KEY);
+        }
+
+        // `[-r]` - all windows in the session are renumbered in sequential order
+        #[cfg(feature = "tmux_1_7")]
+        if self.renumber {
+            cmd.push_flag(R_LOWERCASE_KEY);
+        }
+
+        // `[-d]` - the newly linked window is not selected
+        #[cfg(feature = "tmux_0_8")]
+        if self.detached {
+            cmd.push_flag(D_LOWERCASE_KEY);
+        }
+
+        // `[-k]` - if dst-window exists, it is killed, otherwise an error is generated
+        #[cfg(feature = "tmux_1_3")]
+        if self.kill {
+            cmd.push_flag(K_LOWERCASE_KEY);
+        }
+
+        // `[-s src-window]` - src-window
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(src_window) = &self.src_window {
+            cmd.push_option(S_LOWERCASE_KEY, src_window.as_ref());
+        }
+
+        // `[-t dst-window]` - dst-window
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(dst_window) = &self.dst_window {
+            cmd.push_option(T_LOWERCASE_KEY, dst_window.as_ref());
+        }
+
+        cmd
     }
 }

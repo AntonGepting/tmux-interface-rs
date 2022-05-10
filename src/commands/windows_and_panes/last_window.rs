@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxOutput};
+use crate::TmuxCommand;
 use std::borrow::Cow;
 
 /// Select the last (previously selected) window
@@ -11,16 +11,10 @@ use std::borrow::Cow;
 /// tmux last-window [-t target-session]
 /// (alias: last)
 /// ```
-#[derive(Debug, Clone)]
-pub struct LastWindow<'a>(pub TmuxCommand<'a>);
-
-impl<'a> Default for LastWindow<'a> {
-    fn default() -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LAST_WINDOW)),
-            ..Default::default()
-        })
-    }
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct LastWindow<'a> {
+    /// `[-t target-session]`
+    pub target_session: Option<Cow<'a, str>>,
 }
 
 impl<'a> LastWindow<'a> {
@@ -30,29 +24,20 @@ impl<'a> LastWindow<'a> {
 
     /// `[-t target-session]`
     pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
-        self.0.push_option(T_LOWERCASE_KEY, target_session);
+        self.target_session = Some(target_session.into());
         self
     }
 
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        self.0.output()
-    }
-}
+    pub fn build(&self) -> TmuxCommand {
+        let mut cmd = TmuxCommand::new();
 
-impl<'a> From<TmuxCommand<'a>> for LastWindow<'a> {
-    fn from(item: TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LAST_WINDOW)),
-            ..Default::default()
-        })
-    }
-}
+        cmd.cmd(LAST_WINDOW);
 
-impl<'a> From<&TmuxCommand<'a>> for LastWindow<'a> {
-    fn from(item: &TmuxCommand<'a>) -> Self {
-        Self(TmuxCommand {
-            cmd: Some(Cow::Borrowed(LAST_WINDOW)),
-            ..Default::default()
-        })
+        // `[-t target-session]`
+        if let Some(target_session) = &self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        }
+
+        cmd
     }
 }

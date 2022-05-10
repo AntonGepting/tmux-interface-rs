@@ -311,7 +311,12 @@ pub struct ServerOptions {
 impl ServerOptions {
     // faster than SERVER_OPTIONS_ALL bitmask if will be implemented selective
     pub fn get_all() -> Result<Self, Error> {
-        ShowOptions::new().server().output()?.to_string().parse()
+        ShowOptions::new()
+            .server()
+            .build()
+            .output()?
+            .to_string()
+            .parse()
     }
 
     // XXX: bitmask is overkill now, mb later use for multiple select
@@ -328,6 +333,7 @@ impl ServerOptions {
         ShowOptions::new()
             .server()
             .option(&selected_option)
+            .build()
             .output()?
             .to_string()
             .parse()
@@ -355,6 +361,7 @@ impl ServerOptions {
                     .server()
                     .option(selected_option.0)
                     .value(&selected_value)
+                    .build()
                     .output()?;
             }
         }
