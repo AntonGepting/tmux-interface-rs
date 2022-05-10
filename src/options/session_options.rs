@@ -1340,8 +1340,8 @@ impl SessionOptions {
             .collect::<Vec<String>>()
             .join(" ");
         let s = ShowOptions::new()
-            .option(&selected_option)
             .global()
+            .option(&selected_option)
             .output()?
             .to_string();
         s.parse()

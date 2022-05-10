@@ -172,6 +172,12 @@ under following conditions:
     - [ ] 0.9 - `tmux_0_9` - tmux compilation error
     - [ ] 0.8 - `tmux_0_8` - tmux compilation error
 
+
+## Contributors
+
+*  Yanus Poluektovich ([ypoluektovich](https://github.com/ypoluektovich))
+
+
 ## License
 
 `tmux_interface` library is licensed under the MIT license. Please read the

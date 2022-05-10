@@ -36,9 +36,9 @@ use std::borrow::Cow;
 /// (alias: selectl)
 /// ```
 #[derive(Debug, Clone)]
-pub struct SelectLayot<'a>(pub TmuxCommand<'a>);
+pub struct SelectLayout<'a>(pub TmuxCommand<'a>);
 
-impl<'a> Default for SelectLayot<'a> {
+impl<'a> Default for SelectLayout<'a> {
     fn default() -> Self {
         Self(TmuxCommand {
             cmd: Some(Cow::Borrowed(SELECT_LAYOUT)),
@@ -47,7 +47,7 @@ impl<'a> Default for SelectLayot<'a> {
     }
 }
 
-impl<'a> SelectLayot<'a> {
+impl<'a> SelectLayout<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -99,7 +99,7 @@ impl<'a> SelectLayot<'a> {
     }
 }
 
-impl<'a> From<TmuxCommand<'a>> for SelectLayot<'a> {
+impl<'a> From<TmuxCommand<'a>> for SelectLayout<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             cmd: Some(Cow::Borrowed(SELECT_LAYOUT)),
@@ -108,7 +108,7 @@ impl<'a> From<TmuxCommand<'a>> for SelectLayot<'a> {
     }
 }
 
-impl<'a> From<&TmuxCommand<'a>> for SelectLayot<'a> {
+impl<'a> From<&TmuxCommand<'a>> for SelectLayout<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             cmd: Some(Cow::Borrowed(SELECT_LAYOUT)),

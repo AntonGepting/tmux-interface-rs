@@ -5,7 +5,6 @@ use crate::SessionStack;
 
 // XXX: number of all flags, needed for array init
 // NOTE: variables were first intoduced in tmux 1.6
-
 // accordingly to tmux.h: Formats
 // XXX: check all types
 #[derive(Default, PartialEq, Clone, Debug)]

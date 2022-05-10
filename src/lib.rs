@@ -830,7 +830,7 @@ pub use self::commands::windows_and_panes::respawn_window::RespawnWindow;
 #[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::rotate_window::RotateWindow;
 #[cfg(feature = "tmux_0_9")]
-pub use self::commands::windows_and_panes::select_layout::SelectLayot;
+pub use self::commands::windows_and_panes::select_layout::SelectLayout;
 #[cfg(feature = "tmux_0_8")]
 pub use self::commands::windows_and_panes::select_pane::SelectPane;
 #[cfg(feature = "tmux_0_8")]
