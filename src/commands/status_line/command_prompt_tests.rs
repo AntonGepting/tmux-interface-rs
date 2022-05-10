@@ -66,6 +66,7 @@ fn command_prompt() {
     let cmd = "command-prompt";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_4")]
     s.push("-1");
     #[cfg(feature = "tmux_2_4")]
@@ -86,10 +87,9 @@ fn command_prompt() {
     s.extend_from_slice(&["-t", "3"]);
     #[cfg(feature = "tmux_0_8")]
     s.push("4");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(command_prompt.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(command_prompt.0.bin_args, None);
-    assert_eq!(command_prompt.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(command_prompt.0.args, Some(s));
+    let confirm_before = confirm_before.build().to_vec();
+
+    assert_eq!(confirm_before, s);
 }

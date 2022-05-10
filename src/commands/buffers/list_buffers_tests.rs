@@ -40,6 +40,7 @@ fn list_buffers() {
         feature = "tmux_1_7"
     ))]
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_7")]
     s.extend_from_slice(&["-F", "1"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
@@ -48,16 +49,9 @@ fn list_buffers() {
         all(feature = "tmux_0_8", not(feature = "tmux_1_5")),
         feature = "tmux_1_7"
     ))]
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(list_buffers.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(list_buffers.0.bin_args, None);
-    assert_eq!(list_buffers.0.cmd, Some(Cow::Borrowed(cmd)));
-    #[cfg(any(
-        all(feature = "tmux_0_8", not(feature = "tmux_1_5")),
-        feature = "tmux_1_7"
-    ))]
-    assert_eq!(list_buffers.0.args, Some(s));
-    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_1_7")))]
-    assert_eq!(list_buffers.0.args, None);
+    let list_buffers = list_buffers.build().to_vec();
+
+    assert_eq!(list_buffers, s);
 }

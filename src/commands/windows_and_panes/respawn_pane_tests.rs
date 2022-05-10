@@ -44,6 +44,7 @@ fn respawn_pane() {
     let cmd = "respawnp";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_5")]
     s.push("-k");
     #[cfg(feature = "tmux_2_6")]
@@ -54,10 +55,9 @@ fn respawn_pane() {
     s.extend_from_slice(&["-t", "3"]);
     #[cfg(feature = "tmux_2_6")]
     s.push("4");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(respawn_pane.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(respawn_pane.0.bin_args, None);
-    assert_eq!(respawn_pane.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(respawn_pane.0.args, Some(s));
+    let respawn_pane = respawn_pane.build().to_vec();
+
+    assert_eq!(respawn_pane, s);
 }

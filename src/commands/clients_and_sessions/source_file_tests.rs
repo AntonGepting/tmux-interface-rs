@@ -48,6 +48,7 @@ fn source_file() {
     let cmd = "source";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_3_2")]
     s.push("-F");
     #[cfg(feature = "tmux_3_0")]
@@ -58,10 +59,9 @@ fn source_file() {
     s.push("-v");
     #[cfg(feature = "tmux_0_8")]
     s.push("1");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(source_file.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(source_file.0.bin_args, None);
-    assert_eq!(source_file.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(source_file.0.args, Some(s));
+    let source_file = source_file.build().to_vec();
+
+    assert_eq!(source_file, s);
 }

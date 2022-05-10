@@ -43,6 +43,7 @@ fn move_pane() {
     let cmd = "movep";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_7")]
     s.push("-b");
     #[cfg(feature = "tmux_1_7")]
@@ -57,10 +58,9 @@ fn move_pane() {
     s.extend_from_slice(&["-s", "2"]);
     #[cfg(feature = "tmux_1_7")]
     s.extend_from_slice(&["-t", "3"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(move_pane.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(move_pane.0.bin_args, None);
-    assert_eq!(move_pane.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(move_pane.0.args, Some(s));
+    let move_pane = move_pane.build().to_vec();
+
+    assert_eq!(move_pane, s);
 }

@@ -20,14 +20,14 @@ fn show_hooks() {
     let cmd = "show-hooks";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_2")]
     s.push("-g");
     #[cfg(feature = "tmux_2_2")]
     s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(show_hooks.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(show_hooks.0.bin_args, None);
-    assert_eq!(show_hooks.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(show_hooks.0.args, Some(s));
+    let show_hooks = show_hooks.build().to_vec();
+
+    assert_eq!(show_hooks, s);
 }

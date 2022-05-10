@@ -58,6 +58,7 @@ fn select_layout() {
     let cmd = "selectl";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_7")]
     s.push("-E");
     #[cfg(feature = "tmux_1_5")]
@@ -70,10 +71,9 @@ fn select_layout() {
     s.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_1_0")]
     s.push("2");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(select_layout.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(select_layout.0.bin_args, None);
-    assert_eq!(select_layout.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(select_layout.0.args, Some(s));
+    let select_layout = select_layout.build().to_vec();
+
+    assert_eq!(select_layout, s);
 }

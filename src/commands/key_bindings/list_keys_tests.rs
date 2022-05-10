@@ -48,6 +48,7 @@ fn list_keys() {
     let cmd = "lsk";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_4")]
     s.push("-1");
     #[cfg(feature = "tmux_2_4")]
@@ -62,10 +63,9 @@ fn list_keys() {
     s.extend_from_slice(&["-T", "3"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
     s.extend_from_slice(&["-t", "3"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(list_keys.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(list_keys.0.bin_args, None);
-    assert_eq!(list_keys.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(list_keys.0.args, Some(s));
+    let list_keys = list_keys.build().to_vec();
+
+    assert_eq!(list_keys, s);
 }

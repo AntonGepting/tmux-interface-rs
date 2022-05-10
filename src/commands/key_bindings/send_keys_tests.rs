@@ -78,6 +78,7 @@ fn send_keys() {
     let cmd = "send";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_3_1")]
     s.push("-F");
     #[cfg(feature = "tmux_3_0")]
@@ -97,10 +98,9 @@ fn send_keys() {
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
     s.extend_from_slice(&["-t", "2"]);
     s.push("3");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(send_keys.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(send_keys.0.bin_args, None);
-    assert_eq!(send_keys.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(send_keys.0.args, Some(s));
+    let send_keys = send_keys.build().to_vec();
+
+    assert_eq!(send_keys, s);
 }

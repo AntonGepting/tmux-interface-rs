@@ -58,7 +58,10 @@ fn choose_buffer() {
     #[cfg(feature = "tmux_1_3")]
     choose_buffer.template("6");
 
+    let cmd = "choose-buffer";
+
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_6")]
     s.push("-N");
     #[cfg(feature = "tmux_2_7")]
@@ -77,12 +80,9 @@ fn choose_buffer() {
     s.extend_from_slice(&["-t", "5"]);
     #[cfg(feature = "tmux_1_3")]
     s.push("6");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    let cmd = "choose-buffer";
+    let choose_buffer = choose_buffer.build().to_vec();
 
-    //assert_eq!(choose_buffer.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(choose_buffer.0.bin_args, None);
-    assert_eq!(choose_buffer.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(choose_buffer.0.args, Some(s));
+    assert_eq!(choose_buffer, s);
 }

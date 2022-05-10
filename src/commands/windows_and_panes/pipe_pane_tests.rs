@@ -43,6 +43,7 @@ fn pipe_pane() {
     let cmd = "pipep";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_7")]
     s.push("-I");
     #[cfg(feature = "tmux_2_7")]
@@ -53,10 +54,9 @@ fn pipe_pane() {
     s.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_1_2")]
     s.push("2");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(pipe_pane.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(pipe_pane.0.bin_args, None);
-    assert_eq!(pipe_pane.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(pipe_pane.0.args, Some(s));
+    let pipe_pane = pipe_pane.build().to_vec();
+
+    assert_eq!(pipe_pane, s);
 }

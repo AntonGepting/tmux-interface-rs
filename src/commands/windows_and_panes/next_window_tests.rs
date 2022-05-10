@@ -29,14 +29,14 @@ fn next_window() {
     let cmd = "next";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_0_9")]
     s.push("-a");
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(next_window.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(next_window.0.bin_args, None);
-    assert_eq!(next_window.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(next_window.0.args, Some(s));
+    let next_window = next_window.build().to_vec();
+
+    assert_eq!(next_window, s);
 }

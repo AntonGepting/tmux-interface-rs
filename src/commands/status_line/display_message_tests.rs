@@ -68,6 +68,7 @@ fn display_message() {
     let cmd = "display";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_9a")]
     s.push("-a");
     #[cfg(feature = "tmux_3_0")]
@@ -85,10 +86,9 @@ fn display_message() {
     #[cfg(feature = "tmux_1_5")]
     s.extend_from_slice(&["-t", "3"]);
     s.push("4");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(display_message.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(display_message.0.bin_args, None);
-    assert_eq!(display_message.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(display_message.0.args, Some(s));
+    let display_message = display_message.build().to_vec();
+
+    assert_eq!(display_message, s);
 }

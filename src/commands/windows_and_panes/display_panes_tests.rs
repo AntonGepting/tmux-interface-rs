@@ -42,7 +42,7 @@ fn display_panes() {
     #[cfg(feature = "tmux_3_2")]
     display_panes.ignore_keys();
     #[cfg(feature = "tmux_2_6")]
-    display_panes.start_directory("1");
+    display_panes.duration("1");
     #[cfg(feature = "tmux_1_0")]
     display_panes.target_client("2");
     #[cfg(feature = "tmux_2_3")]
@@ -54,6 +54,7 @@ fn display_panes() {
     let cmd = "displayp";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_9")]
     s.push("-b");
     #[cfg(feature = "tmux_3_2")]
@@ -64,10 +65,9 @@ fn display_panes() {
     s.extend_from_slice(&["-t", "2"]);
     #[cfg(feature = "tmux_2_3")]
     s.push("3");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(display_panes.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(display_panes.0.bin_args, None);
-    assert_eq!(display_panes.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(display_panes.0.args, Some(s));
+    let display_panes = display_panes.build().to_vec();
+
+    assert_eq!(display_panes, s);
 }

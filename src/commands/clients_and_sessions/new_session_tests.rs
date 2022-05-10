@@ -123,6 +123,7 @@ fn new_session() {
     let cmd = "new";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_8")]
     s.push("-A");
     #[cfg(feature = "tmux_0_8")]
@@ -155,11 +156,17 @@ fn new_session() {
     s.extend_from_slice(&["-y", "8"]);
     #[cfg(feature = "tmux_1_2")]
     s.push("9");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    let new_session = new_session.to_tmux_bin_command();
-    assert_eq!(new_session.tmux.bin, Cow::Borrowed("tmux"));
-    assert_eq!(new_session.tmux.args, None);
-    assert_eq!(new_session.command.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(new_session.command.args, Some(s));
+    let new_session = new_session.build().to_vec();
+
+    assert_eq!(new_session, s);
+}
+
+#[test]
+fn new_session_inner() {
+    use crate::NewSession;
+
+    //let a = NewSession::new().session_name("asdf");
+    //dbg!(a.as_ref().cmd);
 }

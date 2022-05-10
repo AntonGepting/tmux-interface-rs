@@ -53,6 +53,7 @@ fn paste_buffer() {
     let cmd = "pasteb";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_0_8")]
     s.push("-d");
     #[cfg(feature = "tmux_1_7")]
@@ -67,10 +68,9 @@ fn paste_buffer() {
     s.extend_from_slice(&["-t", "3"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
     s.extend_from_slice(&["-t", "3"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(paste_buffer.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(paste_buffer.0.bin_args, None);
-    assert_eq!(paste_buffer.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(paste_buffer.0.args, Some(s));
+    let paste_buffer = paste_buffer.build().to_vec();
+
+    assert_eq!(paste_buffer, s);
 }

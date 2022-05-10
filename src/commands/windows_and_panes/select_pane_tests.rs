@@ -54,41 +54,6 @@ fn select_pane() {
     // tmux select-pane [-p pane-index] [-t target-window]
     // (alias: selectp)
     // ```
-    #[cfg(not(feature = "cmd_alias"))]
-    let cmd = "select-pane";
-    #[cfg(feature = "cmd_alias")]
-    let cmd = "selectp";
-
-    let mut s = Vec::new();
-    #[cfg(feature = "tmux_1_3")]
-    s.push("-D");
-    #[cfg(feature = "tmux_2_0")]
-    s.push("-d");
-    #[cfg(feature = "tmux_2_0")]
-    s.push("-e");
-    #[cfg(feature = "tmux_2_1")]
-    s.push("-g");
-    #[cfg(feature = "tmux_1_3")]
-    s.push("-L");
-    #[cfg(feature = "tmux_1_5")]
-    s.push("-l");
-    #[cfg(feature = "tmux_2_1")]
-    s.push("-M");
-    #[cfg(feature = "tmux_2_1")]
-    s.push("-m");
-    #[cfg(feature = "tmux_1_3")]
-    s.push("-R");
-    #[cfg(feature = "tmux_1_3")]
-    s.push("-U");
-    #[cfg(feature = "tmux_3_1")]
-    s.push("-Z");
-    #[cfg(feature = "tmux_2_1")]
-    s.extend_from_slice(&["-P", "1"]);
-    #[cfg(feature = "tmux_2_6")]
-    s.extend_from_slice(&["-T", "2"]);
-    #[cfg(feature = "tmux_1_0")]
-    s.extend_from_slice(&["-t", "3"]);
-
     let target_pane = TargetPane::Raw("3").to_string();
 
     let mut select_pane = SelectPane::new();
@@ -120,10 +85,45 @@ fn select_pane() {
     select_pane.title("2");
     #[cfg(feature = "tmux_1_0")]
     select_pane.target_pane(&target_pane);
-    let s = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(select_pane.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(select_pane.0.bin_args, None);
-    assert_eq!(select_pane.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(select_pane.0.args, Some(s));
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "select-pane";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "selectp";
+
+    let mut s = Vec::new();
+    s.push(cmd);
+    #[cfg(feature = "tmux_1_3")]
+    s.push("-D");
+    #[cfg(feature = "tmux_2_0")]
+    s.push("-d");
+    #[cfg(feature = "tmux_2_0")]
+    s.push("-e");
+    #[cfg(feature = "tmux_2_1")]
+    s.push("-g");
+    #[cfg(feature = "tmux_1_3")]
+    s.push("-L");
+    #[cfg(feature = "tmux_1_5")]
+    s.push("-l");
+    #[cfg(feature = "tmux_2_1")]
+    s.push("-M");
+    #[cfg(feature = "tmux_2_1")]
+    s.push("-m");
+    #[cfg(feature = "tmux_1_3")]
+    s.push("-R");
+    #[cfg(feature = "tmux_1_3")]
+    s.push("-U");
+    #[cfg(feature = "tmux_3_1")]
+    s.push("-Z");
+    #[cfg(feature = "tmux_2_1")]
+    s.extend_from_slice(&["-P", "1"]);
+    #[cfg(feature = "tmux_2_6")]
+    s.extend_from_slice(&["-T", "2"]);
+    #[cfg(feature = "tmux_1_0")]
+    s.extend_from_slice(&["-t", "3"]);
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+
+    let select_pane = select_pane.build().to_vec();
+
+    assert_eq!(select_pane, s);
 }

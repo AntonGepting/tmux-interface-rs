@@ -48,6 +48,7 @@ fn show_environment() {
     let cmd = "showenv";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_3_2")]
     s.push("-h");
     #[cfg(feature = "tmux_1_0")]
@@ -58,10 +59,9 @@ fn show_environment() {
     s.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_1_7")]
     s.push("2");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(show_environment.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(show_environment.0.bin_args, None);
-    assert_eq!(show_environment.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(show_environment.0.args, Some(s));
+    let show_environment = show_environment.build().to_vec();
+
+    assert_eq!(show_environment, s);
 }

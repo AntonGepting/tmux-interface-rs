@@ -50,6 +50,7 @@ fn detach_client() {
     let cmd = "detach";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_2")]
     s.push("-a");
     #[cfg(feature = "tmux_1_5")]
@@ -60,10 +61,9 @@ fn detach_client() {
     s.extend_from_slice(&["-s", "2"]);
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "3"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(detach_client.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(detach_client.0.bin_args, None);
-    assert_eq!(detach_client.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(detach_client.0.args, Some(s));
+    let detach_client = detach_client.build().to_vec();
+
+    assert_eq!(detach_client, s);
 }

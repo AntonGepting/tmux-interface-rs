@@ -51,6 +51,7 @@ fn show_window_options() {
     let cmd = "showw";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_0")]
     s.push("-g");
     #[cfg(feature = "tmux_1_8")]
@@ -61,10 +62,9 @@ fn show_window_options() {
     s.push("2");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
     s.push("3");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(show_window_options.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(show_window_options.0.bin_args, None);
-    assert_eq!(show_window_options.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(show_window_options.0.args, Some(s));
+    let show_window_options = show_window_options.build().to_vec();
+
+    assert_eq!(show_window_options, s);
 }

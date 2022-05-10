@@ -37,6 +37,7 @@ fn display_menu() {
     let cmd = "display-menu";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_3_2")]
     s.push("-O");
     #[cfg(feature = "tmux_3_0")]
@@ -55,10 +56,9 @@ fn display_menu() {
     s.push("7");
     #[cfg(feature = "tmux_3_0")]
     s.push("8");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(display_menu.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(display_menu.0.bin_args, None);
-    assert_eq!(display_menu.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(display_menu.0.args, Some(s));
+    let display_menu = display_menu.build().to_vec();
+
+    assert_eq!(display_menu, s);
 }

@@ -35,11 +35,11 @@ fn delete_buffer() {
     let cmd = "deleteb";
 
     let mut s = Vec::new();
+    s.push(cmd);
     s.extend_from_slice(&["-b", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(delete_buffer.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(delete_buffer.0.bin_args, None);
-    assert_eq!(delete_buffer.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(delete_buffer.0.args, Some(s));
+    let delete_buffer = delete_buffer.build().to_vec();
+
+    assert_eq!(delete_buffer, s);
 }

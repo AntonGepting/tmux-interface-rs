@@ -32,6 +32,7 @@ fn wait_for() {
     let cmd = "wait";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_8")]
     s.push("-L");
     #[cfg(feature = "tmux_1_8")]
@@ -40,10 +41,9 @@ fn wait_for() {
     s.push("-U");
     #[cfg(feature = "tmux_1_8")]
     s.push("1");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(wait_for.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(wait_for.0.bin_args, None);
-    assert_eq!(wait_for.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(wait_for.0.args, Some(s));
+    let wait_for = wait_for.build().to_vec();
+
+    assert_eq!(wait_for, s);
 }

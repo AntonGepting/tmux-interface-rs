@@ -19,8 +19,11 @@ fn start_server() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "start";
 
-    //assert_eq!(start_server.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(start_server.0.bin_args, None);
-    assert_eq!(start_server.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(start_server.0.args, None);
+    let mut s = Vec::new();
+    s.push(cmd);
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+
+    let start_server = start_server.build().to_vec();
+
+    assert_eq!(start_server, s);
 }

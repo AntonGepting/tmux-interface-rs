@@ -50,6 +50,7 @@ fn load_buffer() {
     let cmd = "loadb";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_3_2")]
     s.push("-w");
     #[cfg(feature = "tmux_2_0")]
@@ -62,10 +63,9 @@ fn load_buffer() {
     s.extend_from_slice(&["-t", "4"]);
     #[cfg(feature = "tmux_0_8")]
     s.push("5");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(load_buffer.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(load_buffer.0.bin_args, None);
-    assert_eq!(load_buffer.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(load_buffer.0.args, Some(s));
+    let load_buffer = load_buffer.build().to_vec();
+
+    assert_eq!(load_buffer, s);
 }

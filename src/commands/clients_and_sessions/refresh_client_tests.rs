@@ -86,6 +86,7 @@ fn refresh_client() {
     let cmd = "refresh";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_9a")]
     s.push("-c");
     #[cfg(feature = "tmux_2_9a")]
@@ -116,10 +117,9 @@ fn refresh_client() {
     s.extend_from_slice(&["-t", "4"]);
     #[cfg(feature = "tmux_2_9a")]
     s.push("5");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(refresh_client.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(refresh_client.0.bin_args, None);
-    assert_eq!(refresh_client.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(refresh_client.0.args, Some(s));
+    let refresh_client = refresh_client.build().to_vec();
+
+    assert_eq!(refresh_client, s);
 }

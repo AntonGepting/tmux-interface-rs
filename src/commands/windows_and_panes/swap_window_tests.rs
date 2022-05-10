@@ -29,6 +29,7 @@ fn swap_window() {
     let cmd = "swapw";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_0_8")]
     s.push("-d");
     #[cfg(feature = "tmux_0_8")]
@@ -36,10 +37,9 @@ fn swap_window() {
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "2"]);
 
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(swap_window.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(swap_window.0.bin_args, None);
-    assert_eq!(swap_window.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(swap_window.0.args, Some(s));
+    let swap_window = swap_window.build().to_vec();
+
+    assert_eq!(swap_window, s);
 }

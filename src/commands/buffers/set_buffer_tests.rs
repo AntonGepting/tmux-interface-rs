@@ -55,6 +55,7 @@ fn set_buffer() {
     let cmd = "setb";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_0")]
     s.push("-a");
     #[cfg(feature = "tmux_3_2")]
@@ -71,10 +72,9 @@ fn set_buffer() {
     s.extend_from_slice(&["-t", "5"]);
     #[cfg(feature = "tmux_0_8")]
     s.push("6");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(set_buffer.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(set_buffer.0.bin_args, None);
-    assert_eq!(set_buffer.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(set_buffer.0.args, Some(s));
+    let set_buffer = set_buffer.build().to_vec();
+
+    assert_eq!(set_buffer, s);
 }

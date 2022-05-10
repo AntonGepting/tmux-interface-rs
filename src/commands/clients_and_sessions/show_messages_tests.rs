@@ -40,6 +40,7 @@ fn show_messages() {
     let cmd = "showmsgs";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
     s.push("-I");
     #[cfg(feature = "tmux_1_9")]
@@ -48,10 +49,9 @@ fn show_messages() {
     s.push("-T");
     #[cfg(feature = "tmux_1_2")]
     s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(show_messages.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(show_messages.0.bin_args, None);
-    assert_eq!(show_messages.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(show_messages.0.args, Some(s));
+    let show_messages = show_messages.build().to_vec();
+
+    assert_eq!(show_messages, s);
 }

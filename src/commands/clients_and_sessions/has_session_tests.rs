@@ -16,18 +16,18 @@ fn has_session() {
     #[cfg(feature = "tmux_0_8")]
     has_session.target_session("1");
 
-    let mut s = Vec::new();
-    #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
-
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "has-session";
     #[cfg(feature = "cmd_alias")]
     let cmd = "has";
 
-    //assert_eq!(has_session.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(has_session.0.bin_args, None);
-    assert_eq!(has_session.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(has_session.0.args, Some(s));
+    let mut s = Vec::new();
+    s.push(cmd);
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-t", "1"]);
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+
+    let has_session = has_session.build().to_vec();
+
+    assert_eq!(has_session, s);
 }

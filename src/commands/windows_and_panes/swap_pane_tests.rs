@@ -47,6 +47,7 @@ fn swap_pane() {
     let cmd = "swapp";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_0_8")]
     s.push("-d");
     #[cfg(feature = "tmux_0_8")]
@@ -59,10 +60,9 @@ fn swap_pane() {
     s.extend_from_slice(&["-s", "1"]);
     #[cfg(feature = "tmux_1_0")]
     s.extend_from_slice(&["-t", "2"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(swap_pane.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(swap_pane.0.bin_args, None);
-    assert_eq!(swap_pane.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(swap_pane.0.args, Some(s));
+    let swap_pane = swap_pane.build().to_vec();
+
+    assert_eq!(swap_pane, s);
 }

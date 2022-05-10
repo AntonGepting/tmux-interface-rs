@@ -30,7 +30,7 @@ impl<'a> LockClient<'a> {
         self
     }
 
-    pub fn output(&self) -> TmuxCommand {
+    pub fn build(&self) -> TmuxCommand {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(LOCK_CLIENT);

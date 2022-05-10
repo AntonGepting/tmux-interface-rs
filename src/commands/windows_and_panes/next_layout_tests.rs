@@ -24,12 +24,12 @@ fn next_layout() {
     let cmd = "nextl";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(next_layout.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(next_layout.0.bin_args, None);
-    assert_eq!(next_layout.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(next_layout.0.args, Some(s));
+    let next_layout = next_layout.build().to_vec();
+
+    assert_eq!(next_layout, s);
 }

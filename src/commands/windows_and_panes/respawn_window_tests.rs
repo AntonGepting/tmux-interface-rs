@@ -50,6 +50,7 @@ fn respawn_window() {
     let cmd = "respawnw";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_0_8")]
     s.push("-k");
     #[cfg(feature = "tmux_2_6")]
@@ -60,10 +61,9 @@ fn respawn_window() {
     s.extend_from_slice(&["-t", "3"]);
     #[cfg(feature = "tmux_1_2")]
     s.push("4");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(respawn_window.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(respawn_window.0.bin_args, None);
-    assert_eq!(respawn_window.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(respawn_window.0.args, Some(s));
+    let respawn_window = respawn_window.build().to_vec();
+
+    assert_eq!(respawn_window, s);
 }

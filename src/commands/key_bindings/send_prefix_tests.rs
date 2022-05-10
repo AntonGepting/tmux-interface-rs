@@ -23,14 +23,14 @@ fn send_prefix() {
     let cmd = "send-prefix";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_6")]
     s.push("-2");
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(send_prefix.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(send_prefix.0.bin_args, None);
-    assert_eq!(send_prefix.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(send_prefix.0.args, Some(s));
+    let send_prefix = send_prefix.build().to_vec();
+
+    assert_eq!(send_prefix, s);
 }

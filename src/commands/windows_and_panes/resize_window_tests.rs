@@ -41,6 +41,7 @@ fn resize_window() {
     let cmd = "resizew";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_9")]
     s.push("-a");
     #[cfg(feature = "tmux_2_9")]
@@ -61,10 +62,9 @@ fn resize_window() {
     s.extend_from_slice(&["-y", "3"]);
     #[cfg(feature = "tmux_2_9")]
     s.push("4");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(resize_window.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(resize_window.0.bin_args, None);
-    assert_eq!(resize_window.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(resize_window.0.args, Some(s));
+    let resize_window = resize_window.build().to_vec();
+
+    assert_eq!(resize_window, s);
 }

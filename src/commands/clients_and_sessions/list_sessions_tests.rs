@@ -27,12 +27,12 @@ fn list_sessions() {
     let cmd = "ls";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_6")]
     s.extend_from_slice(&["-F", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(list_sessions.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(list_sessions.0.bin_args, None);
-    assert_eq!(list_sessions.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(list_sessions.0.args, Some(s));
+    let list_sessions = list_sessions.build().to_vec();
+
+    assert_eq!(list_sessions, s);
 }

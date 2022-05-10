@@ -132,7 +132,7 @@ impl<'a> UnbindKey<'a> {
         self
     }
 
-    pub fn output(&self) -> TmuxCommand {
+    pub fn build(&self) -> TmuxCommand {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(UNBIND_KEY);

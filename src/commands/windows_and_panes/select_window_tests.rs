@@ -44,6 +44,7 @@ fn select_window() {
     let cmd = "selectw";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_5")]
     s.push("-l");
     #[cfg(feature = "tmux_1_5")]
@@ -54,10 +55,9 @@ fn select_window() {
     s.push("-T");
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(select_window.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(select_window.0.bin_args, None);
-    assert_eq!(select_window.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(select_window.0.args, Some(s));
+    let select_window = select_window.build().to_vec();
+
+    assert_eq!(select_window, s);
 }

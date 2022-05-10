@@ -42,6 +42,7 @@ fn kill_pane() {
     let cmd = "killp";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_1")]
     s.push("-a");
     #[cfg(feature = "tmux_0_8")]
@@ -50,11 +51,9 @@ fn kill_pane() {
     s.extend_from_slice(&["-p", "2"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
     s.extend_from_slice(&["-t", "3"]);
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let kill_pane = kill_pane.build().to_vec();
 
-    //assert_eq!(kill_pane.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(kill_pane.0.bin_args, None);
-    assert_eq!(kill_pane.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(kill_pane.0.args, Some(s));
+    assert_eq!(kill_pane, s);
 }

@@ -2,7 +2,7 @@
 fn attach_session() {
     #[cfg(feature = "tmux_3_2")]
     use crate::ClientFlags;
-    use crate::{AttachSession, TargetSession};
+    use crate::{AttachSession, TargetSession, TmuxCommand};
     use std::borrow::Cow;
 
     // Structure for attaching client to already existing session
@@ -67,13 +67,16 @@ fn attach_session() {
     }
     #[cfg(feature = "tmux_0_8")]
     attach_session.target_session(&target_session);
+    #[cfg(feature = "tmux_0_8")]
+    attach_session.target_session(target_session.to_string());
 
     #[cfg(not(feature = "cmd_alias"))]
-    let cmd = "attach-session";
+    s.push("attach-session");
     #[cfg(feature = "cmd_alias")]
-    let cmd = "attach";
+    s.push("attach");
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_0_8")]
     s.push("-d");
     #[cfg(feature = "tmux_2_1")]
@@ -88,12 +91,9 @@ fn attach_session() {
     s.extend_from_slice(&["-f", "active-pane"]);
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "2"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //attach_session.to_tmux_bin_command();
+    let attach_session = attach_session.build().to_vec();
 
-    //assert_eq!(attach_session.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(attach_session.0.bin_args, None);
-    assert_eq!(attach_session.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(attach_session.0.args, Some(s));
+    assert_eq!(attach_session, s);
 }

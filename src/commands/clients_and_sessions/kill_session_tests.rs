@@ -32,17 +32,18 @@ fn kill_session() {
     kill_session.target_session(&target_session);
 
     let cmd = "kill-session";
+
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_2")]
     s.push("-a");
     #[cfg(feature = "tmux_1_7")]
     s.push("-C");
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(kill_session.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(kill_session.0.bin_args, None);
-    assert_eq!(kill_session.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(kill_session.0.args, Some(s));
+    let kill_session = kill_session.build().to_vec();
+
+    assert_eq!(kill_session, s);
 }

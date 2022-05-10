@@ -38,12 +38,12 @@ fn list_clients() {
     let cmd = "lsc";
 
     let mut s = Vec::new();
+    s.push(cmd);
     s.extend_from_slice(&["-F", "1"]);
     s.extend_from_slice(&["-t", "2"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(list_clients.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(list_clients.0.bin_args, None);
-    assert_eq!(list_clients.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(list_clients.0.args, Some(s));
+    let list_clients = list_clients.build().to_vec();
+
+    assert_eq!(list_clients, s);
 }

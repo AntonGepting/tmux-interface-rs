@@ -91,6 +91,7 @@ fn new_window() {
     let cmd = "neww";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_3")]
     s.push("-a");
     #[cfg(feature = "tmux_3_2")]
@@ -115,10 +116,9 @@ fn new_window() {
     s.extend_from_slice(&["-t", "5"]);
     #[cfg(feature = "tmux_1_2")]
     s.push("6");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(new_window.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(new_window.0.bin_args, None);
-    assert_eq!(new_window.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(new_window.0.args, Some(s));
+    let new_window = new_window.build().to_vec();
+
+    assert_eq!(new_window, s);
 }

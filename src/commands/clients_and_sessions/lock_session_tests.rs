@@ -21,12 +21,12 @@ fn lock_session() {
     let cmd = "locks";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_1")]
     s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(lock_session.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(lock_session.0.bin_args, None);
-    assert_eq!(lock_session.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(lock_session.0.args, Some(s));
+    let lock_session = lock_session.build().to_vec();
+
+    assert_eq!(lock_session, s);
 }

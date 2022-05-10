@@ -65,12 +65,13 @@ fn show_options() {
     #[cfg(feature = "tmux_1_7")]
     show_options.option("2");
 
-    let mut s = Vec::new();
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-options";
     #[cfg(feature = "cmd_alias")]
     let cmd = "show";
 
+    let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_3_0")]
     s.push("-A");
     #[cfg(feature = "tmux_1_2")]
@@ -90,10 +91,9 @@ fn show_options() {
     s.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_1_7")]
     s.push("2");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(show_options.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(show_options.0.bin_args, None);
-    assert_eq!(show_options.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(show_options.0.args, Some(s));
+    let show_options = show_options.build().to_vec();
+
+    assert_eq!(show_options, s);
 }

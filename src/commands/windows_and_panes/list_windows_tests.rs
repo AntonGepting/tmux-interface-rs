@@ -39,16 +39,16 @@ fn list_windows() {
     let cmd = "lsw";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_5")]
     s.push("-a");
     #[cfg(feature = "tmux_1_6")]
     s.extend_from_slice(&["-F", "1"]);
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "2"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(list_windows.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(list_windows.0.bin_args, None);
-    assert_eq!(list_windows.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(list_windows.0.args, Some(s));
+    let list_windows = list_windows.build().to_vec();
+
+    assert_eq!(list_windows, s);
 }

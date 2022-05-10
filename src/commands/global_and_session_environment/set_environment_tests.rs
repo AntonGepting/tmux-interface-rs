@@ -44,6 +44,7 @@ fn set_environment() {
     let cmd = "setenv";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_3_2")]
     s.push("-F");
     #[cfg(feature = "tmux_1_0")]
@@ -60,10 +61,9 @@ fn set_environment() {
     s.push("2");
     #[cfg(feature = "tmux_1_0")]
     s.push("3");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(set_environment.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(set_environment.0.bin_args, None);
-    assert_eq!(set_environment.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(set_environment.0.args, Some(s));
+    let set_environment = set_environment.build().to_vec();
+
+    assert_eq!(set_environment, s);
 }

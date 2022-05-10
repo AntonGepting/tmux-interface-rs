@@ -94,6 +94,7 @@ fn set_option() {
     let cmd = "set";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_0")]
     s.push("-a");
     #[cfg(feature = "tmux_2_6")]
@@ -124,10 +125,9 @@ fn set_option() {
     s.push("2");
     #[cfg(feature = "tmux_0_8")]
     s.push("3");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(set_option.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(set_option.0.bin_args, None);
-    assert_eq!(set_option.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(set_option.0.args, Some(s));
+    let set_option = set_option.build().to_vec();
+
+    assert_eq!(set_option, s);
 }

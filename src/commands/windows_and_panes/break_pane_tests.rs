@@ -85,6 +85,7 @@ fn break_pane() {
     let cmd = "breakp";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_3_2")]
     s.push("-a");
     #[cfg(feature = "tmux_3_2")]
@@ -107,10 +108,9 @@ fn break_pane() {
     s.extend_from_slice(&["-t", "4"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
     s.extend_from_slice(&["-t", "4"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(break_pane.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(break_pane.0.bin_args, None);
-    assert_eq!(break_pane.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(break_pane.0.args, Some(s));
+    let break_pane = break_pane.build().to_vec();
+
+    assert_eq!(break_pane, s);
 }

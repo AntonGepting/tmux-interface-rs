@@ -42,6 +42,7 @@ fn save_buffer() {
     let cmd = "saveb";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_0_8")]
     s.push("-a");
     #[cfg(feature = "tmux_2_0")]
@@ -52,10 +53,9 @@ fn save_buffer() {
     s.extend_from_slice(&["-t", "3"]);
     #[cfg(feature = "tmux_0_8")]
     s.push("4");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(save_buffer.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(save_buffer.0.bin_args, None);
-    assert_eq!(save_buffer.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(save_buffer.0.args, Some(s));
+    let save_buffer = save_buffer.build().to_vec();
+
+    assert_eq!(save_buffer, s);
 }

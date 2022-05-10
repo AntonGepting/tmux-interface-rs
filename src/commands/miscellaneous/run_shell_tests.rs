@@ -50,6 +50,7 @@ fn run_shell() {
     let cmd = "run";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_8")]
     s.push("-b");
     #[cfg(feature = "tmux_3_2")]
@@ -62,10 +63,9 @@ fn run_shell() {
     s.push("3");
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
     s.push("4");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(run_shell.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(run_shell.0.bin_args, None);
-    assert_eq!(run_shell.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(run_shell.0.args, Some(s));
+    let run_shell = run_shell.build().to_vec();
+
+    assert_eq!(run_shell, s);
 }

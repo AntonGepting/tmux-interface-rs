@@ -42,6 +42,7 @@ fn last_pane() {
     let cmd = "lastp";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_0")]
     s.push("-d");
     #[cfg(feature = "tmux_2_0")]
@@ -50,10 +51,9 @@ fn last_pane() {
     s.push("-Z");
     #[cfg(feature = "tmux_1_4")]
     s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(last_pane.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(last_pane.0.bin_args, None);
-    assert_eq!(last_pane.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(last_pane.0.args, Some(s));
+    let last_pane = last_pane.build().to_vec();
+
+    assert_eq!(last_pane, s);
 }

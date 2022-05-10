@@ -15,8 +15,11 @@ fn kill_server() {
 
     let cmd = "kill-server";
 
-    //assert_eq!(kill_server.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(kill_server.0.bin_args, None);
-    assert_eq!(kill_server.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(kill_server.0.args, None);
+    let mut s = Vec::new();
+    s.push(cmd);
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+
+    let kill_server = kill_server.build().to_vec();
+
+    assert_eq!(kill_server, s);
 }

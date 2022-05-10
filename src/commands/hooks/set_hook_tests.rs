@@ -47,6 +47,7 @@ fn set_hook() {
     let cmd = "set-hook";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_3_0")]
     s.push("-a");
     #[cfg(feature = "tmux_2_2")]
@@ -61,10 +62,9 @@ fn set_hook() {
     s.push("2");
     #[cfg(feature = "tmux_2_2")]
     s.push("3");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(set_hook.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(set_hook.0.bin_args, None);
-    assert_eq!(set_hook.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(set_hook.0.args, Some(s));
+    let set_hook = set_hook.build().to_vec();
+
+    assert_eq!(set_hook, s);
 }

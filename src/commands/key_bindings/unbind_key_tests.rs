@@ -68,6 +68,7 @@ fn unbind_key() {
     let cmd = "unbind";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_4")]
     s.push("-a");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
@@ -84,10 +85,9 @@ fn unbind_key() {
     s.extend_from_slice(&["-T", "2"]);
     #[cfg(feature = "tmux_0_8")]
     s.push("3");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(unbind_key.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(unbind_key.0.bin_args, None);
-    assert_eq!(unbind_key.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(unbind_key.0.args, Some(s));
+    let unbind_key = unbind_key.build().to_vec();
+
+    assert_eq!(unbind_key, s);
 }

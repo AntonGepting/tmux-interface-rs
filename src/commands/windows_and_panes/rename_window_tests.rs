@@ -26,14 +26,14 @@ fn rename_window() {
     let cmd = "renamew";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_0_8")]
     s.push("2");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(rename_window.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(rename_window.0.bin_args, None);
-    assert_eq!(rename_window.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(rename_window.0.args, Some(s));
+    let rename_window = rename_window.build().to_vec();
+
+    assert_eq!(rename_window, s);
 }

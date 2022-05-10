@@ -19,11 +19,11 @@ fn kill_window() {
     // (alias: killw)
     // ```
     let target_window = TargetWindow::Raw("1").to_string();
-    let mut kill_pane = KillWindow::new();
+    let mut kill_window = KillWindow::new();
     #[cfg(feature = "tmux_1_7")]
-    kill_pane.parent_sighup();
+    kill_window.parent_sighup();
     #[cfg(feature = "tmux_0_8")]
-    kill_pane.target_window(&target_window);
+    kill_window.target_window(&target_window);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "kill-window";
@@ -31,14 +31,14 @@ fn kill_window() {
     let cmd = "killw";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_7")]
     s.push("-a");
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "1"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(kill_pane.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(kill_pane.0.bin_args, None);
-    assert_eq!(kill_pane.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(kill_pane.0.args, Some(s));
+    let kill_window = kill_window.build().to_vec();
+
+    assert_eq!(kill_window, s);
 }

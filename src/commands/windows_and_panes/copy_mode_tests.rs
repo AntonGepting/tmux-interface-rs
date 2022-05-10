@@ -49,6 +49,7 @@ fn copy_mode() {
     let cmd = "copy-mode";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_1")]
     s.push("-e");
     #[cfg(feature = "tmux_3_2")]
@@ -65,10 +66,9 @@ fn copy_mode() {
     s.extend_from_slice(&["-t", "2"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
     s.extend_from_slice(&["-t", "2"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(copy_mode.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(copy_mode.0.bin_args, None);
-    assert_eq!(copy_mode.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(copy_mode.0.args, Some(s));
+    let copy_mode = copy_mode.build().to_vec();
+
+    assert_eq!(copy_mode, s);
 }

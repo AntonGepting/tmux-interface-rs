@@ -17,8 +17,11 @@ fn lock_server() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "lock";
 
-    //assert_eq!(lock_server.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(lock_server.0.bin_args, None);
-    assert_eq!(lock_server.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(lock_server.0.args, None);
+    let mut s = Vec::new();
+    s.push(cmd);
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+
+    let lock_server = lock_server.build().to_vec();
+
+    assert_eq!(lock_server, s);
 }

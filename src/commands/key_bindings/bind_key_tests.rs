@@ -71,6 +71,7 @@ fn bind_key() {
     let cmd = "bind";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_0")]
     s.push("-n");
     #[cfg(feature = "tmux_0_8")]
@@ -85,10 +86,9 @@ fn bind_key() {
     s.push("4");
     #[cfg(feature = "tmux_0_8")]
     s.push("5");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(bind_key.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(bind_key.0.bin_args, None);
-    assert_eq!(bind_key.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(bind_key.0.args, Some(s));
+    let bind_key = bind_key.build().to_vec();
+
+    assert_eq!(bind_key, s);
 }

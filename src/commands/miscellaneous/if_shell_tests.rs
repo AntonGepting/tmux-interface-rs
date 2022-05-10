@@ -52,6 +52,7 @@ fn if_shell() {
     let cmd = "if";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_8")]
     s.push("-b");
     #[cfg(feature = "tmux_2_0")]
@@ -64,10 +65,9 @@ fn if_shell() {
     s.push("3");
     #[cfg(feature = "tmux_1_6")]
     s.push("4");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(if_shell.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(if_shell.0.bin_args, None);
-    assert_eq!(if_shell.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(if_shell.0.args, Some(s));
+    let if_shell = if_shell.build().to_vec();
+
+    assert_eq!(if_shell, s);
 }

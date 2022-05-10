@@ -30,16 +30,16 @@ fn confirm_before() {
     let cmd = "confirm";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_5")]
     s.extend_from_slice(&["-p", "1"]);
     #[cfg(feature = "tmux_0_9")]
     s.extend_from_slice(&["-t", "2"]);
     #[cfg(feature = "tmux_0_9")]
     s.push("3");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(confirm_before.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(confirm_before.0.bin_args, None);
-    assert_eq!(confirm_before.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(confirm_before.0.args, Some(s));
+    let confirm_before = confirm_before.build().to_vec();
+
+    assert_eq!(confirm_before, s);
 }

@@ -79,6 +79,7 @@ fn choose_tree() {
     let cmd = "choose-tree";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_7")]
     s.push("-G");
     #[cfg(feature = "tmux_2_7")]
@@ -105,10 +106,9 @@ fn choose_tree() {
     s.extend_from_slice(&["-t", "5"]);
     #[cfg(feature = "tmux_2_6")]
     s.push("6");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(choose_tree.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(choose_tree.0.bin_args, None);
-    assert_eq!(choose_tree.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(choose_tree.0.args, Some(s));
+    let choose_tree = choose_tree.build().to_vec();
+
+    assert_eq!(choose_tree, s);
 }

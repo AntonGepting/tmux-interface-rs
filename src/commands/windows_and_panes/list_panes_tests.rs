@@ -40,6 +40,7 @@ fn list_panes() {
     let cmd = "lsp";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_1_5")]
     s.push("-a");
     #[cfg(feature = "tmux_1_5")]
@@ -48,10 +49,9 @@ fn list_panes() {
     s.extend_from_slice(&["-F", "1"]);
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "2"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(list_panes.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(list_panes.0.bin_args, None);
-    assert_eq!(list_panes.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(list_panes.0.args, Some(s));
+    let list_panes = list_panes.build().to_vec();
+
+    assert_eq!(list_panes, s);
 }

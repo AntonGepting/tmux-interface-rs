@@ -71,6 +71,7 @@ fn choose_client() {
     let cmd = "choose-client";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_6")]
     s.push("-N");
     #[cfg(feature = "tmux_3_1")]
@@ -91,10 +92,9 @@ fn choose_client() {
     s.extend_from_slice(&["-t", "5"]);
     #[cfg(feature = "tmux_1_0")]
     s.push("6");
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(choose_client.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(choose_client.0.bin_args, None);
-    assert_eq!(choose_client.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(choose_client.0.args, Some(s));
+    let choose_client = choose_client.build().to_vec();
+
+    assert_eq!(choose_client, s);
 }

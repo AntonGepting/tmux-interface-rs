@@ -55,6 +55,7 @@ fn join_pane() {
     let cmd = "joinp";
 
     let mut s = Vec::new();
+    s.push(cmd);
     #[cfg(feature = "tmux_2_6")]
     s.push("-b");
     #[cfg(feature = "tmux_1_2")]
@@ -73,10 +74,9 @@ fn join_pane() {
     s.extend_from_slice(&["-s", "2"]);
     #[cfg(feature = "tmux_1_2")]
     s.extend_from_slice(&["-t", "3"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    //assert_eq!(join_pane.0.bin, Cow::Borrowed("tmux"));
-    //assert_eq!(join_pane.0.bin_args, None);
-    assert_eq!(join_pane.0.cmd, Some(Cow::Borrowed(cmd)));
-    assert_eq!(join_pane.0.args, Some(s));
+    let join_pane = join_pane.build().to_vec();
+
+    assert_eq!(join_pane, s);
 }
