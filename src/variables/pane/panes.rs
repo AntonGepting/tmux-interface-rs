@@ -42,6 +42,7 @@ impl Panes {
         let output = ListPanes::new()
             .format(&lsp_format)
             .target(target_window.to_string())
+            .build()
             .output()?
             .to_string();
 
@@ -57,6 +58,7 @@ impl Panes {
         let output = ListPanes::new()
             .format(&lsp_format)
             .target(target_session.to_string())
+            .build()
             .output()?
             .to_string();
 

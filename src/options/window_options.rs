@@ -1187,6 +1187,7 @@ impl WindowOptions {
         ShowOptions::new()
             .global()
             .window()
+            .build()
             .output()?
             .to_string()
             .parse()
@@ -1205,6 +1206,7 @@ impl WindowOptions {
         ShowOptions::new()
             .server()
             .option(&selected_option)
+            .build()
             .output()?
             .to_string()
             .parse()
@@ -1218,6 +1220,7 @@ impl WindowOptions {
                     .server()
                     .option(selected_option.0)
                     .value(&selected_value)
+                    .build()
                     .output()?;
             }
         }

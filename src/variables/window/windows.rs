@@ -42,6 +42,7 @@ impl Windows {
         let output = ListWindows::new()
             .format(&lsw_format)
             .target_session(target_session.to_string())
+            .build()
             .output()?
             .to_string();
 
