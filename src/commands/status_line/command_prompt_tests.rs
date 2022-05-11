@@ -89,7 +89,7 @@ fn command_prompt() {
     s.push("4");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    let confirm_before = confirm_before.build().to_vec();
+    let command_prompt = command_prompt.build().to_vec();
 
-    assert_eq!(confirm_before, s);
+    assert_eq!(command_prompt, s);
 }

@@ -165,7 +165,7 @@ fn new_session() {
 
 #[test]
 fn new_session_inner() {
-    use crate::NewSession;
+    //use crate::NewSession;
 
     //let a = NewSession::new().session_name("asdf");
     //dbg!(a.as_ref().cmd);

@@ -2,7 +2,7 @@
 fn attach_session() {
     #[cfg(feature = "tmux_3_2")]
     use crate::ClientFlags;
-    use crate::{AttachSession, TargetSession, TmuxCommand};
+    use crate::{AttachSession, TargetSession};
     use std::borrow::Cow;
 
     // Structure for attaching client to already existing session
@@ -71,9 +71,9 @@ fn attach_session() {
     attach_session.target_session(target_session.to_string());
 
     #[cfg(not(feature = "cmd_alias"))]
-    s.push("attach-session");
+    let cmd = "attach-session";
     #[cfg(feature = "cmd_alias")]
-    s.push("attach");
+    let cmd = "attach";
 
     let mut s = Vec::new();
     s.push(cmd);

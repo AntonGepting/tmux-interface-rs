@@ -92,7 +92,7 @@ fn resize_pane() {
     s.push("4");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    let resize_window = resize_window.build().to_vec();
+    let resize_pane = resize_pane.build().to_vec();
 
-    assert_eq!(resize_window, s);
+    assert_eq!(resize_pane, s);
 }

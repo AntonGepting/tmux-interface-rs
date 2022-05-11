@@ -76,7 +76,7 @@ impl<'a> LinkWindow<'a> {
     /// `[-t dst-window]` - dst-window
     #[cfg(feature = "tmux_0_8")]
     pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
-        self.src_window = Some(dst_window.into());
+        self.dst_window = Some(dst_window.into());
         self
     }
 

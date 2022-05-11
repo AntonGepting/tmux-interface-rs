@@ -43,8 +43,8 @@ fn if_shell() {
     if_shell.shell_command("2");
     #[cfg(feature = "tmux_0_8")]
     if_shell.command("3");
-    #[cfg(feature = "tmux_0_8")]
-    if_shell.command("4");
+    //#[cfg(feature = "tmux_1_6")]
+    //if_shell.command("4");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "if-shell";
@@ -63,8 +63,8 @@ fn if_shell() {
     s.push("2");
     #[cfg(feature = "tmux_0_8")]
     s.push("3");
-    #[cfg(feature = "tmux_1_6")]
-    s.push("4");
+    //#[cfg(feature = "tmux_1_6")]
+    //s.push("4");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let if_shell = if_shell.build().to_vec();

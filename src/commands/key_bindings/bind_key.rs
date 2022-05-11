@@ -128,7 +128,7 @@ impl<'a> BindKey<'a> {
     /// `command`
     #[cfg(feature = "tmux_0_8")]
     pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
-        self.command(command.into());
+        self.command = Some(command.into());
         self
     }
 

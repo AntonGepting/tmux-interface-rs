@@ -2,6 +2,7 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+// XXX: solution for command [command]
 /// Structure for conditional commands executing
 ///
 /// # Manual
