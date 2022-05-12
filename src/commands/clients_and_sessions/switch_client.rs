@@ -1,6 +1,7 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
+use std::marker::PhantomData;
 
 /// Structure to switch the current session for client `target-client` to `target-session`
 ///
@@ -78,6 +79,8 @@ pub struct SwitchClient<'a> {
     /// `[-T key-table]` - set the client's key table
     #[cfg(feature = "tmux_2_1")]
     pub key_table: Option<Cow<'a, str>>,
+
+    _phantom_data: PhantomData<&'a ()>,
 }
 
 impl<'a> SwitchClient<'a> {

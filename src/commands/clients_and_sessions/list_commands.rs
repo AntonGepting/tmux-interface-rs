@@ -1,6 +1,7 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
+use std::marker::PhantomData;
 
 /// List the syntax of all commands supported by tmux
 ///
@@ -32,6 +33,8 @@ pub struct ListCommands<'a> {
     /// `[command]`
     #[cfg(feature = "tmux_3_2")]
     pub command: Option<Cow<'a, str>>,
+
+    _phantom_data: PhantomData<&'a ()>,
 }
 
 impl<'a> ListCommands<'a> {

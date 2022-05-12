@@ -48,10 +48,10 @@ pub struct DisplayMenu<'a> {
     pub name: Option<Cow<'a, str>>,
 
     /// `key`
-    pub key: Into<Cow<'a, str>>,
+    pub key: Option<Cow<'a, str>>,
 
     /// `command`
-    pub command: Into<Cow<'a, str>>,
+    pub command: Option<Cow<'a, str>>,
 }
 
 impl<'a> DisplayMenu<'a> {
@@ -76,7 +76,7 @@ impl<'a> DisplayMenu<'a> {
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_3_0")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
-        self.target_pane = Some(target_client.into());
+        self.target_pane = Some(target_pane.into());
         self
     }
 
@@ -131,7 +131,7 @@ impl<'a> DisplayMenu<'a> {
 
         // `[-c target-client]` - target-client
         #[cfg(feature = "tmux_3_0")]
-        if let Some(self.target_client) = &self.target_client {
+        if let Some(target_client) = &self.target_client {
             cmd.push_option(C_LOWERCASE_KEY, target_client.as_ref());
         }
 
@@ -144,12 +144,12 @@ impl<'a> DisplayMenu<'a> {
         // `[-T title]` - title
         #[cfg(feature = "tmux_3_0")]
         if let Some(title) = &self.title {
-            cmd.push_option(T_UPPERCASE_KEY, title);
+            cmd.push_option(T_UPPERCASE_KEY, title.as_ref());
         }
 
         // `[-x position]` - x position of the menu
         #[cfg(feature = "tmux_3_0")]
-        if let Some(x) = self.x
+        if let Some(x) = self.x {
             cmd.push_option(X_LOWERCASE_KEY, x.to_string());
         }
 
@@ -161,17 +161,17 @@ impl<'a> DisplayMenu<'a> {
 
         // `name`
         if let Some(name) = &self.name {
-            cmd.push_param(name);
+            cmd.push_param(name.as_ref());
         }
 
         // `key`
         if let Some(key) = &self.key {
-            cmd.push_param(key);
+            cmd.push_param(key.as_ref());
         }
 
         // `command`
         if let Some(command) = &self.command {
-            cmd.push_param(command);
+            cmd.push_param(command.as_ref());
         }
 
         cmd

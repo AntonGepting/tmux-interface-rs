@@ -116,7 +116,7 @@ impl<'a> CopyMode<'a> {
 
     /// `[-t target-window]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
         self.target_window = Some(target_window.into());
         self
     }
@@ -171,7 +171,7 @@ impl<'a> CopyMode<'a> {
         // `[-t target-window]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
         if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
         }
 
         cmd

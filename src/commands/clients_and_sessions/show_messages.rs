@@ -79,7 +79,7 @@ impl<'a> ShowMessages<'a> {
 
         // `[-I]`
         #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
-        if self.server.is_some() {
+        if self.server {
             cmd.push_flag(I_UPPERCASE_KEY);
         }
 

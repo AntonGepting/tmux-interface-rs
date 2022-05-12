@@ -1,6 +1,7 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
+use std::marker::PhantomData;
 
 /// List all clients attached to the server
 ///
@@ -32,6 +33,8 @@ pub struct ListClients<'a> {
     /// `[-t target-session]`
     #[cfg(feature = "tmux_1_5")]
     pub target_session: Option<Cow<'a, str>>,
+
+    _phantom_data: PhantomData<&'a ()>,
 }
 
 impl<'a> ListClients<'a> {

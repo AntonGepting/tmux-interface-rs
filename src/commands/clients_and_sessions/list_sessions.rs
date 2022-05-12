@@ -1,6 +1,7 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
+use std::marker::PhantomData;
 
 // XXX: better result return?
 /// List all sessions managed by the server
@@ -22,6 +23,8 @@ pub struct ListSessions<'a> {
     /// `[-F format]`
     #[cfg(feature = "tmux_1_6")]
     pub format: Option<Cow<'a, str>>,
+
+    _phantom_data: PhantomData<&'a ()>,
 }
 
 impl<'a> ListSessions<'a> {

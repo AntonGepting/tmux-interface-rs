@@ -155,7 +155,7 @@ impl<'a> SendKeys<'a> {
     /// `[-t target-window]` - specify the target window
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
-        self.target_window = Some(target_pane.into());
+        self.target_window = Some(target_window.into());
         self
     }
 

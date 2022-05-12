@@ -95,13 +95,13 @@ impl<'a> KillPane<'a> {
         // `[-p pane-index]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
         if let Some(pane_index) = &self.pane_index {
-            cmd.push_option(p_KEY, pane_index.as_ref());
+            cmd.push_option(P_LOWERCASE_KEY, pane_index.as_ref());
         }
 
         // `[-t target-window]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
         if let Some(target_window) = &self.target_window {
-            cmd.push_option(t_KEY, target_window.as_ref());
+            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
         }
 
         cmd

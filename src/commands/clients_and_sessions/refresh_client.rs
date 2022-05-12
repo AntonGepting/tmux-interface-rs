@@ -328,7 +328,7 @@ impl<'a> RefreshClient<'a> {
         // XXX: refactor vec?
         // `[-F flags]` - set a comma-separated list of flags
         #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_2")))]
-        if let Some(flags) = self.flags {
+        if let Some(flags) = &self.flags {
             cmd.push_option(F_UPPERCASE_KEY, flags.to_string());
         }
 

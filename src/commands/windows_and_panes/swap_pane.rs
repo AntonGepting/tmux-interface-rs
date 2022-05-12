@@ -1,6 +1,7 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
+use std::marker::PhantomData;
 
 /// Swap two panes
 ///
@@ -48,6 +49,8 @@ pub struct SwapPane<'a> {
     /// `[-t dst-pane]` - dst-pane
     #[cfg(feature = "tmux_1_0")]
     pub dst_pane: Option<Cow<'a, str>>,
+
+    _phantom_data: PhantomData<&'a ()>,
 }
 
 impl<'a> SwapPane<'a> {

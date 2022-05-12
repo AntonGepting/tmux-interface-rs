@@ -1,6 +1,7 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
+use std::marker::PhantomData;
 
 /// Make pane `target-pane` the active pane in window `target-window`
 ///
@@ -110,6 +111,8 @@ pub struct SelectPane<'a> {
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_1_0")]
     pub target_pane: Option<Cow<'a, str>>,
+
+    _phantom_data: PhantomData<&'a ()>,
 }
 
 impl<'a> SelectPane<'a> {
