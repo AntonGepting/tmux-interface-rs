@@ -1,75 +1,46 @@
-use crate::commands::constants::*;
+//use crate::commands::constants::*;
 use crate::commands::tmux_bin::TmuxBin;
 use crate::commands::tmux_commands::TmuxCommands;
 use crate::{Error, TmuxCommand, TmuxOutput};
-use std::borrow::Cow;
+//use std::borrow::Cow;
+use std::fmt;
 use std::process::{Command, Stdio};
 
 #[derive(Debug, Clone)]
 pub struct TmuxBinCommands<'a> {
     pub tmux: TmuxBin<'a>,
-    pub commands: TmuxCommands<'a>,
+    pub cmds: TmuxCommands<'a>,
+}
+
+impl<'a> fmt::Display for TmuxBinCommands<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{} {}", self.tmux.to_string(), self.cmds.to_string())
+    }
 }
 
 impl<'a> Default for TmuxBinCommands<'a> {
     fn default() -> Self {
         Self {
             tmux: TmuxBin::default(),
-            commands: TmuxCommands::default(),
+            cmds: TmuxCommands::default(),
         }
     }
 }
 
 impl<'a> TmuxBinCommands<'a> {
-    pub fn new(tmux: TmuxBin<'a>, commands: TmuxCommands<'a>) -> Self {
-        TmuxBinCommands { tmux, commands }
+    pub fn new(tmux: TmuxBin<'a>, cmds: TmuxCommands<'a>) -> Self {
+        TmuxBinCommands { tmux, cmds }
     }
 
     pub fn push<T: Into<TmuxCommand<'a>>>(&mut self, cmd: T) {
-        self.commands.push(cmd.into());
+        self.cmds.push(cmd.into());
     }
-
-    //pub fn append(&mut self) -> &mut Self {
-    //self.commands.append();
-    //self
-    //}
-
-    //pub fn to_vec(&self) -> Vec<&Cow<'a, str>> {
-    //let mut v = Vec::new();
-
-    ////let c = self.commands.to_vec();
-
-    //for c in &self.commands.0 {
-    //v.extend(c.to_vec());
-    //}
-
-    ////if let Some(tmux_args) = &self.tmux.args {
-    ////v.extend(tmux_args);
-    ////}
-
-    //v
-    //}
-
-    //pub fn to_string(&self) -> String {
-    //}
-
-    //pub fn start_server(&mut self) -> StartServer<'a> {
-    //StartServer::new()
-    //}
-
-    //pub fn new_session(&mut self) -> NewSession<'a> {
-    //NewSession::new()
-    //}
-
-    //pub fn show_options(&mut self) -> ShowOptions<'a> {
-    //ShowOptions::new()
-    //}
 
     // XXX: error out
     pub fn output(&self) -> Result<TmuxOutput, Error> {
         let mut command = Command::new(&self.tmux.bin.as_ref());
 
-        for tmux_command in &self.commands.0 {
+        for tmux_command in &self.cmds.0 {
             if let Some(cmd) = &tmux_command.cmd {
                 command.arg(cmd.as_ref());
             }
@@ -97,7 +68,7 @@ impl<'a> From<&TmuxCommands<'a>> for TmuxBinCommands<'a> {
     fn from(item: &TmuxCommands<'a>) -> Self {
         Self {
             tmux: Default::default(),
-            commands: item.clone(),
+            cmds: item.clone(),
         }
     }
 }
@@ -106,7 +77,11 @@ impl<'a> From<TmuxCommands<'a>> for TmuxBinCommands<'a> {
     fn from(item: TmuxCommands<'a>) -> Self {
         Self {
             tmux: Default::default(),
-            commands: item,
+            cmds: item,
         }
     }
+}
+
+pub trait Build<'a> {
+    fn build(&self) -> TmuxCommand<'a>;
 }
