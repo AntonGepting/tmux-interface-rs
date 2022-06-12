@@ -17,9 +17,9 @@ fn list_sessions() {
     // tmux list-sessions
     // (alias: ls)
     // ```
-    let mut list_sessions = ListSessions::new();
+    let list_sessions = ListSessions::new();
     #[cfg(feature = "tmux_1_6")]
-    list_sessions.format("1");
+    let list_sessions = list_sessions.format("1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-sessions";

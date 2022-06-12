@@ -22,20 +22,20 @@ impl<'a> LockSession<'a> {
     }
 
     /// `[-t target-session]`
-    pub fn target_session<T: Into<Cow<'a, str>>>(&mut self, target_session: T) -> &mut Self {
+    pub fn target_session<T: Into<Cow<'a, str>>>(mut self, target_session: T) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
     /// run command
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(LOCK_SESSION);
 
         // `[-t target-session]`
-        if let Some(target_session) = &self.target_session {
-            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         cmd

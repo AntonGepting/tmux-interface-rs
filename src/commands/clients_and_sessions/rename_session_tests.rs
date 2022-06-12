@@ -13,11 +13,12 @@ fn rename_session() {
     // (alias: rename)
     // ```
     let target_session = TargetSession::Raw("1").to_string();
-    let mut rename_session = RenameSession::new();
+
+    let rename_session = RenameSession::new();
     #[cfg(feature = "tmux_0_8")]
-    rename_session.target_session(&target_session);
+    let rename_session = rename_session.target_session(&target_session);
     #[cfg(feature = "tmux_0_8")]
-    rename_session.new_name("2");
+    let rename_session = rename_session.new_name("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "rename-session";

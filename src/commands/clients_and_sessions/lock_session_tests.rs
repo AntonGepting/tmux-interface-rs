@@ -11,9 +11,9 @@ fn lock_session() {
     // tmux lock-session [-t target-session]
     // (alias: locks)
     // ```
-    let mut lock_session = LockSession::new();
+    let lock_session = LockSession::new();
     #[cfg(feature = "tmux_1_1")]
-    lock_session.target_session("1");
+    let lock_session = lock_session.target_session("1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "lock-session";

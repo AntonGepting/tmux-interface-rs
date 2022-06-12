@@ -23,13 +23,13 @@ fn kill_session() {
     // ```
     let target_session = TargetSession::Raw("1").to_string();
 
-    let mut kill_session = KillSession::new();
+    let kill_session = KillSession::new();
     #[cfg(feature = "tmux_2_2")]
-    kill_session.all();
+    let kill_session = kill_session.all();
     #[cfg(feature = "tmux_1_7")]
-    kill_session.clear_alerts();
+    let kill_session = kill_session.clear_alerts();
     #[cfg(feature = "tmux_0_8")]
-    kill_session.target_session(&target_session);
+    let kill_session = kill_session.target_session(&target_session);
 
     let cmd = "kill-session";
 

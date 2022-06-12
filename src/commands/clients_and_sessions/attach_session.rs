@@ -81,35 +81,35 @@ impl<'a> AttachSession<'a> {
 
     /// `[-d]` - any other clients attached to the session are detached
     #[cfg(feature = "tmux_0_8")]
-    pub fn detach_other(&mut self) -> &mut Self {
+    pub fn detach_other(mut self) -> Self {
         self.detach_other = true;
         self
     }
 
     /// `[-E]` - `update-environment` option will not be applied
     #[cfg(feature = "tmux_2_1")]
-    pub fn not_update_env(&mut self) -> &mut Self {
+    pub fn not_update_env(mut self) -> Self {
         self.not_update_env = true;
         self
     }
 
     /// `[-r]` - signifies the client is read-only
     #[cfg(feature = "tmux_1_2")]
-    pub fn read_only(&mut self) -> &mut Self {
+    pub fn read_only(mut self) -> Self {
         self.read_only = true;
         self
     }
 
     /// `[-x]` - send SIGHUP to the parent process, detaching the client
     #[cfg(feature = "tmux_3_0")]
-    pub fn parent_sighup(&mut self) -> &mut Self {
+    pub fn parent_sighup(mut self) -> Self {
         self.parent_sighup = true;
         self
     }
 
     /// `[-c working-directory]` - specify starting directory
     #[cfg(feature = "tmux_1_9")]
-    pub fn working_directory<S: Into<Cow<'a, str>>>(&mut self, working_directory: S) -> &mut Self {
+    pub fn working_directory<S: Into<Cow<'a, str>>>(mut self, working_directory: S) -> Self {
         self.working_directory = Some(working_directory.into());
         self
     }
@@ -117,20 +117,20 @@ impl<'a> AttachSession<'a> {
     // XXX: refactor vec?
     /// `[-f flags]` - sets a comma-separated list of client flags
     #[cfg(feature = "tmux_3_2")]
-    pub fn flags(&mut self, flags: ClientFlags) -> &mut Self {
+    pub fn flags(mut self, flags: ClientFlags) -> Self {
         self.flags = Some(flags);
         self
     }
 
     /// `[-t target-session]` - specify target session name
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
     /// build command with arguments in right order
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(ATTACH_SESSION);
@@ -161,8 +161,8 @@ impl<'a> AttachSession<'a> {
 
         // `[-c working-directory]` - specify starting directory
         #[cfg(feature = "tmux_1_9")]
-        if let Some(working_directory) = &self.working_directory {
-            cmd.push_option(C_LOWERCASE_KEY, working_directory.as_ref());
+        if let Some(working_directory) = self.working_directory {
+            cmd.push_option(C_LOWERCASE_KEY, working_directory);
         }
 
         // `[-f flags]` - sets a comma-separated list of client flags
@@ -173,8 +173,8 @@ impl<'a> AttachSession<'a> {
 
         // `[-t target-session]` - specify target session name
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_session) = &self.target_session {
-            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         cmd

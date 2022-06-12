@@ -46,33 +46,33 @@ impl<'a> ShowMessages<'a> {
 
     /// `[-I]`
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
-    pub fn server(&mut self) -> &mut Self {
+    pub fn server(mut self) -> Self {
         self.server = true;
         self
     }
 
     /// `[-J]`
     #[cfg(feature = "tmux_1_9")]
-    pub fn jobs(&mut self) -> &mut Self {
+    pub fn jobs(mut self) -> Self {
         self.jobs = true;
         self
     }
 
     /// `[-T]`
     #[cfg(feature = "tmux_1_9")]
-    pub fn terminals(&mut self) -> &mut Self {
+    pub fn terminals(mut self) -> Self {
         self.terminals = true;
         self
     }
 
     /// `[-t target-client]`
     #[cfg(feature = "tmux_1_2")]
-    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SHOW_MESSAGES);
@@ -97,8 +97,8 @@ impl<'a> ShowMessages<'a> {
 
         // `[-t target-client]`
         #[cfg(feature = "tmux_1_2")]
-        if let Some(target_client) = &self.target_client {
-            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        if let Some(target_client) = self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client);
         }
 
         cmd

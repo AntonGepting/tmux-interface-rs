@@ -25,20 +25,20 @@ impl<'a> LockClient<'a> {
 
     /// `[-t target-client]`
     #[cfg(feature = "tmux_1_1")]
-    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(LOCK_CLIENT);
 
         // `[-t target-client]`
         #[cfg(feature = "tmux_1_1")]
-        if let Some(target_client) = &self.target_client {
-            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        if let Some(target_client) = self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client);
         }
 
         cmd

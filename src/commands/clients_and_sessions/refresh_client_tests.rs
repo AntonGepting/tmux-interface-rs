@@ -46,39 +46,39 @@ fn refresh_client() {
     // tmux refresh-client [-t target-client]
     // (alias: refresh)
     // ```
-    let mut refresh_client = RefreshClient::new();
+    let refresh_client = RefreshClient::new();
     #[cfg(feature = "tmux_2_9a")]
-    refresh_client.tracking_cursor();
+    let refresh_client = refresh_client.tracking_cursor();
     #[cfg(feature = "tmux_2_9a")]
-    refresh_client.down();
+    let refresh_client = refresh_client.down();
     #[cfg(feature = "tmux_2_9a")]
-    refresh_client.request_clipboard();
+    let refresh_client = refresh_client.request_clipboard();
     #[cfg(feature = "tmux_2_9a")]
-    refresh_client.left();
+    let refresh_client = refresh_client.left();
     #[cfg(feature = "tmux_2_9a")]
-    refresh_client.right();
+    let refresh_client = refresh_client.right();
     #[cfg(feature = "tmux_1_6")]
-    refresh_client.status_line();
+    let refresh_client = refresh_client.status_line();
     #[cfg(feature = "tmux_2_9a")]
-    refresh_client.up();
+    let refresh_client = refresh_client.up();
     #[cfg(feature = "tmux_3_2")]
-    refresh_client.allow_actions(0, State::On);
+    let refresh_client = refresh_client.allow_actions(0, State::On);
     #[cfg(feature = "tmux_3_2")]
-    refresh_client.subscribe(0, None, None);
+    let refresh_client = refresh_client.subscribe(0, None, None);
     #[cfg(feature = "tmux_2_4")]
-    refresh_client.size((1, 2));
+    let refresh_client = refresh_client.size((1, 2));
     #[cfg(feature = "tmux_2_9a")]
     {
         let flags = ClientFlags {
             active_pane: Some(true),
             ..Default::default()
         };
-        refresh_client.flags(flags);
+        let refresh_client = refresh_client.flags(flags);
     }
     #[cfg(feature = "tmux_0_8")]
-    refresh_client.target_client("4");
+    let refresh_client = refresh_client.target_client("4");
     #[cfg(feature = "tmux_2_9a")]
-    refresh_client.adjustment(5);
+    let refresh_client = refresh_client.adjustment(5);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "refresh-client";

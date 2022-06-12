@@ -90,68 +90,68 @@ impl<'a> SwitchClient<'a> {
 
     /// `[-E]` - update-environment option will not be applied
     #[cfg(feature = "tmux_2_1")]
-    pub fn not_update_env(&mut self) -> &mut Self {
+    pub fn not_update_env(mut self) -> Self {
         self.not_update_env = true;
         self
     }
 
     /// `[-l]` - move to the last session
     #[cfg(feature = "tmux_1_4")]
-    pub fn last_session(&mut self) -> &mut Self {
+    pub fn last_session(mut self) -> Self {
         self.last_session = true;
         self
     }
 
     /// `[-n]` - move to the next session
     #[cfg(feature = "tmux_1_4")]
-    pub fn next_session(&mut self) -> &mut Self {
+    pub fn next_session(mut self) -> Self {
         self.next_session = true;
         self
     }
 
     /// `[-p]` - move to the previous session
     #[cfg(feature = "tmux_1_4")]
-    pub fn previous_session(&mut self) -> &mut Self {
+    pub fn previous_session(mut self) -> Self {
         self.previous_session = true;
         self
     }
 
     /// `[-r]` - toggle whether a client is read-only
     #[cfg(feature = "tmux_1_6")]
-    pub fn read_only(&mut self) -> &mut Self {
+    pub fn read_only(mut self) -> Self {
         self.read_only = true;
         self
     }
 
     /// `[-Z]` - keep the window zoomed if it was zoomed
     #[cfg(feature = "tmux_3_1")]
-    pub fn keep_zoomed(&mut self) -> &mut Self {
+    pub fn keep_zoomed(mut self) -> Self {
         self.keep_zoomed = true;
         self
     }
 
     /// `[-c target-client]` - specify the target-client
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
+    pub fn target_client(mut self, target_client: &'a str) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
     /// `[-t target-session]` - specify the target session
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
     /// `[-T key-table]` - set the client's key table
     #[cfg(feature = "tmux_2_1")]
-    pub fn key_table<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
+    pub fn key_table<S: Into<Cow<'a, str>>>(mut self, key_table: S) -> Self {
         self.key_table = Some(key_table.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SWITCH_CLIENT);
@@ -194,20 +194,20 @@ impl<'a> SwitchClient<'a> {
 
         // `[-c target-client]` - specify the target-client
         #[cfg(feature = "tmux_1_0")]
-        if let Some(target_client) = &self.target_client {
-            cmd.push_option(C_LOWERCASE_KEY, target_client.as_ref());
+        if let Some(target_client) = self.target_client {
+            cmd.push_option(C_LOWERCASE_KEY, target_client);
         }
 
         // `[-t target-session]` - specify the target session
         #[cfg(feature = "tmux_1_0")]
-        if let Some(target_session) = &self.target_session {
-            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         // `[-T key-table]` - set the client's key table
         #[cfg(feature = "tmux_2_1")]
-        if let Some(key_table) = &self.key_table {
-            cmd.push_option(T_UPPERCASE_KEY, key_table.as_ref());
+        if let Some(key_table) = self.key_table {
+            cmd.push_option(T_UPPERCASE_KEY, key_table);
         }
 
         cmd

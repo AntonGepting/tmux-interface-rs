@@ -138,49 +138,49 @@ impl<'a> RefreshClient<'a> {
 
     /// `[-c]` - return to tracking the cursor automatically
     #[cfg(feature = "tmux_2_9a")]
-    pub fn tracking_cursor(&mut self) -> &mut Self {
+    pub fn tracking_cursor(mut self) -> Self {
         self.tracking_cursor = true;
         self
     }
 
     /// `[-D]` - move the visible part of a window down by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
-    pub fn down(&mut self) -> &mut Self {
+    pub fn down(mut self) -> Self {
         self.down = true;
         self
     }
 
     /// `[-l]` - request the clipboard from the client using the xterm(1) escape sequence
     #[cfg(feature = "tmux_2_9a")]
-    pub fn request_clipboard(&mut self) -> &mut Self {
+    pub fn request_clipboard(mut self) -> Self {
         self.request_clipboard = true;
         self
     }
 
     /// `[-L]` - move the visible part of a window left by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
-    pub fn left(&mut self) -> &mut Self {
+    pub fn left(mut self) -> Self {
         self.left = true;
         self
     }
 
     /// `[-R]` - move the visible part of a window right by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
-    pub fn right(&mut self) -> &mut Self {
+    pub fn right(mut self) -> Self {
         self.right = true;
         self
     }
 
     /// `[-S]` - only update the client's status line
     #[cfg(feature = "tmux_1_6")]
-    pub fn status_line(&mut self) -> &mut Self {
+    pub fn status_line(mut self) -> Self {
         self.status_line = true;
         self
     }
 
     /// `[-U]` - move the visible part of a window up by `adjustment` rows
     #[cfg(feature = "tmux_2_9a")]
-    pub fn up(&mut self) -> &mut Self {
+    pub fn up(mut self) -> Self {
         self.up = true;
         self
     }
@@ -188,7 +188,7 @@ impl<'a> RefreshClient<'a> {
     // TODO: accept target_pane
     /// `[-A pane:state]` - allows a control mode client to trigger actions on a pane
     #[cfg(feature = "tmux_3_2")]
-    pub fn allow_actions(&mut self, pane: usize, state: State) -> &mut Self {
+    pub fn allow_actions(mut self, pane: usize, state: State) -> Self {
         self.allow_actions = Some((pane, state));
         self
     }
@@ -196,12 +196,7 @@ impl<'a> RefreshClient<'a> {
     // TODO: refactor, accept target_pane, target_window and masks * ...
     /// [-B name:what:format]
     #[cfg(feature = "tmux_3_2")]
-    pub fn subscribe(
-        &mut self,
-        name: usize,
-        what: Option<String>,
-        format: Option<String>,
-    ) -> &mut Self {
+    pub fn subscribe(mut self, name: usize, what: Option<String>, format: Option<String>) -> Self {
         self.subscribe = Some((name, what, format));
         self
     }
@@ -209,7 +204,7 @@ impl<'a> RefreshClient<'a> {
     /// `[-C X,Y]` - set the width and height of a control client
     /// `[-C XxY]` - set the width and height of a control client
     #[cfg(feature = "tmux_2_4")]
-    pub fn size(&mut self, size: (usize, usize)) -> &mut Self {
+    pub fn size(mut self, size: (usize, usize)) -> Self {
         self.size = Some(size);
         self
     }
@@ -217,7 +212,7 @@ impl<'a> RefreshClient<'a> {
     // XXX: refactor vec?
     /// `[-F flags]` - set a comma-separated list of flags
     #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_2")))]
-    pub fn flags(&mut self, flags: ClientFlags) -> &mut Self {
+    pub fn flags(mut self, flags: ClientFlags) -> Self {
         self.flags = Some(flags);
         self
     }
@@ -225,26 +220,26 @@ impl<'a> RefreshClient<'a> {
     // XXX: refactor vec?
     /// `[-f flags]` - sets a comma-separated list of client flags
     #[cfg(feature = "tmux_3_2")]
-    pub fn flags(&mut self, flags: ClientFlags) -> &mut Self {
+    pub fn flags(mut self, flags: ClientFlags) -> Self {
         self.flags = Some(flags);
         self
     }
 
     /// `[-t target-client]` - specify the client
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_client(&mut self, target_client: &'a str) -> &mut Self {
+    pub fn target_client(mut self, target_client: &'a str) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
     /// `[adjustment]` - moves the visible part up/down left/right by adjustment rows/columns
     #[cfg(feature = "tmux_2_9a")]
-    pub fn adjustment(&mut self, adjustment: usize) -> &mut Self {
+    pub fn adjustment(mut self, adjustment: usize) -> Self {
         self.adjustment = Some(adjustment);
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(REFRESH_CLIENT);
@@ -328,7 +323,7 @@ impl<'a> RefreshClient<'a> {
         // XXX: refactor vec?
         // `[-F flags]` - set a comma-separated list of flags
         #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_2")))]
-        if let Some(flags) = &self.flags {
+        if let Some(flags) = self.flags {
             cmd.push_option(F_UPPERCASE_KEY, flags.to_string());
         }
 
@@ -341,8 +336,8 @@ impl<'a> RefreshClient<'a> {
 
         // `[-t target-client]` - specify the client
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_client) = &self.target_client {
-            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        if let Some(target_client) = self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client);
         }
 
         // `[adjustment]` - moves the visible part up/down left/right by adjustment rows/columns

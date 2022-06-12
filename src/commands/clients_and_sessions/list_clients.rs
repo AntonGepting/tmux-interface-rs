@@ -44,33 +44,33 @@ impl<'a> ListClients<'a> {
 
     /// `[-F format]`
     #[cfg(feature = "tmux_1_6")]
-    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
+    pub fn format<S: Into<Cow<'a, str>>>(mut self, format: S) -> Self {
         self.format = Some(format.into());
         self
     }
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_1_5")]
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(LIST_CLIENTS);
 
         // `[-F format]`
         #[cfg(feature = "tmux_1_6")]
-        if let Some(format) = &self.format {
-            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        if let Some(format) = self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format);
         }
 
         // `[-t target-session]`
         #[cfg(feature = "tmux_1_5")]
-        if let Some(target_session) = &self.target_session {
-            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         cmd

@@ -26,11 +26,11 @@ fn list_clients() {
     // ```
     let target_session = TargetSession::Raw("2").to_string();
 
-    let mut list_clients = ListClients::new();
+    let list_clients = ListClients::new();
     #[cfg(feature = "tmux_1_6")]
-    list_clients.format("1");
+    let list_clients = list_clients.format("1");
     #[cfg(feature = "tmux_1_5")]
-    list_clients.target_session(&target_session);
+    let list_clients = list_clients.target_session(&target_session);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-clients";

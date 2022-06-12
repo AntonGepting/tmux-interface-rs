@@ -24,15 +24,15 @@ fn show_messages() {
     // tmux show-messages [-t target-client]
     // (alias: showmsgs)
     // ```
-    let mut show_messages = ShowMessages::new();
+    let show_messages = ShowMessages::new();
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
-    show_messages.server();
+    let show_messages = show_messages.server();
     #[cfg(feature = "tmux_1_9")]
-    show_messages.jobs();
+    let show_messages = show_messages.jobs();
     #[cfg(feature = "tmux_1_9")]
-    show_messages.terminals();
+    let show_messages = show_messages.terminals();
     #[cfg(feature = "tmux_1_2")]
-    show_messages.target_client("1");
+    let show_messages = show_messages.target_client("1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-messages";

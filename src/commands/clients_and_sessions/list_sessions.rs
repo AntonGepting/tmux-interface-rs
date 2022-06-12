@@ -34,20 +34,20 @@ impl<'a> ListSessions<'a> {
 
     /// `[-F format]`
     #[cfg(feature = "tmux_1_6")]
-    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
+    pub fn format<S: Into<Cow<'a, str>>>(mut self, format: S) -> Self {
         self.format = Some(format.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(LIST_SESSIONS);
 
         // `[-F format]`
         #[cfg(feature = "tmux_1_6")]
-        if let Some(format) = &self.format {
-            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        if let Some(format) = self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format);
         }
 
         cmd

@@ -17,7 +17,7 @@ impl KillServer {
         Default::default()
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build<'a>(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(KILL_SERVER);

@@ -46,17 +46,17 @@ fn attach_session() {
     // ```
     let target_session = TargetSession::Raw("2").to_string();
 
-    let mut attach_session = AttachSession::new();
+    let attach_session = AttachSession::new();
     #[cfg(feature = "tmux_0_8")]
-    attach_session.detach_other();
+    let attach_session = attach_session.detach_other();
     #[cfg(feature = "tmux_2_1")]
-    attach_session.not_update_env();
+    let attach_session = attach_session.not_update_env();
     #[cfg(feature = "tmux_1_2")]
-    attach_session.read_only();
+    let attach_session = attach_session.read_only();
     #[cfg(feature = "tmux_3_0")]
-    attach_session.parent_sighup();
+    let attach_session = attach_session.parent_sighup();
     #[cfg(feature = "tmux_1_9")]
-    attach_session.working_directory("1");
+    let attach_session = attach_session.working_directory("1");
     #[cfg(feature = "tmux_3_2")]
     {
         let flags = ClientFlags {
@@ -66,9 +66,9 @@ fn attach_session() {
         attach_session.flags(flags);
     }
     #[cfg(feature = "tmux_0_8")]
-    attach_session.target_session(&target_session);
+    let attach_session = attach_session.target_session(&target_session);
     #[cfg(feature = "tmux_0_8")]
-    attach_session.target_session(target_session.to_string());
+    let attach_session = attach_session.target_session(target_session.to_string());
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "attach-session";

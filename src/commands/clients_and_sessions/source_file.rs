@@ -59,40 +59,40 @@ impl<'a> SourceFile<'a> {
 
     /// `[-F]` - value is expanded as a format
     #[cfg(feature = "tmux_3_2")]
-    pub fn expand(&mut self) -> &mut Self {
+    pub fn expand(mut self) -> Self {
         self.expand = true;
         self
     }
 
     /// `[-n]`
     #[cfg(feature = "tmux_3_0")]
-    pub fn not_execute(&mut self) -> &mut Self {
+    pub fn not_execute(mut self) -> Self {
         self.not_execute = true;
         self
     }
 
     /// `[-q]`
     #[cfg(feature = "tmux_3_0")]
-    pub fn quite(&mut self) -> &mut Self {
+    pub fn quite(mut self) -> Self {
         self.quite = true;
         self
     }
 
     /// `[-v]`
     #[cfg(feature = "tmux_3_0")]
-    pub fn verbose(&mut self) -> &mut Self {
+    pub fn verbose(mut self) -> Self {
         self.verbose = true;
         self
     }
 
     /// `path`
     #[cfg(feature = "tmux_0_8")]
-    pub fn path<S: Into<Cow<'a, str>>>(&mut self, path: S) -> &mut Self {
+    pub fn path<S: Into<Cow<'a, str>>>(mut self, path: S) -> Self {
         self.path = Some(path.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SOURCE_FILE);
@@ -123,8 +123,8 @@ impl<'a> SourceFile<'a> {
 
         // `path`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(path) = &self.path {
-            cmd.push_param(path.as_ref());
+        if let Some(path) = self.path {
+            cmd.push_param(path);
         }
 
         cmd

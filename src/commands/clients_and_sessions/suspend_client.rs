@@ -31,23 +31,23 @@ impl<'a> SuspendClient<'a> {
 
     /// `[-t target-client]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SUSPEND_CLIENT);
 
         // `[-t target-client]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_client) = &self.target_client {
+        if let Some(target_client) = self.target_client {
             #[cfg(feature = "tmux_1_5")]
-            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+            cmd.push_option(T_LOWERCASE_KEY, target_client);
             #[cfg(not(feature = "tmux_1_5"))]
-            cmd.push_option(C_LOWERCASE_KEY, target_client.as_ref());
+            cmd.push_option(C_LOWERCASE_KEY, target_client);
         }
 
         cmd

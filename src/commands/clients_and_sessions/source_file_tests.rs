@@ -30,17 +30,17 @@ fn source_file() {
     // tmux source-file path
     // (alias: source)
     // ```
-    let mut source_file = SourceFile::new();
+    let source_file = SourceFile::new();
     #[cfg(feature = "tmux_3_2")]
-    source_file.expand();
+    let source_file = source_file.expand();
     #[cfg(feature = "tmux_3_0")]
-    source_file.not_execute();
+    let source_file = source_file.not_execute();
     #[cfg(feature = "tmux_3_0")]
-    source_file.quite();
+    let source_file = source_file.quite();
     #[cfg(feature = "tmux_3_0")]
-    source_file.verbose();
+    let source_file = source_file.verbose();
     #[cfg(feature = "tmux_0_8")]
-    source_file.path("1");
+    let source_file = source_file.path("1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "source-file";

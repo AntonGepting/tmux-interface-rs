@@ -29,33 +29,33 @@ impl<'a> RenameSession<'a> {
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
     /// `new-name`
     #[cfg(feature = "tmux_0_8")]
-    pub fn new_name<S: Into<Cow<'a, str>>>(&mut self, new_name: S) -> &mut Self {
+    pub fn new_name<S: Into<Cow<'a, str>>>(mut self, new_name: S) -> Self {
         self.new_name = Some(new_name.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(RENAME_SESSION);
 
         // `[-t target-session]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_session) = &self.target_session {
-            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         // `new-name`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(new_name) = &self.new_name {
-            cmd.push_param(new_name.as_ref());
+        if let Some(new_name) = self.new_name {
+            cmd.push_param(new_name);
         }
 
         cmd

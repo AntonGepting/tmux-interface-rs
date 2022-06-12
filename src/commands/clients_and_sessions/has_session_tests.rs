@@ -12,9 +12,9 @@ fn has_session() {
     // tmux has-session [-t target-session]
     // (alias: has)
     // ```
-    let mut has_session = HasSession::new();
+    let has_session = HasSession::new();
     #[cfg(feature = "tmux_0_8")]
-    has_session.target_session("1");
+    let has_session = has_session.target_session("1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "has-session";

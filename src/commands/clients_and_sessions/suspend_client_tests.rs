@@ -18,8 +18,9 @@ fn suspend_client() {
     // tmux suspend-client [-c target-client]
     // (alias: suspendc)
     // ```
-    let mut suspend_client = SuspendClient::new();
-    suspend_client.target_client("1");
+    let suspend_client = SuspendClient::new();
+    #[cfg(feature = "tmux_0_8")]
+    let suspend_client = suspend_client.target_client("1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "suspend-client";

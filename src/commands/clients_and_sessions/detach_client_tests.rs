@@ -32,17 +32,17 @@ fn detach_client() {
 
     let target_session = TargetSession::Raw("2").to_string();
 
-    let mut detach_client = DetachClient::new();
+    let detach_client = DetachClient::new();
     #[cfg(feature = "tmux_2_2")]
-    detach_client.all();
+    let detach_client = detach_client.all();
     #[cfg(feature = "tmux_1_5")]
-    detach_client.parent_sighup();
+    let detach_client = detach_client.parent_sighup();
     #[cfg(feature = "tmux_2_4")]
-    detach_client.shell_command("1");
+    let detach_client = detach_client.shell_command("1");
     #[cfg(feature = "tmux_1_5")]
-    detach_client.target_session(&target_session);
+    let detach_client = detach_client.target_session(&target_session);
     #[cfg(feature = "tmux_0_8")]
-    detach_client.target_client("3");
+    let detach_client = detach_client.target_client("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "detach-client";

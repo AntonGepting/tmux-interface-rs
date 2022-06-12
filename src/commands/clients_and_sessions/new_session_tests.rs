@@ -75,23 +75,23 @@ fn new_session() {
     // tmux new-session [-d] [-n window-name] [-s session-name] [command]
     // (alias: new)
     // ```
-    let mut new_session = NewSession::new();
+    let new_session = NewSession::new();
     #[cfg(feature = "tmux_1_8")]
-    new_session.attach();
+    let new_session = new_session.attach();
     #[cfg(feature = "tmux_0_8")]
-    new_session.detached();
+    let new_session = new_session.detached();
     #[cfg(feature = "tmux_1_8")]
-    new_session.detach_other();
+    let new_session = new_session.detach_other();
     #[cfg(feature = "tmux_2_1")]
-    new_session.not_update_env();
+    let new_session = new_session.not_update_env();
     #[cfg(feature = "tmux_1_8")]
-    new_session.print();
+    let new_session = new_session.print();
     #[cfg(feature = "tmux_3_0")]
-    new_session.parent_sighup();
+    let new_session = new_session.parent_sighup();
     #[cfg(feature = "tmux_1_9")]
-    new_session.start_directory("1");
+    let new_session = new_session.start_directory("1");
     #[cfg(feature = "tmux_3_2")]
-    new_session.environment("2");
+    let new_session = new_session.environment("2");
     #[cfg(feature = "tmux_3_2")]
     {
         let flags = ClientFlags {
@@ -101,19 +101,19 @@ fn new_session() {
         new_session.flags(flags);
     }
     #[cfg(feature = "tmux_1_8")]
-    new_session.format("3");
+    let new_session = new_session.format("3");
     #[cfg(feature = "tmux_0_8")]
-    new_session.window_name("4");
+    let new_session = new_session.window_name("4");
     #[cfg(feature = "tmux_0_8")]
-    new_session.session_name("5");
+    let new_session = new_session.session_name("5");
     #[cfg(feature = "tmux_2_4")]
-    new_session.group_name("6");
+    let new_session = new_session.group_name("6");
     #[cfg(feature = "tmux_1_6")]
-    new_session.width(7);
+    let new_session = new_session.width(7);
     #[cfg(feature = "tmux_1_6")]
-    new_session.height(8);
+    let new_session = new_session.height(8);
     #[cfg(feature = "tmux_1_2")]
-    new_session.shell_command("9");
+    let new_session = new_session.shell_command("9");
 
     //let new = new_session.to_tmux_bin_command();
 

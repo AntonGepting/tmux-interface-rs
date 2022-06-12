@@ -43,25 +43,25 @@ fn switch_client() {
     // (alias: switchc)
     // ```
     let target_session = TargetSession::Raw("2").to_string();
-    let mut switch_client = SwitchClient::new();
+    let switch_client = SwitchClient::new();
     #[cfg(feature = "tmux_2_1")]
-    switch_client.not_update_env();
+    let switch_client = switch_client.not_update_env();
     #[cfg(feature = "tmux_1_4")]
-    switch_client.last_session();
+    let switch_client = switch_client.last_session();
     #[cfg(feature = "tmux_1_4")]
-    switch_client.next_session();
+    let switch_client = switch_client.next_session();
     #[cfg(feature = "tmux_1_4")]
-    switch_client.previous_session();
+    let switch_client = switch_client.previous_session();
     #[cfg(feature = "tmux_1_6")]
-    switch_client.read_only();
+    let switch_client = switch_client.read_only();
     #[cfg(feature = "tmux_3_1")]
-    switch_client.keep_zoomed();
+    let switch_client = switch_client.keep_zoomed();
     #[cfg(feature = "tmux_1_0")]
-    switch_client.target_client("1");
+    let switch_client = switch_client.target_client("1");
     #[cfg(feature = "tmux_1_0")]
-    switch_client.target_session(&target_session);
+    let switch_client = switch_client.target_session(&target_session);
     #[cfg(feature = "tmux_2_1")]
-    switch_client.key_table("3");
+    let switch_client = switch_client.key_table("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "switch-client";
