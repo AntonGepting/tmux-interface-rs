@@ -28,19 +28,19 @@ fn list_keys() {
     // tmux list-keys [-t key-table]
     // (alias: lsk)
     // ```
-    let mut list_keys = ListKeys::new();
+    let list_keys = ListKeys::new();
     #[cfg(feature = "tmux_2_4")]
-    list_keys.first();
+    let list_keys = list_keys.first();
     #[cfg(feature = "tmux_2_4")]
-    list_keys.command();
+    let list_keys = list_keys.command();
     #[cfg(feature = "tmux_2_4")]
-    list_keys.with_notes();
+    let list_keys = list_keys.with_notes();
     #[cfg(feature = "tmux_3_1")]
-    list_keys.prefix_string("1");
+    let list_keys = list_keys.prefix_string("1");
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_4")))]
-    list_keys.mode_table("2");
+    let list_keys = list_keys.mode_table("2");
     #[cfg(feature = "tmux_0_8")]
-    list_keys.key_table("3");
+    let list_keys = list_keys.key_table("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-keys";

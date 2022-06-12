@@ -50,27 +50,27 @@ fn send_keys() {
     // ```
     let target_pane = TargetPaneExt::raw("2").to_string();
 
-    let mut send_keys = SendKeys::new();
+    let send_keys = SendKeys::new();
     #[cfg(feature = "tmux_3_1")]
-    send_keys.expand_formats();
+    let send_keys = send_keys.expand_formats();
     #[cfg(feature = "tmux_3_0")]
-    send_keys.hex();
+    let send_keys = send_keys.hex();
     #[cfg(feature = "tmux_1_7")]
-    send_keys.disable_lookup();
+    let send_keys = send_keys.disable_lookup();
     #[cfg(feature = "tmux_2_1")]
-    send_keys.mouse_event();
+    let send_keys = send_keys.mouse_event();
     #[cfg(feature = "tmux_1_6")]
-    send_keys.copy_mode();
+    let send_keys = send_keys.copy_mode();
     #[cfg(feature = "tmux_2_4")]
-    send_keys.reset();
+    let send_keys = send_keys.reset();
     #[cfg(feature = "tmux_2_4")]
-    send_keys.repeat_count(1);
+    let send_keys = send_keys.repeat_count(1);
     #[cfg(feature = "tmux_1_6")]
-    send_keys.target_pane(&target_pane);
+    let send_keys = send_keys.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
-    send_keys.target_window(&target_pane);
+    let send_keys = send_keys.target_window(&target_pane);
     #[cfg(feature = "tmux_0_8")]
-    send_keys.key("3");
+    let send_keys = send_keys.key("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "send-keys";

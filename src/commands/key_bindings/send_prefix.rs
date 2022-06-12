@@ -31,19 +31,19 @@ impl<'a> SendPrefix<'a> {
 
     /// `[-2]`
     #[cfg(feature = "tmux_1_6")]
-    pub fn secondary(&mut self) -> &mut Self {
+    pub fn secondary(mut self) -> Self {
         self.secondary = true;
         self
     }
 
     /// `[-t target-pane]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SEND_PREFIX);
@@ -56,8 +56,8 @@ impl<'a> SendPrefix<'a> {
 
         // `[-t target-pane]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         cmd

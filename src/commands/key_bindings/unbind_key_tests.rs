@@ -46,21 +46,21 @@ fn unbind_key() {
     // tmux unbind-key key
     // (alias: unbind)
     // ```
-    let mut unbind_key = UnbindKey::new();
+    let unbind_key = UnbindKey::new();
     #[cfg(feature = "tmux_1_4")]
-    unbind_key.all();
+    let unbind_key = unbind_key.all();
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-    unbind_key.command_mode();
+    let unbind_key = unbind_key.command_mode();
     #[cfg(feature = "tmux_1_0")]
-    unbind_key.root();
+    let unbind_key = unbind_key.root();
     #[cfg(feature = "tmux_3_2")]
-    unbind_key.quite();
+    let unbind_key = unbind_key.quite();
     #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
-    unbind_key.mode_key("1");
+    let unbind_key = unbind_key.mode_key("1");
     #[cfg(feature = "tmux_1_0")]
-    unbind_key.key_table("2");
+    let unbind_key = unbind_key.key_table("2");
     #[cfg(feature = "tmux_0_8")]
-    unbind_key.key("3");
+    let unbind_key = unbind_key.key("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "unbind-key";

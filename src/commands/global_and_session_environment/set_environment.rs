@@ -68,61 +68,61 @@ impl<'a> SetEnvironment<'a> {
 
     /// `[-F]` - value is expanded as a format
     #[cfg(feature = "tmux_3_2")]
-    pub fn expand(&mut self) -> &mut Self {
+    pub fn expand(mut self) -> Self {
         self.expand = true;
         self
     }
 
     /// `[-h]` - marks the variable as hidden
     #[cfg(feature = "tmux_3_2")]
-    pub fn hidden(&mut self) -> &mut Self {
+    pub fn hidden(mut self) -> Self {
         self.hidden = true;
         self
     }
 
     /// `[-g]` - make change in the global environment
     #[cfg(feature = "tmux_1_0")]
-    pub fn global(&mut self) -> &mut Self {
+    pub fn global(mut self) -> Self {
         self.global = true;
         self
     }
 
     /// `[-r]` - remove the variable from the environment before starting a new process
     #[cfg(feature = "tmux_1_0")]
-    pub fn remove(&mut self) -> &mut Self {
+    pub fn remove(mut self) -> Self {
         self.remove = true;
         self
     }
 
     /// `[-u]` - unset a variable
     #[cfg(feature = "tmux_1_0")]
-    pub fn unset(&mut self) -> &mut Self {
+    pub fn unset(mut self) -> Self {
         self.unset = true;
         self
     }
 
     /// `[-t target-session]` - target-session
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
     /// `name`
     #[cfg(feature = "tmux_1_0")]
-    pub fn name<S: Into<Cow<'a, str>>>(&mut self, name: S) -> &mut Self {
+    pub fn name<S: Into<Cow<'a, str>>>(mut self, name: S) -> Self {
         self.name = Some(name.into());
         self
     }
 
     /// `[value]` - specify the value
     #[cfg(feature = "tmux_1_0")]
-    pub fn value<S: Into<Cow<'a, str>>>(&mut self, value: S) -> &mut Self {
+    pub fn value<S: Into<Cow<'a, str>>>(mut self, value: S) -> Self {
         self.value = Some(value.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SET_ENVIRONMENT);
@@ -159,20 +159,20 @@ impl<'a> SetEnvironment<'a> {
 
         // `[-t target-session]` - target-session
         #[cfg(feature = "tmux_1_0")]
-        if let Some(target_session) = &self.target_session {
-            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         // `name`
         #[cfg(feature = "tmux_1_0")]
-        if let Some(name) = &self.name {
-            cmd.push_param(name.as_ref());
+        if let Some(name) = self.name {
+            cmd.push_param(name);
         }
 
         // `[value]` - specify the value
         #[cfg(feature = "tmux_1_0")]
-        if let Some(value) = &self.value {
-            cmd.push_param(value.as_ref());
+        if let Some(value) = self.value {
+            cmd.push_param(value);
         }
 
         cmd

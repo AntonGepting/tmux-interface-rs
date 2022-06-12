@@ -28,21 +28,21 @@ fn set_hook() {
     // ```
     let target_session = TargetSession::Raw("1").to_string();
 
-    let mut set_hook = SetHook::new();
+    let set_hook = SetHook::new();
     #[cfg(feature = "tmux_3_0")]
-    set_hook.append();
+    let set_hook = set_hook.append();
     #[cfg(feature = "tmux_2_2")]
-    set_hook.global();
+    let set_hook = set_hook.global();
     #[cfg(feature = "tmux_2_8")]
-    set_hook.run();
+    let set_hook = set_hook.run();
     #[cfg(feature = "tmux_2_4")]
-    set_hook.unset();
+    let set_hook = set_hook.unset();
     #[cfg(feature = "tmux_2_2")]
-    set_hook.target_session(&target_session);
+    let set_hook = set_hook.target_session(&target_session);
     #[cfg(feature = "tmux_2_2")]
-    set_hook.hook_name("2");
+    let set_hook = set_hook.hook_name("2");
     #[cfg(feature = "tmux_2_2")]
-    set_hook.command("3");
+    let set_hook = set_hook.command("3");
 
     let cmd = "set-hook";
 

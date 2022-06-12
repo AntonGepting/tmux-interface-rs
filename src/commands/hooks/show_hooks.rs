@@ -26,19 +26,19 @@ impl<'a> ShowHooks<'a> {
 
     /// `[-g]`
     #[cfg(feature = "tmux_2_2")]
-    pub fn global(&mut self) -> &mut Self {
+    pub fn global(mut self) -> Self {
         self.global = true;
         self
     }
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_2_2")]
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SHOW_HOOKS);
@@ -51,8 +51,8 @@ impl<'a> ShowHooks<'a> {
 
         // `[-t target-session]`
         #[cfg(feature = "tmux_2_2")]
-        if let Some(target_session) = &self.target_session {
-            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         cmd

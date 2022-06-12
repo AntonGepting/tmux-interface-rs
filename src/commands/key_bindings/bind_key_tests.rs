@@ -49,21 +49,21 @@ fn bind_key() {
     // (alias: bind)
     // ```
 
-    let mut bind_key = BindKey::new();
+    let bind_key = BindKey::new();
     #[cfg(feature = "tmux_1_0")]
-    bind_key.root();
+    let bind_key = bind_key.root();
     #[cfg(feature = "tmux_0_8")]
-    bind_key.repeat();
+    let bind_key = bind_key.repeat();
     #[cfg(feature = "tmux_3_1")]
-    bind_key.note("1");
+    let bind_key = bind_key.note("1");
     #[cfg(feature = "tmux_2_1")]
-    bind_key.key_table("2");
+    let bind_key = bind_key.key_table("2");
     #[cfg(feature = "tmux_0_8")]
-    bind_key.arguments("3");
+    let bind_key = bind_key.arguments("3");
     #[cfg(feature = "tmux_0_8")]
-    bind_key.key("4");
+    let bind_key = bind_key.key("4");
     #[cfg(feature = "tmux_0_8")]
-    bind_key.command("5");
+    let bind_key = bind_key.command("5");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "bind-key";

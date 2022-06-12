@@ -57,40 +57,40 @@ impl<'a> ShowEnvironment<'a> {
 
     /// `[-h]`
     #[cfg(feature = "tmux_3_2")]
-    pub fn hidden(&mut self) -> &mut Self {
+    pub fn hidden(mut self) -> Self {
         self.hidden = true;
         self
     }
 
     /// `[-g]`
     #[cfg(feature = "tmux_1_0")]
-    pub fn global(&mut self) -> &mut Self {
+    pub fn global(mut self) -> Self {
         self.global = true;
         self
     }
 
     /// `[-s]`
     #[cfg(feature = "tmux_2_1")]
-    pub fn as_shell_commands(&mut self) -> &mut Self {
+    pub fn as_shell_commands(mut self) -> Self {
         self.as_shell_commands = true;
         self
     }
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
     /// `[variable]`
     #[cfg(feature = "tmux_1_7")]
-    pub fn variable<S: Into<Cow<'a, str>>>(&mut self, variable: S) -> &mut Self {
+    pub fn variable<S: Into<Cow<'a, str>>>(mut self, variable: S) -> Self {
         self.variable = Some(variable.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SHOW_ENVIRONMENT);
@@ -115,14 +115,14 @@ impl<'a> ShowEnvironment<'a> {
 
         // `[-t target-session]`
         #[cfg(feature = "tmux_1_0")]
-        if let Some(target_session) = &self.target_session {
-            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         // `[variable]`
         #[cfg(feature = "tmux_1_7")]
-        if let Some(variable) = &self.variable {
-            cmd.push_param(variable.as_ref());
+        if let Some(variable) = self.variable {
+            cmd.push_param(variable);
         }
 
         cmd

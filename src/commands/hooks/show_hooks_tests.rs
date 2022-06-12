@@ -11,11 +11,11 @@ fn show_hooks() {
     // ```
     let target_session = TargetSession::Raw("1").to_string();
 
-    let mut show_hooks = ShowHooks::new();
+    let show_hooks = ShowHooks::new();
     #[cfg(feature = "tmux_2_2")]
-    show_hooks.global();
+    let show_hooks = show_hooks.global();
     #[cfg(feature = "tmux_2_2")]
-    show_hooks.target_session(&target_session);
+    let show_hooks = show_hooks.target_session(&target_session);
 
     let cmd = "show-hooks";
 

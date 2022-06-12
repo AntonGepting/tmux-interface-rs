@@ -62,35 +62,35 @@ impl<'a> ListKeys<'a> {
 
     /// `[-1]`
     #[cfg(feature = "tmux_2_4")]
-    pub fn first(&mut self) -> &mut Self {
+    pub fn first(mut self) -> Self {
         self.first = true;
         self
     }
 
     /// `[-a]`
     #[cfg(feature = "tmux_2_4")]
-    pub fn command(&mut self) -> &mut Self {
+    pub fn command(mut self) -> Self {
         self.command = true;
         self
     }
 
     /// `[-N]`
     #[cfg(feature = "tmux_2_4")]
-    pub fn with_notes(&mut self) -> &mut Self {
+    pub fn with_notes(mut self) -> Self {
         self.with_notes = true;
         self
     }
 
     /// `[-P prefix-string]`
     #[cfg(feature = "tmux_3_1")]
-    pub fn prefix_string<S: Into<Cow<'a, str>>>(&mut self, prefix_string: S) -> &mut Self {
+    pub fn prefix_string<S: Into<Cow<'a, str>>>(mut self, prefix_string: S) -> Self {
         self.prefix_string = Some(prefix_string.into());
         self
     }
 
     /// `[-t mode-table]`
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_4")))]
-    pub fn mode_table<S: Into<Cow<'a, str>>>(&mut self, mode_table: S) -> &mut Self {
+    pub fn mode_table<S: Into<Cow<'a, str>>>(mut self, mode_table: S) -> Self {
         self.mode_table = Some(mode_table.into());
         self
     }
@@ -98,12 +98,12 @@ impl<'a> ListKeys<'a> {
     /// `[-t key-table]`
     /// `[-T key-table]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn key_table<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
+    pub fn key_table<S: Into<Cow<'a, str>>>(mut self, key_table: S) -> Self {
         self.key_table = Some(key_table.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(LIST_KEYS);
@@ -128,24 +128,24 @@ impl<'a> ListKeys<'a> {
 
         // `[-P prefix-string]`
         #[cfg(feature = "tmux_3_1")]
-        if let Some(prefix_string) = &self.prefix_string {
+        if let Some(prefix_string) = self.prefix_string {
             cmd.push_option(P_UPPERCASE_KEY, prefix_string);
         }
 
         // `[-t mode-table]`
         #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_4")))]
-        if let Some(mode_table) = &self.mode_table {
-            cmd.push_option(T_LOWERCASE_KEY, mode_table.as_ref());
+        if let Some(mode_table) = self.mode_table {
+            cmd.push_option(T_LOWERCASE_KEY, mode_table);
         }
 
         // `[-t key-table]`
         // `[-T key-table]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(key_table) = &self.key_table {
+        if let Some(key_table) = self.key_table {
             #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-            cmd.push_option(T_LOWERCASE_KEY, key_table.as_ref());
+            cmd.push_option(T_LOWERCASE_KEY, key_table);
             #[cfg(feature = "tmux_2_1")]
-            cmd.push_option(T_UPPERCASE_KEY, key_table.as_ref());
+            cmd.push_option(T_UPPERCASE_KEY, key_table);
         }
 
         cmd

@@ -30,17 +30,17 @@ fn show_environment() {
     // ```
     let target_session = TargetSession::Raw("1").to_string();
 
-    let mut show_environment = ShowEnvironment::new();
+    let show_environment = ShowEnvironment::new();
     #[cfg(feature = "tmux_3_2")]
-    show_environment.hidden();
+    let show_environment = show_environment.hidden();
     #[cfg(feature = "tmux_1_0")]
-    show_environment.global();
+    let show_environment = show_environment.global();
     #[cfg(feature = "tmux_2_1")]
-    show_environment.as_shell_commands();
+    let show_environment = show_environment.as_shell_commands();
     #[cfg(feature = "tmux_1_7")]
-    show_environment.target_session(&target_session);
+    let show_environment = show_environment.target_session(&target_session);
     #[cfg(feature = "tmux_1_7")]
-    show_environment.variable("2");
+    let show_environment = show_environment.variable("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-environment";

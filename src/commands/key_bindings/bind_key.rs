@@ -85,54 +85,55 @@ impl<'a> BindKey<'a> {
 
     /// `[-n]` - an alias for -T root
     #[cfg(feature = "tmux_1_0")]
-    pub fn root(&mut self) -> &mut Self {
+    pub fn root(mut self) -> Self {
         self.root = true;
         self
     }
 
     /// `[-r]` - this key may repeat
     #[cfg(feature = "tmux_0_8")]
-    pub fn repeat(&mut self) -> &mut Self {
+    pub fn repeat(mut self) -> Self {
         self.repeat = true;
         self
     }
 
     /// `[-N note]` - attaches note to the key
     #[cfg(feature = "tmux_3_1")]
-    pub fn note<S: Into<Cow<'a, str>>>(&mut self, note: S) -> &mut Self {
+    pub fn note<S: Into<Cow<'a, str>>>(mut self, note: S) -> Self {
         self.note = Some(note.into());
         self
     }
 
     /// `[-T key-table]` - key-table
     #[cfg(feature = "tmux_2_1")]
-    pub fn key_table<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
+    pub fn key_table<S: Into<Cow<'a, str>>>(mut self, key_table: S) -> Self {
         self.key_table = Some(key_table.into());
         self
     }
 
     /// `[arguments]` - arguments
     #[cfg(feature = "tmux_0_8")]
-    pub fn arguments<S: Into<Cow<'a, str>>>(&mut self, key_table: S) -> &mut Self {
+    pub fn arguments<S: Into<Cow<'a, str>>>(mut self, key_table: S) -> Self {
         self.arguments = Some(key_table.into());
         self
     }
 
     /// `key`
     #[cfg(feature = "tmux_0_8")]
-    pub fn key<S: Into<Cow<'a, str>>>(&mut self, key: S) -> &mut Self {
+    pub fn key<S: Into<Cow<'a, str>>>(mut self, key: S) -> Self {
         self.key = Some(key.into());
         self
     }
 
+    // XXX: command?
     /// `command`
     #[cfg(feature = "tmux_0_8")]
-    pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
+    pub fn command<S: Into<Cow<'a, str>>>(mut self, command: S) -> Self {
         self.command = Some(command.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(BIND_KEY);
@@ -151,32 +152,32 @@ impl<'a> BindKey<'a> {
 
         // `[-N note]` - attaches note to the key
         #[cfg(feature = "tmux_3_1")]
-        if let Some(note) = &self.note {
-            cmd.push_option(N_UPPERCASE_KEY, note.as_ref());
+        if let Some(note) = self.note {
+            cmd.push_option(N_UPPERCASE_KEY, note);
         }
 
         // `[-T key-table]` - key-table
         #[cfg(feature = "tmux_2_1")]
-        if let Some(key_table) = &self.key_table {
-            cmd.push_option(T_UPPERCASE_KEY, key_table.as_ref());
+        if let Some(key_table) = self.key_table {
+            cmd.push_option(T_UPPERCASE_KEY, key_table);
         }
 
         // `[arguments]` - arguments
         #[cfg(feature = "tmux_0_8")]
-        if let Some(arguments) = &self.arguments {
-            cmd.push_param(arguments.as_ref());
+        if let Some(arguments) = self.arguments {
+            cmd.push_param(arguments);
         }
 
         // `key`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(key) = &self.key {
-            cmd.push_param(key.as_ref());
+        if let Some(key) = self.key {
+            cmd.push_param(key);
         }
 
         // `command`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(command) = &self.command {
-            cmd.push_param(command.as_ref());
+        if let Some(command) = self.command {
+            cmd.push_param(command);
         }
 
         cmd

@@ -63,54 +63,55 @@ impl<'a> SetHook<'a> {
 
     /// `[-a]`
     #[cfg(feature = "tmux_3_0")]
-    pub fn append(&mut self) -> &mut Self {
+    pub fn append(mut self) -> Self {
         self.append = true;
         self
     }
 
     /// `[-g]`
     #[cfg(feature = "tmux_2_2")]
-    pub fn global(&mut self) -> &mut Self {
+    pub fn global(mut self) -> Self {
         self.global = true;
         self
     }
 
     /// `[-R]`
     #[cfg(feature = "tmux_2_8")]
-    pub fn run(&mut self) -> &mut Self {
+    pub fn run(mut self) -> Self {
         self.run = true;
         self
     }
 
     /// `[-u]`
     #[cfg(feature = "tmux_2_4")]
-    pub fn unset(&mut self) -> &mut Self {
+    pub fn unset(mut self) -> Self {
         self.unset = true;
         self
     }
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_2_2")]
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
     /// `hook-name`
     #[cfg(feature = "tmux_2_2")]
-    pub fn hook_name<S: Into<Cow<'a, str>>>(&mut self, hook_name: S) -> &mut Self {
+    pub fn hook_name<S: Into<Cow<'a, str>>>(mut self, hook_name: S) -> Self {
         self.hook_name = Some(hook_name.into());
         self
     }
 
+    // XXX: command?
     /// `command`
     #[cfg(feature = "tmux_2_2")]
-    pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
+    pub fn command<S: Into<Cow<'a, str>>>(mut self, command: S) -> Self {
         self.command = Some(command.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SET_HOOK);
@@ -141,20 +142,20 @@ impl<'a> SetHook<'a> {
 
         // `[-t target-session]`
         #[cfg(feature = "tmux_2_2")]
-        if let Some(target_session) = &self.target_session {
-            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         // `hook-name`
         #[cfg(feature = "tmux_2_2")]
-        if let Some(hook_name) = &self.hook_name {
-            cmd.push_param(hook_name.as_ref());
+        if let Some(hook_name) = self.hook_name {
+            cmd.push_param(hook_name);
         }
 
         // `command`
         #[cfg(feature = "tmux_2_2")]
-        if let Some(command) = &self.command {
-            cmd.push_param(command.as_ref());
+        if let Some(command) = self.command {
+            cmd.push_param(command);
         }
 
         cmd

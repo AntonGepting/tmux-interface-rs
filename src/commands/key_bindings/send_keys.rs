@@ -98,75 +98,75 @@ impl<'a> SendKeys<'a> {
 
     /// `[-F]` - expand formats in arguments where appropriate
     #[cfg(feature = "tmux_3_1")]
-    pub fn expand_formats(&mut self) -> &mut Self {
+    pub fn expand_formats(mut self) -> Self {
         self.expand_formats = true;
         self
     }
 
     /// `[-H]` - expect each key to be a hexadecimal number for an ASCII character
     #[cfg(feature = "tmux_3_0")]
-    pub fn hex(&mut self) -> &mut Self {
+    pub fn hex(mut self) -> Self {
         self.hex = true;
         self
     }
 
     /// `[-l]` - disable key name lookup and processes the keys as literal UTF-8 characters
     #[cfg(feature = "tmux_1_7")]
-    pub fn disable_lookup(&mut self) -> &mut Self {
+    pub fn disable_lookup(mut self) -> Self {
         self.disable_lookup = true;
         self
     }
 
     /// `[-M]` - pass through a mouse event
     #[cfg(feature = "tmux_2_1")]
-    pub fn mouse_event(&mut self) -> &mut Self {
+    pub fn mouse_event(mut self) -> Self {
         self.mouse_event = true;
         self
     }
 
     /// `[-R]` - cause the terminal state to be reset
     #[cfg(feature = "tmux_1_6")]
-    pub fn copy_mode(&mut self) -> &mut Self {
+    pub fn copy_mode(mut self) -> Self {
         self.copy_mode = true;
         self
     }
 
     /// `[-X]` - send a command into copy mode
     #[cfg(feature = "tmux_2_4")]
-    pub fn reset(&mut self) -> &mut Self {
+    pub fn reset(mut self) -> Self {
         self.reset = true;
         self
     }
 
     /// `[-N repeat-count]` - specify a repeat count
     #[cfg(feature = "tmux_2_4")]
-    pub fn repeat_count(&mut self, repeat_count: usize) -> &mut Self {
+    pub fn repeat_count(mut self, repeat_count: usize) -> Self {
         self.repeat_count = Some(repeat_count);
         self
     }
 
     /// `[-t target-pane]` - specify the target pane
     #[cfg(feature = "tmux_1_6")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[-t target-window]` - specify the target window
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
     /// `key`
     #[cfg(feature = "tmux_0_8")]
-    pub fn key<S: Into<Cow<'a, str>>>(&mut self, key: S) -> &mut Self {
+    pub fn key<S: Into<Cow<'a, str>>>(mut self, key: S) -> Self {
         self.key = Some(key.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SEND_KEYS);
@@ -209,26 +209,26 @@ impl<'a> SendKeys<'a> {
 
         // `[-N repeat-count]` - specify a repeat count
         #[cfg(feature = "tmux_2_4")]
-        if let Some(repeat_count) = &self.repeat_count {
+        if let Some(repeat_count) = self.repeat_count {
             cmd.push_option(N_UPPERCASE_KEY, repeat_count.to_string());
         }
 
         // `[-t target-pane]` - specify the target pane
         #[cfg(feature = "tmux_1_6")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[-t target-window]` - specify the target window
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         // `key`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(key) = &self.key {
-            cmd.push_param(key.as_ref());
+        if let Some(key) = self.key {
+            cmd.push_param(key);
         }
 
         cmd

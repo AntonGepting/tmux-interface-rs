@@ -20,23 +20,23 @@ fn set_environment() {
     // ```
     let target_session = TargetSession::Raw("1").to_string();
 
-    let mut set_environment = SetEnvironment::new();
+    let set_environment = SetEnvironment::new();
     #[cfg(feature = "tmux_3_2")]
-    set_environment.expand();
+    let set_environment = set_environment.expand();
     #[cfg(feature = "tmux_1_0")]
-    set_environment.global();
+    let set_environment = set_environment.global();
     #[cfg(feature = "tmux_3_2")]
-    set_environment.hidden();
+    let set_environment = set_environment.hidden();
     #[cfg(feature = "tmux_1_0")]
-    set_environment.remove();
+    let set_environment = set_environment.remove();
     #[cfg(feature = "tmux_1_0")]
-    set_environment.unset();
+    let set_environment = set_environment.unset();
     #[cfg(feature = "tmux_1_0")]
-    set_environment.target_session(&target_session);
+    let set_environment = set_environment.target_session(&target_session);
     #[cfg(feature = "tmux_1_0")]
-    set_environment.name("2");
+    let set_environment = set_environment.name("2");
     #[cfg(feature = "tmux_1_0")]
-    set_environment.value("3");
+    let set_environment = set_environment.value("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "set-environment";
