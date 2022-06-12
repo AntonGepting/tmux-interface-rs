@@ -67,54 +67,54 @@ impl<'a> PasteBuffer<'a> {
 
     /// `[-d]` - delete the paste buffer
     #[cfg(feature = "tmux_0_8")]
-    pub fn delete(&mut self) -> &mut Self {
+    pub fn delete(mut self) -> Self {
         self.delete = true;
         self
     }
 
     /// `[-p]` - paste bracket control codes are inserted around the buffer
     #[cfg(feature = "tmux_1_7")]
-    pub fn bracket_codes(&mut self) -> &mut Self {
+    pub fn bracket_codes(mut self) -> Self {
         self.bracket_codes = true;
         self
     }
 
     /// `[-r]` - do no replacement (equivalent to a separator of LF)
     #[cfg(feature = "tmux_1_0")]
-    pub fn no_replacement(&mut self) -> &mut Self {
+    pub fn no_replacement(mut self) -> Self {
         self.no_replacement = true;
         self
     }
 
     /// `[-b buffer-name]` - specify the buffer mode
     #[cfg(feature = "tmux_1_7")]
-    pub fn buffer_name<S: Into<Cow<'a, str>>>(&mut self, buffer_name: S) -> &mut Self {
+    pub fn buffer_name<S: Into<Cow<'a, str>>>(mut self, buffer_name: S) -> Self {
         self.buffer_name = Some(buffer_name.into());
         self
     }
 
     /// `[-s separator]` - specify a separator
     #[cfg(feature = "tmux_1_3")]
-    pub fn separator<S: Into<Cow<'a, str>>>(&mut self, separator: S) -> &mut Self {
+    pub fn separator<S: Into<Cow<'a, str>>>(mut self, separator: S) -> Self {
         self.separator = Some(separator.into());
         self
     }
 
     /// `[-t target-pane]` - specify the target pane
     #[cfg(feature = "tmux_1_7")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[-t target-window]` - specify the target window
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(PASTE_BUFFER);
@@ -139,26 +139,26 @@ impl<'a> PasteBuffer<'a> {
 
         // `[-b buffer-name]` - specify the buffer mode
         #[cfg(feature = "tmux_1_7")]
-        if let Some(buffer_name) = &self.buffer_name {
-            cmd.push_option(B_LOWERCASE_KEY, buffer_name.as_ref());
+        if let Some(buffer_name) = self.buffer_name {
+            cmd.push_option(B_LOWERCASE_KEY, buffer_name);
         }
 
         // `[-s separator]` - specify a separator
         #[cfg(feature = "tmux_1_3")]
-        if let Some(separator) = &self.separator {
-            cmd.push_option(S_LOWERCASE_KEY, separator.as_ref());
+        if let Some(separator) = self.separator {
+            cmd.push_option(S_LOWERCASE_KEY, separator);
         }
 
         // `[-t target-pane]` - specify the target pane
         #[cfg(feature = "tmux_1_7")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[-t target-window]` - specify the target window
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         cmd

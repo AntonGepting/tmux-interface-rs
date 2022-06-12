@@ -31,23 +31,23 @@ fn set_buffer() {
     // tmux set-buffer [-b buffer-index] [-t target-session] data
     // (alias: setb)
     // ```
-    let mut set_buffer = SetBuffer::new();
+    let set_buffer = SetBuffer::new();
     #[cfg(feature = "tmux_2_0")]
-    set_buffer.append();
+    let set_buffer = set_buffer.append();
     #[cfg(feature = "tmux_3_2")]
-    set_buffer.send_to_clipboard();
+    let set_buffer = set_buffer.send_to_clipboard();
     #[cfg(feature = "tmux_2_0")]
-    set_buffer.buffer_name("1");
+    let set_buffer = set_buffer.buffer_name("1");
     #[cfg(feature = "tmux_3_2")]
-    set_buffer.target_client("2");
+    let set_buffer = set_buffer.target_client("2");
     #[cfg(feature = "tmux_2_0")]
-    set_buffer.new_buffer_name("3");
+    let set_buffer = set_buffer.new_buffer_name("3");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
-    set_buffer.buffer_index("4");
+    let set_buffer = set_buffer.buffer_index("4");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-    set_buffer.target_session("5");
+    let set_buffer = set_buffer.target_session("5");
     #[cfg(feature = "tmux_0_8")]
-    set_buffer.data("6");
+    let set_buffer = set_buffer.data("6");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "set-buffer";

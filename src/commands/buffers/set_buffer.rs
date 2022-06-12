@@ -71,61 +71,61 @@ impl<'a> SetBuffer<'a> {
 
     /// `[-a]`
     #[cfg(feature = "tmux_2_0")]
-    pub fn append(&mut self) -> &mut Self {
+    pub fn append(mut self) -> Self {
         self.append = true;
         self
     }
 
     /// `[-w]`
     #[cfg(feature = "tmux_3_2")]
-    pub fn send_to_clipboard(&mut self) -> &mut Self {
+    pub fn send_to_clipboard(mut self) -> Self {
         self.send_to_clipboard = true;
         self
     }
 
     /// `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
-    pub fn buffer_name<S: Into<Cow<'a, str>>>(&mut self, buffer_name: S) -> &mut Self {
+    pub fn buffer_name<S: Into<Cow<'a, str>>>(mut self, buffer_name: S) -> Self {
         self.buffer_name = Some(buffer_name.into());
         self
     }
 
     /// `[-t target-client]`
     #[cfg(feature = "tmux_3_2")]
-    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
     /// `[-n new-buffer-name]`
     #[cfg(feature = "tmux_2_0")]
-    pub fn new_buffer_name<S: Into<Cow<'a, str>>>(&mut self, new_buffer_name: S) -> &mut Self {
+    pub fn new_buffer_name<S: Into<Cow<'a, str>>>(mut self, new_buffer_name: S) -> Self {
         self.new_buffer_name = Some(new_buffer_name.into());
         self
     }
 
     /// `data`
     #[cfg(feature = "tmux_0_8")]
-    pub fn data<S: Into<Cow<'a, str>>>(&mut self, data: S) -> &mut Self {
+    pub fn data<S: Into<Cow<'a, str>>>(mut self, data: S) -> Self {
         self.data = Some(data.into());
         self
     }
 
     /// `[-b buffer-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
-    pub fn buffer_index<S: Into<Cow<'a, str>>>(&mut self, buffer_index: S) -> &mut Self {
+    pub fn buffer_index<S: Into<Cow<'a, str>>>(mut self, buffer_index: S) -> Self {
         self.buffer_index = Some(buffer_index.into());
         self
     }
 
     /// `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-    pub fn target_session<S: Into<Cow<'a, str>>>(&mut self, target_session: S) -> &mut Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SET_BUFFER);
@@ -144,38 +144,38 @@ impl<'a> SetBuffer<'a> {
 
         // `[-b buffer-name]`
         #[cfg(feature = "tmux_2_0")]
-        if let Some(buffer_name) = &self.buffer_name {
-            cmd.push_option(B_LOWERCASE_KEY, buffer_name.as_ref());
+        if let Some(buffer_name) = self.buffer_name {
+            cmd.push_option(B_LOWERCASE_KEY, buffer_name);
         }
 
         // `[-t target-client]`
         #[cfg(feature = "tmux_3_2")]
-        if let Some(target_client) = &self.target_client {
-            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        if let Some(target_client) = self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client);
         }
 
         // `[-n new-buffer-name]`
         #[cfg(feature = "tmux_2_0")]
-        if let Some(new_buffer_name) = &self.new_buffer_name {
-            cmd.push_option(N_LOWERCASE_KEY, new_buffer_name.as_ref());
+        if let Some(new_buffer_name) = self.new_buffer_name {
+            cmd.push_option(N_LOWERCASE_KEY, new_buffer_name);
         }
 
         // `data`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(data) = &self.data {
-            cmd.push_param(data.as_ref());
+        if let Some(data) = self.data {
+            cmd.push_param(data);
         }
 
         // `[-b buffer-index]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
-        if let Some(buffer_index) = &self.buffer_index {
-            cmd.push_option(B_LOWERCASE_KEY, buffer_index.as_ref());
+        if let Some(buffer_index) = self.buffer_index {
+            cmd.push_option(B_LOWERCASE_KEY, buffer_index);
         }
 
         // `[-t target-session]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-        if let Some(target_session) = &self.target_session {
-            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         cmd

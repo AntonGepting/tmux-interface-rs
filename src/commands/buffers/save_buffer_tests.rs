@@ -24,17 +24,17 @@ fn save_buffer() {
     // tmux save-buffer [-a] [-b buffer-index] [-t target-session] path
     // (alias: saveb)
     // ```
-    let mut save_buffer = SaveBuffer::new();
+    let save_buffer = SaveBuffer::new();
     #[cfg(feature = "tmux_0_8")]
-    save_buffer.append();
+    let save_buffer = save_buffer.append();
     #[cfg(feature = "tmux_2_0")]
-    save_buffer.buffer_name("1");
+    let save_buffer = save_buffer.buffer_name("1");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
-    save_buffer.buffer_index("2");
+    let save_buffer = save_buffer.buffer_index("2");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-    save_buffer.target_session("3");
+    let save_buffer = save_buffer.target_session("3");
     #[cfg(feature = "tmux_0_8")]
-    save_buffer.path("4");
+    let save_buffer = save_buffer.path("4");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "save-buffer";

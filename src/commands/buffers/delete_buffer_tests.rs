@@ -26,8 +26,13 @@ fn delete_buffer() {
     // (alias: deleteb)
     // ```
     let buffer_name = TargetPane::Raw("1").to_string();
-    let mut delete_buffer = DeleteBuffer::new();
-    delete_buffer.buffer_name(buffer_name);
+    let delete_buffer = DeleteBuffer::new();
+    #[cfg(feature = "tmux_0_8")]
+    let delete_buffer = delete_buffer.buffer_name(buffer_name);
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
+    let delete_buffer = delete_buffer.buffer_index(buffer_name);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    let delete_buffer = delete_buffer.target_session(buffer_name);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "delete-buffer";
@@ -36,7 +41,13 @@ fn delete_buffer() {
 
     let mut s = Vec::new();
     s.push(cmd);
+
+    #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-b", "1"]);
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
+    s.extend_from_slice(&["-b", "1"]);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    s.extend_from_slice(&["-t", "1"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let delete_buffer = delete_buffer.build().to_vec();

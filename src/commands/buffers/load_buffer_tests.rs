@@ -30,19 +30,19 @@ fn load_buffer() {
     // tmux load-buffer [-b buffer-index] [-t target-session] path
     // (alias: loadb)
     // ```
-    let mut load_buffer = LoadBuffer::new();
+    let load_buffer = LoadBuffer::new();
     #[cfg(feature = "tmux_3_2")]
-    load_buffer.send_to_clipboard();
+    let load_buffer = load_buffer.send_to_clipboard();
     #[cfg(feature = "tmux_2_0")]
-    load_buffer.buffer_name("1");
+    let load_buffer = load_buffer.buffer_name("1");
     #[cfg(feature = "tmux_3_2")]
-    load_buffer.target_client("2");
+    let load_buffer = load_buffer.target_client("2");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
-    load_buffer.buffer_index("3");
+    let load_buffer = load_buffer.buffer_index("3");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-    load_buffer.target_session("4");
+    let load_buffer = load_buffer.target_session("4");
     #[cfg(feature = "tmux_0_8")]
-    load_buffer.path("5");
+    let load_buffer = load_buffer.path("5");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "load-buffer";

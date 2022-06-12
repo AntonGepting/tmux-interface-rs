@@ -31,21 +31,21 @@ fn paste_buffer() {
     // (alias: pasteb)
     // ```
     let target_pane = TargetPane::Raw("3").to_string();
-    let mut paste_buffer = PasteBuffer::new();
+    let paste_buffer = PasteBuffer::new();
     #[cfg(feature = "tmux_0_8")]
-    paste_buffer.delete();
+    let paste_buffer = paste_buffer.delete();
     #[cfg(feature = "tmux_1_7")]
-    paste_buffer.bracket_codes();
+    let paste_buffer = paste_buffer.bracket_codes();
     #[cfg(feature = "tmux_1_0")]
-    paste_buffer.no_replacement();
+    let paste_buffer = paste_buffer.no_replacement();
     #[cfg(feature = "tmux_1_7")]
-    paste_buffer.buffer_name("1");
+    let paste_buffer = paste_buffer.buffer_name("1");
     #[cfg(feature = "tmux_1_3")]
-    paste_buffer.separator("2");
+    let paste_buffer = paste_buffer.separator("2");
     #[cfg(feature = "tmux_1_7")]
-    paste_buffer.target_pane(&target_pane);
+    let paste_buffer = paste_buffer.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
-    paste_buffer.target_window(&target_pane);
+    let paste_buffer = paste_buffer.target_window(&target_pane);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "paste-buffer";

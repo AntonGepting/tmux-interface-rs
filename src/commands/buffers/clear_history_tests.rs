@@ -19,8 +19,14 @@ fn clear_history() {
     // (alias: clearhist)
     // ```
     let target_pane = TargetPane::Raw("1").to_string();
-    let mut clear_history = ClearHistory::new();
-    clear_history.target_pane(target_pane);
+
+    let clear_history = ClearHistory::new();
+    #[cfg(feature = "tmux_1_0")]
+    let clear_history = clear_history.target_pane(target_pane);
+    #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
+    let clear_history = clear_history.pane_index(target_pane);
+    #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
+    let clear_history = clear_history.target_window(target_pane);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "clear-history";
@@ -29,6 +35,12 @@ fn clear_history() {
 
     let mut s = Vec::new();
     s.push(cmd);
+
+    #[cfg(feature = "tmux_1_0")]
+    s.extend_from_slice(&["-t", "1"]);
+    #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
+    s.extend_from_slice(&["-p", "1"]);
+    #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
     s.extend_from_slice(&["-t", "1"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 

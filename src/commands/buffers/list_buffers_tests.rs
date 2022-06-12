@@ -24,11 +24,11 @@ fn list_buffers() {
     // tmux list-buffers [-t target-session]
     // (alias: lsb)
     // ```
-    let mut list_buffers = ListBuffers::new();
+    let list_buffers = ListBuffers::new();
     #[cfg(feature = "tmux_1_7")]
-    list_buffers.format("1");
+    let list_buffers = list_buffers.format("1");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-    list_buffers.target_session("2");
+    let list_buffers = list_buffers.target_session("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-buffers";

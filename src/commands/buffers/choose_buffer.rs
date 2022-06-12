@@ -65,7 +65,7 @@ pub struct ChooseBuffer<'a> {
     #[cfg(feature = "tmux_1_3")]
     pub target_pane: Option<Cow<'a, str>>,
 
-    /// [template] - specify the template
+    /// \[template\] - specify the template
     #[cfg(feature = "tmux_1_3")]
     pub template: Option<Cow<'a, str>>,
 }
@@ -77,68 +77,68 @@ impl<'a> ChooseBuffer<'a> {
 
     /// `[-N]` - start without the preview
     #[cfg(feature = "tmux_2_6")]
-    pub fn no_preview(&mut self) -> &mut Self {
+    pub fn no_preview(mut self) -> Self {
         self.no_preview = true;
         self
     }
 
     /// `[-Z]` - zoom the pane
     #[cfg(feature = "tmux_2_7")]
-    pub fn zoom(&mut self) -> &mut Self {
+    pub fn zoom(mut self) -> Self {
         self.zoom = true;
         self
     }
 
     /// `[-r]` - reverses the sort order
     #[cfg(feature = "tmux_3_1")]
-    pub fn reverse_sort_order(&mut self) -> &mut Self {
+    pub fn reverse_sort_order(mut self) -> Self {
         self.reverse_sort_order = true;
         self
     }
 
     /// `[-F format]` - specify the format for each item in the list
     #[cfg(feature = "tmux_1_7")]
-    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
+    pub fn format<S: Into<Cow<'a, str>>>(mut self, format: S) -> Self {
         self.format = Some(format.into());
         self
     }
 
     /// `[-f filter]` - specify an initial filter
     #[cfg(feature = "tmux_2_6")]
-    pub fn filter<S: Into<Cow<'a, str>>>(&mut self, filter: S) -> &mut Self {
+    pub fn filter<S: Into<Cow<'a, str>>>(mut self, filter: S) -> Self {
         self.filter = Some(filter.into());
         self
     }
 
     /// `[-K key-format]` - format for each shortcut key
     #[cfg(feature = "tmux_3_2")]
-    pub fn key_format<S: Into<Cow<'a, str>>>(&mut self, key_format: S) -> &mut Self {
+    pub fn key_format<S: Into<Cow<'a, str>>>(mut self, key_format: S) -> Self {
         self.key_format = Some(key_format.into());
         self
     }
 
     /// `[-O sort-order]` - specifies the initial sort field
     #[cfg(feature = "tmux_2_6")]
-    pub fn sort_order<S: Into<Cow<'a, str>>>(&mut self, sort_order: S) -> &mut Self {
+    pub fn sort_order<S: Into<Cow<'a, str>>>(mut self, sort_order: S) -> Self {
         self.sort_order = Some(sort_order.into());
         self
     }
 
     /// `[-t target-pane]` - specify the target pane
     #[cfg(feature = "tmux_1_3")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[template]` - specify the template
     #[cfg(feature = "tmux_1_3")]
-    pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
+    pub fn template<S: Into<Cow<'a, str>>>(mut self, template: S) -> Self {
         self.template = Some(template.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(CHOOSE_BUFFER);
@@ -163,14 +163,14 @@ impl<'a> ChooseBuffer<'a> {
 
         // `[-F format]` - specify the format for each item in the list
         #[cfg(feature = "tmux_1_7")]
-        if let Some(format) = &self.format {
-            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        if let Some(format) = self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format);
         }
 
         // `[-f filter]` - specify an initial filter
         #[cfg(feature = "tmux_2_6")]
-        if let Some(filter) = &self.filter {
-            cmd.push_option(F_LOWERCASE_KEY, filter.as_ref());
+        if let Some(filter) = self.filter {
+            cmd.push_option(F_LOWERCASE_KEY, filter);
         }
 
         // `[-K key-format]` - format for each shortcut key
@@ -181,20 +181,20 @@ impl<'a> ChooseBuffer<'a> {
 
         // `[-O sort-order]` - specifies the initial sort field
         #[cfg(feature = "tmux_2_6")]
-        if let Some(sort_order) = &self.sort_order {
-            cmd.push_option(O_UPPERCASE_KEY, sort_order.as_ref());
+        if let Some(sort_order) = self.sort_order {
+            cmd.push_option(O_UPPERCASE_KEY, sort_order);
         }
 
         // `[-t target-pane]` - specify the target pane
         #[cfg(feature = "tmux_1_3")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[template]` - specify the template
         #[cfg(feature = "tmux_1_3")]
-        if let Some(template) = &self.template {
-            cmd.push_param(template.as_ref());
+        if let Some(template) = self.template {
+            cmd.push_param(template);
         }
 
         cmd

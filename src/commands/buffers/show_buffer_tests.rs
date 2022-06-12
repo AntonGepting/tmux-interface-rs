@@ -18,13 +18,13 @@ fn show_buffer() {
     // tmux show-buffer [-b buffer-index] [-t target-session]
     // (alias: showb)
     // ```
-    let mut show_buffer = ShowBuffer::new();
+    let show_buffer = ShowBuffer::new();
     #[cfg(feature = "tmux_1_5")]
-    show_buffer.buffer_name("1");
+    let show_buffer = show_buffer.buffer_name("1");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-    show_buffer.buffer_index("2");
+    let show_buffer = show_buffer.buffer_index("2");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-    show_buffer.target_session("3");
+    let show_buffer = show_buffer.target_session("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-buffer";

@@ -38,25 +38,25 @@ fn choose_buffer() {
     // ```
     let target_pane = TargetPane::Raw("5").to_string();
 
-    let mut choose_buffer = ChooseBuffer::new();
+    let choose_buffer = ChooseBuffer::new();
     #[cfg(feature = "tmux_2_6")]
-    choose_buffer.no_preview();
+    let choose_buffer = choose_buffer.no_preview();
     #[cfg(feature = "tmux_2_7")]
-    choose_buffer.zoom();
+    let choose_buffer = choose_buffer.zoom();
     #[cfg(feature = "tmux_3_1")]
-    choose_buffer.reverse_sort_order();
+    let choose_buffer = choose_buffer.reverse_sort_order();
     #[cfg(feature = "tmux_1_7")]
-    choose_buffer.format("1");
+    let choose_buffer = choose_buffer.format("1");
     #[cfg(feature = "tmux_2_6")]
-    choose_buffer.filter("2");
+    let choose_buffer = choose_buffer.filter("2");
     #[cfg(feature = "tmux_3_2")]
-    choose_buffer.key_format("3");
+    let choose_buffer = choose_buffer.key_format("3");
     #[cfg(feature = "tmux_2_6")]
-    choose_buffer.sort_order("4");
+    let choose_buffer = choose_buffer.sort_order("4");
     #[cfg(feature = "tmux_1_3")]
-    choose_buffer.target_pane(&target_pane);
+    let choose_buffer = choose_buffer.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_3")]
-    choose_buffer.template("6");
+    let choose_buffer = choose_buffer.template("6");
 
     let cmd = "choose-buffer";
 
