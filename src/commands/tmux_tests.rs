@@ -1,6 +1,6 @@
 #[test]
 fn tmux() {
-    use crate::TmuxCommand;
+    use crate::commands::tmux::Tmux;
     use std::borrow::Cow;
 
     // This structure is used to store execution parameters of `tmux`, including binary
@@ -53,45 +53,48 @@ fn tmux() {
     // ```text
     // tmux [-28dqUuVv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
     // ```
-    let mut tmux = TmuxCommand::new();
+    let mut tmux = Tmux::new();
     #[cfg(feature = "tmux_0_8")]
-    tmux.colours256();
+    let tmux = tmux.colours256();
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
-    tmux.colours88();
+    let tmux = tmux.colours88();
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
-    tmux.default_colours();
+    let tmux = tmux.default_colours();
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-    tmux.prevent_msg();
+    let tmux = tmux.prevent_msg();
     #[cfg(feature = "tmux_1_8")]
-    tmux.control_mode();
+    let tmux = tmux.control_mode();
     #[cfg(feature = "tmux_1_8")]
-    tmux.disable_echo();
+    let tmux = tmux.disable_echo();
     #[cfg(feature = "tmux_3_2")]
-    tmux.no_daemon();
+    let tmux = tmux.no_daemon();
     #[cfg(feature = "tmux_1_0")]
-    tmux.login_shell();
+    let tmux = tmux.login_shell();
     #[cfg(feature = "tmux_3_2")]
-    tmux.no_start();
+    let tmux = tmux.no_start();
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
-    tmux.unlock();
+    let tmux = tmux.unlock();
     #[cfg(feature = "tmux_0_8")]
-    tmux.force_utf8();
+    let tmux = tmux.force_utf8();
     #[cfg(feature = "tmux_0_8")]
-    tmux.verbose_logging();
+    let tmux = tmux.verbose_logging();
     #[cfg(feature = "tmux_0_8")]
-    tmux.version();
+    let tmux = tmux.version();
     #[cfg(feature = "tmux_1_1")]
-    tmux.shell_cmd("1");
+    let tmux = tmux.shell_cmd("1");
     #[cfg(feature = "tmux_0_8")]
-    tmux.file("2");
+    let tmux = tmux.file("2");
     #[cfg(feature = "tmux_0_8")]
-    tmux.socket_name("3");
+    let tmux = tmux.socket_name("3");
     #[cfg(feature = "tmux_0_8")]
-    tmux.socket_path("4");
+    let tmux = tmux.socket_path("4");
     #[cfg(feature = "tmux_3_2")]
-    tmux.features("5");
+    let tmux = tmux.features("5");
 
     let mut s = Vec::new();
+
+    s.push("tmux");
+
     #[cfg(feature = "tmux_0_8")]
     s.push("-2");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
@@ -128,10 +131,9 @@ fn tmux() {
     s.extend_from_slice(&["-S", "4"]);
     #[cfg(feature = "tmux_3_2")]
     s.extend_from_slice(&["-T", "5"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    assert_eq!(tmux.bin, Cow::Borrowed("tmux"));
-    assert_eq!(tmux.bin_args, Some(s));
-    assert_eq!(tmux.cmd, None);
-    assert_eq!(tmux.cmd_args, None);
+    let tmux = tmux.build().to_vec();
+
+    assert_eq!(tmux, s);
 }
