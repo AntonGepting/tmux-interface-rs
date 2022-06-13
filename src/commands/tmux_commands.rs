@@ -1,4 +1,4 @@
-use crate::TmuxCommand;
+use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 use std::fmt;
 
@@ -62,10 +62,6 @@ impl<'a> TmuxCommands<'a> {
     pub fn to_vec(&self) -> Vec<Cow<'a, str>> {
         let mut v = Vec::new();
 
-        //for cmd in &self.cmds {
-        //v.extend(cmd.to_vec());
-        //}
-
         let len = self.cmds.len();
         for (i, cmd) in self.cmds.iter().enumerate() {
             v.extend(cmd.to_vec());
@@ -77,11 +73,15 @@ impl<'a> TmuxCommands<'a> {
             }
         }
 
-        //if let Some(args) = &cmd.args {
-        //v.extend(args);
-        //}
-        //v.push(Cow::Borrowed(TMUX_COMMANDS_SEPARATOR));
-        //}
+        v
+    }
+
+    pub fn output(self) -> Vec<Result<TmuxOutput, Error>> {
+        let mut v = Vec::new();
+
+        for cmd in self.cmds {
+            v.push(cmd.output())
+        }
 
         v
     }

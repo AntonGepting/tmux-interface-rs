@@ -1,4 +1,4 @@
-use crate::{Error, TmuxOutput};
+use crate::{Error, Tmux, TmuxOutput};
 use std::borrow::Cow;
 use std::fmt;
 use std::process::{Child, Command, ExitStatus, Stdio};
@@ -187,9 +187,9 @@ impl<'a> TmuxCommand<'a> {
         v
     }
 
-    //pub fn into_tmux_bin_command(self) -> TmuxBinCommand<'a> {
-    //self.into_tmux_bin_command_ext(Default::default())
-    //}
+    pub fn to_tmux(self) -> Tmux<'a> {
+        Tmux::new().command(self)
+    }
 
     //pub fn into_tmux_command(self) -> TmuxCommand<'a> {
     //TmuxCommand::default()
@@ -399,3 +399,23 @@ impl<'a> From<TmuxCommand<'a>> for Command {
     }
 
 */
+
+use crate::{HasSession, KillSession, NewSession};
+
+impl<'a> From<NewSession<'a>> for TmuxCommand<'a> {
+    fn from(item: NewSession<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<HasSession<'a>> for TmuxCommand<'a> {
+    fn from(item: HasSession<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<KillSession<'a>> for TmuxCommand<'a> {
+    fn from(item: KillSession<'a>) -> Self {
+        item.build()
+    }
+}

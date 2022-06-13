@@ -2,7 +2,7 @@ use std::process::ExitStatus;
 use std::process::Output;
 
 // XXX: pub inner?
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct TmuxOutput(pub Output);
 
 impl TmuxOutput {

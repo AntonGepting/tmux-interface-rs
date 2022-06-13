@@ -19,10 +19,9 @@ fn tmux_commands() {
     //cmd.session_name("session2").detached();
     //cmds.push(cmd);
 
-    let mut cmd = ShowOptions::new();
-    cmd.global().option("default-shell").build();
+    let mut cmd = ShowOptions::new().global().option("default-shell").build();
     dbg!(&cmd);
-    cmds.push(cmd.build());
+    cmds.push(cmd);
 
     dbg!(&cmds);
 

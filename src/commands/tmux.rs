@@ -3,6 +3,7 @@ use crate::commands::tmux_command::TmuxCommand;
 use crate::commands::tmux_commands::TmuxCommands;
 use std::borrow::Cow;
 
+// XXX: set_cmds_separator
 // NOTE: [-N] missing in man
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#DESCRIPTION)
 ///
@@ -261,10 +262,10 @@ impl<'a> Tmux<'a> {
         self
     }
 
-    pub fn command(mut self, command: TmuxCommand<'a>) -> Self {
+    pub fn command<T: Into<TmuxCommand<'a>>>(mut self, command: T) -> Self {
         self.command
             .get_or_insert(TmuxCommands::new())
-            .push(command);
+            .push(command.into());
         self
     }
 
@@ -415,6 +416,26 @@ impl<'a> Tmux<'a> {
     //let child = command.spawn()?;
     //Ok(child)
     //}
+}
+
+use crate::{HasSession, KillSession, NewSession};
+
+impl<'a> From<NewSession<'a>> for Tmux<'a> {
+    fn from(item: NewSession<'a>) -> Self {
+        item.build().to_tmux()
+    }
+}
+
+impl<'a> From<HasSession<'a>> for Tmux<'a> {
+    fn from(item: HasSession<'a>) -> Self {
+        item.build().to_tmux()
+    }
+}
+
+impl<'a> From<KillSession<'a>> for Tmux<'a> {
+    fn from(item: KillSession<'a>) -> Self {
+        item.build().to_tmux()
+    }
 }
 
 //impl<'a> From<&Tmux<'a>> for Command {
