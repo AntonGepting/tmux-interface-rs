@@ -18,10 +18,10 @@ fn next_window() {
     // tmux next-window [-t target-session]
     // (alias: next)
     // ```
-    let mut next_window = NextWindow::new();
-    next_window.attach();
+    let next_window = NextWindow::new();
+    let next_window = next_window.attach();
     #[cfg(feature = "tmux_0_8")]
-    next_window.target_window("1");
+    let next_window = next_window.target_window("1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "next-window";

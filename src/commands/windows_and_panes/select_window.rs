@@ -53,40 +53,40 @@ impl<'a> SelectWindow<'a> {
 
     /// `[-l]` - equivalent to last-window
     #[cfg(feature = "tmux_1_5")]
-    pub fn last(&mut self) -> &mut Self {
+    pub fn last(mut self) -> Self {
         self.last = true;
         self
     }
 
     /// `[-n]` - equivalent to next-window
     #[cfg(feature = "tmux_1_5")]
-    pub fn next(&mut self) -> &mut Self {
+    pub fn next(mut self) -> Self {
         self.next = true;
         self
     }
 
     /// `[-p]` - equivalent to previous-window
     #[cfg(feature = "tmux_1_5")]
-    pub fn previous(&mut self) -> &mut Self {
+    pub fn previous(mut self) -> Self {
         self.previous = true;
         self
     }
 
     /// `[-T]` - if the selected window is already the current window, behave like last-window
     #[cfg(feature = "tmux_1_8")]
-    pub fn switch(&mut self) -> &mut Self {
+    pub fn switch(mut self) -> Self {
         self.switch = true;
         self
     }
 
     /// `[-t target-window]` - target-window
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SELECT_WINDOW);
@@ -117,8 +117,8 @@ impl<'a> SelectWindow<'a> {
 
         // `[-t target-window]` - target-window
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         cmd

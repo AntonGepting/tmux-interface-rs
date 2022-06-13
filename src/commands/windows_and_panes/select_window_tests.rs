@@ -26,17 +26,17 @@ fn select_window() {
     // ```
     let target_window = TargetWindow::Raw("1").to_string();
 
-    let mut select_window = SelectWindow::new();
+    let select_window = SelectWindow::new();
     #[cfg(feature = "tmux_1_5")]
-    select_window.last();
+    let select_window = select_window.last();
     #[cfg(feature = "tmux_1_5")]
-    select_window.next();
+    let select_window = select_window.next();
     #[cfg(feature = "tmux_1_5")]
-    select_window.previous();
+    let select_window = select_window.previous();
     #[cfg(feature = "tmux_1_8")]
-    select_window.switch();
+    let select_window = select_window.switch();
     #[cfg(feature = "tmux_0_8")]
-    select_window.target_window(&target_window);
+    let select_window = select_window.target_window(&target_window);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "select-window";

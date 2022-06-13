@@ -32,17 +32,17 @@ fn respawn_window() {
     // ```
     let target_window = TargetWindow::Raw("3").to_string();
 
-    let mut respawn_window = RespawnWindow::new();
+    let respawn_window = RespawnWindow::new();
     #[cfg(feature = "tmux_0_8")]
-    respawn_window.kill();
+    let respawn_window = respawn_window.kill();
     #[cfg(feature = "tmux_2_6")]
-    respawn_window.start_directory("1");
+    let respawn_window = respawn_window.start_directory("1");
     #[cfg(feature = "tmux_3_0")]
-    respawn_window.environment("2");
+    let respawn_window = respawn_window.environment("2");
     #[cfg(feature = "tmux_0_9")]
-    respawn_window.target_window(&target_window);
+    let respawn_window = respawn_window.target_window(&target_window);
     #[cfg(feature = "tmux_1_2")]
-    respawn_window.shell_command("4");
+    let respawn_window = respawn_window.shell_command("4");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "respawn-window";

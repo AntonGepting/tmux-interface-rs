@@ -14,9 +14,9 @@ fn next_layout() {
     // ```
     let target_window = TargetWindow::Raw("1").to_string();
 
-    let mut next_layout = NextLayout::new();
+    let next_layout = NextLayout::new();
     #[cfg(feature = "tmux_0_8")]
-    next_layout.target_window(&target_window);
+    let next_layout = next_layout.target_window(&target_window);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "next-layout";

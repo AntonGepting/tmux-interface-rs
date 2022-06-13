@@ -15,9 +15,9 @@ fn previous_layout() {
 
     let target_window = TargetWindow::Raw("1").to_string();
 
-    let mut previous_layout = PreviousLayout::new();
+    let previous_layout = PreviousLayout::new();
     #[cfg(feature = "tmux_1_3")]
-    previous_layout.target_window(&target_window);
+    let previous_layout = previous_layout.target_window(&target_window);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "previous-layout";

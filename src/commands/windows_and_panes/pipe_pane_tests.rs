@@ -25,17 +25,17 @@ fn pipe_pane() {
     // (alias: pipep)
     // ```
     let target_pane = TargetPane::Raw("1").to_string();
-    let mut pipe_pane = PipePane::new();
+    let pipe_pane = PipePane::new();
     #[cfg(feature = "tmux_2_7")]
-    pipe_pane.stdout();
+    let pipe_pane = pipe_pane.stdout();
     #[cfg(feature = "tmux_2_7")]
-    pipe_pane.stdin();
+    let pipe_pane = pipe_pane.stdin();
     #[cfg(feature = "tmux_1_1")]
-    pipe_pane.open();
+    let pipe_pane = pipe_pane.open();
     #[cfg(feature = "tmux_1_1")]
-    pipe_pane.target_pane(&target_pane);
+    let pipe_pane = pipe_pane.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_2")]
-    pipe_pane.shell_command("2");
+    let pipe_pane = pipe_pane.shell_command("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "pipe-pane";

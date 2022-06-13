@@ -53,40 +53,40 @@ impl<'a> PipePane<'a> {
 
     /// `[-I]` - stdin is connected
     #[cfg(feature = "tmux_2_7")]
-    pub fn stdout(&mut self) -> &mut Self {
+    pub fn stdout(mut self) -> Self {
         self.stdout = true;
         self
     }
 
     /// `[-O]` - stdout is connected
     #[cfg(feature = "tmux_2_7")]
-    pub fn stdin(&mut self) -> &mut Self {
+    pub fn stdin(mut self) -> Self {
         self.stdin = true;
         self
     }
 
     /// `[-o]` - only open a new pipe if no previous pipe exists
     #[cfg(feature = "tmux_1_1")]
-    pub fn open(&mut self) -> &mut Self {
+    pub fn open(mut self) -> Self {
         self.open = true;
         self
     }
 
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_1_1")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[shell-command]` - shell-command
     #[cfg(feature = "tmux_1_2")]
-    pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
+    pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
         self.shell_command = Some(shell_command.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(PIPE_PANE);
@@ -111,14 +111,14 @@ impl<'a> PipePane<'a> {
 
         // `[-t target-pane]` - target-pane
         #[cfg(feature = "tmux_1_1")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[shell-command]` - shell-command
         #[cfg(feature = "tmux_1_2")]
-        if let Some(shell_command) = &self.shell_command {
-            cmd.push_param(shell_command.as_ref());
+        if let Some(shell_command) = self.shell_command {
+            cmd.push_param(shell_command);
         }
 
         cmd

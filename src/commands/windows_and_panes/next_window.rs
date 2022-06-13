@@ -35,19 +35,19 @@ impl<'a> NextWindow<'a> {
 
     /// `[-a]`
     #[cfg(feature = "tmux_0_9")]
-    pub fn attach(&mut self) -> &mut Self {
+    pub fn attach(mut self) -> Self {
         self.attach = true;
         self
     }
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(NEXT_WINDOW);
@@ -60,8 +60,8 @@ impl<'a> NextWindow<'a> {
 
         // `[-t target-session]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         cmd
