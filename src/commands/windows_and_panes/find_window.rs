@@ -61,47 +61,47 @@ impl<'a> FindWindow<'a> {
 
     /// `[-r]` - regular expression
     #[cfg(feature = "tmux_3_0")]
-    pub fn regex(&mut self) -> &mut Self {
+    pub fn regex(mut self) -> Self {
         self.regex = true;
         self
     }
 
     /// `[-C]` - match only visible window contents
     #[cfg(feature = "tmux_1_7")]
-    pub fn only_visible(&mut self) -> &mut Self {
+    pub fn only_visible(mut self) -> Self {
         self.only_visible = true;
         self
     }
 
     /// `[-N]` - match only the window name
     #[cfg(feature = "tmux_1_7")]
-    pub fn only_name(&mut self) -> &mut Self {
+    pub fn only_name(mut self) -> Self {
         self.only_name = true;
         self
     }
 
     /// `[-T]` - match only the window title
     #[cfg(feature = "tmux_1_7")]
-    pub fn only_title(&mut self) -> &mut Self {
+    pub fn only_title(mut self) -> Self {
         self.only_title = true;
         self
     }
 
     /// `[-Z]` - zoom the pane
     #[cfg(feature = "tmux_3_0")]
-    pub fn zoom(&mut self) -> &mut Self {
+    pub fn zoom(mut self) -> Self {
         self.zoom = true;
         self
     }
 
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(FIND_WINDOW);
@@ -138,8 +138,8 @@ impl<'a> FindWindow<'a> {
 
         // `[-t target-pane]` - target-pane
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         cmd

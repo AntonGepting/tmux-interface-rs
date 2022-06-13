@@ -16,15 +16,15 @@ fn wait_for() {
     // tmux wait-for -LSU channel
     // (alias: wait)
     // ```
-    let mut wait_for = WaitFor::new();
+    let wait_for = WaitFor::new();
     #[cfg(feature = "tmux_1_8")]
-    wait_for.locked();
+    let wait_for = wait_for.locked();
     #[cfg(feature = "tmux_1_8")]
-    wait_for.woken();
+    let wait_for = wait_for.woken();
     #[cfg(feature = "tmux_1_8")]
-    wait_for.unlocked();
+    let wait_for = wait_for.unlocked();
     #[cfg(feature = "tmux_1_8")]
-    wait_for.channel("1");
+    let wait_for = wait_for.channel("1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "wait-for";

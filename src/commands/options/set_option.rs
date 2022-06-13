@@ -122,91 +122,91 @@ impl<'a> SetOption<'a> {
 
     /// `[-a]` - value is appended to the existing setting, if the option expects a string or a style
     #[cfg(feature = "tmux_1_0")]
-    pub fn append(&mut self) -> &mut Self {
+    pub fn append(mut self) -> Self {
         self.append = true;
         self
     }
 
     /// `[-F]` - expand formats in the option value
     #[cfg(feature = "tmux_2_6")]
-    pub fn format(&mut self) -> &mut Self {
+    pub fn format(mut self) -> Self {
         self.format = true;
         self
     }
 
     /// `[-g]` - the global session or window option is set
     #[cfg(feature = "tmux_0_8")]
-    pub fn global(&mut self) -> &mut Self {
+    pub fn global(mut self) -> Self {
         self.global = true;
         self
     }
 
     /// `[-o]` - prevents setting an option that is already set
     #[cfg(feature = "tmux_1_8")]
-    pub fn not_overwrite(&mut self) -> &mut Self {
+    pub fn not_overwrite(mut self) -> Self {
         self.not_overwrite = true;
         self
     }
 
     /// `[-p]` - set a pane option
     #[cfg(feature = "tmux_3_0")]
-    pub fn pane(&mut self) -> &mut Self {
+    pub fn pane(mut self) -> Self {
         self.pane = true;
         self
     }
 
     /// `[-q]` - suppress errors about unknown or ambiguous options
     #[cfg(feature = "tmux_1_7")]
-    pub fn quiet(&mut self) -> &mut Self {
+    pub fn quiet(mut self) -> Self {
         self.quiet = true;
         self
     }
 
     /// `[-s]` - set a server option
     #[cfg(feature = "tmux_1_2")]
-    pub fn server(&mut self) -> &mut Self {
+    pub fn server(mut self) -> Self {
         self.server = true;
         self
     }
 
     /// `[-u]` - unset an option, so a session inherits the option from the global options
     #[cfg(feature = "tmux_0_8")]
-    pub fn unset(&mut self) -> &mut Self {
+    pub fn unset(mut self) -> Self {
         self.unset = true;
         self
     }
 
     /// `[-U]` - unsets an option (like -u) but if the option is a pane option also unsets the option on any panes in the window
     #[cfg(feature = "tmux_3_2")]
-    pub fn unset_on_all(&mut self) -> &mut Self {
+    pub fn unset_on_all(mut self) -> Self {
         self.unset_on_all = true;
         self
     }
 
     /// `[-w]` - set a window option
     #[cfg(feature = "tmux_1_2")]
-    pub fn window(&mut self) -> &mut Self {
+    pub fn window(mut self) -> Self {
         self.window = true;
         self
     }
 
     /// `[-t target-pane]` - specify the target-pane
     #[cfg(feature = "tmux_3_0")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[-t target-session | target-window]`
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-    pub fn target(&mut self, target: &'a str) -> &mut Self {
+    pub fn target(mut self, target: &'a str) -> Self {
         self.target = Some(target.into());
         self
     }
 
     /// `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
-    pub fn target_session(&mut self, target_session: &'a str) -> &mut Self {
+    pub fn target_session(mut self, target_session: &'a str) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
@@ -214,18 +214,18 @@ impl<'a> SetOption<'a> {
     // FIXME: option valuer pair in one fn
 
     /// `option`
-    pub fn option<S: Into<Cow<'a, str>>>(&mut self, option: S) -> &mut Self {
+    pub fn option<S: Into<Cow<'a, str>>>(mut self, option: S) -> Self {
         self.option = Some(option.into());
         self
     }
 
     /// `value`
-    pub fn value<S: Into<Cow<'a, str>>>(&mut self, value: S) -> &mut Self {
+    pub fn value<S: Into<Cow<'a, str>>>(mut self, value: S) -> Self {
         self.value = Some(value.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SET_OPTION);
@@ -292,32 +292,32 @@ impl<'a> SetOption<'a> {
 
         // `[-t target-pane]` - specify the target-pane
         #[cfg(feature = "tmux_3_0")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[-t target-session | target-window]`
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-        if let Some(target) = &self.target {
-            cmd.push_option(T_LOWERCASE_KEY, target.as_ref());
+        if let Some(target) = self.target {
+            cmd.push_option(T_LOWERCASE_KEY, target);
         }
 
         // `[-t target-session]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
-        if let Some(target_session) = &self.target_session {
-            cmd.push_option(T_LOWERCASE_KEY, target_session.as_ref());
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         // FIXME: option valuer pair in one fn
 
         // `option`
-        if let Some(option) = &self.option {
-            cmd.push_param(option.as_ref());
+        if let Some(option) = self.option {
+            cmd.push_param(option);
         }
 
         // `value`
-        if let Some(value) = &self.value {
-            cmd.push_param(value.as_ref());
+        if let Some(value) = self.value {
+            cmd.push_param(value);
         }
 
         cmd

@@ -38,19 +38,19 @@ fn select_layout() {
     // ```
     let target_pane = TargetPane::Raw("1").to_string();
 
-    let mut select_layout = SelectLayout::new();
+    let select_layout = SelectLayout::new();
     #[cfg(feature = "tmux_2_7")]
-    select_layout.spread();
+    let select_layout = select_layout.spread();
     #[cfg(feature = "tmux_1_5")]
-    select_layout.next_layout();
+    let select_layout = select_layout.next_layout();
     #[cfg(feature = "tmux_2_1")]
-    select_layout.last_layout();
+    let select_layout = select_layout.last_layout();
     #[cfg(feature = "tmux_1_5")]
-    select_layout.previous_layout();
+    let select_layout = select_layout.previous_layout();
     #[cfg(feature = "tmux_0_9")]
-    select_layout.target_pane(&target_pane);
+    let select_layout = select_layout.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_0")]
-    select_layout.layout_name("2");
+    let select_layout = select_layout.layout_name("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "select-layout";

@@ -31,33 +31,33 @@ impl<'a> ClockMode<'a> {
 
     /// `[-t target-pane]`
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[-t target-window]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(CLOCK_MODE);
 
         // `[-t target-pane]`
         #[cfg(feature = "tmux_1_0")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[-t target-window]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         cmd

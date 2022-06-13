@@ -14,11 +14,11 @@ fn previous_window() {
     // tmux previous-window [-t target-session]
     // (alias: prev)
     // ```
-    let mut previous_window = PreviousWindow::new();
+    let previous_window = PreviousWindow::new();
     #[cfg(feature = "tmux_0_9")]
-    previous_window.parent_sighup();
+    let previous_window = previous_window.parent_sighup();
     #[cfg(feature = "tmux_0_8")]
-    previous_window.target_session("1");
+    let previous_window = previous_window.target_session("1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "previous-window";

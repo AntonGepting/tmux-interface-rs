@@ -21,17 +21,17 @@ fn link_window() {
     let src_window = TargetWindow::Raw("1").to_string();
     let dst_window = TargetWindow::Raw("2").to_string();
 
-    let mut link_window = LinkWindow::new();
+    let link_window = LinkWindow::new();
     #[cfg(feature = "tmux_2_1")]
-    link_window.add();
+    let link_window = link_window.add();
     #[cfg(feature = "tmux_0_8")]
-    link_window.detached();
+    let link_window = link_window.detached();
     #[cfg(feature = "tmux_0_8")]
-    link_window.kill();
+    let link_window = link_window.kill();
     #[cfg(feature = "tmux_0_8")]
-    link_window.src_window(&src_window);
+    let link_window = link_window.src_window(&src_window);
     #[cfg(feature = "tmux_0_8")]
-    link_window.dst_window(&dst_window);
+    let link_window = link_window.dst_window(&dst_window);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "link-window";

@@ -132,63 +132,63 @@ impl<'a> SplitWindow<'a> {
 
     /// `[-b]` - cause the new pane to be created to the left of or above target-pane
     #[cfg(feature = "tmux_2_4")]
-    pub fn before(&mut self) -> &mut Self {
+    pub fn before(mut self) -> Self {
         self.before = true;
         self
     }
 
     /// `[-d]` - do not make the new window the current window
     #[cfg(feature = "tmux_0_8")]
-    pub fn detached(&mut self) -> &mut Self {
+    pub fn detached(mut self) -> Self {
         self.detached = true;
         self
     }
 
     /// `[-f]` - creates a new pane spanning the full window size (h, v)
     #[cfg(feature = "tmux_2_4")]
-    pub fn full(&mut self) -> &mut Self {
+    pub fn full(mut self) -> Self {
         self.full = true;
         self
     }
 
     /// `[-h]` - horizontal split
     #[cfg(feature = "tmux_1_0")]
-    pub fn horizontal(&mut self) -> &mut Self {
+    pub fn horizontal(mut self) -> Self {
         self.horizontal = true;
         self
     }
 
     /// `[-I]` - create an empty pane and forward any output from stdin to it
     #[cfg(feature = "tmux_3_0")]
-    pub fn stdin_forward(&mut self) -> &mut Self {
+    pub fn stdin_forward(mut self) -> Self {
         self.stdin_forward = true;
         self
     }
 
     /// `[-v]` - vertical split
     #[cfg(feature = "tmux_1_0")]
-    pub fn vertical(&mut self) -> &mut Self {
+    pub fn vertical(mut self) -> Self {
         self.vertical = true;
         self
     }
 
     /// `[-P]` - print information about the new window after it has been created
     #[cfg(feature = "tmux_1_5")]
-    pub fn print(&mut self) -> &mut Self {
+    pub fn print(mut self) -> Self {
         self.print = true;
         self
     }
 
     /// `[-c start_directory]` - start-directory
     #[cfg(feature = "tmux_1_7")]
-    pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, start_directory: S) -> &mut Self {
+    pub fn start_directory<S: Into<Cow<'a, str>>>(mut self, start_directory: S) -> Self {
         self.start_directory = Some(start_directory.into());
         self
     }
 
     /// `[-e environment]` - environment
     #[cfg(feature = "tmux_3_1")]
-    pub fn environment<S: Into<Cow<'a, str>>>(&mut self, environment: S) -> &mut Self {
+    pub fn environment<S: Into<Cow<'a, str>>>(mut self, environment: S) -> Self {
         self.environment = Some(environment.into());
         self
     }
@@ -196,40 +196,40 @@ impl<'a> SplitWindow<'a> {
     /// `[-l size]` - specify the size of the new pane in lines
     /// `[-l size | -p percentage]` - specify the size of the new pane in lines
     #[cfg(feature = "tmux_0_8")]
-    pub fn size(&mut self, size: &'a PaneSize) -> &mut Self {
+    pub fn size(mut self, size: &'a PaneSize) -> Self {
         self.size = Some(size);
         self
     }
 
     /// `[-t target-pane]` -
     #[cfg(feature = "tmux_1_2")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[shell-command]` - shell-command
     #[cfg(feature = "tmux_1_2")]
-    pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
+    pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
         self.shell_command = Some(shell_command.into());
         self
     }
 
     /// `[-t target-window]` -
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
     /// `[-F format]` - format
     #[cfg(feature = "tmux_1_7")]
-    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
+    pub fn format<S: Into<Cow<'a, str>>>(mut self, format: S) -> Self {
         self.format = Some(format.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SPLIT_WINDOW);
@@ -278,14 +278,14 @@ impl<'a> SplitWindow<'a> {
 
         // `[-c start_directory]` - start-directory
         #[cfg(feature = "tmux_1_7")]
-        if let Some(start_directory) = &self.start_directory {
-            cmd.push_option(C_LOWERCASE_KEY, start_directory.as_ref());
+        if let Some(start_directory) = self.start_directory {
+            cmd.push_option(C_LOWERCASE_KEY, start_directory);
         }
 
         // `[-e environment]` - environment
         #[cfg(feature = "tmux_3_1")]
-        if let Some(environment) = &self.environment {
-            cmd.push_option(E_LOWERCASE_KEY, environment.as_ref());
+        if let Some(environment) = self.environment {
+            cmd.push_option(E_LOWERCASE_KEY, environment);
         }
 
         // `[-l size]` - specify the size of the new pane in lines
@@ -294,40 +294,42 @@ impl<'a> SplitWindow<'a> {
         if let Some(size) = &self.size {
             #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_1")))]
             match size {
-                PaneSize::Size(size) => cmd.push_option(L_LOWERCASE_KEY, size.to_string()),
+                PaneSize::Size(size) => {
+                    cmd.push_option(L_LOWERCASE_KEY, Cow::Owned(size.to_string()))
+                }
                 PaneSize::Percentage(size) => {
-                    cmd.push_option(L_LOWERCASE_KEY, format!("{}%", size))
+                    cmd.push_option(L_LOWERCASE_KEY, Cow::Owned(format!("{}%", size)))
                 }
             };
             #[cfg(feature = "tmux_3_1")]
             match size {
-                PaneSize::Size(size) => cmd.push_option(L_LOWERCASE_KEY, size.to_string()),
-                PaneSize::Percentage(size) => cmd.push_option(P_LOWERCASE_KEY, size.to_string()),
+                PaneSize::Size(size) => cmd.push_option(L_LOWERCASE_KEY, size),
+                PaneSize::Percentage(size) => cmd.push_option(P_LOWERCASE_KEY, size),
             };
         }
 
         // `[-t target-pane]` -
         #[cfg(feature = "tmux_1_2")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[shell-command]` - shell-command
         #[cfg(feature = "tmux_1_2")]
-        if let Some(shell_command) = &self.shell_command {
-            cmd.push_param(shell_command.as_ref());
+        if let Some(shell_command) = self.shell_command {
+            cmd.push_param(shell_command);
         }
 
         // `[-t target-window]` -
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         // `[-F format]` - format
         #[cfg(feature = "tmux_1_7")]
-        if let Some(format) = &self.format {
-            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        if let Some(format) = self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format);
         }
 
         cmd

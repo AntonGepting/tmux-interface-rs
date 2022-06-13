@@ -60,40 +60,40 @@ impl<'a> IfShell<'a> {
 
     /// `[-b]` - run in the background
     #[cfg(feature = "tmux_1_8")]
-    pub fn background(&mut self) -> &mut Self {
+    pub fn background(mut self) -> Self {
         self.background = true;
         self
     }
 
     /// `[-F]` not execute but considered success if neither empty nor zero
     #[cfg(feature = "tmux_2_0")]
-    pub fn not_execute(&mut self) -> &mut Self {
+    pub fn not_execute(mut self) -> Self {
         self.not_execute = true;
         self
     }
 
     /// `[-t target-pane]` specify the target-pane
     #[cfg(feature = "tmux_1_8")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[shell-command]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
+    pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
         self.shell_command = Some(shell_command.into());
         self
     }
 
     /// `[command]` - specify the second command
     #[cfg(feature = "tmux_0_8")]
-    pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
+    pub fn command<S: Into<Cow<'a, str>>>(mut self, command: S) -> Self {
         self.command = Some(command.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(IF_SHELL);
@@ -112,20 +112,20 @@ impl<'a> IfShell<'a> {
 
         // `[-t target-pane]` specify the target-pane
         #[cfg(feature = "tmux_1_8")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[shell-command]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(shell_command) = &self.shell_command {
-            cmd.push_param(shell_command.as_ref());
+        if let Some(shell_command) = self.shell_command {
+            cmd.push_param(shell_command);
         }
 
         // `[command]` - specify the second command
         #[cfg(feature = "tmux_0_8")]
-        if let Some(command) = &self.command {
-            cmd.push_param(command.as_ref());
+        if let Some(command) = self.command {
+            cmd.push_param(command);
         }
 
         cmd

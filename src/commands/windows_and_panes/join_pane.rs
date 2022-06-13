@@ -68,35 +68,35 @@ impl<'a> JoinPane<'a> {
 
     /// `[-b]` - cause src-pane to be joined to left of or above dst-pane
     #[cfg(feature = "tmux_2_6")]
-    pub fn left_above(&mut self) -> &mut Self {
+    pub fn left_above(mut self) -> Self {
         self.left_above = true;
         self
     }
 
     /// `[-d]` -
     #[cfg(feature = "tmux_1_2")]
-    pub fn detached(&mut self) -> &mut Self {
+    pub fn detached(mut self) -> Self {
         self.detached = true;
         self
     }
 
     /// `[-f]` - creates a new pane spanning the full window height/width
     #[cfg(feature = "tmux_2_6")]
-    pub fn full_size(&mut self) -> &mut Self {
+    pub fn full_size(mut self) -> Self {
         self.full_size = true;
         self
     }
 
     /// `[-h]` - full height
     #[cfg(feature = "tmux_1_2")]
-    pub fn horizontal(&mut self) -> &mut Self {
+    pub fn horizontal(mut self) -> Self {
         self.horizontal = true;
         self
     }
 
     /// `[-v]` - full width
     #[cfg(feature = "tmux_1_2")]
-    pub fn vertical(&mut self) -> &mut Self {
+    pub fn vertical(mut self) -> Self {
         self.vertical = true;
         self
     }
@@ -104,26 +104,26 @@ impl<'a> JoinPane<'a> {
     /// `[-l size]`
     /// `[-l size | -p percentage]` - specify the size of the new pane in lines/columns
     #[cfg(feature = "tmux_1_2")]
-    pub fn size(&mut self, size: &'a PaneSize) -> &mut Self {
+    pub fn size(mut self, size: &'a PaneSize) -> Self {
         self.size = Some(size);
         self
     }
 
     /// `[-s src-pane]` - src-pane
     #[cfg(feature = "tmux_1_2")]
-    pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
+    pub fn src_pane<S: Into<Cow<'a, str>>>(mut self, src_pane: S) -> Self {
         self.src_pane = Some(src_pane.into());
         self
     }
 
     /// `[-t dst-pane]` - dst-pane
     #[cfg(feature = "tmux_1_2")]
-    pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
+    pub fn dst_pane<S: Into<Cow<'a, str>>>(mut self, dst_pane: S) -> Self {
         self.dst_pane = Some(dst_pane.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(JOIN_PANE);
@@ -179,14 +179,14 @@ impl<'a> JoinPane<'a> {
 
         // `[-s src-pane]` - src-pane
         #[cfg(feature = "tmux_1_2")]
-        if let Some(src_pane) = &self.src_pane {
-            cmd.push_option(S_LOWERCASE_KEY, src_pane.as_ref());
+        if let Some(src_pane) = self.src_pane {
+            cmd.push_option(S_LOWERCASE_KEY, src_pane);
         }
 
         // `[-t dst-pane]` - dst-pane
         #[cfg(feature = "tmux_1_2")]
-        if let Some(dst_pane) = &self.dst_pane {
-            cmd.push_option(T_LOWERCASE_KEY, dst_pane.as_ref());
+        if let Some(dst_pane) = self.dst_pane {
+            cmd.push_option(T_LOWERCASE_KEY, dst_pane);
         }
 
         cmd

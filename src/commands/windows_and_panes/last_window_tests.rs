@@ -12,9 +12,9 @@ fn last_window() {
     // tmux last-window [-t target-session]
     // (alias: last)
     // ```
-    let mut last_window = LastWindow::new();
+    let last_window = LastWindow::new();
     #[cfg(feature = "tmux_0_8")]
-    last_window.target_session("1");
+    let last_window = last_window.target_session("1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "last-window";

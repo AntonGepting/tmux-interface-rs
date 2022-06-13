@@ -122,103 +122,103 @@ impl<'a> SelectPane<'a> {
 
     /// `[-D]` - pane below
     #[cfg(feature = "tmux_1_3")]
-    pub fn down(&mut self) -> &mut Self {
+    pub fn down(mut self) -> Self {
         self.down = true;
         self
     }
 
     /// `[-d]` - disable input
     #[cfg(feature = "tmux_2_0")]
-    pub fn disable(&mut self) -> &mut Self {
+    pub fn disable(mut self) -> Self {
         self.disable = true;
         self
     }
 
     /// `[-e]` - enable input
     #[cfg(feature = "tmux_2_0")]
-    pub fn enable(&mut self) -> &mut Self {
+    pub fn enable(mut self) -> Self {
         self.enable = true;
         self
     }
 
     /// `[-g]` - show the current pane style
     #[cfg(feature = "tmux_2_1")]
-    pub fn show_style(&mut self) -> &mut Self {
+    pub fn show_style(mut self) -> Self {
         self.show_style = true;
         self
     }
 
     /// `[-L]` - pane left
     #[cfg(feature = "tmux_1_3")]
-    pub fn left(&mut self) -> &mut Self {
+    pub fn left(mut self) -> Self {
         self.left = true;
         self
     }
 
     /// `[-l]` - equivalent to last-pane command
     #[cfg(feature = "tmux_1_5")]
-    pub fn last(&mut self) -> &mut Self {
+    pub fn last(mut self) -> Self {
         self.last = true;
         self
     }
 
     /// `[-M]` - clear marked pane
     #[cfg(feature = "tmux_2_1")]
-    pub fn set_marked(&mut self) -> &mut Self {
+    pub fn set_marked(mut self) -> Self {
         self.set_marked = true;
         self
     }
 
     /// `[-m]` - set marked pane
     #[cfg(feature = "tmux_2_1")]
-    pub fn clear_marked(&mut self) -> &mut Self {
+    pub fn clear_marked(mut self) -> Self {
         self.clear_marked = true;
         self
     }
 
     /// `[-R]` - pane right
     #[cfg(feature = "tmux_1_3")]
-    pub fn right(&mut self) -> &mut Self {
+    pub fn right(mut self) -> Self {
         self.right = true;
         self
     }
 
     /// `[-U]` - pane above
     #[cfg(feature = "tmux_1_3")]
-    pub fn up(&mut self) -> &mut Self {
+    pub fn up(mut self) -> Self {
         self.up = true;
         self
     }
 
     /// `[-Z]` - keep the window zoomed if it was zoomed
     #[cfg(feature = "tmux_3_1")]
-    pub fn keep_zoomed(&mut self) -> &mut Self {
+    pub fn keep_zoomed(mut self) -> Self {
         self.keep_zoomed = true;
         self
     }
 
     /// `[-P style]` - set the style for a single pane
     #[cfg(feature = "tmux_2_1")]
-    pub fn style<S: Into<Cow<'a, str>>>(&mut self, style: S) -> &mut Self {
+    pub fn style<S: Into<Cow<'a, str>>>(mut self, style: S) -> Self {
         self.style = Some(style.into());
         self
     }
 
     /// `[-T title]` - title
     #[cfg(feature = "tmux_2_6")]
-    pub fn title<S: Into<Cow<'a, str>>>(&mut self, title: S) -> &mut Self {
+    pub fn title<S: Into<Cow<'a, str>>>(mut self, title: S) -> Self {
         self.title = Some(title.into());
         self
     }
 
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SELECT_PANE);
@@ -291,20 +291,20 @@ impl<'a> SelectPane<'a> {
 
         // `[-P style]` - set the style for a single pane
         #[cfg(feature = "tmux_2_1")]
-        if let Some(style) = &self.style {
-            cmd.push_option(P_UPPERCASE_KEY, style.as_ref());
+        if let Some(style) = self.style {
+            cmd.push_option(P_UPPERCASE_KEY, style);
         }
 
         // `[-T title]` - title
         #[cfg(feature = "tmux_2_6")]
-        if let Some(title) = &self.title {
-            cmd.push_option(T_UPPERCASE_KEY, title.as_ref());
+        if let Some(title) = self.title {
+            cmd.push_option(T_UPPERCASE_KEY, title);
         }
 
         // `[-t target-pane]` - target-pane
         #[cfg(feature = "tmux_1_0")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         cmd

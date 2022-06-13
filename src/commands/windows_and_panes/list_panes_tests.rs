@@ -24,15 +24,15 @@ fn list_panes() {
     // tmux list-panes [-t target]
     // (alias: lsp)
     // ```
-    let mut list_panes = ListPanes::new();
+    let list_panes = ListPanes::new();
     #[cfg(feature = "tmux_1_5")]
-    list_panes.all();
+    let list_panes = list_panes.all();
     #[cfg(feature = "tmux_1_5")]
-    list_panes.session();
+    let list_panes = list_panes.session();
     #[cfg(feature = "tmux_1_6")]
-    list_panes.format("1");
+    let list_panes = list_panes.format("1");
     #[cfg(feature = "tmux_0_8")]
-    list_panes.target("2");
+    let list_panes = list_panes.target("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-panes";

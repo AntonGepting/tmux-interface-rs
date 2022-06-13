@@ -13,27 +13,27 @@ fn resize_window() {
     // (alias: resizew)
     let target_window = TargetWindow::Raw("1").to_string();
 
-    let mut resize_window = ResizeWindow::new();
+    let resize_window = ResizeWindow::new();
     #[cfg(feature = "tmux_2_9")]
-    resize_window.smallest();
+    let resize_window = resize_window.smallest();
     #[cfg(feature = "tmux_2_9")]
-    resize_window.largest();
+    let resize_window = resize_window.largest();
     #[cfg(feature = "tmux_2_9")]
-    resize_window.down();
+    let resize_window = resize_window.down();
     #[cfg(feature = "tmux_2_9")]
-    resize_window.left();
+    let resize_window = resize_window.left();
     #[cfg(feature = "tmux_2_9")]
-    resize_window.right();
+    let resize_window = resize_window.right();
     #[cfg(feature = "tmux_2_9")]
-    resize_window.up();
+    let resize_window = resize_window.up();
     #[cfg(feature = "tmux_2_9")]
-    resize_window.target_window(&target_window);
+    let resize_window = resize_window.target_window(&target_window);
     #[cfg(feature = "tmux_2_9")]
-    resize_window.width(2);
+    let resize_window = resize_window.width(2);
     #[cfg(feature = "tmux_2_9")]
-    resize_window.height(3);
+    let resize_window = resize_window.height(3);
     #[cfg(feature = "tmux_2_9")]
-    resize_window.adjustment("4");
+    let resize_window = resize_window.adjustment("4");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "resize-window";

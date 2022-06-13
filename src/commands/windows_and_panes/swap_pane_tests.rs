@@ -27,19 +27,19 @@ fn swap_pane() {
     let src_pane = TargetPane::Raw("1").to_string();
     let dst_pane = TargetPane::Raw("2").to_string();
 
-    let mut swap_pane = SwapPane::new();
+    let swap_pane = SwapPane::new();
     #[cfg(feature = "tmux_0_8")]
-    swap_pane.detached();
+    let swap_pane = swap_pane.detached();
     #[cfg(feature = "tmux_0_8")]
-    swap_pane.previous_pane();
+    let swap_pane = swap_pane.previous_pane();
     #[cfg(feature = "tmux_0_8")]
-    swap_pane.next_pane();
+    let swap_pane = swap_pane.next_pane();
     #[cfg(feature = "tmux_3_1")]
-    swap_pane.keep_zoomed();
+    let swap_pane = swap_pane.keep_zoomed();
     #[cfg(feature = "tmux_1_0")]
-    swap_pane.src_pane(&src_pane);
+    let swap_pane = swap_pane.src_pane(&src_pane);
     #[cfg(feature = "tmux_1_0")]
-    swap_pane.dst_pane(&dst_pane);
+    let swap_pane = swap_pane.dst_pane(&dst_pane);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "swap-pane";

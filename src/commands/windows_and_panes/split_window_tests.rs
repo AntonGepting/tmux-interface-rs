@@ -67,33 +67,33 @@ fn split_window() {
     // ```
     let target_pane = TargetPane::Raw("4").to_string();
 
-    let mut split_window = SplitWindow::new();
+    let split_window = SplitWindow::new();
     #[cfg(feature = "tmux_2_4")]
-    split_window.before();
+    let split_window = split_window.before();
     #[cfg(feature = "tmux_0_8")]
-    split_window.detached();
+    let split_window = split_window.detached();
     #[cfg(feature = "tmux_2_4")]
-    split_window.full();
+    let split_window = split_window.full();
     #[cfg(feature = "tmux_1_0")]
-    split_window.horizontal();
+    let split_window = split_window.horizontal();
     #[cfg(feature = "tmux_3_0")]
-    split_window.stdin_forward();
+    let split_window = split_window.stdin_forward();
     #[cfg(feature = "tmux_1_0")]
-    split_window.vertical();
+    let split_window = split_window.vertical();
     #[cfg(feature = "tmux_1_5")]
-    split_window.print();
+    let split_window = split_window.print();
     #[cfg(feature = "tmux_1_7")]
-    split_window.start_directory("1");
+    let split_window = split_window.start_directory("1");
     #[cfg(feature = "tmux_3_1")]
-    split_window.environment("2");
+    let split_window = split_window.environment("2");
     #[cfg(feature = "tmux_0_8")]
-    split_window.size(&PaneSize::Size(3));
+    let split_window = split_window.size(&PaneSize::Size(3));
     #[cfg(feature = "tmux_1_2")]
-    split_window.target_pane(&target_pane);
+    let split_window = split_window.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_2")]
-    split_window.shell_command("5");
+    let split_window = split_window.shell_command("5");
     #[cfg(feature = "tmux_1_7")]
-    split_window.format("6");
+    let split_window = split_window.format("6");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "split-window";

@@ -59,31 +59,31 @@ fn new_window() {
     // ```
     let target_window = TargetWindow::Raw("5").to_string();
 
-    let mut new_window = NewWindow::new();
+    let new_window = NewWindow::new();
     #[cfg(feature = "tmux_1_3")]
-    new_window.after();
+    let new_window = new_window.after();
     #[cfg(feature = "tmux_3_2")]
-    new_window.before();
+    let new_window = new_window.before();
     #[cfg(feature = "tmux_0_8")]
-    new_window.detached();
+    let new_window = new_window.detached();
     #[cfg(feature = "tmux_1_0")]
-    new_window.kill();
+    let new_window = new_window.kill();
     #[cfg(feature = "tmux_1_5")]
-    new_window.print();
+    let new_window = new_window.print();
     #[cfg(feature = "tmux_3_2")]
-    new_window.select();
+    let new_window = new_window.select();
     #[cfg(feature = "tmux_1_7")]
-    new_window.start_directory("1");
+    let new_window = new_window.start_directory("1");
     #[cfg(feature = "tmux_3_0")]
-    new_window.environment("2");
+    let new_window = new_window.environment("2");
     #[cfg(feature = "tmux_1_7")]
-    new_window.format("3");
+    let new_window = new_window.format("3");
     #[cfg(feature = "tmux_0_8")]
-    new_window.window_name("4");
+    let new_window = new_window.window_name("4");
     #[cfg(feature = "tmux_0_8")]
-    new_window.target_window(&target_window);
+    let new_window = new_window.target_window(&target_window);
     #[cfg(feature = "tmux_1_2")]
-    new_window.shell_command("6");
+    let new_window = new_window.shell_command("6");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "new-window";

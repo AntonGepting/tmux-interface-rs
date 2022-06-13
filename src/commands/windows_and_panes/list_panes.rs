@@ -45,30 +45,30 @@ impl<'a> ListPanes<'a> {
     }
 
     /// `[-a]`
-    pub fn all(&mut self) -> &mut Self {
+    pub fn all(mut self) -> Self {
         self.all = true;
         self
     }
 
     /// `[-s]`
-    pub fn session(&mut self) -> &mut Self {
+    pub fn session(mut self) -> Self {
         self.session = true;
         self
     }
 
     /// `[-F format]`
-    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
+    pub fn format<S: Into<Cow<'a, str>>>(mut self, format: S) -> Self {
         self.format = Some(format.into());
         self
     }
 
     /// `[-t target]`
-    pub fn target<S: Into<Cow<'a, str>>>(&mut self, target: S) -> &mut Self {
+    pub fn target<S: Into<Cow<'a, str>>>(mut self, target: S) -> Self {
         self.target = Some(target.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(LIST_PANES);
@@ -84,13 +84,13 @@ impl<'a> ListPanes<'a> {
         }
 
         // `[-F format]`
-        if let Some(format) = &self.format {
-            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        if let Some(format) = self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format);
         }
 
         // `[-t target]`
-        if let Some(target) = &self.target {
-            cmd.push_option(T_LOWERCASE_KEY, target.as_ref());
+        if let Some(target) = self.target {
+            cmd.push_option(T_LOWERCASE_KEY, target);
         }
 
         cmd

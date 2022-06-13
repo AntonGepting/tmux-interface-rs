@@ -69,47 +69,47 @@ impl<'a> SelectLayout<'a> {
 
     /// `[-E]` - spread the current pane and any panes next to it out evenly
     #[cfg(feature = "tmux_2_7")]
-    pub fn spread(&mut self) -> &mut Self {
+    pub fn spread(mut self) -> Self {
         self.spread = true;
         self
     }
 
     /// `[-n]` - next-layout equivalent
     #[cfg(feature = "tmux_1_5")]
-    pub fn next_layout(&mut self) -> &mut Self {
+    pub fn next_layout(mut self) -> Self {
         self.next_layout = true;
         self
     }
 
     /// `[-o]` - apply the last set layout if possible
     #[cfg(feature = "tmux_2_1")]
-    pub fn last_layout(&mut self) -> &mut Self {
+    pub fn last_layout(mut self) -> Self {
         self.last_layout = true;
         self
     }
 
     /// `[-p]` - previous-layout equivalent
     #[cfg(feature = "tmux_1_5")]
-    pub fn previous_layout(&mut self) -> &mut Self {
+    pub fn previous_layout(mut self) -> Self {
         self.previous_layout = true;
         self
     }
 
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_0_9")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[layout-name]` - layout-name
     #[cfg(feature = "tmux_1_0")]
-    pub fn layout_name<S: Into<Cow<'a, str>>>(&mut self, layout_name: S) -> &mut Self {
+    pub fn layout_name<S: Into<Cow<'a, str>>>(mut self, layout_name: S) -> Self {
         self.layout_name = Some(layout_name.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
         cmd.cmd(SELECT_LAYOUT);
 
@@ -139,14 +139,14 @@ impl<'a> SelectLayout<'a> {
 
         // `[-t target-pane]` - target-pane
         #[cfg(feature = "tmux_0_9")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[layout-name]` - layout-name
         #[cfg(feature = "tmux_1_0")]
-        if let Some(layout_name) = &self.layout_name {
-            cmd.push_param(layout_name.as_ref());
+        if let Some(layout_name) = self.layout_name {
+            cmd.push_param(layout_name);
         }
 
         cmd

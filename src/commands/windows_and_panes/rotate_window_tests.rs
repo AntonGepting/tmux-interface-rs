@@ -20,15 +20,15 @@ fn rotate_window() {
     // ```
     let target_window = TargetWindow::Raw("1").to_string();
 
-    let mut rotate_window = RotateWindow::new();
+    let rotate_window = RotateWindow::new();
     #[cfg(feature = "tmux_0_8")]
-    rotate_window.down();
+    let rotate_window = rotate_window.down();
     #[cfg(feature = "tmux_0_8")]
-    rotate_window.up();
+    let rotate_window = rotate_window.up();
     #[cfg(feature = "tmux_3_1")]
-    rotate_window.keep_zoomed();
+    let rotate_window = rotate_window.keep_zoomed();
     #[cfg(feature = "tmux_0_8")]
-    rotate_window.target_window(&target_window);
+    let rotate_window = rotate_window.target_window(&target_window);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "rotate-window";

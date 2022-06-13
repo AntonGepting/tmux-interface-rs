@@ -55,29 +55,29 @@ fn break_pane() {
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     let target_window = TargetWindow::Raw("4").to_string();
 
-    let mut break_pane = BreakPane::new();
+    let break_pane = BreakPane::new();
     #[cfg(feature = "tmux_3_2")]
-    break_pane.after();
+    let break_pane = break_pane.after();
     #[cfg(feature = "tmux_3_2")]
-    break_pane.before();
+    let break_pane = break_pane.before();
     #[cfg(feature = "tmux_0_8")]
-    break_pane.detached();
+    let break_pane = break_pane.detached();
     #[cfg(feature = "tmux_1_7")]
-    break_pane.print();
+    let break_pane = break_pane.print();
     #[cfg(feature = "tmux_1_7")]
-    break_pane.format("1");
+    let break_pane = break_pane.format("1");
     #[cfg(feature = "tmux_2_4")]
-    break_pane.window_name("2");
+    let break_pane = break_pane.window_name("2");
     #[cfg(feature = "tmux_2_1")]
-    break_pane.src_pane(&src_pane);
+    let break_pane = break_pane.src_pane(&src_pane);
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
-    break_pane.dst_pane(&dst_pane);
+    let break_pane = break_pane.dst_pane(&dst_pane);
     #[cfg(feature = "tmux_2_2")]
-    break_pane.dst_window(&dst_pane);
+    let break_pane = break_pane.dst_window(&dst_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
-    break_pane.target_pane(&dst_pane);
+    let break_pane = break_pane.target_pane(&dst_pane);
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    break_pane.target_window(&target_window);
+    let break_pane = break_pane.target_window(&target_window);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "break-pane";

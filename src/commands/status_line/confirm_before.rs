@@ -37,46 +37,46 @@ impl<'a> ConfirmBefore<'a> {
 
     /// `[-p prompt]`
     #[cfg(feature = "tmux_1_5")]
-    pub fn prompt<S: Into<Cow<'a, str>>>(&mut self, prompt: S) -> &mut Self {
+    pub fn prompt<S: Into<Cow<'a, str>>>(mut self, prompt: S) -> Self {
         self.prompt = Some(prompt.into());
         self
     }
 
     /// `[-t target-client]`
     #[cfg(feature = "tmux_0_9")]
-    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
     /// `command`
     #[cfg(feature = "tmux_0_9")]
-    pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
+    pub fn command<S: Into<Cow<'a, str>>>(mut self, command: S) -> Self {
         self.command = Some(command.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(CONFIRM_BEFORE);
 
         // `[-p prompt]`
         #[cfg(feature = "tmux_1_5")]
-        if let Some(prompt) = &self.prompt {
-            cmd.push_option(P_LOWERCASE_KEY, prompt.as_ref());
+        if let Some(prompt) = self.prompt {
+            cmd.push_option(P_LOWERCASE_KEY, prompt);
         }
 
         // `[-t target-client]`
         #[cfg(feature = "tmux_0_9")]
-        if let Some(target_client) = &self.target_client {
-            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        if let Some(target_client) = self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client);
         }
 
         // `command`
         #[cfg(feature = "tmux_0_9")]
-        if let Some(command) = &self.command {
-            cmd.push_param(command.as_ref());
+        if let Some(command) = self.command {
+            cmd.push_param(command);
         }
 
         cmd

@@ -16,13 +16,13 @@ fn confirm_before() {
     // tmux confirm-before [-t target-client] command
     // (alias: confirm)
     // ```
-    let mut confirm_before = ConfirmBefore::new();
+    let confirm_before = ConfirmBefore::new();
     #[cfg(feature = "tmux_1_5")]
-    confirm_before.prompt("1");
+    let confirm_before = confirm_before.prompt("1");
     #[cfg(feature = "tmux_0_9")]
-    confirm_before.target_client("2");
+    let confirm_before = confirm_before.target_client("2");
     #[cfg(feature = "tmux_0_9")]
-    confirm_before.command("3");
+    let confirm_before = confirm_before.command("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "confirm-before";

@@ -32,17 +32,17 @@ fn if_shell() {
     // ```
     let target_pane = TargetPane::Raw("1").to_string();
 
-    let mut if_shell = IfShell::new();
+    let if_shell = IfShell::new();
     #[cfg(feature = "tmux_1_8")]
-    if_shell.background();
+    let if_shell = if_shell.background();
     #[cfg(feature = "tmux_2_0")]
-    if_shell.not_execute();
+    let if_shell = if_shell.not_execute();
     #[cfg(feature = "tmux_1_8")]
-    if_shell.target_pane(&target_pane);
+    let if_shell = if_shell.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_6")]
-    if_shell.shell_command("2");
+    let if_shell = if_shell.shell_command("2");
     #[cfg(feature = "tmux_0_8")]
-    if_shell.command("3");
+    let if_shell = if_shell.command("3");
     //#[cfg(feature = "tmux_1_6")]
     //if_shell.command("4");
 

@@ -44,26 +44,27 @@ fn show_options() {
     // ```
 
     let target_pane = TargetPane::Raw("1").to_string();
-    let mut show_options = ShowOptions::new();
+
+    let show_options = ShowOptions::new();
     #[cfg(feature = "tmux_3_0")]
-    show_options.include_inherited();
+    let show_options = show_options.include_inherited();
     #[cfg(feature = "tmux_1_2")]
-    show_options.global();
+    let show_options = show_options.global();
     #[cfg(feature = "tmux_3_0")]
-    show_options.hooks();
+    let show_options = show_options.hooks();
     #[cfg(feature = "tmux_3_0")]
-    show_options.pane();
+    let show_options = show_options.pane();
     #[cfg(feature = "tmux_1_8")]
-    show_options.quiet();
+    let show_options = show_options.quiet();
     #[cfg(feature = "tmux_1_2")]
-    show_options.server();
+    let show_options = show_options.server();
     #[cfg(feature = "tmux_1_8")]
-    show_options.value();
+    let show_options = show_options.value();
     #[cfg(feature = "tmux_1_2")]
-    show_options.window();
-    show_options.target(&target_pane);
+    let show_options = show_options.window();
+    let show_options = show_options.target(&target_pane);
     #[cfg(feature = "tmux_1_7")]
-    show_options.option("2");
+    let show_options = show_options.option("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-options";

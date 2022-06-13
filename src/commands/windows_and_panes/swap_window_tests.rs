@@ -15,13 +15,13 @@ fn swap_window() {
     let src_window = TargetWindow::Raw("1").to_string();
     let dst_window = TargetWindow::Raw("2").to_string();
 
-    let mut swap_window = SwapWindow::new();
+    let swap_window = SwapWindow::new();
     #[cfg(feature = "tmux_0_8")]
-    swap_window.detached();
+    let swap_window = swap_window.detached();
     #[cfg(feature = "tmux_0_8")]
-    swap_window.src_window(&src_window);
+    let swap_window = swap_window.src_window(&src_window);
     #[cfg(feature = "tmux_0_8")]
-    swap_window.dst_window(&dst_window);
+    let swap_window = swap_window.dst_window(&dst_window);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "swap-window";

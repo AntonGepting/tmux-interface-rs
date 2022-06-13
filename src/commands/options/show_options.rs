@@ -94,75 +94,75 @@ impl<'a> ShowOptions<'a> {
 
     /// `[-A]` - includes options inherited from a parent set of options
     #[cfg(feature = "tmux_3_0")]
-    pub fn include_inherited(&mut self) -> &mut Self {
+    pub fn include_inherited(mut self) -> Self {
         self.include_inherited = true;
         self
     }
 
     /// `[-g]` - global session or window options are listed
     #[cfg(feature = "tmux_1_2")]
-    pub fn global(&mut self) -> &mut Self {
+    pub fn global(mut self) -> Self {
         self.global = true;
         self
     }
 
     /// `[-H]` - includes hooks (omitted by default)
     #[cfg(feature = "tmux_3_0")]
-    pub fn hooks(&mut self) -> &mut Self {
+    pub fn hooks(mut self) -> Self {
         self.hooks = true;
         self
     }
 
     /// `[-p]` - show window options
     #[cfg(feature = "tmux_3_0")]
-    pub fn pane(&mut self) -> &mut Self {
+    pub fn pane(mut self) -> Self {
         self.pane = true;
         self
     }
 
     /// `[-q]` - no error will be returned if `option` is unset
     #[cfg(feature = "tmux_1_8")]
-    pub fn quiet(&mut self) -> &mut Self {
+    pub fn quiet(mut self) -> Self {
         self.quiet = true;
         self
     }
 
     /// `[-s]` - show the server options
     #[cfg(feature = "tmux_1_2")]
-    pub fn server(&mut self) -> &mut Self {
+    pub fn server(mut self) -> Self {
         self.server = true;
         self
     }
 
     /// `[-v]` - shows only the option value
     #[cfg(feature = "tmux_1_8")]
-    pub fn value(&mut self) -> &mut Self {
+    pub fn value(mut self) -> Self {
         self.value = true;
         self
     }
 
     /// `[-w]` - show the window options
     #[cfg(feature = "tmux_1_2")]
-    pub fn window(&mut self) -> &mut Self {
+    pub fn window(mut self) -> Self {
         self.window = true;
         self
     }
 
     /// `[-t target-pane]` - target session or window name
     //#[cfg(feature = "tmux_X_X")]
-    pub fn target<S: Into<Cow<'a, str>>>(&mut self, target: S) -> &mut Self {
+    pub fn target<S: Into<Cow<'a, str>>>(mut self, target: S) -> Self {
         self.target = Some(target.into());
         self
     }
 
     /// `[option]` - specify option name
     #[cfg(feature = "tmux_1_7")]
-    pub fn option<S: Into<Cow<'a, str>>>(&mut self, option: S) -> &mut Self {
+    pub fn option<S: Into<Cow<'a, str>>>(mut self, option: S) -> Self {
         self.option = Some(option.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SHOW_OPTIONS);
@@ -217,14 +217,14 @@ impl<'a> ShowOptions<'a> {
 
         // `[-t target-pane]` - target session or window name
         //#[cfg(feature = "tmux_X_X")]
-        if let Some(target) = &self.target {
-            cmd.push_option(T_LOWERCASE_KEY, target.as_ref());
+        if let Some(target) = self.target {
+            cmd.push_option(T_LOWERCASE_KEY, target);
         }
 
         // `[option]` - specify option name
         #[cfg(feature = "tmux_1_7")]
-        if let Some(option) = &self.option {
-            cmd.push_param(option.as_ref());
+        if let Some(option) = self.option {
+            cmd.push_param(option);
         }
 
         cmd

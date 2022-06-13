@@ -56,37 +56,38 @@ fn set_option() {
     // ```
     // FIXME: target, target-sesion, target-window
     let target_pane = TargetPane::Raw("1").to_string();
-    let mut set_option = SetOption::new();
+
+    let set_option = SetOption::new();
     #[cfg(feature = "tmux_1_0")]
-    set_option.append();
+    let set_option = set_option.append();
     #[cfg(feature = "tmux_2_6")]
-    set_option.format();
+    let set_option = set_option.format();
     #[cfg(feature = "tmux_0_8")]
-    set_option.global();
+    let set_option = set_option.global();
     #[cfg(feature = "tmux_1_8")]
-    set_option.not_overwrite();
+    let set_option = set_option.not_overwrite();
     #[cfg(feature = "tmux_3_0")]
-    set_option.pane();
+    let set_option = set_option.pane();
     #[cfg(feature = "tmux_1_7")]
-    set_option.quiet();
+    let set_option = set_option.quiet();
     #[cfg(feature = "tmux_1_2")]
-    set_option.server();
+    let set_option = set_option.server();
     #[cfg(feature = "tmux_0_8")]
-    set_option.unset();
+    let set_option = set_option.unset();
     #[cfg(feature = "tmux_3_2")]
-    set_option.unset_on_all();
+    let set_option = set_option.unset_on_all();
     #[cfg(feature = "tmux_1_2")]
-    set_option.window();
+    let set_option = set_option.window();
     #[cfg(feature = "tmux_3_0")]
-    set_option.target_pane(&target_pane);
+    let set_option = set_option.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-    set_option.target(&target_pane);
+    let set_option = set_option.target(&target_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
-    set_option.target_session(&target_pane);
+    let set_option = set_option.target_session(&target_pane);
     #[cfg(feature = "tmux_0_8")]
-    set_option.option("2");
+    let set_option = set_option.option("2");
     #[cfg(feature = "tmux_0_8")]
-    set_option.value("3");
+    let set_option = set_option.value("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "set-option";

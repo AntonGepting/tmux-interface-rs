@@ -35,19 +35,19 @@ impl<'a> UnlinkWindow<'a> {
 
     /// `[-k]`
     #[cfg(feature = "tmux_1_0")]
-    pub fn detach_other(&mut self) -> &mut Self {
+    pub fn detach_other(mut self) -> Self {
         self.detach_other = true;
         self
     }
 
     /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(UNLINK_WINDOW);
@@ -60,8 +60,8 @@ impl<'a> UnlinkWindow<'a> {
 
         // `[-t target-window]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         cmd

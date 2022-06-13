@@ -14,25 +14,25 @@ fn display_menu() {
     // ```
     let target_pane = TargetPane::Raw("2").to_string();
 
-    let mut display_menu = DisplayMenu::new();
+    let display_menu = DisplayMenu::new();
     #[cfg(feature = "tmux_3_2")]
-    display_menu.not_close();
+    let display_menu = display_menu.not_close();
     #[cfg(feature = "tmux_3_0")]
-    display_menu.target_client("1");
+    let display_menu = display_menu.target_client("1");
     #[cfg(feature = "tmux_3_0")]
-    display_menu.target_pane(&target_pane);
+    let display_menu = display_menu.target_pane(&target_pane);
     #[cfg(feature = "tmux_3_0")]
-    display_menu.title("3");
+    let display_menu = display_menu.title("3");
     #[cfg(feature = "tmux_3_0")]
-    display_menu.x(4);
+    let display_menu = display_menu.x(4);
     #[cfg(feature = "tmux_3_0")]
-    display_menu.y(5);
+    let display_menu = display_menu.y(5);
     #[cfg(feature = "tmux_3_0")]
-    display_menu.name("6");
+    let display_menu = display_menu.name("6");
     #[cfg(feature = "tmux_3_0")]
-    display_menu.key("7");
+    let display_menu = display_menu.key("7");
     #[cfg(feature = "tmux_3_0")]
-    display_menu.command("8");
+    let display_menu = display_menu.command("8");
 
     let cmd = "display-menu";
 

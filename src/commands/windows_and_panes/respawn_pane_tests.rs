@@ -26,17 +26,17 @@ fn respawn_pane() {
     // ```
     let target_pane = TargetPane::Raw("3").to_string();
 
-    let mut respawn_pane = RespawnPane::new();
+    let respawn_pane = RespawnPane::new();
     #[cfg(feature = "tmux_1_5")]
-    respawn_pane.kill();
+    let respawn_pane = respawn_pane.kill();
     #[cfg(feature = "tmux_2_6")]
-    respawn_pane.start_directory("1");
+    let respawn_pane = respawn_pane.start_directory("1");
     #[cfg(feature = "tmux_3_0")]
-    respawn_pane.environment("2");
+    let respawn_pane = respawn_pane.environment("2");
     #[cfg(feature = "tmux_1_5")]
-    respawn_pane.target_pane(&target_pane);
+    let respawn_pane = respawn_pane.target_pane(&target_pane);
     #[cfg(feature = "tmux_2_6")]
-    respawn_pane.shell_command("4");
+    let respawn_pane = respawn_pane.shell_command("4");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "respawn-pane";

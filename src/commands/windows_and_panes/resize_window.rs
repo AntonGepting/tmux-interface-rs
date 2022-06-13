@@ -50,66 +50,66 @@ impl<'a> ResizeWindow<'a> {
     }
 
     /// `[-a]` - set the size of the smallest session containing the window
-    pub fn smallest(&mut self) -> &mut Self {
+    pub fn smallest(mut self) -> Self {
         self.smallest = true;
         self
     }
 
     /// `[-A]` - set the size of the largest session containing the window
-    pub fn largest(&mut self) -> &mut Self {
+    pub fn largest(mut self) -> Self {
         self.largest = true;
         self
     }
 
     /// `[-D]` - resize down by adjustment
-    pub fn down(&mut self) -> &mut Self {
+    pub fn down(mut self) -> Self {
         self.down = true;
         self
     }
 
     /// `[-L]` - resize left by adjustment
-    pub fn left(&mut self) -> &mut Self {
+    pub fn left(mut self) -> Self {
         self.left = true;
         self
     }
 
     /// `[-R]` - resize right by adjustment
-    pub fn right(&mut self) -> &mut Self {
+    pub fn right(mut self) -> Self {
         self.right = true;
         self
     }
 
     /// `[-U]` - resize up by adjustment
-    pub fn up(&mut self) -> &mut Self {
+    pub fn up(mut self) -> Self {
         self.up = true;
         self
     }
 
     /// `[-t target-window]` - target-window
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
     /// `[-x width]` - absolute size
-    pub fn width(&mut self, width: usize) -> &mut Self {
+    pub fn width(mut self, width: usize) -> Self {
         self.width = Some(width);
         self
     }
 
     /// `[-y height]` - absolute size
-    pub fn height(&mut self, height: usize) -> &mut Self {
+    pub fn height(mut self, height: usize) -> Self {
         self.height = Some(height);
         self
     }
 
     /// `[adjustment]` - adjustment
-    pub fn adjustment<S: Into<Cow<'a, str>>>(&mut self, adjustment: S) -> &mut Self {
+    pub fn adjustment<S: Into<Cow<'a, str>>>(mut self, adjustment: S) -> Self {
         self.adjustment = Some(adjustment.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(RESIZE_WINDOW);
@@ -145,23 +145,23 @@ impl<'a> ResizeWindow<'a> {
         }
 
         // `[-t target-window]` - target-window
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         // `[-x width]` - absolute size
-        if let Some(width) = &self.width {
+        if let Some(width) = self.width {
             cmd.push_option(X_LOWERCASE_KEY, width.to_string());
         }
 
         // `[-y height]` - absolute size
-        if let Some(height) = &self.height {
+        if let Some(height) = self.height {
             cmd.push_option(Y_LOWERCASE_KEY, height.to_string());
         }
 
         // `[adjustment]` - adjustment
-        if let Some(adjustment) = &self.adjustment {
-            cmd.push_param(adjustment.as_ref());
+        if let Some(adjustment) = self.adjustment {
+            cmd.push_param(adjustment);
         }
 
         cmd

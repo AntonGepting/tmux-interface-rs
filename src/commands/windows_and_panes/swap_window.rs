@@ -33,26 +33,26 @@ impl<'a> SwapWindow<'a> {
 
     /// `[-d]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn detached(&mut self) -> &mut Self {
+    pub fn detached(mut self) -> Self {
         self.detached = true;
         self
     }
 
     /// `[-s src-window]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn src_window<S: Into<Cow<'a, str>>>(&mut self, src_window: S) -> &mut Self {
+    pub fn src_window<S: Into<Cow<'a, str>>>(mut self, src_window: S) -> Self {
         self.src_window = Some(src_window.into());
         self
     }
 
     /// `[-t dst-window]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
+    pub fn dst_window<S: Into<Cow<'a, str>>>(mut self, dst_window: S) -> Self {
         self.dst_window = Some(dst_window.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SWAP_WINDOW);
@@ -65,14 +65,14 @@ impl<'a> SwapWindow<'a> {
 
         // `[-s src-window]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(src_window) = &self.src_window {
-            cmd.push_option(S_LOWERCASE_KEY, src_window.as_ref());
+        if let Some(src_window) = self.src_window {
+            cmd.push_option(S_LOWERCASE_KEY, src_window);
         }
 
         // `[-t dst-window]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(dst_window) = &self.dst_window {
-            cmd.push_option(T_LOWERCASE_KEY, dst_window.as_ref());
+        if let Some(dst_window) = self.dst_window {
+            cmd.push_option(T_LOWERCASE_KEY, dst_window);
         }
 
         cmd

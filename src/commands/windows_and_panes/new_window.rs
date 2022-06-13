@@ -114,89 +114,89 @@ impl<'a> NewWindow<'a> {
 
     /// `[-a]` - new window is inserted at the next index up from the specified target-window
     #[cfg(feature = "tmux_1_3")]
-    pub fn after(&mut self) -> &mut Self {
+    pub fn after(mut self) -> Self {
         self.after = true;
         self
     }
 
     /// `[-b]` - new window is inserted at the next index before the specified target-window
     #[cfg(feature = "tmux_3_2")]
-    pub fn before(&mut self) -> &mut Self {
+    pub fn before(mut self) -> Self {
         self.before = true;
         self
     }
 
     /// `[-d]` - the session does not make the new window the current window
     #[cfg(feature = "tmux_0_8")]
-    pub fn detached(&mut self) -> &mut Self {
+    pub fn detached(mut self) -> Self {
         self.detached = true;
         self
     }
 
     /// `[-k]` - destroy if already exists
     #[cfg(feature = "tmux_1_0")]
-    pub fn kill(&mut self) -> &mut Self {
+    pub fn kill(mut self) -> Self {
         self.kill = true;
         self
     }
 
     /// `[-P]` - print information about the new window after it has been created
     #[cfg(feature = "tmux_1_5")]
-    pub fn print(&mut self) -> &mut Self {
+    pub fn print(mut self) -> Self {
         self.print = true;
         self
     }
 
     /// `[-S]` - is given and a window named window-name already exists, it is selected
     #[cfg(feature = "tmux_3_2")]
-    pub fn select(&mut self) -> &mut Self {
+    pub fn select(mut self) -> Self {
         self.select = true;
         self
     }
 
     /// `[-c start-directory]` - start-directory
     #[cfg(feature = "tmux_1_7")]
-    pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, start_directory: S) -> &mut Self {
+    pub fn start_directory<S: Into<Cow<'a, str>>>(mut self, start_directory: S) -> Self {
         self.start_directory = Some(start_directory.into());
         self
     }
 
     /// `[-e environment]` - environment
     #[cfg(feature = "tmux_3_0")]
-    pub fn environment<S: Into<Cow<'a, str>>>(&mut self, environment: S) -> &mut Self {
+    pub fn environment<S: Into<Cow<'a, str>>>(mut self, environment: S) -> Self {
         self.environment = Some(environment.into());
         self
     }
 
     /// `[-F format]` - format
     #[cfg(feature = "tmux_1_7")]
-    pub fn format<S: Into<Cow<'a, str>>>(&mut self, format: S) -> &mut Self {
+    pub fn format<S: Into<Cow<'a, str>>>(mut self, format: S) -> Self {
         self.format = Some(format.into());
         self
     }
 
     /// `[-n window-name]` - window-name
     #[cfg(feature = "tmux_0_8")]
-    pub fn window_name<S: Into<Cow<'a, str>>>(&mut self, window_name: S) -> &mut Self {
+    pub fn window_name<S: Into<Cow<'a, str>>>(mut self, window_name: S) -> Self {
         self.window_name = Some(window_name.into());
         self
     }
 
     /// `[-t target-window]` - target-window
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
     /// `[shell-command]` - shell-command
     #[cfg(feature = "tmux_1_2")]
-    pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
+    pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
         self.shell_command = Some(shell_command.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(NEW_WINDOW);
@@ -239,38 +239,38 @@ impl<'a> NewWindow<'a> {
 
         // `[-c start-directory]` - start-directory
         #[cfg(feature = "tmux_1_7")]
-        if let Some(start_directory) = &self.start_directory {
-            cmd.push_option(C_LOWERCASE_KEY, start_directory.as_ref());
+        if let Some(start_directory) = self.start_directory {
+            cmd.push_option(C_LOWERCASE_KEY, start_directory);
         }
 
         // `[-e environment]` - environment
         #[cfg(feature = "tmux_3_0")]
-        if let Some(environment) = &self.environment {
-            cmd.push_option(E_LOWERCASE_KEY, environment.as_ref());
+        if let Some(environment) = self.environment {
+            cmd.push_option(E_LOWERCASE_KEY, environment);
         }
 
         // `[-F format]` - format
         #[cfg(feature = "tmux_1_7")]
-        if let Some(format) = &self.format {
-            cmd.push_option(F_UPPERCASE_KEY, format.as_ref());
+        if let Some(format) = self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format);
         }
 
         // `[-n window-name]` - window-name
         #[cfg(feature = "tmux_0_8")]
-        if let Some(window_name) = &self.window_name {
-            cmd.push_option(N_LOWERCASE_KEY, window_name.as_ref());
+        if let Some(window_name) = self.window_name {
+            cmd.push_option(N_LOWERCASE_KEY, window_name);
         }
 
         // `[-t target-window]` - target-window
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         // `[shell-command]` - shell-command
         #[cfg(feature = "tmux_1_2")]
-        if let Some(shell_command) = &self.shell_command {
-            cmd.push_param(shell_command.as_ref());
+        if let Some(shell_command) = self.shell_command {
+            cmd.push_param(shell_command);
         }
 
         cmd

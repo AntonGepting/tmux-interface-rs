@@ -26,15 +26,15 @@ fn kill_pane() {
     // ```
     let target_pane = TargetPane::Raw("1").to_string();
 
-    let mut kill_pane = KillPane::new();
+    let kill_pane = KillPane::new();
     #[cfg(feature = "tmux_1_1")]
-    kill_pane.all();
+    let kill_pane = kill_pane.all();
     #[cfg(feature = "tmux_1_0")]
-    kill_pane.target_pane(&target_pane);
+    let kill_pane = kill_pane.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    kill_pane.pane_index("2");
+    let kill_pane = kill_pane.pane_index("2");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    kill_pane.target_window("3");
+    let kill_pane = kill_pane.target_window("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "kill-pane";

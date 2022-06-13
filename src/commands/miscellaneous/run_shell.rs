@@ -61,47 +61,47 @@ impl<'a> RunShell<'a> {
 
     /// `[-b]`
     #[cfg(feature = "tmux_1_8")]
-    pub fn background(&mut self) -> &mut Self {
+    pub fn background(mut self) -> Self {
         self.background = true;
         self
     }
 
     /// `[-C]` - execute tmux command
     #[cfg(feature = "tmux_3_2")]
-    pub fn tmux_command(&mut self) -> &mut Self {
+    pub fn tmux_command(mut self) -> Self {
         self.tmux_command = true;
         self
     }
 
     /// `[-d delay]`
     #[cfg(feature = "tmux_1_8")]
-    pub fn delay(&mut self, delay: usize) -> &mut Self {
+    pub fn delay(mut self, delay: usize) -> Self {
         self.delay = Some(delay);
         self
     }
 
     /// `[-t target-pane]`
     #[cfg(feature = "tmux_1_8")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `shell-command`
     #[cfg(feature = "tmux_1_2")]
-    pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
+    pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
         self.shell_command = Some(shell_command.into());
         self
     }
 
     /// `command`
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
-    pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
+    pub fn command<S: Into<Cow<'a, str>>>(mut self, command: S) -> Self {
         self.command = Some(command.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(RUN_SHELL);
@@ -126,20 +126,20 @@ impl<'a> RunShell<'a> {
 
         // `[-t target-pane]`
         #[cfg(feature = "tmux_1_8")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `shell-command`
         #[cfg(feature = "tmux_1_2")]
-        if let Some(shell_command) = &self.shell_command {
-            cmd.push_param(shell_command.as_ref());
+        if let Some(shell_command) = self.shell_command {
+            cmd.push_param(shell_command);
         }
 
         // `command`
         #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
-        if let Some(command) = &self.command {
-            cmd.push_param(command.as_ref());
+        if let Some(command) = self.command {
+            cmd.push_param(command);
         }
 
         cmd

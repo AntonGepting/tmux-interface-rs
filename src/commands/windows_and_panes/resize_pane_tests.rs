@@ -37,29 +37,29 @@ fn resize_pane() {
     // (alias: resizep)
     // ```
     let target_pane = TargetPane::Raw("1").to_string();
-    let mut resize_pane = ResizePane::new();
+    let resize_pane = ResizePane::new();
     #[cfg(feature = "tmux_0_9")]
-    resize_pane.down();
+    let resize_pane = resize_pane.down();
     #[cfg(feature = "tmux_1_8")]
-    resize_pane.left();
+    let resize_pane = resize_pane.left();
     #[cfg(feature = "tmux_2_1")]
-    resize_pane.mouse();
+    let resize_pane = resize_pane.mouse();
     #[cfg(feature = "tmux_1_8")]
-    resize_pane.right();
+    let resize_pane = resize_pane.right();
     #[cfg(feature = "tmux_3_2")]
-    resize_pane.trim();
+    let resize_pane = resize_pane.trim();
     #[cfg(feature = "tmux_0_9")]
-    resize_pane.up();
+    let resize_pane = resize_pane.up();
     #[cfg(feature = "tmux_1_8")]
-    resize_pane.zoom();
+    let resize_pane = resize_pane.zoom();
     #[cfg(feature = "tmux_0_9")]
-    resize_pane.target_pane(&target_pane);
+    let resize_pane = resize_pane.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_8")]
-    resize_pane.width(2);
+    let resize_pane = resize_pane.width(2);
     #[cfg(feature = "tmux_1_8")]
-    resize_pane.height(3);
+    let resize_pane = resize_pane.height(3);
     #[cfg(feature = "tmux_0_9")]
-    resize_pane.adjustment("4");
+    let resize_pane = resize_pane.adjustment("4");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "resize-pane";

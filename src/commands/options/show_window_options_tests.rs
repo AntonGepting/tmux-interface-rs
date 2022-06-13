@@ -33,17 +33,18 @@ fn show_window_options() {
     // ```
     // (alias: showw)
     let target_window = TargetWindow::Raw("1").to_string();
-    let mut show_window_options = ShowWindowOptions::new();
+
+    let show_window_options = ShowWindowOptions::new();
     #[cfg(feature = "tmux_1_0")]
-    show_window_options.global();
+    let show_window_options = show_window_options.global();
     #[cfg(feature = "tmux_1_8")]
-    show_window_options.only_value();
+    let show_window_options = show_window_options.only_value();
     #[cfg(feature = "tmux_0_8")]
-    show_window_options.target_window(&target_window);
+    let show_window_options = show_window_options.target_window(&target_window);
     #[cfg(feature = "tmux_0_8")]
-    show_window_options.option("2");
+    let show_window_options = show_window_options.option("2");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    show_window_options.value("3");
+    let show_window_options = show_window_options.value("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-window-options";

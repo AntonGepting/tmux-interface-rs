@@ -46,27 +46,27 @@ fn choose_client() {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
     let target_window = TargetWindow::Raw("5").to_string();
 
-    let mut choose_client = ChooseClient::new();
+    let choose_client = ChooseClient::new();
     #[cfg(feature = "tmux_2_6")]
-    choose_client.without_preview();
+    let choose_client = choose_client.without_preview();
     #[cfg(feature = "tmux_3_1")]
-    choose_client.reverse_sort_order();
+    let choose_client = choose_client.reverse_sort_order();
     #[cfg(feature = "tmux_3_1")]
-    choose_client.zoom();
+    let choose_client = choose_client.zoom();
     #[cfg(feature = "tmux_1_7")]
-    choose_client.format("1");
+    let choose_client = choose_client.format("1");
     #[cfg(feature = "tmux_2_6")]
-    choose_client.filter("2");
+    let choose_client = choose_client.filter("2");
     #[cfg(feature = "tmux_3_2")]
-    choose_client.key_format("3");
+    let choose_client = choose_client.key_format("3");
     #[cfg(feature = "tmux_2_6")]
-    choose_client.sort_order("4");
+    let choose_client = choose_client.sort_order("4");
     #[cfg(feature = "tmux_2_6")]
-    choose_client.target_pane(&target_pane);
+    let choose_client = choose_client.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
-    choose_client.target_window(&target_window);
+    let choose_client = choose_client.target_window(&target_window);
     #[cfg(feature = "tmux_1_0")]
-    choose_client.template("6");
+    let choose_client = choose_client.template("6");
 
     let cmd = "choose-client";
 

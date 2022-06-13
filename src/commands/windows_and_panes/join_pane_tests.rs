@@ -31,23 +31,23 @@ fn join_pane() {
     let src_pane = TargetPane::Raw("2").to_string();
     let dst_pane = TargetPane::Raw("3").to_string();
 
-    let mut join_pane = JoinPane::new();
+    let join_pane = JoinPane::new();
     #[cfg(feature = "tmux_2_6")]
-    join_pane.left_above();
+    let join_pane = join_pane.left_above();
     #[cfg(feature = "tmux_1_2")]
-    join_pane.detached();
+    let join_pane = join_pane.detached();
     #[cfg(feature = "tmux_2_6")]
-    join_pane.full_size();
+    let join_pane = join_pane.full_size();
     #[cfg(feature = "tmux_1_2")]
-    join_pane.horizontal();
+    let join_pane = join_pane.horizontal();
     #[cfg(feature = "tmux_1_2")]
-    join_pane.vertical();
+    let join_pane = join_pane.vertical();
     #[cfg(feature = "tmux_1_2")]
-    join_pane.size(&PaneSize::Percentage(1));
+    let join_pane = join_pane.size(&PaneSize::Percentage(1));
     #[cfg(feature = "tmux_1_2")]
-    join_pane.src_pane(&src_pane);
+    let join_pane = join_pane.src_pane(&src_pane);
     #[cfg(feature = "tmux_1_2")]
-    join_pane.dst_pane(&dst_pane);
+    let join_pane = join_pane.dst_pane(&dst_pane);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "join-pane";

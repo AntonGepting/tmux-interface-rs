@@ -53,40 +53,40 @@ impl<'a> RespawnPane<'a> {
 
     /// `[-k]` - any existing command is killed
     #[cfg(feature = "tmux_1_5")]
-    pub fn kill(&mut self) -> &mut Self {
+    pub fn kill(mut self) -> Self {
         self.kill = true;
         self
     }
 
     /// `[-c start-directory]` - start-directory
     #[cfg(feature = "tmux_2_6")]
-    pub fn start_directory<S: Into<Cow<'a, str>>>(&mut self, start_directory: S) -> &mut Self {
+    pub fn start_directory<S: Into<Cow<'a, str>>>(mut self, start_directory: S) -> Self {
         self.start_directory = Some(start_directory.into());
         self
     }
 
     /// `[-e environment]` - environment
     #[cfg(feature = "tmux_3_0")]
-    pub fn environment<S: Into<Cow<'a, str>>>(&mut self, environment: S) -> &mut Self {
+    pub fn environment<S: Into<Cow<'a, str>>>(mut self, environment: S) -> Self {
         self.environment = Some(environment.into());
         self
     }
 
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_1_5")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[shell-command]` - shell-command
     #[cfg(feature = "tmux_2_6")]
-    pub fn shell_command<S: Into<Cow<'a, str>>>(&mut self, shell_command: S) -> &mut Self {
+    pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
         self.shell_command = Some(shell_command.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(RESPAWN_PANE);
@@ -99,26 +99,26 @@ impl<'a> RespawnPane<'a> {
 
         // `[-c start-directory]` - start-directory
         #[cfg(feature = "tmux_2_6")]
-        if let Some(start_directory) = &self.start_directory {
-            cmd.push_option(C_LOWERCASE_KEY, start_directory.as_ref());
+        if let Some(start_directory) = self.start_directory {
+            cmd.push_option(C_LOWERCASE_KEY, start_directory);
         }
 
         // `[-e environment]` - environment
         #[cfg(feature = "tmux_3_0")]
-        if let Some(environment) = &self.environment {
-            cmd.push_option(E_LOWERCASE_KEY, environment.as_ref());
+        if let Some(environment) = self.environment {
+            cmd.push_option(E_LOWERCASE_KEY, environment);
         }
 
         // `[-t target-pane]` - target-pane
         #[cfg(feature = "tmux_1_5")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[shell-command]` - shell-command
         #[cfg(feature = "tmux_2_6")]
-        if let Some(shell_command) = &self.shell_command {
-            cmd.push_param(shell_command.as_ref());
+        if let Some(shell_command) = self.shell_command {
+            cmd.push_param(shell_command);
         }
 
         cmd

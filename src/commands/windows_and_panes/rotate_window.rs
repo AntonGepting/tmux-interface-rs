@@ -43,33 +43,33 @@ impl<'a> RotateWindow<'a> {
 
     /// `[-D]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn down(&mut self) -> &mut Self {
+    pub fn down(mut self) -> Self {
         self.down = true;
         self
     }
 
     /// `[-U]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn up(&mut self) -> &mut Self {
+    pub fn up(mut self) -> Self {
         self.up = true;
         self
     }
 
     /// `[-Z]`
     #[cfg(feature = "tmux_3_1")]
-    pub fn keep_zoomed(&mut self) -> &mut Self {
+    pub fn keep_zoomed(mut self) -> Self {
         self.keep_zoomed = true;
         self
     }
 
     /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(ROTATE_WINDOW);
@@ -94,8 +94,8 @@ impl<'a> RotateWindow<'a> {
 
         // `[-t target-window]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         cmd

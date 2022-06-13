@@ -30,19 +30,19 @@ fn run_shell() {
     // ```
     let target_pane = TargetPane::Raw("2").to_string();
 
-    let mut run_shell = RunShell::new();
+    let run_shell = RunShell::new();
     #[cfg(feature = "tmux_1_8")]
-    run_shell.background();
+    let run_shell = run_shell.background();
     #[cfg(feature = "tmux_3_2")]
-    run_shell.tmux_command();
+    let run_shell = run_shell.tmux_command();
     #[cfg(feature = "tmux_3_2")]
-    run_shell.delay(1);
+    let run_shell = run_shell.delay(1);
     #[cfg(feature = "tmux_1_8")]
-    run_shell.target_pane(&target_pane);
+    let run_shell = run_shell.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_2")]
-    run_shell.shell_command("3");
+    let run_shell = run_shell.shell_command("3");
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
-    run_shell.command("4");
+    let run_shell = run_shell.command("4");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "run-shell";

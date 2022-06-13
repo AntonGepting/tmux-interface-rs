@@ -67,61 +67,61 @@ impl<'a> CopyMode<'a> {
 
     /// `[-e]`
     #[cfg(feature = "tmux_2_1")]
-    pub fn bottom_exit(&mut self) -> &mut Self {
+    pub fn bottom_exit(mut self) -> Self {
         self.bottom_exit = true;
         self
     }
 
     /// `[-H]` - hides the position indicator in the top right
     #[cfg(feature = "tmux_3_2")]
-    pub fn hide_position(&mut self) -> &mut Self {
+    pub fn hide_position(mut self) -> Self {
         self.hide_position = true;
         self
     }
 
     /// `[-M]`
     #[cfg(feature = "tmux_2_1")]
-    pub fn mouse_drag(&mut self) -> &mut Self {
+    pub fn mouse_drag(mut self) -> Self {
         self.mouse_drag = true;
         self
     }
 
     /// `[-q]` - cancels copy mode and any other modes
     #[cfg(feature = "tmux_3_2")]
-    pub fn cancel(&mut self) -> &mut Self {
+    pub fn cancel(mut self) -> Self {
         self.cancel = true;
         self
     }
 
     /// `[-u]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn page_up(&mut self) -> &mut Self {
+    pub fn page_up(mut self) -> Self {
         self.page_up = true;
         self
     }
 
     /// `[-s src-pane]`
     #[cfg(feature = "tmux_1_0")]
-    pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
+    pub fn src_pane<S: Into<Cow<'a, str>>>(mut self, src_pane: S) -> Self {
         self.src_pane = Some(src_pane.into());
         self
     }
 
     /// `[-t target-pane]`
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[-t target-window]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(COPY_MODE);
@@ -158,20 +158,20 @@ impl<'a> CopyMode<'a> {
 
         // `[-s src-pane]`
         #[cfg(feature = "tmux_1_0")]
-        if let Some(src_pane) = &self.src_pane {
-            cmd.push_option(S_LOWERCASE_KEY, src_pane.as_ref());
+        if let Some(src_pane) = self.src_pane {
+            cmd.push_option(S_LOWERCASE_KEY, src_pane);
         }
 
         // `[-t target-pane]`
         #[cfg(feature = "tmux_1_0")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[-t target-window]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         cmd

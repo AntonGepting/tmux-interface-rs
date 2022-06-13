@@ -36,17 +36,17 @@ fn display_panes() {
     // tmux display-panes [-t target-client]
     // (alias: displayp)
     // ```
-    let mut display_panes = DisplayPanes::new();
+    let display_panes = DisplayPanes::new();
     #[cfg(feature = "tmux_2_9")]
-    display_panes.not_block();
+    let display_panes = display_panes.not_block();
     #[cfg(feature = "tmux_3_2")]
-    display_panes.ignore_keys();
+    let display_panes = display_panes.ignore_keys();
     #[cfg(feature = "tmux_2_6")]
-    display_panes.duration("1");
+    let display_panes = display_panes.duration("1");
     #[cfg(feature = "tmux_1_0")]
-    display_panes.target_client("2");
+    let display_panes = display_panes.target_client("2");
     #[cfg(feature = "tmux_2_3")]
-    display_panes.template("3");
+    let display_panes = display_panes.template("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "display-panes";

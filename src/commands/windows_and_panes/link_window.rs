@@ -47,40 +47,40 @@ impl<'a> LinkWindow<'a> {
 
     /// `[-a]` - the window is moved to the next index up
     #[cfg(feature = "tmux_2_1")]
-    pub fn add(&mut self) -> &mut Self {
+    pub fn add(mut self) -> Self {
         self.add = true;
         self
     }
 
     /// `[-d]` - the newly linked window is not selected
     #[cfg(feature = "tmux_0_8")]
-    pub fn detached(&mut self) -> &mut Self {
+    pub fn detached(mut self) -> Self {
         self.detached = true;
         self
     }
 
     /// `[-k]` - if dst-window exists, it is killed, otherwise an error is generated
     #[cfg(feature = "tmux_0_8")]
-    pub fn kill(&mut self) -> &mut Self {
+    pub fn kill(mut self) -> Self {
         self.kill = true;
         self
     }
 
     /// `[-s src-window]` - src-window
     #[cfg(feature = "tmux_0_8")]
-    pub fn src_window<S: Into<Cow<'a, str>>>(&mut self, src_window: S) -> &mut Self {
+    pub fn src_window<S: Into<Cow<'a, str>>>(mut self, src_window: S) -> Self {
         self.src_window = Some(src_window.into());
         self
     }
 
     /// `[-t dst-window]` - dst-window
     #[cfg(feature = "tmux_0_8")]
-    pub fn dst_window<S: Into<Cow<'a, str>>>(&mut self, dst_window: S) -> &mut Self {
+    pub fn dst_window<S: Into<Cow<'a, str>>>(mut self, dst_window: S) -> Self {
         self.dst_window = Some(dst_window.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(LINK_WINDOW);
@@ -105,14 +105,14 @@ impl<'a> LinkWindow<'a> {
 
         // `[-s src-window]` - src-window
         #[cfg(feature = "tmux_0_8")]
-        if let Some(src_window) = &self.src_window {
-            cmd.push_option(S_LOWERCASE_KEY, src_window.as_ref());
+        if let Some(src_window) = self.src_window {
+            cmd.push_option(S_LOWERCASE_KEY, src_window);
         }
 
         // `[-t dst-window]` - dst-window
         #[cfg(feature = "tmux_0_8")]
-        if let Some(dst_window) = &self.dst_window {
-            cmd.push_option(T_LOWERCASE_KEY, dst_window.as_ref());
+        if let Some(dst_window) = self.dst_window {
+            cmd.push_option(T_LOWERCASE_KEY, dst_window);
         }
 
         cmd

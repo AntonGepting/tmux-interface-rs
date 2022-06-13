@@ -89,82 +89,82 @@ impl<'a> ResizePane<'a> {
 
     /// `[-D]` - resize down by adjustment
     #[cfg(feature = "tmux_0_9")]
-    pub fn down(&mut self) -> &mut Self {
+    pub fn down(mut self) -> Self {
         self.down = true;
         self
     }
 
     /// `[-L]` - resize left by adjustment
     #[cfg(feature = "tmux_1_8")]
-    pub fn left(&mut self) -> &mut Self {
+    pub fn left(mut self) -> Self {
         self.left = true;
         self
     }
 
     /// `[-M]` - begin mouse resizing
     #[cfg(feature = "tmux_2_1")]
-    pub fn mouse(&mut self) -> &mut Self {
+    pub fn mouse(mut self) -> Self {
         self.mouse = true;
         self
     }
 
     /// `[-R]` - resize right by adjustment
     #[cfg(feature = "tmux_1_8")]
-    pub fn right(&mut self) -> &mut Self {
+    pub fn right(mut self) -> Self {
         self.right = true;
         self
     }
 
     /// `[-T]` - trims all lines below the current cursor position
     #[cfg(feature = "tmux_3_2")]
-    pub fn trim(&mut self) -> &mut Self {
+    pub fn trim(mut self) -> Self {
         self.trim = true;
         self
     }
 
     /// `[-U]` - resize up by adjustment
     #[cfg(feature = "tmux_0_9")]
-    pub fn up(&mut self) -> &mut Self {
+    pub fn up(mut self) -> Self {
         self.up = true;
         self
     }
 
     /// `[-Z]` - the active pane is toggled between zoomed and unzoomed
     #[cfg(feature = "tmux_1_8")]
-    pub fn zoom(&mut self) -> &mut Self {
+    pub fn zoom(mut self) -> Self {
         self.zoom = true;
         self
     }
 
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_0_9")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[-x width]` - absolute size
     #[cfg(feature = "tmux_1_8")]
-    pub fn width(&mut self, width: usize) -> &mut Self {
+    pub fn width(mut self, width: usize) -> Self {
         self.width = Some(width);
         self
     }
 
     /// `[-y height]` - absolute size
     #[cfg(feature = "tmux_1_8")]
-    pub fn height(&mut self, height: usize) -> &mut Self {
+    pub fn height(mut self, height: usize) -> Self {
         self.height = Some(height);
         self
     }
 
     /// `[adjustment]` - adjustment
     #[cfg(feature = "tmux_0_9")]
-    pub fn adjustment<S: Into<Cow<'a, str>>>(&mut self, adjustment: S) -> &mut Self {
+    pub fn adjustment<S: Into<Cow<'a, str>>>(mut self, adjustment: S) -> Self {
         self.adjustment = Some(adjustment.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(RESIZE_PANE);
@@ -213,26 +213,26 @@ impl<'a> ResizePane<'a> {
 
         // `[-t target-pane]` - target-pane
         #[cfg(feature = "tmux_0_9")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[-x width]` - absolute size
         #[cfg(feature = "tmux_1_8")]
-        if let Some(width) = &self.width {
+        if let Some(width) = self.width {
             cmd.push_option(X_LOWERCASE_KEY, width.to_string());
         }
 
         // `[-y height]` - absolute size
         #[cfg(feature = "tmux_1_8")]
-        if let Some(height) = &self.height {
+        if let Some(height) = self.height {
             cmd.push_option(Y_LOWERCASE_KEY, height.to_string());
         }
 
         // `[adjustment]` - adjustment
         #[cfg(feature = "tmux_0_9")]
-        if let Some(adjustment) = &self.adjustment {
-            cmd.push_param(adjustment.as_ref());
+        if let Some(adjustment) = self.adjustment {
+            cmd.push_param(adjustment);
         }
 
         cmd

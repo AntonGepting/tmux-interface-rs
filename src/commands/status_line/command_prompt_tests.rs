@@ -41,27 +41,27 @@ fn command_prompt() {
     // ```text
     // tmux command-prompt [-t target-client] [template]
     // ```
-    let mut command_prompt = CommandPrompt::new();
+    let command_prompt = CommandPrompt::new();
     #[cfg(feature = "tmux_2_4")]
-    command_prompt.one_keypress();
+    let command_prompt = command_prompt.one_keypress();
     #[cfg(feature = "tmux_2_4")]
-    command_prompt.on_input_change();
+    let command_prompt = command_prompt.on_input_change();
     #[cfg(feature = "tmux_3_1")]
-    command_prompt.key_name();
+    let command_prompt = command_prompt.key_name();
     #[cfg(feature = "tmux_3_1")]
-    command_prompt.numeric();
+    let command_prompt = command_prompt.numeric();
     #[cfg(feature = "tmux_3_2")]
-    command_prompt.for_target();
+    let command_prompt = command_prompt.for_target();
     #[cfg(feature = "tmux_3_2")]
-    command_prompt.for_window();
+    let command_prompt = command_prompt.for_window();
     #[cfg(feature = "tmux_1_5")]
-    command_prompt.inputs("1");
+    let command_prompt = command_prompt.inputs("1");
     #[cfg(feature = "tmux_1_0")]
-    command_prompt.prompts("2");
+    let command_prompt = command_prompt.prompts("2");
     #[cfg(feature = "tmux_0_8")]
-    command_prompt.target_client("3");
+    let command_prompt = command_prompt.target_client("3");
     #[cfg(feature = "tmux_0_8")]
-    command_prompt.template("4");
+    let command_prompt = command_prompt.template("4");
 
     let cmd = "command-prompt";
 

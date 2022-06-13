@@ -56,35 +56,35 @@ fn select_pane() {
     // ```
     let target_pane = TargetPane::Raw("3").to_string();
 
-    let mut select_pane = SelectPane::new();
+    let select_pane = SelectPane::new();
     #[cfg(feature = "tmux_1_3")]
-    select_pane.down();
+    let select_pane = select_pane.down();
     #[cfg(feature = "tmux_2_0")]
-    select_pane.disable();
+    let select_pane = select_pane.disable();
     #[cfg(feature = "tmux_2_0")]
-    select_pane.enable();
+    let select_pane = select_pane.enable();
     #[cfg(feature = "tmux_2_1")]
-    select_pane.show_style();
+    let select_pane = select_pane.show_style();
     #[cfg(feature = "tmux_1_3")]
-    select_pane.left();
+    let select_pane = select_pane.left();
     #[cfg(feature = "tmux_1_5")]
-    select_pane.last();
+    let select_pane = select_pane.last();
     #[cfg(feature = "tmux_2_1")]
-    select_pane.set_marked();
+    let select_pane = select_pane.set_marked();
     #[cfg(feature = "tmux_2_1")]
-    select_pane.clear_marked();
+    let select_pane = select_pane.clear_marked();
     #[cfg(feature = "tmux_1_3")]
-    select_pane.right();
+    let select_pane = select_pane.right();
     #[cfg(feature = "tmux_1_3")]
-    select_pane.up();
+    let select_pane = select_pane.up();
     #[cfg(feature = "tmux_3_1")]
-    select_pane.keep_zoomed();
+    let select_pane = select_pane.keep_zoomed();
     #[cfg(feature = "tmux_2_1")]
-    select_pane.style("1");
+    let select_pane = select_pane.style("1");
     #[cfg(feature = "tmux_2_6")]
-    select_pane.title("2");
+    let select_pane = select_pane.title("2");
     #[cfg(feature = "tmux_1_0")]
-    select_pane.target_pane(&target_pane);
+    let select_pane = select_pane.target_pane(&target_pane);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "select-pane";

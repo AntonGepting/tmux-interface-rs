@@ -25,13 +25,14 @@ fn list_windows() {
     // (alias: lsw)
     // ```
     let target_session = TargetSession::Raw("2").to_string();
-    let mut list_windows = ListWindows::new();
+
+    let list_windows = ListWindows::new();
     #[cfg(feature = "tmux_1_5")]
-    list_windows.all();
+    let list_windows = list_windows.all();
     #[cfg(feature = "tmux_1_6")]
-    list_windows.format("1");
+    let list_windows = list_windows.format("1");
     #[cfg(feature = "tmux_0_8")]
-    list_windows.target_session(&target_session);
+    let list_windows = list_windows.target_session(&target_session);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-windows";

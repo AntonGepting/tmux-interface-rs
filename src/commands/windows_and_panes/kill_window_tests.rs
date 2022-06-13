@@ -19,11 +19,12 @@ fn kill_window() {
     // (alias: killw)
     // ```
     let target_window = TargetWindow::Raw("1").to_string();
-    let mut kill_window = KillWindow::new();
+
+    let kill_window = KillWindow::new();
     #[cfg(feature = "tmux_1_7")]
-    kill_window.parent_sighup();
+    let kill_window = kill_window.parent_sighup();
     #[cfg(feature = "tmux_0_8")]
-    kill_window.target_window(&target_window);
+    let kill_window = kill_window.target_window(&target_window);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "kill-window";

@@ -14,11 +14,11 @@ fn rename_window() {
     // ```
     let target_window = TargetWindow::Raw("1").to_string();
 
-    let mut rename_window = RenameWindow::new();
+    let rename_window = RenameWindow::new();
     #[cfg(feature = "tmux_0_8")]
-    rename_window.target_window(&target_window);
+    let rename_window = rename_window.target_window(&target_window);
     #[cfg(feature = "tmux_0_8")]
-    rename_window.new_name("2");
+    let rename_window = rename_window.new_name("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "rename-window";

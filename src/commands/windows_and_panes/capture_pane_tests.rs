@@ -38,31 +38,31 @@ fn capture_pane() {
     #[cfg(feature = "tmux_1_2")]
     let target_pane = TargetPane::Raw("4").to_string();
 
-    let mut capture_pane = CapturePane::new();
+    let capture_pane = CapturePane::new();
     #[cfg(feature = "tmux_1_8")]
-    capture_pane.alternate_screen();
+    let capture_pane = capture_pane.alternate_screen();
     #[cfg(feature = "tmux_1_8")]
-    capture_pane.escape_sequences();
+    let capture_pane = capture_pane.escape_sequences();
     #[cfg(feature = "tmux_1_8")]
-    capture_pane.stdout();
+    let capture_pane = capture_pane.stdout();
     #[cfg(feature = "tmux_1_8")]
-    capture_pane.pane();
+    let capture_pane = capture_pane.pane();
     #[cfg(feature = "tmux_1_8")]
-    capture_pane.quite();
+    let capture_pane = capture_pane.quite();
     #[cfg(feature = "tmux_2_4")]
-    capture_pane.escape_non_printable();
+    let capture_pane = capture_pane.escape_non_printable();
     #[cfg(feature = "tmux_2_4")]
-    capture_pane.join();
+    let capture_pane = capture_pane.join();
     #[cfg(feature = "tmux_3_1")]
-    capture_pane.trailing_spaces();
+    let capture_pane = capture_pane.trailing_spaces();
     #[cfg(feature = "tmux_1_8")]
-    capture_pane.buffer_name("1");
+    let capture_pane = capture_pane.buffer_name("1");
     #[cfg(feature = "tmux_1_5")]
-    capture_pane.end_line("2");
+    let capture_pane = capture_pane.end_line("2");
     #[cfg(feature = "tmux_1_5")]
-    capture_pane.start_line("3");
+    let capture_pane = capture_pane.start_line("3");
     #[cfg(feature = "tmux_1_2")]
-    capture_pane.target_pane(&target_pane);
+    let capture_pane = capture_pane.target_pane(&target_pane);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "capture-pane";

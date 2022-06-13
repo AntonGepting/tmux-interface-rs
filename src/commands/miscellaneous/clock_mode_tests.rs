@@ -14,11 +14,11 @@ fn clock_mode() {
     // ```text
     // tmux clock-mode [-t target-window]
     // ```
-    let mut clock_mode = ClockMode::new();
+    let clock_mode = ClockMode::new();
     #[cfg(feature = "tmux_1_0")]
-    clock_mode.target_pane("1");
+    let clock_mode = clock_mode.target_pane("1");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    clock_mode.target_window("2");
+    let clock_mode = clock_mode.target_window("2");
 
     let cmd = "clock-mode";
 

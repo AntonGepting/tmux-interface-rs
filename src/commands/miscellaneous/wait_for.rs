@@ -43,33 +43,33 @@ impl<'a> WaitFor<'a> {
 
     /// `[-L]`
     #[cfg(feature = "tmux_1_8")]
-    pub fn locked(&mut self) -> &mut Self {
+    pub fn locked(mut self) -> Self {
         self.locked = true;
         self
     }
 
     /// `[-S]`
     #[cfg(feature = "tmux_1_8")]
-    pub fn woken(&mut self) -> &mut Self {
+    pub fn woken(mut self) -> Self {
         self.woken = true;
         self
     }
 
     /// `[-U]`
     #[cfg(feature = "tmux_1_8")]
-    pub fn unlocked(&mut self) -> &mut Self {
+    pub fn unlocked(mut self) -> Self {
         self.unlocked = true;
         self
     }
 
     /// `channel`
     #[cfg(feature = "tmux_1_8")]
-    pub fn channel<S: Into<Cow<'a, str>>>(&mut self, channel: S) -> &mut Self {
+    pub fn channel<S: Into<Cow<'a, str>>>(mut self, channel: S) -> Self {
         self.channel = Some(channel.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(WAIT_FOR);
@@ -94,8 +94,8 @@ impl<'a> WaitFor<'a> {
 
         // `channel`
         #[cfg(feature = "tmux_1_8")]
-        if let Some(channel) = &self.channel {
-            cmd.push_param(channel.as_ref());
+        if let Some(channel) = self.channel {
+            cmd.push_param(channel);
         }
         cmd
     }

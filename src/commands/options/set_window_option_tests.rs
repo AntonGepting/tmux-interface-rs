@@ -41,25 +41,25 @@ fn set_window_option() {
     // ```
     let target_window = TargetWindow::Raw("1").to_string();
 
-    let mut set_window_option = SetWindowOption::new();
+    let set_window_option = SetWindowOption::new();
     #[cfg(feature = "tmux_1_0")]
-    set_window_option.append();
+    let set_window_option = set_window_option.append();
     #[cfg(feature = "tmux_2_6")]
-    set_window_option.format();
+    let set_window_option = set_window_option.format();
     #[cfg(feature = "tmux_0_8")]
-    set_window_option.global();
+    let set_window_option = set_window_option.global();
     #[cfg(feature = "tmux_1_9")]
-    set_window_option.not_overwrite();
+    let set_window_option = set_window_option.not_overwrite();
     #[cfg(feature = "tmux_1_7")]
-    set_window_option.quiet();
+    let set_window_option = set_window_option.quiet();
     #[cfg(feature = "tmux_0_8")]
-    set_window_option.unset();
+    let set_window_option = set_window_option.unset();
     #[cfg(feature = "tmux_0_8")]
-    set_window_option.target_window(&target_window);
+    let set_window_option = set_window_option.target_window(&target_window);
     #[cfg(feature = "tmux_0_8")]
-    set_window_option.option("2");
+    let set_window_option = set_window_option.option("2");
     #[cfg(feature = "tmux_0_8")]
-    set_window_option.value("3");
+    let set_window_option = set_window_option.value("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "set-window-option";

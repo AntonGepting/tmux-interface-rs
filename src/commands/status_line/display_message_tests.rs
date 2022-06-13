@@ -43,24 +43,25 @@ fn display_message() {
     //  (alias: display)
     // ```
     let target_pane = TargetPane::Raw("3").to_string();
-    let mut display_message = DisplayMessage::new();
+
+    let display_message = DisplayMessage::new();
     #[cfg(feature = "tmux_2_9a")]
-    display_message.list_format_vars();
+    let display_message = display_message.list_format_vars();
     #[cfg(feature = "tmux_3_0")]
-    display_message.forward_stdin();
+    let display_message = display_message.forward_stdin();
     #[cfg(feature = "tmux_3_2")]
-    display_message.ignore_keys();
+    let display_message = display_message.ignore_keys();
     #[cfg(feature = "tmux_2_9a")]
-    display_message.print();
+    let display_message = display_message.print();
     #[cfg(feature = "tmux_2_9a")]
-    display_message.verbose();
+    let display_message = display_message.verbose();
     #[cfg(feature = "tmux_1_0")]
-    display_message.target_client("1");
+    let display_message = display_message.target_client("1");
     #[cfg(feature = "tmux_3_2")]
-    display_message.delay(2);
+    let display_message = display_message.delay(2);
     #[cfg(feature = "tmux_1_5")]
-    display_message.target_pane(&target_pane);
-    display_message.message("4");
+    let display_message = display_message.target_pane(&target_pane);
+    let display_message = display_message.message("4");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "display-message";

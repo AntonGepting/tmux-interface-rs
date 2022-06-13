@@ -48,33 +48,33 @@ fn choose_tree() {
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
     let target_window = TargetWindow::Raw("5").to_string();
 
-    let mut choose_tree = ChooseTree::new();
+    let choose_tree = ChooseTree::new();
     #[cfg(feature = "tmux_2_7")]
-    choose_tree.all();
+    let choose_tree = choose_tree.all();
     #[cfg(feature = "tmux_2_7")]
-    choose_tree.without_preview();
+    let choose_tree = choose_tree.without_preview();
     #[cfg(feature = "tmux_3_1")]
-    choose_tree.reverse_sort_order();
+    let choose_tree = choose_tree.reverse_sort_order();
     #[cfg(feature = "tmux_1_7")]
-    choose_tree.collapsed_sessions();
+    let choose_tree = choose_tree.collapsed_sessions();
     #[cfg(feature = "tmux_1_8")]
-    choose_tree.collapsed_windows();
+    let choose_tree = choose_tree.collapsed_windows();
     #[cfg(feature = "tmux_2_7")]
-    choose_tree.zoom();
+    let choose_tree = choose_tree.zoom();
     #[cfg(feature = "tmux_2_6")]
-    choose_tree.format("1");
+    let choose_tree = choose_tree.format("1");
     #[cfg(feature = "tmux_2_6")]
-    choose_tree.filter("2");
+    let choose_tree = choose_tree.filter("2");
     #[cfg(feature = "tmux_3_2")]
-    choose_tree.key_format("3");
+    let choose_tree = choose_tree.key_format("3");
     #[cfg(feature = "tmux_2_6")]
-    choose_tree.sort_order("4");
+    let choose_tree = choose_tree.sort_order("4");
     #[cfg(feature = "tmux_2_6")]
-    choose_tree.target_pane(&target_pane);
+    let choose_tree = choose_tree.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    choose_tree.target_window(&target_window);
+    let choose_tree = choose_tree.target_window(&target_window);
     #[cfg(feature = "tmux_2_6")]
-    choose_tree.template("6");
+    let choose_tree = choose_tree.template("6");
 
     let cmd = "choose-tree";
 

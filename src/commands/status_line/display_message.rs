@@ -87,68 +87,68 @@ impl<'a> DisplayMessage<'a> {
 
     /// `[-a]` - list the format variables and their values
     #[cfg(feature = "tmux_2_9a")]
-    pub fn list_format_vars(&mut self) -> &mut Self {
+    pub fn list_format_vars(mut self) -> Self {
         self.list_format_vars = true;
         self
     }
 
     /// `[-I]` - forward any input read from stdin to the empty pane given by target-pane
     #[cfg(feature = "tmux_3_0")]
-    pub fn forward_stdin(&mut self) -> &mut Self {
+    pub fn forward_stdin(mut self) -> Self {
         self.forward_stdin = true;
         self
     }
 
     /// `[-N]` - ignores key presses and closes only after the delay expires
     #[cfg(feature = "tmux_3_2")]
-    pub fn ignore_keys(&mut self) -> &mut Self {
+    pub fn ignore_keys(mut self) -> Self {
         self.ignore_keys = true;
         self
     }
 
     /// `[-p]` - the output is printed to stdout
     #[cfg(feature = "tmux_2_9a")]
-    pub fn print(&mut self) -> &mut Self {
+    pub fn print(mut self) -> Self {
         self.print = true;
         self
     }
 
     /// `[-v]` - print verbose logging as the format is parsed
     #[cfg(feature = "tmux_2_9a")]
-    pub fn verbose(&mut self) -> &mut Self {
+    pub fn verbose(mut self) -> Self {
         self.verbose = true;
         self
     }
 
     /// `[-c target-client]` - target-client
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
     /// `[-d delay]` - delay
     #[cfg(feature = "tmux_3_2")]
-    pub fn delay(&mut self, delay: usize) -> &mut Self {
+    pub fn delay(mut self, delay: usize) -> Self {
         self.delay = Some(delay);
         self
     }
 
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_1_5")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[message]` - message
     #[cfg(feature = "tmux_1_0")]
-    pub fn message<S: Into<Cow<'a, str>>>(&mut self, message: S) -> &mut Self {
+    pub fn message<S: Into<Cow<'a, str>>>(mut self, message: S) -> Self {
         self.message = Some(message.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(DISPLAY_MESSAGE);
@@ -185,8 +185,8 @@ impl<'a> DisplayMessage<'a> {
 
         // `[-c target-client]` - target-client
         #[cfg(feature = "tmux_1_0")]
-        if let Some(target_client) = &self.target_client {
-            cmd.push_option(C_LOWERCASE_KEY, target_client.as_ref());
+        if let Some(target_client) = self.target_client {
+            cmd.push_option(C_LOWERCASE_KEY, target_client);
         }
 
         // `[-d delay]` - delay
@@ -197,14 +197,14 @@ impl<'a> DisplayMessage<'a> {
 
         // `[-t target-pane]` - target-pane
         #[cfg(feature = "tmux_1_5")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[message]` - message
         #[cfg(feature = "tmux_1_0")]
-        if let Some(message) = &self.message {
-            cmd.push_param(message.as_ref());
+        if let Some(message) = self.message {
+            cmd.push_param(message);
         }
 
         cmd

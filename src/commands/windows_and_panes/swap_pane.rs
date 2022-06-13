@@ -60,47 +60,47 @@ impl<'a> SwapPane<'a> {
 
     /// `[-d]` - instruct tmux not to change the active pane
     #[cfg(feature = "tmux_0_8")]
-    pub fn detached(&mut self) -> &mut Self {
+    pub fn detached(mut self) -> Self {
         self.detached = true;
         self
     }
 
     /// `[-D]` - swap with the next pane
     #[cfg(feature = "tmux_0_8")]
-    pub fn previous_pane(&mut self) -> &mut Self {
+    pub fn previous_pane(mut self) -> Self {
         self.previous_pane = true;
         self
     }
 
     /// `[-U]` - swap with the previous pane
     #[cfg(feature = "tmux_0_8")]
-    pub fn next_pane(&mut self) -> &mut Self {
+    pub fn next_pane(mut self) -> Self {
         self.next_pane = true;
         self
     }
 
     /// `[-Z]` - keep the window zoomed if it was zoomed
     #[cfg(feature = "tmux_3_1")]
-    pub fn keep_zoomed(&mut self) -> &mut Self {
+    pub fn keep_zoomed(mut self) -> Self {
         self.keep_zoomed = true;
         self
     }
 
     /// `[-s src-pane]` - src-pane
     #[cfg(feature = "tmux_1_0")]
-    pub fn src_pane<S: Into<Cow<'a, str>>>(&mut self, src_pane: S) -> &mut Self {
+    pub fn src_pane<S: Into<Cow<'a, str>>>(mut self, src_pane: S) -> Self {
         self.src_pane = Some(src_pane.into());
         self
     }
 
     /// `[-t dst-pane]` - dst-pane
     #[cfg(feature = "tmux_1_0")]
-    pub fn dst_pane<S: Into<Cow<'a, str>>>(&mut self, dst_pane: S) -> &mut Self {
+    pub fn dst_pane<S: Into<Cow<'a, str>>>(mut self, dst_pane: S) -> Self {
         self.dst_pane = Some(dst_pane.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SWAP_PANE);
@@ -131,14 +131,14 @@ impl<'a> SwapPane<'a> {
 
         // `[-s src-pane]` - src-pane
         #[cfg(feature = "tmux_1_0")]
-        if let Some(src_pane) = &self.src_pane {
-            cmd.push_option(S_LOWERCASE_KEY, src_pane.as_ref());
+        if let Some(src_pane) = self.src_pane {
+            cmd.push_option(S_LOWERCASE_KEY, src_pane);
         }
 
         // `[-t dst-pane]` - dst-pane
         #[cfg(feature = "tmux_1_0")]
-        if let Some(dst_pane) = &self.dst_pane {
-            cmd.push_option(T_LOWERCASE_KEY, dst_pane.as_ref());
+        if let Some(dst_pane) = self.dst_pane {
+            cmd.push_option(T_LOWERCASE_KEY, dst_pane);
         }
 
         cmd

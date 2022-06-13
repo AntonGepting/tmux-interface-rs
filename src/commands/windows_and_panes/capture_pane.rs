@@ -94,21 +94,21 @@ impl<'a> CapturePane<'a> {
 
     /// `[-a]` - the alternate screen is used, and the history is not accessible
     #[cfg(feature = "tmux_1_8")]
-    pub fn alternate_screen(&mut self) -> &mut Self {
+    pub fn alternate_screen(mut self) -> Self {
         self.alternate_screen = true;
         self
     }
 
     /// `[-e]` - the output includes escape sequences for text and background attributes
     #[cfg(feature = "tmux_1_8")]
-    pub fn escape_sequences(&mut self) -> &mut Self {
+    pub fn escape_sequences(mut self) -> Self {
         self.escape_sequences = true;
         self
     }
 
     /// `[-p]` - the output goes to stdout
     #[cfg(feature = "tmux_1_8")]
-    pub fn stdout(&mut self) -> &mut Self {
+    pub fn stdout(mut self) -> Self {
         self.stdout = true;
         self
     }
@@ -116,42 +116,42 @@ impl<'a> CapturePane<'a> {
     /// `[-P]` - capture only any output that the pane has received that is the beginning of an
     /// as-yet incomplete escape sequence
     #[cfg(feature = "tmux_1_8")]
-    pub fn pane(&mut self) -> &mut Self {
+    pub fn pane(mut self) -> Self {
         self.pane = true;
         self
     }
 
     /// `[-q]` - quite
     #[cfg(feature = "tmux_1_8")]
-    pub fn quite(&mut self) -> &mut Self {
+    pub fn quite(mut self) -> Self {
         self.quite = true;
         self
     }
 
     /// `[-C]` - escape non-printable characters as octal \xxx
     #[cfg(feature = "tmux_2_4")]
-    pub fn escape_non_printable(&mut self) -> &mut Self {
+    pub fn escape_non_printable(mut self) -> Self {
         self.escape_non_printable = true;
         self
     }
 
     /// `[-J]` - preserve trailing spaces and joins any wrapped lines
     #[cfg(feature = "tmux_2_4")]
-    pub fn join(&mut self) -> &mut Self {
+    pub fn join(mut self) -> Self {
         self.join = true;
         self
     }
 
     /// `[-N]` - preserves trailing spaces at each line's end
     #[cfg(feature = "tmux_3_1")]
-    pub fn trailing_spaces(&mut self) -> &mut Self {
+    pub fn trailing_spaces(mut self) -> Self {
         self.trailing_spaces = true;
         self
     }
 
     /// `[-b buffer-name]` - buffer-name
     #[cfg(feature = "tmux_1_8")]
-    pub fn buffer_name<S: Into<Cow<'a, str>>>(&mut self, buffer_name: S) -> &mut Self {
+    pub fn buffer_name<S: Into<Cow<'a, str>>>(mut self, buffer_name: S) -> Self {
         self.buffer_name = Some(buffer_name.into());
         self
     }
@@ -159,7 +159,7 @@ impl<'a> CapturePane<'a> {
     // XXX: type usize?
     /// `[-E end-line]` - specify the ending line number
     #[cfg(feature = "tmux_1_5")]
-    pub fn end_line<S: Into<Cow<'a, str>>>(&mut self, end_line: S) -> &mut Self {
+    pub fn end_line<S: Into<Cow<'a, str>>>(mut self, end_line: S) -> Self {
         self.end_line = Some(end_line.into());
         self
     }
@@ -167,19 +167,19 @@ impl<'a> CapturePane<'a> {
     // XXX: type usize?
     /// `[-S start-line]` - specify the starting line number
     #[cfg(feature = "tmux_1_5")]
-    pub fn start_line<S: Into<Cow<'a, str>>>(&mut self, start_line: S) -> &mut Self {
+    pub fn start_line<S: Into<Cow<'a, str>>>(mut self, start_line: S) -> Self {
         self.start_line = Some(start_line.into());
         self
     }
 
     /// `[-t target-pane]` - specify target-pane
     #[cfg(feature = "tmux_1_2")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(CAPTURE_PANE);
@@ -235,26 +235,26 @@ impl<'a> CapturePane<'a> {
 
         // `[-b buffer-name]` - buffer-name
         #[cfg(feature = "tmux_1_8")]
-        if let Some(buffer_name) = &self.buffer_name {
-            cmd.push_option(B_LOWERCASE_KEY, buffer_name.as_ref());
+        if let Some(buffer_name) = self.buffer_name {
+            cmd.push_option(B_LOWERCASE_KEY, buffer_name);
         }
 
         // `[-E end-line]` - specify the ending line number
         #[cfg(feature = "tmux_1_5")]
-        if let Some(end_line) = &self.end_line {
-            cmd.push_option(E_UPPERCASE_KEY, end_line.as_ref());
+        if let Some(end_line) = self.end_line {
+            cmd.push_option(E_UPPERCASE_KEY, end_line);
         }
 
         // `[-S start-line]` - specify the starting line number
         #[cfg(feature = "tmux_1_5")]
-        if let Some(start_line) = &self.start_line {
-            cmd.push_option(S_UPPERCASE_KEY, start_line.as_ref());
+        if let Some(start_line) = self.start_line {
+            cmd.push_option(S_UPPERCASE_KEY, start_line);
         }
 
         // `[-t target-pane]` - specify target-pane
         #[cfg(feature = "tmux_1_2")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         cmd

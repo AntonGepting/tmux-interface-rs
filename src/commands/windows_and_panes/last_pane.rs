@@ -50,33 +50,33 @@ impl<'a> LastPane<'a> {
 
     /// `[-d]`
     #[cfg(feature = "tmux_2_0")]
-    pub fn disable(&mut self) -> &mut Self {
+    pub fn disable(mut self) -> Self {
         self.disable = true;
         self
     }
 
     /// `[-e]`
     #[cfg(feature = "tmux_2_0")]
-    pub fn enable(&mut self) -> &mut Self {
+    pub fn enable(mut self) -> Self {
         self.enable = true;
         self
     }
 
     /// `[-Z]`
     #[cfg(feature = "tmux_3_1")]
-    pub fn keep_zoomed(&mut self) -> &mut Self {
+    pub fn keep_zoomed(mut self) -> Self {
         self.keep_zoomed = true;
         self
     }
 
     /// `[-t target-window]`
     #[cfg(feature = "tmux_1_4")]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(LAST_PANE);
@@ -101,8 +101,8 @@ impl<'a> LastPane<'a> {
 
         // `[-t target-window]`
         #[cfg(feature = "tmux_1_4")]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         cmd

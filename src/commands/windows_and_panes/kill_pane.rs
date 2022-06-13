@@ -49,33 +49,33 @@ impl<'a> KillPane<'a> {
 
     /// `[-a]`
     #[cfg(feature = "tmux_1_1")]
-    pub fn all(&mut self) -> &mut Self {
+    pub fn all(mut self) -> Self {
         self.all = true;
         self
     }
 
     /// `[-t target-pane]`
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[-p pane-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    pub fn pane_index<S: Into<Cow<'a, str>>>(&mut self, pane_index: S) -> &mut Self {
+    pub fn pane_index<S: Into<Cow<'a, str>>>(mut self, pane_index: S) -> Self {
         self.pane_index = Some(pane_index.into());
         self
     }
 
     /// `[-t target-window]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(KILL_PANE);
@@ -88,20 +88,20 @@ impl<'a> KillPane<'a> {
 
         // `[-t target-pane]`
         #[cfg(feature = "tmux_1_0")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[-p pane-index]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-        if let Some(pane_index) = &self.pane_index {
-            cmd.push_option(P_LOWERCASE_KEY, pane_index.as_ref());
+        if let Some(pane_index) = self.pane_index {
+            cmd.push_option(P_LOWERCASE_KEY, pane_index);
         }
 
         // `[-t target-window]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         cmd

@@ -40,21 +40,21 @@ fn move_window() {
     let src_pane = TargetWindow::Raw("1").to_string();
     let dst_pane = TargetWindow::Raw("2").to_string();
 
-    let mut move_window = MoveWindow::new();
+    let move_window = MoveWindow::new();
     #[cfg(feature = "tmux_2_1")]
-    move_window.after();
+    let move_window = move_window.after();
     #[cfg(feature = "tmux_3_2")]
-    move_window.before();
+    let move_window = move_window.before();
     #[cfg(feature = "tmux_1_7")]
-    move_window.renumber();
+    let move_window = move_window.renumber();
     #[cfg(feature = "tmux_0_8")]
-    move_window.detached();
+    let move_window = move_window.detached();
     #[cfg(feature = "tmux_1_3")]
-    move_window.kill();
+    let move_window = move_window.kill();
     #[cfg(feature = "tmux_0_8")]
-    move_window.src_window(&src_pane);
+    let move_window = move_window.src_window(&src_pane);
     #[cfg(feature = "tmux_0_8")]
-    move_window.dst_window(&dst_pane);
+    let move_window = move_window.dst_window(&dst_pane);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "move-window";

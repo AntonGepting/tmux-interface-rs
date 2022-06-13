@@ -90,75 +90,75 @@ impl<'a> CommandPrompt<'a> {
 
     /// `[-1]` makesthe prompt only accept one key press
     #[cfg(feature = "tmux_2_4")]
-    pub fn one_keypress(&mut self) -> &mut Self {
+    pub fn one_keypress(mut self) -> Self {
         self.one_keypress = true;
         self
     }
 
     /// `[-i]` execute the command every time the prompt input changes
     #[cfg(feature = "tmux_2_4")]
-    pub fn on_input_change(&mut self) -> &mut Self {
+    pub fn on_input_change(mut self) -> Self {
         self.on_input_change = true;
         self
     }
 
     /// `[-k]` - the key press is translated to a key name
     #[cfg(feature = "tmux_3_1")]
-    pub fn key_name(&mut self) -> &mut Self {
+    pub fn key_name(mut self) -> Self {
         self.key_name = true;
         self
     }
 
     /// `[-N]` - makes the prompt only accept numeric key presses
     #[cfg(feature = "tmux_3_1")]
-    pub fn numeric(&mut self) -> &mut Self {
+    pub fn numeric(mut self) -> Self {
         self.numeric = true;
         self
     }
 
     /// `[-T]` - tells tmux that the prompt is for a target which affects what completions are offered when Tab is pressed
     #[cfg(feature = "tmux_3_2")]
-    pub fn for_target(&mut self) -> &mut Self {
+    pub fn for_target(mut self) -> Self {
         self.for_target = true;
         self
     }
 
     /// `[-W]` - indicates the prompt is for a window.
     #[cfg(feature = "tmux_3_2")]
-    pub fn for_window(&mut self) -> &mut Self {
+    pub fn for_window(mut self) -> Self {
         self.for_window = true;
         self
     }
 
     /// `[-I inputs]` - comma-separated list of the initial text for each prompt
     #[cfg(feature = "tmux_1_5")]
-    pub fn inputs<S: Into<Cow<'a, str>>>(&mut self, inputs: S) -> &mut Self {
+    pub fn inputs<S: Into<Cow<'a, str>>>(mut self, inputs: S) -> Self {
         self.inputs = Some(inputs.into());
         self
     }
 
     /// `[-p prompts]` - prompts is a comma-separated list of prompts which are displayed in order
     #[cfg(feature = "tmux_1_0")]
-    pub fn prompts<S: Into<Cow<'a, str>>>(&mut self, prompts: S) -> &mut Self {
+    pub fn prompts<S: Into<Cow<'a, str>>>(mut self, prompts: S) -> Self {
         self.prompts = Some(prompts.into());
         self
     }
 
     /// `[-t target-client]` - target-client
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
     /// `[template]` - template
     #[cfg(feature = "tmux_0_8")]
-    pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
+    pub fn template<S: Into<Cow<'a, str>>>(mut self, template: S) -> Self {
         self.template = Some(template.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(COMMAND_PROMPT);
@@ -201,26 +201,26 @@ impl<'a> CommandPrompt<'a> {
 
         // `[-I inputs]` - comma-separated list of the initial text for each prompt
         #[cfg(feature = "tmux_1_5")]
-        if let Some(inputs) = &self.inputs {
-            cmd.push_option(I_UPPERCASE_KEY, inputs.as_ref());
+        if let Some(inputs) = self.inputs {
+            cmd.push_option(I_UPPERCASE_KEY, inputs);
         }
 
         // `[-p prompts]` - prompts is a comma-separated list of prompts which are displayed in order
         #[cfg(feature = "tmux_1_0")]
-        if let Some(prompts) = &self.prompts {
-            cmd.push_option(P_LOWERCASE_KEY, prompts.as_ref());
+        if let Some(prompts) = self.prompts {
+            cmd.push_option(P_LOWERCASE_KEY, prompts);
         }
 
         // `[-t target-client]` - target-client
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_client) = &self.target_client {
-            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        if let Some(target_client) = self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client);
         }
 
         // `[template]` - template
         #[cfg(feature = "tmux_0_8")]
-        if let Some(template) = &self.template {
-            cmd.push_param(template.as_ref());
+        if let Some(template) = self.template {
+            cmd.push_param(template);
         }
 
         cmd

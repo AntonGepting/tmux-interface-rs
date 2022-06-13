@@ -21,21 +21,21 @@ fn move_pane() {
     let src_pane = TargetPane::Raw("2").to_string();
     let dst_pane = TargetPane::Raw("3").to_string();
 
-    let mut move_pane = MovePane::new();
+    let move_pane = MovePane::new();
     #[cfg(feature = "tmux_1_7")]
-    move_pane.left_above();
+    let move_pane = move_pane.left_above();
     #[cfg(feature = "tmux_1_7")]
-    move_pane.detached();
+    let move_pane = move_pane.detached();
     #[cfg(feature = "tmux_1_7")]
-    move_pane.horizontal();
+    let move_pane = move_pane.horizontal();
     #[cfg(feature = "tmux_1_7")]
-    move_pane.vertical();
+    let move_pane = move_pane.vertical();
     #[cfg(feature = "tmux_1_7")]
-    move_pane.size(&PaneSize::Size(1));
+    let move_pane = move_pane.size(&PaneSize::Size(1));
     #[cfg(feature = "tmux_1_7")]
-    move_pane.src_pane(&src_pane);
+    let move_pane = move_pane.src_pane(&src_pane);
     #[cfg(feature = "tmux_1_7")]
-    move_pane.dst_pane(&dst_pane);
+    let move_pane = move_pane.dst_pane(&dst_pane);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "move-pane";

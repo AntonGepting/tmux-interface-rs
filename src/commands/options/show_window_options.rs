@@ -62,40 +62,40 @@ impl<'a> ShowWindowOptions<'a> {
 
     /// `[-g]`
     #[cfg(feature = "tmux_1_0")]
-    pub fn global(&mut self) -> &mut Self {
+    pub fn global(mut self) -> Self {
         self.global = true;
         self
     }
 
     /// `[-v]`
     #[cfg(feature = "tmux_1_8")]
-    pub fn only_value(&mut self) -> &mut Self {
+    pub fn only_value(mut self) -> Self {
         self.only_value = true;
         self
     }
 
     /// `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
     /// `option`
     #[cfg(feature = "tmux_0_8")]
-    pub fn option<S: Into<Cow<'a, str>>>(&mut self, option: S) -> &mut Self {
+    pub fn option<S: Into<Cow<'a, str>>>(mut self, option: S) -> Self {
         self.option = Some(option.into());
         self
     }
 
     /// `value`
     #[cfg(feature = "tmux_0_8")]
-    pub fn value<S: Into<Cow<'a, str>>>(&mut self, value: S) -> &mut Self {
+    pub fn value<S: Into<Cow<'a, str>>>(mut self, value: S) -> Self {
         self.value = Some(value.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SHOW_WINDOW_OPTIONS);
@@ -114,20 +114,20 @@ impl<'a> ShowWindowOptions<'a> {
 
         // `[-t target-window]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         // `option`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(option) = &self.option {
-            cmd.push_param(option.as_ref());
+        if let Some(option) = self.option {
+            cmd.push_param(option);
         }
 
         // `value`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(value) = &self.value {
-            cmd.push_param(value.as_ref());
+        if let Some(value) = self.value {
+            cmd.push_param(value);
         }
 
         cmd

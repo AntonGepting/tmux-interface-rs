@@ -61,64 +61,64 @@ impl<'a> DisplayMenu<'a> {
 
     /// `[-O]` - the menu does not close when the mouse button is released without an item selected
     #[cfg(feature = "tmux_3_2")]
-    pub fn not_close(&mut self) -> &mut Self {
+    pub fn not_close(mut self) -> Self {
         self.not_close = true;
         self
     }
 
     /// `[-c target-client]` - target-client
     #[cfg(feature = "tmux_3_0")]
-    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
     /// `[-t target-pane]` - target-pane
     #[cfg(feature = "tmux_3_0")]
-    pub fn target_pane<S: Into<Cow<'a, str>>>(&mut self, target_pane: S) -> &mut Self {
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[-T title]` - title
     #[cfg(feature = "tmux_3_0")]
-    pub fn title<S: Into<Cow<'a, str>>>(&mut self, title: S) -> &mut Self {
+    pub fn title<S: Into<Cow<'a, str>>>(mut self, title: S) -> Self {
         self.title = Some(title.into());
         self
     }
 
     /// `[-x position]` - x position of the menu
     #[cfg(feature = "tmux_3_0")]
-    pub fn x(&mut self, x: usize) -> &mut Self {
+    pub fn x(mut self, x: usize) -> Self {
         self.x = Some(x);
         self
     }
 
     /// `[-y position]` - y position of the menu
     #[cfg(feature = "tmux_3_0")]
-    pub fn y(&mut self, y: usize) -> &mut Self {
+    pub fn y(mut self, y: usize) -> Self {
         self.y = Some(y);
         self
     }
 
     /// `name`
-    pub fn name<S: Into<Cow<'a, str>>>(&mut self, name: S) -> &mut Self {
+    pub fn name<S: Into<Cow<'a, str>>>(mut self, name: S) -> Self {
         self.name = Some(name.into());
         self
     }
 
     /// `key`
-    pub fn key<S: Into<Cow<'a, str>>>(&mut self, key: S) -> &mut Self {
+    pub fn key<S: Into<Cow<'a, str>>>(mut self, key: S) -> Self {
         self.key = Some(key.into());
         self
     }
 
-    pub fn command<S: Into<Cow<'a, str>>>(&mut self, command: S) -> &mut Self {
+    pub fn command<S: Into<Cow<'a, str>>>(mut self, command: S) -> Self {
         self.command = Some(command.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(DISPLAY_MENU);
@@ -131,20 +131,20 @@ impl<'a> DisplayMenu<'a> {
 
         // `[-c target-client]` - target-client
         #[cfg(feature = "tmux_3_0")]
-        if let Some(target_client) = &self.target_client {
-            cmd.push_option(C_LOWERCASE_KEY, target_client.as_ref());
+        if let Some(target_client) = self.target_client {
+            cmd.push_option(C_LOWERCASE_KEY, target_client);
         }
 
         // `[-t target-pane]` - target-pane
         #[cfg(feature = "tmux_3_0")]
-        if let Some(target_pane) = &self.target_pane {
-            cmd.push_option(T_LOWERCASE_KEY, target_pane.as_ref());
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[-T title]` - title
         #[cfg(feature = "tmux_3_0")]
-        if let Some(title) = &self.title {
-            cmd.push_option(T_UPPERCASE_KEY, title.as_ref());
+        if let Some(title) = self.title {
+            cmd.push_option(T_UPPERCASE_KEY, title);
         }
 
         // `[-x position]` - x position of the menu
@@ -160,18 +160,18 @@ impl<'a> DisplayMenu<'a> {
         }
 
         // `name`
-        if let Some(name) = &self.name {
-            cmd.push_param(name.as_ref());
+        if let Some(name) = self.name {
+            cmd.push_param(name);
         }
 
         // `key`
-        if let Some(key) = &self.key {
-            cmd.push_param(key.as_ref());
+        if let Some(key) = self.key {
+            cmd.push_param(key);
         }
 
         // `command`
-        if let Some(command) = &self.command {
-            cmd.push_param(command.as_ref());
+        if let Some(command) = self.command {
+            cmd.push_param(command);
         }
 
         cmd

@@ -28,23 +28,23 @@ fn copy_mode() {
     // ```
     let target_pane = TargetPane::Raw("2").to_string();
 
-    let mut copy_mode = CopyMode::new();
+    let copy_mode = CopyMode::new();
     #[cfg(feature = "tmux_2_1")]
-    copy_mode.bottom_exit();
+    let copy_mode = copy_mode.bottom_exit();
     #[cfg(feature = "tmux_3_2")]
-    copy_mode.hide_position();
+    let copy_mode = copy_mode.hide_position();
     #[cfg(feature = "tmux_2_1")]
-    copy_mode.mouse_drag();
+    let copy_mode = copy_mode.mouse_drag();
     #[cfg(feature = "tmux_3_2")]
-    copy_mode.cancel();
+    let copy_mode = copy_mode.cancel();
     #[cfg(feature = "tmux_0_8")]
-    copy_mode.page_up();
+    let copy_mode = copy_mode.page_up();
     #[cfg(feature = "tmux_3_2")]
-    copy_mode.src_pane("1");
+    let copy_mode = copy_mode.src_pane("1");
     #[cfg(feature = "tmux_1_0")]
-    copy_mode.target_pane(&target_pane);
+    let copy_mode = copy_mode.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    copy_mode.target_window(&target_pane);
+    let copy_mode = copy_mode.target_window(&target_pane);
 
     let cmd = "copy-mode";
 

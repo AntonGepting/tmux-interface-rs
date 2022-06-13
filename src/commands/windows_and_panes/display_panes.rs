@@ -66,40 +66,40 @@ impl<'a> DisplayPanes<'a> {
 
     /// `[-b]`
     #[cfg(feature = "tmux_2_9")]
-    pub fn not_block(&mut self) -> &mut Self {
+    pub fn not_block(mut self) -> Self {
         self.not_block = true;
         self
     }
 
     /// `[-N]`
     #[cfg(feature = "tmux_3_2")]
-    pub fn ignore_keys(&mut self) -> &mut Self {
+    pub fn ignore_keys(mut self) -> Self {
         self.ignore_keys = true;
         self
     }
 
     /// `[-d duration]`
     #[cfg(feature = "tmux_2_6")]
-    pub fn duration<S: Into<Cow<'a, str>>>(&mut self, duration: S) -> &mut Self {
+    pub fn duration<S: Into<Cow<'a, str>>>(mut self, duration: S) -> Self {
         self.duration = Some(duration.into());
         self
     }
 
     /// `[-d target-client]`
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_client<S: Into<Cow<'a, str>>>(&mut self, target_client: S) -> &mut Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
     /// `[template]`
     #[cfg(feature = "tmux_2_3")]
-    pub fn template<S: Into<Cow<'a, str>>>(&mut self, template: S) -> &mut Self {
+    pub fn template<S: Into<Cow<'a, str>>>(mut self, template: S) -> Self {
         self.template = Some(template.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(DISPLAY_PANES);
@@ -118,20 +118,20 @@ impl<'a> DisplayPanes<'a> {
 
         // `[-d duration]`
         #[cfg(feature = "tmux_2_6")]
-        if let Some(duration) = &self.duration {
-            cmd.push_option(D_LOWERCASE_KEY, duration.as_ref());
+        if let Some(duration) = self.duration {
+            cmd.push_option(D_LOWERCASE_KEY, duration);
         }
 
         // `[-d duration]`
         #[cfg(feature = "tmux_1_0")]
-        if let Some(target_client) = &self.target_client {
-            cmd.push_option(T_LOWERCASE_KEY, target_client.as_ref());
+        if let Some(target_client) = self.target_client {
+            cmd.push_option(T_LOWERCASE_KEY, target_client);
         }
 
         // `[template]`
         #[cfg(feature = "tmux_2_3")]
-        if let Some(template) = &self.template {
-            cmd.push_param(template.as_ref());
+        if let Some(template) = self.template {
+            cmd.push_param(template);
         }
 
         cmd

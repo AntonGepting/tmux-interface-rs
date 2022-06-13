@@ -82,66 +82,66 @@ impl<'a> SetWindowOption<'a> {
 
     /// `[-a]` -
     #[cfg(feature = "tmux_1_0")]
-    pub fn append(&mut self) -> &mut Self {
+    pub fn append(mut self) -> Self {
         self.append = true;
         self
     }
 
     /// `[-F]` -
     #[cfg(feature = "tmux_2_6")]
-    pub fn format(&mut self) -> &mut Self {
+    pub fn format(mut self) -> Self {
         self.format = true;
         self
     }
 
     /// `[-g]` -
     #[cfg(feature = "tmux_0_8")]
-    pub fn global(&mut self) -> &mut Self {
+    pub fn global(mut self) -> Self {
         self.global = true;
         self
     }
 
     /// `[-o]` -
     #[cfg(feature = "tmux_1_9")]
-    pub fn not_overwrite(&mut self) -> &mut Self {
+    pub fn not_overwrite(mut self) -> Self {
         self.not_overwrite = true;
         self
     }
 
     /// `[-q]` -
     #[cfg(feature = "tmux_1_7")]
-    pub fn quiet(&mut self) -> &mut Self {
+    pub fn quiet(mut self) -> Self {
         self.quiet = true;
         self
     }
 
     /// `[-u]` -
     #[cfg(feature = "tmux_0_8")]
-    pub fn unset(&mut self) -> &mut Self {
+    pub fn unset(mut self) -> Self {
         self.unset = true;
         self
     }
 
     /// `[-t target-window]` -
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window<S: Into<Cow<'a, str>>>(&mut self, target_window: S) -> &mut Self {
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
     /// `option`
-    pub fn option<S: Into<Cow<'a, str>>>(&mut self, option: S) -> &mut Self {
+    pub fn option<S: Into<Cow<'a, str>>>(mut self, option: S) -> Self {
         self.option = Some(option.into());
         self
     }
 
     /// `value`
-    pub fn value<S: Into<Cow<'a, str>>>(&mut self, value: S) -> &mut Self {
+    pub fn value<S: Into<Cow<'a, str>>>(mut self, value: S) -> Self {
         self.value = Some(value.into());
         self
     }
 
-    pub fn build(&self) -> TmuxCommand {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.cmd(SET_WINDOW_OPTION);
@@ -184,18 +184,18 @@ impl<'a> SetWindowOption<'a> {
 
         // `[-t target-window]` -
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_window) = &self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window.as_ref());
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
         // `option`
-        if let Some(option) = &self.option {
-            cmd.push_param(option.as_ref());
+        if let Some(option) = self.option {
+            cmd.push_param(option);
         }
 
         // `value`
-        if let Some(value) = &self.value {
-            cmd.push_param(value.as_ref());
+        if let Some(value) = self.value {
+            cmd.push_param(value);
         }
 
         cmd
