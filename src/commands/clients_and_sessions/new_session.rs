@@ -247,7 +247,7 @@ impl<'a> NewSession<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(NEW_SESSION);
+        cmd.name(NEW_SESSION);
 
         // `[-A]` - behave like `attach-session` if `session-name` already exists
         #[cfg(feature = "tmux_1_8")]

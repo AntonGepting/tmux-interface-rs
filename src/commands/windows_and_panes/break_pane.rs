@@ -184,7 +184,7 @@ impl<'a> BreakPane<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(BREAK_PANE);
+        cmd.name(BREAK_PANE);
 
         // `[-a]` - the window is moved to the next index after
         #[cfg(feature = "tmux_3_2")]

@@ -165,7 +165,7 @@ impl<'a> ShowOptions<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SHOW_OPTIONS);
+        cmd.name(SHOW_OPTIONS);
 
         // `[-A]` - includes options inherited from a parent set of options
         #[cfg(feature = "tmux_3_0")]

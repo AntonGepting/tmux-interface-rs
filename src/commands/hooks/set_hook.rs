@@ -114,7 +114,7 @@ impl<'a> SetHook<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SET_HOOK);
+        cmd.name(SET_HOOK);
 
         // `[-a]`
         #[cfg(feature = "tmux_3_0")]

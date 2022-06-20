@@ -103,7 +103,7 @@ impl<'a> SwapPane<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SWAP_PANE);
+        cmd.name(SWAP_PANE);
 
         // `[-d]` - instruct tmux not to change the active pane
         #[cfg(feature = "tmux_0_8")]

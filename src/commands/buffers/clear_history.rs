@@ -61,7 +61,7 @@ impl<'a> ClearHistory<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(CLEAR_HISTORY);
+        cmd.name(CLEAR_HISTORY);
 
         // `[-t target-pane]`
         #[cfg(feature = "tmux_1_0")]

@@ -68,7 +68,7 @@ impl<'a> DeleteBuffer<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(DELETE_BUFFER);
+        cmd.name(DELETE_BUFFER);
 
         // `[-b buffer-name]`
         #[cfg(feature = "tmux_0_8")]

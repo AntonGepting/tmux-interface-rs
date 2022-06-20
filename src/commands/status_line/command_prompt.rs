@@ -161,7 +161,7 @@ impl<'a> CommandPrompt<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(COMMAND_PROMPT);
+        cmd.name(COMMAND_PROMPT);
 
         // `[-1]` makesthe prompt only accept one key press
         #[cfg(feature = "tmux_2_4")]

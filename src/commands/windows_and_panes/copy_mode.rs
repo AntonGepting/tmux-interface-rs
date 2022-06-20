@@ -124,7 +124,7 @@ impl<'a> CopyMode<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(COPY_MODE);
+        cmd.name(COPY_MODE);
 
         // `[-e]`
         #[cfg(feature = "tmux_2_1")]

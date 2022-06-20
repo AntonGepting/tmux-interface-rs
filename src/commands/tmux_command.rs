@@ -38,7 +38,7 @@ impl<'a> TmuxCommand<'a> {
     }
 
     /// set tmux command name
-    pub fn cmd<S: Into<Cow<'a, str>>>(&mut self, name: S) -> &mut Self {
+    pub fn name<S: Into<Cow<'a, str>>>(&mut self, name: S) -> &mut Self {
         self.0.name(name);
         self
     }

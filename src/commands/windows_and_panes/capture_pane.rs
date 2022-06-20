@@ -182,7 +182,7 @@ impl<'a> CapturePane<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(CAPTURE_PANE);
+        cmd.name(CAPTURE_PANE);
 
         // `[-a]` - the alternate screen is used, and the history is not accessible
         #[cfg(feature = "tmux_1_8")]

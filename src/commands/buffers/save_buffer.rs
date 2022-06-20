@@ -89,7 +89,7 @@ impl<'a> SaveBuffer<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SAVE_BUFFER);
+        cmd.name(SAVE_BUFFER);
 
         // `[-a]`
         #[cfg(feature = "tmux_0_8")]

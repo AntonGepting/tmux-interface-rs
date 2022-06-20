@@ -192,7 +192,7 @@ impl<'a> ChooseTree<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(CHOOSE_TREE);
+        cmd.name(CHOOSE_TREE);
 
         // `[-G]` - include all sessions in any session groups in the tree rather than only the first
         #[cfg(feature = "tmux_2_7")]

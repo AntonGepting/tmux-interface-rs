@@ -169,7 +169,7 @@ impl<'a> SendKeys<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SEND_KEYS);
+        cmd.name(SEND_KEYS);
 
         // `[-F]` - expand formats in arguments where appropriate
         #[cfg(feature = "tmux_3_1")]

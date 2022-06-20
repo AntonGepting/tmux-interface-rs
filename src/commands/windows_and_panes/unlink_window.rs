@@ -50,7 +50,7 @@ impl<'a> UnlinkWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(UNLINK_WINDOW);
+        cmd.name(UNLINK_WINDOW);
 
         // `[-k]`
         #[cfg(feature = "tmux_1_0")]

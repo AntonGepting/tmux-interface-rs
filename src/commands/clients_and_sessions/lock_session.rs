@@ -31,7 +31,7 @@ impl<'a> LockSession<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LOCK_SESSION);
+        cmd.name(LOCK_SESSION);
 
         // `[-t target-session]`
         if let Some(target_session) = self.target_session {

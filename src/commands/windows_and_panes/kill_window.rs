@@ -51,7 +51,7 @@ impl<'a> KillWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(KILL_WINDOW);
+        cmd.name(KILL_WINDOW);
 
         // `[-a]`
         #[cfg(feature = "tmux_1_7")]

@@ -33,7 +33,7 @@ impl<'a> LockClient<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LOCK_CLIENT);
+        cmd.name(LOCK_CLIENT);
 
         // `[-t target-client]`
         #[cfg(feature = "tmux_1_1")]

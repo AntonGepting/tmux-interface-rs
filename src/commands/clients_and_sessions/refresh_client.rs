@@ -242,7 +242,7 @@ impl<'a> RefreshClient<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(REFRESH_CLIENT);
+        cmd.name(REFRESH_CLIENT);
 
         // `[-c]` - return to tracking the cursor automatically
         #[cfg(feature = "tmux_2_9a")]

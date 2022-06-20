@@ -64,7 +64,7 @@ impl<'a> KillSession<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(KILL_SESSION);
+        cmd.name(KILL_SESSION);
 
         // `[-a]`
         #[cfg(feature = "tmux_2_2")]

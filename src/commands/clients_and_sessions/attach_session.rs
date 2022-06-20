@@ -133,7 +133,7 @@ impl<'a> AttachSession<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(ATTACH_SESSION);
+        cmd.name(ATTACH_SESSION);
 
         // `[-d]` - any other clients attached to the session are detached
         #[cfg(feature = "tmux_0_8")]

@@ -89,7 +89,7 @@ impl<'a> PipePane<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(PIPE_PANE);
+        cmd.name(PIPE_PANE);
 
         // `[-I]` - stdin is connected
         #[cfg(feature = "tmux_2_7")]

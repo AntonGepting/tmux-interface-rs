@@ -79,7 +79,7 @@ impl<'a> LastPane<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LAST_PANE);
+        cmd.name(LAST_PANE);
 
         // `[-d]`
         #[cfg(feature = "tmux_2_0")]

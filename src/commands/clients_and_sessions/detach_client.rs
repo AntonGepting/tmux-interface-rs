@@ -95,7 +95,7 @@ impl<'a> DetachClient<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(DETACH_CLIENT);
+        cmd.name(DETACH_CLIENT);
 
         // `[-a]` - kill all but the client client given with `-t`
         #[cfg(feature = "tmux_2_2")]

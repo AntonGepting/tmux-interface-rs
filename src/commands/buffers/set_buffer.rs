@@ -128,7 +128,7 @@ impl<'a> SetBuffer<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SET_BUFFER);
+        cmd.name(SET_BUFFER);
 
         // `[-a]`
         #[cfg(feature = "tmux_2_0")]

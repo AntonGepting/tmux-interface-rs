@@ -98,7 +98,7 @@ impl<'a> ShowWindowOptions<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SHOW_WINDOW_OPTIONS);
+        cmd.name(SHOW_WINDOW_OPTIONS);
 
         // `[-g]`
         #[cfg(feature = "tmux_1_0")]

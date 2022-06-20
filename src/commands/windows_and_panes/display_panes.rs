@@ -102,7 +102,7 @@ impl<'a> DisplayPanes<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(DISPLAY_PANES);
+        cmd.name(DISPLAY_PANES);
 
         // `[-b]`
         #[cfg(feature = "tmux_2_9")]

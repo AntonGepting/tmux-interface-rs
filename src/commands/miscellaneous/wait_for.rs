@@ -72,7 +72,7 @@ impl<'a> WaitFor<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(WAIT_FOR);
+        cmd.name(WAIT_FOR);
 
         // `[-L]`
         #[cfg(feature = "tmux_1_8")]

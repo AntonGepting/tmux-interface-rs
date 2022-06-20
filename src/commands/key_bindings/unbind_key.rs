@@ -135,7 +135,7 @@ impl<'a> UnbindKey<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(UNBIND_KEY);
+        cmd.name(UNBIND_KEY);
 
         // `[-a]`
         #[cfg(feature = "tmux_1_4")]

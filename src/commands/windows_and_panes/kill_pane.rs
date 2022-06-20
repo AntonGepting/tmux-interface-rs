@@ -78,7 +78,7 @@ impl<'a> KillPane<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(KILL_PANE);
+        cmd.name(KILL_PANE);
 
         // `[-a]`
         #[cfg(feature = "tmux_1_1")]

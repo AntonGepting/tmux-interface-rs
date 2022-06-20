@@ -93,7 +93,7 @@ impl<'a> ShowEnvironment<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SHOW_ENVIRONMENT);
+        cmd.name(SHOW_ENVIRONMENT);
 
         // `[-h]`
         #[cfg(feature = "tmux_3_2")]

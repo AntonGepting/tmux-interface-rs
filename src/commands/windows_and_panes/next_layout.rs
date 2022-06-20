@@ -33,7 +33,7 @@ impl<'a> NextLayout<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(NEXT_LAYOUT);
+        cmd.name(NEXT_LAYOUT);
 
         // `[-t target-window]`
         #[cfg(feature = "tmux_0_8")]

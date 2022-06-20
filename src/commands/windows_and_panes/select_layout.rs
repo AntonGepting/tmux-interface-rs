@@ -111,7 +111,8 @@ impl<'a> SelectLayout<'a> {
 
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
-        cmd.cmd(SELECT_LAYOUT);
+
+        cmd.name(SELECT_LAYOUT);
 
         // `[-E]` - spread the current pane and any panes next to it out evenly
         #[cfg(feature = "tmux_2_7")]

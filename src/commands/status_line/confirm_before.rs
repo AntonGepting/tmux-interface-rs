@@ -59,7 +59,7 @@ impl<'a> ConfirmBefore<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(CONFIRM_BEFORE);
+        cmd.name(CONFIRM_BEFORE);
 
         // `[-p prompt]`
         #[cfg(feature = "tmux_1_5")]

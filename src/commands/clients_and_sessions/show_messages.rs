@@ -75,7 +75,7 @@ impl<'a> ShowMessages<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SHOW_MESSAGES);
+        cmd.name(SHOW_MESSAGES);
 
         // `[-I]`
         #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]

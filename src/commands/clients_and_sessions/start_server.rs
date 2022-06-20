@@ -21,7 +21,7 @@ impl StartServer {
     pub fn build<'a>(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(START_SERVER);
+        cmd.name(START_SERVER);
 
         cmd
     }

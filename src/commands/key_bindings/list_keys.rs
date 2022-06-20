@@ -106,7 +106,7 @@ impl<'a> ListKeys<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LIST_KEYS);
+        cmd.name(LIST_KEYS);
 
         // `[-1]`
         #[cfg(feature = "tmux_2_4")]

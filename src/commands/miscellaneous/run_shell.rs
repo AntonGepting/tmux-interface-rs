@@ -104,7 +104,7 @@ impl<'a> RunShell<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(RUN_SHELL);
+        cmd.name(RUN_SHELL);
 
         // `[-b]`
         #[cfg(feature = "tmux_1_8")]

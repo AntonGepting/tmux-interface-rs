@@ -71,7 +71,7 @@ impl<'a> ListPanes<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LIST_PANES);
+        cmd.name(LIST_PANES);
 
         // `[-a]`
         if self.all {

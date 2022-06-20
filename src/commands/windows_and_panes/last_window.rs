@@ -31,7 +31,7 @@ impl<'a> LastWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LAST_WINDOW);
+        cmd.name(LAST_WINDOW);
 
         // `[-t target-session]`
         if let Some(target_session) = self.target_session {

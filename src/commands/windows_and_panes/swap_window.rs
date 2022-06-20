@@ -55,7 +55,7 @@ impl<'a> SwapWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SWAP_WINDOW);
+        cmd.name(SWAP_WINDOW);
 
         // `[-d]`
         #[cfg(feature = "tmux_0_8")]

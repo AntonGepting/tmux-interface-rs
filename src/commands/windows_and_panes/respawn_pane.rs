@@ -89,7 +89,7 @@ impl<'a> RespawnPane<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(RESPAWN_PANE);
+        cmd.name(RESPAWN_PANE);
 
         // `[-k]` - any existing command is killed
         #[cfg(feature = "tmux_1_5")]

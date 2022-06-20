@@ -106,7 +106,7 @@ impl<'a> LoadBuffer<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LOAD_BUFFER);
+        cmd.name(LOAD_BUFFER);
 
         // `[-w]`
         #[cfg(feature = "tmux_3_2")]

@@ -72,7 +72,7 @@ impl<'a> RotateWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(ROTATE_WINDOW);
+        cmd.name(ROTATE_WINDOW);
 
         // `[-D]`
         #[cfg(feature = "tmux_0_8")]

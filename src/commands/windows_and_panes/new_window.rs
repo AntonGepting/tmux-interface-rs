@@ -199,7 +199,7 @@ impl<'a> NewWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(NEW_WINDOW);
+        cmd.name(NEW_WINDOW);
 
         // `[-a]` - new window is inserted at the next index up from the specified target-window
         #[cfg(feature = "tmux_1_3")]

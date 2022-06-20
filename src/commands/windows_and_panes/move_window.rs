@@ -123,7 +123,7 @@ impl<'a> MoveWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(MOVE_WINDOW);
+        cmd.name(MOVE_WINDOW);
 
         // `[-a]` - the window is moved to the next index up
         #[cfg(feature = "tmux_2_1")]

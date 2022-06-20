@@ -117,7 +117,7 @@ impl<'a> PasteBuffer<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(PASTE_BUFFER);
+        cmd.name(PASTE_BUFFER);
 
         // `[-d]` - delete the paste buffer
         #[cfg(feature = "tmux_0_8")]

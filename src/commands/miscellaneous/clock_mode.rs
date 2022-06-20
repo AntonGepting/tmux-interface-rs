@@ -46,7 +46,7 @@ impl<'a> ClockMode<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(CLOCK_MODE);
+        cmd.name(CLOCK_MODE);
 
         // `[-t target-pane]`
         #[cfg(feature = "tmux_1_0")]

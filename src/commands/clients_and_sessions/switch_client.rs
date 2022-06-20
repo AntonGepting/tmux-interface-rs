@@ -154,7 +154,7 @@ impl<'a> SwitchClient<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SWITCH_CLIENT);
+        cmd.name(SWITCH_CLIENT);
 
         // `[-E]` - update-environment option will not be applied
         #[cfg(feature = "tmux_2_1")]

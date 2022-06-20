@@ -95,7 +95,7 @@ impl<'a> SourceFile<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SOURCE_FILE);
+        cmd.name(SOURCE_FILE);
 
         // `[-F]` - value is expanded as a format
         #[cfg(feature = "tmux_3_2")]

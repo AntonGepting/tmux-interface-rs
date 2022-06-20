@@ -44,7 +44,7 @@ impl<'a> RenameSession<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(RENAME_SESSION);
+        cmd.name(RENAME_SESSION);
 
         // `[-t target-session]`
         #[cfg(feature = "tmux_0_8")]

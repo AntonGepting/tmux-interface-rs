@@ -228,7 +228,7 @@ impl<'a> SetOption<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SET_OPTION);
+        cmd.name(SET_OPTION);
 
         // `[-a]` - value is appended to the existing setting, if the option expects a string or a style
         #[cfg(feature = "tmux_1_0")]

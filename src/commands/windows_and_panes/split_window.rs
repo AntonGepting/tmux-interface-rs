@@ -232,7 +232,7 @@ impl<'a> SplitWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SPLIT_WINDOW);
+        cmd.name(SPLIT_WINDOW);
 
         // `[-b]` - cause the new pane to be created to the left of or above target-pane
         #[cfg(feature = "tmux_2_4")]

@@ -59,7 +59,7 @@ impl<'a> ListClients<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LIST_CLIENTS);
+        cmd.name(LIST_CLIENTS);
 
         // `[-F format]`
         #[cfg(feature = "tmux_1_6")]

@@ -54,7 +54,7 @@ use std::borrow::Cow;
 /// tmux [-28dqUuVv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 // XXX: using environment vars
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[derive(Debug, Default)]
 pub struct Tmux<'a> {
     /// `[-2]` - Force tmux to assume the terminal supports 256 colours
     #[cfg(feature = "tmux_0_8")]
@@ -272,7 +272,7 @@ impl<'a> Tmux<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(TMUX);
+        cmd.name(TMUX);
 
         // `[-2]` - Force tmux to assume the terminal supports 256 colours
         #[cfg(feature = "tmux_0_8")]

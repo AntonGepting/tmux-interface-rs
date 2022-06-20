@@ -44,7 +44,7 @@ impl<'a> RenameWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(RENAME_WINDOW);
+        cmd.name(RENAME_WINDOW);
 
         // `[-t target-window]`
         #[cfg(feature = "tmux_0_8")]

@@ -125,7 +125,7 @@ impl<'a> SetEnvironment<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SET_ENVIRONMENT);
+        cmd.name(SET_ENVIRONMENT);
 
         // `[-F]` - value is expanded as a format
         #[cfg(feature = "tmux_3_2")]

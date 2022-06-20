@@ -39,7 +39,7 @@ impl<'a> SuspendClient<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SUSPEND_CLIENT);
+        cmd.name(SUSPEND_CLIENT);
 
         // `[-t target-client]`
         #[cfg(feature = "tmux_0_8")]

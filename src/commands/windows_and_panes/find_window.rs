@@ -104,7 +104,7 @@ impl<'a> FindWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(FIND_WINDOW);
+        cmd.name(FIND_WINDOW);
 
         // `[-r]` - regular expression
         #[cfg(feature = "tmux_3_0")]

@@ -68,7 +68,7 @@ impl<'a> ListWindows<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LIST_WINDOWS);
+        cmd.name(LIST_WINDOWS);
 
         // `[-a]`
         #[cfg(feature = "tmux_1_5")]

@@ -50,7 +50,7 @@ impl<'a> NextWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(NEXT_WINDOW);
+        cmd.name(NEXT_WINDOW);
 
         // `[-a]`
         #[cfg(feature = "tmux_0_9")]

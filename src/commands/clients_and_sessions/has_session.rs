@@ -32,7 +32,7 @@ impl<'a> HasSession<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(HAS_SESSION);
+        cmd.name(HAS_SESSION);
 
         // `[-t target-session]`
         if let Some(target_session) = self.target_session {

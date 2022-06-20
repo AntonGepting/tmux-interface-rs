@@ -95,7 +95,7 @@ impl<'a> RespawnWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(RESPAWN_WINDOW);
+        cmd.name(RESPAWN_WINDOW);
 
         // `[-k]` - any existing command is killed
         #[cfg(feature = "tmux_0_8")]

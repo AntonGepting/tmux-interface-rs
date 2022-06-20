@@ -96,7 +96,7 @@ impl<'a> IfShell<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(IF_SHELL);
+        cmd.name(IF_SHELL);
 
         // `[-b]` - run in the background
         #[cfg(feature = "tmux_1_8")]

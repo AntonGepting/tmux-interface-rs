@@ -144,7 +144,7 @@ impl<'a> SetWindowOption<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SET_WINDOW_OPTION);
+        cmd.name(SET_WINDOW_OPTION);
 
         // `[-a]` -
         #[cfg(feature = "tmux_1_0")]

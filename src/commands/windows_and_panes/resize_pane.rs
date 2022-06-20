@@ -167,7 +167,7 @@ impl<'a> ResizePane<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(RESIZE_PANE);
+        cmd.name(RESIZE_PANE);
 
         // `[-D]` - resize down by adjustment
         #[cfg(feature = "tmux_0_9")]

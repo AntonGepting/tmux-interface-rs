@@ -221,7 +221,7 @@ impl<'a> SelectPane<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SELECT_PANE);
+        cmd.name(SELECT_PANE);
 
         // `[-D]` - pane below
         #[cfg(feature = "tmux_1_3")]

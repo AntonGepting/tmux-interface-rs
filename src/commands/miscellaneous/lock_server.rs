@@ -19,7 +19,7 @@ impl LockServer {
     pub fn build<'a>(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LOCK_SERVER);
+        cmd.name(LOCK_SERVER);
 
         cmd
     }

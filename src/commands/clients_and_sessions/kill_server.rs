@@ -20,7 +20,7 @@ impl KillServer {
     pub fn build<'a>(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(KILL_SERVER);
+        cmd.name(KILL_SERVER);
 
         cmd
     }

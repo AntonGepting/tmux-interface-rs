@@ -55,7 +55,7 @@ impl<'a> ListBuffers<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LIST_BUFFERS);
+        cmd.name(LIST_BUFFERS);
 
         // `[-t target-session]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]

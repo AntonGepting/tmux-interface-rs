@@ -41,7 +41,7 @@ impl<'a> ShowHooks<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SHOW_HOOKS);
+        cmd.name(SHOW_HOOKS);
 
         // `[-g]`
         #[cfg(feature = "tmux_2_2")]

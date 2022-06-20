@@ -151,7 +151,7 @@ impl<'a> DisplayMessage<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(DISPLAY_MESSAGE);
+        cmd.name(DISPLAY_MESSAGE);
 
         // `[-a]` - list the format variables and their values
         #[cfg(feature = "tmux_2_9a")]

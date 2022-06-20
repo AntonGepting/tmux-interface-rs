@@ -141,7 +141,7 @@ impl<'a> ChooseBuffer<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(CHOOSE_BUFFER);
+        cmd.name(CHOOSE_BUFFER);
 
         // `[-N]` - start without the preview
         #[cfg(feature = "tmux_2_6")]

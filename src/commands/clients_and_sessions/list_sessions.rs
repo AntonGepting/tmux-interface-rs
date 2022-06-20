@@ -42,7 +42,7 @@ impl<'a> ListSessions<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(LIST_SESSIONS);
+        cmd.name(LIST_SESSIONS);
 
         // `[-F format]`
         #[cfg(feature = "tmux_1_6")]

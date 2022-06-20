@@ -89,7 +89,7 @@ impl<'a> SelectWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SELECT_WINDOW);
+        cmd.name(SELECT_WINDOW);
 
         // `[-l]` - equivalent to last-window
         #[cfg(feature = "tmux_1_5")]

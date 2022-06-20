@@ -46,7 +46,7 @@ impl<'a> SendPrefix<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(SEND_PREFIX);
+        cmd.name(SEND_PREFIX);
 
         // `[-2]`
         #[cfg(feature = "tmux_1_6")]

@@ -136,7 +136,7 @@ impl<'a> BindKey<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(BIND_KEY);
+        cmd.name(BIND_KEY);
 
         // `[-n]` - an alias for -T root
         #[cfg(feature = "tmux_1_0")]

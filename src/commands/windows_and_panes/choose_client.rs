@@ -157,7 +157,7 @@ impl<'a> ChooseClient<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(CHOOSE_CLIENT);
+        cmd.name(CHOOSE_CLIENT);
 
         // `[-N]` - start without the preview
         #[cfg(feature = "tmux_2_6")]

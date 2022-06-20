@@ -106,7 +106,7 @@ impl<'a> MovePane<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(MOVE_PANE);
+        cmd.name(MOVE_PANE);
 
         // `[-b]` - cause src-pane to be joined to left of or above dst-pane
         #[cfg(feature = "tmux_1_7")]
