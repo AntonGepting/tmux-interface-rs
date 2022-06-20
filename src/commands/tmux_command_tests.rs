@@ -7,7 +7,7 @@ fn tmux_command_to_string() {
     tmux.push_flag_short('c');
     tmux.push_flag_short('d');
     assert_eq!(tmux.to_string(), "cmd -cd");
-    tmux.not_combine_short_flags = true;
+    tmux.0.not_combine_short_flags = true;
     assert_eq!(tmux.to_string(), "cmd -c -d");
 }
 

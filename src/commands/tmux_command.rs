@@ -1,3 +1,5 @@
+use cmd::Cmd;
+
 use crate::{Error, Tmux, TmuxOutput};
 use std::borrow::Cow;
 use std::fmt;
@@ -11,38 +13,13 @@ use crate::commands::tmux_commands::TmuxCommands;
 // XXX: rename (.cmd to .name)?
 // XXX: environment
 /// Standard tmux command line arguments syntax:
+///
 /// ```text
 /// tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 ///
-/// Tmux command line parts:
-/// - executable (part I) (example: `tmux`)
-/// - executable args (part II) (example: `[-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path]`)
-/// - command (part III) (example: `[command]`)
-/// - command args (part IV) (example: `[flags]`)
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct TmuxCommand<'a> {
-    /// environment variables
-    pub envs: Option<Vec<(Cow<'a, str>, Cow<'a, str>)>>,
-    /// Tmux command (part III) (`[new-session]`)
-    // XXX: rename command name
-    pub name: Option<Cow<'a, str>>,
-    /// command alias (`new-session` -> `new`)
-    pub alias: Option<Cow<'a, str>>,
-    /// Tmux command flags (`[-a] [-b] [-c]`)
-    pub flags: Option<Vec<Cow<'a, str>>>,
-    pub flags_short: Option<String>,
-    /// Tmux command arguments (part IV) (`[-n session-name] [shell-command]`)
-    pub args: Option<Vec<Cow<'a, str>>>,
-    /// subcommand
-    pub cmds: Option<TmuxCommands<'a>>,
-    /// separator (" ")
-    pub separator: Option<&'a str>,
-    // `-f -a` = `-fa`
-    pub not_combine_short_flags: bool,
-    // `new-session` = `new`
-    pub not_use_alias: bool,
-}
+#[derive(Debug, Default, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
+pub struct TmuxCommand<'a>(pub Cmd<'a>);
 
 // XXX: reason?
 //macro_rules! tmux_command!("env", "cmd", "-a", "-b", "-arg 0", "param")
@@ -51,10 +28,7 @@ pub const TMUX_COMMAND_ARG_SEPARATOR: &str = " ";
 
 impl<'a> fmt::Display for TmuxCommand<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let output = self
-            .to_vec()
-            .join(self.separator.unwrap_or(TMUX_COMMAND_ARG_SEPARATOR));
-        write!(f, "{}", output)
+        self.0.fmt(f)
     }
 }
 
@@ -64,14 +38,14 @@ impl<'a> TmuxCommand<'a> {
     }
 
     /// set tmux command name
-    pub fn cmd<S: Into<Cow<'a, str>>>(&mut self, cmd: S) -> &mut Self {
-        self.name = Some(cmd.into());
+    pub fn cmd<S: Into<Cow<'a, str>>>(&mut self, name: S) -> &mut Self {
+        self.0.name(name);
         self
     }
 
     /// run tmux command
     pub fn output(&self) -> Result<TmuxOutput, Error> {
-        let mut command = Command::from(self);
+        let mut command = Command::from(&self.0);
         // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
         command.stdin(Stdio::inherit());
         let output = command.output()?;
@@ -80,14 +54,20 @@ impl<'a> TmuxCommand<'a> {
 
     // XXX: really necessary?
     pub fn spawn(&self) -> Result<Child, Error> {
-        let mut command = Command::from(self);
-        Ok(command.spawn()?)
+        let mut command = Command::from(&self.0);
+        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
+        command.stdin(Stdio::inherit());
+        let child = command.spawn()?;
+        Ok(child)
     }
 
     // XXX: really necessary?
     pub fn status(&self) -> Result<ExitStatus, Error> {
-        let mut command = Command::from(self);
-        Ok(command.status()?)
+        let mut command = Command::from(&self.0);
+        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
+        command.stdin(Stdio::inherit());
+        let status = command.status()?;
+        Ok(status)
     }
 
     pub fn env<T, U>(&mut self, key: T, value: U) -> &mut Self
@@ -95,9 +75,7 @@ impl<'a> TmuxCommand<'a> {
         T: Into<Cow<'a, str>>,
         U: Into<Cow<'a, str>>,
     {
-        self.envs
-            .get_or_insert(Vec::new())
-            .push((key.into(), value.into()));
+        self.0.env(key, value);
         self
     }
 
@@ -105,12 +83,12 @@ impl<'a> TmuxCommand<'a> {
     // if vec doesn't exist, creates it and appends with given arguments
     /// push a single flag (`-x`)
     pub fn push_flag<S: Into<Cow<'a, str>>>(&mut self, flag: S) -> &mut Self {
-        self.args.get_or_insert(Vec::new()).push(flag.into());
+        self.0.push_flag(flag);
         self
     }
 
     pub fn push_flag_short(&mut self, flag: char) -> &mut Self {
-        self.flags_short.get_or_insert(String::new()).push(flag);
+        self.0.push_flag_short(flag);
         self
     }
 
@@ -121,26 +99,24 @@ impl<'a> TmuxCommand<'a> {
         U: Into<Cow<'a, str>>,
         V: Into<Cow<'a, str>>,
     {
-        self.args
-            .get_or_insert(Vec::new())
-            .extend_from_slice(&[key.into(), option.into()]);
+        self.0.push_option(key, option);
         self
     }
 
     // if vec doesn't exist, creates it and appends with given arguments
     /// push a single parameter (`<VALUE>`)
     pub fn push_param<S: Into<Cow<'a, str>>>(&mut self, param: S) -> &mut Self {
-        self.args.get_or_insert(Vec::new()).push(param.into());
+        self.0.push_param(param);
         self
     }
 
     pub fn push_cmd(&mut self, command: TmuxCommand<'a>) -> &mut Self {
-        self.cmds.get_or_insert(TmuxCommands::new()).push(command);
+        self.0.push_cmd(command.0);
         self
     }
 
     pub fn push_cmds(&mut self, commands: TmuxCommands<'a>) -> &mut Self {
-        self.cmds = Some(commands);
+        self.0.subcommands = Some(commands.0);
         self
     }
 
@@ -154,37 +130,7 @@ impl<'a> TmuxCommand<'a> {
     //}
 
     pub fn to_vec(&self) -> Vec<Cow<'a, str>> {
-        let mut v: Vec<Cow<'a, str>> = Vec::new();
-
-        if let Some(envs) = &self.envs {
-            for (key, value) in envs {
-                v.push(Cow::Owned(format!("{}={}", key, value)));
-            }
-        }
-
-        if let Some(cmd) = &self.name {
-            v.push(cmd.to_owned());
-        }
-
-        if let Some(flags_short) = &self.flags_short {
-            if self.not_combine_short_flags {
-                for c in flags_short.chars() {
-                    v.push(Cow::Owned(format!("-{}", c)));
-                }
-            } else {
-                v.push(Cow::Owned(format!("-{}", flags_short)));
-            }
-        }
-
-        if let Some(args) = &self.args {
-            v.extend(args.to_vec());
-        }
-
-        if let Some(cmds) = &self.cmds {
-            v.extend(cmds.to_vec());
-        }
-
-        v
+        self.0.to_vec()
     }
 
     pub fn to_tmux(self) -> Tmux<'a> {
@@ -211,8 +157,6 @@ impl<'a> TmuxCommand<'a> {
     //}
 }
 
-const EMPTY_COMMAND: &str = "";
-
 // create ready to exec `std::process::Command`
 // - create `std::process::Command`
 // - push binary arguments
@@ -220,32 +164,7 @@ const EMPTY_COMMAND: &str = "";
 // - push command args
 impl<'a> From<&TmuxCommand<'a>> for Command {
     fn from(tmux_command: &TmuxCommand) -> Self {
-        // user given command or blank command
-        let name = tmux_command
-            .name
-            .as_ref()
-            .unwrap_or(&Cow::Borrowed(EMPTY_COMMAND));
-        let mut command = Command::new(name.as_ref());
-
-        // environment variables
-        if let Some(envs) = &tmux_command.envs {
-            command.envs(
-                envs.iter()
-                    .map(|(key, value)| (key.as_ref(), value.as_ref())),
-            );
-        }
-
-        // arguments
-        if let Some(args) = &tmux_command.args {
-            command.args(args.iter().map(|arg| arg.as_ref()));
-        }
-
-        // subcommands
-        if let Some(cmds) = &tmux_command.cmds {
-            command.args(cmds.to_vec().iter().map(|arg| arg.as_ref()));
-        }
-
-        command
+        Command::from(&tmux_command.0)
     }
 }
 
@@ -255,8 +174,8 @@ impl<'a> From<&TmuxCommand<'a>> for Command {
 // - push command
 // - push command args
 impl<'a> From<TmuxCommand<'a>> for Command {
-    fn from(tmux: TmuxCommand) -> Self {
-        Command::from(&tmux)
+    fn from(tmux_command: TmuxCommand) -> Self {
+        Command::from(tmux_command.0)
     }
 }
 
@@ -400,7 +319,7 @@ impl<'a> From<TmuxCommand<'a>> for Command {
 
 */
 
-use crate::{HasSession, KillSession, NewSession};
+use crate::{HasSession, KillSession, ListPanes, ListSessions, ListWindows, NewSession};
 
 impl<'a> From<NewSession<'a>> for TmuxCommand<'a> {
     fn from(item: NewSession<'a>) -> Self {
@@ -416,6 +335,24 @@ impl<'a> From<HasSession<'a>> for TmuxCommand<'a> {
 
 impl<'a> From<KillSession<'a>> for TmuxCommand<'a> {
     fn from(item: KillSession<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ListPanes<'a>> for TmuxCommand<'a> {
+    fn from(item: ListPanes<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ListWindows<'a>> for TmuxCommand<'a> {
+    fn from(item: ListWindows<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ListSessions<'a>> for TmuxCommand<'a> {
+    fn from(item: ListSessions<'a>) -> Self {
         item.build()
     }
 }

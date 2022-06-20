@@ -1,4 +1,5 @@
 use crate::{Error, TmuxCommand, TmuxOutput};
+use cmd::CmdList;
 use std::borrow::Cow;
 use std::fmt;
 
@@ -17,29 +18,12 @@ pub const TMUX_COMMANDS_SEPARATOR: &str = "\\;";
 
 ///
 
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-pub struct TmuxCommands<'a> {
-    pub cmds: Vec<TmuxCommand<'a>>,
-    pub separator: Option<Cow<'a, str>>,
-}
+#[derive(Debug, Default, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
+pub struct TmuxCommands<'a>(pub CmdList<'a>);
 
 impl<'a> fmt::Display for TmuxCommands<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let separator = self
-            .separator
-            .as_ref()
-            .unwrap_or(&Cow::Borrowed(TMUX_COMMANDS_SEPARATOR));
-        let output = self.to_vec().join(separator.as_ref());
-        write!(f, "{}", output)
-    }
-}
-
-impl<'a> Default for TmuxCommands<'a> {
-    fn default() -> Self {
-        Self {
-            cmds: Vec::new(),
-            separator: Some(Cow::Borrowed(";")),
-        }
+        self.0.fmt(f)
     }
 }
 
@@ -50,41 +34,31 @@ impl<'a> TmuxCommands<'a> {
 
     // XXX: -> Self?
     pub fn push(&mut self, cmd: TmuxCommand<'a>) {
-        self.cmds.push(cmd);
+        self.0.push(cmd.0);
     }
 
     pub fn cmd(mut self, cmd: TmuxCommand<'a>) -> Self {
-        self.cmds.push(cmd);
+        self.0.push(cmd.0);
         self
     }
 
     // XXX: mb use in display trait?
     pub fn to_vec(&self) -> Vec<Cow<'a, str>> {
-        let mut v = Vec::new();
-
-        let len = self.cmds.len();
-        for (i, cmd) in self.cmds.iter().enumerate() {
-            v.extend(cmd.to_vec());
-
-            if let Some(separator) = &self.separator {
-                if i < len - 1 {
-                    v.push(separator.clone());
-                }
-            }
-        }
-
-        v
+        self.0.to_vec()
     }
 
-    pub fn output(self) -> Vec<Result<TmuxOutput, Error>> {
-        let mut v = Vec::new();
-
-        for cmd in self.cmds {
-            v.push(cmd.output())
-        }
-
-        v
-    }
+    // XXX: ugly
+    //pub fn output(self) -> Vec<Result<TmuxOutput, Error>> {
+    //let mut v = Vec::new();
+    //for output in self.0.output() {
+    //let output = match output {
+    //Ok(o) => Ok(TmuxOutput(o)),
+    //Err(e) => Err(Error::from(e)),
+    //};
+    //v.push(output);
+    //}
+    //v
+    //}
 
     // NOTE: from bin
     // XXX: error out
