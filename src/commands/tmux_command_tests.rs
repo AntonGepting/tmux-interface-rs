@@ -3,11 +3,11 @@ fn tmux_command_to_string() {
     use crate::TmuxCommand;
 
     let mut tmux = TmuxCommand::new();
-    tmux.cmd("cmd");
+    tmux.name("cmd");
     tmux.push_flag_short('c');
     tmux.push_flag_short('d');
     assert_eq!(tmux.to_string(), "cmd -cd");
-    tmux.0.not_combine_short_flags = true;
+    tmux.not_combine_short_flags();
     assert_eq!(tmux.to_string(), "cmd -c -d");
 }
 
@@ -16,7 +16,7 @@ fn tmux_command_to_vec() {
     use crate::TmuxCommand;
 
     let mut tmux = TmuxCommand::new();
-    tmux.cmd("cmd");
+    tmux.name("cmd");
     tmux.push_flag("--a");
     tmux.push_flag("--b");
     tmux.push_param("param");
@@ -41,7 +41,7 @@ fn tmux_subcommands() {
     use crate::TmuxCommand;
 
     let mut tmux = TmuxCommand::new();
-    tmux.cmd("tmux");
+    tmux.name("tmux");
     tmux.push_flag("--a");
     tmux.push_flag("--b");
 
