@@ -1,4 +1,4 @@
-use cmd::Cmd;
+use cmd_builder::Cmd;
 
 use crate::{Error, Tmux, TmuxOutput};
 use std::borrow::Cow;
@@ -76,6 +76,16 @@ impl<'a> TmuxCommand<'a> {
         U: Into<Cow<'a, str>>,
     {
         self.0.env(key, value);
+        self
+    }
+
+    pub fn not_combine_short_flags(&mut self) -> &mut Self {
+        self.0.not_combine_short_flags();
+        self
+    }
+
+    pub fn not_use_alias(&mut self) -> &mut Self {
+        self.0.not_use_alias();
         self
     }
 
