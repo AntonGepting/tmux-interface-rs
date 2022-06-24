@@ -1,9 +1,9 @@
 use cmd_builder::Cmd;
 
-use crate::{Error, Tmux, TmuxOutput};
+use crate::Tmux;
 use std::borrow::Cow;
 use std::fmt;
-use std::process::{Child, Command, ExitStatus, Stdio};
+use std::process::Command;
 
 //use crate::commands::tmux_bin::TmuxBin;
 //use crate::commands::tmux_bin_command::TmuxBinCommand;
@@ -43,31 +43,8 @@ impl<'a> TmuxCommand<'a> {
         self
     }
 
-    /// run tmux command
-    pub fn output(&self) -> Result<TmuxOutput, Error> {
-        let mut command = Command::from(&self.0);
-        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
-        command.stdin(Stdio::inherit());
-        let output = command.output()?;
-        Ok(TmuxOutput(output))
-    }
-
-    // XXX: really necessary?
-    pub fn spawn(&self) -> Result<Child, Error> {
-        let mut command = Command::from(&self.0);
-        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
-        command.stdin(Stdio::inherit());
-        let child = command.spawn()?;
-        Ok(child)
-    }
-
-    // XXX: really necessary?
-    pub fn status(&self) -> Result<ExitStatus, Error> {
-        let mut command = Command::from(&self.0);
-        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
-        command.stdin(Stdio::inherit());
-        let status = command.status()?;
-        Ok(status)
+    pub fn to_command(self) -> Command {
+        self.0.to_command()
     }
 
     pub fn env<T, U>(&mut self, key: T, value: U) -> &mut Self
@@ -139,11 +116,13 @@ impl<'a> TmuxCommand<'a> {
     //Command::from(self)
     //}
 
+    /// create [`Vec<Cow<'a, str>>`] from [`TmuxCommand`]
     pub fn to_vec(&self) -> Vec<Cow<'a, str>> {
         self.0.to_vec()
     }
 
-    pub fn to_tmux(self) -> Tmux<'a> {
+    /// create [`Tmux`] from [`TmuxCommand`]
+    pub fn into_tmux(self) -> Tmux<'a> {
         Tmux::new().command(self)
     }
 
@@ -166,6 +145,10 @@ impl<'a> TmuxCommand<'a> {
     //writeln!(stdin, "{}", self.to_string())
     //}
 }
+
+//pub trait BuildCommand<'a> {
+//fn build(self) -> TmuxCommand<'a>;
+//}
 
 // create ready to exec `std::process::Command`
 // - create `std::process::Command`
