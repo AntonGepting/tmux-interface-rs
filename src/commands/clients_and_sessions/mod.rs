@@ -185,3 +185,112 @@ impl<'a> TmuxCommand<'a> {
         SwitchClient::new()
     }
 }
+
+// XXX: generic
+impl<'a> From<AttachSession<'a>> for TmuxCommand<'a> {
+    fn from(item: AttachSession<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<DetachClient<'a>> for TmuxCommand<'a> {
+    fn from(item: DetachClient<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<HasSession<'a>> for TmuxCommand<'a> {
+    fn from(item: HasSession<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<KillServer> for TmuxCommand<'a> {
+    fn from(item: KillServer) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<KillSession<'a>> for TmuxCommand<'a> {
+    fn from(item: KillSession<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ListClients<'a>> for TmuxCommand<'a> {
+    fn from(item: ListClients<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ListCommands<'a>> for TmuxCommand<'a> {
+    fn from(item: ListCommands<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ListSessions<'a>> for TmuxCommand<'a> {
+    fn from(item: ListSessions<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<LockClient<'a>> for TmuxCommand<'a> {
+    fn from(item: LockClient<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<LockSession<'a>> for TmuxCommand<'a> {
+    fn from(item: LockSession<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<NewSession<'a>> for TmuxCommand<'a> {
+    fn from(item: NewSession<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<RefreshClient<'a>> for TmuxCommand<'a> {
+    fn from(item: RefreshClient<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<RenameSession<'a>> for TmuxCommand<'a> {
+    fn from(item: RenameSession<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ShowMessages<'a>> for TmuxCommand<'a> {
+    fn from(item: ShowMessages<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<SourceFile<'a>> for TmuxCommand<'a> {
+    fn from(item: SourceFile<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<StartServer> for TmuxCommand<'a> {
+    fn from(item: StartServer) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<SuspendClient<'a>> for TmuxCommand<'a> {
+    fn from(item: SuspendClient<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<SwitchClient<'a>> for TmuxCommand<'a> {
+    fn from(item: SwitchClient<'a>) -> Self {
+        item.build()
+    }
+}

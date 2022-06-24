@@ -28,3 +28,15 @@ impl<'a> TmuxCommand<'a> {
         ShowEnvironment::new()
     }
 }
+
+impl<'a> From<SetEnvironment<'a>> for TmuxCommand<'a> {
+    fn from(item: SetEnvironment<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ShowEnvironment<'a>> for TmuxCommand<'a> {
+    fn from(item: ShowEnvironment<'a>) -> Self {
+        item.build()
+    }
+}

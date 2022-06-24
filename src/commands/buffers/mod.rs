@@ -101,3 +101,58 @@ impl<'a> TmuxCommand<'a> {
         ShowBuffer::new()
     }
 }
+
+// XXX: generic
+impl<'a> From<ChooseBuffer<'a>> for TmuxCommand<'a> {
+    fn from(item: ChooseBuffer<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ClearHistory<'a>> for TmuxCommand<'a> {
+    fn from(item: ClearHistory<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<DeleteBuffer<'a>> for TmuxCommand<'a> {
+    fn from(item: DeleteBuffer<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ListBuffers<'a>> for TmuxCommand<'a> {
+    fn from(item: ListBuffers<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<LoadBuffer<'a>> for TmuxCommand<'a> {
+    fn from(item: LoadBuffer<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<PasteBuffer<'a>> for TmuxCommand<'a> {
+    fn from(item: PasteBuffer<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<SaveBuffer<'a>> for TmuxCommand<'a> {
+    fn from(item: SaveBuffer<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<SetBuffer<'a>> for TmuxCommand<'a> {
+    fn from(item: SetBuffer<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ShowBuffer<'a>> for TmuxCommand<'a> {
+    fn from(item: ShowBuffer<'a>) -> Self {
+        item.build()
+    }
+}

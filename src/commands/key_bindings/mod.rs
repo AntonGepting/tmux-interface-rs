@@ -54,3 +54,26 @@ impl<'a> TmuxCommand<'a> {
         UnbindKey::new()
     }
 }
+
+impl<'a> From<BindKey<'a>> for TmuxCommand<'a> {
+    fn from(item: BindKey<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ListKeys<'a>> for TmuxCommand<'a> {
+    fn from(item: ListKeys<'a>) -> Self {
+        item.build()
+    }
+}
+impl<'a> From<SendKeys<'a>> for TmuxCommand<'a> {
+    fn from(item: SendKeys<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<UnbindKey<'a>> for TmuxCommand<'a> {
+    fn from(item: UnbindKey<'a>) -> Self {
+        item.build()
+    }
+}

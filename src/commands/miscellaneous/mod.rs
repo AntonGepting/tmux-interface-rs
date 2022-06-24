@@ -67,3 +67,33 @@ impl<'a> TmuxCommand<'a> {
         WaitFor::new()
     }
 }
+
+impl<'a> From<ClockMode<'a>> for TmuxCommand<'a> {
+    fn from(item: ClockMode<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<IfShell<'a>> for TmuxCommand<'a> {
+    fn from(item: IfShell<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<LockServer> for TmuxCommand<'a> {
+    fn from(item: LockServer) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<RunShell<'a>> for TmuxCommand<'a> {
+    fn from(item: RunShell<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<WaitFor<'a>> for TmuxCommand<'a> {
+    fn from(item: WaitFor<'a>) -> Self {
+        item.build()
+    }
+}

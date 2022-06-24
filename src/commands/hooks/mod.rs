@@ -27,3 +27,15 @@ impl<'a> TmuxCommand<'a> {
         ShowHooks::new()
     }
 }
+
+impl<'a> From<SetHook<'a>> for TmuxCommand<'a> {
+    fn from(item: SetHook<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ShowHooks<'a>> for TmuxCommand<'a> {
+    fn from(item: ShowHooks<'a>) -> Self {
+        item.build()
+    }
+}

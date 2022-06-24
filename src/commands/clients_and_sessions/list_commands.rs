@@ -37,40 +37,6 @@ pub struct ListCommands<'a> {
     _phantom_data: PhantomData<&'a ()>,
 }
 
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct ListCommands2<T, U> {
-    pub format: Option<T>,
-    pub command: Option<U>,
-}
-
-impl<T: Default + AsRef<str>, U: Default + AsRef<str>> ListCommands2<T, U> {
-    pub fn new() -> Self {
-        Default::default()
-    }
-
-    pub fn format(&mut self, format: T) -> &mut Self {
-        self.format = Some(format);
-        self
-    }
-
-    pub fn command(&mut self, command: U) -> &mut Self {
-        self.command = Some(command);
-        self
-    }
-}
-
-#[test]
-fn test_listcommands2() {
-    let mut s = ListCommands2::new();
-    s.format(String::from("format"));
-    s.command("command");
-
-    //let mut s = ListCommands2::new();
-    //s.format(String::from("format"))
-    //s.command("command");
-    dbg!(s);
-}
-
 impl<'a> ListCommands<'a> {
     pub fn new() -> Self {
         Default::default()
@@ -111,14 +77,24 @@ impl<'a> ListCommands<'a> {
     }
 }
 
-impl<'a> From<ListCommands<'a>> for TmuxCommand<'a> {
-    fn from(item: ListCommands<'a>) -> Self {
-        item.build()
-    }
-}
+//impl<'a> BuildCommand<'a> for ListCommands<'a> {
+//fn build(self) -> TmuxCommand<'a> {
+//let mut cmd = TmuxCommand::new();
 
-//impl<'a> From<&'a mut ListCommands<'a>> for TmuxCommand<'a> {
-//fn from(item: &'a mut ListCommands<'a>) -> Self {
-//item.build()
+//cmd.name(LIST_COMMANDS);
+
+//// `[-F format]`
+//#[cfg(feature = "tmux_2_3")]
+//if let Some(format) = self.format {
+//cmd.push_option(F_UPPERCASE_KEY, format);
+//}
+
+//// `[command]`
+//#[cfg(feature = "tmux_3_2")]
+//if let Some(command) = self.command {
+//cmd.push_param(command);
+//}
+
+//cmd
 //}
 //}

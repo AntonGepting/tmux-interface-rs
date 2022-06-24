@@ -13,7 +13,7 @@
 //! [`tmux`] - tmux binary command and it's arguments
 //! [`tmux_command`] - wrapper for [`crate::cmd_builder::Cmd`] type
 //! [`tmux_commands`] - wrapper for [`crate::cmd_builder::CmdList`] type
-//! [`new_session`] - tmux autonomous command
+//! [`commands::NewSession`] - tmux autonomous command
 //!
 //!
 //! bypass arguments in right order
@@ -31,7 +31,7 @@
 //!     * autonomous
 //!     * binary
 //!
-//! # Single tmux command
+//! # Single autonomous tmux command
 //!
 //! Single tmux commands can be separated in two types:
 //!

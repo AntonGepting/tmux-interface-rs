@@ -54,3 +54,28 @@ impl<'a> TmuxCommand<'a> {
         DisplayMessage::new()
     }
 }
+
+impl<'a> From<CommandPrompt<'a>> for TmuxCommand<'a> {
+    fn from(item: CommandPrompt<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ConfirmBefore<'a>> for TmuxCommand<'a> {
+    fn from(item: ConfirmBefore<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_3_0")]
+impl<'a> From<DisplayMenu<'a>> for TmuxCommand<'a> {
+    fn from(item: DisplayMenu<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<DisplayMessage<'a>> for TmuxCommand<'a> {
+    fn from(item: DisplayMessage<'a>) -> Self {
+        item.build()
+    }
+}

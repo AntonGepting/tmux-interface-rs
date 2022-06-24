@@ -45,3 +45,27 @@ impl<'a> TmuxCommand<'a> {
         ShowWindowOptions::new()
     }
 }
+
+impl<'a> From<SetOption<'a>> for TmuxCommand<'a> {
+    fn from(item: SetOption<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<SetWindowOption<'a>> for TmuxCommand<'a> {
+    fn from(item: SetWindowOption<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ShowOptions<'a>> for TmuxCommand<'a> {
+    fn from(item: ShowOptions<'a>) -> Self {
+        item.build()
+    }
+}
+
+impl<'a> From<ShowWindowOptions<'a>> for TmuxCommand<'a> {
+    fn from(item: ShowWindowOptions<'a>) -> Self {
+        item.build()
+    }
+}
