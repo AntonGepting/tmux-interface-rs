@@ -1,7 +1,9 @@
 use crate::commands::constants::*;
 use crate::commands::tmux_command::TmuxCommand;
 use crate::commands::tmux_commands::TmuxCommands;
+use crate::{Error, TmuxOutput};
 use std::borrow::Cow;
+use std::process::{Child, Command, ExitStatus, Stdio};
 
 // XXX: set_cmds_separator
 // NOTE: [-N] missing in man
@@ -389,52 +391,65 @@ impl<'a> Tmux<'a> {
         cmd
     }
 
-    //// run tmux command
-    //pub fn output(&self) -> Result<TmuxOutput, Error> {
-    //let mut command = Command::from(self);
-    //// NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
-    //command
-    //.stdin(Stdio::inherit())
-    ////.stdin(Stdio::piped())
-    //.stdout(Stdio::piped());
-    ////.spawn()
-    //dbg!(&command);
-    //let output = command.output()?;
-    //Ok(TmuxOutput(output))
+    //pub fn to_command(&self) -> Command {
+    //Command::from(self)
     //}
 
-    //// run tmux command
-    //pub fn spawn(&self) -> Result<Child, Error> {
-    //let mut command = Command::from(self);
-    //// NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
-    //command
-    ////.stdin(Stdio::inherit())
-    //.stdin(Stdio::piped())
-    //.stdout(Stdio::piped());
-    ////.spawn()
-    //dbg!(&command);
-    //let child = command.spawn()?;
-    //Ok(child)
-    //}
-}
+    pub fn into_command(self) -> Command {
+        Command::from(self)
+    }
 
-use crate::{HasSession, KillSession, NewSession};
+    /// run tmux command
+    pub fn output(self) -> Result<TmuxOutput, Error> {
+        let mut command = Command::from(self);
+        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
+        command.stdin(Stdio::inherit());
+        let output = command.output()?;
+        Ok(TmuxOutput(output))
+    }
 
-impl<'a> From<NewSession<'a>> for Tmux<'a> {
-    fn from(item: NewSession<'a>) -> Self {
-        item.build().to_tmux()
+    // XXX: really necessary?
+    pub fn spawn(self) -> Result<Child, Error> {
+        let mut command = Command::from(self);
+        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
+        command.stdin(Stdio::inherit());
+        let child = command.spawn()?;
+        Ok(child)
+    }
+
+    // XXX: really necessary?
+    pub fn status(self) -> Result<ExitStatus, Error> {
+        let mut command = Command::from(self);
+        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
+        command.stdin(Stdio::inherit());
+        let status = command.status()?;
+        Ok(status)
     }
 }
 
-impl<'a> From<HasSession<'a>> for Tmux<'a> {
-    fn from(item: HasSession<'a>) -> Self {
-        item.build().to_tmux()
-    }
-}
+//use crate::{HasSession, KillSession, NewSession};
 
-impl<'a> From<KillSession<'a>> for Tmux<'a> {
-    fn from(item: KillSession<'a>) -> Self {
-        item.build().to_tmux()
+//impl<'a> From<NewSession<'a>> for Tmux<'a> {
+//fn from(item: NewSession<'a>) -> Self {
+//item.build().into_tmux()
+//}
+//}
+
+//impl<'a> From<HasSession<'a>> for Tmux<'a> {
+//fn from(item: HasSession<'a>) -> Self {
+//item.build().into_tmux()
+//}
+//}
+
+//impl<'a> From<KillSession<'a>> for Tmux<'a> {
+//fn from(item: KillSession<'a>) -> Self {
+//item.build().into_tmux()
+//}
+//}
+
+impl<'a> From<Tmux<'a>> for Command {
+    fn from(item: Tmux<'a>) -> Self {
+        item.build().into()
     }
 }
 
