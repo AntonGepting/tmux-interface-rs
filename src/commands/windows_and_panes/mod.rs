@@ -110,78 +110,82 @@ pub mod unlink_window;
 //#[cfg(feature = "tmux_1_0")]
 //pub mod up_pane;
 
-#[cfg(feature = "tmux_0_8")]
-pub mod break_pane_tests;
-#[cfg(feature = "tmux_1_2")]
-pub mod capture_pane_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod choose_client_tests;
-#[cfg(feature = "tmux_1_7")]
-pub mod choose_tree_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod copy_mode_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod display_panes_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod find_window_tests;
-#[cfg(feature = "tmux_1_2")]
-pub mod join_pane_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod kill_pane_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod kill_window_tests;
-#[cfg(feature = "tmux_1_4")]
-pub mod last_pane_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod last_window_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod link_window_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod list_panes_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod list_windows_tests;
-#[cfg(feature = "tmux_1_7")]
-pub mod move_pane_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod move_window_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod new_window_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod next_layout_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod next_window_tests;
-#[cfg(feature = "tmux_1_1")]
-pub mod pipe_pane_tests;
-#[cfg(feature = "tmux_1_3")]
-pub mod previous_layout_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod previous_window_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod rename_window_tests;
-#[cfg(feature = "tmux_0_9")]
-pub mod resize_pane_tests;
-#[cfg(feature = "tmux_2_9")]
-pub mod resize_window_tests;
-#[cfg(feature = "tmux_1_5")]
-pub mod respawn_pane_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod respawn_window_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod rotate_window_tests;
-#[cfg(feature = "tmux_0_9")]
-pub mod select_layout_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod select_pane_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod select_window_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod split_window_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod swap_pane_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod swap_window_tests;
-#[cfg(feature = "tmux_0_8")]
-pub mod unlink_window_tests;
+#[cfg(test)]
+#[path = "."]
+mod windows_and_panes_tests {
+    #[cfg(feature = "tmux_0_8")]
+    pub mod break_pane_tests;
+    #[cfg(feature = "tmux_1_2")]
+    pub mod capture_pane_tests;
+    #[cfg(feature = "tmux_1_0")]
+    pub mod choose_client_tests;
+    #[cfg(feature = "tmux_1_7")]
+    pub mod choose_tree_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod copy_mode_tests;
+    #[cfg(feature = "tmux_1_0")]
+    pub mod display_panes_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod find_window_tests;
+    #[cfg(feature = "tmux_1_2")]
+    pub mod join_pane_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod kill_pane_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod kill_window_tests;
+    #[cfg(feature = "tmux_1_4")]
+    pub mod last_pane_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod last_window_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod link_window_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod list_panes_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod list_windows_tests;
+    #[cfg(feature = "tmux_1_7")]
+    pub mod move_pane_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod move_window_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod new_window_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod next_layout_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod next_window_tests;
+    #[cfg(feature = "tmux_1_1")]
+    pub mod pipe_pane_tests;
+    #[cfg(feature = "tmux_1_3")]
+    pub mod previous_layout_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod previous_window_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod rename_window_tests;
+    #[cfg(feature = "tmux_0_9")]
+    pub mod resize_pane_tests;
+    #[cfg(feature = "tmux_2_9")]
+    pub mod resize_window_tests;
+    #[cfg(feature = "tmux_1_5")]
+    pub mod respawn_pane_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod respawn_window_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod rotate_window_tests;
+    #[cfg(feature = "tmux_0_9")]
+    pub mod select_layout_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod select_pane_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod select_window_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod split_window_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod swap_pane_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod swap_window_tests;
+    #[cfg(feature = "tmux_0_8")]
+    pub mod unlink_window_tests;
+}
 
 /// All functions from man tmux "Windows and Panes" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES))

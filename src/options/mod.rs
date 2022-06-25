@@ -13,14 +13,18 @@ pub mod session_options;
 #[cfg(feature = "tmux_1_2")]
 pub mod window_options;
 
-#[cfg(feature = "tmux_3_1")]
-pub mod pane_options_tests;
-#[cfg(feature = "tmux_1_2")]
-pub mod server_options_tests;
-#[cfg(feature = "tmux_1_0")]
-pub mod session_options_tests;
-#[cfg(feature = "tmux_1_2")]
-pub mod window_options_tests;
+#[cfg(test)]
+#[path = "."]
+mod options_tests {
+    #[cfg(feature = "tmux_3_1")]
+    pub mod pane_options_tests;
+    #[cfg(feature = "tmux_1_2")]
+    pub mod server_options_tests;
+    #[cfg(feature = "tmux_1_0")]
+    pub mod session_options_tests;
+    #[cfg(feature = "tmux_1_2")]
+    pub mod window_options_tests;
+}
 
 #[cfg(feature = "tmux_3_1")]
 use crate::options::pane_options::PaneOptions;

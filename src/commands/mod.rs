@@ -13,7 +13,7 @@
 //! [`tmux`] - tmux binary command and it's arguments
 //! [`tmux_command`] - wrapper for [`crate::cmd_builder::Cmd`] type
 //! [`tmux_commands`] - wrapper for [`crate::cmd_builder::CmdList`] type
-//! [`commands::NewSession`] - tmux autonomous command
+//! [`NewSession`][`crate::commands::clients_and_sessions::new_session::NewSession`] - tmux autonomous command
 //!
 //!
 //! bypass arguments in right order
@@ -104,11 +104,11 @@ pub mod tmux_commands;
 pub mod tmux_output;
 
 #[cfg(test)]
-pub mod tmux_command_tests;
-#[cfg(test)]
-pub mod tmux_commands_tests;
-#[cfg(test)]
-pub mod tmux_tests;
+pub mod commands_tests {
+    pub mod tmux_command_tests;
+    pub mod tmux_commands_tests;
+    pub mod tmux_tests;
+}
 
 pub mod buffers;
 pub mod clients_and_sessions;

@@ -208,6 +208,7 @@
 //!     use crate::tmux_interface::{AttachSession, NewSession, TargetPane, TargetSession, TmuxCommand};
 //!
 //!     let target_session = TargetSession::Raw("session_name").to_string();
+//!
 //!     let mut tmux = TmuxCommand::new();
 //!     let new_session = NewSession::new().detached().session_name("session_name").output();
 //!     let attach_session = AttachSession::new().target_session(&target_session).output();
@@ -216,6 +217,8 @@
 //!     ```
 //!
 //!
+
+extern crate cmd_builder;
 
 pub mod error;
 
@@ -650,7 +653,9 @@ pub use crate::options::pane_options::PANE_OPTIONS_ALL;
 pub use crate::options::pane_options::PANE_OPTIONS_NONE;
 
 pub use self::commands::tmux_command::TmuxCommand;
+pub use self::commands::tmux_commands::TmuxCommands;
 pub use self::commands::tmux_output::TmuxOutput;
+pub use self::commands::Tmux;
 
 // buffers
 #[cfg(feature = "tmux_1_3")]
@@ -845,7 +850,7 @@ pub use self::commands::windows_and_panes::swap_window::SwapWindow;
 pub use self::commands::windows_and_panes::unlink_window::UnlinkWindow;
 
 // enums
-pub use crate::commands::PaneSize;
+pub use crate::commands::common::PaneSize;
 
 pub use crate::target::target_pane::{TargetPane, TargetPaneExt, TargetPaneToken};
 pub use crate::target::target_session::TargetSession;
@@ -885,6 +890,10 @@ pub use self::version::Version;
 // structs
 pub use self::error::Error;
 
-//mod options_tests;
-//mod tmux_option_tests;
-mod version_tests;
+#[cfg(test)]
+#[path = "."]
+mod lib_tests {
+    //mod options_tests;
+    //mod tmux_option_tests;
+    mod version_tests;
+}

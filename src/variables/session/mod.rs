@@ -2,6 +2,10 @@ pub mod session;
 pub mod session_stack;
 pub mod sessions;
 
-pub mod session_stack_tests;
-pub mod session_tests;
-pub mod sessions_tests;
+#[cfg(test)]
+#[path = "."]
+mod variables_session_tests {
+    mod session_stack_tests;
+    mod session_tests;
+    mod sessions_tests;
+}
