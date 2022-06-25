@@ -104,10 +104,11 @@ pub mod tmux_commands;
 pub mod tmux_output;
 
 #[cfg(test)]
-pub mod commands_tests {
-    pub mod tmux_command_tests;
-    pub mod tmux_commands_tests;
-    pub mod tmux_tests;
+#[path = "."]
+mod commands_tests {
+    mod tmux_command_tests;
+    mod tmux_commands_tests;
+    mod tmux_tests;
 }
 
 pub mod buffers;
