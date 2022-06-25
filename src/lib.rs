@@ -232,7 +232,7 @@ pub mod version;
 
 pub mod control_mode;
 
-pub mod format;
+pub mod formats;
 
 // common options
 pub use crate::options::StatusKeys;

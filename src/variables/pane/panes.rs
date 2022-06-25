@@ -1,6 +1,7 @@
-use crate::format::format::Format;
+use crate::formats::formats::Formats;
 use crate::Error;
-use crate::{ListPanes, Pane};
+use crate::{ListPanes, Pane, Tmux};
+//use std::borrow::Cow;
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -35,14 +36,16 @@ impl Panes {
 
     // XXX: generic
     pub fn get<S: ToString>(target_window: S) -> Result<Self, Error> {
-        let mut format = Format::new();
+        let mut format = Formats::new();
         format.separator(':');
+        let format = format.to_string();
 
-        let lsp_format = format.to_string();
-        let output = ListPanes::new()
-            .format(&lsp_format)
-            .target(target_window.to_string())
-            .build()
+        let output = Tmux::new()
+            .command(
+                ListPanes::new()
+                    .format(format)
+                    .target(target_window.to_string()),
+            )
             .output()?
             .to_string();
 
@@ -51,14 +54,16 @@ impl Panes {
 
     // XXX: generic
     pub fn get_all<S: ToString>(target_session: S) -> Result<Self, Error> {
-        let mut format = Format::new();
+        let mut format = Formats::new();
         format.separator(':');
+        let format = format.to_string();
 
-        let lsp_format = format.to_string();
-        let output = ListPanes::new()
-            .format(&lsp_format)
-            .target(target_session.to_string())
-            .build()
+        let output = Tmux::new()
+            .command(
+                ListPanes::new()
+                    .format(format)
+                    .target(target_session.to_string()),
+            )
             .output()?
             .to_string();
 

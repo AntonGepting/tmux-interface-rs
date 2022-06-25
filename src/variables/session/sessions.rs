@@ -1,7 +1,5 @@
-use crate::format::format::Format;
-use crate::Error;
-use crate::ListSessions;
-use crate::Session;
+use crate::formats::formats::Formats;
+use crate::{Error, ListSessions, Session, Tmux};
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -34,7 +32,7 @@ impl Sessions {
     }
 
     pub fn get() -> Result<Self, Error> {
-        let mut format = Format::new();
+        let mut format = Formats::new();
         format.separator(':');
 
         #[cfg(feature = "tmux_2_1")]
@@ -87,9 +85,8 @@ impl Sessions {
         format.session_windows();
 
         let ls_format = format.to_string();
-        let output = ListSessions::new()
-            .format(&ls_format)
-            .build()
+        let output = Tmux::new()
+            .command(ListSessions::new().format(&ls_format))
             .output()?
             .to_string();
         Sessions::from_str(&output)

@@ -1,23 +1,23 @@
-use crate::format::variable::Variable;
+use crate::formats::variable::Variable;
 use std::fmt;
 
 #[derive(Debug)]
-pub struct Format {
+pub struct Formats {
     // XXX: string or char, join(), split() ?
     pub separator: char,
     pub variables: Vec<Variable>,
 }
 
-impl Default for Format {
+impl Default for Formats {
     fn default() -> Self {
-        Format {
+        Formats {
             separator: '\'',
             variables: Vec::new(),
         }
     }
 }
 
-impl fmt::Display for Format {
+impl fmt::Display for Formats {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let output = self
             .variables
@@ -29,7 +29,7 @@ impl fmt::Display for Format {
     }
 }
 
-impl Format {
+impl Formats {
     pub fn new() -> Self {
         Default::default()
     }

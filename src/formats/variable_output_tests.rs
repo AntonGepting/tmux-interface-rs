@@ -1,6 +1,6 @@
 #[test]
 fn from_string() {
-    use crate::format::variable_output::VariableOutput;
+    use crate::formats::variable_output::VariableOutput;
 
     let mut f: Option<bool> = None;
     let f_str = "1";

@@ -1,6 +1,6 @@
-use crate::format::format::Format;
+use crate::formats::formats::Formats;
 use crate::variables::window::window::WINDOW_VARS_SEPARATOR;
-use crate::{Error, ListWindows, Window};
+use crate::{Error, ListWindows, Tmux, Window};
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -34,15 +34,17 @@ impl Windows {
 
     // XXX: generic
     pub fn get<S: ToString>(target_session: S) -> Result<Self, Error> {
-        let mut format = Format::new();
+        let mut format = Formats::new();
         format.separator(WINDOW_VARS_SEPARATOR);
 
         let lsw_format = format.to_string();
 
-        let output = ListWindows::new()
-            .format(&lsw_format)
-            .target_session(target_session.to_string())
-            .build()
+        let output = Tmux::new()
+            .command(
+                ListWindows::new()
+                    .format(&lsw_format)
+                    .target_session(target_session.to_string()),
+            )
             .output()?
             .to_string();
 

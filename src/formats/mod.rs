@@ -32,16 +32,16 @@
 //! # See Also
 //! * [Tmux Manual -> Formats](https://man7.org/linux/man-pages/man1/tmux.1.html#FORMATS)
 //!
-pub mod format;
-pub mod format_output;
+pub mod formats;
+pub mod formats_output;
 pub mod variable;
 pub mod variable_output;
 
 #[cfg(test)]
 #[path = "."]
 mod formats_tests {
-    mod format_output_tests;
-    mod format_tests;
+    mod formats_output_tests;
+    mod formats_tests;
     mod variable_output_tests;
     mod variable_tests;
 }

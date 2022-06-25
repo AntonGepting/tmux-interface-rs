@@ -1,4 +1,4 @@
-use crate::format::format_output::FormatOutput;
+use crate::formats::formats_output::FormatsOutput;
 use crate::Error;
 #[cfg(feature = "tmux_1_8")]
 use crate::PaneTabs;
@@ -128,7 +128,7 @@ impl Pane {
 
     pub fn from_str<S: AsRef<str>>(s: S) -> Result<Self, Error> {
         let mut pane = Pane::new();
-        let mut format = FormatOutput::new();
+        let mut format = FormatsOutput::new();
         format.separator(PANE_VARS_SEPARATOR);
 
         #[cfg(feature = "tmux_1_6")]
@@ -198,7 +198,7 @@ impl Pane {
         #[cfg(feature = "tmux_1_6")]
         format.pane_width(&mut pane.width);
 
-        FormatOutput::from_string_ext(s.as_ref(), &mut format);
+        FormatsOutput::from_string_ext(s.as_ref(), &mut format);
         Ok(pane)
     }
 }

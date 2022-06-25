@@ -1,25 +1,25 @@
-use crate::format::variable_output::VariableOutput;
+use crate::formats::variable_output::VariableOutput;
 use crate::Layout;
 use crate::PaneTabs;
 use crate::SessionStack;
 use crate::WindowFlags;
 
 #[derive(Debug)]
-pub struct FormatOutput<'a> {
+pub struct FormatsOutput<'a> {
     pub separator: char,
     pub variables: Vec<VariableOutput<'a>>,
 }
 
-impl<'a> Default for FormatOutput<'a> {
+impl<'a> Default for FormatsOutput<'a> {
     fn default() -> Self {
-        FormatOutput {
+        FormatsOutput {
             separator: '\'',
             variables: Vec::new(),
         }
     }
 }
 
-impl<'a> FormatOutput<'a> {
+impl<'a> FormatsOutput<'a> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -37,7 +37,7 @@ impl<'a> FormatOutput<'a> {
 
     // TODO: check vec same size, return type?
     // XXX: mb from_string for default format too?
-    pub fn from_string_ext(s: &str, format: &'a mut FormatOutput<'a>) {
+    pub fn from_string_ext(s: &str, format: &'a mut FormatsOutput<'a>) {
         let v: Vec<&str> = s.split(format.separator).collect();
         for (i, variable) in v.iter().enumerate() {
             VariableOutput::from_string_ext(variable, &mut format.variables[i]);

@@ -1,4 +1,4 @@
-use crate::format::format_output::FormatOutput;
+use crate::formats::formats_output::FormatsOutput;
 use crate::Error;
 use crate::Layout;
 use crate::WindowFlags;
@@ -132,7 +132,7 @@ impl Window {
     // XXX: mb deserialize like serde something?
     pub fn from_str<S: AsRef<str>>(s: S) -> Result<Self, Error> {
         let mut window = Window::new();
-        let mut format = FormatOutput::new();
+        let mut format = FormatsOutput::new();
 
         format.separator(WINDOW_VARS_SEPARATOR);
 
@@ -212,7 +212,7 @@ impl Window {
         #[cfg(feature = "tmux_2_0")]
         format.window_zoomed_flag(&mut window.zoomed_flag);
 
-        FormatOutput::from_string_ext(s.as_ref(), &mut format);
+        FormatsOutput::from_string_ext(s.as_ref(), &mut format);
         Ok(window)
     }
 }

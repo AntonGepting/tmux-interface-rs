@@ -1,4 +1,4 @@
-use crate::format::format_output::FormatOutput;
+use crate::formats::formats_output::FormatsOutput;
 use crate::Error;
 #[cfg(feature = "tmux_2_5")]
 use crate::SessionStack;
@@ -93,7 +93,7 @@ impl Session {
 
     pub fn from_str<S: AsRef<str>>(s: S) -> Result<Self, Error> {
         let mut session = Session::new();
-        let mut format = FormatOutput::new();
+        let mut format = FormatsOutput::new();
         format.separator(':');
 
         #[cfg(feature = "tmux_2_1")]
@@ -145,7 +145,7 @@ impl Session {
         #[cfg(feature = "tmux_1_6")]
         format.session_windows(&mut session.windows);
 
-        FormatOutput::from_string_ext(s.as_ref(), &mut format);
+        FormatsOutput::from_string_ext(s.as_ref(), &mut format);
         Ok(session)
     }
 
