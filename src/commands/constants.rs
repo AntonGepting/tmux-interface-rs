@@ -281,6 +281,9 @@ pub const RENAME_SESSION: &str = "rename-session";
 #[cfg(feature = "cmd_alias")]
 pub const RENAME_SESSION: &str = "rename";
 
+/// `server-access`
+pub const SERVER_ACCESS: &str = "server-access";
+
 /// `show-messages`
 #[cfg(not(feature = "cmd_alias"))]
 pub const SHOW_MESSAGES: &str = "show-messages";

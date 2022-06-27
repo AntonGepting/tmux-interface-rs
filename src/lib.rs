@@ -709,6 +709,8 @@ pub use self::commands::clients_and_sessions::refresh_client::RefreshClient;
 pub use self::commands::clients_and_sessions::refresh_client::State;
 #[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::rename_session::RenameSession;
+#[cfg(feature = "tmux_3_3")]
+pub use self::commands::clients_and_sessions::server_access::ServerAccess;
 #[cfg(feature = "tmux_1_2")]
 pub use self::commands::clients_and_sessions::show_messages::ShowMessages;
 #[cfg(feature = "tmux_0_8")]

@@ -2,6 +2,8 @@
 use crate::LockClient;
 #[cfg(feature = "tmux_1_1")]
 use crate::LockSession;
+#[cfg(feature = "tmux_3_3")]
+use crate::ServerAccess;
 #[cfg(feature = "tmux_1_2")]
 use crate::ShowMessages;
 use crate::TmuxCommand;
@@ -40,6 +42,8 @@ pub mod new_session;
 pub mod refresh_client;
 #[cfg(feature = "tmux_0_8")]
 pub mod rename_session;
+#[cfg(feature = "tmux_3_3")]
+pub mod server_access;
 #[cfg(feature = "tmux_1_2")]
 pub mod show_messages;
 #[cfg(feature = "tmux_0_8")]
@@ -261,6 +265,13 @@ impl<'a> From<RefreshClient<'a>> for TmuxCommand<'a> {
 
 impl<'a> From<RenameSession<'a>> for TmuxCommand<'a> {
     fn from(item: RenameSession<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_3_3")]
+impl<'a> From<ServerAccess<'a>> for TmuxCommand<'a> {
+    fn from(item: ServerAccess<'a>) -> Self {
         item.build()
     }
 }
