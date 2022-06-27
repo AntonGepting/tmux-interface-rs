@@ -36,7 +36,7 @@ fn source_file() {
     #[cfg(feature = "tmux_3_0")]
     let source_file = source_file.not_execute();
     #[cfg(feature = "tmux_3_0")]
-    let source_file = source_file.quite();
+    let source_file = source_file.quiet();
     #[cfg(feature = "tmux_3_0")]
     let source_file = source_file.verbose();
     #[cfg(feature = "tmux_0_8")]

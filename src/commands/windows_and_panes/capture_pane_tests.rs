@@ -48,7 +48,7 @@ fn capture_pane() {
     #[cfg(feature = "tmux_1_8")]
     let capture_pane = capture_pane.pane();
     #[cfg(feature = "tmux_1_8")]
-    let capture_pane = capture_pane.quite();
+    let capture_pane = capture_pane.quiet();
     #[cfg(feature = "tmux_2_4")]
     let capture_pane = capture_pane.escape_non_printable();
     #[cfg(feature = "tmux_2_4")]

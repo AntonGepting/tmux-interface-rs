@@ -61,7 +61,7 @@ pub struct UnbindKey<'a> {
 
     /// `[-q]`
     #[cfg(feature = "tmux_3_2")]
-    pub quite: bool,
+    pub quiet: bool,
 
     /// `[-t mode-key]`
     #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
@@ -105,7 +105,7 @@ impl<'a> UnbindKey<'a> {
 
     /// `[-q]`
     #[cfg(feature = "tmux_3_2")]
-    pub fn quite(mut self) -> Self {
+    pub fn quiet(mut self) -> Self {
         self.quiet = true;
         self
     }

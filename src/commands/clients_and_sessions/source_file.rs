@@ -41,7 +41,7 @@ pub struct SourceFile<'a> {
 
     /// `[-q]`
     #[cfg(feature = "tmux_3_0")]
-    pub quite: bool,
+    pub quiet: bool,
 
     /// `[-v]`
     #[cfg(feature = "tmux_3_0")]
@@ -73,8 +73,8 @@ impl<'a> SourceFile<'a> {
 
     /// `[-q]`
     #[cfg(feature = "tmux_3_0")]
-    pub fn quite(mut self) -> Self {
-        self.quite = true;
+    pub fn quiet(mut self) -> Self {
+        self.quiet = true;
         self
     }
 
@@ -111,7 +111,7 @@ impl<'a> SourceFile<'a> {
 
         // `[-q]`
         #[cfg(feature = "tmux_3_0")]
-        if self.quite {
+        if self.quiet {
             cmd.push_flag(Q_LOWERCASE_KEY);
         }
 

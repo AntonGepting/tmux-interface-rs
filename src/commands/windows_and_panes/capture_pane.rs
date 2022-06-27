@@ -52,9 +52,9 @@ pub struct CapturePane<'a> {
     #[cfg(feature = "tmux_1_8")]
     pub pane: bool,
 
-    /// `[-q]` - quite
+    /// `[-q]` - quiet
     #[cfg(feature = "tmux_1_8")]
-    pub quite: bool,
+    pub quiet: bool,
 
     /// `[-C]` - escape non-printable characters as octal \xxx
     #[cfg(feature = "tmux_2_4")]
@@ -121,10 +121,10 @@ impl<'a> CapturePane<'a> {
         self
     }
 
-    /// `[-q]` - quite
+    /// `[-q]` - quiet
     #[cfg(feature = "tmux_1_8")]
-    pub fn quite(mut self) -> Self {
-        self.quite = true;
+    pub fn quiet(mut self) -> Self {
+        self.quiet = true;
         self
     }
 
@@ -209,9 +209,9 @@ impl<'a> CapturePane<'a> {
             cmd.push_flag(P_UPPERCASE_KEY);
         }
 
-        // `[-q]` - quite
+        // `[-q]` - quiet
         #[cfg(feature = "tmux_1_8")]
-        if self.quite {
+        if self.quiet {
             cmd.push_flag(Q_LOWERCASE_KEY);
         }
 

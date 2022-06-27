@@ -54,7 +54,7 @@ fn unbind_key() {
     #[cfg(feature = "tmux_1_0")]
     let unbind_key = unbind_key.root();
     #[cfg(feature = "tmux_3_2")]
-    let unbind_key = unbind_key.quite();
+    let unbind_key = unbind_key.quiet();
     #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
     let unbind_key = unbind_key.mode_key("1");
     #[cfg(feature = "tmux_1_0")]
