@@ -657,6 +657,9 @@ pub use self::commands::tmux_commands::TmuxCommands;
 pub use self::commands::tmux_output::TmuxOutput;
 pub use self::commands::Tmux;
 
+#[cfg(feature = "tmux_2_9a")]
+pub use self::commands::common::client_flags::ClientFlags;
+
 // buffers
 #[cfg(feature = "tmux_1_3")]
 pub use self::commands::buffers::choose_buffer::ChooseBuffer;
@@ -680,8 +683,6 @@ pub use self::commands::buffers::show_buffer::ShowBuffer;
 // clients and sessions
 #[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::attach_session::AttachSession;
-#[cfg(feature = "tmux_2_9a")]
-pub use self::commands::clients_and_sessions::client_flags::ClientFlags;
 #[cfg(feature = "tmux_0_8")]
 pub use self::commands::clients_and_sessions::detach_client::DetachClient;
 #[cfg(feature = "tmux_0_8")]
@@ -774,6 +775,8 @@ pub use self::commands::status_line::confirm_before::ConfirmBefore;
 pub use self::commands::status_line::display_menu::DisplayMenu;
 #[cfg(feature = "tmux_1_0")]
 pub use self::commands::status_line::display_message::DisplayMessage;
+#[cfg(feature = "tmux_3_2")]
+pub use self::commands::status_line::display_popup::DisplayPopup;
 
 // windows and panes
 #[cfg(feature = "tmux_0_8")]

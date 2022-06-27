@@ -7,6 +7,13 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
+/// tmux ^3.2:
+/// ```text
+/// tmux split-window [-bdfhIvPZ] [-c start-directory] [-e environment] [-l size] [-t target-pane]
+/// [shell-command] [-F format]
+/// (alias: splitw)
+/// ```
+///
 /// tmux ^3.1:
 /// ```text
 /// tmux split-window [-bdfhIvP] [-c start-directory] [-e environment] [-l size] [-t target-pane]
@@ -95,6 +102,10 @@ pub struct SplitWindow<'a> {
     #[cfg(feature = "tmux_1_5")]
     pub print: bool,
 
+    /// `[-Z]` - print information about the new window after it has been created
+    #[cfg(feature = "tmux_3_2")]
+    pub zoom: bool,
+
     /// `[-c start_directory]` - start-directory
     #[cfg(feature = "tmux_1_7")]
     pub start_directory: Option<Cow<'a, str>>,
@@ -176,6 +187,13 @@ impl<'a> SplitWindow<'a> {
     #[cfg(feature = "tmux_1_5")]
     pub fn print(mut self) -> Self {
         self.print = true;
+        self
+    }
+
+    /// `[-Z]` - zooms if the window is not zoomed, or keeps it zoomed if already zoomed
+    #[cfg(feature = "tmux_3_2")]
+    pub fn zoom(mut self) -> Self {
+        self.zoom = true;
         self
     }
 
@@ -303,8 +321,8 @@ impl<'a> SplitWindow<'a> {
             };
             #[cfg(feature = "tmux_3_1")]
             match size {
-                PaneSize::Size(size) => cmd.push_option(L_LOWERCASE_KEY, size),
-                PaneSize::Percentage(size) => cmd.push_option(P_LOWERCASE_KEY, size),
+                PaneSize::Size(size) => cmd.push_option(L_LOWERCASE_KEY, size.to_string()),
+                PaneSize::Percentage(size) => cmd.push_option(P_LOWERCASE_KEY, size.to_string()),
             };
         }
 

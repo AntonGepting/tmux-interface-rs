@@ -62,19 +62,18 @@ fn refresh_client() {
     #[cfg(feature = "tmux_2_9a")]
     let refresh_client = refresh_client.up();
     #[cfg(feature = "tmux_3_2")]
-    let refresh_client = refresh_client.allow_actions(0, State::On);
+    let refresh_client = refresh_client.allow_actions("0", State::On);
     #[cfg(feature = "tmux_3_2")]
-    let refresh_client = refresh_client.subscribe(0, None, None);
+    let refresh_client = refresh_client.subscribe("0", None, None);
     #[cfg(feature = "tmux_2_4")]
     let refresh_client = refresh_client.size((1, 2));
     #[cfg(feature = "tmux_2_9a")]
-    {
-        let flags = ClientFlags {
-            active_pane: Some(true),
-            ..Default::default()
-        };
-        let refresh_client = refresh_client.flags(flags);
-    }
+    let flags = ClientFlags {
+        active_pane: Some(true),
+        ..Default::default()
+    };
+    #[cfg(feature = "tmux_2_9a")]
+    let refresh_client = refresh_client.flags(flags);
     #[cfg(feature = "tmux_0_8")]
     let refresh_client = refresh_client.target_client("4");
     #[cfg(feature = "tmux_2_9a")]
@@ -101,8 +100,9 @@ fn refresh_client() {
     s.push("-S");
     #[cfg(feature = "tmux_2_9a")]
     s.push("-U");
+    // TODO: %0 test
     #[cfg(feature = "tmux_3_2")]
-    s.extend_from_slice(&["-A", "%0:on"]);
+    s.extend_from_slice(&["-A", "0:on"]);
     #[cfg(feature = "tmux_3_2")]
     s.extend_from_slice(&["-B", "%0"]);
     #[cfg(feature = "tmux_3_0")]

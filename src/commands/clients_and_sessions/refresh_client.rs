@@ -6,7 +6,7 @@ use std::borrow::Cow;
 #[cfg(feature = "tmux_3_2")]
 use std::fmt;
 
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 #[cfg(feature = "tmux_3_2")]
 pub enum State {
     On,
@@ -26,6 +26,26 @@ impl fmt::Display for State {
         };
         write!(f, "{}", s)
     }
+}
+
+// XXX: struct or tuple?
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[cfg(feature = "tmux_3_2")]
+pub struct AllowActions<'a> {
+    pub pane: Cow<'a, str>,
+    pub state: State,
+}
+
+/// [-B name:what:format]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[cfg(feature = "tmux_3_2")]
+pub struct Subscribe<'a> {
+    pub name: Cow<'a, str>,
+    /// empty to check the format only for the attached session
+    /// pane ID such as ‘%0’; ‘%*’ for all panes in the attached session
+    /// window ID such as ‘@0’; or ‘@*’ for all windows in the attached session
+    pub what: Option<usize>,
+    pub format: Option<usize>,
 }
 
 /// Structure for refreshing the current client
@@ -100,12 +120,12 @@ pub struct RefreshClient<'a> {
     // TODO: accept target_pane
     /// `[-A pane:state]` - allows a control mode client to trigger actions on a pane
     #[cfg(feature = "tmux_3_2")]
-    pub allow_actions: Option<usize, State>,
+    pub allow_actions: Option<AllowActions<'a>>,
 
     // TODO: refactor, accept target_pane, target_window and masks * ...
     /// [-B name:what:format]
     #[cfg(feature = "tmux_3_2")]
-    pub subscribe: Option<(usize, usize)>,
+    pub subscribe: Option<Subscribe<'a>>,
 
     /// `[-C X,Y]` - set the width and height of a control client
     /// `[-C XxY]` - set the width and height of a control client
@@ -188,16 +208,28 @@ impl<'a> RefreshClient<'a> {
     // TODO: accept target_pane
     /// `[-A pane:state]` - allows a control mode client to trigger actions on a pane
     #[cfg(feature = "tmux_3_2")]
-    pub fn allow_actions(mut self, pane: usize, state: State) -> Self {
-        self.allow_actions = Some((pane, state));
+    pub fn allow_actions<S: Into<Cow<'a, str>>>(mut self, pane: S, state: State) -> Self {
+        self.allow_actions = Some(AllowActions {
+            pane: pane.into(),
+            state,
+        });
         self
     }
 
     // TODO: refactor, accept target_pane, target_window and masks * ...
     /// [-B name:what:format]
     #[cfg(feature = "tmux_3_2")]
-    pub fn subscribe(mut self, name: usize, what: Option<String>, format: Option<String>) -> Self {
-        self.subscribe = Some((name, what, format));
+    pub fn subscribe<S: Into<Cow<'a, str>>>(
+        mut self,
+        name: S,
+        what: Option<usize>,
+        format: Option<usize>,
+    ) -> Self {
+        self.subscribe = Some(Subscribe {
+            name: name.into(),
+            what: what,
+            format: format,
+        });
         self
     }
 
@@ -290,17 +322,20 @@ impl<'a> RefreshClient<'a> {
         // `[-A pane:state]` - allows a control mode client to trigger actions on a pane
         #[cfg(feature = "tmux_3_2")]
         if let Some(allow_actions) = self.allow_actions {
-            cmd.push_option(A_UPPERCASE_KEY, format!("%{}:{}", pane, state));
+            cmd.push_option(
+                A_UPPERCASE_KEY,
+                format!("{}:{}", allow_actions.pane, allow_actions.state),
+            );
         }
 
         // TODO: refactor, accept target_pane, target_window and masks * ...
         // [-B name:what:format]
         #[cfg(feature = "tmux_3_2")]
         if let Some(subscribe) = self.subscribe {
-            let mut arg = format!("%{}", name);
-            if let Some(s) = what {
+            let mut arg = format!("%{}", subscribe.name);
+            if let Some(s) = subscribe.what {
                 arg = format!("{}:{}", arg, s);
-                if let Some(s) = format {
+                if let Some(s) = subscribe.format {
                     arg = format!("{}:{}", arg, s);
                 }
             }

@@ -58,13 +58,12 @@ fn attach_session() {
     #[cfg(feature = "tmux_1_9")]
     let attach_session = attach_session.working_directory("1");
     #[cfg(feature = "tmux_3_2")]
-    {
-        let flags = ClientFlags {
-            active_pane: Some(true),
-            ..Default::default()
-        };
-        attach_session.flags(flags);
-    }
+    let flags = ClientFlags {
+        active_pane: Some(true),
+        ..Default::default()
+    };
+    #[cfg(feature = "tmux_3_2")]
+    let attach_session = attach_session.flags(flags);
     #[cfg(feature = "tmux_0_8")]
     let attach_session = attach_session.target_session(&target_session);
     #[cfg(feature = "tmux_0_8")]

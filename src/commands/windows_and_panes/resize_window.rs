@@ -112,7 +112,7 @@ impl<'a> ResizeWindow<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(RESIZE_WINDOW);
+        cmd.name(RESIZE_WINDOW);
 
         // `[-a]` - set the size of the smallest session containing the window
         if self.smallest {

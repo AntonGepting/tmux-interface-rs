@@ -8,6 +8,15 @@ pub mod position;
 pub use self::client_flags::ClientFlags;
 pub use self::pane_size::PaneSize;
 #[cfg(feature = "tmux_3_2")]
+pub use self::pane_size::Size;
+#[cfg(feature = "tmux_3_2")]
 pub use self::position::PositionX;
 #[cfg(feature = "tmux_3_2")]
 pub use self::position::PositionY;
+
+#[cfg(test)]
+#[path = "."]
+mod common_tests {
+    #[cfg(feature = "tmux_2_9a")]
+    pub mod client_flags_tests;
+}

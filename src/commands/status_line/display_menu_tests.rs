@@ -34,7 +34,10 @@ fn display_menu() {
     #[cfg(feature = "tmux_3_0")]
     let display_menu = display_menu.command("8");
 
+    #[cfg(not(feature = "cmd_alias"))]
     let cmd = "display-menu";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "menu";
 
     let mut s = Vec::new();
     s.push(cmd);

@@ -97,6 +97,13 @@ pub struct NewSession<'a> {
     /// [-c start-directory] - specify starting directory
     #[cfg(feature = "tmux_1_9")]
     pub start_directory: Option<Cow<'a, str>>,
+    /// [-e environment] - takes the form ‘VARIABLE=value’ and sets an environment variable for the
+    /// newly created session; it may be specified multiple times
+    #[cfg(feature = "tmux_3_2")]
+    pub environment: Option<Vec<(Cow<'a, str>, Cow<'a, str>)>>,
+    /// [-f flags] - comma-separated list of client flags
+    #[cfg(feature = "tmux_3_2")]
+    pub flags: Option<ClientFlags>,
     /// [-F format] - specify different format
     #[cfg(feature = "tmux_1_8")]
     pub format: Option<Cow<'a, str>>,
@@ -174,12 +181,13 @@ impl<'a> NewSession<'a> {
         self
     }
 
-    // XXX: mb. 2 args - var, value?
     /// `[-e start-directory]` - takes the form ‘VARIABLE=value’ and sets an environment variable
     /// for the newly created session; it may be specified multiple times.
     #[cfg(feature = "tmux_3_2")]
-    pub fn environment<S: Into<Cow<'a, str>>>(mut self, environment: S) -> Self {
-        self.environment = Some(environment.into());
+    pub fn environment<S: Into<Cow<'a, str>>>(mut self, variable: S, value: S) -> Self {
+        self.environment
+            .get_or_insert(Vec::new())
+            .push((variable.into(), value.into()));
         self
     }
 
@@ -296,7 +304,9 @@ impl<'a> NewSession<'a> {
         // for the newly created session; it may be specified multiple times.
         #[cfg(feature = "tmux_3_2")]
         if let Some(environment) = self.environment {
-            cmd.push_option(E_LOWERCASE_KEY, environment);
+            for variable in environment {
+                cmd.push_option(E_LOWERCASE_KEY, format!("{}={}", variable.0, variable.1));
+            }
         }
 
         // XXX: refactor vec?

@@ -113,6 +113,8 @@ pub const X_UPPERCASE_KEY: &str = "-X";
 pub const Z_UPPERCASE_KEY: &str = "-Z";
 /// `-CC`
 pub const CC_UPPERCASE_KEY: &str = "-CC";
+/// `-EE`
+pub const EE_UPPERCASE_KEY: &str = "-EE";
 
 /// `tmux` - Default tmux binary name
 pub const TMUX: &str = "tmux";
@@ -477,6 +479,13 @@ pub const DISPLAY_MESSAGE: &str = "display-message";
 /// `display`
 #[cfg(feature = "cmd_alias")]
 pub const DISPLAY_MESSAGE: &str = "display";
+
+/// `display-popup`
+#[cfg(not(feature = "cmd_alias"))]
+pub const DISPLAY_POPUP: &str = "display-popup";
+/// `popup`
+#[cfg(feature = "cmd_alias")]
+pub const DISPLAY_POPUP: &str = "popup";
 
 // Windows and panes
 

@@ -9,7 +9,7 @@ use std::fmt;
 /// M        Both    The mouse position
 /// W        Both    The window position on the status line
 /// S        -y      The line above or below the status line
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 #[cfg(feature = "tmux_3_2")]
 pub enum PositionX {
     ColumnNumber(usize),
@@ -42,7 +42,7 @@ impl fmt::Display for PositionX {
 /// M        Both    The mouse position
 /// W        Both    The window position on the status line
 /// S        -y      The line above or below the status line
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 #[cfg(feature = "tmux_3_2")]
 pub enum PositionY {
     ColumnNumber(usize),
@@ -69,7 +69,7 @@ impl fmt::Display for PositionY {
     }
 }
 
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 #[cfg(feature = "tmux_3_2")]
 pub enum PositionFormat {
     /// `popup_centre_x` - Centered in the client

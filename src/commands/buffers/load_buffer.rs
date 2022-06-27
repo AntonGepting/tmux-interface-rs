@@ -64,7 +64,7 @@ impl<'a> LoadBuffer<'a> {
     /// `[-w]`
     #[cfg(feature = "tmux_3_2")]
     pub fn send_to_clipboard(mut self) -> Self {
-        self.path = true;
+        self.send_to_clipboard = true;
         self
     }
 

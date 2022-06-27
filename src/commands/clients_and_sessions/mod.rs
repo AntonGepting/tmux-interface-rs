@@ -16,8 +16,6 @@ use crate::{
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#CLIENTS_AND_SESSIONS))
 #[cfg(feature = "tmux_0_8")]
 pub mod attach_session;
-#[cfg(feature = "tmux_2_9a")]
-pub mod client_flags;
 #[cfg(feature = "tmux_0_8")]
 pub mod detach_client;
 #[cfg(feature = "tmux_0_8")]
@@ -58,8 +56,6 @@ pub mod switch_client;
 mod clients_and_sessions_tests {
     #[cfg(feature = "tmux_0_8")]
     pub mod attach_session_tests;
-    #[cfg(feature = "tmux_2_9a")]
-    pub mod client_flags_tests;
     #[cfg(feature = "tmux_0_8")]
     pub mod detach_client_tests;
     #[cfg(feature = "tmux_0_8")]

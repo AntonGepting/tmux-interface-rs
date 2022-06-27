@@ -4,6 +4,8 @@ use crate::CommandPrompt;
 use crate::ConfirmBefore;
 #[cfg(feature = "tmux_3_0")]
 use crate::DisplayMenu;
+#[cfg(feature = "tmux_3_2")]
+use crate::DisplayPopup;
 use crate::TmuxCommand;
 
 #[cfg(feature = "tmux_1_0")]
@@ -21,6 +23,8 @@ pub mod display_menu;
 pub mod display_message;
 //#[cfg(feature = "tmux_1_0")]
 //pub mod select_prompt;
+#[cfg(feature = "tmux_3_2")]
+pub mod display_popup;
 
 #[cfg(test)]
 #[path = "."]
@@ -33,6 +37,8 @@ mod status_line_tests {
     pub mod display_menu_tests;
     #[cfg(feature = "tmux_1_0")]
     pub mod display_message_tests;
+    #[cfg(feature = "tmux_3_2")]
+    pub mod display_popup_tests;
 }
 
 /// All functions from man tmux "Status line" listed below
@@ -56,6 +62,11 @@ impl<'a> TmuxCommand<'a> {
     #[cfg(feature = "tmux_1_0")]
     pub fn display_message() -> DisplayMessage<'a> {
         DisplayMessage::new()
+    }
+
+    #[cfg(feature = "tmux_3_2")]
+    pub fn display_popup() -> DisplayPopup<'a> {
+        DisplayPopup::new()
     }
 }
 

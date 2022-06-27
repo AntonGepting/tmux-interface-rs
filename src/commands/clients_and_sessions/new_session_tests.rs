@@ -91,29 +91,28 @@ fn new_session() {
     #[cfg(feature = "tmux_1_9")]
     let new_session = new_session.start_directory("1");
     #[cfg(feature = "tmux_3_2")]
-    let new_session = new_session.environment("2");
+    let new_session = new_session.environment("2", "3");
     #[cfg(feature = "tmux_3_2")]
-    {
-        let flags = ClientFlags {
-            active_pane: Some(true),
-            ..Default::default()
-        };
-        new_session.flags(flags);
-    }
+    let flags = ClientFlags {
+        active_pane: Some(true),
+        ..Default::default()
+    };
+    #[cfg(feature = "tmux_3_2")]
+    let new_session = new_session.flags(flags);
     #[cfg(feature = "tmux_1_8")]
-    let new_session = new_session.format("3");
+    let new_session = new_session.format("4");
     #[cfg(feature = "tmux_0_8")]
-    let new_session = new_session.window_name("4");
+    let new_session = new_session.window_name("5");
     #[cfg(feature = "tmux_0_8")]
-    let new_session = new_session.session_name("5");
+    let new_session = new_session.session_name("6");
     #[cfg(feature = "tmux_2_4")]
-    let new_session = new_session.group_name("6");
+    let new_session = new_session.group_name("7");
     #[cfg(feature = "tmux_1_6")]
-    let new_session = new_session.width(7);
+    let new_session = new_session.width(8);
     #[cfg(feature = "tmux_1_6")]
-    let new_session = new_session.height(8);
+    let new_session = new_session.height(9);
     #[cfg(feature = "tmux_1_2")]
-    let new_session = new_session.shell_command("9");
+    let new_session = new_session.shell_command("10");
 
     //let new = new_session.to_tmux_bin_command();
 
@@ -139,23 +138,23 @@ fn new_session() {
     #[cfg(feature = "tmux_1_9")]
     s.extend_from_slice(&["-c", "1"]);
     #[cfg(feature = "tmux_3_2")]
-    s.extend_from_slice(&["-e", "2"]);
+    s.extend_from_slice(&["-e", "2=3"]);
     #[cfg(feature = "tmux_3_2")]
     s.extend_from_slice(&["-f", "active-pane"]);
     #[cfg(feature = "tmux_1_8")]
-    s.extend_from_slice(&["-F", "3"]);
+    s.extend_from_slice(&["-F", "4"]);
     #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-n", "4"]);
+    s.extend_from_slice(&["-n", "5"]);
     #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-s", "5"]);
+    s.extend_from_slice(&["-s", "6"]);
     #[cfg(feature = "tmux_2_4")]
-    s.extend_from_slice(&["-t", "6"]);
+    s.extend_from_slice(&["-t", "7"]);
     #[cfg(feature = "tmux_1_6")]
-    s.extend_from_slice(&["-x", "7"]);
+    s.extend_from_slice(&["-x", "8"]);
     #[cfg(feature = "tmux_1_6")]
-    s.extend_from_slice(&["-y", "8"]);
+    s.extend_from_slice(&["-y", "9"]);
     #[cfg(feature = "tmux_1_2")]
-    s.push("9");
+    s.push("10");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let new_session = new_session.build().to_vec();

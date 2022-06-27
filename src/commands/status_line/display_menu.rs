@@ -121,7 +121,7 @@ impl<'a> DisplayMenu<'a> {
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.cmd(DISPLAY_MENU);
+        cmd.name(DISPLAY_MENU);
 
         // `[-O]` - the menu does not close when the mouse button is released without an item selected
         #[cfg(feature = "tmux_3_2")]

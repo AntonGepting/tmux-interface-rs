@@ -47,10 +47,10 @@ fn set_environment() {
     s.push(cmd);
     #[cfg(feature = "tmux_3_2")]
     s.push("-F");
-    #[cfg(feature = "tmux_1_0")]
-    s.push("-g");
     #[cfg(feature = "tmux_3_2")]
     s.push("-h");
+    #[cfg(feature = "tmux_1_0")]
+    s.push("-g");
     #[cfg(feature = "tmux_1_0")]
     s.push("-r");
     #[cfg(feature = "tmux_1_0")]

@@ -57,6 +57,10 @@ pub struct ChooseBuffer<'a> {
     #[cfg(feature = "tmux_2_6")]
     pub filter: Option<Cow<'a, str>>,
 
+    /// [-K key-format] -
+    #[cfg(feature = "tmux_3_2")]
+    pub key_format: Option<Cow<'a, str>>,
+
     /// [-O sort-order] - specifies the initial sort field
     #[cfg(feature = "tmux_2_6")]
     pub sort_order: Option<Cow<'a, str>>,
