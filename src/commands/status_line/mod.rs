@@ -1,3 +1,5 @@
+#[cfg(feature = "tmux_3_3")]
+use crate::ClearPromptHistory;
 #[cfg(feature = "tmux_0_8")]
 use crate::CommandPrompt;
 #[cfg(feature = "tmux_0_9")]
@@ -13,6 +15,8 @@ use crate::DisplayMessage;
 
 /// All functions from man tmux "Status line" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#STATUS_LINE))
+#[cfg(feature = "tmux_3_3")]
+pub mod clear_prompt_history;
 #[cfg(feature = "tmux_0_8")]
 pub mod command_prompt;
 #[cfg(feature = "tmux_0_9")]
@@ -29,6 +33,8 @@ pub mod display_popup;
 #[cfg(test)]
 #[path = "."]
 mod status_line_tests {
+    #[cfg(feature = "tmux_3_3")]
+    pub mod clear_prompt_history_tests;
     #[cfg(feature = "tmux_0_8")]
     pub mod command_prompt_tests;
     #[cfg(feature = "tmux_0_9")]
@@ -44,6 +50,11 @@ mod status_line_tests {
 /// All functions from man tmux "Status line" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#STATUS_LINE))
 impl<'a> TmuxCommand<'a> {
+    #[cfg(feature = "tmux_3_3")]
+    pub fn clear_prompt_history() -> ClearPromptHistory<'a> {
+        ClearPromptHistory::new()
+    }
+
     #[cfg(feature = "tmux_0_8")]
     pub fn command_prompt() -> CommandPrompt<'a> {
         CommandPrompt::new()

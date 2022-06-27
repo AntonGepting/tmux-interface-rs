@@ -769,6 +769,8 @@ pub use self::commands::options::show_options::ShowOptions;
 pub use self::commands::options::show_window_options::ShowWindowOptions;
 
 // status line
+#[cfg(feature = "tmux_3_3")]
+pub use self::commands::status_line::clear_prompt_history::ClearPromptHistory;
 #[cfg(feature = "tmux_0_8")]
 pub use self::commands::status_line::command_prompt::CommandPrompt;
 #[cfg(feature = "tmux_0_9")]

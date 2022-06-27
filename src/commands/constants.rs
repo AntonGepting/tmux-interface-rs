@@ -460,6 +460,13 @@ pub const SHOW_WINDOW_OPTIONS: &str = "showw";
 
 // Status Line
 
+/// `clear-prompt-history`
+#[cfg(not(feature = "cmd_alias"))]
+pub const CLEAR_PROMPT_HISTORY: &str = "clear-prompt-history";
+/// `clearphist`
+#[cfg(feature = "cmd_alias")]
+pub const CLEAR_PROMPT_HISTORY: &str = "clearphist";
+
 /// `command-prompt`
 pub const COMMAND_PROMPT: &str = "command-prompt";
 
