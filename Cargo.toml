@@ -57,10 +57,13 @@ tmux_3_1a = ["tmux_3_1"]
 tmux_3_1b = ["tmux_3_1a"]
 tmux_3_1c = ["tmux_3_1b"]
 tmux_3_2 = ["tmux_3_1c"]
+tmux_3_2a = ["tmux_3_2"]
+tmux_3_3 = ["tmux_3_2a"]
+tmux_3_3a = ["tmux_3_3"]
 # tmux current version wich is currently in development
-tmux_X_X = ["tmux_3_2"]
+tmux_X_X = ["tmux_3_3a"]
 # tmux latest synonymous version
-tmux_latest = ["tmux_3_2"]
+tmux_latest = ["tmux_3_3"]
 # tmux stable synonymous version
 #tmux_stable = ["tmux_2_8"]
 
@@ -73,3 +76,5 @@ default = ["tmux_2_8", "cmd_alias"]
 
 
 [dependencies]
+# FIXME: make public crate dep
+cmd_builder = { git = "https://github.com/AntonGepting/cmd-builder-rs" }
