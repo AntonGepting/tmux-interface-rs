@@ -11,6 +11,12 @@ fn refresh_client() {
     //
     // # Manual
     //
+    // tmux 3.3:
+    // ```text
+    // tmux refresh-client [-cDLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags]
+    // [-l [target-pane]] [-t target-client] [adjustment] (alias: refresh)
+    // ```
+    //
     // tmux 3.2:
     // ```text
     // tmux refresh-client [-cDlLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags] [-t target-client] [adjustment]
@@ -53,6 +59,8 @@ fn refresh_client() {
     let refresh_client = refresh_client.down();
     #[cfg(feature = "tmux_2_9a")]
     let refresh_client = refresh_client.request_clipboard();
+    #[cfg(all(feature = "tmux_3_3", not(feature = "tmux_3_2a")))]
+    let refresh_client = refresh_client.request_clipboard("1");
     #[cfg(feature = "tmux_2_9a")]
     let refresh_client = refresh_client.left();
     #[cfg(feature = "tmux_2_9a")]
@@ -92,6 +100,8 @@ fn refresh_client() {
     s.push("-D");
     #[cfg(feature = "tmux_2_9a")]
     s.push("-l");
+    #[cfg(all(feature = "tmux_3_3", not(feature = "tmux_3_2a")))]
+    s.extend_from_slice(["-l", "1"]);
     #[cfg(feature = "tmux_2_9a")]
     s.push("-L");
     #[cfg(feature = "tmux_2_9a")]

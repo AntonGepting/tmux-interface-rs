@@ -52,6 +52,12 @@ pub struct Subscribe<'a> {
 ///
 /// # Manual
 ///
+/// tmux 3.3:
+/// ```text
+/// tmux refresh-client [-cDLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags]
+/// [-l [target-pane]] [-t target-client] [adjustment] (alias: refresh)
+/// ```
+///
 /// tmux 3.2:
 /// ```text
 /// tmux refresh-client [-cDlLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags] [-t target-client] [adjustment]
@@ -100,6 +106,10 @@ pub struct RefreshClient<'a> {
     /// `[-l]` - request the clipboard from the client using the xterm(1) escape sequence
     #[cfg(feature = "tmux_2_9a")]
     pub request_clipboard: bool,
+
+    /// `[-l [target-pane]]` - request the clipboard from the client using the xterm(1) escape sequence
+    #[cfg(all(feature = "tmux_3_3", not(feature = "tmux_3_2a")))]
+    pub request_clipboard: Option<Option<Cow<'a, str>>>,
 
     /// `[-L]` - move the visible part of a window left by `adjustment` columns
     #[cfg(feature = "tmux_2_9a")]
@@ -174,6 +184,13 @@ impl<'a> RefreshClient<'a> {
     #[cfg(feature = "tmux_2_9a")]
     pub fn request_clipboard(mut self) -> Self {
         self.request_clipboard = true;
+        self
+    }
+
+    /// `[-l]` - request the clipboard from the client using the xterm(1) escape sequence
+    #[cfg(all(feature = "tmux_3_3", not(feature = "tmux_3_2a")))]
+    pub fn request_clipboard<S: Into<Cow<'a, str>>>(mut self, target_pane: Option<S>) -> Self {
+        self.request_clipboard = Some(target_pane);
         self
     }
 
@@ -292,6 +309,15 @@ impl<'a> RefreshClient<'a> {
         #[cfg(feature = "tmux_2_9a")]
         if self.request_clipboard {
             cmd.push_flag(L_LOWERCASE_KEY);
+        }
+
+        // `[-l]` - request the clipboard from the client using the xterm(1) escape sequence
+        #[cfg(all(feature = "tmux_3_3", not(feature = "tmux_3_2a")))]
+        if let Some(request_clipboard) = self.request_clipboard {
+            match request_clipboard {
+                Some(target_pane) => cmd.push_option(L_LOWERCASE_KEY, target_pane),
+                None => cmd.push_flag(L_LOWERCASE_KEY),
+            }
         }
 
         // `[-L]` - move the visible part of a window left by `adjustment` columns
