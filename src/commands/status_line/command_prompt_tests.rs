@@ -1,11 +1,18 @@
 #[test]
 fn command_prompt() {
+    #[cfg(feature = "tmux_3_3")]
+    use crate::commands::status_line::command_prompt::PromptType;
     use crate::CommandPrompt;
     use std::borrow::Cow;
 
     // Structure for open the command prompt in a client
     //
     // # Manual
+    //
+    // tmux ^3.3:
+    // ```text
+    // command-prompt [-1bFikN] [-I inputs] [-p prompts] [-t target-client] [-T prompt-type] [template]
+    // ```
     //
     // tmux ^3.2:
     // ```text
@@ -50,8 +57,10 @@ fn command_prompt() {
     let command_prompt = command_prompt.key_name();
     #[cfg(feature = "tmux_3_1")]
     let command_prompt = command_prompt.numeric();
-    #[cfg(feature = "tmux_3_2")]
+    #[cfg(all(feature = "tmux_3_2", not(feature = "tmux_3_3")))]
     let command_prompt = command_prompt.for_target();
+    #[cfg(feature = "tmux_3_3")]
+    let command_prompt = command_prompt.prompt_type(PromptType::Command);
     #[cfg(feature = "tmux_3_2")]
     let command_prompt = command_prompt.for_window();
     #[cfg(feature = "tmux_1_5")]
@@ -75,8 +84,10 @@ fn command_prompt() {
     s.push("-k");
     #[cfg(feature = "tmux_3_1")]
     s.push("-N");
-    #[cfg(feature = "tmux_3_2")]
+    #[cfg(all(feature = "tmux_3_2", not(feature = "tmux_3_3")))]
     s.push("-T");
+    #[cfg(feature = "tmux_3_3")]
+    s.extend_from_slice(&["-T", "command"]);
     #[cfg(feature = "tmux_3_2")]
     s.push("-W");
     #[cfg(feature = "tmux_1_5")]

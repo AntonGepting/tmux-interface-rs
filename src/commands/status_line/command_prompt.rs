@@ -1,10 +1,44 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
+#[cfg(feature = "tmux_3_3")]
+use std::fmt;
+
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[cfg(feature = "tmux_3_3")]
+pub enum PromptType {
+    /// `command`
+    Command,
+    /// `search`
+    Search,
+    /// `target`
+    Target,
+    /// `window-target`
+    WindowTarget,
+}
+
+#[cfg(feature = "tmux_3_3")]
+impl fmt::Display for PromptType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let s = match self {
+            PromptType::Command => "command",
+            PromptType::Search => "search",
+            PromptType::Target => "target",
+            PromptType::WindowTarget => "window-target",
+        };
+
+        write!(f, "{}", s)
+    }
+}
 
 /// Structure for open the command prompt in a client
 ///
 /// # Manual
+///
+/// tmux ^3.3:
+/// ```text
+/// command-prompt [-1bFikN] [-I inputs] [-p prompts] [-t target-client] [-T prompt-type] [template]
+/// ```
 ///
 /// tmux ^3.2:
 /// ```text
@@ -42,9 +76,17 @@ use std::borrow::Cow;
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct CommandPrompt<'a> {
-    /// `[-1]` makesthe prompt only accept one key press
+    /// `[-1]` - makes the prompt only accept one key press
     #[cfg(feature = "tmux_2_4")]
     pub one_keypress: bool,
+
+    /// `[-b]` - the prompt is shown in the background and the invoking client does not exit until it is dismissed
+    #[cfg(feature = "tmux_3_3")]
+    pub background: bool,
+
+    /// `[-F]` -
+    #[cfg(feature = "tmux_3_3")]
+    pub expand_as_format: bool,
 
     /// `[-i]` execute the command every time the prompt input changes
     #[cfg(feature = "tmux_2_4")]
@@ -59,8 +101,12 @@ pub struct CommandPrompt<'a> {
     pub numeric: bool,
 
     /// `[-T]` - tells tmux that the prompt is for a target which affects what completions are offered when Tab is pressed
-    #[cfg(feature = "tmux_3_2")]
+    #[cfg(all(feature = "tmux_3_2", not(feature = "tmux_3_3")))]
     pub for_target: bool,
+
+    /// `[-T prompt-type]` - tells tmux the prompt type. This affects what completions are offered when Tab is pressed
+    #[cfg(feature = "tmux_3_3")]
+    pub prompt_type: Option<PromptType>,
 
     /// `[-W]` - indicates the prompt is for a window.
     #[cfg(feature = "tmux_3_2")]
@@ -117,9 +163,16 @@ impl<'a> CommandPrompt<'a> {
     }
 
     /// `[-T]` - tells tmux that the prompt is for a target which affects what completions are offered when Tab is pressed
-    #[cfg(feature = "tmux_3_2")]
+    #[cfg(all(feature = "tmux_3_2", not(feature = "tmux_3_3")))]
     pub fn for_target(mut self) -> Self {
         self.for_target = true;
+        self
+    }
+
+    /// `[-T prompt-type]`
+    #[cfg(feature = "tmux_3_3")]
+    pub fn prompt_type(mut self, prompt_type: PromptType) -> Self {
+        self.prompt_type = Some(prompt_type);
         self
     }
 
@@ -188,9 +241,15 @@ impl<'a> CommandPrompt<'a> {
         }
 
         // `[-T]` - tells tmux that the prompt is for a target which affects what completions are offered when Tab is pressed
-        #[cfg(feature = "tmux_3_2")]
+        #[cfg(all(feature = "tmux_3_2", not(feature = "tmux_3_3")))]
         if self.for_target {
             cmd.push_flag(T_UPPERCASE_KEY);
+        }
+
+        // `[-T prompt-type]` -
+        #[cfg(feature = "tmux_3_3")]
+        if let Some(prompt_type) = self.prompt_type {
+            cmd.push_option(T_UPPERCASE_KEY, prompt_type.to_string());
         }
 
         // `[-W]` - indicates the prompt is for a window.
