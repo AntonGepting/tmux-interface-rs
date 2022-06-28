@@ -8,19 +8,19 @@ use std::borrow::Cow;
 ///
 /// tmux ^2.2:
 /// ```text
-/// tmux show-messages [-JT] [-t target-client]
+/// show-messages [-JT] [-t target-client]
 /// (alias: showmsgs)
 /// ```
 ///
 /// tmux ^1.9:
 /// ```text
-/// tmux show-messages [-IJT] [-t target-client]
+/// show-messages [-IJT] [-t target-client]
 /// (alias: showmsgs)
 /// ```
 ///
 /// tmux ^1.2:
 /// ```text
-/// tmux show-messages [-t target-client]
+/// show-messages [-t target-client]
 /// (alias: showmsgs)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

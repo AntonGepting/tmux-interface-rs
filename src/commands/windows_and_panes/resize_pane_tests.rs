@@ -9,31 +9,31 @@ fn resize_pane() {
     //
     // tmux ^3.2:
     // ```text
-    // tmux resize-pane [-DLMRTUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+    // resize-pane [-DLMRTUZ] [-t target-pane] [-x width] [-y height] [adjustment]
     // (alias: resizep)
     // ```
     //
     // tmux ^2.1:
     // ```text
-    // tmux resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+    // resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
     // (alias: resizep)
     // ```
     //
     // tmux ^1.8:
     // ```text
-    // tmux resize-pane [-DLRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+    // resize-pane [-DLRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
     // (alias: resizep)
     // ```
     //
     // tmux ^1.0:
     // ```text
-    // tmux resize-pane [-DLRU] [-t target-pane] [adjustment]
+    // resize-pane [-DLRU] [-t target-pane] [adjustment]
     // (alias: resizep)
     // ```
     //
     // tmux ^0.9:
     // ```text
-    // tmux resize-pane [-DU] [-p pane-index] [-t target-pane] [adjustment]
+    // resize-pane [-DU] [-p pane-index] [-t target-pane] [adjustment]
     // (alias: resizep)
     // ```
     let target_pane = TargetPane::Raw("1").to_string();

@@ -8,19 +8,19 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.1:
 /// ```text
-/// tmux last-pane [-deZ] [-t target-window]
+/// last-pane [-deZ] [-t target-window]
 /// (alias: lastp)
 /// ```
 ///
 /// tmux ^2.0:
 /// ```text
-/// tmux last-pane [-de] [-t target-window]
+/// last-pane [-de] [-t target-window]
 /// (alias: lastp)
 /// ```
 ///
 /// tmux ^1.4:
 /// ```text
-/// tmux last-pane [-t target-window]
+/// last-pane [-t target-window]
 /// (alias: lastp)
 /// ```
 // FIXME: versions and function parameters

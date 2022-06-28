@@ -9,19 +9,19 @@ use std::marker::PhantomData;
 ///
 /// tmux ^3.2:
 /// ```text
-/// tmux list-commands [-F format] [command]
+/// list-commands [-F format] [command]
 /// (alias: lscm)
 /// ```
 ///
 /// tmux ^2.3:
 /// ```text
-/// tmux list-commands [-F format]
+/// list-commands [-F format]
 /// (alias: lscm)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux list-commands
+/// list-commands
 /// (alias: lscm)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

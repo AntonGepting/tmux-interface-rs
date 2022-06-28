@@ -9,19 +9,19 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.6:
 /// ```text
-/// tmux list-windows [-a] [-F format] [-t target-session]
+/// list-windows [-a] [-F format] [-t target-session]
 /// (alias: lsw)
 /// ```
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux list-windows [-a] [-t target-session]
+/// list-windows [-a] [-t target-session]
 /// (alias: lsw)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux list-windows [-t target-session]
+/// list-windows [-t target-session]
 /// (alias: lsw)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

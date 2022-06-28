@@ -9,13 +9,13 @@ fn clear_history() {
     //
     // tmux ^1.0:
     // ```text
-    // tmux clear-history [-t target-pane]
+    // clear-history [-t target-pane]
     // (alias: clearhist)
     // ```
     //
     // tmux ^0.9:
     // ```text
-    // tmux clear-history [-p pane-index] [-t target-window]
+    // clear-history [-p pane-index] [-t target-window]
     // (alias: clearhist)
     // ```
     let target_pane = TargetPane::Raw("1").to_string();

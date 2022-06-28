@@ -8,13 +8,13 @@ use std::borrow::Cow;
 ///
 /// tmux ^0.9:
 /// ```text
-/// tmux previous-window [-a] [-t target-session]
+/// previous-window [-a] [-t target-session]
 /// (alias: prev)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux previous-window [-t target-session]
+/// previous-window [-t target-session]
 /// (alias: prev)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

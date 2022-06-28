@@ -9,31 +9,31 @@ fn move_window() {
     //
     // tmux ^3.2:
     // ```text
-    // tmux move-window [-abrdk] [-s src-window] [-t dst-window]
+    // move-window [-abrdk] [-s src-window] [-t dst-window]
     // (alias: movew)
     // ```
     //
     // tmux ^2.1:
     // ```text
-    // tmux move-window [-ardk] [-s src-window] [-t dst-window]
+    // move-window [-ardk] [-s src-window] [-t dst-window]
     // (alias: movew)
     // ```
     //
     // tmux ^1.7:
     // ```text
-    // tmux move-window [-rdk] [-s src-window] [-t dst-window]
+    // move-window [-rdk] [-s src-window] [-t dst-window]
     // (alias: movew)
     // ```
     //
     // tmux ^1.3:
     // ```text
-    // tmux move-window [-dk] [-s src-window] [-t dst-window]
+    // move-window [-dk] [-s src-window] [-t dst-window]
     // (alias: movew)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux move-window [-d] [-s src-window] [-t dst-window]
+    // move-window [-d] [-s src-window] [-t dst-window]
     // (alias: movew)
     // ```
 

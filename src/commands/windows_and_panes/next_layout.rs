@@ -8,7 +8,7 @@ use std::borrow::Cow;
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux next-layout [-t target-window]
+/// next-layout [-t target-window]
 /// (alias: nextl)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

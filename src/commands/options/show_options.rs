@@ -10,37 +10,37 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.0:
 /// ```text
-/// tmux show-options [-AgHpqsvw] [-t target-pane] [option]
+/// show-options [-AgHpqsvw] [-t target-pane] [option]
 /// (alias: show)
 /// ```
 ///
 /// tmux ^1.8:
 /// ```text
-/// tmux show-options [-gqsvw] [-t target-session | target-window] [option]
+/// show-options [-gqsvw] [-t target-session | target-window] [option]
 /// (alias: show)
 /// ```
 ///
 /// tmux ^1.7:
 /// ```text
-/// tmux show-options [-gsw] [-t target-session | target-window] [option]
+/// show-options [-gsw] [-t target-session | target-window] [option]
 /// (alias: show)
 /// ```
 ///
 /// tmux ^1.2:
 /// ```text
-/// tmux show-options [-gsw] [-t target-session | target-window]
+/// show-options [-gsw] [-t target-session | target-window]
 /// (alias: show)
 /// ```
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux show-options [-t target-session]
+/// show-options [-t target-session]
 /// (alias: show)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux show-options [-t target-session] option value
+/// show-options [-t target-session] option value
 /// (alias: show)
 /// ```
 // XXX: better result type?

@@ -9,13 +9,13 @@ use std::marker::PhantomData;
 ///
 /// tmux ^1.6:
 /// ```text
-/// tmux list-sessions [-F format]
+/// list-sessions [-F format]
 /// (alias: ls)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux list-sessions
+/// list-sessions
 /// (alias: ls)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

@@ -9,13 +9,13 @@ fn show_buffer() {
     //
     // tmux ^1.5:
     // ```text
-    // tmux show-buffer [-b buffer-name]
+    // show-buffer [-b buffer-name]
     // (alias: showb)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux show-buffer [-b buffer-index] [-t target-session]
+    // show-buffer [-b buffer-index] [-t target-session]
     // (alias: showb)
     // ```
     let show_buffer = ShowBuffer::new();

@@ -9,13 +9,13 @@ fn next_window() {
     //
     // tmux ^0.9:
     // ```text
-    // tmux next-window [-a] [-t target-session]
+    // next-window [-a] [-t target-session]
     // (alias: next)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux next-window [-t target-session]
+    // next-window [-t target-session]
     // (alias: next)
     // ```
     let next_window = NextWindow::new();

@@ -6,12 +6,12 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux clock-mode [-t target-pane]
+/// clock-mode [-t target-pane]
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux clock-mode [-t target-window]
+/// clock-mode [-t target-window]
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ClockMode<'a> {

@@ -5,7 +5,7 @@ use crate::TmuxCommand;
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux lock-server
+/// lock-server
 /// (alias: lock)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

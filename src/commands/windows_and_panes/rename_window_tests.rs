@@ -9,7 +9,7 @@ fn rename_window() {
     //
     // tmux ^0.8:
     // ```text
-    // tmux rename-window [-t target-window] new-name
+    // rename-window [-t target-window] new-name
     // (alias: renamew)
     // ```
     let target_window = TargetWindow::Raw("1").to_string();

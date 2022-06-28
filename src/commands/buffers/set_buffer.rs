@@ -8,25 +8,25 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.2:
 /// ```text
-/// tmux set-buffer [-aw] [-b buffer-name] [-t target-client] [-n new-buffer-name] data
+/// set-buffer [-aw] [-b buffer-name] [-t target-client] [-n new-buffer-name] data
 /// (alias: setb)
 /// ```
 ///
 /// tmux ^2.0:
 /// ```text
-/// tmux set-buffer [-a] [-b buffer-name] [-n new-buffer-name] data
+/// set-buffer [-a] [-b buffer-name] [-n new-buffer-name] data
 /// (alias: setb)
 /// ```
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux set-buffer [-b buffer-index] data
+/// set-buffer [-b buffer-index] data
 /// (alias: setb)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux set-buffer [-b buffer-index] [-t target-session] data
+/// set-buffer [-b buffer-index] [-t target-session] data
 /// (alias: setb)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

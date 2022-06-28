@@ -9,7 +9,7 @@ fn display_menu() {
     //
     // tmux ^3.0:
     // ```text
-    // tmux display-menu [-c target-client] [-t target-pane] [-T title]
+    // display-menu [-c target-client] [-t target-pane] [-T title]
     // [-x position] [-y position] name key command ...
     // ```
     let target_pane = TargetPane::Raw("2").to_string();

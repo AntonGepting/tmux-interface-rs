@@ -6,31 +6,31 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.1:
 /// ```text
-/// tmux capture-pane [-aepPqCJN] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
+/// capture-pane [-aepPqCJN] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
 /// (alias: capturep)
 /// ```
 ///
 /// tmux ^2.4:
 /// ```text
-/// tmux capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
+/// capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
 /// (alias: capturep)
 /// ```
 ///
 /// tmux ^1.8:
 /// ```text
-/// tmux capture-pane [-aepPq] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
+/// capture-pane [-aepPq] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
 /// (alias: capturep)
 /// ```
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux capture-pane [-b buffer-index] [-E end-line] [-S start-line] [-t target-pane]
+/// capture-pane [-b buffer-index] [-E end-line] [-S start-line] [-t target-pane]
 /// (alias: capturep)
 /// ```
 ///
 /// tmux ^1.2:
 /// ```text
-/// tmux capture-pane [-b buffer-index] [-t target-pane]
+/// capture-pane [-b buffer-index] [-t target-pane]
 /// (alias: capturep)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

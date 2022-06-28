@@ -8,13 +8,13 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux clear-history [-t target-pane]
+/// clear-history [-t target-pane]
 /// (alias: clearhist)
 /// ```
 ///
 /// tmux ^0.9:
 /// ```text
-/// tmux clear-history [-p pane-index] [-t target-window]
+/// clear-history [-p pane-index] [-t target-window]
 /// (alias: clearhist)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

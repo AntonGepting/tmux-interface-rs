@@ -7,12 +7,12 @@ fn clock_mode() {
     //
     // tmux ^1.0:
     // ```text
-    // tmux clock-mode [-t target-pane]
+    // clock-mode [-t target-pane]
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux clock-mode [-t target-window]
+    // clock-mode [-t target-window]
     // ```
     let clock_mode = ClockMode::new();
     #[cfg(feature = "tmux_1_0")]

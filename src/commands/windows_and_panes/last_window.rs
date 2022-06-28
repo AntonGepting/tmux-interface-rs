@@ -8,7 +8,7 @@ use std::borrow::Cow;
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux last-window [-t target-session]
+/// last-window [-t target-session]
 /// (alias: last)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

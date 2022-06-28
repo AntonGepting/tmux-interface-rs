@@ -9,52 +9,52 @@ fn new_window() {
     //
     // tmux ^3.2:
     // ```text
-    // tmux new-window [-abdkPS] [-c start-directory] [-e environment] [-F format] [-n window-name]
+    // new-window [-abdkPS] [-c start-directory] [-e environment] [-F format] [-n window-name]
     // [-t target-window] [shell-command]
     // (alias: neww)
     // ```
     //
     // tmux ^3.0:
     // ```text
-    // tmux new-window [-adkP] [-c start-directory] [-e environment] [-F format] [-n window-name] [-t
+    // new-window [-adkP] [-c start-directory] [-e environment] [-F format] [-n window-name] [-t
     // target-window] [shell-command]
     // (alias: neww)
     // ```
     //
     // tmux ^1.7:
     // ```text
-    // tmux new-window [-adkP] [-c start-directory] [-F format] [-n window-name] [-t target-window]
+    // new-window [-adkP] [-c start-directory] [-F format] [-n window-name] [-t target-window]
     // [shell-command]
     // (alias: neww)
     // ```
     //
     // tmux ^1.5:
     // ```text
-    // tmux new-window [-adkP] [-n window-name] [-t target-window] [shell-command]
+    // new-window [-adkP] [-n window-name] [-t target-window] [shell-command]
     // (alias: neww)
     // ```
     //
     // tmux ^1.3:
     // ```text
-    // tmux new-window [-adk] [-n window-name] [-t target-window] [shell-command]
+    // new-window [-adk] [-n window-name] [-t target-window] [shell-command]
     // (alias: neww)
     // ```
     //
     // tmux ^1.2:
     // ```text
-    // tmux new-window [-dk] [-n window-name] [-t target-window] [shell-command]
+    // new-window [-dk] [-n window-name] [-t target-window] [shell-command]
     // (alias: neww)
     // ```
     //
     // tmux ^1.0:
     // ```text
-    // tmux new-window [-dk] [-n window-name] [-t target-window] [command]
+    // new-window [-dk] [-n window-name] [-t target-window] [command]
     // (alias: neww)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux new-window [-d] [-n window-name] [-t target-window] [command]
+    // new-window [-d] [-n window-name] [-t target-window] [command]
     // (alias: neww)
     // ```
     let target_window = TargetWindow::Raw("5").to_string();

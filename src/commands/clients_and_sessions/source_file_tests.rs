@@ -9,25 +9,25 @@ fn source_file() {
     //
     // tmux ^3.2:
     // ```text
-    // tmux source-file [-Fnqv] path ...
+    // source-file [-Fnqv] path ...
     // (alias: source)
     // ```
     //
     // tmux ^3.0:
     // ```text
-    // tmux source-file [-nqv] path
+    // source-file [-nqv] path
     // (alias: source)
     // ```
     //
     // tmux ^2.3:
     // ```text
-    // tmux source-file path
+    // source-file path
     // (alias: source)
     //
     // ```
     // tmux ^0.8:
     // ```text
-    // tmux source-file path
+    // source-file path
     // (alias: source)
     // ```
     let source_file = SourceFile::new();

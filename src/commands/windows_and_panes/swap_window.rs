@@ -8,7 +8,7 @@ use std::borrow::Cow;
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux swap-window [-d] [-s src-window] [-t dst-window]
+/// swap-window [-d] [-s src-window] [-t dst-window]
 /// (alias: swapw)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

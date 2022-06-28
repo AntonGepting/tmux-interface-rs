@@ -8,13 +8,13 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux suspend-client [-t target-client]
+/// suspend-client [-t target-client]
 /// (alias: suspendc)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux suspend-client [-c target-client]
+/// suspend-client [-c target-client]
 /// (alias: suspendc)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

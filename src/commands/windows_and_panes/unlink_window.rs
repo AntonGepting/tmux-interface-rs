@@ -8,13 +8,13 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux unlink-window [-k] [-t target-window]
+/// unlink-window [-k] [-t target-window]
 /// (alias: unlinkw)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux unlink-window [-t target-window]
+/// unlink-window [-t target-window]
 /// (alias: unlinkw)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

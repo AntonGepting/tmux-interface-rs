@@ -8,22 +8,22 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.0:
 /// ```text
-/// tmux set-hook [-agRu] [-t target-session] hook-name command
+/// set-hook [-agRu] [-t target-session] hook-name command
 /// ```
 ///
 /// tmux ^2.8:
 /// ```text
-/// tmux set-hook [-gRu] [-t target-session] hook-name command
+/// set-hook [-gRu] [-t target-session] hook-name command
 /// ```
 ///
 /// tmux ^2.4:
 /// ```text
-/// tmux set-hook [-gu] [-t target-session] hook-name command
+/// set-hook [-gu] [-t target-session] hook-name command
 /// ```
 ///
 /// tmux ^2.2:
 /// ```text
-/// tmux set-hook [-g] [-t target-session] hook-name command
+/// set-hook [-g] [-t target-session] hook-name command
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SetHook<'a> {

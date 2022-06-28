@@ -9,37 +9,37 @@ fn display_message() {
     //
     // tmux ^3.2:
     // ```text
-    // tmux display-message [-aINpv] [-c target-client] [-d delay] [-t target-pane] [message]
+    // display-message [-aINpv] [-c target-client] [-d delay] [-t target-pane] [message]
     //  (alias: display)
     // ```
     //
     // tmux ^3.0:
     // ```text
-    // tmux display-message [-aIpv] [-c target-client] [-t target-pane] [message]
+    // display-message [-aIpv] [-c target-client] [-t target-pane] [message]
     //  (alias: display)
     // ```
     //
     // tmux ^2.9a:
     // ```text
-    // tmux display-message [-apv] [-c target-client] [-t target-pane] [message]
+    // display-message [-apv] [-c target-client] [-t target-pane] [message]
     //  (alias: display)
     // ```
     //
     // tmux ^1.5:
     // ```text
-    // tmux display-message [-p] [-c target-client] [-t target-pane] [message]
+    // display-message [-p] [-c target-client] [-t target-pane] [message]
     //  (alias: display)
     // ```
     //
     // tmux ^1.2:
     // ```text
-    // tmux display-message [-p] [-t target-client] [message]
+    // display-message [-p] [-t target-client] [message]
     //  (alias: display)
     // ```
     //
     // tmux ^1.0:
     // ```text
-    // tmux display-message [-t target-client] [message]
+    // display-message [-t target-client] [message]
     //  (alias: display)
     // ```
     let target_pane = TargetPane::Raw("3").to_string();

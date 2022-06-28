@@ -9,49 +9,49 @@ use std::marker::PhantomData;
 ///
 /// tmux ^3.1:
 /// ```text
-/// tmux select-pane [-DdeLlMmRUZ] [-T title] [-t target-pane]
+/// select-pane [-DdeLlMmRUZ] [-T title] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
 /// tmux ^2.6:
 /// ```text
-/// tmux select-pane [-DdeLlMmRU] [-T title] [-t target-pane]
+/// select-pane [-DdeLlMmRU] [-T title] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
 /// tmux ^2.1:
 /// ```text
-/// tmux select-pane [-DdegLlMmRU] [-P style] [-t target-pane]
+/// select-pane [-DdegLlMmRU] [-P style] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
 /// tmux ^2.0:
 /// ```text
-/// tmux select-pane [-DdeLlRU] [-t target-pane]
+/// select-pane [-DdeLlRU] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux select-pane [-DLlRU] [-t target-pane]
+/// select-pane [-DLlRU] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
 /// tmux ^1.3:
 /// ```text
-/// tmux select-pane [-DLRU] [-t target-pane]
+/// select-pane [-DLRU] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux select-pane [-t target-pane]
+/// select-pane [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux select-pane [-p pane-index] [-t target-window]
+/// select-pane [-p pane-index] [-t target-window]
 /// (alias: selectp)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

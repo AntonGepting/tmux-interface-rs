@@ -7,7 +7,7 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.1:
 /// ```text
-/// tmux lock-session [-t target-session]
+/// lock-session [-t target-session]
 /// (alias: locks)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

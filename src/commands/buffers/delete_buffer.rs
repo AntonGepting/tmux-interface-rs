@@ -9,19 +9,19 @@ use std::borrow::Cow;
 ///
 /// tmux ^2.0:
 /// ```text
-/// tmux delete-buffer [-b buffer-name]
+/// delete-buffer [-b buffer-name]
 /// (alias: deleteb)
 /// ```
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux delete-buffer [-b buffer-index]
+/// delete-buffer [-b buffer-index]
 /// (alias: deleteb)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux delete-buffer [-b buffer-index] [-t target-session]
+/// delete-buffer [-b buffer-index] [-t target-session]
 /// (alias: deleteb)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

@@ -7,13 +7,13 @@ fn wait_for() {
     //
     // tmux ^1.9:
     // ```text
-    // tmux wait-for [-L | -S | -U] channel
+    // wait-for [-L | -S | -U] channel
     // (alias: wait)
     // ```
     //
     // tmux ^1.8:
     // ```text
-    // tmux wait-for -LSU channel
+    // wait-for -LSU channel
     // (alias: wait)
     // ```
     let wait_for = WaitFor::new();

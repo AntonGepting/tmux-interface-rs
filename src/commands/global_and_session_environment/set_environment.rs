@@ -8,13 +8,13 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.2:
 /// ```text
-/// tmux set-environment [-Fhgru] [-t target-session] name [value]
+/// set-environment [-Fhgru] [-t target-session] name [value]
 /// (alias: setenv)
 /// ```
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux set-environment [-gru] [-t target-session] name [value]
+/// set-environment [-gru] [-t target-session] name [value]
 /// (alias: setenv)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
@@ -51,15 +51,6 @@ pub struct SetEnvironment<'a> {
     #[cfg(feature = "tmux_1_0")]
     pub value: Option<Cow<'a, str>>,
 }
-
-//impl<'a> Default for SetEnvironment<'a> {
-//fn default() -> Self {
-//SetEnvironment
-//expand: false,
-//..Default::default()
-//})
-//}
-//}
 
 impl<'a> SetEnvironment<'a> {
     pub fn new() -> Self {

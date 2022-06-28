@@ -8,17 +8,17 @@ use std::borrow::Cow;
 ///
 /// tmux ^2.2:
 /// ```text
-/// tmux kill-session [-aC] [-t target-session]
+/// kill-session [-aC] [-t target-session]
 /// ```
 ///
 /// tmux ^1.7:
 /// ```text
-/// tmux kill-session [-a] [-t target-session]
+/// kill-session [-a] [-t target-session]
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux kill-session [-t target-session]
+/// kill-session [-t target-session]
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct KillSession<'a> {

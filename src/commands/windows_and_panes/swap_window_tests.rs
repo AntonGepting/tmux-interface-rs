@@ -9,7 +9,7 @@ fn swap_window() {
     //
     // tmux ^0.8:
     // ```text
-    // tmux swap-window [-d] [-s src-window] [-t dst-window]
+    // swap-window [-d] [-s src-window] [-t dst-window]
     // (alias: swapw)
     // ```
     let src_window = TargetWindow::Raw("1").to_string();

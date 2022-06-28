@@ -9,19 +9,19 @@ fn list_buffers() {
     //
     // tmux ^1.7:
     // ```text
-    // tmux list-buffers [-F format]
+    // list-buffers [-F format]
     // (alias: lsb)
     // ```
     //
     // tmux ^1.5:
     // ```text
-    // tmux list-buffers
+    // list-buffers
     // (alias: lsb)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux list-buffers [-t target-session]
+    // list-buffers [-t target-session]
     // (alias: lsb)
     // ```
     let list_buffers = ListBuffers::new();

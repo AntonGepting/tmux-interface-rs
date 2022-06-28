@@ -9,67 +9,67 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.2:
 /// ```text
-/// tmux split-window [-bdfhIvPZ] [-c start-directory] [-e environment] [-l size] [-t target-pane]
+/// split-window [-bdfhIvPZ] [-c start-directory] [-e environment] [-l size] [-t target-pane]
 /// [shell-command] [-F format]
 /// (alias: splitw)
 /// ```
 ///
 /// tmux ^3.1:
 /// ```text
-/// tmux split-window [-bdfhIvP] [-c start-directory] [-e environment] [-l size] [-t target-pane]
+/// split-window [-bdfhIvP] [-c start-directory] [-e environment] [-l size] [-t target-pane]
 /// [shell-command] [-F format]
 /// (alias: splitw)
 /// ```
 ///
 /// tmux ^3.0:
 /// ```text
-/// tmux split-window [-bdfhIvP] [-c start-directory] [-e environment] [-l size | -p percentage]
+/// split-window [-bdfhIvP] [-c start-directory] [-e environment] [-l size | -p percentage]
 /// [-t target-pane] [shell-command] [-F format]
 /// (alias: splitw)
 /// ```
 ///
 /// tmux ^2.4:
 /// ```text
-/// tmux split-window [-bdfhvP] [-c start-directory] [-l size | -p percentage] [-t target-pane]
+/// split-window [-bdfhvP] [-c start-directory] [-l size | -p percentage] [-t target-pane]
 /// [shell-command] [-F format]
 /// (alias: splitw)
 /// ```
 ///
 /// tmux ^2.0:
 /// ```text
-/// tmux split-window [-bdhvP] [-c start-directory] [-l size | -p percentage] [-t target-pane]
+/// split-window [-bdhvP] [-c start-directory] [-l size | -p percentage] [-t target-pane]
 /// [shell-command] [-F format]
 /// (alias: splitw)
 /// ```
 ///
 /// tmux ^1.7:
 /// ```text
-/// tmux split-window [-dhvP] [-c start-directory] [-l size | -p percentage] [-t target-pane]
+/// split-window [-dhvP] [-c start-directory] [-l size | -p percentage] [-t target-pane]
 /// [shell-command] [-F format]
 /// (alias: splitw)
 /// ```
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux split-window [-dhvP] [-l size | -p percentage] [-t target-pane] [shell-command]
+/// split-window [-dhvP] [-l size | -p percentage] [-t target-pane] [shell-command]
 /// (alias: splitw)
 /// ```
 ///
 /// tmux ^1.2:
 /// ```text
-/// tmux split-window [-dhv] [-l size | -p percentage] [-t target-pane] [shell-command]
+/// split-window [-dhv] [-l size | -p percentage] [-t target-pane] [shell-command]
 /// (alias: splitw)
 /// ```
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux split-window [-dhv] [-l size | -p percentage] [-t target-window] [command]
+/// split-window [-dhv] [-l size | -p percentage] [-t target-window] [command]
 /// (alias: splitw)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux split-window [-d] [-l size | -p percentage] [-t target-window] [command]
+/// split-window [-d] [-l size | -p percentage] [-t target-window] [command]
 /// (alias: splitw)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

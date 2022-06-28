@@ -10,19 +10,19 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.1:
 /// ```text
-/// tmux join-pane [-bdfhv] [-l size] [-s src-pane] [-t dst-pane]
+/// join-pane [-bdfhv] [-l size] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
 ///
 /// tmux ^1.7:
 /// ```text
-/// tmux join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+/// join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
 ///
 /// tmux ^1.2:
 /// ```text
-/// tmux join-pane [-dhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+/// join-pane [-dhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

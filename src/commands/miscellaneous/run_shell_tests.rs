@@ -7,25 +7,25 @@ fn run_shell() {
     //
     // tmux ^3.2:
     // ```text
-    // tmux run-shell [-bC] [-d delay] [-t target-pane] [shell-command]
+    // run-shell [-bC] [-d delay] [-t target-pane] [shell-command]
     // (alias: run)
     // ```
     //
     // tmux ^1.8:
     // ```text
-    // tmux run-shell [-b] [-t target-pane] shell-command
+    // run-shell [-b] [-t target-pane] shell-command
     // (alias: run)
     // ```
     //
     // tmux ^1.2:
     // ```text
-    // tmux run-shell shell-command
+    // run-shell shell-command
     // (alias: run)
     // ```
     //
     // tmux ^1.1:
     // ```text
-    // tmux run-shell command
+    // run-shell command
     // (alias: run)
     // ```
     let target_pane = TargetPane::Raw("2").to_string();

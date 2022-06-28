@@ -9,7 +9,7 @@ use std::borrow::Cow;
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux has-session [-t target-session]
+/// has-session [-t target-session]
 /// (alias: has)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

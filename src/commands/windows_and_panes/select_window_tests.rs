@@ -9,19 +9,19 @@ fn select_window() {
     //
     // tmux ^1.8:
     // ```text
-    // tmux select-window [-lnpT] [-t target-window]
+    // select-window [-lnpT] [-t target-window]
     // (alias: selectw)
     // ```
     //
     // tmux ^1.5:
     // ```text
-    // tmux select-window [-lnp] [-t target-window]
+    // select-window [-lnp] [-t target-window]
     // (alias: selectw)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux select-window [-t target-window]
+    // select-window [-t target-window]
     // (alias: selectw)
     // ```
     let target_window = TargetWindow::Raw("1").to_string();

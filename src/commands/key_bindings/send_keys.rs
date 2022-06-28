@@ -8,43 +8,43 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.1:
 /// ```text
-/// tmux send-keys [-FHlMRX] [-N repeat-count] [-t target-pane] key ...
+/// send-keys [-FHlMRX] [-N repeat-count] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
 /// tmux ^3.0:
 /// ```text
-/// tmux send-keys [-HlMRX] [-N repeat-count] [-t target-pane] key ...
+/// send-keys [-HlMRX] [-N repeat-count] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
 /// tmux ^2.4:
 /// ```text
-/// tmux send-keys [-lMRX] [-N repeat-count] [-t target-pane] key ...
+/// send-keys [-lMRX] [-N repeat-count] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
 /// tmux ^2.1:
 /// ```text
-/// tmux send-keys [-lMR] [-t target-pane] key ...
+/// send-keys [-lMR] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
 /// tmux ^1.7:
 /// ```text
-/// tmux send-keys [-lR] [-t target-pane] key ...
+/// send-keys [-lR] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
 /// tmux ^1.6:
 /// ```text
-/// tmux send-keys [-R] [-t target-pane] key ...
+/// send-keys [-R] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux send-keys [-t target-window] key ...
+/// send-keys [-t target-window] key ...
 /// (alias: send)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

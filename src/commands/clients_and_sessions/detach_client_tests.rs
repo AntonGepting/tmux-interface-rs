@@ -9,25 +9,25 @@ fn detach_client() {
     //
     // tmux ^2.4:
     // ```text
-    // tmux detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
+    // detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
     // (alias: detach)
     // ```
     //
     // tmux ^2.2:
     // ```text
-    // tmux detach-client [-aP] [-s target-session] [-t target-client]
+    // detach-client [-aP] [-s target-session] [-t target-client]
     // (alias: detach)
     // ```
     //
     // tmux ^1.5:
     // ```text
-    // tmux detach-client [-P] [-s target-session] [-t target-client]
+    // detach-client [-P] [-s target-session] [-t target-client]
     // (alias: detach)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux detach-client [-t target-client]
+    // detach-client [-t target-client]
     // (alias: detach)
 
     let target_session = TargetSession::Raw("2").to_string();

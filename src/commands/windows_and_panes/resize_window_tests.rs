@@ -9,7 +9,7 @@ fn resize_window() {
     //
     // tmux ^2.9a:
     // ```text
-    // tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
+    // resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
     // (alias: resizew)
     let target_window = TargetWindow::Raw("1").to_string();
 

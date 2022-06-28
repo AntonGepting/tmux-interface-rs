@@ -9,25 +9,25 @@ fn paste_buffer() {
     //
     // tmux ^1.7:
     // ```text
-    // tmux paste-buffer [-dpr] [-b buffer-name] [-s separator] [-t target-pane]
+    // paste-buffer [-dpr] [-b buffer-name] [-s separator] [-t target-pane]
     // (alias: pasteb)
     // ```
     //
     // tmux ^1.3:
     // ```text
-    // tmux paste-buffer [-dr] [-b buffer-index] [-s separator] [-t target-window]
+    // paste-buffer [-dr] [-b buffer-index] [-s separator] [-t target-window]
     // (alias: pasteb)
     // ```
     //
     // tmux ^1.0:
     // ```text
-    // tmux paste-buffer [-dr] [-b buffer-index] [-t target-window]
+    // paste-buffer [-dr] [-b buffer-index] [-t target-window]
     // (alias: pasteb)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux paste-buffer [-d] [-b buffer-index] [-t target-window]
+    // paste-buffer [-d] [-b buffer-index] [-t target-window]
     // (alias: pasteb)
     // ```
     let target_pane = TargetPane::Raw("3").to_string();

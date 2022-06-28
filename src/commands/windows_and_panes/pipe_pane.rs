@@ -8,19 +8,19 @@ use std::borrow::Cow;
 ///
 /// tmux ^2.7:
 /// ```text
-/// tmux pipe-pane [-IOo] [-t target-pane] [shell-command]
+/// pipe-pane [-IOo] [-t target-pane] [shell-command]
 /// (alias: pipep)
 /// ```
 ///
 /// tmux ^1.2:
 /// ```text
-/// tmux pipe-pane [-o] [-t target-pane] [shell-command]
+/// pipe-pane [-o] [-t target-pane] [shell-command]
 /// (alias: pipep)
 /// ```
 ///
 /// tmux ^1.1:
 /// ```text
-/// tmux pipe-pane [-o] [-t target-pane] [command]
+/// pipe-pane [-o] [-t target-pane] [command]
 /// (alias: pipep)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

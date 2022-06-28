@@ -7,12 +7,12 @@ fn send_prefix() {
     //
     // tmux ^1.6
     // ```text
-    // tmux send-prefix [-2] [-t target-pane]
+    // send-prefix [-2] [-t target-pane]
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux send-prefix [-t target-pane]
+    // send-prefix [-t target-pane]
     // ```
     let send_prefix = SendPrefix::new();
     #[cfg(feature = "tmux_1_6")]

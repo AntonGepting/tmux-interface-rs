@@ -9,22 +9,22 @@ fn copy_mode() {
     //
     // tmux ^3.2:
     // ```text
-    // tmux copy-mode [-eHMqu] [-s src-pane] [-t target-pane]
+    // copy-mode [-eHMqu] [-s src-pane] [-t target-pane]
     // ```
     //
     // tmux ^2.1:
     // ```text
-    // tmux copy-mode [-Meu] [-t target-pane]
+    // copy-mode [-Meu] [-t target-pane]
     // ```
     //
     // tmux ^1.0:
     // ```text
-    // tmux copy-mode [-u] [-t target-pane]
+    // copy-mode [-u] [-t target-pane]
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux copy-mode [-u] [-t target-window]
+    // copy-mode [-u] [-t target-window]
     // ```
     let target_pane = TargetPane::Raw("2").to_string();
 

@@ -9,7 +9,7 @@ fn kill_server() {
     //
     // tmux ^0.8:
     // ```text
-    // tmux kill-server
+    // kill-server
     // ```
     let kill_server = KillServer::new();
 

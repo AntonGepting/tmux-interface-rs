@@ -8,7 +8,7 @@ use std::borrow::Cow;
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux rename-window [-t target-window] new-name
+/// rename-window [-t target-window] new-name
 /// (alias: renamew)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

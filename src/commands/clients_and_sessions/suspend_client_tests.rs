@@ -9,13 +9,13 @@ fn suspend_client() {
     //
     // tmux ^1.5:
     // ```text
-    // tmux suspend-client [-t target-client]
+    // suspend-client [-t target-client]
     // (alias: suspendc)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux suspend-client [-c target-client]
+    // suspend-client [-c target-client]
     // (alias: suspendc)
     // ```
     let suspend_client = SuspendClient::new();

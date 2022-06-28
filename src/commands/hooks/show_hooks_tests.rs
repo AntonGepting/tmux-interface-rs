@@ -7,7 +7,7 @@ fn show_hooks() {
     //
     // tmux ^2.2:
     // ```text
-    // tmux show-hooks [-g] [-t target-session]
+    // show-hooks [-g] [-t target-session]
     // ```
     let target_session = TargetSession::Raw("1").to_string();
 

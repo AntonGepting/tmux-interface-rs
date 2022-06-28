@@ -6,12 +6,12 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.6
 /// ```text
-/// tmux send-prefix [-2] [-t target-pane]
+/// send-prefix [-2] [-t target-pane]
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux send-prefix [-t target-pane]
+/// send-prefix [-t target-pane]
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SendPrefix<'a> {

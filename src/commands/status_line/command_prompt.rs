@@ -42,37 +42,37 @@ impl fmt::Display for PromptType {
 ///
 /// tmux ^3.2:
 /// ```text
-/// tmux command-prompt [-1ikNTW] [-I inputs] [-p prompts] [-t target-client] [template]
+/// command-prompt [-1ikNTW] [-I inputs] [-p prompts] [-t target-client] [template]
 /// ```
 ///
 /// tmux ^3.1:
 /// ```text
-/// tmux command-prompt [-1ikN] [-I inputs] [-p prompts] [-t target-client] [template]
+/// command-prompt [-1ikN] [-I inputs] [-p prompts] [-t target-client] [template]
 /// ```
 ///
 /// tmux ^3.0:
 /// ```text
-/// tmux command-prompt [-1Ni] [-I inputs] [-p prompts] [-t target-client] [template]
+/// command-prompt [-1Ni] [-I inputs] [-p prompts] [-t target-client] [template]
 /// ```
 ///
 /// tmux ^2.4:
 /// ```text
-/// tmux command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
+/// command-prompt [-1i] [-I inputs] [-p prompts] [-t target-client] [template]
 /// ```
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux command-prompt [-I inputs] [-p prompts] [-t target-client] [template]
+/// command-prompt [-I inputs] [-p prompts] [-t target-client] [template]
 /// ```
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux command-prompt [-p prompts] [-t target-client] [template]
+/// command-prompt [-p prompts] [-t target-client] [template]
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux command-prompt [-t target-client] [template]
+/// command-prompt [-t target-client] [template]
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct CommandPrompt<'a> {

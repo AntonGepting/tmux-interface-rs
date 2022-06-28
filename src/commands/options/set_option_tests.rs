@@ -9,49 +9,49 @@ fn set_option() {
     //
     // tmux ^3.2:
     // ```text
-    // tmux set-option [-aFgopqsuUw] [-t target-pane] option value
+    // set-option [-aFgopqsuUw] [-t target-pane] option value
     // (alias: set)
     // ```
     //
     // tmux ^3.0:
     // ```text
-    // tmux set-option [-aFgopqsuw] [-t target-pane] option value
+    // set-option [-aFgopqsuw] [-t target-pane] option value
     // (alias: set)
     // ```
     //
     // tmux ^2.6:
     // ```text
-    // tmux set-option [-aFgoqsuw] [-t target-session | target-window] option value
+    // set-option [-aFgoqsuw] [-t target-session | target-window] option value
     // (alias: set)
     // ```
     //
     // tmux ^1.8:
     // ```text
-    // tmux set-option [-agoqsuw] [-t target-session | target-window] option value
+    // set-option [-agoqsuw] [-t target-session | target-window] option value
     // (alias: set)
     // ```
     //
     // tmux ^1.7:
     // ```text
-    // tmux set-option [-agqsuw] [-t target-session | target-window] option value
+    // set-option [-agqsuw] [-t target-session | target-window] option value
     // (alias: set)
     // ```
     //
     // tmux ^1.2:
     // ```text
-    // tmux set-option [-agsuw] [-t target-session | target-window] option value
+    // set-option [-agsuw] [-t target-session | target-window] option value
     // (alias: set)
     // ```
     //
     // tmux ^1.0:
     // ```text
-    // tmux set-option [-agu] [-t target-session] option value
+    // set-option [-agu] [-t target-session] option value
     // (alias: set)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux set-option [-gu] [-t target-session] option value
+    // set-option [-gu] [-t target-session] option value
     // (alias: set)
     // ```
     // FIXME: target, target-sesion, target-window

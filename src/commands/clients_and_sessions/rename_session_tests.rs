@@ -9,7 +9,7 @@ fn rename_session() {
     //
     // tmux ^0.8:
     // ```text
-    // tmux rename-session [-t target-session] new-name
+    // rename-session [-t target-session] new-name
     // (alias: rename)
     // ```
     let target_session = TargetSession::Raw("1").to_string();

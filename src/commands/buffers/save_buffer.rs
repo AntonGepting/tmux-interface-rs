@@ -8,19 +8,19 @@ use std::borrow::Cow;
 ///
 /// tmux ^2.0:
 /// ```text
-/// tmux save-buffer [-a] [-b buffer-name] path
+/// save-buffer [-a] [-b buffer-name] path
 /// (alias: saveb)
 /// ```
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux save-buffer [-a] [-b buffer-index] path
+/// save-buffer [-a] [-b buffer-index] path
 /// (alias: saveb)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux save-buffer [-a] [-b buffer-index] [-t target-session] path
+/// save-buffer [-a] [-b buffer-index] [-t target-session] path
 /// (alias: saveb)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

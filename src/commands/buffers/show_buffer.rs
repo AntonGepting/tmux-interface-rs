@@ -8,13 +8,13 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux show-buffer [-b buffer-name]
+/// show-buffer [-b buffer-name]
 /// (alias: showb)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux show-buffer [-b buffer-index] [-t target-session]
+/// show-buffer [-b buffer-index] [-t target-session]
 /// (alias: showb)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

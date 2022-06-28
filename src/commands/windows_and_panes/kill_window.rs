@@ -9,13 +9,13 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.7:
 /// ```text
-/// tmux kill-window [-a] [-t target-window]
+/// kill-window [-a] [-t target-window]
 /// (alias: killw)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux kill-window [-a] [-t target-window]
+/// kill-window [-a] [-t target-window]
 /// (alias: killw)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

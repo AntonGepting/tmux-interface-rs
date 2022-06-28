@@ -10,37 +10,37 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.2:
 /// ```text
-/// tmux attach-session [-dErx] [-c working-directory] [-f flags] [-t target-session]
+/// attach-session [-dErx] [-c working-directory] [-f flags] [-t target-session]
 /// (alias: attach)
 /// ```
 ///
 /// tmux ^3.0:
 /// ```text
-/// tmux attach-session [-dErx] [-c working-directory] [-t target-session]
+/// attach-session [-dErx] [-c working-directory] [-t target-session]
 /// (alias: attach)
 /// ```
 ///
 /// tmux ^2.1:
 /// ```text
-/// tmux attach-session [-dEr] [-c working-directory] [-t target-session]
+/// attach-session [-dEr] [-c working-directory] [-t target-session]
 /// (alias: attach)
 /// ```
 ///
 /// tmux ^1.9:
 /// ```text
-/// tmux attach-session [-dr] [-c working-directory] [-t target-session]
+/// attach-session [-dr] [-c working-directory] [-t target-session]
 /// (alias: attach)
 /// ```
 ///
 /// tmux ^1.2:
 /// ```text
-/// tmux attach-session [-dr] [-t target-session]
+/// attach-session [-dr] [-t target-session]
 /// (alias: attach)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux attach-session [-d] [-t target-session]
+/// attach-session [-d] [-t target-session]
 /// (alias: attach)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

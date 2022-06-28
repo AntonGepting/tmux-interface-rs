@@ -9,31 +9,31 @@ fn display_panes() {
     //
     // tmux ^3.2:
     // ```text
-    // tmux display-panes [-bN] [-d duration] [-t target-client] [template]
+    // display-panes [-bN] [-d duration] [-t target-client] [template]
     // (alias: displayp)
     // ```
     //
     // tmux ^2.9:
     // ```text
-    // tmux display-panes [-b] [-d duration] [-t target-client] [template]
+    // display-panes [-b] [-d duration] [-t target-client] [template]
     // (alias: displayp)
     // ```
     //
     // tmux ^2.6:
     // ```text
-    // tmux display-panes [-d duration] [-t target-client] [template]
+    // display-panes [-d duration] [-t target-client] [template]
     // (alias: displayp)
     // ```
     //
     // tmux ^2.3:
     // ```text
-    // tmux display-panes [-t target-client] [template]
+    // display-panes [-t target-client] [template]
     // (alias: displayp)
     // ```
     //
     // tmux ^1.0:
     // ```text
-    // tmux display-panes [-t target-client]
+    // display-panes [-t target-client]
     // (alias: displayp)
     // ```
     let display_panes = DisplayPanes::new();

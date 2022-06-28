@@ -9,7 +9,7 @@ fn has_session() {
     //
     // tmux ^0.8:
     // ```text
-    // tmux has-session [-t target-session]
+    // has-session [-t target-session]
     // (alias: has)
     // ```
     let has_session = HasSession::new();

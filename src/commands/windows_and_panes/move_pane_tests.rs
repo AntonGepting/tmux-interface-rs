@@ -9,13 +9,13 @@ fn move_pane() {
     //
     // tmux ^3.1:
     // ```text
-    // tmux move-pane [-bdhv] [-l size] [-s src-pane] [-t dst-pane]
+    // move-pane [-bdhv] [-l size] [-s src-pane] [-t dst-pane]
     // (alias: movep)
     // ```
     //
     // tmux ^1.7:
     // ```text
-    // tmux move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+    // move-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     // (alias: movep)
     // ```
     let src_pane = TargetPane::Raw("2").to_string();

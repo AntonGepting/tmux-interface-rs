@@ -7,7 +7,7 @@ use crate::TmuxCommand;
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux start-server
+/// start-server
 /// (alias: start)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

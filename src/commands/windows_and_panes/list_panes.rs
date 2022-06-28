@@ -9,19 +9,19 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.6:
 /// ```text
-/// tmux list-panes [-as] [-F format] [-t target]
+/// list-panes [-as] [-F format] [-t target]
 /// (alias: lsp)
 /// ```
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux list-panes [-as] [-t target]
+/// list-panes [-as] [-t target]
 /// (alias: lsp)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux list-panes [-t target]
+/// list-panes [-t target]
 /// (alias: lsp)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

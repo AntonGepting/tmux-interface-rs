@@ -10,19 +10,19 @@ fn delete_buffer() {
     //
     // tmux ^2.0:
     // ```text
-    // tmux delete-buffer [-b buffer-name]
+    // delete-buffer [-b buffer-name]
     // (alias: deleteb)
     // ```
     //
     // tmux ^1.5:
     // ```text
-    // tmux delete-buffer [-b buffer-index]
+    // delete-buffer [-b buffer-index]
     // (alias: deleteb)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux delete-buffer [-b buffer-index] [-t target-session]
+    // delete-buffer [-b buffer-index] [-t target-session]
     // (alias: deleteb)
     // ```
     let buffer_name = TargetPane::Raw("1").to_string();

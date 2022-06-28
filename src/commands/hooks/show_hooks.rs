@@ -6,7 +6,7 @@ use std::borrow::Cow;
 ///
 /// tmux ^2.2:
 /// ```text
-/// tmux show-hooks [-g] [-t target-session]
+/// show-hooks [-g] [-t target-session]
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ShowHooks<'a> {

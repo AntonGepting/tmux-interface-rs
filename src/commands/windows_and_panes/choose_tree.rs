@@ -9,33 +9,33 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.2:
 /// ```text
-/// tmux choose-tree [-GNrswZ] [-F format] [-f filter] [-K key-format] [-O sort-order] [-t target-pane] [template]
+/// choose-tree [-GNrswZ] [-F format] [-f filter] [-K key-format] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
 /// tmux ^3.1:
 /// ```text
-/// tmux choose-tree [-GNrswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+/// choose-tree [-GNrswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
 /// tmux ^2.7:
 /// ```text
-/// tmux choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+/// choose-tree [-GNswZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
 /// tmux ^2.6:
 /// ```text
-/// tmux choose-tree [-Nsw] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+/// choose-tree [-Nsw] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
 /// tmux ^1.8:
 /// ```text
-/// tmux choose-tree [-suw] [-b session-template] [-c window-template] [-S format] [-W format]
+/// choose-tree [-suw] [-b session-template] [-c window-template] [-S format] [-W format]
 /// [-t target-window]
 /// ```
 ///
 /// tmux ^1.7:
 /// ```text
-/// tmux choose-tree [-sw] [-b session-template] [-c window-template] [-S format] [-W format]
+/// choose-tree [-sw] [-b session-template] [-c window-template] [-S format] [-W format]
 /// [-t target-window]
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

@@ -9,13 +9,13 @@ fn set_environment() {
     //
     // tmux ^3.2:
     // ```text
-    // tmux set-environment [-Fhgru] [-t target-session] name [value]
+    // set-environment [-Fhgru] [-t target-session] name [value]
     // (alias: setenv)
     // ```
     //
     // tmux ^1.0:
     // ```text
-    // tmux set-environment [-gru] [-t target-session] name [value]
+    // set-environment [-gru] [-t target-session] name [value]
     // (alias: setenv)
     // ```
     let target_session = TargetSession::Raw("1").to_string();

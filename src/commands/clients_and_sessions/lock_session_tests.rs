@@ -8,7 +8,7 @@ fn lock_session() {
     //
     // tmux ^1.1:
     // ```text
-    // tmux lock-session [-t target-session]
+    // lock-session [-t target-session]
     // (alias: locks)
     // ```
     let lock_session = LockSession::new();

@@ -9,7 +9,7 @@ fn lock_client() {
     //
     // tmux ^1.1:
     // ```text
-    // tmux lock-client [-t target-client]
+    // lock-client [-t target-client]
     // (alias: lockc)
     // ```
     let lock_client = LockClient::new();

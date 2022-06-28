@@ -8,31 +8,31 @@ use std::borrow::Cow;
 ///
 /// tmux ^2.7:
 /// ```text
-/// tmux select-layout [-Enop] [-t target-pane] [layout-name]
+/// select-layout [-Enop] [-t target-pane] [layout-name]
 /// (alias: selectl)
 /// ```
 ///
 /// tmux ^2.1:
 /// ```text
-/// tmux select-layout [-nop] [-t target-pane] [layout-name]
+/// select-layout [-nop] [-t target-pane] [layout-name]
 /// (alias: selectl)
 /// ```
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux select-layout [-np] [-t target-pane] [layout-name]
+/// select-layout [-np] [-t target-pane] [layout-name]
 /// (alias: selectl)
 /// ```
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux select-layout [-t target-pane] [layout-name]
+/// select-layout [-t target-pane] [layout-name]
 /// (alias: selectl)
 /// ```
 ///
 /// tmux ^0.9:
 /// ```text
-/// tmux select-layout [-t target-pane] layout-name
+/// select-layout [-t target-pane] layout-name
 /// (alias: selectl)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

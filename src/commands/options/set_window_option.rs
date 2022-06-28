@@ -11,31 +11,31 @@ use std::borrow::Cow;
 ///
 /// tmux ^2.6:
 /// ```text
-/// tmux set-window-option [-aFgoqu] [-t target-window] option value
+/// set-window-option [-aFgoqu] [-t target-window] option value
 /// (alias: setw)
 /// ```
 ///
 /// tmux ^1.9:
 /// ```text
-/// tmux set-window-option [-agoqu] [-t target-window] option value
+/// set-window-option [-agoqu] [-t target-window] option value
 /// (alias: setw)
 /// ```
 ///
 /// tmux ^1.7:
 /// ```text
-/// tmux set-window-option [-agqu] [-t target-window] option value
+/// set-window-option [-agqu] [-t target-window] option value
 /// (alias: setw)
 /// ```
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux set-window-option [-agu] [-t target-window] option value
+/// set-window-option [-agu] [-t target-window] option value
 /// (alias: setw)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux set-window-option [-gu] [-t target-window] option value
+/// set-window-option [-gu] [-t target-window] option value
 /// (alias: setw)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

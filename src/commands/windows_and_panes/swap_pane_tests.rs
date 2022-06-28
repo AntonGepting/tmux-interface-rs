@@ -9,19 +9,19 @@ fn swap_pane() {
     //
     // tmux ^3.1:
     // ```text
-    // tmux swap-pane [-dDUZ] [-s src-pane] [-t dst-pane]
+    // swap-pane [-dDUZ] [-s src-pane] [-t dst-pane]
     // (alias: swapp)
     // ```
     //
     // tmux ^1.0:
     // ```text
-    // tmux swap-pane [-dDU] [-s src-pane] [-t dst-pane]
+    // swap-pane [-dDU] [-s src-pane] [-t dst-pane]
     // (alias: swapp)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux swap-pane [-dDU] [-p src-index] [-t target-window] [-q dst-index]
+    // swap-pane [-dDU] [-p src-index] [-t target-window] [-q dst-index]
     // (alias: swapp)
     // ```
     let src_pane = TargetPane::Raw("1").to_string();

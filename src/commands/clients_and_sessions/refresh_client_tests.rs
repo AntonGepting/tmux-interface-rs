@@ -13,43 +13,43 @@ fn refresh_client() {
     //
     // tmux 3.3:
     // ```text
-    // tmux refresh-client [-cDLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags]
+    // refresh-client [-cDLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags]
     // [-l [target-pane]] [-t target-client] [adjustment] (alias: refresh)
     // ```
     //
     // tmux 3.2:
     // ```text
-    // tmux refresh-client [-cDlLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags] [-t target-client] [adjustment]
+    // refresh-client [-cDlLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags] [-t target-client] [adjustment]
     // (alias: refresh)
     // ```
     //
     // tmux 3.0:
     // ```text
-    // tmux refresh-client [-cDlLRSU] [-C XxY] [-F flags] [-t target-client] [adjustment]
+    // refresh-client [-cDlLRSU] [-C XxY] [-F flags] [-t target-client] [adjustment]
     // (alias: refresh)
     // ```
     //
     // tmux 2.9a:
     // ```text
-    // tmux refresh-client [-cDlLRSU] [-C width,height] [-F flags] [-t target-client] [adjustment]
+    // refresh-client [-cDlLRSU] [-C width,height] [-F flags] [-t target-client] [adjustment]
     // (alias: refresh)
     // ```
     //
     // tmux 2.4:
     // ```text
-    // tmux refresh-client [-C width,height] [-S] [-t target-client]
+    // refresh-client [-C width,height] [-S] [-t target-client]
     // (alias: refresh)
     // ```
     //
     // tmux 1.6:
     // ```text
-    // tmux refresh-client [-S] [-t target-client]
+    // refresh-client [-S] [-t target-client]
     // (alias: refresh)
     // ```
     //
     // tmux 0.8:
     // ```text
-    // tmux refresh-client [-t target-client]
+    // refresh-client [-t target-client]
     // (alias: refresh)
     // ```
     let refresh_client = RefreshClient::new();

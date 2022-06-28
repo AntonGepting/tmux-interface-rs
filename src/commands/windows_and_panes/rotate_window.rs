@@ -8,13 +8,13 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.1:
 /// ```text
-/// tmux rotate-window [-DUZ] [-t target-window]
+/// rotate-window [-DUZ] [-t target-window]
 /// (alias: rotatew)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux rotate-window [-DU] [-t target-window]
+/// rotate-window [-DU] [-t target-window]
 /// (alias: rotatew)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

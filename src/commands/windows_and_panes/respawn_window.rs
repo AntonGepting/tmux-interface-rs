@@ -8,25 +8,25 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.0:
 /// ```text
-/// tmux respawn-window [-k] [-c start-directory] [-e environment] [-t target-window]
+/// respawn-window [-k] [-c start-directory] [-e environment] [-t target-window]
 /// [shell-command]
 /// (alias: respawnw)
 ///
 /// tmux ^2.6:
 /// ```text
-/// tmux respawn-window [-k] [-c start-directory] [-t target-window]
+/// respawn-window [-k] [-c start-directory] [-t target-window]
 /// [shell-command]
 /// (alias: respawnw)
 ///
 /// tmux ^1.2:
 /// ```text
-/// tmux respawn-window [-k] [-t target-window] [shell-command]
+/// respawn-window [-k] [-t target-window] [shell-command]
 /// (alias: respawnw)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux respawn-window [-k] [-t target-window] [command]
+/// respawn-window [-k] [-t target-window] [command]
 /// (alias: respawnw)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

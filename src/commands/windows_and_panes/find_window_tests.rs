@@ -7,22 +7,22 @@ fn find_window() {
     //
     // tmux ^3.0:
     // ```text
-    // tmux find-window [-rCNTZ] [-t target-pane] match-string
+    // find-window [-rCNTZ] [-t target-pane] match-string
     // (alias: findw)
     //
     // tmux ^2.6:
     // ```text
-    // tmux find-window [-CNT] [-t target-pane] match-string
+    // find-window [-CNT] [-t target-pane] match-string
     // (alias: findw)
     //
     // tmux ^1.7:
     // ```text
-    // tmux find-window [-CNT] [-F format] [-t target-pane] match-string
+    // find-window [-CNT] [-F format] [-t target-pane] match-string
     // (alias: findw)
     //
     // tmux ^0.8:
     // ```text
-    // tmux find-window [-t target-pane] match-string
+    // find-window [-t target-pane] match-string
     // (alias: findw)
     // ```
     let target_pane = TargetPane::Raw("1").to_string();

@@ -8,7 +8,7 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.1:
 /// ```text
-/// tmux lock-client [-t target-client]
+/// lock-client [-t target-client]
 /// (alias: lockc)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

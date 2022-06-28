@@ -10,25 +10,25 @@ fn show_window_options() {
     //
     // tmux ^1.8:
     // ```text
-    // tmux show-window-options [-gv] [-t target-window] [option]
+    // show-window-options [-gv] [-t target-window] [option]
     // (alias: showw)
     // ```
     //
     // tmux ^1.7:
     // ```text
-    // tmux show-window-options [-g] [-t target-window] [option]
+    // show-window-options [-g] [-t target-window] [option]
     // (alias: showw)
     // ```
     //
     // tmux ^1.0:
     // ```text
-    // tmux show-window-options [-g] [-t target-window]
+    // show-window-options [-g] [-t target-window]
     // (alias: showw)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux show-window-options [-t target-window] option value
+    // show-window-options [-t target-window] option value
     // (alias: showw)
     // ```
     // (alias: showw)

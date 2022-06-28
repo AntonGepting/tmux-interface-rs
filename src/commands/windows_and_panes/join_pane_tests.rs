@@ -9,23 +9,21 @@ fn join_pane() {
     //
     // # Manual
     //
-    // tmux join-pane [-bdfhv] [-l size] [-s src-pane] [-t dst-pane]
-    // (alias: joinp)
     // tmux ^3.1:
     // ```text
-    // tmux join-pane [-bdfhv] [-l size] [-s src-pane] [-t dst-pane]
+    // join-pane [-bdfhv] [-l size] [-s src-pane] [-t dst-pane]
     // (alias: joinp)
     // ```
     //
     // tmux ^1.7:
     // ```text
-    // tmux join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+    // join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     // (alias: joinp)
     // ```
     //
     // tmux ^1.2:
     // ```text
-    // tmux join-pane [-dhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
+    // join-pane [-dhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
     // (alias: joinp)
     // ```
     let src_pane = TargetPane::Raw("2").to_string();

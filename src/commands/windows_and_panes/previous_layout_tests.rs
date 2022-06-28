@@ -9,7 +9,7 @@ fn previous_layout() {
     //
     // tmux ^1.3:
     // ```text
-    // tmux previous-layout [-t target-window]
+    // previous-layout [-t target-window]
     // (alias: prevl)
     // ```
 

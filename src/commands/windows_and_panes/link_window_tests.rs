@@ -9,13 +9,13 @@ fn link_window() {
     //
     // tmux ^2.1:
     // ```text
-    // tmux link-window [-adk] [-s src-window] [-t dst-window]
+    // link-window [-adk] [-s src-window] [-t dst-window]
     // (alias: linkw)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux link-window [-dk] [-s src-window] [-t dst-window]
+    // link-window [-dk] [-s src-window] [-t dst-window]
     // (alias: linkw)
     // ```
     let src_window = TargetWindow::Raw("1").to_string();

@@ -6,25 +6,25 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.2:
 /// ```text:
-/// tmux show-environment [-hgs] [-t target-session] [variable]
+/// show-environment [-hgs] [-t target-session] [variable]
 /// (alias: showenv)
 /// ```
 ///
 /// tmux ^2.1:
 /// ```text
-/// tmux show-environment [-gs] [-t target-session] [variable]
+/// show-environment [-gs] [-t target-session] [variable]
 /// (alias: showenv)
 /// ```
 ///
 /// tmux ^1.7:
 /// ```text
-/// tmux show-environment [-g] [-t target-session] [variable]
+/// show-environment [-g] [-t target-session] [variable]
 /// (alias: showenv)
 /// ```
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux show-environment [-g] [-t target-session]
+/// show-environment [-g] [-t target-session]
 /// (alias: showenv)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

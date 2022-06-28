@@ -9,7 +9,7 @@ fn next_layout() {
     //
     // tmux ^0.8:
     // ```text
-    // tmux next-layout [-t target-window]
+    // next-layout [-t target-window]
     // (alias: nextl)
     // ```
     let target_window = TargetWindow::Raw("1").to_string();

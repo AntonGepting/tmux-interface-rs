@@ -6,13 +6,13 @@ use std::borrow::Cow;
 ///
 /// tmux ^1.5:
 /// ```text
-/// tmux confirm-before [-p prompt] [-t target-client] command
+/// confirm-before [-p prompt] [-t target-client] command
 /// (alias: confirm)
 /// ```
 ///
 /// tmux ^0.9:
 /// ```text
-/// tmux confirm-before [-t target-client] command
+/// confirm-before [-t target-client] command
 /// (alias: confirm)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

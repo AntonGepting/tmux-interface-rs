@@ -9,43 +9,43 @@ fn bind_key() {
     //
     // tmux 3.1:
     // ```text
-    // tmux bind-key [-nr] [-N note] [-T key-table] key command [arguments]
+    // bind-key [-nr] [-N note] [-T key-table] key command [arguments]
     // (alias: bind)
     // ```
     //
     // tmux ^2.4:
     // ```text
-    // tmux bind-key [-nr] [-T key-table] key command [arguments]
+    // bind-key [-nr] [-T key-table] key command [arguments]
     // (alias: bind)
     // ```
     //
     // tmux ^2.3:
     // ```text
-    // tmux bind-key [-cnr] [-R repeat-count] [-t mode-table] [-T key-table] key command [arguments]
+    // bind-key [-cnr] [-R repeat-count] [-t mode-table] [-T key-table] key command [arguments]
     // (alias: bind)
     // ```
     //
     // tmux ^2.1:
     // ```text
-    // tmux bind-key [-cnr] [-t mode-table] [-T key-table] key command [arguments]
+    // bind-key [-cnr] [-t mode-table] [-T key-table] key command [arguments]
     // (alias: bind)
     // ```
     //
     // tmux ^2.0:
     // ```text
-    // tmux bind-key [-cnr] [-t mode-table] key command [arguments]
+    // bind-key [-cnr] [-t mode-table] key command [arguments]
     // (alias: bind)
     // ```
     //
     // tmux ^1.0:
     // ```text
-    // tmux bind-key [-cnr] [-t key-table] key command [arguments]
+    // bind-key [-cnr] [-t key-table] key command [arguments]
     // (alias: bind)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux bind-key [-r] key command [arguments]
+    // bind-key [-r] key command [arguments]
     // (alias: bind)
     // ```
 

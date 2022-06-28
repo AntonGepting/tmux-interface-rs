@@ -8,7 +8,7 @@ use std::borrow::Cow;
 ///
 /// tmux ^2.9:
 /// ```text
-/// tmux resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
+/// resize-window [-aADLRU] [-t target-window] [-x width] [-y height] [adjustment]
 /// (alias: resizew)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

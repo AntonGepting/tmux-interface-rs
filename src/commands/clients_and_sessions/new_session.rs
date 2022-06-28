@@ -10,68 +10,68 @@ use std::borrow::Cow;
 ///
 /// tmux 3.2:
 /// ```text
-/// tmux new-session [-AdDEPX] [-c start-directory] [-e environment] [-f flags] [-F format]
+/// new-session [-AdDEPX] [-c start-directory] [-e environment] [-f flags] [-F format]
 /// [-n window-name] [-s session-name] [-t group-name] [-x width] [-y height] [shell-command]
 /// (alias: new)
 /// ```
 ///
 /// tmux 3.0:
 /// ```text
-/// tmux new-session [-AdDEPX] [-c start-directory] [-F format] [-n window-name] [-s session-name]
+/// new-session [-AdDEPX] [-c start-directory] [-F format] [-n window-name] [-s session-name]
 /// [-t group-name] [-x width] [-y height] [shell-command]
 /// (alias: new)
 /// ```
 ///
 /// tmux 2.4:
 /// ```text
-/// tmux new-session [-AdDEP] [-c start-directory] [-F format] [-n window-name] [-s session-name]
+/// new-session [-AdDEP] [-c start-directory] [-F format] [-n window-name] [-s session-name]
 /// [-t group-name] [-x width] [-y height] [shell-command]
 /// (alias: new)
 /// ```
 ///
 /// tmux 2.1:
 /// ```text
-/// tmux new-session [-AdDEP] [-c start-directory] [-F format] [-n window-name] [-s session-name]
+/// new-session [-AdDEP] [-c start-directory] [-F format] [-n window-name] [-s session-name]
 /// [-t target-session] [-x width] [-y height] [shell-command]
 /// (alias: new)
 /// ```
 ///
 /// tmux 1.9:
 /// ```text
-/// tmux new-session [-AdDP] [-c start-directory] [-F format] [-n window-name] [-s session-name]
+/// new-session [-AdDP] [-c start-directory] [-F format] [-n window-name] [-s session-name]
 /// [-t target-session] [-x width] [-y height] [shell-command]
 /// (alias: new)
 /// ```
 ///
 /// tmux 1.8:
 /// ```text
-/// tmux new-session [-AdDP] [-F format] [-n window-name] [-s session-name] [-t target-session]
+/// new-session [-AdDP] [-F format] [-n window-name] [-s session-name] [-t target-session]
 /// [-x width] [-y height] [shell-command]
 /// (alias: new)
 /// ```
 ///
 /// tmux 1.6:
 /// ```text
-/// tmux new-session [-d] [-n window-name] [-s session-name] [-t target-session] [-x width]
+/// new-session [-d] [-n window-name] [-s session-name] [-t target-session] [-x width]
 /// [-y height] [shell-command]
 /// (alias: new)
 /// ```
 ///
 /// tmux 1.2:
 /// ```text
-/// tmux new-session [-d] [-n window-name] [-s session-name] [-t target-session] [shell-command]
+/// new-session [-d] [-n window-name] [-s session-name] [-t target-session] [shell-command]
 /// (alias: new)
 /// ```
 ///
 /// tmux 1.1:
 /// ```text
-/// tmux new-session [-d] [-n window-name] [-s session-name] [-t target-session] [command]
+/// new-session [-d] [-n window-name] [-s session-name] [-t target-session] [command]
 /// (alias: new)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux new-session [-d] [-n window-name] [-s session-name] [command]
+/// new-session [-d] [-n window-name] [-s session-name] [command]
 /// (alias: new)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

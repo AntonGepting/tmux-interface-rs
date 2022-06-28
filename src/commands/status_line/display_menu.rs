@@ -8,13 +8,13 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.2:
 /// ```text
-/// tmux display-menu [-O] [-c target-client] [-t target-pane] [-T title] [-x position] [-y position] name key command ...
+/// display-menu [-O] [-c target-client] [-t target-pane] [-T title] [-x position] [-y position] name key command ...
 /// alias: menu
 /// ```
 ///
 /// tmux ^3.0:
 /// ```text
-/// tmux display-menu [-c target-client] [-t target-pane] [-T title] [-x position] [-y position] name key command ...
+/// display-menu [-c target-client] [-t target-pane] [-T title] [-x position] [-y position] name key command ...
 /// alias: menu
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

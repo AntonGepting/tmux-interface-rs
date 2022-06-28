@@ -9,7 +9,7 @@ fn start_server() {
     //
     // tmux ^0.8:
     // ```text
-    // tmux start-server
+    // start-server
     // (alias: start)
     // ```
     let start_server = StartServer::new();

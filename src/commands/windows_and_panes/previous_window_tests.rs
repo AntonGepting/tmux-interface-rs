@@ -5,13 +5,13 @@ fn previous_window() {
 
     // tmux ^0.9:
     // ```text
-    // tmux previous-window [-a] [-t target-session]
+    // previous-window [-a] [-t target-session]
     // (alias: prev)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux previous-window [-t target-session]
+    // previous-window [-t target-session]
     // (alias: prev)
     // ```
     let previous_window = PreviousWindow::new();

@@ -8,43 +8,43 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.2:
 /// ```text
-/// tmux break-pane [-abdP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
+/// break-pane [-abdP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
 /// (alias: breakp)
 /// ```
 ///
 /// tmux ^2.4:
 /// ```text
-/// tmux break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
+/// break-pane [-dP] [-F format] [-n window-name] [-s src-pane] [-t dst-window]
 /// (alias: breakp)
 /// ```
 ///
 /// tmux ^2.2:
 /// ```text
-/// tmux break-pane [-dP] [-F format] [-s src-pane] [-t dst-window]
+/// break-pane [-dP] [-F format] [-s src-pane] [-t dst-window]
 /// (alias: breakp)
 /// ```
 ///
 /// tmux ^2.1:
 /// ```text
-/// tmux break-pane [-dP] [-F format] [-s src-pane] [-t dst-pane]
+/// break-pane [-dP] [-F format] [-s src-pane] [-t dst-pane]
 /// (alias: breakp)
 /// ```
 ///
 /// tmux ^1.7:
 /// ```text
-/// tmux break-pane [-dP] [-F format] [-t target-pane]
+/// break-pane [-dP] [-F format] [-t target-pane]
 /// (alias: breakp)
 /// ```
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux break-pane [-d] [-t target-window]
+/// break-pane [-d] [-t target-window]
 /// (alias: breakp)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux break-pane [-d] [-p pane-index] [-t target-window]
+/// break-pane [-d] [-p pane-index] [-t target-window]
 /// (alias: breakp)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

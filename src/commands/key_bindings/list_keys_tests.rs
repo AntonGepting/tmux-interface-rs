@@ -7,25 +7,25 @@ fn list_keys() {
     //
     // tmux ^3.1:
     // ```text
-    // tmux list-keys [-1aN] [-P prefix-string -T key-table]
+    // list-keys [-1aN] [-P prefix-string -T key-table]
     // (alias: lsk)
     // ```
     //
     // tmux ^2.4:
     // ```text
-    // tmux list-keys [-T key-table]
+    // list-keys [-T key-table]
     // (alias: lsk)
     // ```
     //
     // tmux ^2.1:
     // ```text
-    // tmux list-keys [-t mode-table] [-T key-table]
+    // list-keys [-t mode-table] [-T key-table]
     // (alias: lsk)
     // ```
     //
     // tmux ^0.8:
     // ```text
-    // tmux list-keys [-t key-table]
+    // list-keys [-t key-table]
     // (alias: lsk)
     // ```
     let list_keys = ListKeys::new();

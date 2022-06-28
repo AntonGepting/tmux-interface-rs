@@ -9,37 +9,37 @@ use std::marker::PhantomData;
 ///
 /// tmux ^3.1:
 /// ```text
-/// tmux switch-client [-ElnprZ] [-c target-client] [-t target-session] [-T key-table]
+/// switch-client [-ElnprZ] [-c target-client] [-t target-session] [-T key-table]
 /// (alias: switchc)
 /// ```
 ///
 /// tmux ^2.1:
 /// ```text
-/// tmux switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
+/// switch-client [-Elnpr] [-c target-client] [-t target-session] [-T key-table]
 /// (alias: switchc)
 /// ```
 ///
 /// tmux ^1.6:
 /// ```text
-/// tmux switch-client [-lnpr] [-c target-client] [-t target-session]
+/// switch-client [-lnpr] [-c target-client] [-t target-session]
 /// (alias: switchc)
 /// ```
 ///
 /// tmux ^1.4:
 /// ```text
-/// tmux switch-client [-lnp] [-c target-client] [-t target-session]
+/// switch-client [-lnp] [-c target-client] [-t target-session]
 /// (alias: switchc)
 /// ```
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux switch-client [-c target-client] [-t target-session]
+/// switch-client [-c target-client] [-t target-session]
 /// (alias: switchc)
 /// ```
 ///
 /// tmux ^0.8:
 /// ```text
-/// tmux switch-client [-c target-client -t target-session]
+/// switch-client [-c target-client -t target-session]
 /// (alias: switchc)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

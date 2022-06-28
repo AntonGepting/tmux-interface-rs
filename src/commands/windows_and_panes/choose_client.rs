@@ -8,32 +8,32 @@ use std::borrow::Cow;
 ///
 /// tmux ^3.2:
 /// ```text
-/// tmux choose-client [-NrZ] [-F format] [-f filter] [-K key-format] [-O sort-order] [-t target-pane] [template]
+/// choose-client [-NrZ] [-F format] [-f filter] [-K key-format] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
 /// tmux ^3.1:
 /// ```text
-/// tmux choose-client [-NrZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+/// choose-client [-NrZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
 /// tmux ^2.7:
 /// ```text
-/// tmux choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+/// choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
 /// tmux ^2.6:
 /// ```text
-/// tmux choose-client [-N] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+/// choose-client [-N] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
 /// tmux ^1.7:
 /// ```text
-/// tmux choose-client [-F format] [-t target-window] [template]
+/// choose-client [-F format] [-t target-window] [template]
 /// ```
 ///
 /// tmux ^1.0:
 /// ```text
-/// tmux choose-client  [-t target-window] [template]
+/// choose-client  [-t target-window] [template]
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ChooseClient<'a> {

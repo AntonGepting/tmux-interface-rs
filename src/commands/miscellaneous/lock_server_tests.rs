@@ -7,7 +7,7 @@ fn lock_server() {
     //
     // tmux ^0.8:
     // ```text
-    // tmux lock-server
+    // lock-server
     // (alias: lock)
     // ```
     let lock_server = LockServer::new();
