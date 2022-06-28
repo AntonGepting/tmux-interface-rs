@@ -7,6 +7,26 @@ use std::borrow::Cow;
 use std::fmt;
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[cfg(feature = "tmux_3_3")]
+pub struct RefreshClientSize {
+    pub window_id: Option<usize>,
+    pub width: usize,
+    pub height: usize,
+}
+
+#[cfg(feature = "tmux_3_3")]
+impl fmt::Display for RefreshClientSize {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let s = match self.window_id {
+            Some(window_id) => format!("@{}:{}x{}", window_id, self.width, self.height),
+            None => format!("{}x{}", self.width, self.height),
+        };
+
+        write!(f, "{}", s)
+    }
+}
+
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 #[cfg(feature = "tmux_3_2")]
 pub enum State {
     On,
@@ -36,6 +56,7 @@ pub struct AllowActions<'a> {
     pub state: State,
 }
 
+// TODO: enum for what?
 /// [-B name:what:format]
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 #[cfg(feature = "tmux_3_2")]
@@ -252,6 +273,7 @@ impl<'a> RefreshClient<'a> {
 
     /// `[-C X,Y]` - set the width and height of a control client
     /// `[-C XxY]` - set the width and height of a control client
+    /// `[-C @id:XxY]` - set the width and height of a control client
     #[cfg(feature = "tmux_2_4")]
     pub fn size(mut self, size: (usize, usize)) -> Self {
         self.size = Some(size);
