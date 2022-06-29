@@ -781,6 +781,8 @@ pub use self::commands::status_line::display_menu::DisplayMenu;
 pub use self::commands::status_line::display_message::DisplayMessage;
 #[cfg(feature = "tmux_3_2")]
 pub use self::commands::status_line::display_popup::DisplayPopup;
+#[cfg(feature = "tmux_3_3")]
+pub use self::commands::status_line::show_prompt_history::ShowPromptHistory;
 
 // windows and panes
 #[cfg(feature = "tmux_0_8")]

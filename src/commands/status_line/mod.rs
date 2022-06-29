@@ -8,6 +8,8 @@ use crate::ConfirmBefore;
 use crate::DisplayMenu;
 #[cfg(feature = "tmux_3_2")]
 use crate::DisplayPopup;
+#[cfg(feature = "tmux_3_3")]
+use crate::ShowPromptHistory;
 use crate::TmuxCommand;
 
 #[cfg(feature = "tmux_1_0")]
@@ -29,6 +31,8 @@ pub mod display_message;
 //pub mod select_prompt;
 #[cfg(feature = "tmux_3_2")]
 pub mod display_popup;
+#[cfg(feature = "tmux_3_3")]
+pub mod show_prompt_history;
 
 #[cfg(test)]
 #[path = "."]
@@ -45,6 +49,8 @@ mod status_line_tests {
     pub mod display_message_tests;
     #[cfg(feature = "tmux_3_2")]
     pub mod display_popup_tests;
+    #[cfg(feature = "tmux_3_3")]
+    pub mod show_prompt_history_tests;
 }
 
 /// All functions from man tmux "Status line" listed below
@@ -79,14 +85,28 @@ impl<'a> TmuxCommand<'a> {
     pub fn display_popup() -> DisplayPopup<'a> {
         DisplayPopup::new()
     }
+
+    #[cfg(feature = "tmux_3_3")]
+    pub fn show_prompt_history() -> ShowPromptHistory<'a> {
+        ShowPromptHistory::new()
+    }
 }
 
+#[cfg(feature = "tmux_3_3")]
+impl<'a> From<ClearPromptHistory<'a>> for TmuxCommand<'a> {
+    fn from(item: ClearPromptHistory<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<CommandPrompt<'a>> for TmuxCommand<'a> {
     fn from(item: CommandPrompt<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_9")]
 impl<'a> From<ConfirmBefore<'a>> for TmuxCommand<'a> {
     fn from(item: ConfirmBefore<'a>) -> Self {
         item.build()
@@ -100,8 +120,23 @@ impl<'a> From<DisplayMenu<'a>> for TmuxCommand<'a> {
     }
 }
 
+#[cfg(feature = "tmux_1_0")]
 impl<'a> From<DisplayMessage<'a>> for TmuxCommand<'a> {
     fn from(item: DisplayMessage<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_3_2")]
+impl<'a> From<DisplayPopup<'a>> for TmuxCommand<'a> {
+    fn from(item: DisplayPopup<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_3_3")]
+impl<'a> From<ShowPromptHistory<'a>> for TmuxCommand<'a> {
+    fn from(item: ShowPromptHistory<'a>) -> Self {
         item.build()
     }
 }

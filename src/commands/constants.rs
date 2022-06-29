@@ -497,6 +497,13 @@ pub const DISPLAY_POPUP: &str = "display-popup";
 #[cfg(feature = "cmd_alias")]
 pub const DISPLAY_POPUP: &str = "popup";
 
+/// `clear-prompt-history`
+#[cfg(not(feature = "cmd_alias"))]
+pub const SHOW_PROMPT_HISTORY: &str = "show-prompt-history";
+/// `clearphist`
+#[cfg(feature = "cmd_alias")]
+pub const SHOW_PROMPT_HISTORY: &str = "showphist";
+
 // Windows and panes
 
 /// `break-pane`
