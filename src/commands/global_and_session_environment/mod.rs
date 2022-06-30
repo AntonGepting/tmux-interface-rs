@@ -1,14 +1,16 @@
 use crate::TmuxCommand;
 
-#[cfg(feature = "tmux_1_0")]
-use crate::{SetEnvironment, ShowEnvironment};
-
 /// All functions from man tmux "Global and session environment" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#GLOBAL_AND_SESSION_ENVIRONMENT))
 #[cfg(feature = "tmux_1_0")]
 pub mod set_environment;
 #[cfg(feature = "tmux_1_0")]
 pub mod show_environment;
+
+#[cfg(feature = "tmux_1_0")]
+pub use set_environment::SetEnvironment;
+#[cfg(feature = "tmux_1_0")]
+pub use show_environment::ShowEnvironment;
 
 #[cfg(test)]
 #[path = "."]

@@ -1,31 +1,4 @@
-#[cfg(feature = "tmux_1_4")]
-use crate::LastPane;
-#[cfg(feature = "tmux_1_1")]
-use crate::PipePane;
-#[cfg(feature = "tmux_1_3")]
-use crate::PreviousLayout;
-#[cfg(feature = "tmux_2_9")]
-use crate::ResizeWindow;
-#[cfg(feature = "tmux_1_5")]
-use crate::RespawnPane;
 use crate::TmuxCommand;
-#[cfg(feature = "tmux_0_8")]
-use crate::{
-    BreakPane, CopyMode, FindWindow, KillPane, KillWindow, LastWindow, LinkWindow, ListPanes,
-    ListWindows, MoveWindow, NewWindow, NextLayout, PreviousWindow, RenameWindow, RespawnWindow,
-    RotateWindow, SelectPane, SelectWindow, SplitWindow, SwapPane, SwapWindow, UnlinkWindow,
-};
-#[cfg(feature = "tmux_1_2")]
-use crate::{CapturePane, JoinPane};
-#[cfg(feature = "tmux_1_0")]
-use crate::{ChooseClient, DisplayPanes};
-#[cfg(feature = "tmux_1_7")]
-use crate::{ChooseTree, MovePane};
-#[cfg(feature = "tmux_0_9")]
-use crate::{ResizePane, SelectLayout};
-
-#[cfg(feature = "tmux_0_8")]
-use crate::NextWindow;
 
 /// All functions from man tmux "Windows and Panes" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES))
@@ -109,6 +82,87 @@ pub mod swap_window;
 pub mod unlink_window;
 //#[cfg(feature = "tmux_1_0")]
 //pub mod up_pane;
+
+#[cfg(feature = "tmux_0_8")]
+pub use break_pane::BreakPane;
+#[cfg(feature = "tmux_1_2")]
+pub use capture_pane::CapturePane;
+#[cfg(feature = "tmux_1_0")]
+pub use choose_client::ChooseClient;
+//#[cfg(feature = "tmux_1_0")]
+//pub use choose_session::ChooseSession;
+#[cfg(feature = "tmux_1_7")]
+pub use choose_tree::ChooseTree;
+//#[cfg(feature = "tmux_1_0")]
+//pub use choose_window::ChooseWindow;
+#[cfg(feature = "tmux_0_8")]
+pub use copy_mode::CopyMode;
+#[cfg(feature = "tmux_1_0")]
+pub use display_panes::DisplayPanes;
+//#[cfg(feature = "tmux_1_0")]
+//pub use down_pane::DownPane;
+#[cfg(feature = "tmux_0_8")]
+pub use find_window::FindWindow;
+#[cfg(feature = "tmux_1_2")]
+pub use join_pane::JoinPane;
+#[cfg(feature = "tmux_0_8")]
+pub use kill_pane::KillPane;
+#[cfg(feature = "tmux_0_8")]
+pub use kill_window::KillWindow;
+#[cfg(feature = "tmux_1_4")]
+pub use last_pane::LastPane;
+#[cfg(feature = "tmux_0_8")]
+pub use last_window::LastWindow;
+#[cfg(feature = "tmux_0_8")]
+pub use link_window::LinkWindow;
+#[cfg(feature = "tmux_0_8")]
+pub use list_panes::ListPanes;
+#[cfg(feature = "tmux_0_8")]
+pub use list_windows::ListWindows;
+#[cfg(feature = "tmux_1_7")]
+pub use move_pane::MovePane;
+#[cfg(feature = "tmux_0_8")]
+pub use move_window::MoveWindow;
+#[cfg(feature = "tmux_0_8")]
+pub use new_window::NewWindow;
+#[cfg(feature = "tmux_0_8")]
+pub use next_layout::NextLayout;
+#[cfg(feature = "tmux_0_8")]
+pub use next_window::NextWindow;
+#[cfg(feature = "tmux_1_1")]
+pub use pipe_pane::PipePane;
+#[cfg(feature = "tmux_1_3")]
+pub use previous_layout::PreviousLayout;
+#[cfg(feature = "tmux_0_8")]
+pub use previous_window::PreviousWindow;
+#[cfg(feature = "tmux_0_8")]
+pub use rename_window::RenameWindow;
+#[cfg(feature = "tmux_0_9")]
+pub use resize_pane::ResizePane;
+#[cfg(feature = "tmux_2_9")]
+pub use resize_window::ResizeWindow;
+#[cfg(feature = "tmux_1_5")]
+pub use respawn_pane::RespawnPane;
+#[cfg(feature = "tmux_0_8")]
+pub use respawn_window::RespawnWindow;
+#[cfg(feature = "tmux_0_8")]
+pub use rotate_window::RotateWindow;
+#[cfg(feature = "tmux_0_9")]
+pub use select_layout::SelectLayout;
+#[cfg(feature = "tmux_0_8")]
+pub use select_pane::SelectPane;
+#[cfg(feature = "tmux_0_8")]
+pub use select_window::SelectWindow;
+#[cfg(feature = "tmux_0_8")]
+pub use split_window::SplitWindow;
+#[cfg(feature = "tmux_0_8")]
+pub use swap_pane::SwapPane;
+#[cfg(feature = "tmux_0_8")]
+pub use swap_window::SwapWindow;
+#[cfg(feature = "tmux_0_8")]
+pub use unlink_window::UnlinkWindow;
+//#[cfg(feature = "tmux_1_0")]
+//pub use up_pane::UpPane;
 
 #[cfg(test)]
 #[path = "."]
@@ -361,150 +415,175 @@ impl<'a> TmuxCommand<'a> {
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<BreakPane<'a>> for TmuxCommand<'a> {
     fn from(item: BreakPane<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_2")]
 impl<'a> From<CapturePane<'a>> for TmuxCommand<'a> {
     fn from(item: CapturePane<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_0")]
 impl<'a> From<ChooseClient<'a>> for TmuxCommand<'a> {
     fn from(item: ChooseClient<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_7")]
 impl<'a> From<ChooseTree<'a>> for TmuxCommand<'a> {
     fn from(item: ChooseTree<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<CopyMode<'a>> for TmuxCommand<'a> {
     fn from(item: CopyMode<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_0")]
 impl<'a> From<DisplayPanes<'a>> for TmuxCommand<'a> {
     fn from(item: DisplayPanes<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<FindWindow<'a>> for TmuxCommand<'a> {
     fn from(item: FindWindow<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_2")]
 impl<'a> From<JoinPane<'a>> for TmuxCommand<'a> {
     fn from(item: JoinPane<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<KillPane<'a>> for TmuxCommand<'a> {
     fn from(item: KillPane<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<KillWindow<'a>> for TmuxCommand<'a> {
     fn from(item: KillWindow<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_4")]
 impl<'a> From<LastPane<'a>> for TmuxCommand<'a> {
     fn from(item: LastPane<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<LastWindow<'a>> for TmuxCommand<'a> {
     fn from(item: LastWindow<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<LinkWindow<'a>> for TmuxCommand<'a> {
     fn from(item: LinkWindow<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<ListPanes<'a>> for TmuxCommand<'a> {
     fn from(item: ListPanes<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<ListWindows<'a>> for TmuxCommand<'a> {
     fn from(item: ListWindows<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_7")]
 impl<'a> From<MovePane<'a>> for TmuxCommand<'a> {
     fn from(item: MovePane<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<MoveWindow<'a>> for TmuxCommand<'a> {
     fn from(item: MoveWindow<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<NewWindow<'a>> for TmuxCommand<'a> {
     fn from(item: NewWindow<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<NextLayout<'a>> for TmuxCommand<'a> {
     fn from(item: NextLayout<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<NextWindow<'a>> for TmuxCommand<'a> {
     fn from(item: NextWindow<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_1")]
 impl<'a> From<PipePane<'a>> for TmuxCommand<'a> {
     fn from(item: PipePane<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_3")]
 impl<'a> From<PreviousLayout<'a>> for TmuxCommand<'a> {
     fn from(item: PreviousLayout<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<PreviousWindow<'a>> for TmuxCommand<'a> {
     fn from(item: PreviousWindow<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<RenameWindow<'a>> for TmuxCommand<'a> {
     fn from(item: RenameWindow<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_9")]
 impl<'a> From<ResizePane<'a>> for TmuxCommand<'a> {
     fn from(item: ResizePane<'a>) -> Self {
         item.build()
@@ -525,14 +604,65 @@ impl<'a> From<RespawnPane<'a>> for TmuxCommand<'a> {
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<RespawnWindow<'a>> for TmuxCommand<'a> {
     fn from(item: RespawnWindow<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<RotateWindow<'a>> for TmuxCommand<'a> {
     fn from(item: RotateWindow<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_0_9")]
+impl<'a> From<SelectLayout<'a>> for TmuxCommand<'a> {
+    fn from(item: SelectLayout<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_0_8")]
+impl<'a> From<SelectPane<'a>> for TmuxCommand<'a> {
+    fn from(item: SelectPane<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_0_8")]
+impl<'a> From<SelectWindow<'a>> for TmuxCommand<'a> {
+    fn from(item: SelectWindow<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_0_8")]
+impl<'a> From<SplitWindow<'a>> for TmuxCommand<'a> {
+    fn from(item: SplitWindow<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_0_8")]
+impl<'a> From<SwapPane<'a>> for TmuxCommand<'a> {
+    fn from(item: SwapPane<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_0_8")]
+impl<'a> From<SwapWindow<'a>> for TmuxCommand<'a> {
+    fn from(item: SwapWindow<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_0_8")]
+impl<'a> From<UnlinkWindow<'a>> for TmuxCommand<'a> {
+    fn from(item: UnlinkWindow<'a>) -> Self {
         item.build()
     }
 }

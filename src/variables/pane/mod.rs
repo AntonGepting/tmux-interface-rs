@@ -2,6 +2,13 @@ pub mod pane;
 pub mod pane_tabs;
 pub mod panes;
 
+#[cfg(feature = "tmux_1_6")]
+pub use pane::Pane;
+#[cfg(feature = "tmux_1_6")]
+pub use pane_tabs::PaneTabs;
+#[cfg(feature = "tmux_1_6")]
+pub use panes::Panes;
+
 #[cfg(test)]
 #[path = "."]
 mod variables_pane_tests {

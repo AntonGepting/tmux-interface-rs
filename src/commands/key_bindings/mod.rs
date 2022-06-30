@@ -1,6 +1,4 @@
 use crate::TmuxCommand;
-#[cfg(feature = "tmux_0_8")]
-use crate::{BindKey, ListKeys, SendKeys, SendPrefix, UnbindKey};
 
 /// All functions from man tmux "Key Bindings" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#KEY_BINDINGS))
@@ -14,6 +12,17 @@ pub mod send_keys;
 pub mod send_prefix;
 #[cfg(feature = "tmux_0_8")]
 pub mod unbind_key;
+
+#[cfg(feature = "tmux_0_8")]
+pub use bind_key::BindKey;
+#[cfg(feature = "tmux_0_8")]
+pub use list_keys::ListKeys;
+#[cfg(feature = "tmux_0_8")]
+pub use send_keys::SendKeys;
+#[cfg(feature = "tmux_0_8")]
+pub use send_prefix::SendPrefix;
+#[cfg(feature = "tmux_0_8")]
+pub use unbind_key::UnbindKey;
 
 #[cfg(test)]
 #[path = "."]
@@ -59,23 +68,35 @@ impl<'a> TmuxCommand<'a> {
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<BindKey<'a>> for TmuxCommand<'a> {
     fn from(item: BindKey<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<ListKeys<'a>> for TmuxCommand<'a> {
     fn from(item: ListKeys<'a>) -> Self {
         item.build()
     }
 }
+
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<SendKeys<'a>> for TmuxCommand<'a> {
     fn from(item: SendKeys<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
+impl<'a> From<SendPrefix<'a>> for TmuxCommand<'a> {
+    fn from(item: SendPrefix<'a>) -> Self {
+        item.build()
+    }
+}
+
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<UnbindKey<'a>> for TmuxCommand<'a> {
     fn from(item: UnbindKey<'a>) -> Self {
         item.build()

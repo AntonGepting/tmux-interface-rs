@@ -37,6 +37,11 @@ pub mod formats_output;
 pub mod variable;
 pub mod variable_output;
 
+pub use formats::Formats;
+pub use formats_output::FormatsOutput;
+pub use variable::Variable;
+pub use variable_output::VariableOutput;
+
 #[cfg(test)]
 #[path = "."]
 mod formats_tests {

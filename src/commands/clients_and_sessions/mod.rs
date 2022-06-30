@@ -1,18 +1,4 @@
-#[cfg(feature = "tmux_1_1")]
-use crate::LockClient;
-#[cfg(feature = "tmux_1_1")]
-use crate::LockSession;
-#[cfg(feature = "tmux_3_3")]
-use crate::ServerAccess;
-#[cfg(feature = "tmux_1_2")]
-use crate::ShowMessages;
 use crate::TmuxCommand;
-#[cfg(feature = "tmux_0_8")]
-use crate::{
-    AttachSession, DetachClient, HasSession, KillServer, KillSession, ListClients, ListCommands,
-    ListSessions, NewSession, RefreshClient, RenameSession, SourceFile, StartServer, SuspendClient,
-    SwitchClient,
-};
 
 /// All functions from man tmux "Clients and Sessions" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#CLIENTS_AND_SESSIONS))
@@ -54,6 +40,45 @@ pub mod start_server;
 pub mod suspend_client;
 #[cfg(feature = "tmux_0_8")]
 pub mod switch_client;
+
+#[cfg(feature = "tmux_0_8")]
+pub use attach_session::AttachSession;
+#[cfg(feature = "tmux_0_8")]
+pub use detach_client::DetachClient;
+#[cfg(feature = "tmux_0_8")]
+pub use has_session::HasSession;
+#[cfg(feature = "tmux_0_8")]
+pub use kill_server::KillServer;
+#[cfg(feature = "tmux_0_8")]
+pub use kill_session::KillSession;
+#[cfg(feature = "tmux_0_8")]
+pub use list_clients::ListClients;
+#[cfg(feature = "tmux_0_8")]
+pub use list_commands::ListCommands;
+#[cfg(feature = "tmux_0_8")]
+pub use list_sessions::ListSessions;
+#[cfg(feature = "tmux_1_1")]
+pub use lock_client::LockClient;
+#[cfg(feature = "tmux_1_1")]
+pub use lock_session::LockSession;
+#[cfg(feature = "tmux_0_8")]
+pub use new_session::NewSession;
+#[cfg(feature = "tmux_0_8")]
+pub use refresh_client::RefreshClient;
+#[cfg(feature = "tmux_0_8")]
+pub use rename_session::RenameSession;
+#[cfg(feature = "tmux_3_3")]
+pub use server_access::ServerAccess;
+#[cfg(feature = "tmux_1_2")]
+pub use show_messages::ShowMessages;
+#[cfg(feature = "tmux_0_8")]
+pub use source_file::SourceFile;
+#[cfg(feature = "tmux_0_8")]
+pub use start_server::StartServer;
+#[cfg(feature = "tmux_0_8")]
+pub use suspend_client::SuspendClient;
+#[cfg(feature = "tmux_0_8")]
+pub use switch_client::SwitchClient;
 
 #[cfg(test)]
 #[path = "."]

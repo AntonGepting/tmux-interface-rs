@@ -27,13 +27,13 @@ mod options_tests {
 }
 
 #[cfg(feature = "tmux_3_1")]
-use crate::options::pane_options::PaneOptions;
+pub use crate::options::pane_options::*;
 #[cfg(feature = "tmux_1_2")]
-use crate::options::server_options::ServerOptions;
+pub use crate::options::server_options::*;
 #[cfg(feature = "tmux_1_0")]
-use crate::options::session_options::SessionOptions;
+pub use crate::options::session_options::*;
 #[cfg(feature = "tmux_1_2")]
-use crate::options::window_options::WindowOptions;
+pub use crate::options::window_options::*;
 
 #[cfg(feature = "tmux_1_0")]
 pub struct Options {

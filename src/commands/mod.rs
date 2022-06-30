@@ -121,8 +121,31 @@ pub mod options;
 pub mod status_line;
 pub mod windows_and_panes;
 
-pub use self::tmux::Tmux;
-use crate::TmuxCommand;
+pub use common::*;
+
+// buffers
+pub use buffers::*;
+// clients and sessions
+pub use clients_and_sessions::*;
+// global and session environment
+pub use global_and_session_environment::*;
+// hooks
+pub use hooks::*;
+// key bindings
+pub use key_bindings::*;
+// miscellaneous
+pub use miscellaneous::*;
+// options
+pub use options::*;
+// status line
+pub use status_line::*;
+// windows and panes
+pub use windows_and_panes::*;
+
+pub use tmux::Tmux;
+pub use tmux_command::TmuxCommand;
+pub use tmux_commands::TmuxCommands;
+pub use tmux_output::TmuxOutput;
 
 // XXX: ?
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html))

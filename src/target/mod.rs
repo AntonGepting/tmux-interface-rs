@@ -31,6 +31,10 @@ pub mod target_pane;
 pub mod target_session;
 pub mod target_window;
 
+pub use target_pane::{TargetPane, TargetPaneExt, TargetPaneToken};
+pub use target_session::TargetSession;
+pub use target_window::{TargetWindow, TargetWindowExt, TargetWindowToken};
+
 #[cfg(test)]
 #[path = "."]
 mod target_tests {

@@ -1,6 +1,4 @@
 use crate::TmuxCommand;
-#[cfg(feature = "tmux_0_8")]
-use crate::{SetOption, SetWindowOption, ShowOptions, ShowWindowOptions};
 
 /// All functions from man tmux "Options" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#OPTIONS))
@@ -12,6 +10,15 @@ pub mod set_window_option;
 pub mod show_options;
 #[cfg(feature = "tmux_0_8")]
 pub mod show_window_options;
+
+#[cfg(feature = "tmux_0_8")]
+pub use set_option::SetOption;
+#[cfg(feature = "tmux_0_8")]
+pub use set_window_option::SetWindowOption;
+#[cfg(feature = "tmux_0_8")]
+pub use show_options::ShowOptions;
+#[cfg(feature = "tmux_0_8")]
+pub use show_window_options::ShowWindowOptions;
 
 #[cfg(test)]
 #[path = "."]
@@ -50,24 +57,28 @@ impl<'a> TmuxCommand<'a> {
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<SetOption<'a>> for TmuxCommand<'a> {
     fn from(item: SetOption<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<SetWindowOption<'a>> for TmuxCommand<'a> {
     fn from(item: SetWindowOption<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<ShowOptions<'a>> for TmuxCommand<'a> {
     fn from(item: ShowOptions<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<ShowWindowOptions<'a>> for TmuxCommand<'a> {
     fn from(item: ShowWindowOptions<'a>) -> Self {
         item.build()

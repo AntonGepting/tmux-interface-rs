@@ -1,11 +1,4 @@
 use crate::TmuxCommand;
-#[cfg(feature = "tmux_1_8")]
-use crate::WaitFor;
-#[cfg(feature = "tmux_0_8")]
-use crate::{ClockMode, IfShell, LockServer};
-
-#[cfg(feature = "tmux_1_1")]
-use crate::RunShell;
 
 /// All functions from man tmux "Miscellaneous" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#MISCELLANEOUS))
@@ -23,6 +16,21 @@ pub mod lock_server;
 pub mod run_shell;
 #[cfg(feature = "tmux_1_8")]
 pub mod wait_for;
+
+#[cfg(feature = "tmux_0_8")]
+pub use clock_mode::ClockMode;
+#[cfg(feature = "tmux_0_8")]
+pub use if_shell::IfShell;
+#[cfg(feature = "tmux_0_8")]
+pub use lock_server::LockServer;
+//#[cfg(feature = "tmux_1_0")]
+//pub use server_info::ServerInfo;
+//#[cfg(feature = "tmux_1_0")]
+//pub use set_password::SetPassword;
+#[cfg(feature = "tmux_1_1")]
+pub use run_shell::RunShell;
+#[cfg(feature = "tmux_1_8")]
+pub use wait_for::WaitFor;
 
 #[cfg(test)]
 #[path = "."]
@@ -72,30 +80,35 @@ impl<'a> TmuxCommand<'a> {
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<ClockMode<'a>> for TmuxCommand<'a> {
     fn from(item: ClockMode<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<IfShell<'a>> for TmuxCommand<'a> {
     fn from(item: IfShell<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<LockServer> for TmuxCommand<'a> {
     fn from(item: LockServer) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_1")]
 impl<'a> From<RunShell<'a>> for TmuxCommand<'a> {
     fn from(item: RunShell<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_8")]
 impl<'a> From<WaitFor<'a>> for TmuxCommand<'a> {
     fn from(item: WaitFor<'a>) -> Self {
         item.build()

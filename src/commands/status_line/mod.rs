@@ -1,19 +1,4 @@
-#[cfg(feature = "tmux_3_3")]
-use crate::ClearPromptHistory;
-#[cfg(feature = "tmux_0_8")]
-use crate::CommandPrompt;
-#[cfg(feature = "tmux_0_9")]
-use crate::ConfirmBefore;
-#[cfg(feature = "tmux_3_0")]
-use crate::DisplayMenu;
-#[cfg(feature = "tmux_3_2")]
-use crate::DisplayPopup;
-#[cfg(feature = "tmux_3_3")]
-use crate::ShowPromptHistory;
 use crate::TmuxCommand;
-
-#[cfg(feature = "tmux_1_0")]
-use crate::DisplayMessage;
 
 /// All functions from man tmux "Status line" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#STATUS_LINE))
@@ -33,6 +18,23 @@ pub mod display_message;
 pub mod display_popup;
 #[cfg(feature = "tmux_3_3")]
 pub mod show_prompt_history;
+
+#[cfg(feature = "tmux_3_3")]
+pub use clear_prompt_history::ClearPromptHistory;
+#[cfg(feature = "tmux_0_8")]
+pub use command_prompt::CommandPrompt;
+#[cfg(feature = "tmux_0_9")]
+pub use confirm_before::ConfirmBefore;
+#[cfg(feature = "tmux_3_0")]
+pub use display_menu::DisplayMenu;
+#[cfg(feature = "tmux_1_0")]
+pub use display_message::DisplayMessage;
+//#[cfg(feature = "tmux_1_0")]
+//pub use select_prompt::SelectPrompt;
+#[cfg(feature = "tmux_3_2")]
+pub use display_popup::DisplayPopup;
+#[cfg(feature = "tmux_3_3")]
+pub use show_prompt_history::ShowPromptHistory;
 
 #[cfg(test)]
 #[path = "."]
