@@ -13,22 +13,22 @@ use std::borrow::Cow;
 ///
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ServerAccess<'a> {
-    /// [-a] - give access
+    /// `[-a]` - give access
     #[cfg(feature = "tmux_3_3")]
     pub add: bool,
-    /// [-d] - revoke access
+    /// `[-d]` - revoke access
     #[cfg(feature = "tmux_3_3")]
     pub delete: bool,
-    /// [-r] - read-only permission for user
+    /// `[-r]` - read-only permission for user
     #[cfg(feature = "tmux_3_3")]
     pub read: bool,
-    /// [-w] - write permission for user
+    /// `[-w]` - write permission for user
     #[cfg(feature = "tmux_3_3")]
     pub write: bool,
-    /// [-l] - list current access permissions
+    /// `[-l]` - list current access permissions
     #[cfg(feature = "tmux_3_3")]
     pub list: bool,
-    /// [user] - user
+    /// `[user]` - user
     #[cfg(feature = "tmux_3_3")]
     pub user: Option<Cow<'a, str>>,
 }

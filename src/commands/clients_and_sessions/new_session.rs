@@ -76,53 +76,53 @@ use std::borrow::Cow;
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct NewSession<'a> {
-    /// [-A] - behave like `attach-session` if `session-name` already exists
+    /// `[-A]` - behave like `attach-session` if `session-name` already exists
     #[cfg(feature = "tmux_1_8")]
     pub attach: bool,
-    /// [-d] - new session is not attached to the current terminal
+    /// `[-d]` - new session is not attached to the current terminal
     #[cfg(feature = "tmux_0_8")]
     pub detached: bool,
-    /// [-D] - any other clients attached to the session are detached
+    /// `[-D]` - any other clients attached to the session are detached
     #[cfg(feature = "tmux_1_8")]
     pub detach_other: bool,
-    /// [-E] - `update-environment` option will not be applied
+    /// `[-E]` - `update-environment` option will not be applied
     #[cfg(feature = "tmux_2_1")]
     pub not_update_env: bool,
-    /// [-P] - print information about the new session after it has been created
+    /// `[-P]` - print information about the new session after it has been created
     #[cfg(feature = "tmux_1_8")]
     pub print: bool,
-    /// [-X] - send SIGHUP to the parent process, detaching the client
+    /// `[-X]` - send SIGHUP to the parent process, detaching the client
     #[cfg(feature = "tmux_3_0")]
     pub parent_sighup: bool,
-    /// [-c start-directory] - specify starting directory
+    /// `[-c start-directory]` - specify starting directory
     #[cfg(feature = "tmux_1_9")]
     pub start_directory: Option<Cow<'a, str>>,
-    /// [-e environment] - takes the form ‘VARIABLE=value’ and sets an environment variable for the
+    /// `[-e environment]` - takes the form ‘VARIABLE=value’ and sets an environment variable for the
     /// newly created session; it may be specified multiple times
     #[cfg(feature = "tmux_3_2")]
     pub environment: Option<Vec<(Cow<'a, str>, Cow<'a, str>)>>,
-    /// [-f flags] - comma-separated list of client flags
+    /// `[-f flags]` - comma-separated list of client flags
     #[cfg(feature = "tmux_3_2")]
     pub flags: Option<ClientFlags>,
-    /// [-F format] - specify different format
+    /// `[-F format]` - specify different format
     #[cfg(feature = "tmux_1_8")]
     pub format: Option<Cow<'a, str>>,
-    /// [-n window-name] - window name of the initial window
+    /// `[-n window-name]` - window name of the initial window
     #[cfg(feature = "tmux_0_8")]
     pub window_name: Option<Cow<'a, str>>,
-    /// [-s session-name] - specify a session name
+    /// `[-s session-name]` - specify a session name
     #[cfg(feature = "tmux_0_8")]
     pub session_name: Option<Cow<'a, str>>,
-    /// [-t group-name] - specify a session group
+    /// `[-t group-name]` - specify a session group
     #[cfg(feature = "tmux_2_4")]
     pub group_name: Option<Cow<'a, str>>,
-    /// [-x width] - specify a different width
+    /// `[-x width]` - specify a different width
     #[cfg(feature = "tmux_1_6")]
     pub width: Option<usize>,
-    /// [-y height] - specify a different height
+    /// `[-y height]` - specify a different height
     #[cfg(feature = "tmux_1_6")]
     pub height: Option<usize>,
-    /// [shell-command] - shell command to execute in the initial window
+    /// `[shell-command]` - shell command to execute in the initial window
     #[cfg(feature = "tmux_1_2")]
     pub shell_command: Option<Cow<'a, str>>,
 }

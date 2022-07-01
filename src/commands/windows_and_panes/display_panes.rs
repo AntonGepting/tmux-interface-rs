@@ -37,24 +37,24 @@ use std::borrow::Cow;
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct DisplayPanes<'a> {
-    // `[-b]`
+    /// `[-b]`
     #[cfg(feature = "tmux_2_9")]
     pub not_block: bool,
 
-    // `[-N]`
+    /// `[-N]`
     #[cfg(feature = "tmux_3_2")]
     pub ignore_keys: bool,
 
     // XXX: type?
-    // `[-d duration]`
+    /// `[-d duration]`
     #[cfg(feature = "tmux_2_6")]
     pub duration: Option<Cow<'a, str>>,
 
-    // `[-t target-client]`
+    /// `[-t target-client]`
     #[cfg(feature = "tmux_1_0")]
     pub target_client: Option<Cow<'a, str>>,
 
-    // `[template]`
+    /// `[template]`
     #[cfg(feature = "tmux_2_3")]
     pub template: Option<Cow<'a, str>>,
 }

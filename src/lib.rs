@@ -7,151 +7,9 @@
 //! # Description
 //!
 //! Main purpose of the `tmux_interface` library is to implement simple sending and recieving data
-//! mechanisms for intercommunication with `TMUX` only via standard streams (`stdin`, `stdout`,
-//! `stderr`).
+//! mechanisms for intercommunication with `TMUX` only via standard streams (`stdin`, `stdout`).
 //!
-//! # Project Structure
-//!
-//! This goal can be reached by splitting it into two separate tasks:
-//!
-//! 1. Providing wrapper functions for tmux subcommands (which is sending data). Wrapper functions are
-//! structured like in tmux manual in few next categories:
-//!
-//!     - Clients and Sessions ([`clients_and_sessions`](crate::commands::clients_and_sessions))
-//!     - Windows and Panes ([`windows_and_panes`](crate::commands::windows_and_panes))
-//!     - Key Bindings ([`key_bindings`](crate::commands::key_bindings))
-//!     - Options ([`options`](crate::commands::options))
-//!     - Hooks ([`hooks`](crate::commands::hooks))
-//!     - Global and Session Environment ([`global_and_session_environment`](crate::commands::global_and_session_environment))
-//!     - Status Line ([`status_line`](crate::commands::status_line))
-//!     - Buffers ([`buffers`](crate::commands::buffers))
-//!     - Miscellaneous ([`miscellaneous`](crate::commands::miscellaneous))
-//!
-//! Main structure is [`TmuxCommand`](crate::TmuxCommand) wich has all these wrapper functions implementations.
-//!
-//! 2. Parsing functions for tmux output as rust structures (which is recieving data). Parsing function are
-//! structured by objects they operate with:
-//!
-//!     - [`Sessions`](crate::Sessions)
-//!     - [`Session`](crate::Session)
-//!     - [`Windows`](crate::Windows)
-//!     - [`Window`](crate::Window)
-//!     - [`Panes`](crate::Panes)
-//!     - [`Pane`](crate::Pane)
-//!     - ...
-//!
-//! # Conventions
-//!
-//! Library Functions:
-//!     - Function names and their grouping are inherited from tmux manual
-//!
-//! # Examples
-//!
-//! ```
-//! use crate::tmux_interface::{AttachSession, NewSession, KillSession, TmuxCommand};
-//!
-//! // 1. TmuxCommand
-//! let tmux = TmuxCommand::new();
-//!
-//! tmux.new_session().detached().session_name("new_session_name1").output().unwrap();
-//! tmux.attach_session().target_session("new_session_name1").output().unwrap();
-//! tmux.kill_session().target_session("new_session_name1").output().unwrap();
-//!
-//! // 2.a. One-liner
-//! NewSession::new().detached().session_name("new_session_name2a").output().unwrap();
-//! AttachSession::new().target_session("new_session_name2a").output().unwrap();
-//! KillSession::new().target_session("new_session_name2a").output().unwrap();
-//!
-//! // 2.b. Multi-Liner
-//! let mut new_session = NewSession::new();
-//! new_session.detached();
-//! new_session.session_name("new_session_name2b");
-//! new_session.output().unwrap();
-//!
-//! let mut attach_session = AttachSession::new();
-//! attach_session.target_session("new_session_name2b");
-//! attach_session.output().unwrap();
-//!
-//! let mut kill_session = KillSession::new();
-//! kill_session.target_session("new_session_name2b").output().unwrap();
-//! ```
-//!
-//!
-//! # Examples
-//!
-//! Parsing examples:
-//! ```
-//! use crate::tmux_interface::{Sessions, Session, Windows, Window, Pane, Panes, TargetSession,
-//! TargetWindowExt};
-//!
-//! let sessions = Sessions::get().unwrap();
-//! let windows = Windows::get(&TargetSession::Raw("0")).unwrap();
-//! let panes = Panes::get(&TargetWindowExt::raw("0:1")).unwrap();
-//! ```
-//!
-//!
-//! # Examples
-//!
-//! Change tmux command line flags, options
-//! ```
-//! use crate::tmux_interface::{TmuxCommand, NewSession, KillSession};
-//!
-//! let mut tmux = TmuxCommand::new();
-//! tmux.bin("tmux");
-//! NewSession::from(&tmux).detached().session_name("new_session_name3").output();
-//! KillSession::from(&tmux).target_session("new_session_name3").output();
-//! ```
-//!
-//! # New session
-//!
-//! ## Examples
-//! Create a new tmux session without any additional parameters (alternative to: `tmux new-session`)
-//!
-//! ```text
-//! use crate::tmux_interface::TmuxCommand;
-//!
-//! let mut tmux = TmuxCommand::new();
-//! tmux.new_session().output().unwrap();
-//! ```
-//!
-//! ## Examples
-//!
-//! Create a new tmux session with some additional parameters (alternative to: `tmux new -d -s new_session`)
-//! using builder pattern:
-//!
-//! ```
-//! use crate::tmux_interface::{TmuxCommand, TargetSession};
-//!
-//! let mut tmux = TmuxCommand::new();
-//! tmux.new_session().detached().session_name("new_session_default").output();
-//! tmux.kill_session().target_session("new_session_default").output();
-//! ```
-//!
-//! using `std::default::Default` trait:
-//! ```
-//! use crate::tmux_interface::{TmuxCommand, NewSession, TargetSession};
-//!
-//! let mut tmux = TmuxCommand::new();
-//! let new_session =
-//! tmux.new_session().detached().session_name("new_session_default").output();
-//! tmux.kill_session().target_session("new_session_default").output();
-//! ```
-//!
-//! using direct structure modification:
-//! ```
-//! use crate::tmux_interface::{TmuxCommand, NewSession, TargetSession};
-//!
-//! let mut tmux = TmuxCommand::new();
-//! let mut new_session = NewSession::new();
-//! new_session.detached();
-//! new_session.session_name("new_session_direct");
-//! new_session.output();
-//! tmux.kill_session().target_session("new_session_direct").output();
-//! ```
-//!
-//!
-//!
-//! ## Usage
+//! ## Usage / Quick Start
 //!
 //! 1. Add a dependency in your `Cargo.toml`. Versions below `0.1.0` are
 //!    mostly for development and testing purposes (further versions may have
@@ -209,11 +67,248 @@
 //!
 //!     let target_session = TargetSession::Raw("session_name").to_string();
 //!
-//!     let mut tmux = TmuxCommand::new();
-//!     let new_session = NewSession::new().detached().session_name("session_name").output();
-//!     let attach_session = AttachSession::new().target_session(&target_session).output();
-//!     tmux.send_keys().key("exit").key("C-m").output();
-//!     tmux.kill_session().target_session(&target_session).output();
+//!     let tmux = Tmux::new()
+//!     .command(NewSession().detached().session_name(target_session))
+//!     .command(HasSession().target_session(target_session))
+//!     .command(AttachSession::new().target_session(target_session))
+//!     .command(SendKeys::new().key("exit").key("C-m"))
+//!     .command(KillSession().target_session(target_session))
+//!     //.envs()
+//!     .output()
+//!     .unwrap();
+//!
+//!     ```
+//!
+//! # Overview
+//!
+//! * Commands ([`commands`])
+//!     * Clients and Sessions ([`clients_and_sessions`](crate::commands::clients_and_sessions))
+//!     * Windows and Panes ([`windows_and_panes`](crate::commands::windows_and_panes))
+//!     * Key Bindings ([`key_bindings`](crate::commands::key_bindings))
+//!     * Options ([`options`](crate::commands::options))
+//!     * Hooks ([`hooks`](crate::commands::hooks))
+//!     * Global and Session Environment ([`global_and_session_environment`](crate::commands::global_and_session_environment))
+//!     * Status Line ([`status_line`](crate::commands::status_line))
+//!     * Buffers ([`buffers`](crate::commands::buffers))
+//!     * Miscellaneous ([`miscellaneous`](crate::commands::miscellaneous))
+//!     * Common ([`common`](crate::commands::common))
+//!
+//! * Variables ([`variables`])
+//!     * [`Sessions`](crate::Sessions)
+//!     * [`Session`](crate::Session)
+//!     * [`Windows`](crate::Windows)
+//!     * [`Window`](crate::Window)
+//!     * [`Panes`](crate::Panes)
+//!     * [`Pane`](crate::Pane)
+//!     * ...
+//!
+//! * Formats ([`formats`])
+//!     * [`Formats`][crate::formats::Formats]
+//!     * [`FormatsOutput`][crate::formats::FormatsOutput]
+//!     * [`Variable`][crate::formats::Variable]
+//!     * [`VariableOutput`][crate::formats::VariableOutput]
+//!
+//!
+//! * Styles ([`styles`])
+//!     * [`StyleList`][crate::styles::StyleList]
+//!     * [`Style`][crate::styles::Style]
+//!
+//! * Target ([`target`])
+//!     * [`TargetSession`]
+//!     * [`TargetWindow`]
+//!     * [`TargetPane`]
+//!
+//! Main structure is [`TmuxCommand`](crate::TmuxCommand) wich has all these wrapper functions implementations.
+//! This goal can be reached by splitting it into two separate tasks:
+//!
+//! 1. Providing wrapper functions for tmux subcommands (which is sending data). Wrapper functions are
+//! structured like in tmux manual in few next categories:
+//!
+//! 2. Parsing functions for tmux output as rust structures (which is recieving data). Parsing function are
+//! structured by objects they operate with:
+//!
+//! # Conventions
+//!
+//! Library Functions:
+//!     - Function names and their grouping are inherited from tmux manual
+//!
+//! # Examples
+//!
+//! ```
+//! use crate::tmux_interface::{AttachSession, NewSession, KillSession, Tmux};
+//!
+//! let tmux = Tmux::new()
+//! .command(NewSession::new().detached().session_name("new_session_name1"))
+//! .command(AttachSession::new().target_session("new_session_name1"))
+//! .command(KillSession::new().target_session("new_session_name1"))
+//! .output()
+//! .unwrap();
+//! ```
+//!
+//! # Examples
+//!
+//! Parsing examples:
+//! ```
+//! use crate::tmux_interface::{Sessions, Session, Windows, Window, Pane, Panes, TargetSession,
+//! TargetWindowExt};
+//!
+//! let sessions = Sessions::get().unwrap();
+//! let windows = Windows::get(&TargetSession::Raw("0")).unwrap();
+//! let panes = Panes::get(&TargetWindowExt::raw("0:1")).unwrap();
+//! ```
+//!
+//!
+//! # Examples
+//!
+//! Change tmux command line flags, options
+//! ```
+//! use crate::tmux_interface::{TmuxCommand, NewSession, KillSession};
+//!
+//! let mut tmux = Tmux::new().bin("tmux")
+//! .command(NewSession::new().detached().session_name("new_session_name3"))
+//! .command(KillSession::new().target_session("new_session_name3"))
+//! .output()
+//! .unwrap();
+//! ```
+//!
+//! # New session
+//!
+//! ## Examples
+//! Create a new tmux session without any additional parameters (alternative to: `tmux new-session`)
+//!
+//! ```text
+//! use crate::tmux_interface::TmuxCommand;
+//!
+//! let mut tmux = TmuxCommand::new();
+//! tmux.new_session().output().unwrap();
+//! ```
+//!
+//! ## Examples
+//!
+//! Create a new tmux session with some additional parameters (alternative to: `tmux new -d -s new_session`)
+//! using builder pattern:
+//!
+//! ```
+//! use crate::tmux_interface::{TmuxCommand, TargetSession};
+//!
+//! let mut tmux = Tmux::new();
+//! tmux.new_session().detached().session_name("new_session_default").output();
+//! tmux.kill_session().target_session("new_session_default").output();
+//! ```
+//!
+//! using `std::default::Default` trait:
+//! ```
+//! use crate::tmux_interface::{TmuxCommand, NewSession, TargetSession};
+//!
+//! let mut tmux = Tmux::new();
+//! let new_session =
+//! tmux.new_session().detached().session_name("new_session_default").output();
+//! tmux.kill_session().target_session("new_session_default").output();
+//! ```
+//!
+//! using direct structure modification:
+//! ```
+//! use crate::tmux_interface::{TmuxCommand, NewSession, TargetSession};
+//!
+//! let mut tmux = Tmux::new();
+//! let mut new_session = NewSession::new();
+//! new_session.detached();
+//! new_session.session_name("new_session_direct");
+//! new_session.output();
+//! tmux.kill_session().target_session("new_session_direct").output();
+//! ```
+//!
+//!
+//! ## Library levels
+//!
+//! Invokation process can be described by few levels.
+//! * Each level allows to do the same, but with more or less impact and advantage
+//! * Each level has some abstraction and some limitations
+//! * Each level is based on top of the previous one
+//!
+//! Levels:
+//!
+//! 0. syscall `fork(...)`, `CreateProcess(...)` - Operating System abstraction
+//!
+//! 1. [`std::process::Command`] - Rust standard library abstraction
+//!     * OS independence
+//!     * comfortable working low level
+//!     * manually build commands using strings and string arrays types
+//!
+//!     ### Example:
+//!     ```
+//!     let cmd = Command::new("tmux")
+//!                 .arg("new-session")
+//!                 .args(["-s", "name"])
+//!                 .output();
+//!     ```
+//!
+//! 2. [`cmd_builder::Cmd`], [`cmd_builder::CmdList`] - custom Rust crate abstraction
+//!     * additional functionality for [`std::process::Command`]
+//!     * allows to store alternative information about commands such as:
+//!         * command name `new-session` and command alias `new`
+//!         * short flag name `-l` and long flag name `--long-flag`
+//!         * custom separator, hyphen, etc... (` `, `-`, `--`, `=`, ``)
+//!
+//!     * allows runtime mechanisms for deciding and building short or long commands
+//!
+//!     ### Example:
+//!     ```
+//!     let cmd = Cmd::new("tmux")
+//!                 .subcommand("new-session")
+//!                 .alias("new")
+//!                 .option("-s", "name")
+//!                 .output();
+//!     ```
+//!
+//! 3. [`TmuxCommand`], [`TmuxCommands`] - just a wrapper around [`cmd_builder::Cmd`] inside `tmux_interface` crate,
+//! same functionality
+//!
+//!     ### Example:
+//!     ```
+//!     let cmd = TmuxCommand::new("tmux")
+//!                 .subcommand("new-session")
+//!                 .alias("new")
+//!                 .option("-s", "name")
+//!                 .output();
+//!     ```
+//!
+//! 4. [`Tmux`], [`NewSession`], [`AttachSession`] ... - tmux commands builder
+//!     * near tmux as possible
+//!     * build tmux commands
+//!     * tmux commands can include binary name and arguments or nor for control mode
+//!     * names near tmux
+//!     * order of arguments doesn't matter
+//!
+//!     ### Example:
+//!     ```
+//!     let cmd = Tmux::new()
+//!                 .command(NewSession::new()
+//!                 .session_name("name"))
+//!                 .output();
+//!     ```
+//!
+//!
+//! 5. [`Options`] - tmux objects control
+//!     * accessing and using internal tmux instances
+//!         * formats
+//!         * options
+//!         * variables
+//!         * ...
+//!
+//!     ### Example
+//!     ```
+//!     unimplemented!();
+//!     ```
+//!
+//! 6. `TmuxInterface` - tmux control
+//!     * setting/getting methods abstraction, just an object with it's attributes
+//!     * offline/online working (default/control mode)
+//!     * mapping of whole tmux with it's all internal instances as an object in Rust
+//!
+//!     ### Example
+//!     ```
+//!     unimplemented!();
 //!     ```
 //!
 //!

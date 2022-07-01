@@ -2,26 +2,31 @@
 //! tmux commands
 //!
 //!
-//! # Tmux Command
+//! # Tmux Commands
 //!
 //! ## Example
 //!
 //! ```text
-//! tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+//! tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path]
+//! [command [flags]]
 //! ```
 //!
-//! [`tmux`] - tmux binary command and it's arguments
-//! [`tmux_command`] - wrapper for [`crate::cmd_builder::Cmd`] type
-//! [`tmux_commands`] - wrapper for [`crate::cmd_builder::CmdList`] type
-//! [`NewSession`][`crate::commands::clients_and_sessions::new_session::NewSession`] - tmux autonomous command
+//! * [`tmux`] - tmux binary command and it's arguments
+//! * [`tmux_command`] - wrapper for [`crate::cmd_builder::Cmd`] type
+//! * [`tmux_commands`] - wrapper for [`crate::cmd_builder::CmdList`] type
+//! * [`NewSession`] - tmux autonomous command
 //!
 //!
-//! bypass arguments in right order
+//!
+//! ```text
 //! NewSession::new() -> NewSession -> .build() -> TmuxCommand
-//! Tmux::new() -> Tmux -> .build() -> TmuxCommand (only tmux can be passed to std::process::Command)
+//!
+//! Tmux::new() -> Tmux -> .build() -> TmuxCommand
+//! (only tmux can be passed to std::process::Command)
+//! ```
 //!
 //!
-//! # Tmux Commands Variants
+//! # Overview
 //!
 //! Tmux commands
 //! * single

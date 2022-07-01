@@ -37,39 +37,39 @@ use std::borrow::Cow;
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ChooseBuffer<'a> {
-    /// [-N] - start without the preview
+    /// `[-N]` - start without the preview
     #[cfg(feature = "tmux_2_6")]
     pub no_preview: bool,
 
-    /// [-Z] - zoom the pane
+    /// `[-Z]` - zoom the pane
     #[cfg(feature = "tmux_2_7")]
     pub zoom: bool,
 
-    /// [-r] - reverses the sort order
+    /// `[-r]` - reverses the sort order
     #[cfg(feature = "tmux_3_1")]
     pub reverse_sort_order: bool,
 
-    /// [-F] - specify the format for each item in the list
+    /// `[-F]` - specify the format for each item in the list
     #[cfg(feature = "tmux_1_7")]
     pub format: Option<Cow<'a, str>>,
 
-    /// [-f filter] - specify an initial filter
+    /// `[-f filter]` - specify an initial filter
     #[cfg(feature = "tmux_2_6")]
     pub filter: Option<Cow<'a, str>>,
 
-    /// [-K key-format] -
+    /// `[-K key-format]` -
     #[cfg(feature = "tmux_3_2")]
     pub key_format: Option<Cow<'a, str>>,
 
-    /// [-O sort-order] - specifies the initial sort field
+    /// `[-O sort-order]` - specifies the initial sort field
     #[cfg(feature = "tmux_2_6")]
     pub sort_order: Option<Cow<'a, str>>,
 
-    /// [-t target-pane] - specify the target pane
+    /// `[-t target-pane]` - specify the target pane
     #[cfg(feature = "tmux_1_3")]
     pub target_pane: Option<Cow<'a, str>>,
 
-    /// \[template\] - specify the template
+    /// `[template]` - specify the template
     #[cfg(feature = "tmux_1_3")]
     pub template: Option<Cow<'a, str>>,
 }
