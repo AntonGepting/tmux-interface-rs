@@ -1,7 +1,8 @@
 #[test]
 fn display_popup() {
-    use crate::commands::common::pane_size::Size;
-    use crate::commands::status_line::display_popup::PopupBorderLinesType;
+    #[cfg(feature = "tmux_3_3")]
+    use crate::commands::PopupBorderLinesType;
+    use crate::commands::Size;
     use crate::{DisplayPopup, TargetPane};
     use std::borrow::Cow;
 

@@ -1,7 +1,7 @@
 #[test]
 fn command_prompt() {
     #[cfg(feature = "tmux_3_3")]
-    use crate::commands::status_line::command_prompt::PromptType;
+    use crate::commands::PromptType;
     use crate::CommandPrompt;
     use std::borrow::Cow;
 

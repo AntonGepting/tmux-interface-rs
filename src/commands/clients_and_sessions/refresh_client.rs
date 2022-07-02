@@ -2,72 +2,11 @@ use crate::commands::constants::*;
 #[cfg(feature = "tmux_2_9a")]
 use crate::ClientFlags;
 use crate::TmuxCommand;
+#[cfg(feature = "tmux_3_2")]
+use crate::{AllowActions, State, Subscribe};
 use std::borrow::Cow;
 #[cfg(feature = "tmux_3_2")]
 use std::fmt;
-
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-#[cfg(feature = "tmux_3_3")]
-pub struct RefreshClientSize {
-    pub window_id: Option<usize>,
-    pub width: usize,
-    pub height: usize,
-}
-
-#[cfg(feature = "tmux_3_3")]
-impl fmt::Display for RefreshClientSize {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let s = match self.window_id {
-            Some(window_id) => format!("@{}:{}x{}", window_id, self.width, self.height),
-            None => format!("{}x{}", self.width, self.height),
-        };
-
-        write!(f, "{}", s)
-    }
-}
-
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-#[cfg(feature = "tmux_3_2")]
-pub enum State {
-    On,
-    Off,
-    Continue,
-    Pause,
-}
-
-#[cfg(feature = "tmux_3_2")]
-impl fmt::Display for State {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let s = match self {
-            Self::On => "on",
-            Self::Off => "off",
-            Self::Continue => "continue",
-            Self::Pause => "pause",
-        };
-        write!(f, "{}", s)
-    }
-}
-
-// XXX: struct or tuple?
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-#[cfg(feature = "tmux_3_2")]
-pub struct AllowActions<'a> {
-    pub pane: Cow<'a, str>,
-    pub state: State,
-}
-
-// TODO: enum for what?
-/// [-B name:what:format]
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-#[cfg(feature = "tmux_3_2")]
-pub struct Subscribe<'a> {
-    pub name: Cow<'a, str>,
-    /// empty to check the format only for the attached session
-    /// pane ID such as ‘%0’; ‘%*’ for all panes in the attached session
-    /// window ID such as ‘@0’; or ‘@*’ for all windows in the attached session
-    pub what: Option<usize>,
-    pub format: Option<usize>,
-}
 
 /// Structure for refreshing the current client
 ///
