@@ -8,7 +8,7 @@
 //! * client
 //!
 //! # See Also
-//! * [Format][`crate::format`]
+//! * [Formats][`crate::formats`]
 //! * [Tmux Manual -> Formats](https://man7.org/linux/man-pages/man1/tmux.1.html#FORMATS)
 pub mod layout;
 pub mod pane;

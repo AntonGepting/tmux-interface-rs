@@ -1,4 +1,4 @@
-//! The [`format`][`crate::format`] module contains functions for working with tmux formats
+//! The [`formats`] module contains functions for working with tmux formats
 //!
 //! Two steps
 //!
