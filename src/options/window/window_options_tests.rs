@@ -21,34 +21,6 @@ fn bitflags() {
 }
 
 #[test]
-#[cfg(feature = "tmux_1_0")]
-fn status_position() {
-    use crate::ClockModeStyle;
-    assert_eq!(ClockModeStyle::_12.to_string(), "12");
-    assert_eq!(ClockModeStyle::_24.to_string(), "24");
-}
-
-#[test]
-#[cfg(feature = "tmux_2_3")]
-fn pane_border_status() {
-    use crate::PaneBorderStatus;
-    assert_eq!(PaneBorderStatus::Off.to_string(), "off");
-    assert_eq!(PaneBorderStatus::Top.to_string(), "top");
-    assert_eq!(PaneBorderStatus::Bottom.to_string(), "bottom");
-}
-
-#[test]
-#[cfg(feature = "tmux_2_9")]
-fn window_size() {
-    use crate::WindowSize;
-    assert_eq!(WindowSize::Largest.to_string(), "largest");
-    assert_eq!(WindowSize::Smallest.to_string(), "smallest");
-    assert_eq!(WindowSize::Manual.to_string(), "manual");
-    #[cfg(feature = "tmux_3_1")]
-    assert_eq!(WindowSize::Latest.to_string(), "latest");
-}
-
-#[test]
 fn parse() {
     use crate::WindowOptions;
 

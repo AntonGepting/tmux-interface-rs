@@ -1,247 +1,8 @@
-use super::create_insert_vec;
-use crate::commands::tmux_bin_command::TmuxBinCommand;
-use crate::commands::tmux_bin_commands::TmuxBinCommands;
-use crate::commands::tmux_commands::TmuxCommands;
+use super::{Action, Activity, DetachOnDestroy, Status, StatusJustify, StatusPosition};
 use crate::options::StatusKeys;
-use crate::TmuxCommand;
-use crate::{Error, SetOption, ShowOptions, Switch};
+use crate::{Error, SetOption, ShowOptions, Switch, Tmux};
 use std::fmt;
 use std::str::FromStr;
-
-//visual-silence [on | off | both]
-#[cfg(feature = "tmux_0_8")]
-#[derive(PartialEq, Clone, Debug)]
-pub enum Activity {
-    On,
-    Off,
-    #[cfg(feature = "tmux_2_6")]
-    Both,
-}
-
-#[cfg(feature = "tmux_0_8")]
-impl FromStr for Activity {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "on" => Ok(Self::On),
-            "off" => Ok(Self::Off),
-            #[cfg(feature = "tmux_2_6")]
-            "both" => Ok(Self::Both),
-            _ => Err(Error::ParseActivity),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_0_8")]
-impl fmt::Display for Activity {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::On => write!(f, "on"),
-            Self::Off => write!(f, "off"),
-            #[cfg(feature = "tmux_2_6")]
-            Self::Both => write!(f, "both"),
-        }
-    }
-}
-
-//activity-action [any | none | current | other]
-//bell-action [any | none | current | other]
-//silence-action [any | none | current | other]
-#[cfg(feature = "tmux_0_8")]
-#[derive(PartialEq, Clone, Debug)]
-pub enum Action {
-    Any,
-    None,
-    Current,
-    #[cfg(feature = "tmux_2_1")]
-    Other,
-}
-
-#[cfg(feature = "tmux_0_8")]
-impl FromStr for Action {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "any" => Ok(Self::Any),
-            "none" => Ok(Self::None),
-            "current" => Ok(Self::Current),
-            #[cfg(feature = "tmux_2_1")]
-            "other" => Ok(Self::Other),
-            _ => Err(Error::ParseAction),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_0_8")]
-impl fmt::Display for Action {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::Any => write!(f, "any"),
-            Self::None => write!(f, "none"),
-            Self::Current => write!(f, "current"),
-            #[cfg(feature = "tmux_2_1")]
-            Self::Other => write!(f, "other"),
-        }
-    }
-}
-
-//status [off | on | 2 | 3 | 4 | 5]
-#[derive(PartialEq, Clone, Debug)]
-#[cfg(feature = "tmux_0_8")]
-pub enum Status {
-    On,
-    Off,
-    #[cfg(feature = "tmux_2_9")]
-    _2,
-    #[cfg(feature = "tmux_2_9")]
-    _3,
-    #[cfg(feature = "tmux_2_9")]
-    _4,
-    #[cfg(feature = "tmux_2_9")]
-    _5,
-}
-
-#[cfg(feature = "tmux_0_8")]
-impl FromStr for Status {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "on" => Ok(Self::On),
-            "off" => Ok(Self::Off),
-            #[cfg(feature = "tmux_2_9")]
-            "2" => Ok(Self::_2),
-            #[cfg(feature = "tmux_2_9")]
-            "3" => Ok(Self::_3),
-            #[cfg(feature = "tmux_2_9")]
-            "4" => Ok(Self::_4),
-            #[cfg(feature = "tmux_2_9")]
-            "5" => Ok(Self::_5),
-            _ => Err(Error::ParseStatus),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_0_8")]
-impl fmt::Display for Status {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::On => write!(f, "on"),
-            Self::Off => write!(f, "off"),
-            #[cfg(feature = "tmux_2_9")]
-            Self::_2 => write!(f, "2"),
-            #[cfg(feature = "tmux_2_9")]
-            Self::_3 => write!(f, "3"),
-            #[cfg(feature = "tmux_2_9")]
-            Self::_4 => write!(f, "4"),
-            #[cfg(feature = "tmux_2_9")]
-            Self::_5 => write!(f, "5"),
-        }
-    }
-}
-
-//status-justify [left | centre | right]
-#[derive(PartialEq, Clone, Debug)]
-#[cfg(feature = "tmux_1_0")]
-pub enum StatusJustify {
-    Left,
-    Centre,
-    Right,
-}
-
-#[cfg(feature = "tmux_1_0")]
-impl FromStr for StatusJustify {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "left" => Ok(Self::Left),
-            "centre" => Ok(Self::Centre),
-            "right" => Ok(Self::Right),
-            _ => Err(Error::ParseStatusJustify),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_1_0")]
-impl fmt::Display for StatusJustify {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::Left => write!(f, "left"),
-            Self::Centre => write!(f, "centre"),
-            Self::Right => write!(f, "right"),
-        }
-    }
-}
-
-//status-position [top | bottom]
-#[derive(PartialEq, Clone, Debug)]
-#[cfg(feature = "tmux_1_7")]
-pub enum StatusPosition {
-    Top,
-    Bottom,
-}
-
-#[cfg(feature = "tmux_1_7")]
-impl FromStr for StatusPosition {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "top" => Ok(Self::Top),
-            "bottom" => Ok(Self::Bottom),
-            _ => Err(Error::ParseStatusPosition),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_1_7")]
-impl fmt::Display for StatusPosition {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::Top => write!(f, "top"),
-            Self::Bottom => write!(f, "bottom"),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_1_4")]
-#[derive(PartialEq, Clone, Debug)]
-pub enum DetachOnDestroy {
-    On,
-    Off,
-    #[cfg(feature = "tmux_3_2")]
-    NoDetached,
-}
-
-#[cfg(feature = "tmux_1_4")]
-impl FromStr for DetachOnDestroy {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "on" => Ok(Self::On),
-            "off" => Ok(Self::Off),
-            #[cfg(feature = "tmux_3_2")]
-            "no-detached" => Ok(Self::NoDetached),
-            _ => Err(Error::ParseAction),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_1_4")]
-impl fmt::Display for DetachOnDestroy {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::On => write!(f, "on"),
-            Self::Off => write!(f, "off"),
-            #[cfg(feature = "tmux_3_2")]
-            Self::NoDetached => write!(f, "no-detached"),
-        }
-    }
-}
 
 // XXX: conditionals?
 // NOTE: total num: 81 (u128)
@@ -476,6 +237,10 @@ pub const SESSION_OPTIONS_NUM: usize = 45;
 pub const SESSION_OPTIONS_NUM: usize = 45;
 
 // TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
+// option_name
+// from_string
+// to_string
+// option_bitflag
 pub const SESSION_OPTIONS: [(
     &str,
     fn(o: &mut SessionOptions, i: Option<usize>, s: &str),
@@ -864,10 +629,15 @@ pub const SESSION_OPTIONS: [(
         |o| o.status_fg.as_ref().map(|v| v.to_string()),
         STATUS_FG,
     ),
+    // FIXME: !!! unwrap
     #[cfg(feature = "tmux_2_9")]
     (
         "status-format",
-        |o, i, s| o.status_format = create_insert_vec(o.status_format.as_mut(), i, s),
+        |o, i, s| {
+            o.status_format
+                .get_or_insert(Vec::new())
+                .insert(i.unwrap(), s.to_string())
+        },
         |o| o.status_format.as_ref().map(|v| v.join(" ").to_string()),
         STATUS_FORMAT,
     ),
@@ -1005,17 +775,27 @@ pub const SESSION_OPTIONS: [(
         |o| o.terminal_overrides.as_ref().map(|v| v.to_string()),
         TERMINAL_OVERRIDES,
     ),
+    // FIXME: !!! unwrap
     #[cfg(feature = "tmux_1_0")]
     (
         "update-environment",
-        |o, i, s| o.update_environment = create_insert_vec(o.update_environment.as_mut(), i, s),
+        |o, i, s| {
+            o.update_environment
+                .get_or_insert(Vec::new())
+                .insert(i.unwrap(), s.to_string())
+        },
         |o| o.update_environment.as_ref().map(|v| v.join(" ")),
         UPDATE_ENVIRONMENT,
     ),
+    // FIXME: !!! unwrap
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
     (
         "user-keys",
-        |o, i, s| o.user_keys = create_insert_vec(o.user_keys.as_mut(), i, s),
+        |o, i, s| {
+            o.user_keys
+                .get_or_insert(Vec::new())
+                .insert(i.unwrap(), s.to_string())
+        },
         |o| o.user_keys.as_ref().map(|v| v.join(" ")),
         USER_KEYS,
     ),
@@ -1329,46 +1109,46 @@ pub struct SessionOptions {
 //}
 //}
 //
-pub enum TmuxCommandVariant<'a> {
-    None,
-    // stdin handle needed
-    Single(TmuxCommand<'a>),
-    // stdin handle needed
-    Multiple(TmuxCommands<'a>),
-    SingleBin(TmuxBinCommand<'a>),
-    MultipleBin(TmuxBinCommands<'a>),
-}
+//pub enum TmuxCommandVariant<'a> {
+//None,
+//// stdin handle needed
+//Single(TmuxCommand<'a>),
+//// stdin handle needed
+//Multiple(TmuxCommands<'a>),
+//SingleBin(TmuxBinCommand<'a>),
+//MultipleBin(TmuxBinCommands<'a>),
+//}
 
 impl SessionOptions {
-    // FIXME: review, same arms
-    pub fn get_all(cmd: Option<&TmuxCommand>) -> Result<Self, Error> {
-        let mut show_options = match cmd {
-            Some(cmd) => ShowOptions::new(),
-            None => ShowOptions::new(),
+    // NOTE: Tmux struct wrong decision here, because of dircet and control mode
+    pub fn get_all() -> Result<Self, Error> {
+        Self::get_all_ext(None)
+    }
+
+    pub fn get_all_ext(cb: Option<&dyn Fn() -> String>) -> Result<Self, Error> {
+        let s = match cb {
+            Some(cb) => cb(),
+            None => Tmux::new()
+                .command(ShowOptions::new().global())
+                .output()?
+                .to_string(),
         };
-        let s = show_options.global().build().output()?.to_string();
         s.parse()
     }
 
     // XXX: bitmask is overkill now, mb later use for multiple select
     // NOTE: not allows selective get by bitmask
-    // FIXME: review, same arms
     #[cfg(feature = "tmux_1_7")]
-    pub fn get(cmd: Option<&TmuxCommand>, bitflags: u128) -> Result<Self, Error> {
-        let show_options = match cmd {
-            Some(cmd) => ShowOptions::new(),
-            None => ShowOptions::new(),
-        };
+    pub fn get(bitflags: u128) -> Result<Self, Error> {
         Self::get_ext(None, bitflags)
     }
 
     // extended
     //
-    // FIXME: review, arms
     // XXX: bitmask is overkill now, mb later use for multiple select
     // NOTE: not allows selective get by bitmask
     #[cfg(feature = "tmux_1_7")]
-    pub fn get_ext(cmds: Option<&mut TmuxBinCommands>, bitflags: u128) -> Result<Self, Error> {
+    pub fn get_ext(cb: Option<&dyn Fn() -> String>, bitflags: u128) -> Result<Self, Error> {
         let selected_option = SESSION_OPTIONS
             .iter()
             .filter(|t| bitflags == t.3)
@@ -1376,18 +1156,15 @@ impl SessionOptions {
             .collect::<Vec<String>>()
             .join(" ");
 
-        let mut show_options = ShowOptions::new();
-        show_options.option(selected_option);
-
-        let result = match cmds {
-            Some(cmds) => {
-                //cmds.push(show_options);
-                cmds.output()?.to_string()
-            }
-            None => show_options.build().output()?.to_string(),
+        let s = match cb {
+            Some(cb) => cb(),
+            None => Tmux::new()
+                .command(ShowOptions::new().option(selected_option))
+                .output()?
+                .to_string(),
         };
 
-        result.parse()
+        s.parse()
     }
 
     // do not create anything, just get option from tmux
@@ -1412,7 +1189,8 @@ impl SessionOptions {
             .global()
             .option(&selected_option)
             .build()
-            .output()?
+            //.into_tmux_bin_command()
+            //.output()?
             .to_string();
         s.parse()
     }

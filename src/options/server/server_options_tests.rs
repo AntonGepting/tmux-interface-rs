@@ -12,22 +12,12 @@ fn show_generated_struct() {
 fn bitflags() {
     use crate::{SERVER_OPTIONS_ALL, SERVER_OPTIONS_NONE};
     let bitflags =
-        // 14____8_7______0
-        0b_1111111_11111111;
+        // 15_____8_7______0
+        0b_11111111_11111111;
     //println!("{:b}", SERVER_OPTIONS_ALL);
     //println!("{:b}", &bitflags);
     assert_eq!(bitflags, SERVER_OPTIONS_ALL);
     assert_eq!(0, SERVER_OPTIONS_NONE);
-}
-
-#[test]
-fn set_clipboard() {
-    use crate::SetClipboard;
-
-    assert_eq!(SetClipboard::On.to_string(), "on");
-    assert_eq!(SetClipboard::Off.to_string(), "off");
-    #[cfg(feature = "tmux_2_6")]
-    assert_eq!(SetClipboard::External.to_string(), "external");
 }
 
 #[test]

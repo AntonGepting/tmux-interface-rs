@@ -1,43 +1,7 @@
 use crate::{Error, Switch};
-use crate::{SetOption, ShowOptions};
+use crate::{SetOption, ShowOptions, Tmux};
 use std::fmt;
 use std::str::FromStr;
-
-#[derive(PartialEq, Clone, Debug)]
-#[cfg(feature = "tmux_3_0")]
-pub enum RemainOnExit {
-    On,
-    Off,
-    #[cfg(feature = "tmux_3_2")]
-    Failed,
-}
-
-#[cfg(feature = "tmux_3_0")]
-impl fmt::Display for RemainOnExit {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::On => write!(f, "on"),
-            Self::Off => write!(f, "off"),
-            #[cfg(feature = "tmux_3_2")]
-            Self::Failed => write!(f, "failed"),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_3_0")]
-impl FromStr for RemainOnExit {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "on" => Ok(Self::On),
-            "off" => Ok(Self::Off),
-            #[cfg(feature = "tmux_3_2")]
-            "failed" => Ok(Self::Failed),
-            _ => Err(Error::ParseRemainOnExit),
-        }
-    }
-}
 
 // XXX: conditionals?
 // NOTE: total num: 5 (usize)
@@ -147,7 +111,9 @@ pub struct PaneOptions {
 
 impl PaneOptions {
     pub fn get_all() -> Result<Self, Error> {
-        let s = ShowOptions::new().global().output()?.to_string();
+        let s = Tmux::with_command(ShowOptions::new().global())
+            .output()?
+            .to_string();
         s.parse()
     }
 
@@ -161,9 +127,7 @@ impl PaneOptions {
             .map(|t| format!("{}", t.0))
             .collect::<Vec<String>>()
             .join(" ");
-        let s = ShowOptions::new()
-            .pane()
-            .option(&selected_option)
+        let s = Tmux::with_command(ShowOptions::new().pane().option(&selected_option))
             .output()?
             .to_string();
         s.parse()
@@ -174,11 +138,13 @@ impl PaneOptions {
     pub fn set(&self, bitflags: usize) -> Result<(), Error> {
         for selected_option in PANE_OPTIONS.iter().filter(|t| bitflags & t.3 == t.3) {
             if let Some(selected_value) = selected_option.2(&self) {
-                SetOption::new()
-                    .pane()
-                    .option(selected_option.0)
-                    .value(&selected_value)
-                    .output()?;
+                Tmux::with_command(
+                    SetOption::new()
+                        .pane()
+                        .option(selected_option.0)
+                        .value(&selected_value),
+                )
+                .output()?;
             }
         }
         Ok(())

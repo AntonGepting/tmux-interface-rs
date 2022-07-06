@@ -1,39 +1,62 @@
-// mb separated crate later, and tmux_interface as underlying layer
+//!     show-options [-AgHpqsvw] [-t target-pane] [option]
+//!                   (alias: show)
+//!             Show the pane options (or a single option if option is
+//!             provided) with -p, the window options with -w, the server
+//!             options with -s, otherwise the session options.  If the
+//!             option is not a user option, -w or -s may be unnecessary -
+//!             tmux will infer the type from the option name, assuming -w
+//!             for pane options.  Global session or window options are
+//!             listed if -g is used.  -v shows only the option value, not
+//!             the name.  If -q is set, no error will be returned if
+//!             option is unset.  -H includes hooks (omitted by default).
+//!             -A includes options inherited from a parent set of options,
+//!             such options are marked with an asterisk.
+//!
+//! Tmux boundary conditions
+//!
+//! * Tmux Option:
+//!     * Server Options (`-s`)
+//!     * Session Options (otherwise ``)
+//!         * global (`-g`)
+//!     * Window Options (`-w`)
+//!         * global (`-g`)
+//!     * Pane Options (`-p`)
+//!
+//! * User Option:
+//!
+//! Get:
+//! * all
+//! * single one
+//! * value with name
+//! * value without name
+//! * inherited from parent (`*`)
+//!
+//! Set:
+//! * single one with name and value
+//!
+// mb separated crate later, and tmux_commands as underlying layer
 //
-use crate::Error;
-use std::fmt;
-use std::str::FromStr;
+pub mod common;
 
 #[cfg(feature = "tmux_3_1")]
-pub mod pane_options;
+pub mod pane;
 #[cfg(feature = "tmux_1_2")]
-pub mod server_options;
+pub mod server;
 #[cfg(feature = "tmux_1_0")]
-pub mod session_options;
+pub mod session;
 #[cfg(feature = "tmux_1_2")]
-pub mod window_options;
+pub mod window;
 
-#[cfg(test)]
-#[path = "."]
-mod options_tests {
-    #[cfg(feature = "tmux_3_1")]
-    pub mod pane_options_tests;
-    #[cfg(feature = "tmux_1_2")]
-    pub mod server_options_tests;
-    #[cfg(feature = "tmux_1_0")]
-    pub mod session_options_tests;
-    #[cfg(feature = "tmux_1_2")]
-    pub mod window_options_tests;
-}
+pub use crate::options::common::*;
 
 #[cfg(feature = "tmux_3_1")]
-pub use crate::options::pane_options::*;
+pub use crate::options::pane::*;
 #[cfg(feature = "tmux_1_2")]
-pub use crate::options::server_options::*;
+pub use crate::options::server::*;
 #[cfg(feature = "tmux_1_0")]
-pub use crate::options::session_options::*;
+pub use crate::options::session::*;
 #[cfg(feature = "tmux_1_2")]
-pub use crate::options::window_options::*;
+pub use crate::options::window::*;
 
 #[cfg(feature = "tmux_1_0")]
 pub struct Options {
@@ -44,61 +67,8 @@ pub struct Options {
     pub pane_options: PaneOptions,
 }
 
-#[derive(PartialEq, Clone, Debug)]
-pub enum StatusKeys {
-    Vi,
-    Emacs,
-}
-
-impl FromStr for StatusKeys {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "vi" => Ok(Self::Vi),
-            "emacs" => Ok(Self::Emacs),
-            _ => Err(Error::ParseStatusKeys),
-        }
-    }
-}
-
-impl fmt::Display for StatusKeys {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::Vi => write!(f, "vi"),
-            Self::Emacs => write!(f, "emacs"),
-        }
-    }
-}
-
-#[derive(PartialEq, Clone, Debug)]
-pub enum Switch {
-    On,
-    Off,
-}
-
-impl FromStr for Switch {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "on" => Ok(Self::On),
-            "off" => Ok(Self::Off),
-            _ => Err(Error::ParseSwitch),
-        }
-    }
-}
-
-impl fmt::Display for Switch {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::On => write!(f, "on"),
-            Self::Off => write!(f, "off"),
-        }
-    }
-}
-
-// fn checks if vec already exists, if not creates it, and inserts an item at given index
+//fn checks if vec already exists, if not creates it, and inserts an item at given index
+//TODO: replace with get_or_insert
 #[cfg(feature = "tmux_1_0")]
 fn create_insert_vec(
     v: Option<&mut Vec<String>>,

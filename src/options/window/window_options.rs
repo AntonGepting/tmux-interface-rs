@@ -1,112 +1,8 @@
+use super::*;
 use crate::options::StatusKeys;
 use crate::{Error, SetOption, ShowOptions, Switch};
 use std::fmt;
 use std::str::FromStr;
-
-//clock-mode-style [12 | 24]
-#[derive(PartialEq, Clone, Debug)]
-#[cfg(feature = "tmux_1_0")]
-pub enum ClockModeStyle {
-    _12,
-    _24,
-}
-
-#[cfg(feature = "tmux_1_0")]
-impl FromStr for ClockModeStyle {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "12" => Ok(Self::_12),
-            "24" => Ok(Self::_24),
-            _ => Err(Error::ParseClockModeStyle),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_1_0")]
-impl fmt::Display for ClockModeStyle {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::_12 => write!(f, "12"),
-            Self::_24 => write!(f, "24"),
-        }
-    }
-}
-
-//pane-border-status [off | top | bottom]
-#[derive(PartialEq, Clone, Debug)]
-#[cfg(feature = "tmux_2_3")]
-pub enum PaneBorderStatus {
-    Off,
-    Top,
-    Bottom,
-}
-
-#[cfg(feature = "tmux_2_3")]
-impl FromStr for PaneBorderStatus {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "off" => Ok(Self::Off),
-            "top" => Ok(Self::Top),
-            "bottom" => Ok(Self::Bottom),
-            _ => Err(Error::ParsePaneBorderStatus),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_2_3")]
-impl fmt::Display for PaneBorderStatus {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::Off => write!(f, "off"),
-            Self::Top => write!(f, "top"),
-            Self::Bottom => write!(f, "bottom"),
-        }
-    }
-}
-
-//window-size largest | smallest | manual | latest
-#[derive(PartialEq, Clone, Debug)]
-#[cfg(feature = "tmux_2_9")]
-pub enum WindowSize {
-    Largest,
-    Smallest,
-    Manual,
-    #[cfg(feature = "tmux_3_1")]
-    Latest,
-}
-
-#[cfg(feature = "tmux_2_9")]
-impl FromStr for WindowSize {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            "largest" => Ok(Self::Largest),
-            "smallest" => Ok(Self::Smallest),
-            "manual" => Ok(Self::Manual),
-            #[cfg(feature = "tmux_3_1")]
-            "latest" => Ok(Self::Latest),
-            _ => Err(Error::ParseWindowSize),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_2_9")]
-impl fmt::Display for WindowSize {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::Largest => write!(f, "largest"),
-            Self::Smallest => write!(f, "smallest"),
-            Self::Manual => write!(f, "manual"),
-            #[cfg(feature = "tmux_3_1")]
-            Self::Latest => write!(f, "latest"),
-        }
-    }
-}
 
 // XXX: conditionals?
 // NOTE: total num: 70 (u128)
@@ -1188,7 +1084,8 @@ impl WindowOptions {
             .global()
             .window()
             .build()
-            .output()?
+            //.into_tmux_bin_command()
+            //.output()?
             .to_string()
             .parse()
     }
@@ -1207,7 +1104,8 @@ impl WindowOptions {
             .server()
             .option(&selected_option)
             .build()
-            .output()?
+            //.into_tmux_bin_command()
+            //.output()?
             .to_string()
             .parse()
     }
@@ -1220,8 +1118,9 @@ impl WindowOptions {
                     .server()
                     .option(selected_option.0)
                     .value(&selected_value)
-                    .build()
-                    .output()?;
+                    .build();
+                //.into_tmux_bin_command()
+                //.output()?;
             }
         }
         Ok(())

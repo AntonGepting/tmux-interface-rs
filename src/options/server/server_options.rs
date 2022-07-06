@@ -1,51 +1,9 @@
-#[cfg(feature = "tmux_2_0")]
-use super::create_insert_vec;
+//#[cfg(feature = "tmux_2_0")]
+//use super::create_insert_vec;
+use super::*;
 use crate::{Error, SetOption, ShowOptions, Switch};
 use std::fmt;
 use std::str::FromStr;
-
-const ON: &str = "on";
-const OFF: &str = "off";
-#[cfg(feature = "tmux_2_6")]
-const EXTERNAL: &str = "external";
-
-//set-clipboard [on | external | off]
-#[derive(PartialEq, Clone, Debug)]
-#[cfg(feature = "tmux_1_5")]
-pub enum SetClipboard {
-    On,
-    Off,
-    #[cfg(feature = "tmux_2_6")]
-    External,
-}
-
-#[cfg(feature = "tmux_1_5")]
-impl FromStr for SetClipboard {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        match s {
-            ON => Ok(Self::On),
-            OFF => Ok(Self::Off),
-            #[cfg(feature = "tmux_2_6")]
-            EXTERNAL => Ok(Self::External),
-            _ => Err(Error::ParseSetClipboard),
-        }
-    }
-}
-
-#[cfg(feature = "tmux_1_5")]
-impl fmt::Display for SetClipboard {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let value = match self {
-            Self::On => ON,
-            Self::Off => OFF,
-            #[cfg(feature = "tmux_2_6")]
-            Self::External => EXTERNAL,
-        };
-        f.write_str(value)
-    }
-}
 
 // XXX: conditionals?
 // NOTE: total num: 14 (usize)
@@ -56,14 +14,15 @@ pub const DEFAULT_TERMINAL: usize = 1 << 3;
 pub const ESCAPE_TIME: usize = 1 << 4;
 pub const EXIT_EMPTY: usize = 1 << 5;
 pub const EXIT_UNATTACHED: usize = 1 << 6;
-pub const FOCUS_EVENTS: usize = 1 << 7;
-pub const HISTORY_FILE: usize = 1 << 8;
-pub const MESSAGE_LIMIT: usize = 1 << 9;
-pub const QUIET: usize = 1 << 10;
-pub const SET_CLIPBOARD: usize = 1 << 11;
-pub const TERMINAL_OVERRIDES: usize = 1 << 12;
-pub const USER_KEYS: usize = 1 << 13;
-pub const DETACH_ON_DESTROY: usize = 1 << 14;
+pub const EXTENDED_KEYS: usize = 1 << 7;
+pub const FOCUS_EVENTS: usize = 1 << 8;
+pub const HISTORY_FILE: usize = 1 << 9;
+pub const MESSAGE_LIMIT: usize = 1 << 10;
+pub const QUIET: usize = 1 << 11;
+pub const SET_CLIPBOARD: usize = 1 << 12;
+pub const TERMINAL_OVERRIDES: usize = 1 << 13;
+pub const USER_KEYS: usize = 1 << 14;
+pub const DETACH_ON_DESTROY: usize = 1 << 15;
 
 pub const SERVER_OPTIONS_NONE: usize = 0;
 //pub const SERVER_OPTIONS_DEFAULT: usize = ;
@@ -75,6 +34,7 @@ pub const SERVER_OPTIONS_ALL: usize = BACKSPACE
     | ESCAPE_TIME
     | EXIT_EMPTY
     | EXIT_UNATTACHED
+    | EXTENDED_KEYS
     | FOCUS_EVENTS
     | HISTORY_FILE
     | MESSAGE_LIMIT
@@ -132,8 +92,10 @@ pub const SERVER_OPTIONS_NUM: usize = 11;
 pub const SERVER_OPTIONS_NUM: usize = 12;
 //#[cfg(all(feature = "tmux_3_0a", not(feature = "tmux_3_1")))]
 //pub const SERVER_OPTIONS_NUM: usize = 12;
-#[cfg(all(feature = "tmux_3_1", not(feature = "tmux_X_X")))]
+#[cfg(all(feature = "tmux_3_1", not(feature = "tmux_3_2")))]
 pub const SERVER_OPTIONS_NUM: usize = 13;
+#[cfg(all(feature = "tmux_3_2", not(feature = "tmux_X_X")))]
+pub const SERVER_OPTIONS_NUM: usize = 14;
 #[cfg(feature = "tmux_X_X")]
 pub const SERVER_OPTIONS_NUM: usize = 13; // FIXME: 15 in master
 
@@ -159,10 +121,15 @@ pub const SERVER_OPTIONS: [(
         |o| o.buffer_limit.as_ref().map(|v| v.to_string()),
         BUFFER_LIMIT,
     ),
+    // FIXME: !!! unwrap
     #[cfg(feature = "tmux_2_4")]
     (
         "command-alias",
-        |o, i, s| o.command_alias = create_insert_vec(o.command_alias.as_mut(), i, s),
+        |o, i, s| {
+            o.command_alias
+                .get_or_insert(Vec::new())
+                .insert(i.unwrap(), s.to_string())
+        },
         |o| o.command_alias.as_ref().map(|v| v.join(" ")),
         COMMAND_ALIAS,
     ),
@@ -194,6 +161,13 @@ pub const SERVER_OPTIONS: [(
         |o| o.exit_unattached.as_ref().map(|v| v.to_string()),
         EXIT_UNATTACHED,
     ),
+    #[cfg(feature = "tmux_3_2")]
+    (
+        "extended-keys",
+        |o, _, s| o.extended_keys = s.parse().ok(),
+        |o| o.extended_keys.as_ref().map(|v| v.to_string()),
+        EXTENDED_KEYS,
+    ),
     #[cfg(feature = "tmux_1_9")]
     (
         "focus-events",
@@ -222,10 +196,15 @@ pub const SERVER_OPTIONS: [(
         |o| o.set_clipboard.as_ref().map(|v| v.to_string()),
         SET_CLIPBOARD,
     ),
+    // FIXME: !!! unwrap
     #[cfg(feature = "tmux_2_0")]
     (
         "terminal-overrides",
-        |o, i, s| o.terminal_overrides = create_insert_vec(o.terminal_overrides.as_mut(), i, s),
+        |o, i, s| {
+            o.terminal_overrides
+                .get_or_insert(Vec::new())
+                .insert(i.unwrap(), s.to_string())
+        },
         |o| o.terminal_overrides.as_ref().map(|v| v.join(" ")),
         TERMINAL_OVERRIDES,
     ),
@@ -272,15 +251,20 @@ pub struct ServerOptions {
     // default-terminal terminal
     #[cfg(feature = "tmux_2_1")]
     pub default_terminal: Option<String>,
+    //copy_command
     //escape-time time
     #[cfg(feature = "tmux_1_2")]
     pub escape_time: Option<usize>,
+    //editor
     //exit-empty [on | off]
     #[cfg(feature = "tmux_2_7")]
     pub exit_empty: Option<Switch>,
     //exit-unattached [on | off]
     #[cfg(feature = "tmux_1_4")]
     pub exit_unattached: Option<Switch>,
+    //extended-keys [on | off]
+    #[cfg(feature = "tmux_3_2")]
+    pub extended_keys: Option<Switch>,
     //focus-events [on | off]
     #[cfg(feature = "tmux_1_9")]
     pub focus_events: Option<Switch>,
@@ -293,6 +277,7 @@ pub struct ServerOptions {
     //set-clipboard [on | external | off]
     #[cfg(feature = "tmux_1_5")]
     pub set_clipboard: Option<SetClipboard>,
+    // terminal-features[]
     //terminal-overrides[] string
     #[cfg(feature = "tmux_2_0")]
     pub terminal_overrides: Option<Vec<String>>,
@@ -314,7 +299,8 @@ impl ServerOptions {
         ShowOptions::new()
             .server()
             .build()
-            .output()?
+            //.into_tmux_bin_command()
+            //.output()?
             .to_string()
             .parse()
     }
@@ -334,7 +320,8 @@ impl ServerOptions {
             .server()
             .option(&selected_option)
             .build()
-            .output()?
+            //.into_tmux_bin_command()
+            //.output()?
             .to_string()
             .parse()
     }
@@ -361,8 +348,9 @@ impl ServerOptions {
                     .server()
                     .option(selected_option.0)
                     .value(&selected_value)
-                    .build()
-                    .output()?;
+                    .build();
+                //.into_tmux_bin_command()
+                //.output()?;
             }
         }
         Ok(())
@@ -429,6 +417,8 @@ pub struct ServerOptionsBuilder<'a> {
     pub exit_empty: Option<Switch>,
     #[cfg(feature = "tmux_1_4")]
     pub exit_unattached: Option<Switch>,
+    #[cfg(feature = "tmux_3_2")]
+    pub extended_keys: Option<Switch>,
     #[cfg(feature = "tmux_1_9")]
     pub focus_events: Option<Switch>,
     #[cfg(feature = "tmux_2_1")]
@@ -495,6 +485,12 @@ impl<'a> ServerOptionsBuilder<'a> {
         self
     }
 
+    #[cfg(feature = "tmux_3_2")]
+    pub fn extended_keys(&mut self, extended_keys: Switch) -> &mut Self {
+        self.extended_keys = Some(extended_keys);
+        self
+    }
+
     #[cfg(feature = "tmux_1_9")]
     pub fn focus_events(&mut self, focus_events: Switch) -> &mut Self {
         self.focus_events = Some(focus_events);
@@ -553,6 +549,8 @@ impl<'a> ServerOptionsBuilder<'a> {
             exit_empty: self.exit_empty.clone(),
             #[cfg(feature = "tmux_1_4")]
             exit_unattached: self.exit_unattached.clone(),
+            #[cfg(feature = "tmux_3_2")]
+            extended_keys: self.extended_keys.clone(),
             #[cfg(feature = "tmux_1_9")]
             focus_events: self.focus_events.clone(),
             #[cfg(feature = "tmux_2_1")]
