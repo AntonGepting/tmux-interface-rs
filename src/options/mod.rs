@@ -22,7 +22,7 @@
 //!         * global (`-g`)
 //!     * Pane Options (`-p`)
 //!
-//! * User Option:
+//! * User Option (`@name`)
 //!
 //! Get:
 //! * all
@@ -65,27 +65,4 @@ pub struct Options {
     pub window_options: WindowOptions,
     #[cfg(feature = "tmux_3_1")]
     pub pane_options: PaneOptions,
-}
-
-//fn checks if vec already exists, if not creates it, and inserts an item at given index
-//TODO: replace with get_or_insert
-#[cfg(feature = "tmux_1_0")]
-fn create_insert_vec(
-    v: Option<&mut Vec<String>>,
-    i: Option<usize>,
-    s: &str,
-) -> Option<Vec<String>> {
-    if let Some(v) = v {
-        if let Some(i) = i {
-            v.insert(i, s.to_string());
-            return Some(v.to_vec());
-        };
-    } else {
-        let mut v = Vec::new();
-        if let Some(i) = i {
-            v.insert(i, s.to_string());
-            return Some(v);
-        };
-    };
-    None
 }
