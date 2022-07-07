@@ -1,6 +1,5 @@
-use crate::formats::formats::Formats;
 use crate::variables::window::window::WINDOW_VARS_SEPARATOR;
-use crate::{Error, ListWindows, Tmux, Window};
+use crate::{Error, Formats, ListWindows, Tmux, Window};
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]

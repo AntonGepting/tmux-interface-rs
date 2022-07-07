@@ -1,5 +1,5 @@
-use crate::formats::formats_output::FormatsOutput;
 use crate::Error;
+use crate::FormatsOutput;
 #[cfg(feature = "tmux_1_8")]
 use crate::PaneTabs;
 

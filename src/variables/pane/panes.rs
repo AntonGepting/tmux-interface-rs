@@ -1,6 +1,4 @@
-use crate::formats::formats::Formats;
-use crate::Error;
-use crate::{ListPanes, Pane, Tmux};
+use crate::{Error, Formats, ListPanes, Pane, Tmux};
 //use std::borrow::Cow;
 use std::ops::Index;
 

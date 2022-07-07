@@ -1,7 +1,4 @@
-use crate::formats::formats_output::FormatsOutput;
-use crate::Error;
-use crate::Layout;
-use crate::WindowFlags;
+use crate::{Error, FormatsOutput, Layout, WindowFlags};
 
 // NOTE: variables were first intoduced in tmux 1.6
 

@@ -1,5 +1,4 @@
-use crate::formats::formats::Formats;
-use crate::{Error, ListSessions, Session, Tmux};
+use crate::{Error, Formats, ListSessions, Session, Tmux};
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]

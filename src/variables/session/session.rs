@@ -1,5 +1,5 @@
-use crate::formats::formats_output::FormatsOutput;
 use crate::Error;
+use crate::FormatsOutput;
 #[cfg(feature = "tmux_2_5")]
 use crate::SessionStack;
 
