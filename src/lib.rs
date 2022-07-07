@@ -324,7 +324,6 @@ pub mod styles;
 pub mod target;
 #[cfg(feature = "tmux_1_6")]
 pub mod variables;
-pub mod version;
 
 pub use commands::*;
 pub use control_mode::*;
@@ -335,12 +334,3 @@ pub use styles::*;
 pub use target::*;
 #[cfg(feature = "tmux_1_6")]
 pub use variables::*;
-pub use version::Version;
-
-#[cfg(test)]
-#[path = "."]
-mod lib_tests {
-    //mod options_tests;
-    //mod tmux_option_tests;
-    mod version_tests;
-}

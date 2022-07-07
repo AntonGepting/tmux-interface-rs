@@ -15,6 +15,7 @@ pub mod refresh_client_size;
 pub mod state;
 #[cfg(feature = "tmux_3_2")]
 pub mod subscribe;
+pub mod version;
 
 #[cfg(feature = "tmux_3_2")]
 pub use self::allow_actions::AllowActions;
@@ -37,10 +38,12 @@ pub use self::refresh_client_size::RefreshClientSize;
 pub use self::state::State;
 #[cfg(feature = "tmux_3_2")]
 pub use self::subscribe::Subscribe;
+pub use version::Version;
 
 #[cfg(test)]
 #[path = "."]
 mod common_tests {
     #[cfg(feature = "tmux_2_9a")]
     pub mod client_flags_tests;
+    mod version_tests;
 }
