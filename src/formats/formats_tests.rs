@@ -1,7 +1,7 @@
 #[test]
 fn to_string() {
-    use crate::formats::formats::Formats;
-    use crate::formats::variable::Variable;
+    use crate::Formats;
+    use crate::Variable;
 
     let mut f = Formats::new();
     f.push(Variable::WindowActive);

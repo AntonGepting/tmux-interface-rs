@@ -1,8 +1,7 @@
-use crate::formats::variable_output::VariableOutput;
-use crate::Layout;
-use crate::PaneTabs;
+use super::VariableOutput;
+#[cfg(feature = "tmux_2_5")]
 use crate::SessionStack;
-use crate::WindowFlags;
+use crate::{Layout, PaneTabs, WindowFlags};
 
 #[derive(Debug)]
 pub struct FormatsOutput<'a> {

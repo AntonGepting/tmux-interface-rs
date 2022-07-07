@@ -1,7 +1,7 @@
 #[test]
 fn multiple_from_string() {
-    use crate::formats::formats_output::FormatsOutput;
-    use crate::formats::variable_output::VariableOutput;
+    use crate::FormatsOutput;
+    use crate::VariableOutput;
 
     let mut c: Option<bool> = None;
     let mut d: Option<bool> = None;
@@ -17,8 +17,8 @@ fn multiple_from_string() {
 
 #[test]
 fn struct_from_string() {
-    use crate::formats::formats_output::FormatsOutput;
-    use crate::formats::variable_output::VariableOutput;
+    use crate::FormatsOutput;
+    use crate::VariableOutput;
 
     #[derive(Debug, PartialEq, Default)]
     struct FormatStruct {

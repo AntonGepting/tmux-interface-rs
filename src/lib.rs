@@ -315,38 +315,27 @@
 
 extern crate cmd_builder;
 
-pub mod error;
-
 pub mod commands;
+pub mod control_mode;
+pub mod error;
+pub mod formats;
 pub mod options;
+pub mod styles;
 pub mod target;
 #[cfg(feature = "tmux_1_6")]
 pub mod variables;
-
 pub mod version;
 
-pub mod control_mode;
-
-pub mod formats;
-
-pub mod styles;
-
-// options module
-pub use options::*;
-
-// commands module
 pub use commands::*;
-
-// target module
+pub use control_mode::*;
+pub use error::Error;
+pub use formats::*;
+pub use options::*;
+pub use styles::*;
 pub use target::*;
-
-// variables module
+#[cfg(feature = "tmux_1_6")]
 pub use variables::*;
-
 pub use version::Version;
-
-// structs
-pub use self::error::Error;
 
 #[cfg(test)]
 #[path = "."]

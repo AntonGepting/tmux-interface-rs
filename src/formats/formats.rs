@@ -1,4 +1,4 @@
-use crate::formats::variable::Variable;
+use super::Variable;
 use std::fmt;
 
 #[derive(Debug)]
