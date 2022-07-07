@@ -1,7 +1,5 @@
 use crate::commands::constants::*;
-use crate::commands::tmux_command::TmuxCommand;
-use crate::commands::tmux_commands::TmuxCommands;
-use crate::{Error, TmuxOutput};
+use crate::{Error, TmuxCommand, TmuxCommands, TmuxOutput};
 use std::borrow::Cow;
 use std::process::{Child, Command, ExitStatus, Stdio};
 
@@ -130,6 +128,7 @@ pub struct Tmux<'a> {
     #[cfg(feature = "tmux_3_2")]
     pub features: Option<Cow<'a, str>>,
 
+    /// `[command]`
     pub command: Option<TmuxCommands<'a>>,
 }
 
@@ -259,11 +258,12 @@ impl<'a> Tmux<'a> {
 
     /// `[-T features]` - Set terminal features for the client
     #[cfg(feature = "tmux_3_2")]
-    pub fn features(mut self, features: S) -> Self {
+    pub fn features<S: Into<Cow<'a, str>>>(mut self, features: S) -> Self {
         self.features = Some(features.into());
         self
     }
 
+    /// `[command]`
     pub fn command<T: Into<TmuxCommand<'a>>>(mut self, command: T) -> Self {
         self.command
             .get_or_insert(TmuxCommands::new())
@@ -384,6 +384,7 @@ impl<'a> Tmux<'a> {
             cmd.push_option(T_UPPERCASE_KEY, features);
         }
 
+        // `[command]`
         if let Some(command) = self.command {
             cmd.push_cmds(command);
         }
@@ -395,10 +396,27 @@ impl<'a> Tmux<'a> {
     //Command::from(self)
     //}
 
+    // XXX: ?
     pub fn into_command(self) -> Command {
         Command::from(self)
     }
 
+    // XXX: command or subcommand better name?
+    pub fn with_command<T: Into<TmuxCommand<'a>>>(command: T) -> Tmux<'a> {
+        Tmux::new().command(command.into())
+    }
+
+    // XXX: ?
+    pub fn add_command<T: Into<TmuxCommand<'a>>>(mut self, command: T) -> Self {
+        self.command
+            .get_or_insert(TmuxCommands::new())
+            .push(command.into());
+        self
+    }
+}
+
+// from std::process::Command
+impl<'a> Tmux<'a> {
     /// run tmux command
     pub fn output(self) -> Result<TmuxOutput, Error> {
         let mut command = Command::from(self);

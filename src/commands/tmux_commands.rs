@@ -1,5 +1,5 @@
-use crate::{Error, TmuxCommand, TmuxOutput};
-use cmd::CmdList;
+use crate::TmuxCommand;
+use cmd_builder::CmdList;
 use std::borrow::Cow;
 use std::fmt;
 
@@ -33,8 +33,8 @@ impl<'a> TmuxCommands<'a> {
     }
 
     // XXX: -> Self?
-    pub fn push(&mut self, cmd: TmuxCommand<'a>) {
-        self.0.push(cmd.0);
+    pub fn push<T: Into<TmuxCommand<'a>>>(&mut self, cmd: T) {
+        self.0.push(cmd.into().0);
     }
 
     pub fn cmd(mut self, cmd: TmuxCommand<'a>) -> Self {

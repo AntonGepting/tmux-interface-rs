@@ -360,30 +360,4 @@ impl<'a> NewSession<'a> {
 
         cmd
     }
-
-    //pub fn append_to(self, cmds: &mut TmuxCommands<'a>) {
-    //self.0.append_to(cmds);
-    //}
-
-    //pub fn into_inner(self) -> TmuxCommand<'a> {
-    //self.0
-    //}
-
-    //// ?
-    //pub fn as_ref(&self) -> &TmuxCommand<'a> {
-    //&self.0
-    //}
-
-    //// ?
-    //pub fn as_mut(&mut self) -> &mut TmuxCommand<'a> {
-    //&mut self.0
-    //}
-
-    //pub fn into_tmux_bin_command(self) -> TmuxBinCommand<'a> {
-    //self.0.into_tmux_bin_command()
-    //}
-
-    //pub fn into_tmux_bin_command_ext(self, tmux: TmuxBin<'a>) -> TmuxBinCommand<'a> {
-    //self.0.into_tmux_bin_command_ext(tmux)
-    //}
 }

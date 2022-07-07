@@ -1,13 +1,9 @@
 use cmd_builder::Cmd;
 
-use crate::Tmux;
+use crate::{Tmux, TmuxCommands};
 use std::borrow::Cow;
 use std::fmt;
 use std::process::Command;
-
-//use crate::commands::tmux_bin::TmuxBin;
-//use crate::commands::tmux_bin_command::TmuxBinCommand;
-use crate::commands::tmux_commands::TmuxCommands;
 
 // XXX: mb enum for command?
 // XXX: rename (.cmd to .name)?
@@ -201,75 +197,6 @@ impl<'a> From<TmuxCommand<'a>> for Command {
 //self.push_param(flag.into());
 //}
 //}
-
-////impl<'a> From<&mut NewSession<'a>> for TmuxCommand<'a> {
-////fn from(item: &mut NewSession<'a>) -> Self {
-////item.0.clone()
-////}
-////}
-
-//impl<'a> From<&'a NewSession<'a>> for &TmuxCommand<'a> {
-//fn from(item: &'a NewSession<'a>) -> Self {
-//&item.0
-//}
-//}
-
-//impl<'a> From<&mut NewSession<'a>> for TmuxCommand<'a> {
-//fn from(item: &mut NewSession<'a>) -> Self {
-//item.0.clone()
-//}
-//}
-
-//impl<'a> From<ShowOptions<'a>> for TmuxCommand<'a> {
-//fn from(item: ShowOptions<'a>) -> Self {
-//item.0
-//}
-//}
-
-//impl<'a> From<&'a ShowOptions<'a>> for &TmuxCommand<'a> {
-//fn from(item: &'a ShowOptions<'a>) -> Self {
-//&item.0
-//}
-//}
-
-//impl<'a> From<&mut ShowOptions<'a>> for TmuxCommand<'a> {
-//fn from(item: &mut ShowOptions<'a>) -> Self {
-//item.0.clone()
-//}
-//}
-
-//impl<'a> From<&'a HasSession<'a>> for &'a TmuxCommand<'a> {
-//fn from(item: &'a HasSession<'a>) -> Self {
-//&item.0
-//}
-//}
-
-//impl<'a> From<&mut HasSession<'a>> for TmuxCommand<'a> {
-//fn from(item: &mut HasSession<'a>) -> Self {
-//item.0.clone()
-//}
-//}
-
-//impl<'a> From<&'a KillSession<'a>> for &'a TmuxCommand<'a> {
-//fn from(item: &'a KillSession<'a>) -> Self {
-//&item.0
-//}
-//}
-
-//impl<'a> From<&mut KillSession<'a>> for TmuxCommand<'a> {
-//fn from(item: &mut KillSession<'a>) -> Self {
-//item.0.clone()
-//}
-//}
-
-//impl<'a> From<StartServer> for TmuxCommand<'a> {
-//fn from(item: StartServer<'a>) -> Self {
-//item.0
-//}
-//}
-//
-//
-//
 //    /// Returns mutable reference to tmux executable name `Cow<'a, str>`
 /* NOTE: from bin
     ///
@@ -311,41 +238,3 @@ impl<'a> From<TmuxCommand<'a>> for Command {
     }
 
 */
-
-use crate::{HasSession, KillSession, ListPanes, ListSessions, ListWindows, NewSession};
-
-impl<'a> From<NewSession<'a>> for TmuxCommand<'a> {
-    fn from(item: NewSession<'a>) -> Self {
-        item.build()
-    }
-}
-
-impl<'a> From<HasSession<'a>> for TmuxCommand<'a> {
-    fn from(item: HasSession<'a>) -> Self {
-        item.build()
-    }
-}
-
-impl<'a> From<KillSession<'a>> for TmuxCommand<'a> {
-    fn from(item: KillSession<'a>) -> Self {
-        item.build()
-    }
-}
-
-impl<'a> From<ListPanes<'a>> for TmuxCommand<'a> {
-    fn from(item: ListPanes<'a>) -> Self {
-        item.build()
-    }
-}
-
-impl<'a> From<ListWindows<'a>> for TmuxCommand<'a> {
-    fn from(item: ListWindows<'a>) -> Self {
-        item.build()
-    }
-}
-
-impl<'a> From<ListSessions<'a>> for TmuxCommand<'a> {
-    fn from(item: ListSessions<'a>) -> Self {
-        item.build()
-    }
-}

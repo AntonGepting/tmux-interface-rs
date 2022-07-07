@@ -25,12 +25,4 @@ impl StartServer {
 
         cmd
     }
-
-    //pub fn append_to(self, cmds: &mut TmuxCommands<'a>) {
-    //self.0.append_to(cmds)
-    //}
-
-    //pub fn to_command(self) -> TmuxCommand<'a> {
-    //self.0
-    //}
 }

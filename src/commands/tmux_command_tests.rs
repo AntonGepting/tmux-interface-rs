@@ -37,54 +37,50 @@ fn tmux_command_to_vec() {
 //}
 
 #[test]
-fn tmux_subcommands() {
-    use crate::TmuxCommand;
-
-    let mut tmux = TmuxCommand::new();
-    tmux.name("tmux");
-    tmux.push_flag("--a");
-    tmux.push_flag("--b");
-
-    //assert_eq!(tmux)
-}
-
-#[test]
 fn tmux_multiple_subcommands() {
     use crate::{ListCommands, Tmux};
 
     let tmux = Tmux::new()
         .verbose_logging()
         .version()
-        .command(ListCommands::new().format("listcommands1").build())
-        .command(ListCommands::new().format("listcommands2").build())
+        .command(ListCommands::new().format("listcommands1"))
+        .command(ListCommands::new().format("listcommands2"))
         .build()
         .to_string();
 
-    assert_eq!(
-        tmux,
-        "tmux -v -V lscm -F listcommands1 ; lscm -F listcommands2"
-    );
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "list-commands";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "lscm";
+
+    let s = vec![
+        "tmux",
+        "-v",
+        "-V",
+        cmd,
+        "-F",
+        "listcommands1",
+        ";",
+        cmd,
+        "-F",
+        "listcommands2",
+    ]
+    .join(" ");
+
+    assert_eq!(tmux, s);
 }
 
 #[test]
 fn tmux_command() {
     use crate::{KillSession, NewSession, Tmux};
 
-    let cmd = Tmux::new()
-        .command(NewSession::new().session_name("asdf").detached().build())
-        .build();
-    let output = cmd.output();
-    dbg!(output);
+    let output = Tmux::with_command(NewSession::new().session_name("asdf").detached())
+        .output()
+        .unwrap();
+    assert!(output.status().success());
 
-    let cmd = Tmux::new()
-        .command(KillSession::new().target_session("asdf").build())
-        .build();
-    let output = cmd.output();
-
-    dbg!(output);
-
-    //assert_eq!(
-    //tmux,
-    //"tmux -v -V lscm -F listcommands1 ; lscm -F listcommands2"
-    //);
+    let output = Tmux::with_command(KillSession::new().target_session("asdf"))
+        .output()
+        .unwrap();
+    assert!(output.status().success());
 }
