@@ -1092,33 +1092,6 @@ pub struct SessionOptions {
     //pub user_options: Option<HashMap<String, String>>
 }
 
-//pub struct TmuxOptions<'a> {
-//pub cmd: TmuxBinCommands<'a>,
-//}
-
-//impl<'a> TmuxOptions<'a> {
-//pub fn new() -> Self {
-//Self {
-//cmd: TmuxBinCommands::new(),
-//}
-//}
-
-//pub fn get_all_session_options() -> Result<SessionOptions, Error> {
-//let s = ShowOptions::from().global().output()?.to_string();
-//s.parse()
-//}
-//}
-//
-//pub enum TmuxCommandVariant<'a> {
-//None,
-//// stdin handle needed
-//Single(TmuxCommand<'a>),
-//// stdin handle needed
-//Multiple(TmuxCommands<'a>),
-//SingleBin(TmuxBinCommand<'a>),
-//MultipleBin(TmuxBinCommands<'a>),
-//}
-
 impl SessionOptions {
     // NOTE: Tmux struct wrong decision here, because of dircet and control mode
     pub fn get_all() -> Result<Self, Error> {

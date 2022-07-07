@@ -16,11 +16,17 @@
 //!
 //! * Tmux Option:
 //!     * Server Options (`-s`)
+//!       > server options which do not apply to any particular window or session or pane
 //!     * Session Options (otherwise ``)
+//!       > Sessions which do not have a particular option configured inherit the value from the global session options
+//!         * local (``)
 //!         * global (`-g`)
 //!     * Window Options (`-w`)
+//!       > There is also a set of global window options from which any unset window or pane options are inherited
+//!         * local (``)
 //!         * global (`-g`)
 //!     * Pane Options (`-p`)
+//!       > Pane options inherit from window options
 //!
 //! * User Option (`@name`)
 //!
@@ -62,7 +68,9 @@ pub use crate::options::window::*;
 pub struct Options {
     pub server_options: ServerOptions,
     pub session_options: SessionOptions,
+    pub global_session_options: SessionOptions,
     pub window_options: WindowOptions,
+    pub global_window_options: WindowOptions,
     #[cfg(feature = "tmux_3_1")]
     pub pane_options: PaneOptions,
 }
