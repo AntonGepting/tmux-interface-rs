@@ -1,4 +1,4 @@
-use super::target_session::TargetSession;
+use super::TargetSession;
 use std::fmt;
 
 // XXX: borrowing/owning?
