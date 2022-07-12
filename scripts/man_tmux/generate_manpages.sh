@@ -12,7 +12,7 @@ GIT_URL="https://github.com/tmux/tmux.git"
 # global variables file
 VARIABLES_FILE="versions.var"
 
-# import varibales
+# import variables
 source $VARIABLES_FILE
 
 # download sources

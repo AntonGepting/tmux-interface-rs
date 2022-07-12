@@ -153,7 +153,7 @@ pub enum TargetPaneToken {
     LeftOf,
     /// {right-of} The pane to the right of the active pane
     RightOf,
-    //// {mouse} = most recent mouse event occured
+    //// {mouse} = most recent mouse event occurred
     //Mouse,{last}            !    The last (previously active) pane
 }
 

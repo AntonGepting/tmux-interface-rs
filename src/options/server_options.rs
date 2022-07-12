@@ -253,7 +253,7 @@ pub const SERVER_OPTIONS: [(
 ];
 
 // XXX: ugly array implementation?
-// XXX: String vs &str, send/recieve like 2 structures
+// XXX: String vs &str, send/receive like 2 structures
 // XXX: String vs &str optimization
 // TODO: Vec variables solution for arrays
 // TODO: check types
