@@ -2,7 +2,7 @@ use crate::commands::constants::*;
 use crate::{Error, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
 
-/// Stucture for putting a pane into buffer mode
+/// Structure for putting a pane into buffer mode
 ///
 /// # Manual
 ///

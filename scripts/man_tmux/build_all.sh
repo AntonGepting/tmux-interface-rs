@@ -5,7 +5,7 @@ SRC_ROOT=".."
 # global variables file
 VARIABLES_FILE="versions.var"
 
-# import varibales
+# import variables
 source $VARIABLES_FILE
 
 

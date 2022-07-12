@@ -6,7 +6,7 @@
 //!
 //! # Description
 //!
-//! Main purpose of the `tmux_interface` library is to implement simple sending and recieving data
+//! Main purpose of the `tmux_interface` library is to implement simple sending and receiving data
 //! mechanisms for intercommunication with `TMUX` only via standard streams (`stdin`, `stdout`,
 //! `stderr`).
 //!
@@ -27,9 +27,9 @@
 //!     - Buffers ([`buffers`](crate::commands::buffers))
 //!     - Miscellaneous ([`miscellaneous`](crate::commands::miscellaneous))
 //!
-//! Main structure is [`TmuxCommand`](crate::TmuxCommand) wich has all these wrapper functions implementations.
+//! Main structure is [`TmuxCommand`](crate::TmuxCommand) which has all these wrapper functions implementations.
 //!
-//! 2. Parsing functions for tmux output as rust structures (which is recieving data). Parsing function are
+//! 2. Parsing functions for tmux output as rust structures (which is receiving data). Parsing function are
 //! structured by objects they operate with:
 //!
 //!     - [`Sessions`](crate::Sessions)
@@ -280,7 +280,7 @@ pub use crate::options::server_options::SERVER_OPTIONS_ALL;
 #[cfg(feature = "tmux_1_0")]
 pub use crate::options::server_options::SERVER_OPTIONS_NONE;
 
-// session otions
+// session options
 #[cfg(feature = "tmux_1_0")]
 pub use crate::options::session_options::SessionOptions;
 #[cfg(feature = "tmux_1_0")]
