@@ -74,3 +74,27 @@ pub struct Options {
     #[cfg(feature = "tmux_3_1")]
     pub pane_options: PaneOptions,
 }
+
+//pub fn set_server
+//}
+//
+
+enum TmuxServerOption {
+    A,
+}
+
+pub enum TmuxOptionName {
+    TmuxServerOption,
+    //Session(),
+    //Window(),
+    //Pane(),
+}
+
+pub struct TmuxOption<T> {
+    pub name: TmuxOptionName,
+    pub index: Option<usize>,
+    pub global: bool,
+    pub value: Option<T>,
+}
+
+impl<T: fmt::Display> TmuxOption<T> {}
