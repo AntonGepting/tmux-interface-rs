@@ -175,7 +175,8 @@ under following conditions:
 
 ## Contributors
 
-*  Yanus Poluektovich ([ypoluektovich](https://github.com/ypoluektovich))
+* Kian-Meng Ang ([kianmeng](https://github.com/kianmeng))
+* Yanus Poluektovich ([ypoluektovich](https://github.com/ypoluektovich))
 
 
 ## License
