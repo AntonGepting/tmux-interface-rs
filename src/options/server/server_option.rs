@@ -40,6 +40,94 @@ pub const QUIET: &str = "quiet";
 #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
 pub const DETACH_ON_DESTROY: &str = "detach-on-destroy";
 
+pub enum TmuxServerOption {
+    A,
+}
+
+pub enum TmuxOptionName {
+    TmuxServerOption(TmuxServerOption),
+    //Session(),
+    //Window(),
+    //Pane(),
+}
+
+//#[derive(Default)]
+pub struct TmuxOption<T> {
+    pub name: TmuxOptionName,
+    pub index: Option<usize>,
+    pub global: bool,
+    pub value: Option<T>,
+}
+
+impl<T: fmt::Display> TmuxOption<T> {}
+
+//#[derive(Default)]
+pub struct TmuxServerOption2<T>(pub TmuxOption<T>);
+
+pub struct OptionsController<'a> {
+    pub setter: &'a dyn Fn(&str) -> String,
+    pub getter: &'a dyn Fn(&str) -> String,
+}
+
+impl<'a> OptionsController<'a> {
+    pub fn new() -> Self {
+        Self {
+            setter: &Self::default_getter,
+            getter: &Self::default_getter,
+        }
+    }
+
+    fn default_getter(name: &str) -> String {
+        Tmux::new()
+            .command(SetOption::new().server().option(name))
+            .output()
+            .unwrap()
+            .to_string()
+    }
+
+    pub fn getaaaa(tmux: Option<Tmux>, name: &str) {
+        let show_options = ShowOptions::new().server().option(name);
+        let tmux = match tmux {
+            Some(tmux) => tmux.command(show_options),
+            None => Tmux::new().command(show_options),
+        };
+        tmux.output().unwrap().to_string();
+    }
+
+    pub fn setter(&mut self, setter: &'a dyn Fn(&str) -> String) -> &mut Self {
+        self.setter = setter;
+        self
+    }
+
+    pub fn getter(&mut self, getter: &'a dyn Fn(&str) -> String) -> &mut Self {
+        self.getter = getter;
+        self
+    }
+}
+
+impl<'a> ServerOptionController<'a> {
+    pub fn new() -> Self {}
+}
+
+impl<T: fmt::Display> TmuxServerOption2<T> {
+    pub fn buffer_limit() {}
+
+    pub fn get(&self, name: ServerOptionName) -> Result<ServerOption, Error> {
+        Tmux::new()
+            .command(ShowOptions::new().server().option(name))
+            .output()?
+            .to_string()
+            .parse()
+    }
+
+    pub fn set(&self) -> Result<(), Error> {
+        Tmux::new()
+            .command(SetOption::new().server().option(name).value())
+            .output()?;
+        Ok(())
+    }
+}
+
 // variants possible:
 // * option_name value
 // * option_name
@@ -228,27 +316,6 @@ fn get_array_item_name<'a, T: fmt::Display>(
         None => name.into(),
     }
 }
-
-//pub struct OptionsController<'a> {
-//pub setter: &'a dyn Fn(&str) -> String,
-////pub getter:
-//}
-
-//impl<'a> OptionsController<'a> {
-//pub fn new_server_options_controller() -> {
-//}
-
-//pub fn default_server_cb(&str) -> String {
-//Tmux::new()
-//.command(SetOption::new().server().value(value).option(name))
-//.output()
-//}
-
-//pub fn setter(&mut self, setter: &'a dyn Fn(&str) -> String) -> &mut Self {
-//self.setter = setter;
-//self
-//}
-//}
 
 impl ServerOption {
     //pub fn set_ext(cb: Option<&dyn Fn(&str, &str) -> String>) -> Result<Self, Error> {
