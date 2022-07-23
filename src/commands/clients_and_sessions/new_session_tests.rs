@@ -137,3 +137,16 @@ fn new_session() {
     assert_eq!(new_session.0.cmd, Some(Cow::Borrowed(cmd)));
     assert_eq!(new_session.0.cmd_args, Some(s));
 }
+
+#[test]
+fn new_session_from_tmux_command() {
+    use crate::TmuxCommand;
+
+    let mut s = Vec::new();
+    s.extend_from_slice(&["-f", "myfile"]);
+    let s = s.into_iter().map(|a| a.into()).collect();
+
+    let cmd = TmuxCommand::new().file("myfile").new_session();
+
+    assert_eq!(cmd.0.bin_args, Some(s));
+}
