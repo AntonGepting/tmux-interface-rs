@@ -189,6 +189,7 @@ impl<'a> From<TmuxCommand<'a>> for NewSession<'a> {
     fn from(item: TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin,
+            bin_args: item.bin_args,
             cmd: Some(Cow::Borrowed(NEW_SESSION)),
             ..Default::default()
         })
@@ -199,6 +200,7 @@ impl<'a> From<&TmuxCommand<'a>> for NewSession<'a> {
     fn from(item: &TmuxCommand<'a>) -> Self {
         Self(TmuxCommand {
             bin: item.bin.clone(),
+            bin_args: item.bin_args.clone(),
             cmd: Some(Cow::Borrowed(NEW_SESSION)),
             ..Default::default()
         })
