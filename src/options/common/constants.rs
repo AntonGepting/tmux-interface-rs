@@ -29,7 +29,7 @@ pub const _3: &str = "3";
 #[cfg(feature = "tmux_2_9")]
 pub const _4: &str = "4";
 #[cfg(feature = "tmux_2_9")]
-pub const _2: &str = "5";
+pub const _5: &str = "5";
 
 #[cfg(feature = "tmux_1_0")]
 pub const LEFT: &str = "left";
@@ -49,7 +49,7 @@ pub const _12: &str = "12";
 pub const _24: &str = "24";
 
 #[cfg(feature = "tmux_2_9")]
-pub const LARGEST: &str = "largets";
+pub const LARGEST: &str = "largest";
 #[cfg(feature = "tmux_2_9")]
 pub const SMALLEST: &str = "smallest";
 #[cfg(feature = "tmux_2_9")]

@@ -124,13 +124,13 @@ fn to_string() {
     assert_eq!(server_options.to_string(), "buffer-limit 50");
 }
 
-#[test]
-fn get_all() {
-    use crate::ServerOptions;
+//#[test]
+//fn get_all() {
+//use crate::ServerOptions;
 
-    let server_options = ServerOptions::get().unwrap();
-    dbg!(server_options);
-}
+//let server_options = ServerOptions::get().unwrap();
+//dbg!(server_options);
+//}
 
 //#[test]
 //fn get_single() {

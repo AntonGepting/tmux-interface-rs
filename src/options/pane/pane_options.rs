@@ -3,6 +3,9 @@ use crate::{SetOption, ShowOptions, Tmux};
 use std::fmt;
 use std::str::FromStr;
 
+#[cfg(feature = "tmux_3_0")]
+use crate::RemainOnExit;
+
 // XXX: conditionals?
 // NOTE: total num: 5 (usize)
 pub const ALLOW_RENAME: usize = 1 << 0;

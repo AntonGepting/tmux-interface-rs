@@ -17,24 +17,76 @@
 //! * Tmux Option:
 //!     * Server Options (`-s`)
 //!       > server options which do not apply to any particular window or session or pane
+//!         * absolute (no global/local differentiation)
+//!           * get
+//!             * single
+//!               * name value
+//!               * value
+//!             * all
+//!               * name value
+//!               * value
+//!           * set
+//!           * toggle (on/off {default}/off) if no value specified
 //!     * Session Options (otherwise ``)
 //!       > Sessions which do not have a particular option configured inherit the value from the global session options
 //!         * local (``)
+//!           * get
+//!             * single
+//!               * name value
+//!               * value
+//!             * all
+//!               * name value
+//!               * value
+//!           * set
+//!             * name value
 //!         * global (`-g`)
+//!           * get
+//!             * single
+//!               * name value
+//!               * value
+//!             * all
+//!               * name value
+//!               * value
+//!           * set
+//!             * name value
 //!     * Window Options (`-w`)
 //!       > There is also a set of global window options from which any unset window or pane options are inherited
 //!         * local (``)
+//!           * get
+//!             * single
+//!               * name value
+//!               * value
+//!             * all
+//!               * name value
+//!               * value
+//!           * set
+//!             * name value
 //!         * global (`-g`)
+//!           * get
+//!             * single
+//!               * name value
+//!               * value
+//!             * all
+//!               * name value
+//!               * value
+//!           * set
+//!             * name value
 //!     * Pane Options (`-p`)
 //!       > Pane options inherit from window options
+//!         * absolute (no global/local differentiation)
+//!           * get
+//!             * single
+//!               * name value
+//!               * value
+//!             * all
+//!               * name value
+//!               * value
+//!           * set
+//!             * name value
 //!
 //! * User Option (`@name`)
 //!
 //! Get:
-//! * all
-//! * single one
-//! * value with name
-//! * value without name
 //! * inherited from parent (`*`)
 //!
 //! Set:
@@ -65,8 +117,8 @@ pub use crate::options::session::*;
 pub use crate::options::window::*;
 
 #[cfg(feature = "tmux_1_0")]
-pub struct Options {
-    pub server_options: ServerOptions,
+pub struct Options<'a> {
+    pub server_options: ServerOptions<'a>,
     pub session_options: SessionOptions,
     pub global_session_options: SessionOptions,
     pub window_options: WindowOptions,
@@ -75,6 +127,8 @@ pub struct Options {
     pub pane_options: PaneOptions,
 }
 
+//pub struct OptionsController {
+//}
 //pub fn set_server
 //}
 //
