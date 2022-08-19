@@ -1,6 +1,5 @@
 use crate::options::*;
-use crate::{Error, SetOption, ShowOptions, Tmux, TmuxOutput};
-use std::borrow::Cow;
+use crate::{Error, TmuxOutput};
 use std::fmt;
 use std::str::FromStr;
 
@@ -80,9 +79,9 @@ pub enum ServerOptionName {
     UserOption(String),
 }
 
-fn array_name(name: &str, index: usize) -> String {
-    format!("{}[{}]", name, index)
-}
+//fn array_name(name: &str, index: usize) -> String {
+//format!("{}[{}]", name, index)
+//}
 
 //impl<'a> From<ServerOptionName> for Cow<'a, str> {
 //fn from(name: ServerOptionName) -> Self {
@@ -421,7 +420,7 @@ impl TmuxServerOptionOutputFull {
 impl FromStr for TmuxServerOptionOutputFull {
     type Err = Error;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    fn from_str(_s: &str) -> Result<Self, Self::Err> {
         //let (name, i, value) = Self::get_option(s);
 
         //match name {
@@ -572,18 +571,18 @@ impl TmuxServerOptionOutput {
 }
 
 // TODO: multiline
-fn default_show_server_option<'a, S: Into<Cow<'a, str>>>(name: S) -> Result<String, Error> {
-    let output = Tmux::new()
-        .command(ShowOptions::new().server().option(name).value())
-        .output()?;
-    Ok(output.to_string())
-}
+//fn default_show_server_option<'a, S: Into<Cow<'a, str>>>(name: S) -> Result<String, Error> {
+//let output = Tmux::new()
+//.command(ShowOptions::new().server().option(name).value())
+//.output()?;
+//Ok(output.to_string())
+//}
 
-fn default_set_option<'a, S: Into<Cow<'a, str>>>(name: S, value: S) -> Result<TmuxOutput, Error> {
-    Tmux::new()
-        .command(SetOption::new().server().option(name).value(value))
-        .output()
-}
+//fn default_set_option<'a, S: Into<Cow<'a, str>>>(name: S, value: S) -> Result<TmuxOutput, Error> {
+//Tmux::new()
+//.command(SetOption::new().server().option(name).value(value))
+//.output()
+//}
 
 //pub struct ArrayItem<T> {
 //pub index: usize,

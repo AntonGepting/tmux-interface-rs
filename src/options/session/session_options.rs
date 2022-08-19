@@ -1,6 +1,6 @@
 use super::{Action, Activity, DetachOnDestroy, Status, StatusJustify, StatusPosition};
 use crate::options::StatusKeys;
-use crate::{Error, SetOption, ShowOptions, Switch, Tmux};
+use crate::{Error, ShowOptions, Switch, Tmux};
 use std::fmt;
 use std::str::FromStr;
 
@@ -971,8 +971,8 @@ impl SessionOptions {
 impl FromStr for SessionOptions {
     type Err = Error;
 
-    fn from_str(options: &str) -> Result<Self, Self::Err> {
-        let mut session_options: SessionOptions = Default::default();
+    fn from_str(_options: &str) -> Result<Self, Self::Err> {
+        let session_options: SessionOptions = Default::default();
         //let mut v: Vec<&str>;
         //let mut arr: Vec<&str>;
         //for option in options.lines() {
@@ -993,7 +993,7 @@ impl FromStr for SessionOptions {
 }
 
 impl fmt::Display for SessionOptions {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, _f: &mut fmt::Formatter) -> fmt::Result {
         // pane option
         //for var in SESSION_OPTIONS.iter() {
         //// if is set some - extract
