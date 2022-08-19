@@ -1,11 +1,13 @@
 #[cfg(feature = "tmux_3_0")]
 pub mod remain_on_exit;
 
+pub mod get_pane_option;
 pub mod pane_options;
 
 #[cfg(feature = "tmux_3_0")]
 pub use remain_on_exit::RemainOnExit;
 
+pub use get_pane_option::*;
 pub use pane_options::*;
 
 #[cfg(test)]

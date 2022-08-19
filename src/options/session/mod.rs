@@ -5,7 +5,12 @@ pub mod status;
 pub mod status_justify;
 pub mod status_position;
 
+pub mod constants;
+pub mod get_session_option;
+pub mod get_session_options;
 pub mod session_options;
+pub mod set_session_option;
+pub mod set_session_options;
 
 pub use action::Action;
 pub use activity::Activity;
@@ -14,7 +19,12 @@ pub use status::Status;
 pub use status_justify::StatusJustify;
 pub use status_position::StatusPosition;
 
+pub use constants::*;
+pub use get_session_option::GetSessionOption;
+pub use get_session_options::*;
 pub use session_options::*;
+pub use set_session_option::SetSessionOption;
+pub use set_session_options::*;
 
 #[cfg(test)]
 #[path = "."]

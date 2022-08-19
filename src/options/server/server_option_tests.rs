@@ -65,31 +65,3 @@
 //"detach-on-destroy"
 //);
 //}
-
-#[test]
-fn parse_server_option() {
-    use crate::options::{GetServerOption, TmuxServerOptionOutput};
-    use crate::Tmux;
-
-    #[cfg(feature = "tmux_3_1")]
-    {
-        let origin = "C-?";
-        let output = Tmux::new()
-            .command(GetServerOption::new().backspace())
-            .output()
-            .unwrap();
-        let value = TmuxServerOptionOutput::from(output).backspace().unwrap();
-        assert_eq!(origin, value);
-    }
-
-    #[cfg(feature = "tmux_1_5")]
-    {
-        let origin = 50;
-        let output = Tmux::new()
-            .command(GetServerOption::new().buffer_limit())
-            .output()
-            .unwrap();
-        let value = TmuxServerOptionOutput::from(output).buffer_limit().unwrap();
-        assert_eq!(origin, value);
-    }
-}

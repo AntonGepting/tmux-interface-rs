@@ -1,3 +1,6 @@
+//!
+//! Command builders and output parsers
+//!
 //!     show-options [-AgHpqsvw] [-t target-pane] [option]
 //!                   (alias: show)
 //!             Show the pane options (or a single option if option is
@@ -92,6 +95,9 @@
 //! Set:
 //! * single one with name and value
 //!
+//! 1. need subclassing global / local options -> custom Deref trait
+//! 2. need user methods abstraction (so user can't access options of wrong object) -> newtype wrapper type
+//! 3. need builder / parser for single option
 // mb separated crate later, and tmux_commands as underlying layer
 //
 pub mod common;
