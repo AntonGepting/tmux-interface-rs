@@ -10,7 +10,7 @@ pub mod get_session_option;
 pub mod get_session_options;
 pub mod session_options;
 pub mod set_session_option;
-pub mod set_session_options;
+//pub mod set_session_options;
 
 pub use action::Action;
 pub use activity::Activity;
@@ -24,7 +24,7 @@ pub use get_session_option::GetSessionOption;
 pub use get_session_options::*;
 pub use session_options::*;
 pub use set_session_option::SetSessionOption;
-pub use set_session_options::*;
+//pub use set_session_options::*;
 
 #[cfg(test)]
 #[path = "."]

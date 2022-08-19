@@ -2,39 +2,25 @@ use crate::options::*;
 use crate::{ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
+// NOTE: ADR: compile time or run time parametrisation for global local option set/get
+// * compile time: trais
+// * runtime: struct field with user given setter/getter
+
 // TODO: all options exist in get/set?
 
-pub struct GetSessionOption;
+pub struct GetLocalSessionOption;
 
-pub struct GetGlobalSessionOption(GetSessionOption);
+pub struct GetGlobalSessionOption;
 
-impl std::ops::Deref for GetGlobalSessionOption {
-    type Target = GetSessionOption;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl Getter for GetGlobalSessionOption {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new()
-            .global()
-            .option(name.into())
-            .value()
-            .build()
-    }
-}
-
-pub trait Getter {
+impl GetSessionOption for GetLocalSessionOption {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
         ShowOptions::new().option(name).value().build()
     }
 }
 
-impl Getter for GetSessionOption {
+impl GetSessionOption for GetGlobalSessionOption {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().option(name.into()).value().build()
+        ShowOptions::new().option(name).global().value().build()
     }
 }
 
@@ -43,10 +29,11 @@ impl Getter for GetSessionOption {
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-impl GetSessionOption {
-    //pub fn get<T: Into<Cow<'a, str>>>(&self, name: T) -> TmuxCommand<'a> {
-    //(self.getter)(name.into())
-    //}
+// default implementation for getting options, by default local options
+pub trait GetSessionOption {
+    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
+        ShowOptions::new().option(name.into()).value().build()
+    }
 
     //pub fn gets<'a>(names: ServerOptionB) -> TmuxCommands<'a> {
     //let mut cmds = TmuxCommands::new();
@@ -63,7 +50,7 @@ impl GetSessionOption {
     /// activity-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn activity_action<'a>() -> TmuxCommand<'a> {
+    fn activity_action<'a>() -> TmuxCommand<'a> {
         Self::get(ACTIVITY_ACTION)
     }
 
@@ -74,7 +61,7 @@ impl GetSessionOption {
     /// assume-paste-time milliseconds
     /// ```
     #[cfg(feature = "tmux_1_8")]
-    pub fn assume_paste_time<'a>() -> TmuxCommand<'a> {
+    fn assume_paste_time<'a>() -> TmuxCommand<'a> {
         Self::get(ASSUME_PASTE_TIME)
     }
 
@@ -85,7 +72,7 @@ impl GetSessionOption {
     /// base-index index
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn base_index<'a>() -> TmuxCommand<'a> {
+    fn base_index<'a>() -> TmuxCommand<'a> {
         Self::get(BASE_INDEX)
     }
 
@@ -101,7 +88,7 @@ impl GetSessionOption {
     /// bell-action [any | none | other]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn bell_action<'a>() -> TmuxCommand<'a> {
+    fn bell_action<'a>() -> TmuxCommand<'a> {
         Self::get(BELL_ACTION)
     }
 
@@ -112,7 +99,7 @@ impl GetSessionOption {
     /// bell-on-alert [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
-    pub fn bell_on_alert<'a>() -> TmuxCommand<'a> {
+    fn bell_on_alert<'a>() -> TmuxCommand<'a> {
         Self::get(BELL_ON_ALERT)
     }
 
@@ -123,7 +110,7 @@ impl GetSessionOption {
     /// buffer-limit limit
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
-    pub fn buffer_limit<'a>() -> TmuxCommand<'a> {
+    fn buffer_limit<'a>() -> TmuxCommand<'a> {
         Self::get(BUFFER_LIMIT)
     }
 
@@ -134,7 +121,7 @@ impl GetSessionOption {
     /// default-command shell-command
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn default_command<'a>() -> TmuxCommand<'a> {
+    fn default_command<'a>() -> TmuxCommand<'a> {
         Self::get(DEFAULT_COMMAND)
     }
 
@@ -145,7 +132,7 @@ impl GetSessionOption {
     /// default-shell path
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn default_shell<'a>() -> TmuxCommand<'a> {
+    fn default_shell<'a>() -> TmuxCommand<'a> {
         Self::get(DEFAULT_SHELL)
     }
 
@@ -156,7 +143,7 @@ impl GetSessionOption {
     /// default-path path
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn default_path<'a>() -> TmuxCommand<'a> {
+    fn default_path<'a>() -> TmuxCommand<'a> {
         Self::get(DEFAULT_PATH)
     }
 
@@ -167,7 +154,7 @@ impl GetSessionOption {
     /// default-terminal terminal
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    pub fn default_terminal<'a>() -> TmuxCommand<'a> {
+    fn default_terminal<'a>() -> TmuxCommand<'a> {
         Self::get(DEFAULT_TERMINAL)
     }
 
@@ -178,7 +165,7 @@ impl GetSessionOption {
     /// default-size XxY
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    pub fn default_size<'a>() -> TmuxCommand<'a> {
+    fn default_size<'a>() -> TmuxCommand<'a> {
         Self::get(DEFAULT_SIZE)
     }
 
@@ -189,7 +176,7 @@ impl GetSessionOption {
     /// destroy-unattached [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    pub fn destroy_unattached<'a>() -> TmuxCommand<'a> {
+    fn destroy_unattached<'a>() -> TmuxCommand<'a> {
         Self::get(DESTROY_UNATTACHED)
     }
 
@@ -205,7 +192,7 @@ impl GetSessionOption {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    pub fn detach_on_destroy<'a>() -> TmuxCommand<'a> {
+    fn detach_on_destroy<'a>() -> TmuxCommand<'a> {
         Self::get(DETACH_ON_DESTROY)
     }
 
@@ -216,7 +203,7 @@ impl GetSessionOption {
     /// display-panes-active-colour colour
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    pub fn display_panes_active_colour<'a>() -> TmuxCommand<'a> {
+    fn display_panes_active_colour<'a>() -> TmuxCommand<'a> {
         Self::get(DISPLAY_PANES_ACTIVE_COLOUR)
     }
 
@@ -227,7 +214,7 @@ impl GetSessionOption {
     /// display-panes-colour colour
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn display_panes_colour<'a>() -> TmuxCommand<'a> {
+    fn display_panes_colour<'a>() -> TmuxCommand<'a> {
         Self::get(DISPLAY_PANES_COLOUR)
     }
 
@@ -238,7 +225,7 @@ impl GetSessionOption {
     /// display-panes-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn display_panes_time<'a>() -> TmuxCommand<'a> {
+    fn display_panes_time<'a>() -> TmuxCommand<'a> {
         Self::get(DISPLAY_PANES_TIME)
     }
 
@@ -249,7 +236,7 @@ impl GetSessionOption {
     /// display-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn display_time<'a>() -> TmuxCommand<'a> {
+    fn display_time<'a>() -> TmuxCommand<'a> {
         Self::get(DISPLAY_TIME)
     }
 
@@ -260,7 +247,7 @@ impl GetSessionOption {
     /// history-limit lines
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn history_limit<'a>() -> TmuxCommand<'a> {
+    fn history_limit<'a>() -> TmuxCommand<'a> {
         Self::get(HISTORY_LIMIT)
     }
 
@@ -271,7 +258,7 @@ impl GetSessionOption {
     /// key-table key-table
     /// ```
     #[cfg(feature = "tmux_2_2")]
-    pub fn key_table<'a>() -> TmuxCommand<'a> {
+    fn key_table<'a>() -> TmuxCommand<'a> {
         Self::get(KEY_TABLE)
     }
 
@@ -282,7 +269,7 @@ impl GetSessionOption {
     /// lock-after-time number
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn lock_after_time<'a>() -> TmuxCommand<'a> {
+    fn lock_after_time<'a>() -> TmuxCommand<'a> {
         Self::get(LOCK_AFTER_TIME)
     }
 
@@ -293,7 +280,7 @@ impl GetSessionOption {
     /// lock-command shell-command
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn lock_command<'a>() -> TmuxCommand<'a> {
+    fn lock_command<'a>() -> TmuxCommand<'a> {
         Self::get(LOCK_COMMAND)
     }
 
@@ -304,7 +291,7 @@ impl GetSessionOption {
     /// lock-server [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
-    pub fn lock_server<'a>() -> TmuxCommand<'a> {
+    fn lock_server<'a>() -> TmuxCommand<'a> {
         Self::get(LOCK_SERVER)
     }
 
@@ -315,7 +302,7 @@ impl GetSessionOption {
     /// message-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn message_attr<'a>() -> TmuxCommand<'a> {
+    fn message_attr<'a>() -> TmuxCommand<'a> {
         Self::get(MESSAGE_ATTR)
     }
 
@@ -326,7 +313,7 @@ impl GetSessionOption {
     /// message-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn message_bg<'a>() -> TmuxCommand<'a> {
+    fn message_bg<'a>() -> TmuxCommand<'a> {
         Self::get(MESSAGE_BG)
     }
 
@@ -337,7 +324,7 @@ impl GetSessionOption {
     /// message-command-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub fn message_command_attr<'a>() -> TmuxCommand<'a> {
+    fn message_command_attr<'a>() -> TmuxCommand<'a> {
         Self::get(MESSAGE_COMMAND_ATTR)
     }
 
@@ -348,7 +335,7 @@ impl GetSessionOption {
     /// message-command-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub fn message_command_bg<'a>() -> TmuxCommand<'a> {
+    fn message_command_bg<'a>() -> TmuxCommand<'a> {
         Self::get(MESSAGE_COMMAND_BG)
     }
 
@@ -359,7 +346,7 @@ impl GetSessionOption {
     /// message-command-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub fn message_command_fg<'a>() -> TmuxCommand<'a> {
+    fn message_command_fg<'a>() -> TmuxCommand<'a> {
         Self::get(MESSAGE_COMMAND_FG)
     }
 
@@ -370,7 +357,7 @@ impl GetSessionOption {
     /// message-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn message_fg<'a>() -> TmuxCommand<'a> {
+    fn message_fg<'a>() -> TmuxCommand<'a> {
         Self::get(MESSAGE_FG)
     }
 
@@ -381,7 +368,7 @@ impl GetSessionOption {
     /// message-command-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn message_command_style<'a>() -> TmuxCommand<'a> {
+    fn message_command_style<'a>() -> TmuxCommand<'a> {
         Self::get(MESSAGE_COMMAND_STYLE)
     }
 
@@ -392,7 +379,7 @@ impl GetSessionOption {
     /// message-limit number
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    pub fn message_limit<'a>() -> TmuxCommand<'a> {
+    fn message_limit<'a>() -> TmuxCommand<'a> {
         Self::get(MESSAGE_LIMIT)
     }
 
@@ -403,7 +390,7 @@ impl GetSessionOption {
     /// message-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn message_style<'a>() -> TmuxCommand<'a> {
+    fn message_style<'a>() -> TmuxCommand<'a> {
         Self::get(MESSAGE_STYLE)
     }
 
@@ -414,7 +401,7 @@ impl GetSessionOption {
     /// mouse-resize-pane [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    pub fn mouse_resize_pane<'a>() -> TmuxCommand<'a> {
+    fn mouse_resize_pane<'a>() -> TmuxCommand<'a> {
         Self::get(MOUSE_RESIZE_PANE)
     }
     /// ### Manual
@@ -424,7 +411,7 @@ impl GetSessionOption {
     /// mouse-select-pane [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    pub fn mouse_select_pane<'a>() -> TmuxCommand<'a> {
+    fn mouse_select_pane<'a>() -> TmuxCommand<'a> {
         Self::get(MOUSE_SELECT_PANE)
     }
 
@@ -435,7 +422,7 @@ impl GetSessionOption {
     /// mouse-select-window [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    pub fn mouse_select_window<'a>() -> TmuxCommand<'a> {
+    fn mouse_select_window<'a>() -> TmuxCommand<'a> {
         Self::get(MOUSE_SELECT_WINDOW)
     }
 
@@ -446,7 +433,7 @@ impl GetSessionOption {
     /// mouse [on | off]
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    pub fn mouse<'a>() -> TmuxCommand<'a> {
+    fn mouse<'a>() -> TmuxCommand<'a> {
         Self::get(MOUSE)
     }
 
@@ -457,7 +444,7 @@ impl GetSessionOption {
     /// mouse-utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
-    pub fn mouse_utf8<'a>() -> TmuxCommand<'a> {
+    fn mouse_utf8<'a>() -> TmuxCommand<'a> {
         Self::get(MOUSE_UTF8)
     }
 
@@ -468,7 +455,7 @@ impl GetSessionOption {
     /// pane-active-border-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_active_border_bg<'a>() -> TmuxCommand<'a> {
+    fn pane_active_border_bg<'a>() -> TmuxCommand<'a> {
         Self::get(PANE_ACTIVE_BORDER_BG)
     }
 
@@ -479,7 +466,7 @@ impl GetSessionOption {
     /// pane-active-border-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_active_border_fg<'a>() -> TmuxCommand<'a> {
+    fn pane_active_border_fg<'a>() -> TmuxCommand<'a> {
         Self::get(PANE_ACTIVE_BORDER_FG)
     }
 
@@ -490,7 +477,7 @@ impl GetSessionOption {
     /// pane-border-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_border_bg<'a>() -> TmuxCommand<'a> {
+    fn pane_border_bg<'a>() -> TmuxCommand<'a> {
         Self::get(PANE_BORDER_BG)
     }
 
@@ -501,7 +488,7 @@ impl GetSessionOption {
     /// pane-border-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_border_fg<'a>() -> TmuxCommand<'a> {
+    fn pane_border_fg<'a>() -> TmuxCommand<'a> {
         Self::get(PANE_BORDER_FG)
     }
 
@@ -512,7 +499,7 @@ impl GetSessionOption {
     /// pane-active-border-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    pub fn pane_active_border_style<'a>() -> TmuxCommand<'a> {
+    fn pane_active_border_style<'a>() -> TmuxCommand<'a> {
         Self::get(PANE_ACTIVE_BORDER_STYLE)
     }
 
@@ -523,7 +510,7 @@ impl GetSessionOption {
     /// pane-border-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    pub fn pane_border_style<'a>() -> TmuxCommand<'a> {
+    fn pane_border_style<'a>() -> TmuxCommand<'a> {
         Self::get(PANE_BORDER_STYLE)
     }
 
@@ -534,7 +521,7 @@ impl GetSessionOption {
     /// prefix key
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn prefix<'a>() -> TmuxCommand<'a> {
+    fn prefix<'a>() -> TmuxCommand<'a> {
         Self::get(PREFIX)
     }
 
@@ -545,7 +532,7 @@ impl GetSessionOption {
     /// prefix2 key
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    pub fn prefix2<'a>() -> TmuxCommand<'a> {
+    fn prefix2<'a>() -> TmuxCommand<'a> {
         Self::get(PREFIX2)
     }
 
@@ -556,7 +543,7 @@ impl GetSessionOption {
     /// renumber-windows [on | off]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    pub fn renumber_windows<'a>() -> TmuxCommand<'a> {
+    fn renumber_windows<'a>() -> TmuxCommand<'a> {
         Self::get(RENUMBER_WINDOWS)
     }
 
@@ -567,7 +554,7 @@ impl GetSessionOption {
     /// repeat-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn repeat_time<'a>() -> TmuxCommand<'a> {
+    fn repeat_time<'a>() -> TmuxCommand<'a> {
         Self::get(REPEAT_TIME)
     }
 
@@ -578,7 +565,7 @@ impl GetSessionOption {
     /// set-remain-on-exit [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-    pub fn set_remain_on_exit<'a>() -> TmuxCommand<'a> {
+    fn set_remain_on_exit<'a>() -> TmuxCommand<'a> {
         Self::get(SET_REMAIN_ON_EXIT)
     }
 
@@ -589,7 +576,7 @@ impl GetSessionOption {
     /// set-titles [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn set_titles<'a>() -> TmuxCommand<'a> {
+    fn set_titles<'a>() -> TmuxCommand<'a> {
         Self::get(SET_TITLES)
     }
 
@@ -600,7 +587,7 @@ impl GetSessionOption {
     /// set-titles-string string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn set_titles_string<'a>() -> TmuxCommand<'a> {
+    fn set_titles_string<'a>() -> TmuxCommand<'a> {
         Self::get(SET_TITLES_STRING)
     }
 
@@ -611,7 +598,7 @@ impl GetSessionOption {
     /// silence-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn silence_action<'a>() -> TmuxCommand<'a> {
+    fn silence_action<'a>() -> TmuxCommand<'a> {
         Self::get(SILENCE_ACTION)
     }
 
@@ -626,7 +613,7 @@ impl GetSessionOption {
     /// status [off | on]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status<'a>() -> TmuxCommand<'a> {
+    fn status<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS)
     }
 
@@ -637,7 +624,7 @@ impl GetSessionOption {
     /// status-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_attr<'a>() -> TmuxCommand<'a> {
+    fn status_attr<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_ATTR)
     }
 
@@ -648,7 +635,7 @@ impl GetSessionOption {
     /// status-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_bg<'a>() -> TmuxCommand<'a> {
+    fn status_bg<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_BG)
     }
 
@@ -659,7 +646,7 @@ impl GetSessionOption {
     /// status-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_fg<'a>() -> TmuxCommand<'a> {
+    fn status_fg<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_FG)
     }
 
@@ -670,7 +657,7 @@ impl GetSessionOption {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    pub fn status_format<'a>() -> TmuxCommand<'a> {
+    fn status_format<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_FORMAT)
     }
 
@@ -681,7 +668,7 @@ impl GetSessionOption {
     /// status-interval interval
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_interval<'a>() -> TmuxCommand<'a> {
+    fn status_interval<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_INTERVAL)
     }
 
@@ -692,7 +679,7 @@ impl GetSessionOption {
     /// status-justify [left | centre | right]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_justify<'a>() -> TmuxCommand<'a> {
+    fn status_justify<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_JUSTIFY)
     }
 
@@ -703,7 +690,7 @@ impl GetSessionOption {
     /// status-keys [vi | emacs]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_keys<'a>() -> TmuxCommand<'a> {
+    fn status_keys<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_KEYS)
     }
 
@@ -714,7 +701,7 @@ impl GetSessionOption {
     /// status-left string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_left<'a>() -> TmuxCommand<'a> {
+    fn status_left<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_LEFT)
     }
 
@@ -725,7 +712,7 @@ impl GetSessionOption {
     /// status-left-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_left_attr<'a>() -> TmuxCommand<'a> {
+    fn status_left_attr<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_LEFT_ATTR)
     }
 
@@ -736,7 +723,7 @@ impl GetSessionOption {
     /// status-left-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_left_bg<'a>() -> TmuxCommand<'a> {
+    fn status_left_bg<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_LEFT_BG)
     }
 
@@ -747,7 +734,7 @@ impl GetSessionOption {
     /// status-left-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_left_fg<'a>() -> TmuxCommand<'a> {
+    fn status_left_fg<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_LEFT_FG)
     }
 
@@ -758,7 +745,7 @@ impl GetSessionOption {
     /// status-left-length length
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_left_length<'a>() -> TmuxCommand<'a> {
+    fn status_left_length<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_LEFT_LENGTH)
     }
 
@@ -769,7 +756,7 @@ impl GetSessionOption {
     /// status-left-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn status_left_style<'a>() -> TmuxCommand<'a> {
+    fn status_left_style<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_LEFT_STYLE)
     }
 
@@ -780,7 +767,7 @@ impl GetSessionOption {
     /// status-position [top | bottom]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    pub fn status_position<'a>() -> TmuxCommand<'a> {
+    fn status_position<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_POSITION)
     }
 
@@ -791,7 +778,7 @@ impl GetSessionOption {
     /// status-right string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_right<'a>() -> TmuxCommand<'a> {
+    fn status_right<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_RIGHT)
     }
 
@@ -802,7 +789,7 @@ impl GetSessionOption {
     /// status-right-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_right_attr<'a>() -> TmuxCommand<'a> {
+    fn status_right_attr<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_RIGHT_ATTR)
     }
 
@@ -813,7 +800,7 @@ impl GetSessionOption {
     /// status-right-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_right_bg<'a>() -> TmuxCommand<'a> {
+    fn status_right_bg<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_RIGHT_BG)
     }
 
@@ -824,7 +811,7 @@ impl GetSessionOption {
     /// status-right-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_right_fg<'a>() -> TmuxCommand<'a> {
+    fn status_right_fg<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_RIGHT_FG)
     }
 
@@ -835,7 +822,7 @@ impl GetSessionOption {
     /// status-right-length length
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_right_length<'a>() -> TmuxCommand<'a> {
+    fn status_right_length<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_RIGHT_LENGTH)
     }
 
@@ -846,7 +833,7 @@ impl GetSessionOption {
     /// status-right-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn status_right_style<'a>() -> TmuxCommand<'a> {
+    fn status_right_style<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_RIGHT_STYLE)
     }
 
@@ -857,7 +844,7 @@ impl GetSessionOption {
     /// status-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn status_style<'a>() -> TmuxCommand<'a> {
+    fn status_style<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_STYLE)
     }
 
@@ -868,7 +855,7 @@ impl GetSessionOption {
     /// status-utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    pub fn status_utf8<'a>() -> TmuxCommand<'a> {
+    fn status_utf8<'a>() -> TmuxCommand<'a> {
         Self::get(STATUS_UTF8)
     }
 
@@ -879,7 +866,7 @@ impl GetSessionOption {
     /// terminal-overrides string
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    pub fn terminal_overrides<'a>() -> TmuxCommand<'a> {
+    fn terminal_overrides<'a>() -> TmuxCommand<'a> {
         Self::get(TERMINAL_OVERRIDES)
     }
 
@@ -890,7 +877,7 @@ impl GetSessionOption {
     /// update-environment[] variable
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn update_environment<'a>() -> TmuxCommand<'a> {
+    fn update_environment<'a>() -> TmuxCommand<'a> {
         Self::get(UPDATE_ENVIRONMENT)
     }
 
@@ -901,7 +888,7 @@ impl GetSessionOption {
     /// user-keys
     /// ```
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
-    pub fn user_keys<'a>() -> TmuxCommand<'a> {
+    fn user_keys<'a>() -> TmuxCommand<'a> {
         Self::get(USER_KEYS)
     }
 
@@ -917,7 +904,7 @@ impl GetSessionOption {
     /// visual-activity [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn visual_activity<'a>() -> TmuxCommand<'a> {
+    fn visual_activity<'a>() -> TmuxCommand<'a> {
         Self::get(VISUAL_ACTIVITY)
     }
 
@@ -933,7 +920,7 @@ impl GetSessionOption {
     /// visual-bell [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn visual_bell<'a>() -> TmuxCommand<'a> {
+    fn visual_bell<'a>() -> TmuxCommand<'a> {
         Self::get(VISUAL_BELL)
     }
 
@@ -944,7 +931,7 @@ impl GetSessionOption {
     /// visual-content [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    pub fn visual_content<'a>() -> TmuxCommand<'a> {
+    fn visual_content<'a>() -> TmuxCommand<'a> {
         Self::get(VISUAL_CONTENT)
     }
 
@@ -955,7 +942,7 @@ impl GetSessionOption {
     /// visual-silence [on | off | both]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    pub fn visual_silence<'a>() -> TmuxCommand<'a> {
+    fn visual_silence<'a>() -> TmuxCommand<'a> {
         Self::get(VISUAL_SILENCE)
     }
 
@@ -966,7 +953,7 @@ impl GetSessionOption {
     /// word-separators string
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    pub fn word_separators<'a>() -> TmuxCommand<'a> {
+    fn word_separators<'a>() -> TmuxCommand<'a> {
         Self::get(WORD_SEPARATORS)
     }
 
@@ -1011,8 +998,8 @@ fn get_session_option() {
     //.unwrap();
 
     let cmd = Tmux::new()
-        .command(GetSessionOption::activity_action())
-        .command(GetSessionOption::base_index())
+        .command(GetLocalSessionOption::activity_action())
+        .command(GetLocalSessionOption::base_index())
         .command(GetGlobalSessionOption::activity_action())
         .command(GetGlobalSessionOption::base_index());
 
