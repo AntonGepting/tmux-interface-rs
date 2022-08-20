@@ -250,7 +250,9 @@ pub struct TmuxServerOption2<T>(pub TmuxOption<T>);
 //}
 
 #[test]
-fn get_server_option_c() {
+fn get_server_option() {
+    use crate::Tmux;
+
     let cmd = Tmux::new()
         .command(GetServerOption::get(BUFFER_LIMIT))
         .output()

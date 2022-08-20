@@ -1,4 +1,4 @@
-use super::common::*;
+use crate::options::*;
 use crate::{ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
@@ -10,15 +10,19 @@ use std::borrow::Cow;
 
 pub struct GetLocalWindowOption;
 
-pub struct GetGlobalWindowOption;
+impl GetWindowOption for GetLocalWindowOption {}
 
-impl GetWindowOption for GetLocalWindowOption {
+impl GetOptionExt for GetLocalWindowOption {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
         ShowOptions::new().window().option(name).value().build()
     }
 }
 
-impl GetWindowOption for GetGlobalWindowOption {
+pub struct GetGlobalWindowOption;
+
+impl GetWindowOption for GetGlobalWindowOption {}
+
+impl GetOptionExt for GetGlobalWindowOption {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
         ShowOptions::new()
             .window()
@@ -35,15 +39,7 @@ impl GetWindowOption for GetGlobalWindowOption {
 // option value
 //
 // default implementation for getting options, by default local options
-pub trait GetWindowOption {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new()
-            .window()
-            .option(name.into())
-            .value()
-            .build()
-    }
-
+pub trait GetWindowOption: GetOptionExt {
     /// ### Manual
     ///
     /// tmux ^1.0:

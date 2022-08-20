@@ -3,24 +3,41 @@ use crate::{ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 use std::fmt;
 
-pub struct GetPaneOption;
-
-impl GetOptionExt for GetPaneOption {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new()
-            .pane()
-            .option(name.into())
-            .value()
-            .build()
-    }
-}
+pub struct SetPaneOption;
 
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-impl GetPaneOption: GetOptionExt {
+impl SetPaneOption {
+    fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        name: T,
+        value: Option<S>,
+    ) -> TmuxCommand<'a> {
+        match value {
+            Some(data) => Self::set_ext(name, Some(data)),
+            None => Self::unset(name),
+        }
+    }
+
+    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
+        SetOption::new().option(name).unset().build()
+    }
+
+    // unset if value = None
+    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        name: T,
+        value: Option<S>,
+    ) -> TmuxCommand<'a> {
+        //(self.setter)(name.into(), value.map(|s| s.into()))
+        let cmd = match value {
+            Some(data) => SetOption::new().option(name).value(data),
+            None => SetOption::new().option(name),
+        };
+        cmd.build()
+    }
+
     /// ### Manual
     ///
     /// tmux ^3.0:
@@ -28,8 +45,8 @@ impl GetPaneOption: GetOptionExt {
     /// allow-rename [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn allow_rename<'a>() -> TmuxCommand<'a> {
-        Self::get(ALLOW_RENAME)
+    pub fn allow_rename<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
+        Self::set(ALLOW_RENAME, switch.map(|s| s.to_string()))
     }
     /// ### Manual
     ///
@@ -38,8 +55,8 @@ impl GetPaneOption: GetOptionExt {
     /// alternate-screen [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn alternate_screen<'a>() -> TmuxCommand<'a> {
-        Self::get(ALTERNATE_SCREEN)
+    pub fn alternate_screen<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
+        Self::set(ALTERNATE_SCREEN, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -54,8 +71,8 @@ impl GetPaneOption: GetOptionExt {
     /// remain-on-exit [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn remain_on_exit<'a>() -> TmuxCommand<'a> {
-        Self::get(REMAIN_ON_EXIT)
+    pub fn remain_on_exit<'a>(remain_on_exit: Option<RemainOnExit>) -> TmuxCommand<'a> {
+        Self::get(REMAIN_ON_EXIT, remain_on_exit.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -65,8 +82,8 @@ impl GetPaneOption: GetOptionExt {
     /// window-active-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn window_active_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_ACTIVE_STYLE)
+    pub fn window_active_style<'a>(style: Option<String>) -> TmuxCommand<'a> {
+        Self::get(WINDOW_ACTIVE_STYLE, style)
     }
 
     /// ### Manual
@@ -76,8 +93,8 @@ impl GetPaneOption: GetOptionExt {
     /// window-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn window_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STYLE)
+    pub fn window_style<'a>(style: Option<String>) -> TmuxCommand<'a> {
+        Self::get(WINDOW_STYLE, style)
     }
 
     /// ### Manual
@@ -87,8 +104,8 @@ impl GetPaneOption: GetOptionExt {
     /// synchronize-panes [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn synchronize_panes<'a>() -> TmuxCommand<'a> {
-        Self::get(SYNCHRONIZE_PANES)
+    pub fn synchronize_panes<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
+        Self::get(SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -102,20 +119,20 @@ impl GetPaneOption: GetOptionExt {
 }
 
 #[test]
-fn get_pane_option() {
+fn set_pane_option() {
     //let cmd = Tmux::new()
-    //.command(GetPaneOption::get(BUFFER_LIMIT))
+    //.command(SetPaneOption::get(BUFFER_LIMIT))
     //.output()
     //.unwrap();
     let cmd = Tmux::new()
-        .command(GetPaneOption::synchronize_panes())
-        .command(GetPaneOption::window_size())
+        .command(SetPaneOption::synchronize_panes())
+        .command(SetPaneOption::window_style())
         .output()
         .unwrap();
     dbg!(&cmd);
 
     //let cmd = Tmux::new()
-    //.command(GetPaneOption::command_alias())
+    //.command(SetPaneOption::command_alias())
     //.output()
     //.unwrap();
     //let cmd = TmuxServerOptionOutput::from(cmd).command_alias();

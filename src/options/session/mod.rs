@@ -20,10 +20,10 @@ pub use status_justify::StatusJustify;
 pub use status_position::StatusPosition;
 
 pub use constants::*;
-pub use get_session_option::GetSessionOption;
-pub use get_session_options::*;
+pub use get_session_option::{GetGlobalSessionOption, GetLocalSessionOption, GetSessionOption};
+pub use get_session_options::GetSessionOptions;
 pub use session_options::*;
-pub use set_session_option::SetSessionOption;
+pub use set_session_option::{SetGlobalSessionOption, SetLocalSessionOption, SetSessionOption};
 //pub use set_session_options::*;
 
 #[cfg(test)]
@@ -44,4 +44,7 @@ mod session_tests {
     pub mod status_position_tests;
     #[cfg(feature = "tmux_0_8")]
     pub mod status_tests;
+
+    #[cfg(feature = "tmux_0_8")]
+    pub mod get_session_options_tests;
 }

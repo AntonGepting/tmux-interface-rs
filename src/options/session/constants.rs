@@ -150,7 +150,7 @@ pub const SET_TITLES: &str = "set-titles";
 pub const SET_TITLES_STRING: &str = "set-titles-string";
 //silence-action [any | none | current | other]
 #[cfg(feature = "tmux_2_6")]
-pub const SILENCE_ACTION: &str = "silece-action";
+pub const SILENCE_ACTION: &str = "silence-action";
 //status [off | on | 2 | 3 | 4 | 5]
 //tmux 1.0: status [off | on]
 #[cfg(feature = "tmux_1_0")]
@@ -212,7 +212,7 @@ pub const STATUS_RIGHT_BG: &str = "status-right-bg";
 pub const STATUS_RIGHT_FG: &str = "status-right-fg";
 //status-right-length length
 #[cfg(feature = "tmux_1_0")]
-pub const STATUS_RIGHT_LENGTH: &str = "status-right-lenght";
+pub const STATUS_RIGHT_LENGTH: &str = "status-right-length";
 //status-right-style style
 #[cfg(feature = "tmux_1_9")]
 pub const STATUS_RIGHT_STYLE: &str = "status-right-style";

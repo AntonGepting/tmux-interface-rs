@@ -1,5 +1,6 @@
-use super::get_session_option::{GetGlobalSessionOption, GetLocalSessionOption};
-use crate::options::session::get_session_option::GetSessionOption;
+use crate::options::session::get_session_option::{
+    GetGlobalSessionOption, GetLocalSessionOption, GetSessionOption,
+};
 use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
@@ -1297,27 +1298,4 @@ pub trait GetSessionOptions<'a, Getter: GetSessionOption> {
     //fn into_commands(self) -> TmuxCommands<'a> {
     //self.options
     //}
-}
-
-#[test]
-fn get_session_options() {
-    use crate::Tmux;
-
-    let get_options = GetGlobalSessionOptions::new()
-        .visual_silence()
-        .word_separators()
-        .into_commands();
-
-    let output = Tmux::new().commands(get_options).output();
-
-    dbg!(output);
-
-    let get_options = GetLocalSessionOptions::new()
-        .visual_silence()
-        .word_separators()
-        .into_commands();
-
-    let output = Tmux::new().commands(get_options).output();
-
-    dbg!(output);
 }

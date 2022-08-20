@@ -8,21 +8,25 @@ use std::borrow::Cow;
 
 // TODO: all options exist in get/set?
 
-pub struct GetLocalSessionOption;
-
 pub struct GetGlobalSessionOption;
 
-impl GetSessionOption for GetLocalSessionOption {
+impl GetOptionExt for GetGlobalSessionOption {
+    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
+        ShowOptions::new().option(name).global().value().build()
+    }
+}
+
+impl GetSessionOption for GetGlobalSessionOption {}
+
+pub struct GetLocalSessionOption;
+
+impl GetOptionExt for GetLocalSessionOption {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
         ShowOptions::new().option(name).value().build()
     }
 }
 
-impl GetSessionOption for GetGlobalSessionOption {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().option(name).global().value().build()
-    }
-}
+impl GetSessionOption for GetLocalSessionOption {}
 
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned
@@ -30,11 +34,7 @@ impl GetSessionOption for GetGlobalSessionOption {
 // option value
 //
 // default implementation for getting options, by default local options
-pub trait GetSessionOption {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().option(name.into()).value().build()
-    }
-
+pub trait GetSessionOption: GetOptionExt {
     //pub fn gets<'a>(names: ServerOptionB) -> TmuxCommands<'a> {
     //let mut cmds = TmuxCommands::new();
     //for name in names.0 {
