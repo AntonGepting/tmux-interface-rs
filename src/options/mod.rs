@@ -3,6 +3,7 @@
 //!
 //! Command builders and output parsers
 //!
+//! Get
 //! ```text
 //! show-options [-AgHpqsvw] [-t target-pane] [option]
 //! (alias: show)
@@ -17,6 +18,45 @@
 //! option is unset.  -H includes hooks (omitted by default).
 //! -A includes options inherited from a parent set of options,
 //! such options are marked with an asterisk.
+//! ```
+//!
+//! Set
+//! ```text
+//! set-option [-aFgopqsuUw] [-t target-pane] option value
+//!       (alias: set)
+//! Set a pane option with -p, a window option with -w, a
+//! server option with -s, otherwise a session option.  If the
+//! option is not a user option, -w or -s may be unnecessary -
+//! tmux will infer the type from the option name, assuming -w
+//! for pane options.  If -g is given, the global session or
+//! window option is set.
+//!
+//! -F expands formats in the option value.  The -u flag unsets
+//! an option, so a session inherits the option from the global
+//! options (or with -g, restores a global option to the
+//! default).  -U unsets an option (like -u) but if the option
+//! is a pane option also unsets the option on any panes in the
+//! window.  value depends on the option and may be a number, a
+//! string, or a flag (on, off, or omitted to toggle).
+//!
+//! The -o flag prevents setting an option that is already set
+//! and the -q flag suppresses errors about unknown or
+//! ambiguous options.
+//!
+//! With -a, and if the option expects a string or a style,
+//! value is appended to the existing setting.  For example:
+//!
+//!       set -g status-left "foo"
+//!       set -ag status-left "bar"
+//!
+//! Will result in ‘foobar’.  And:
+//!
+//!       set -g status-style "bg=red"
+//!       set -ag status-style "fg=blue"
+//!
+//! Will result in a red background and blue foreground.
+//! Without -a, the result would be the default background and
+//! a blue foreground.
 //! ```
 //!
 //! * Tmux Options
@@ -35,6 +75,11 @@
 //!     * [`Session`]()
 //!     * [`Window`]()
 //!     * [`Pane`]()
+//!
+//! * by Setting
+//!     * Set
+//!     * Unset
+//!     * Toggle (for `on | off | ...` options)
 //!
 //! Scope
 //!
@@ -59,6 +104,44 @@
 //!     * Pane
 //!         * [`GetPaneOption`](crate::GetPaneOption)
 //!         * [`SetPaneOption`](crate::SetPaneOption)
+//!
+//!
+//! **Table**: Tmux Options
+//! <table>
+//!   <thead>
+//!     <tr>
+//!       <th>Tmux Options</th>
+//!       <th colspan="2">Scope</th>
+//!     </tr>
+//!   </thead>
+//!   <tbody>
+//!     <tr>
+//!       <td></td>
+//!       <td>Global</td>
+//!       <td>Local</td>
+//!     </tr>
+//!     <tr>
+//!       <td>ServerOptions</td>
+//!       <td></td>
+//!       <td>x</td>
+//!     </tr>
+//!     <tr>
+//!       <td>SessionOptions</td>
+//!       <td>x</td>
+//!       <td>x</td>
+//!     </tr>
+//!     <tr>
+//!       <td>WindowOptions</td>
+//!       <td>x</td>
+//!       <td>x</td>
+//!     </tr>
+//!     <tr>
+//!       <td>PaneOptions</td>
+//!       <td></td>
+//!       <td>x</td>
+//!     </tr>
+//!   </tbody>
+//! </table>
 //!
 //
 // Tmux boundary conditions
@@ -188,12 +271,15 @@ pub struct Options<'a> {
 use crate::{SetOption, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
+/// common trait for getting options, allowing different implementations for different object options
 pub trait GetOptionExt {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
         ShowOptions::new().option(name).value().build()
     }
 }
 
+// TODO: optimize set/set_ext are the same
+/// common trait for setting options, allowing different implementations for different object options
 pub trait SetOptionExt {
     fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         name: T,
