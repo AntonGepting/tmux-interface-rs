@@ -62,3 +62,68 @@ pub const DETACH_ON_DESTROY: &str = "detach-on-destroy";
 
 pub const USER_OPTION_MARKER: &str = "@";
 pub const SEPARATOR: &str = " ";
+
+pub enum ServerOptionName {
+    // backspace key
+    #[cfg(feature = "tmux_3_1")]
+    Backspace,
+    // buffer-limit number
+    #[cfg(feature = "tmux_1_5")]
+    BufferLimit,
+    // command-alias[] name=value
+    #[cfg(feature = "tmux_2_4")]
+    CommandAlias,
+    // default-terminal terminal
+    #[cfg(feature = "tmux_2_1")]
+    DefaultTerminal,
+    // copy-command shell-command
+    #[cfg(feature = "tmux_3_3")]
+    CopyCommand,
+    // escape-time time
+    #[cfg(feature = "tmux_1_2")]
+    EscapeTime,
+    // editor shell-command
+    #[cfg(feature = "tmux_3_2")]
+    Editor,
+    // exit-empty [on | off]
+    #[cfg(feature = "tmux_2_7")]
+    ExitEmpty,
+    // exit-unattached [on | off]
+    #[cfg(feature = "tmux_1_4")]
+    ExitUnattached,
+    // extended-keys [on | off]
+    #[cfg(feature = "tmux_3_2")]
+    ExtendedKeys,
+    // focus-events [on | off]
+    #[cfg(feature = "tmux_1_9")]
+    FocusEvents,
+    // history-file path
+    #[cfg(feature = "tmux_2_1")]
+    HistoryFile,
+    // message-limit number
+    #[cfg(feature = "tmux_2_0")]
+    MessageLimit,
+    // prompt-history-limit number
+    #[cfg(feature = "tmux_3_3")]
+    PromptHistoryLimit,
+    // set-clipboard [on | external | off]
+    #[cfg(feature = "tmux_1_5")]
+    SetClipboard,
+    // terminal-features[] string
+    #[cfg(feature = "tmux_3_2")]
+    TerminalFeatures,
+    // terminal-overrides[] string
+    #[cfg(feature = "tmux_2_0")]
+    TerminalOverrides,
+    // user-keys[] key
+    #[cfg(feature = "tmux_3_0")]
+    UserKeys,
+    // quiet [on | off]
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+    Quiet,
+    // detach-on-destroy [on | off]
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+    DetachOnDestroy,
+    // user option
+    UserOption(String),
+}

@@ -1,3 +1,5 @@
+// doc note parts/modules commands builders and parsers
+//
 //!
 //! Command builders and output parsers
 //!
@@ -38,25 +40,25 @@
 //!
 //! * Global Options
 //!     * Session
-//!         * [`GetGlobalSessionOption`](session::GetGlobalSessionOption)
-//!         * [`SetGlobalSessionOption`](session::SetGlobalSessionOption)
+//!         * [`GetGlobalSessionOption`](crate::GetGlobalSessionOption)
+//!         * [`SetGlobalSessionOption`](crate::SetGlobalSessionOption)
 //!     * Window
-//!         * [`GetGlobalWindowOption`](window::GetGlobalWindowOption)
-//!         * [`SetGlobalWindowOption`](window::SetGlobalWindowOption)
+//!         * [`GetGlobalWindowOption`](crate::GetGlobalWindowOption)
+//!         * [`SetGlobalWindowOption`](crate::SetGlobalWindowOption)
 //!
 //! * Local Options
 //!     * Server
-//!         * [`GetServerOption`](session::GetServerOption)
-//!         * [`SetServerOption`](session::SetServerOption)
+//!         * [`GetServerOption`](crate::GetServerOption)
+//!         * [`SetServerOption`](crate::SetServerOption)
 //!     * Session
-//!         * [`GetLocalSessionOption`](session::GetLocalSessionOption)
-//!         * [`SetLocalSessionOption`](session::SetLocalSessionOption)
+//!         * [`GetLocalSessionOption`](crate::GetLocalSessionOption)
+//!         * [`SetLocalSessionOption`](crate::SetLocalSessionOption)
 //!     * Window
-//!         * [`GetLocalSessionOption`](session::GetLocalSessionOption)
-//!         * [`SetLocalSessionOption`](session::SetLocalSessionOption)
+//!         * [`GetLocalSessionOption`](crate::GetLocalSessionOption)
+//!         * [`SetLocalSessionOption`](crate::SetLocalSessionOption)
 //!     * Pane
-//!         * [`GetPaneOption`](session::GetPaneOption)
-//!         * [`SetPaneOption`](session::SetPaneOption)
+//!         * [`GetPaneOption`](crate::GetPaneOption)
+//!         * [`SetPaneOption`](crate::SetPaneOption)
 //!
 //
 // Tmux boundary conditions

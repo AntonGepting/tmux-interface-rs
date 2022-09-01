@@ -1,3 +1,50 @@
+//! # Selective Session Options Command Getter Builder
+//!
+//! Allows building commands for getting global and "local" session options
+//!
+//! Differences between global and "local" session options ([tmux man](https://man7.org/linux/man-pages/man1/tmux.1.html#OPTIONS))
+//!
+//! ## Global
+//!
+//! ### Examples
+//!
+//! ```
+//! let options = GetGlobalSessionOptions::new().activity_action().assume_paste_time();
+//! let output = Tmux::with_commands(options).output().unwrap();
+//! // parse
+//! ```
+//!
+//! request:
+//! ```text
+//! tmux show-options -g activity-action ; show-options -g assume-paste-time
+//! ```
+//!
+//! response:
+//! ```text
+//! activity-action other
+//! assume-paste-time 1
+//! ```
+//!
+//!
+//! ## Local
+//!
+//! ### Examples
+//!
+//! ```
+//! let options = GetLocalSessionOptions::new().activity_action().assume_paste_time();
+//! let output = Tmux::with_commands(options).output().unwrap();
+//! // parse
+//! ```
+//!
+//! request:
+//! ```text
+//! tmux show-options activity-action ; show-options assume-paste-time
+//! ```
+//!
+//! response:
+//! ```text
+//! ```
+
 use crate::options::session::get_session_option::{
     GetGlobalSessionOption, GetLocalSessionOption, GetSessionOption,
 };

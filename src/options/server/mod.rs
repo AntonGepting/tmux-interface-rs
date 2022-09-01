@@ -1,37 +1,85 @@
-#[cfg(feature = "tmux_3_2")]
-pub mod extended_keys;
-#[cfg(feature = "tmux_1_5")]
-pub mod set_clipboard;
+//! Module for working with server options
+//!
+//! # Table of Contents
+//!
+//! * Command Builder
+//!
+//!     * Getter Command Builder
+//!
+//!         * [`GetServerOption`](#get-single-option) - get single option
+//!         * [`GetServerOptions`](#get-multiple-options) - get multiple options
+//!
+//!     * Setter Command Builder
+//!
+//!         * [`SetServerOption`](crate::SetServerOption) - set single option
+//!         * [`SetServerOptions`](crate::SetServerOptions) - set multiple options
+//!
+//! * Parser
+//!    * ServerOptionOutput
+//!    * ServerOptionsOutput
+//!
+//!
+//! ## Get Single Option
+//!
+//! [`GetServerOption`](crate::GetServerOption) Module
+//!
+//! ### Example
+//!
+//! ```
+//! use crate::{GetServerOption, Tmux};
+//!
+//! let output = Tmux::with_command(GetServerOption::buffer_limit()).output();
+//! ```
+//!
+//!
+//! ## Get Multiple Options
+//!
+//! [`GetServerOptions`](crate::GetServerOptions) Module
+//!
+//! ### Example
+//!
+//! ```
+//! use crate::{GetServerOptions, Tmux};
+//!
+//! let output = Tmux::with_command(
+//!     GetServerOptions::new()
+//!         .buffer_limit()
+//!         .history_file()
+//!         .build())
+//!     .output();
+//! ```
+//!
+//!
+//!
 
-pub mod constants;
-pub mod get_server_option;
-pub mod get_server_options;
+// 1. approach we know what options we are expecting
+// 2. approach we don't know what option we are expecting
+//
+//
+
+pub mod builder;
+pub mod common;
+pub mod parser;
+
 pub mod server_option;
 pub mod server_options;
-pub mod set_server_option;
-pub mod set_server_options;
 
-#[cfg(feature = "tmux_3_2")]
-pub use extended_keys::ExtendedKeys;
-#[cfg(feature = "tmux_1_5")]
-pub use set_clipboard::SetClipboard;
+pub use builder::*;
+pub use common::*;
+pub use parser::*;
 
-pub use constants::*;
-pub use get_server_option::*;
 pub use server_option::*;
 pub use server_options::*;
-pub use set_server_option::*;
 
 #[cfg(test)]
 #[path = "."]
 mod server_tests {
-    #[cfg(feature = "tmux_3_2")]
-    pub mod extended_keys_tests;
     #[cfg(feature = "tmux_1_2")]
     pub mod server_options_tests;
-    #[cfg(feature = "tmux_1_5")]
-    pub mod set_clipboard_tests;
 
     #[cfg(feature = "tmux_1_2")]
     pub mod server_option_tests;
+
+    pub mod get_server_option_tests;
+    pub mod get_server_options_tests;
 }

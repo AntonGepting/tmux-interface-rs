@@ -1,6 +1,4 @@
-use super::set_server_option::SetServerOption;
-use super::*;
-use crate::{Switch, TmuxCommands};
+use crate::{SetClipboard, SetServerOption, Switch, TmuxCommands};
 use std::borrow::Cow;
 use std::fmt;
 

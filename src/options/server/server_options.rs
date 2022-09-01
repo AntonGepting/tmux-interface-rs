@@ -7,40 +7,6 @@ use std::borrow::Cow;
 use std::fmt;
 use std::str::FromStr;
 
-#[derive(Default, PartialEq, Clone, Debug)]
-pub struct OptionsArray<'a>(Vec<Cow<'a, str>>);
-
-impl<'a> OptionsArray<'a> {
-    pub fn new() -> Self {
-        Default::default()
-    }
-
-    pub fn push<S: Into<Cow<'a, str>>>(&mut self, item: S) {
-        self.0.push(item.into());
-    }
-
-    pub fn insert<S: Into<Cow<'a, str>>>(&mut self, i: usize, item: S) {
-        self.0.insert(i, item.into());
-    }
-
-    pub fn to_string_ext<S: fmt::Display>(self, name: S) -> String {
-        let mut s = String::new();
-        for (i, item) in self.0.iter().enumerate() {
-            s += &format!("{}[{}] {}\n", name, i, item);
-        }
-        s
-    }
-}
-
-#[test]
-fn options_array() {
-    let mut a = OptionsArray::new();
-    a.push("asdf1");
-    a.push("asdf2");
-    let result = a.to_string_ext(TERMINAL_OVERRIDES);
-    dbg!(result);
-}
-
 //#[derive(Default, PartialEq, Clone, Debug)]
 //pub struct TmuxOption<N, T> {
 //pub name: N,
@@ -451,7 +417,6 @@ impl<'a> ServerOptions<'a> {
         #[cfg(feature = "tmux_3_2")]
         let cmds = cmds.editor(self.editor);
 
-        // NOTE: unwrap Option then wrap again (reason: toggle if None, set if Some)
         #[cfg(feature = "tmux_2_7")]
         let cmds = cmds.exit_empty(self.exit_empty);
 
@@ -570,31 +535,38 @@ fn server_options23() {
 // command_alias[n] = "aliasN" => command_alias["aliasN"]
 // TODO: optimization, merge server, session, window, pane?
 
-const SEPARATOR: &str = " ";
+//const SEPARATOR: &str = " ";
 
 // split string in 3 parts, name, index (if option is an array) and value
-fn get_option(s: &str) -> (Option<&str>, Option<usize>, Option<&str>) {
-    let v: Vec<&str> = s.trim().splitn(2, SEPARATOR).collect();
-    let value = v.get(1).copied();
-    let mut index: Option<usize> = None;
-    let mut name = v.get(0).copied();
+//fn get_option(s: &str) -> (Option<&str>, Option<usize>, Option<&str>) {
+//let v: Vec<&str> = s.trim().splitn(2, SEPARATOR).collect();
+//let value = v.get(1).copied();
+//let mut index: Option<usize> = None;
+//let mut name = v.get(0).copied();
 
-    if let Some(name_array) = name {
-        let v: Vec<&str> = name_array.split(|c| c == '[' || c == ']').collect();
-        name = v.get(0).copied();
-        index = v.get(1).and_then(|i| i.parse().ok());
+//if let Some(name_array) = name {
+//let v: Vec<&str> = name_array.split(|c| c == '[' || c == ']').collect();
+//name = v.get(0).copied();
+//index = v.get(1).and_then(|i| i.parse().ok());
+//}
+
+//(name, index, value)
+//}
+
+//fn array_insert<T: FromStr>(v: &mut Option<Vec<T>>, index: Option<usize>, value: Option<T>) {
+//index.and_then(|i| value.and_then(|data| Some(v.get_or_insert(Vec::new()).insert(i, data))));
+//}
+
+fn array_insert<T: FromStr>(v: &mut Option<Vec<T>>, value: Option<(usize, T)>) {
+    match value {
+        Some((i, data)) => v.get_or_insert(Vec::new()).insert(i, data),
+        None => *v = None,
     }
-
-    (name, index, value)
 }
 
-fn array_insert<T: FromStr>(v: &mut Option<Vec<T>>, index: Option<usize>, value: Option<T>) {
-    index.and_then(|i| value.and_then(|data| Some(v.get_or_insert(Vec::new()).insert(i, data))));
-}
-
-fn cow_parse<'a>(value: Option<&str>) -> Option<Cow<'a, str>> {
-    value.and_then(|s| Some(Cow::Owned(s.into())))
-}
+//fn cow_parse<'a>(value: Option<&str>) -> Option<Cow<'a, str>> {
+//value.and_then(|s| Some(Cow::Owned(s.into())))
+//}
 
 impl<'a> FromStr for ServerOptions<'a> {
     type Err = Error;
@@ -602,91 +574,168 @@ impl<'a> FromStr for ServerOptions<'a> {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut server_options = ServerOptions::default();
 
-        for option in s.lines() {
-            let (name, i, value) = get_option(option);
-            //dbg!((s, option, name, i, value));
-            if let Some(name) = name {
-                //let option = option.parse::<ServerOption>()?;
-                match name {
-                    #[cfg(feature = "tmux_3_1")]
-                    BACKSPACE => server_options.backspace = cow_parse(value),
-                    #[cfg(feature = "tmux_1_5")]
-                    BUFFER_LIMIT => {
-                        server_options.buffer_limit = value.and_then(|s| s.parse().ok())
-                    }
-                    #[cfg(feature = "tmux_2_4")]
-                    COMMAND_ALIAS => array_insert(
-                        &mut server_options.command_alias,
-                        i,
-                        value.and_then(|s| s.parse().ok()),
-                    ),
-                    #[cfg(feature = "tmux_2_1")]
-                    DEFAULT_TERMINAL => server_options.default_terminal = cow_parse(value),
-                    #[cfg(feature = "tmux_3_2")]
-                    COPY_COMMAND => server_options.copy_command = cow_parse(value),
-                    #[cfg(feature = "tmux_1_2")]
-                    ESCAPE_TIME => server_options.escape_time = value.and_then(|s| s.parse().ok()),
-                    #[cfg(feature = "tmux_3_2")]
-                    EDITOR => server_options.editor = cow_parse(value),
-                    #[cfg(feature = "tmux_2_7")]
-                    EXIT_EMPTY => server_options.exit_empty = value.and_then(|s| s.parse().ok()),
-                    #[cfg(feature = "tmux_1_4")]
-                    EXIT_UNATTACHED => {
-                        server_options.exit_unattached = value.and_then(|s| s.parse().ok())
-                    }
-                    #[cfg(feature = "tmux_3_2")]
-                    EXTENDED_KEYS => {
-                        server_options.extended_keys = value.and_then(|s| s.parse().ok())
-                    }
-                    #[cfg(feature = "tmux_1_9")]
-                    FOCUS_EVENTS => {
-                        server_options.focus_events = value.and_then(|s| s.parse().ok())
-                    }
-                    #[cfg(feature = "tmux_2_1")]
-                    HISTORY_FILE => server_options.history_file = cow_parse(value),
-                    #[cfg(feature = "tmux_2_0")]
-                    MESSAGE_LIMIT => {
-                        server_options.message_limit = value.and_then(|s| s.parse().ok())
-                    }
-                    #[cfg(feature = "tmux_3_3")]
-                    PROMPT_HISTORY_LIMIT => {
-                        server_options.prompt_history_limit = value.and_then(|s| s.parse().ok())
-                    }
-                    #[cfg(feature = "tmux_1_5")]
-                    SET_CLIPBOARD => {
-                        server_options.set_clipboard = value.and_then(|s| s.parse().ok())
-                    }
-                    #[cfg(feature = "tmux_3_2")]
-                    TERMINAL_FEATURES => array_insert(
-                        &mut server_options.terminal_features,
-                        i,
-                        value.and_then(|s| s.parse().ok()),
-                    ),
-                    #[cfg(feature = "tmux_2_0")]
-                    TERMINAL_OVERRIDES => array_insert(
-                        &mut server_options.terminal_overrides,
-                        i,
-                        value.and_then(|s| s.parse().ok()),
-                    ),
-                    #[cfg(feature = "tmux_3_0")]
-                    USER_KEYS => array_insert(
-                        &mut server_options.user_keys,
-                        i,
-                        value.and_then(|s| s.parse().ok()),
-                    ),
-                    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-                    QUIET => server_options.quiet = value.and_then(|s| s.parse().ok()),
-                    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-                    DETACH_ON_DESTROY => {
-                        server_options.detach_on_destroy = value.and_then(|s| s.parse().ok())
-                    }
-                    _ => return Err(Error::Tmux(format!("unknown option: {}", name))),
+        for line in s.lines() {
+            let option: SingleLineServerOption = line.parse()?;
+
+            match option {
+                #[cfg(feature = "tmux_3_1")]
+                SingleLineServerOption::Backspace(value) => server_options.backspace = value,
+                #[cfg(feature = "tmux_1_5")]
+                SingleLineServerOption::BufferLimit(value) => server_options.buffer_limit = value,
+                #[cfg(feature = "tmux_2_4")]
+                SingleLineServerOption::CommandAlias(value) => {
+                    array_insert(&mut server_options.command_alias, value)
                 }
+                #[cfg(feature = "tmux_2_1")]
+                SingleLineServerOption::DefaultTerminal(value) => {
+                    server_options.default_terminal = value.map(|s| s.into())
+                }
+                #[cfg(feature = "tmux_3_2")]
+                SingleLineServerOption::CopyCommand(value) => server_options.copy_command = value,
+                #[cfg(feature = "tmux_1_2")]
+                SingleLineServerOption::EscapeTime(value) => server_options.escape_time = value,
+                #[cfg(feature = "tmux_3_2")]
+                SingleLineServerOption::Editor(value) => server_options.editor = value,
+                #[cfg(feature = "tmux_2_7")]
+                SingleLineServerOption::ExitEmpty(value) => server_options.exit_empty = value,
+                #[cfg(feature = "tmux_1_4")]
+                SingleLineServerOption::ExitUnattached(value) => {
+                    server_options.exit_unattached = value
+                }
+                #[cfg(feature = "tmux_3_2")]
+                SingleLineServerOption::ExtendedKeys(value) => server_options.extended_keys = value,
+                #[cfg(feature = "tmux_1_9")]
+                SingleLineServerOption::FocusEvents(value) => server_options.focus_events = value,
+                #[cfg(feature = "tmux_2_1")]
+                SingleLineServerOption::HistoryFile(value) => {
+                    server_options.history_file = value.map(|s| s.into())
+                }
+                #[cfg(feature = "tmux_2_0")]
+                SingleLineServerOption::MessageLimit(value) => server_options.message_limit = value,
+                #[cfg(feature = "tmux_3_3")]
+                SingleLineServerOption::PromptHistoryLimit(value) => {
+                    server_options.prompt_history_limit = value
+                }
+                #[cfg(feature = "tmux_1_5")]
+                SingleLineServerOption::SetClipboard(value) => server_options.set_clipboard = value,
+                #[cfg(feature = "tmux_3_2")]
+                SingleLineServerOption::TerminalFeatures(value) => {
+                    array_insert(&mut server_options.terminal_features, value)
+                }
+                #[cfg(feature = "tmux_2_0")]
+                SingleLineServerOption::TerminalOverrides(value) => {
+                    array_insert(&mut server_options.terminal_overrides, value)
+                }
+                #[cfg(feature = "tmux_3_0")]
+                SingleLineServerOption::UserKeys(value) => {
+                    array_insert(&mut server_options.user_keys, value)
+                }
+                #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+                SingleLineServerOption::Quiet(value) => server_options.quiet = value,
+                #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+                SingleLineServerOption::DetachOnDestroy(value) => {
+                    server_options.detach_on_destroy = value
+                }
+
+                _ => return Err(Error::Tmux(format!("unknown option:"))),
             }
         }
+
         Ok(server_options)
     }
 }
+
+//impl<'a> FromStr for ServerOptions<'a> {
+//type Err = Error;
+
+//fn from_str(s: &str) -> Result<Self, Self::Err> {
+//let mut server_options = ServerOptions::default();
+
+//for option in s.lines() {
+//let (name, i, value) = get_option(option);
+////dbg!((s, option, name, i, value));
+//if let Some(name) = name {
+////let option = option.parse::<ServerOption>()?;
+//match name {
+//#[cfg(feature = "tmux_3_1")]
+//BACKSPACE => server_options.backspace = cow_parse(value),
+//#[cfg(feature = "tmux_1_5")]
+//BUFFER_LIMIT => {
+//server_options.buffer_limit = value.and_then(|s| s.parse().ok())
+//}
+//#[cfg(feature = "tmux_2_4")]
+//COMMAND_ALIAS => array_insert(
+//&mut server_options.command_alias,
+//i,
+//value.and_then(|s| s.parse().ok()),
+//),
+//#[cfg(feature = "tmux_2_1")]
+//DEFAULT_TERMINAL => server_options.default_terminal = cow_parse(value),
+//#[cfg(feature = "tmux_3_2")]
+//COPY_COMMAND => server_options.copy_command = cow_parse(value),
+//#[cfg(feature = "tmux_1_2")]
+//ESCAPE_TIME => server_options.escape_time = value.and_then(|s| s.parse().ok()),
+//#[cfg(feature = "tmux_3_2")]
+//EDITOR => server_options.editor = cow_parse(value),
+//#[cfg(feature = "tmux_2_7")]
+//EXIT_EMPTY => server_options.exit_empty = value.and_then(|s| s.parse().ok()),
+//#[cfg(feature = "tmux_1_4")]
+//EXIT_UNATTACHED => {
+//server_options.exit_unattached = value.and_then(|s| s.parse().ok())
+//}
+//#[cfg(feature = "tmux_3_2")]
+//EXTENDED_KEYS => {
+//server_options.extended_keys = value.and_then(|s| s.parse().ok())
+//}
+//#[cfg(feature = "tmux_1_9")]
+//FOCUS_EVENTS => {
+//server_options.focus_events = value.and_then(|s| s.parse().ok())
+//}
+//#[cfg(feature = "tmux_2_1")]
+//HISTORY_FILE => server_options.history_file = cow_parse(value),
+//#[cfg(feature = "tmux_2_0")]
+//MESSAGE_LIMIT => {
+//server_options.message_limit = value.and_then(|s| s.parse().ok())
+//}
+//#[cfg(feature = "tmux_3_3")]
+//PROMPT_HISTORY_LIMIT => {
+//server_options.prompt_history_limit = value.and_then(|s| s.parse().ok())
+//}
+//#[cfg(feature = "tmux_1_5")]
+//SET_CLIPBOARD => {
+//server_options.set_clipboard = value.and_then(|s| s.parse().ok())
+//}
+//#[cfg(feature = "tmux_3_2")]
+//TERMINAL_FEATURES => array_insert(
+//&mut server_options.terminal_features,
+//i,
+//value.and_then(|s| s.parse().ok()),
+//),
+//#[cfg(feature = "tmux_2_0")]
+//TERMINAL_OVERRIDES => array_insert(
+//&mut server_options.terminal_overrides,
+//i,
+//value.and_then(|s| s.parse().ok()),
+//),
+//#[cfg(feature = "tmux_3_0")]
+//USER_KEYS => array_insert(
+//&mut server_options.user_keys,
+//i,
+//value.and_then(|s| s.parse().ok()),
+//),
+//#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+//QUIET => server_options.quiet = value.and_then(|s| s.parse().ok()),
+//#[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+//DETACH_ON_DESTROY => {
+//server_options.detach_on_destroy = value.and_then(|s| s.parse().ok())
+//}
+//_ => return Err(Error::Tmux(format!("unknown option: {}", name))),
+//}
+//}
+//}
+//Ok(server_options)
+//}
+//}
 
 // universal insert in vec
 //pub fn insert_vec<T: >(server_options: &mut ServerOptions, i: usize, value: Option<T>) {
@@ -698,3 +747,5 @@ impl<'a> FromStr for ServerOptions<'a> {
 //None => (),
 //};
 //}
+//
+//

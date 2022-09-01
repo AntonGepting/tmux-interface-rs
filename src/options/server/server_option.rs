@@ -1,7 +1,18 @@
-use crate::options::*;
-use crate::{Error, TmuxOutput};
-use std::fmt;
-use std::str::FromStr;
+//use std::str::FromStr;
+//oneline
+//multiline
+
+// Output:
+// * random (got buffer, need recognize fields)
+//      * Form
+//          * long (`option_name value`)
+//          * short (`value`), single option get/parse (otherwise there is no chance to assign)
+//
+// * expected (got buffer, need to extract some fields)
+//      * Form
+//          * long (`option_name value`)
+//          * short (`value`), single option get/parse (otherwise there is no chance to assign)
+//
 
 // get
 // * get single one
@@ -13,71 +24,16 @@ use std::str::FromStr;
 //      * toggle (on/off {default}/off) if no value specified
 
 // FIXME: proper Error in return
-
-pub enum ServerOptionName {
-    // backspace key
-    #[cfg(feature = "tmux_3_1")]
-    Backspace,
-    // buffer-limit number
-    #[cfg(feature = "tmux_1_5")]
-    BufferLimit,
-    // command-alias[] name=value
-    #[cfg(feature = "tmux_2_4")]
-    CommandAlias,
-    // default-terminal terminal
-    #[cfg(feature = "tmux_2_1")]
-    DefaultTerminal,
-    // copy-command shell-command
-    #[cfg(feature = "tmux_3_3")]
-    CopyCommand,
-    // escape-time time
-    #[cfg(feature = "tmux_1_2")]
-    EscapeTime,
-    // editor shell-command
-    #[cfg(feature = "tmux_3_2")]
-    Editor,
-    // exit-empty [on | off]
-    #[cfg(feature = "tmux_2_7")]
-    ExitEmpty,
-    // exit-unattached [on | off]
-    #[cfg(feature = "tmux_1_4")]
-    ExitUnattached,
-    // extended-keys [on | off]
-    #[cfg(feature = "tmux_3_2")]
-    ExtendedKeys,
-    // focus-events [on | off]
-    #[cfg(feature = "tmux_1_9")]
-    FocusEvents,
-    // history-file path
-    #[cfg(feature = "tmux_2_1")]
-    HistoryFile,
-    // message-limit number
-    #[cfg(feature = "tmux_2_0")]
-    MessageLimit,
-    // prompt-history-limit number
-    #[cfg(feature = "tmux_3_3")]
-    PromptHistoryLimit,
-    // set-clipboard [on | external | off]
-    #[cfg(feature = "tmux_1_5")]
-    SetClipboard,
-    // terminal-features[] string
-    #[cfg(feature = "tmux_3_2")]
-    TerminalFeatures,
-    // terminal-overrides[] string
-    #[cfg(feature = "tmux_2_0")]
-    TerminalOverrides,
-    // user-keys[] key
-    #[cfg(feature = "tmux_3_0")]
-    UserKeys,
-    // quiet [on | off]
-    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    Quiet,
-    // detach-on-destroy [on | off]
-    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    DetachOnDestroy,
-    // user option
-    UserOption(String),
-}
+//
+//
+// ServerOption::backspace() -> Result<Self::Backspace(String), Error>
+//  GetServerOption::backspace()
+//  ParseServerOption::from_str()
+//
+// ServerOption::set().backspace() -> Result<(), Error> {
+//  SetServerOption::backspace()
+//  Output
+// }
 
 //fn array_name(name: &str, index: usize) -> String {
 //format!("{}[{}]", name, index)
@@ -146,30 +102,6 @@ pub enum ServerOptionName {
 //write!(f, "{}", s)
 //}
 //}
-
-pub enum TmuxServerOption {
-    A,
-}
-
-pub enum TmuxOptionName {
-    TmuxServerOption(TmuxServerOption),
-    //Session(),
-    //Window(),
-    //Pane(),
-}
-
-//#[derive(Default)]
-pub struct TmuxOption<T> {
-    pub name: TmuxOptionName,
-    pub index: Option<usize>,
-    pub global: bool,
-    pub value: Option<T>,
-}
-
-impl<T: fmt::Display> TmuxOption<T> {}
-
-//#[derive(Default)]
-pub struct TmuxServerOption2<T>(pub TmuxOption<T>);
 
 //pub struct OptionsController<'a> {
 //pub setter: &'a dyn Fn(&str) -> String,
@@ -249,328 +181,53 @@ pub struct TmuxServerOption2<T>(pub TmuxOption<T>);
 //}
 //}
 
-#[test]
-fn get_server_option() {
-    use crate::Tmux;
+//#[test]
+//fn get_server_option() {
+//use crate::Tmux;
 
-    let cmd = Tmux::new()
-        .command(GetServerOption::get(BUFFER_LIMIT))
-        .output()
-        .unwrap();
-    let cmd = Tmux::new()
-        .command(GetServerOption::buffer_limit())
-        .command(GetServerOption::set_clipboard())
-        .output()
-        .unwrap();
-    dbg!(&cmd);
-    let cmd = TmuxServerOptionOutput::from(cmd).buffer_limit();
-    dbg!(&cmd);
+//let cmd = Tmux::new()
+//.command(GetServerOption::get(BUFFER_LIMIT))
+//.output()
+//.unwrap();
+//let cmd = Tmux::new()
+//.command(GetServerOption::buffer_limit())
+//.command(GetServerOption::set_clipboard())
+//.output()
+//.unwrap();
+//dbg!(&cmd);
+//let cmd = TmuxServerOptionOutput::from(cmd).buffer_limit();
+//dbg!(&cmd);
 
-    let cmd = Tmux::new()
-        .command(GetServerOption::command_alias())
-        .output()
-        .unwrap();
-    let cmd = TmuxServerOptionOutput::from(cmd).command_alias();
-    dbg!(&cmd);
+//let cmd = Tmux::new()
+//.command(GetServerOption::command_alias())
+//.output()
+//.unwrap();
+//let cmd = TmuxServerOptionOutput::from(cmd).command_alias();
+//dbg!(&cmd);
 
-    let cmds = SetServerOption::command_alias(Some(vec!["asdf".to_string(), "a".to_string()]));
-    dbg!(&cmds);
-}
-
-impl<'a> From<TmuxOutput> for TmuxServerOptionOutput {
-    fn from(tmux_output: TmuxOutput) -> Self {
-        Self(tmux_output.to_string())
-    }
-}
-
-//#[derive(Debug)]
-//pub struct TmuxServerOptionOutputFull;
-
-// variants possible:
-// * option_name value
-// * option_name
-// * option_name[i] value
-//
-pub enum TmuxServerOptionOutputFull {
-    // backspace key
-    #[cfg(feature = "tmux_3_1")]
-    Backspace(Option<String>),
-    // buffer-limit number
-    #[cfg(feature = "tmux_1_5")]
-    BufferLimit(Option<usize>),
-    // command-alias[] name=value
-    #[cfg(feature = "tmux_2_4")]
-    //CommandAlias(Option<Vec<String>>),
-    //CommandAlias(Option<ArrayItem<String>>),
-    CommandAlias(Option<(usize, String)>),
-    // default-terminal terminal
-    #[cfg(feature = "tmux_2_1")]
-    DefaultTerminal(Option<String>),
-    //copy_command
-    //escape-time time
-    #[cfg(feature = "tmux_1_2")]
-    EscapeTime(Option<usize>),
-    //editor
-    //exit-empty [on | off]
-    #[cfg(feature = "tmux_2_7")]
-    ExitEmpty(Option<Switch>),
-    //exit-unattached [on | off]
-    #[cfg(feature = "tmux_1_4")]
-    ExitUnattached(Option<Switch>),
-    //extended-keys [on | off]
-    #[cfg(feature = "tmux_3_2")]
-    ExtendedKeys(Option<Switch>),
-    //focus-events [on | off]
-    #[cfg(feature = "tmux_1_9")]
-    FocusEvents(Option<Switch>),
-    //history-file path
-    #[cfg(feature = "tmux_2_1")]
-    HistoryFile(Option<String>),
-    //message-limit number
-    #[cfg(feature = "tmux_2_0")]
-    MessageLimit(Option<usize>),
-    //set-clipboard [on | external | off]
-    #[cfg(feature = "tmux_1_5")]
-    SetClipboard(Option<SetClipboard>),
-    // terminal-features[]
-    //terminal-overrides[] string
-    #[cfg(feature = "tmux_2_0")]
-    //TerminalOverrides(Option<ArrayItem<String>>),
-    TerminalOverrides(Option<(usize, String)>),
-    //user-keys[] key
-    #[cfg(feature = "tmux_3_0")]
-    UserKeys(Option<(usize, String)>),
-    // quiet ?
-    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    Quiet(Option<Switch>),
-    // detach-on-destroy ?
-    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    DetachOnDestroy(Option<Switch>),
-    // user option
-    UserOption(Option<String>),
-}
+//let cmds = SetServerOption::command_alias(Some(vec!["asdf".to_string(), "a".to_string()]));
+//dbg!(&cmds);
+//}
 
 // mb common
-fn parse_value<T: FromStr>(value: Option<&str>) -> Option<T> {
-    value.and_then(|data| data.parse().ok())
-}
-
-impl TmuxServerOptionOutputFull {
-    // split string in 3 parts, name, index (if option is an array) and value
-    // TODO: rename
-    pub fn get_option(s: &str) -> (Option<&str>, Option<usize>, Option<&str>) {
-        let v: Vec<&str> = s.trim().splitn(2, SEPARATOR).collect();
-        let value = v.get(1).copied();
-        let mut index: Option<usize> = None;
-        let mut name = v.get(0).copied();
-
-        if let Some(name_array) = name {
-            let v: Vec<&str> = name_array.split(|c| c == '[' || c == ']').collect();
-            name = v.get(0).copied();
-            index = v.get(1).and_then(|i| i.parse().ok());
-        }
-
-        (name, index, value)
-    }
-
-    // parse single option with given name value and index
-    pub fn parse_option(
-        name: &str,
-        index: Option<usize>,
-        value: Option<&str>,
-    ) -> Result<Self, Error> {
-        match name {
-            #[cfg(feature = "tmux_3_1")]
-            BACKSPACE => Ok(Self::Backspace(parse_value(value))),
-            #[cfg(feature = "tmux_1_5")]
-            BUFFER_LIMIT => Ok(Self::BufferLimit(parse_value(value))),
-            #[cfg(feature = "tmux_2_4")]
-            COMMAND_ALIAS => Ok(Self::CommandAlias(parse_array_value(index, value))),
-            #[cfg(feature = "tmux_2_1")]
-            DEFAULT_TERMINAL => Ok(Self::DefaultTerminal(parse_value(value))),
-            #[cfg(feature = "tmux_1_2")]
-            ESCAPE_TIME => Ok(Self::EscapeTime(parse_value(value))),
-            #[cfg(feature = "tmux_2_7")]
-            EXIT_EMPTY => Ok(Self::ExitEmpty(parse_value(value))),
-            #[cfg(feature = "tmux_1_4")]
-            EXIT_UNATTACHED => Ok(Self::ExitUnattached(parse_value(value))),
-            #[cfg(feature = "tmux_3_2")]
-            EXTENDED_KEYS => Ok(Self::ExtendedKeys(parse_value(value))),
-            #[cfg(feature = "tmux_1_9")]
-            FOCUS_EVENTS => Ok(Self::FocusEvents(parse_value(value))),
-            #[cfg(feature = "tmux_2_1")]
-            HISTORY_FILE => Ok(Self::HistoryFile(parse_value(value))),
-            #[cfg(feature = "tmux_2_0")]
-            MESSAGE_LIMIT => Ok(Self::MessageLimit(parse_value(value))),
-            #[cfg(feature = "tmux_1_5")]
-            SET_CLIPBOARD => Ok(Self::SetClipboard(parse_value(value))),
-            #[cfg(feature = "tmux_2_0")]
-            TERMINAL_OVERRIDES => Ok(Self::TerminalOverrides(parse_array_value(index, value))),
-            #[cfg(feature = "tmux_3_0")]
-            USER_KEYS => Ok(Self::UserKeys(parse_array_value(index, value))),
-            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-            QUIET => Ok(Self::Quiet(parse_value(value))),
-            #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-            DETACH_ON_DESTROY => Ok(Self::DetachOnDestroy(parse_value(value))),
-            _ => Err(Error::ParseStatusKeys),
-        }
-    }
-}
+//fn parse_value<T: FromStr>(value: Option<&str>) -> Option<T> {
+//value.and_then(|data| data.parse().ok())
+//}
 
 // single line
 // multiple lines
-impl FromStr for TmuxServerOptionOutputFull {
-    type Err = Error;
+//impl FromStr for TmuxServerOptionsOutputStore {
+//type Err = Error;
 
-    fn from_str(_s: &str) -> Result<Self, Self::Err> {
-        //let (name, i, value) = Self::get_option(s);
+//fn from_str(s: &str) -> Result<Self, Self::Err> {
+//let (name, i, value) = Self::get_option(s);
 
-        //match name {
-        //Some(name) => Self::parse_option(name, i, value),
-        //None => Err(Error::ParseStatusKeys),
-        //}
-        Err(Error::ParseStatusKeys)
-    }
-}
-
-#[derive(Debug)]
-pub struct TmuxServerOptionOutput(String);
-
-impl TmuxServerOptionOutput {
-    // backspace key
-    #[cfg(feature = "tmux_3_1")]
-    pub fn backspace(&self) -> Result<String, ()> {
-        Ok(self.0.trim_end())
-    }
-
-    // buffer-limit number
-    #[cfg(feature = "tmux_1_5")]
-    pub fn buffer_limit<'a>(&self) -> Result<usize, Error> {
-        Ok(self.0.trim_end().parse()?)
-    }
-
-    // command-alias[] name=value
-    #[cfg(feature = "tmux_2_4")]
-    pub fn command_alias(&self) -> Vec<String> {
-        let mut v = Vec::new();
-        for item in self.0.lines() {
-            v.push(item.to_string())
-        }
-        v
-    }
-
-    // default-terminal terminal
-    #[cfg(feature = "tmux_3_2")]
-    pub fn copy_command(&self) -> String {
-        self.0.trim_end().to_string()
-    }
-
-    // copy-command shell-command
-    #[cfg(feature = "tmux_2_1")]
-    pub fn default_terminal(&self) -> String {
-        self.0.trim_end().to_string()
-    }
-
-    // escape-time time
-    #[cfg(feature = "tmux_1_2")]
-    pub fn escape_time(&self) -> Result<usize, Error> {
-        Ok(self.0.trim_end().parse()?)
-    }
-
-    // editor shell-command
-    #[cfg(feature = "tmux_3_2")]
-    pub fn editor(&self) -> String {
-        self.0.trim_end()
-    }
-
-    // exit-empty [on | off]
-    #[cfg(feature = "tmux_2_7")]
-    pub fn exit_empty(&self) -> Result<Switch, Error> {
-        self.0.trim_end().parse()
-    }
-
-    // exit-unattached [on | off]
-    #[cfg(feature = "tmux_1_4")]
-    pub fn exit_unattached(&self) -> Result<Switch, Error> {
-        self.0.trim_end().parse()
-    }
-
-    // extended-keys [on | off]
-    #[cfg(feature = "tmux_3_2")]
-    pub fn extended_keys(&self) -> Result<Switch, Error> {
-        self.0.trim_end().parse()
-    }
-
-    // focus-events [on | off]
-    #[cfg(feature = "tmux_1_9")]
-    pub fn focus_events(&self) -> Result<Switch, Error> {
-        self.0.trim_end().parse()
-    }
-
-    // history-file path
-    #[cfg(feature = "tmux_2_1")]
-    pub fn history_file(&self) -> String {
-        self.0.trim_end().to_string()
-    }
-
-    // message-limit number
-    #[cfg(feature = "tmux_2_0")]
-    pub fn message_limit(&self) -> Result<usize, Error> {
-        Ok(self.0.trim_end().parse()?)
-    }
-
-    // prompt-history-limit number
-    #[cfg(feature = "tmux_3_3")]
-    pub fn prompt_history_limit(&self) -> Result<usize, Error> {
-        self.0.trim_end().parse()
-    }
-
-    //set-clipboard [on | external | off]
-    #[cfg(feature = "tmux_1_5")]
-    pub fn set_clipboard(&self) -> Result<SetClipboard, Error> {
-        self.0.trim_end().parse()
-    }
-
-    // terminal-features[] string
-    #[cfg(feature = "tmux_3_2")]
-    pub fn terminal_features(&self) -> Vec<String> {
-        let mut v = Vec::new();
-        for item in self.0.lines() {
-            v.push(item.to_string())
-        }
-        v
-    }
-
-    // terminal-overrides[] string
-    #[cfg(feature = "tmux_2_0")]
-    pub fn terminal_overrides(&self) -> Vec<String> {
-        let mut v = Vec::new();
-        for item in self.0.lines() {
-            v.push(item.to_string())
-        }
-        v
-    }
-
-    // user-keys[] key
-    #[cfg(feature = "tmux_3_0")]
-    pub fn user_keys(&self) -> TmuxCommand<'a> {}
-
-    // quiet [on | off]
-    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    pub fn quiet(&self) -> Result<Switch, Error> {
-        self.0.trim_end().parse()
-    }
-
-    // detach-on-destroy [on | off]
-    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    pub fn detach_on_destroy(&self) -> Result<Switch, Error> {
-        self.0.trim_end().parse()
-    }
-
-    // user option
-    //pub fn user_option<S: fmt::Display>(&self, name: S) -> TmuxCommand<'a> {
-    //}
-}
+//match name {
+//Some(name) => Self::parse_option(name, i, value),
+//None => Err(Error::ParseStatusKeys),
+//}
+//}
+//}
 
 // TODO: multiline
 //fn default_show_server_option<'a, S: Into<Cow<'a, str>>>(name: S) -> Result<String, Error> {
@@ -657,14 +314,14 @@ impl TmuxServerOptionOutput {
 
 //}
 
-fn parse_array_value<T: FromStr>(index: Option<usize>, value: Option<&str>) -> Option<(usize, T)> {
-    match index {
-        Some(i) => value
-            .and_then(|data| data.parse().ok())
-            .map(|data| (i, data)),
-        None => None,
-    }
-}
+//fn parse_array_value<T: FromStr>(index: Option<usize>, value: Option<&str>) -> Option<(usize, T)> {
+//match index {
+//Some(i) => value
+//.and_then(|data| data.parse().ok())
+//.map(|data| (i, data)),
+//None => None,
+//}
+//}
 
 //impl fmt::Display for ServerOption {
 //fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
