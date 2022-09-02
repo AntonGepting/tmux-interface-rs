@@ -79,7 +79,4 @@ mod server_tests {
 
     #[cfg(feature = "tmux_1_2")]
     pub mod server_option_tests;
-
-    pub mod get_server_option_tests;
-    pub mod get_server_options_tests;
 }

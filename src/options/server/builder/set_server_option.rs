@@ -1,52 +1,30 @@
 use crate::options::*;
-use crate::{SetOption, TmuxCommand, TmuxCommands};
+use crate::{SetOption, SetOptionExt, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 use std::fmt;
 
 pub struct SetServerOption;
 
-pub trait Setter {
-    fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(name: T, value: S) -> TmuxCommand<'a> {
-        SetOption::new().server().option(name).value(value).build()
-    }
-}
-
-impl Setter for SetServerOption {
-    fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(name: T, value: S) -> TmuxCommand<'a> {
-        SetOption::new().server().option(name).value(value).build()
-    }
-}
-
-impl SetServerOption {
-    pub fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        match value {
-            Some(data) => Self::set_ext(name, Some(data)),
-            None => Self::unset(name),
-        }
-    }
-
-    // unset if value = None
-    pub fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
+impl SetOptionExt for SetServerOption {
+    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
         SetOption::new().server().option(name).unset().build()
     }
 
     // unset if value = None
-    pub fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         name: T,
         value: Option<S>,
     ) -> TmuxCommand<'a> {
-        //(self.setter)(name.into(), value.map(|s| s.into()))
         let cmd = match value {
             Some(data) => SetOption::new().server().option(name).value(data),
             None => SetOption::new().server().option(name),
         };
         cmd.build()
     }
+}
 
-    pub fn set_array<'a, S: fmt::Display>(name: S, value: Option<Vec<String>>) -> TmuxCommands<'a> {
+impl SetServerOption {
+    fn set_array<'a, S: fmt::Display>(name: S, value: Option<Vec<String>>) -> TmuxCommands<'a> {
         let mut cmds = TmuxCommands::new();
         if let Some(data) = value {
             for (i, item) in data.iter().enumerate() {

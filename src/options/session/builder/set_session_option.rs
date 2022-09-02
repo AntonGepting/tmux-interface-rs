@@ -1,7 +1,6 @@
-use crate::options::session::activity::Activity;
 use crate::options::SetOptionExt;
 use crate::options::*;
-use crate::{SetOption, TmuxCommand, TmuxCommands};
+use crate::{Action, Activity, DetachOnDestroy, SetOption, Status, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 use std::fmt;
 
@@ -86,8 +85,8 @@ pub trait SetSessionOption: SetOptionExt {
     /// activity-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    fn activity_action<'a>(activity: Option<Activity>) -> TmuxCommand<'a> {
-        Self::set(ACTIVITY_ACTION, activity.map(|s| s.to_string()))
+    fn activity_action<'a>(action: Option<Action>) -> TmuxCommand<'a> {
+        Self::set(ACTIVITY_ACTION, action.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -228,8 +227,8 @@ pub trait SetSessionOption: SetOptionExt {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn detach_on_destroy<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(DETACH_ON_DESTROY, switch.map(|s| s.to_string()))
+    fn detach_on_destroy<'a>(detach_on_destroy: Option<DetachOnDestroy>) -> TmuxCommand<'a> {
+        Self::set(DETACH_ON_DESTROY, detach_on_destroy.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -652,8 +651,8 @@ pub trait SetSessionOption: SetOptionExt {
     /// status [off | on]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn status<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(STATUS, switch.map(|s| s.to_string()))
+    fn status<'a>(status: Option<Status>) -> TmuxCommand<'a> {
+        Self::set(STATUS, status.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -916,8 +915,8 @@ pub trait SetSessionOption: SetOptionExt {
     /// update-environment[] variable
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn update_environment<'a, S: Into<Cow<'a, str>>>(variable: Option<S>) -> TmuxCommand<'a> {
-        Self::set(UPDATE_ENVIRONMENT, variable)
+    fn update_environment<'a>(variable: Option<Vec<String>>) -> TmuxCommands<'a> {
+        Self::set_array(UPDATE_ENVIRONMENT, variable)
     }
 
     /// ### Manual
@@ -943,8 +942,8 @@ pub trait SetSessionOption: SetOptionExt {
     /// visual-activity [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn visual_activity<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(VISUAL_ACTIVITY, switch.map(|s| s.to_string()))
+    fn visual_activity<'a>(activity: Option<Activity>) -> TmuxCommand<'a> {
+        Self::set(VISUAL_ACTIVITY, activity.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -959,8 +958,8 @@ pub trait SetSessionOption: SetOptionExt {
     /// visual-bell [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn visual_bell<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(VISUAL_BELL, switch.map(|s| s.to_string()))
+    fn visual_bell<'a>(activity: Option<Activity>) -> TmuxCommand<'a> {
+        Self::set(VISUAL_BELL, activity.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -981,8 +980,8 @@ pub trait SetSessionOption: SetOptionExt {
     /// visual-silence [on | off | both]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn visual_silence<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(VISUAL_SILENCE, switch.map(|s| s.to_string()))
+    fn visual_silence<'a>(activity: Option<Activity>) -> TmuxCommand<'a> {
+        Self::set(VISUAL_SILENCE, activity.map(|s| s.to_string()))
     }
 
     /// ### Manual

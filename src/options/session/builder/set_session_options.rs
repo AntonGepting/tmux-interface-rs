@@ -1,19 +1,89 @@
-use super::set_session_option::SetSessionOption;
-use super::{Action, Activity, StatusJustify};
-use crate::{StatusKeys, StatusPosition, Switch, TmuxCommands};
+// NOTE: DRY, global and local session options structures have same methods therefore common setter
+// and getter traits were choosen for common use super::set_session_option::Self::Setter;
+//
+use crate::{Action, Activity, DetachOnDestroy, Status, StatusJustify};
+use crate::{
+    SetGlobalSessionOption, SetLocalSessionOption, SetSessionOption, StatusKeys, StatusPosition,
+    Switch, TmuxCommand, TmuxCommands,
+};
 use std::borrow::Cow;
 
 #[derive(Debug)]
-pub struct SetSessionOptions<'a> {
+pub struct SetLocalSessionOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
-impl<'a> SetSessionOptions<'a> {
-    pub fn new() -> Self {
+#[derive(Debug)]
+pub struct SetGlobalSessionOptions<'a> {
+    pub options: TmuxCommands<'a>,
+}
+
+impl<'a> SetSessionOptions<'a> for SetLocalSessionOptions<'a> {
+    type Setter = SetLocalSessionOption;
+
+    fn new() -> Self {
         Self {
             options: TmuxCommands::new(),
         }
     }
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+
+    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
+        self.options.push_cmds(options);
+    }
+
+    fn build(self) -> TmuxCommands<'a> {
+        self.options
+    }
+}
+
+impl<'a> SetSessionOptions<'a> for SetGlobalSessionOptions<'a> {
+    type Setter = SetGlobalSessionOption;
+
+    fn new() -> Self {
+        Self {
+            options: TmuxCommands::new(),
+        }
+    }
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+
+    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
+        self.options.push_cmds(options);
+    }
+
+    fn build(self) -> TmuxCommands<'a> {
+        self.options
+    }
+}
+
+//impl<'a> SetGlobalSessionOptions<'a> {}
+
+//impl<'a> SetLocalSessionOptions<'a> {
+//pub fn new() -> Self{
+//Self {
+//options: TmuxCommands::new(),
+//}
+//}
+
+////pub fn push(&mut self, option: TmuxCommand<'a>) {
+////self.push(option);
+////}
+//}
+
+pub trait SetSessionOptions<'a> {
+    type Setter: SetSessionOption;
+
+    fn new() -> Self;
+
+    fn push(&mut self, option: TmuxCommand<'a>);
+
+    fn push_cmds(&mut self, options: TmuxCommands<'a>);
 
     /// ### Manual
     ///
@@ -22,9 +92,11 @@ impl<'a> SetSessionOptions<'a> {
     /// activity-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn activity_action(mut self, activity: Option<Activity>) -> Self {
-        self.options
-            .push(SetSessionOption::activity_action(activity));
+    fn activity_action(mut self, action: Option<Action>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::activity_action(action));
         self
     }
 
@@ -35,9 +107,11 @@ impl<'a> SetSessionOptions<'a> {
     /// assume-paste-time milliseconds
     /// ```
     #[cfg(feature = "tmux_1_8")]
-    pub fn assume_paste_time(mut self, milliseconds: Option<usize>) -> Self {
-        self.options
-            .push(SetSessionOption::assume_paste_time(milliseconds));
+    fn assume_paste_time(mut self, milliseconds: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::assume_paste_time(milliseconds));
         self
     }
 
@@ -48,8 +122,11 @@ impl<'a> SetSessionOptions<'a> {
     /// base-index index
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn base_index(mut self, index: Option<usize>) -> Self {
-        self.options.push(SetSessionOption::base_index(index));
+    fn base_index(mut self, index: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::base_index(index));
         self
     }
 
@@ -65,8 +142,11 @@ impl<'a> SetSessionOptions<'a> {
     /// bell-action [any | none | other]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn bell_action(mut self, action: Option<Action>) -> Self {
-        self.options.push(SetSessionOption::bell_action(action));
+    fn bell_action(mut self, action: Option<Action>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::bell_action(action));
         self
     }
 
@@ -77,8 +157,11 @@ impl<'a> SetSessionOptions<'a> {
     /// bell-on-alert [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
-    pub fn bell_on_alert(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetSessionOption::BELL_ON_ALERT(switch));
+    fn bell_on_alert(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::BELL_ON_ALERT(switch));
         self
     }
 
@@ -89,8 +172,11 @@ impl<'a> SetSessionOptions<'a> {
     /// buffer-limit limit
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
-    pub fn buffer_limit(mut self, limit: Option<usize>) -> Self {
-        self.options.push(SetSessionOption::buffer_limit(limit));
+    fn buffer_limit(mut self, limit: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::buffer_limit(limit));
         self
     }
 
@@ -101,9 +187,11 @@ impl<'a> SetSessionOptions<'a> {
     /// default-command shell-command
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn default_command<S: Into<Cow<'a, str>>>(mut self, shell_command: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::default_command(shell_command));
+    fn default_command<S: Into<Cow<'a, str>>>(mut self, shell_command: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::default_command(shell_command));
         self
     }
 
@@ -114,8 +202,11 @@ impl<'a> SetSessionOptions<'a> {
     /// default-shell path
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn default_shell<S: Into<Cow<'a, str>>>(mut self, path: Option<S>) -> Self {
-        self.options.push(SetSessionOption::default_shell(path));
+    fn default_shell<S: Into<Cow<'a, str>>>(mut self, path: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::default_shell(path));
         self
     }
 
@@ -126,8 +217,11 @@ impl<'a> SetSessionOptions<'a> {
     /// default-path path
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn default_path<S: Into<Cow<'a, str>>>(mut self, path: Option<S>) -> Self {
-        self.options.push(SetSessionOption::default_path(path));
+    fn default_path<S: Into<Cow<'a, str>>>(mut self, path: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::default_path(path));
         self
     }
 
@@ -138,9 +232,11 @@ impl<'a> SetSessionOptions<'a> {
     /// default-terminal terminal
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    pub fn default_terminal<S: Into<Cow<'a, str>>>(mut self, terminal: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::default_terminal(terminal));
+    fn default_terminal<S: Into<Cow<'a, str>>>(mut self, terminal: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::default_terminal(terminal));
         self
     }
 
@@ -151,8 +247,11 @@ impl<'a> SetSessionOptions<'a> {
     /// default-size XxY
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    pub fn default_size(mut self) -> Self {
-        self.options.push(SetSessionOption::default_size());
+    fn default_size(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::default_size());
         self
     }
 
@@ -163,9 +262,11 @@ impl<'a> SetSessionOptions<'a> {
     /// destroy-unattached [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    pub fn destroy_unattached(mut self, switch: Option<Switch>) -> Self {
-        self.options
-            .push(SetSessionOption::destroy_unattached(switch));
+    fn destroy_unattached(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::destroy_unattached(switch));
         self
     }
 
@@ -181,9 +282,11 @@ impl<'a> SetSessionOptions<'a> {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    pub fn detach_on_destroy(mut self, switch: Option<Switch>) -> Self {
-        self.options
-            .push(SetSessionOption::detach_on_destroy(switch));
+    fn detach_on_destroy(mut self, detach_on_destroy: Option<DetachOnDestroy>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::detach_on_destroy(detach_on_destroy));
         self
     }
 
@@ -194,9 +297,11 @@ impl<'a> SetSessionOptions<'a> {
     /// display-panes-active-colour colour
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    pub fn display_panes_active_colour<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::display_panes_active_colour(colour));
+    fn display_panes_active_colour<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::display_panes_active_colour(colour));
         self
     }
 
@@ -207,9 +312,11 @@ impl<'a> SetSessionOptions<'a> {
     /// display-panes-colour colour
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn display_panes_colour<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::display_panes_colour(colour));
+    fn display_panes_colour<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::display_panes_colour(colour));
         self
     }
 
@@ -220,9 +327,11 @@ impl<'a> SetSessionOptions<'a> {
     /// display-panes-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn display_panes_time(mut self, time: Option<usize>) -> Self {
-        self.options
-            .push(SetSessionOption::display_panes_time(time));
+    fn display_panes_time(mut self, time: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::display_panes_time(time));
         self
     }
 
@@ -233,8 +342,11 @@ impl<'a> SetSessionOptions<'a> {
     /// display-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn display_time(mut self, time: Option<usize>) -> Self {
-        self.options.push(SetSessionOption::display_time(time));
+    fn display_time(mut self, time: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::display_time(time));
         self
     }
 
@@ -245,8 +357,11 @@ impl<'a> SetSessionOptions<'a> {
     /// history-limit lines
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn history_limit(mut self, lines: Option<usize>) -> Self {
-        self.options.push(SetSessionOption::history_limit(lines));
+    fn history_limit(mut self, lines: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::history_limit(lines));
         self
     }
 
@@ -257,8 +372,11 @@ impl<'a> SetSessionOptions<'a> {
     /// key-table key-table
     /// ```
     #[cfg(feature = "tmux_2_2")]
-    pub fn key_table<S: Into<Cow<'a, str>>>(mut self, key_table: Option<S>) -> Self {
-        self.options.push(SetSessionOption::key_table(key_table));
+    fn key_table<S: Into<Cow<'a, str>>>(mut self, key_table: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::key_table(key_table));
         self
     }
 
@@ -269,8 +387,11 @@ impl<'a> SetSessionOptions<'a> {
     /// lock-after-time number
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn lock_after_time(mut self, number: Option<usize>) -> Self {
-        self.options.push(SetSessionOption::lock_after_time(number));
+    fn lock_after_time(mut self, number: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::lock_after_time(number));
         self
     }
 
@@ -281,9 +402,11 @@ impl<'a> SetSessionOptions<'a> {
     /// lock-command shell-command
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn lock_command<S: Into<Cow<'a, str>>>(mut self, shell_command: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::lock_command(shell_command));
+    fn lock_command<S: Into<Cow<'a, str>>>(mut self, shell_command: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::lock_command(shell_command));
         self
     }
 
@@ -294,8 +417,11 @@ impl<'a> SetSessionOptions<'a> {
     /// lock-server [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
-    pub fn lock_server(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetSessionOption::lock_server(switch));
+    fn lock_server(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::lock_server(switch));
         self
     }
 
@@ -306,9 +432,11 @@ impl<'a> SetSessionOptions<'a> {
     /// message-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn message_attr<S: Into<Cow<'a, str>>>(mut self, attributes: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::message_attr(attributes));
+    fn message_attr<S: Into<Cow<'a, str>>>(mut self, attributes: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::message_attr(attributes));
         self
     }
 
@@ -319,8 +447,11 @@ impl<'a> SetSessionOptions<'a> {
     /// message-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn message_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options.push(SetSessionOption::message_bg(colour));
+    fn message_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::message_bg(colour));
         self
     }
 
@@ -331,9 +462,12 @@ impl<'a> SetSessionOptions<'a> {
     /// message-command-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub fn message_command_attr<S: Into<Cow<'a, str>>>(mut self, attributes: Option<S>) -> Self {
+    fn message_command_attr<S: Into<Cow<'a, str>>>(mut self, attributes: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
         self.options
-            .push(SetSessionOption::message_command_attr(attributes));
+            .push(Self::Self::Setter::message_command_attr(attributes));
         self
     }
 
@@ -344,9 +478,11 @@ impl<'a> SetSessionOptions<'a> {
     /// message-command-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub fn message_command_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::message_command_bg(colour));
+    fn message_command_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::message_command_bg(colour));
         self
     }
 
@@ -357,9 +493,11 @@ impl<'a> SetSessionOptions<'a> {
     /// message-command-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub fn message_command_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::message_command_fg(colour));
+    fn message_command_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::message_command_fg(colour));
         self
     }
 
@@ -370,8 +508,11 @@ impl<'a> SetSessionOptions<'a> {
     /// message-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn message_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options.push(SetSessionOption::message_fg(colour));
+    fn message_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::message_fg(colour));
         self
     }
 
@@ -382,9 +523,11 @@ impl<'a> SetSessionOptions<'a> {
     /// message-command-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn message_command_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::message_command_style(style));
+    fn message_command_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::message_command_style(style));
         self
     }
 
@@ -395,8 +538,11 @@ impl<'a> SetSessionOptions<'a> {
     /// message-limit number
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    pub fn message_limit(mut self, number: Option<usize>) -> Self {
-        self.options.push(SetSessionOption::message_limit(number));
+    fn message_limit(mut self, number: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::message_limit(number));
         self
     }
 
@@ -407,8 +553,11 @@ impl<'a> SetSessionOptions<'a> {
     /// message-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn message_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self {
-        self.options.push(SetSessionOption::message_style(style));
+    fn message_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::message_style(style));
         self
     }
 
@@ -419,9 +568,11 @@ impl<'a> SetSessionOptions<'a> {
     /// mouse-resize-pane [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    pub fn mouse_resize_pane(mut self, switch: Option<Switch>) -> Self {
-        self.options
-            .push(SetSessionOption::mouse_resize_pane(switch));
+    fn mouse_resize_pane(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::mouse_resize_pane(switch));
         self
     }
     /// ### Manual
@@ -431,9 +582,11 @@ impl<'a> SetSessionOptions<'a> {
     /// mouse-select-pane [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    pub fn mouse_select_pane(mut self, switch: Option<Switch>) -> Self {
-        self.options
-            .push(SetSessionOption::mouse_select_pane(switch));
+    fn mouse_select_pane(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::mouse_select_pane(switch));
         self
     }
 
@@ -444,9 +597,11 @@ impl<'a> SetSessionOptions<'a> {
     /// mouse-select-window [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    pub fn mouse_select_window(mut self, switch: Option<Switch>) -> Self {
-        self.options
-            .push(SetSessionOption::mouse_select_window(switch));
+    fn mouse_select_window(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::mouse_select_window(switch));
         self
     }
 
@@ -457,8 +612,11 @@ impl<'a> SetSessionOptions<'a> {
     /// mouse [on | off]
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    pub fn mouse(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetSessionOption::mouse(switch));
+    fn mouse(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::mouse(switch));
         self
     }
 
@@ -469,8 +627,11 @@ impl<'a> SetSessionOptions<'a> {
     /// mouse-utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
-    pub fn mouse_utf8(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetSessionOption::mouse_utf8(switch));
+    fn mouse_utf8(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::mouse_utf8(switch));
         self
     }
 
@@ -481,9 +642,12 @@ impl<'a> SetSessionOptions<'a> {
     /// pane-active-border-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_active_border_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
+    fn pane_active_border_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
         self.options
-            .push(SetSessionOption::pane_active_border_bg(colour));
+            .push(Self::Setter::pane_active_border_bg(colour));
         self
     }
 
@@ -494,9 +658,12 @@ impl<'a> SetSessionOptions<'a> {
     /// pane-active-border-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_active_border_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
+    fn pane_active_border_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
         self.options
-            .push(SetSessionOption::pane_active_border_fg(colour));
+            .push(Self::Setter::pane_active_border_fg(colour));
         self
     }
 
@@ -507,8 +674,11 @@ impl<'a> SetSessionOptions<'a> {
     /// pane-border-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_border_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options.push(SetSessionOption::pane_border_bg(colour));
+    fn pane_border_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::pane_border_bg(colour));
         self
     }
 
@@ -519,8 +689,11 @@ impl<'a> SetSessionOptions<'a> {
     /// pane-border-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_border_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options.push(SetSessionOption::pane_border_fg(colour));
+    fn pane_border_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::pane_border_fg(colour));
         self
     }
 
@@ -531,9 +704,12 @@ impl<'a> SetSessionOptions<'a> {
     /// pane-active-border-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    pub fn pane_active_border_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self {
+    fn pane_active_border_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
         self.options
-            .push(SetSessionOption::pane_active_border_style(style));
+            .push(Self::Setter::pane_active_border_style(style));
         self
     }
 
@@ -544,9 +720,11 @@ impl<'a> SetSessionOptions<'a> {
     /// pane-border-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    pub fn pane_border_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::pane_border_style(style));
+    fn pane_border_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::pane_border_style(style));
         self
     }
 
@@ -557,8 +735,11 @@ impl<'a> SetSessionOptions<'a> {
     /// prefix key
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn prefix<S: Into<Cow<'a, str>>>(mut self, key: Option<S>) -> Self {
-        self.options.push(SetSessionOption::prefix(key));
+    fn prefix<S: Into<Cow<'a, str>>>(mut self, key: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::prefix(key));
         self
     }
 
@@ -569,8 +750,11 @@ impl<'a> SetSessionOptions<'a> {
     /// prefix2 key
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    pub fn prefix2<S: Into<Cow<'a, str>>>(mut self, key: Option<S>) -> Self {
-        self.options.push(SetSessionOption::prefix2(key));
+    fn prefix2<S: Into<Cow<'a, str>>>(mut self, key: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::prefix2(key));
         self
     }
 
@@ -581,9 +765,11 @@ impl<'a> SetSessionOptions<'a> {
     /// renumber-windows [on | off]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    pub fn renumber_windows(mut self, switch: Option<Switch>) -> Self {
-        self.options
-            .push(SetSessionOption::renumber_windows(switch));
+    fn renumber_windows(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::renumber_windows(switch));
         self
     }
 
@@ -594,8 +780,11 @@ impl<'a> SetSessionOptions<'a> {
     /// repeat-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn repeat_time(mut self, time: Option<usize>) -> Self {
-        self.options.push(SetSessionOption::repeat_time(time));
+    fn repeat_time(mut self, time: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::repeat_time(time));
         self
     }
 
@@ -606,9 +795,11 @@ impl<'a> SetSessionOptions<'a> {
     /// set-remain-on-exit [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-    pub fn set_remain_on_exit(mut self, switch: Option<Switch>) -> Self {
-        self.options
-            .push(SetSessionOption::set_remain_on_exit(switch));
+    fn set_remain_on_exit(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::set_remain_on_exit(switch));
         self
     }
 
@@ -619,8 +810,11 @@ impl<'a> SetSessionOptions<'a> {
     /// set-titles [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn set_titles(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetSessionOption::set_titles(switch));
+    fn set_titles(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::set_titles(switch));
         self
     }
 
@@ -631,9 +825,11 @@ impl<'a> SetSessionOptions<'a> {
     /// set-titles-string string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn set_titles_string<S: Into<Cow<'a, str>>>(mut self, string: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::set_titles_string(string));
+    fn set_titles_string<S: Into<Cow<'a, str>>>(mut self, string: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::set_titles_string(string));
         self
     }
 
@@ -644,8 +840,11 @@ impl<'a> SetSessionOptions<'a> {
     /// silence-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    pub fn silence_action(mut self, action: Option<Action>) -> Self {
-        self.options.push(SetSessionOption::silence_action(action));
+    fn silence_action(mut self, action: Option<Action>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::silence_action(action));
         self
     }
 
@@ -660,8 +859,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status [off | on]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetSessionOption::status(switch));
+    fn status(mut self, status: Option<Status>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status(status));
         self
     }
 
@@ -672,8 +874,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_attr<S: Into<Cow<'a, str>>>(mut self, attributes: Option<S>) -> Self {
-        self.options.push(SetSessionOption::status_attr(attributes));
+    fn status_attr<S: Into<Cow<'a, str>>>(mut self, attributes: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_attr(attributes));
         self
     }
 
@@ -684,8 +889,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options.push(SetSessionOption::status_bg(colour));
+    fn status_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_bg(colour));
         self
     }
 
@@ -696,8 +904,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options.push(SetSessionOption::status_fg(colour));
+    fn status_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_fg(colour));
         self
     }
 
@@ -708,8 +919,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    pub fn status_format<S: Into<Cow<'a, str>>>(mut self, format: Option<S>) -> Self {
-        self.options.push(SetSessionOption::status_format(format));
+    fn status_format<S: Into<Cow<'a, str>>>(mut self, format: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_format(format));
         self
     }
 
@@ -720,9 +934,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-interval interval
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_interval(mut self, interval: Option<usize>) -> Self {
-        self.options
-            .push(SetSessionOption::status_interval(interval));
+    fn status_interval(mut self, interval: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_interval(interval));
         self
     }
 
@@ -733,9 +949,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-justify [left | centre | right]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_justify(mut self, status_justify: Option<StatusJustify>) -> Self {
-        self.options
-            .push(SetSessionOption::status_justify(status_justify));
+    fn status_justify(mut self, status_justify: Option<StatusJustify>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_justify(status_justify));
         self
     }
 
@@ -746,9 +964,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-keys [vi | emacs]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_keys(mut self, status_keys: Option<StatusKeys>) -> Self {
-        self.options
-            .push(SetSessionOption::status_keys(status_keys));
+    fn status_keys(mut self, status_keys: Option<StatusKeys>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_keys(status_keys));
         self
     }
 
@@ -759,8 +979,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-left string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_left<S: Into<Cow<'a, str>>>(mut self, string: Option<S>) -> Self {
-        self.options.push(SetSessionOption::status_left(string));
+    fn status_left<S: Into<Cow<'a, str>>>(mut self, string: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_left(string));
         self
     }
 
@@ -771,9 +994,12 @@ impl<'a> SetSessionOptions<'a> {
     /// status-left-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_left_attr<S: Into<Cow<'a, str>>>(mut self, attributes: Option<S>) -> Self {
+    fn status_left_attr<S: Into<Cow<'a, str>>>(mut self, attributes: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
         self.options
-            .push(SetSessionOption::status_left_attr(attributes));
+            .push(Self::Setter::status_left_attr(attributes));
         self
     }
 
@@ -784,8 +1010,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-left-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_left_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options.push(SetSessionOption::status_left_bg(colour));
+    fn status_left_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_left_bg(colour));
         self
     }
 
@@ -796,8 +1025,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-left-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_left_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options.push(SetSessionOption::status_left_fg(colour));
+    fn status_left_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_left_fg(colour));
         self
     }
 
@@ -808,9 +1040,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-left-length length
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_left_length(mut self, length: Option<usize>) -> Self {
-        self.options
-            .push(SetSessionOption::status_left_length(length));
+    fn status_left_length(mut self, length: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_left_length(length));
         self
     }
 
@@ -821,9 +1055,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-left-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn status_left_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::status_left_style(style));
+    fn status_left_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_left_style(style));
         self
     }
 
@@ -834,9 +1070,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-position [top | bottom]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    pub fn status_position(mut self, status_position: Option<StatusPosition>) -> Self {
-        self.options
-            .push(SetSessionOption::status_position(status_position));
+    fn status_position(mut self, status_position: Option<StatusPosition>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_position(status_position));
         self
     }
 
@@ -847,8 +1085,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-right string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_right<S: Into<Cow<'a, str>>>(mut self, string: Option<S>) -> Self {
-        self.options.push(SetSessionOption::status_right(string));
+    fn status_right<S: Into<Cow<'a, str>>>(mut self, string: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_right(string));
         self
     }
 
@@ -859,9 +1100,12 @@ impl<'a> SetSessionOptions<'a> {
     /// status-right-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_right_attr<S: Into<Cow<'a, str>>>(mut self, attributes: Option<S>) -> Self {
+    fn status_right_attr<S: Into<Cow<'a, str>>>(mut self, attributes: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
         self.options
-            .push(SetSessionOption::status_right_attr(attributes));
+            .push(Self::Setter::status_right_attr(attributes));
         self
     }
 
@@ -872,8 +1116,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-right-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_right_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options.push(SetSessionOption::status_right_bg(colour));
+    fn status_right_bg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_right_bg(colour));
         self
     }
 
@@ -884,8 +1131,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-right-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub fn status_right_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self {
-        self.options.push(SetSessionOption::status_right_fg(colour));
+    fn status_right_fg<S: Into<Cow<'a, str>>>(mut self, colour: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_right_fg(colour));
         self
     }
 
@@ -896,9 +1146,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-right-length length
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn status_right_length(mut self, length: Option<usize>) -> Self {
-        self.options
-            .push(SetSessionOption::status_right_length(length));
+    fn status_right_length(mut self, length: Option<usize>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_right_length(length));
         self
     }
 
@@ -909,9 +1161,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-right-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn status_right_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::status_right_style(style));
+    fn status_right_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_right_style(style));
         self
     }
 
@@ -922,8 +1176,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn status_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self {
-        self.options.push(SetSessionOption::status_style(style));
+    fn status_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_style(style));
         self
     }
 
@@ -934,8 +1191,11 @@ impl<'a> SetSessionOptions<'a> {
     /// status-utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    pub fn status_utf8(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetSessionOption::status_utf8(switch));
+    fn status_utf8(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::status_utf8(switch));
         self
     }
 
@@ -946,9 +1206,11 @@ impl<'a> SetSessionOptions<'a> {
     /// terminal-overrides string
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    pub fn terminal_overrides<S: Into<Cow<'a, str>>>(mut self, string: Option<S>) -> Self {
-        self.options
-            .push(SetSessionOption::terminal_overrides(string));
+    fn terminal_overrides<S: Into<Cow<'a, str>>>(mut self, string: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::terminal_overrides(string));
         self
     }
 
@@ -959,9 +1221,11 @@ impl<'a> SetSessionOptions<'a> {
     /// update-environment[] variable
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn update_environment(mut self, variable: Option<String>) -> Self {
-        self.options
-            .push(SetSessionOption::update_environment(variable));
+    fn update_environment(mut self, variable: Option<Vec<String>>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push_cmds(Self::Setter::update_environment(variable));
         self
     }
 
@@ -972,8 +1236,11 @@ impl<'a> SetSessionOptions<'a> {
     /// user-keys[] key
     /// ```
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
-    pub fn user_keys<S: Into<Cow<'a, str>>>(mut self, key: Option<S>) -> Self {
-        self.options.push(SetSessionOption::user_keys(key));
+    fn user_keys<S: Into<Cow<'a, str>>>(mut self, key: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::user_keys(key));
         self
     }
 
@@ -989,8 +1256,11 @@ impl<'a> SetSessionOptions<'a> {
     /// visual-activity [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn visual_activity(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetSessionOption::visual_activity(switch));
+    fn visual_activity(mut self, activity: Option<Activity>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::visual_activity(activity));
         self
     }
 
@@ -1006,8 +1276,11 @@ impl<'a> SetSessionOptions<'a> {
     /// visual-bell [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    pub fn visual_bell(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetSessionOption::visual_bell(switch));
+    fn visual_bell(mut self, activity: Option<Activity>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::visual_bell(activity));
         self
     }
 
@@ -1018,8 +1291,11 @@ impl<'a> SetSessionOptions<'a> {
     /// visual-content [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    pub fn visual_content(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetSessionOption::visual_content(switch));
+    fn visual_content(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::visual_content(switch));
         self
     }
 
@@ -1030,8 +1306,11 @@ impl<'a> SetSessionOptions<'a> {
     /// visual-silence [on | off | both]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    pub fn visual_silence(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetSessionOption::visual_silence(switch));
+    fn visual_silence(mut self, activity: Option<Activity>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::visual_silence(activity));
         self
     }
 
@@ -1042,12 +1321,13 @@ impl<'a> SetSessionOptions<'a> {
     /// word-separators string
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    pub fn word_separators<S: Into<Cow<'a, str>>>(mut self, string: Option<S>) -> Self {
-        self.options.push(SetSessionOption::word_separators(string));
+    fn word_separators<S: Into<Cow<'a, str>>>(mut self, string: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::word_separators(string));
         self
     }
 
-    pub fn build(self) -> TmuxCommands<'a> {
-        self.options
-    }
+    fn build(self) -> TmuxCommands<'a>;
 }

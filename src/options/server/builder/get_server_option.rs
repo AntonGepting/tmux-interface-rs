@@ -1,5 +1,5 @@
 use crate::options::*;
-use crate::{ShowOptions, TmuxCommand};
+use crate::{GetOptionExt, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 use std::fmt;
 
@@ -7,34 +7,7 @@ use std::fmt;
 
 pub struct GetServerOption;
 
-pub struct GetGlobalServerOption(GetServerOption);
-
-impl std::ops::Deref for GetGlobalServerOption {
-    type Target = GetServerOption;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl Getter for GetGlobalServerOption {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new()
-            .server()
-            .global()
-            .option(name.into())
-            .value()
-            .build()
-    }
-}
-
-pub trait Getter {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().server().option(name).value().build()
-    }
-}
-
-impl Getter for GetServerOption {
+impl GetOptionExt for GetServerOption {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
         ShowOptions::new()
             .server()
