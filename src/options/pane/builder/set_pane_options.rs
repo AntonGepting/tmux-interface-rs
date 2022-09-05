@@ -1,41 +1,17 @@
-use crate::options::*;
-use crate::{ShowOptions, TmuxCommand};
+use crate::{RemainOnExit, SetPaneOption, Switch, TmuxCommands};
 use std::borrow::Cow;
 use std::fmt;
 
-pub struct SetPaneOption;
+#[derive(Debug)]
+pub struct SetPaneOptions<'a> {
+    pub options: TmuxCommands<'a>,
+}
 
-// NOTE: method avoiding names like set_set_clipboard
-// NOTE: multiple commands should be avoided in case short form is used (only the value will be returned
-// back) bc. not possible to differentiate between multi line array option value and single line
-// option value
-//
-impl SetPaneOption {
-    fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        match value {
-            Some(data) => Self::set_ext(name, Some(data)),
-            None => Self::unset(name),
+impl<'a> SetPaneOptions<'a> {
+    pub fn new() -> Self {
+        Self {
+            options: TmuxCommands::new(),
         }
-    }
-
-    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().option(name).unset().build()
-    }
-
-    // unset if value = None
-    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        //(self.setter)(name.into(), value.map(|s| s.into()))
-        let cmd = match value {
-            Some(data) => SetOption::new().option(name).value(data),
-            None => SetOption::new().option(name),
-        };
-        cmd.build()
     }
 
     /// ### Manual
@@ -45,8 +21,9 @@ impl SetPaneOption {
     /// allow-rename [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn allow_rename<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(ALLOW_RENAME, switch.map(|s| s.to_string()))
+    pub fn allow_rename(mut self, switch: Option<Switch>) -> Self {
+        self.options.push(SetPaneOption::allow_rename(switch));
+        self
     }
     /// ### Manual
     ///
@@ -55,8 +32,9 @@ impl SetPaneOption {
     /// alternate-screen [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn alternate_screen<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(ALTERNATE_SCREEN, switch.map(|s| s.to_string()))
+    pub fn alternate_screen(mut self, switch: Option<Switch>) -> Self {
+        self.options.push(SetPaneOption::alternate_screen(switch));
+        self
     }
 
     /// ### Manual
@@ -71,8 +49,9 @@ impl SetPaneOption {
     /// remain-on-exit [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn remain_on_exit<'a>(remain_on_exit: Option<RemainOnExit>) -> TmuxCommand<'a> {
-        Self::get(REMAIN_ON_EXIT, remain_on_exit.map(|s| s.to_string()))
+    pub fn remain_on_exit(mut self, switch: Option<RemainOnExit>) -> Self {
+        self.options.push(SetPaneOption::remain_on_exit(switch));
+        self
     }
 
     /// ### Manual
@@ -82,8 +61,9 @@ impl SetPaneOption {
     /// window-active-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn window_active_style<'a>(style: Option<String>) -> TmuxCommand<'a> {
-        Self::get(WINDOW_ACTIVE_STYLE, style)
+    pub fn window_active_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self {
+        self.options.push(SetPaneOption::window_active_style(style));
+        self
     }
 
     /// ### Manual
@@ -93,8 +73,9 @@ impl SetPaneOption {
     /// window-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn window_style<'a>(style: Option<String>) -> TmuxCommand<'a> {
-        Self::get(WINDOW_STYLE, style)
+    pub fn window_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self {
+        self.options.push(SetPaneOption::window_style(style));
+        self
     }
 
     /// ### Manual
@@ -104,8 +85,9 @@ impl SetPaneOption {
     /// synchronize-panes [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn synchronize_panes<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::get(SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
+    pub fn synchronize_panes(mut self, switch: Option<Switch>) -> Self {
+        self.options.push(SetPaneOption::synchronize_panes(switch));
+        self
     }
 
     /// ### Manual
@@ -113,31 +95,12 @@ impl SetPaneOption {
     /// ```text
     /// user option
     /// ```
-    pub fn user_option<'a, S: fmt::Display>(name: S) -> TmuxCommand<'a> {
-        Self::get(format!("{}{}", USER_OPTION_MARKER, name))
+    pub fn user_option<S: fmt::Display>(mut self, name: S, value: Option<String>) -> Self {
+        self.options.push(SetPaneOption::user_option(name, value));
+        self
     }
-}
 
-#[test]
-fn set_pane_option() {
-    //let cmd = Tmux::new()
-    //.command(SetPaneOption::get(BUFFER_LIMIT))
-    //.output()
-    //.unwrap();
-    let cmd = Tmux::new()
-        .command(SetPaneOption::synchronize_panes())
-        .command(SetPaneOption::window_style())
-        .output()
-        .unwrap();
-    dbg!(&cmd);
-
-    //let cmd = Tmux::new()
-    //.command(SetPaneOption::command_alias())
-    //.output()
-    //.unwrap();
-    //let cmd = TmuxServerOptionOutput::from(cmd).command_alias();
-    //dbg!(&cmd);
-
-    //let cmds = SetPaneOption::command_alias(Some(vec!["asdf".to_string(), "a".to_string()]));
-    //dbg!(&cmds);
+    pub fn build(self) -> TmuxCommands<'a> {
+        self.options
+    }
 }

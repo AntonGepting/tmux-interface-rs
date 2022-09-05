@@ -22,7 +22,7 @@ impl SetPaneOption {
     }
 
     fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().option(name).unset().build()
+        SetOption::new().pane().option(name).unset().build()
     }
 
     // unset if value = None
@@ -32,8 +32,8 @@ impl SetPaneOption {
     ) -> TmuxCommand<'a> {
         //(self.setter)(name.into(), value.map(|s| s.into()))
         let cmd = match value {
-            Some(data) => SetOption::new().option(name).value(data),
-            None => SetOption::new().option(name),
+            Some(data) => SetOption::new().pane().option(name).value(data),
+            None => SetOption::new().pane().option(name),
         };
         cmd.build()
     }
@@ -48,6 +48,7 @@ impl SetPaneOption {
     pub fn allow_rename<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
         Self::set(ALLOW_RENAME, switch.map(|s| s.to_string()))
     }
+
     /// ### Manual
     ///
     /// tmux ^3.0:
@@ -72,7 +73,7 @@ impl SetPaneOption {
     /// ```
     #[cfg(feature = "tmux_3_0")]
     pub fn remain_on_exit<'a>(remain_on_exit: Option<RemainOnExit>) -> TmuxCommand<'a> {
-        Self::get(REMAIN_ON_EXIT, remain_on_exit.map(|s| s.to_string()))
+        Self::set(REMAIN_ON_EXIT, remain_on_exit.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -82,8 +83,8 @@ impl SetPaneOption {
     /// window-active-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn window_active_style<'a>(style: Option<String>) -> TmuxCommand<'a> {
-        Self::get(WINDOW_ACTIVE_STYLE, style)
+    pub fn window_active_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
+        Self::set(WINDOW_ACTIVE_STYLE, style)
     }
 
     /// ### Manual
@@ -93,8 +94,8 @@ impl SetPaneOption {
     /// window-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn window_style<'a>(style: Option<String>) -> TmuxCommand<'a> {
-        Self::get(WINDOW_STYLE, style)
+    pub fn window_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
+        Self::set(WINDOW_STYLE, style)
     }
 
     /// ### Manual
@@ -105,7 +106,7 @@ impl SetPaneOption {
     /// ```
     #[cfg(feature = "tmux_3_2")]
     pub fn synchronize_panes<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::get(SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
+        Self::set(SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -113,31 +114,7 @@ impl SetPaneOption {
     /// ```text
     /// user option
     /// ```
-    pub fn user_option<'a, S: fmt::Display>(name: S) -> TmuxCommand<'a> {
-        Self::get(format!("{}{}", USER_OPTION_MARKER, name))
+    pub fn user_option<'a, S: fmt::Display>(name: S, value: Option<String>) -> TmuxCommand<'a> {
+        Self::set(format!("{}{}", USER_OPTION_MARKER, name), value)
     }
-}
-
-#[test]
-fn set_pane_option() {
-    //let cmd = Tmux::new()
-    //.command(SetPaneOption::get(BUFFER_LIMIT))
-    //.output()
-    //.unwrap();
-    let cmd = Tmux::new()
-        .command(SetPaneOption::synchronize_panes())
-        .command(SetPaneOption::window_style())
-        .output()
-        .unwrap();
-    dbg!(&cmd);
-
-    //let cmd = Tmux::new()
-    //.command(SetPaneOption::command_alias())
-    //.output()
-    //.unwrap();
-    //let cmd = TmuxServerOptionOutput::from(cmd).command_alias();
-    //dbg!(&cmd);
-
-    //let cmds = SetPaneOption::command_alias(Some(vec!["asdf".to_string(), "a".to_string()]));
-    //dbg!(&cmds);
 }
