@@ -1,5 +1,5 @@
 use crate::options::*;
-use crate::{ShowOptions, TmuxCommand};
+use crate::{GetOptionExt, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 use std::fmt;
 
@@ -20,7 +20,7 @@ impl GetOptionExt for GetPaneOption {
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-impl GetPaneOption: GetOptionExt {
+impl GetPaneOption {
     /// ### Manual
     ///
     /// tmux ^3.0:

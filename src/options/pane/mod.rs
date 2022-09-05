@@ -1,12 +1,12 @@
-pub mod common;
 pub mod builder;
+pub mod common;
 
-pub mod pane_options;
+//pub mod pane_options;
 
-pub use common::*;
 pub use builder::*;
+pub use common::*;
 
-pub use pane_options::*;
+//pub use pane_options::*;
 
 #[cfg(test)]
 #[path = "."]

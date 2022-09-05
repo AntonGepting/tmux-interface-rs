@@ -21,7 +21,7 @@ impl<'a> SetServerOptions<'a> {
     /// backspace key
     /// ```
     #[cfg(feature = "tmux_3_1")]
-    pub fn backspace<S: Into<Cow<'a, str>>>(mut self, backspace: S) -> Self {
+    pub fn backspace<S: Into<Cow<'a, str>>>(mut self, backspace: Option<S>) -> Self {
         self.options.push(SetServerOption::backspace(backspace));
         self
     }

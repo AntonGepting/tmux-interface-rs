@@ -349,8 +349,8 @@ impl TmuxServerOptionOutput {
     }
 
     // user-keys[] key
-    #[cfg(feature = "tmux_3_0")]
-    pub fn user_keys(&self) -> TmuxCommand<'a> {}
+    //#[cfg(feature = "tmux_3_0")]
+    //pub fn user_keys(&self) -> {}
 
     // quiet [on | off]
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]

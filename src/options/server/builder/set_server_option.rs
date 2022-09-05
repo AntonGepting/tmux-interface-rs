@@ -10,6 +10,13 @@ impl SetOptionExt for SetServerOption {
         SetOption::new().server().option(name).unset().build()
     }
 
+    fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        name: T,
+        value: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set_ext(name, value)
+    }
+
     // unset if value = None
     fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         name: T,
@@ -30,6 +37,8 @@ impl SetServerOption {
             for (i, item) in data.iter().enumerate() {
                 cmds.push(Self::set(format!("{}[{}]", name, i), Some(item.to_owned())));
             }
+        } else {
+            cmds.push(Self::set(format!("{}", name), Some("")));
         }
         cmds
     }
@@ -41,7 +50,7 @@ impl SetServerOption {
     /// backspace key
     /// ```
     #[cfg(feature = "tmux_3_1")]
-    pub fn backspace<'a, S: Into<Cow<'a, str>>>(backspace: S) -> TmuxCommand<'a> {
+    pub fn backspace<'a, S: Into<Cow<'a, str>>>(backspace: Option<S>) -> TmuxCommand<'a> {
         Self::set(BACKSPACE, backspace)
     }
 
@@ -109,7 +118,7 @@ impl SetServerOption {
     /// editor shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn editor<'a, S: Into<Cow<'a, str>>>(&self, editor: Option<S>) -> TmuxCommand<'a> {
+    pub fn editor<'a, S: Into<Cow<'a, str>>>(editor: Option<S>) -> TmuxCommand<'a> {
         Self::set(EDITOR, editor)
     }
 

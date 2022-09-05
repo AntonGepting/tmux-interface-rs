@@ -1,12 +1,12 @@
 pub mod builder;
 pub mod common;
 
-pub mod session_options;
+//pub mod session_options;
 
 pub use builder::*;
 pub use common::*;
 
-pub use session_options::*;
+//pub use session_options::*;
 
 #[cfg(test)]
 #[path = "."]

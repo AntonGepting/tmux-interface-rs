@@ -240,20 +240,20 @@ pub trait SetSessionOptions<'a> {
         self
     }
 
-    /// ### Manual
-    ///
-    /// tmux ^2.9:
-    /// ```text
-    /// default-size XxY
-    /// ```
-    #[cfg(feature = "tmux_2_9")]
-    fn default_size(mut self) -> Self
-    where
-        Self: Sized,
-    {
-        self.push(Self::Setter::default_size());
-        self
-    }
+    //// ### Manual
+    ////
+    //// tmux ^2.9:
+    //// ```text
+    //// default-size XxY
+    //// ```
+    //#[cfg(feature = "tmux_2_9")]
+    //fn default_size(mut self, size: Option<WindowSize>) -> Self
+    //where
+    //Self: Sized,
+    //{
+    //self.push(Self::Setter::default_size(size));
+    //self
+    //}
 
     /// ### Manual
     ///

@@ -268,176 +268,177 @@ impl<'a> SessionOptions<'a> {
         //GetServerOptions::new();
     }
 
-    //pub fn set(self) -> TmuxCommands<'a> {
-    //let cmds = SetLocalSessionOptions::new();
+    pub fn set(self) -> TmuxCommands<'a> {
+        let cmds = SetLocalSessionOptions::new();
 
-    //#[cfg(feature = "tmux_2_6")]
-    //let cmds = cmds.activity_action(self.activity_action);
-    //#[cfg(feature = "tmux_1_8")]
-    //let cmds = cmds.assume_paste_time(self.assume_paste_time);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.base_index(self.base_index);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.bell_action(self.bell_action);
-    //#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
-    //let cmds = cmds.bell_on_alert(self.bell_on_alert);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
-    //let cmds = cmds.buffer_limit(self.buffer_limit);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.default_command(self.default_command);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.default_shell(self.default_shell);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.default_path(self.default_path);
-    //#[cfg(feature = "tmux_2_9")]
-    //let cmds = cmds.default_size(self.default_size);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    //let cmds = cmds.default_terminal(self.default_terminal);
-    //#[cfg(feature = "tmux_1_4")]
-    //let cmds = cmds.destroy_unattached(self.destroy_unattached);
-    //#[cfg(feature = "tmux_1_4")]
-    //let cmds = cmds.detach_on_destroy(self.detach_on_destroy);
-    //#[cfg(feature = "tmux_1_2")]
-    //let cmds = cmds.display_panes_active_colour(self.display_panes_active_colour);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.display_panes_colour(self.display_panes_colour);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.display_panes_time(self.display_panes_time);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.display_time(self.display_time);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.history_limit(self.history_limit);
-    //#[cfg(feature = "tmux_2_2")]
-    //let cmds = cmds.key_table(self.key_table);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.lock_after_time(self.lock_after_time);
-    //#[cfg(feature = "tmux_1_1")]
-    //let cmds = cmds.lock_command(self.lock_command);
-    //#[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
-    //let cmds = cmds.lock_server(self.lock_server);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.message_attr(self.message_attr);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.message_bg(self.message_bg);
-    //#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.message_command_attr(self.message_command_attr);
-    //#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.message_command_bg(self.message_command_bg);
-    //#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.message_command_fg(self.message_command_fg);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.message_fg(self.message_fg);
-    //#[cfg(feature = "tmux_1_9")]
-    //let cmds = cmds.message_command_style(self.message_command_style);
-    //#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    //let cmds = cmds.message_limit(self.message_limit);
-    //#[cfg(feature = "tmux_1_9")]
-    //let cmds = cmds.message_style(self.message_style);
-    //#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    //let cmds = cmds.mouse_resize_pane(self.mouse_resize_pane);
-    //#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    //let cmds = cmds.mouse_select_pane(self.mouse_select_pane);
-    //#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    //let cmds = cmds.mouse_select_window(self.mouse_select_window);
-    //#[cfg(feature = "tmux_2_1")]
-    //let cmds = cmds.mouse(self.mouse);
-    //#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
-    //let cmds = cmds.mouse_utf8(self.mouse_utf8);
-    //#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.pane_active_border_bg(self.pane_active_border_bg);
-    //#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.pane_active_border_fg(self.pane_active_border_fg);
-    //#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.pane_border_bg(self.pane_border_bg);
-    //#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.pane_border_fg(self.pane_border_fg);
-    //#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    //let cmds = cmds.pane_active_border_style(self.pane_active_border_style);
-    //#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    //let cmds = cmds.pane_border_style(self.pane_border_style);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.prefix(self.prefix);
-    //#[cfg(feature = "tmux_1_6")]
-    //let cmds = cmds.prefix2(self.prefix2);
-    //#[cfg(feature = "tmux_1_7")]
-    //let cmds = cmds.renumber_windows(self.renumber_windows);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.repeat_time(self.repeat_time);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-    //let cmds = cmds.set_remain_on_exit(self.set_remain_on_exit);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.set_titles(self.set_titles);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.set_titles_string(self.set_titles_string);
-    //#[cfg(feature = "tmux_2_6")]
-    //let cmds = cmds.silence_action(self.silence_action);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.status(self.status);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.status_attr(self.status_attr);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.status_bg(self.status_bg);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.status_fg(self.status_fg);
-    //#[cfg(feature = "tmux_2_9")]
-    //let cmds = cmds.status_format(self.status_format);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.status_interval(self.status_interval);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.status_justify(self.status_justify);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.status_keys(self.status_keys);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.status_left(self.status_left);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.status_left_attr(self.status_left_attr);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.status_left_bg(self.status_left_bg);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.status_left_fg(self.status_left_fg);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.status_left_length(self.status_left_length);
-    //#[cfg(feature = "tmux_1_9")]
-    //let cmds = cmds.status_left_style(self.status_left_style);
-    //#[cfg(feature = "tmux_1_7")]
-    //let cmds = cmds.status_position(self.status_position);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.status_right(self.status_right);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.status_right_attr(self.status_right_attr);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.status_right_bg(self.status_right_bg);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    //let cmds = cmds.status_right_fg(self.status_right_fg);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.status_right_length(self.status_right_length);
-    //#[cfg(feature = "tmux_1_9")]
-    //let cmds = cmds.status_right_style(self.status_right_style);
-    //#[cfg(feature = "tmux_1_9")]
-    //let cmds = cmds.status_style(self.status_style);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    //let cmds = cmds.status_utf8(self.status_utf8);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    //let cmds = cmds.terminal_overrides(self.terminal_overrides);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.update_environment(self.update_environment);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.visual_activity(self.visual_activity);
-    //#[cfg(feature = "tmux_1_0")]
-    //let cmds = cmds.visual_bell(self.visual_bell);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    //let cmds = cmds.visual_content(self.visual_content);
-    //#[cfg(feature = "tmux_1_4")]
-    //let cmds = cmds.visual_silence(self.visual_silence);
-    //#[cfg(feature = "tmux_1_6")]
-    //let cmds = cmds.word_separators(self.word_separators);
-    //// `@USER_OPTION`
+        #[cfg(feature = "tmux_2_6")]
+        let cmds = cmds.activity_action(self.activity_action);
+        #[cfg(feature = "tmux_1_8")]
+        let cmds = cmds.assume_paste_time(self.assume_paste_time);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.base_index(self.base_index);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.bell_action(self.bell_action);
+        #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+        let cmds = cmds.bell_on_alert(self.bell_on_alert);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
+        let cmds = cmds.buffer_limit(self.buffer_limit);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.default_command(self.default_command);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.default_shell(self.default_shell);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.default_path(self.default_path);
+        #[cfg(feature = "tmux_2_9")]
+        let cmds = cmds.default_size(self.default_size);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+        let cmds = cmds.default_terminal(self.default_terminal);
+        #[cfg(feature = "tmux_1_4")]
+        let cmds = cmds.destroy_unattached(self.destroy_unattached);
+        #[cfg(feature = "tmux_1_4")]
+        let cmds = cmds.detach_on_destroy(self.detach_on_destroy);
+        #[cfg(feature = "tmux_1_2")]
+        let cmds = cmds.display_panes_active_colour(self.display_panes_active_colour);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.display_panes_colour(self.display_panes_colour);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.display_panes_time(self.display_panes_time);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.display_time(self.display_time);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.history_limit(self.history_limit);
+        #[cfg(feature = "tmux_2_2")]
+        let cmds = cmds.key_table(self.key_table);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.lock_after_time(self.lock_after_time);
+        #[cfg(feature = "tmux_1_1")]
+        let cmds = cmds.lock_command(self.lock_command);
+        #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
+        let cmds = cmds.lock_server(self.lock_server);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.message_attr(self.message_attr);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.message_bg(self.message_bg);
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let cmds = cmds.message_command_attr(self.message_command_attr);
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let cmds = cmds.message_command_bg(self.message_command_bg);
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let cmds = cmds.message_command_fg(self.message_command_fg);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.message_fg(self.message_fg);
+        #[cfg(feature = "tmux_1_9")]
+        let cmds = cmds.message_command_style(self.message_command_style);
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+        let cmds = cmds.message_limit(self.message_limit);
+        #[cfg(feature = "tmux_1_9")]
+        let cmds = cmds.message_style(self.message_style);
+        #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+        let cmds = cmds.mouse_resize_pane(self.mouse_resize_pane);
+        #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+        let cmds = cmds.mouse_select_pane(self.mouse_select_pane);
+        #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+        let cmds = cmds.mouse_select_window(self.mouse_select_window);
+        #[cfg(feature = "tmux_2_1")]
+        let cmds = cmds.mouse(self.mouse);
+        #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
+        let cmds = cmds.mouse_utf8(self.mouse_utf8);
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+        let cmds = cmds.pane_active_border_bg(self.pane_active_border_bg);
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+        let cmds = cmds.pane_active_border_fg(self.pane_active_border_fg);
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+        let cmds = cmds.pane_border_bg(self.pane_border_bg);
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+        let cmds = cmds.pane_border_fg(self.pane_border_fg);
+        #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+        let cmds = cmds.pane_active_border_style(self.pane_active_border_style);
+        #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+        let cmds = cmds.pane_border_style(self.pane_border_style);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.prefix(self.prefix);
+        #[cfg(feature = "tmux_1_6")]
+        let cmds = cmds.prefix2(self.prefix2);
+        #[cfg(feature = "tmux_1_7")]
+        let cmds = cmds.renumber_windows(self.renumber_windows);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.repeat_time(self.repeat_time);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
+        let cmds = cmds.set_remain_on_exit(self.set_remain_on_exit);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.set_titles(self.set_titles);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.set_titles_string(self.set_titles_string);
+        #[cfg(feature = "tmux_2_6")]
+        let cmds = cmds.silence_action(self.silence_action);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.status(self.status);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.status_attr(self.status_attr);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.status_bg(self.status_bg);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.status_fg(self.status_fg);
+        #[cfg(feature = "tmux_2_9")]
+        let cmds = cmds.status_format(self.status_format);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.status_interval(self.status_interval);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.status_justify(self.status_justify);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.status_keys(self.status_keys);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.status_left(self.status_left);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.status_left_attr(self.status_left_attr);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.status_left_bg(self.status_left_bg);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.status_left_fg(self.status_left_fg);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.status_left_length(self.status_left_length);
+        #[cfg(feature = "tmux_1_9")]
+        let cmds = cmds.status_left_style(self.status_left_style);
+        #[cfg(feature = "tmux_1_7")]
+        let cmds = cmds.status_position(self.status_position);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.status_right(self.status_right);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.status_right_attr(self.status_right_attr);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.status_right_bg(self.status_right_bg);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let cmds = cmds.status_right_fg(self.status_right_fg);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.status_right_length(self.status_right_length);
+        #[cfg(feature = "tmux_1_9")]
+        let cmds = cmds.status_right_style(self.status_right_style);
+        #[cfg(feature = "tmux_1_9")]
+        let cmds = cmds.status_style(self.status_style);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
+        let cmds = cmds.status_utf8(self.status_utf8);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+        let cmds = cmds.terminal_overrides(self.terminal_overrides);
+        // FIXME
+        //#[cfg(feature = "tmux_1_0")]
+        //let cmds = cmds.update_environment(self.update_environment);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.visual_activity(self.visual_activity);
+        #[cfg(feature = "tmux_1_0")]
+        let cmds = cmds.visual_bell(self.visual_bell);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+        let cmds = cmds.visual_content(self.visual_content);
+        #[cfg(feature = "tmux_1_4")]
+        let cmds = cmds.visual_silence(self.visual_silence);
+        #[cfg(feature = "tmux_1_6")]
+        let cmds = cmds.word_separators(self.word_separators);
+        // `@USER_OPTION`
 
-    //cmds.build()
+        cmds.build()
 
-    //// NOTE: Tmux struct wrong decision here, because of dircet and control mode
-    ////Self::get_all_ext(None)
-    //}
+        // NOTE: Tmux struct wrong decision here, because of dircet and control mode
+        //Self::get_all_ext(None)
+    }
 
     // XXX: bitmask is overkill now, mb later use for multiple select
     // NOTE: not allows selective get by bitmask

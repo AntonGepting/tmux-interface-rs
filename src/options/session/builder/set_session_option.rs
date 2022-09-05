@@ -193,16 +193,16 @@ pub trait SetSessionOption: SetOptionExt {
         Self::set(DEFAULT_TERMINAL, terminal)
     }
 
-    /// ### Manual
-    ///
-    /// tmux ^2.9:
-    /// ```text
-    /// default-size XxY
-    /// ```
-    #[cfg(feature = "tmux_2_9")]
-    fn default_size<'a>() -> TmuxCommand<'a> {
-        Self::set(DEFAULT_SIZE)
-    }
+    //// ### Manual
+    ////
+    //// tmux ^2.9:
+    //// ```text
+    //// default-size XxY
+    //// ```
+    //#[cfg(feature = "tmux_2_9")]
+    //fn default_size<'a>(size: ) -> TmuxCommand<'a> {
+    //Self::set(DEFAULT_SIZE, size.map(|s| s.to_string()))
+    //}
 
     /// ### Manual
     ///

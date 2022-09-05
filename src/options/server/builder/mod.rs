@@ -14,6 +14,6 @@ mod server_tests {
     pub mod get_server_option_tests;
     pub mod get_server_options_tests;
 
-    //pub mod set_server_option_tests;
-    //pub mod set_server_options_tests;
+    pub mod set_server_option_tests;
+    pub mod set_server_options_tests;
 }

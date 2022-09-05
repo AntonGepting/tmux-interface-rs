@@ -251,16 +251,16 @@ pub use crate::options::session::*;
 #[cfg(feature = "tmux_1_2")]
 pub use crate::options::window::*;
 
-#[cfg(feature = "tmux_1_0")]
-pub struct Options<'a> {
-    pub server_options: ServerOptions<'a>,
-    //pub session_options: SessionOptions<'a>,
-    //pub global_session_options: SessionOptions<'a>,
-    pub window_options: WindowOptions,
-    pub global_window_options: WindowOptions,
-    #[cfg(feature = "tmux_3_1")]
-    pub pane_options: PaneOptions,
-}
+//#[cfg(feature = "tmux_1_0")]
+//pub struct Options<'a> {
+////pub server_options: ServerOptions<'a>,
+////pub session_options: SessionOptions<'a>,
+////pub global_session_options: SessionOptions<'a>,
+//pub window_options: WindowOptions,
+//pub global_window_options: WindowOptions,
+//#[cfg(feature = "tmux_3_1")]
+//pub pane_options: PaneOptions,
+//}
 
 //pub struct OptionsController {
 //}

@@ -1,10 +1,10 @@
-#[test]
-fn get_buffer_limit() {
-    use crate::{GetServerOption, Tmux};
+//#[test]
+//fn get_buffer_limit() {
+//use crate::{GetServerOption, Tmux};
 
-    #[cfg(feature = "tmux_1_5")]
-    let get_option = Tmux::with_command(GetServerOption::buffer_limit()).output();
-}
+//#[cfg(feature = "tmux_1_5")]
+//let get_option = Tmux::with_command(GetServerOption::buffer_limit()).output();
+//}
 
 #[test]
 fn get_server_option() {
