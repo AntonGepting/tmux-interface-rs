@@ -49,7 +49,16 @@ fn set_server_options() {
     #[cfg(feature = "tmux_1_5")]
     v.push(format!("{} {} {}", cmd, "set-clipboard", "external"));
     #[cfg(feature = "tmux_3_2")]
-    v.push(format!("{} {} {}", cmd, "terminal-features"));
+    {
+        v.push(format!(
+            "{} {} {}",
+            cmd, "terminal-features[0]", "xterm*:clipboard:ccolour:cstyle:focus:title"
+        ));
+        v.push(format!(
+            "{} {} {}",
+            cmd, "terminal-features[1]", "screen*:title"
+        ));
+    }
     #[cfg(feature = "tmux_2_0")]
     v.push(format!("{} {} {}", cmd, "terminal-overrides", ""));
     #[cfg(feature = "tmux_3_0")]
@@ -97,14 +106,14 @@ fn set_server_options() {
     #[cfg(feature = "tmux_1_5")]
     let options = options.set_clipboard(Some(SetClipboard::External));
     #[cfg(feature = "tmux_3_2")]
-    let options = options.terminal_features(vec![
-        "xterm*:clipboard:ccolour:cstyle:focus:title",
-        "screen*:title",
-    ]);
+    let options = options.terminal_features(Some(vec![
+        "xterm*:clipboard:ccolour:cstyle:focus:title".to_string(),
+        "screen*:title".to_string(),
+    ]));
     #[cfg(feature = "tmux_2_0")]
     let options = options.terminal_overrides(None);
     #[cfg(feature = "tmux_3_0")]
-    let options = options.user_keys(Some(""));
+    let options = options.user_keys(None);
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
     let options = options.quiet(Some(""));
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]

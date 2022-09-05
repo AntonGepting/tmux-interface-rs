@@ -12,7 +12,6 @@ impl GetOptionExt for GetServerOption {
         ShowOptions::new()
             .server()
             .option(name.into())
-            .value()
             .build()
     }
 }

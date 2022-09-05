@@ -74,9 +74,9 @@ pub use parser::*;
 #[cfg(test)]
 #[path = "."]
 mod server_tests {
-    #[cfg(feature = "tmux_1_2")]
-    pub mod server_options_tests;
+    //#[cfg(feature = "tmux_1_2")]
+    //pub mod server_options_tests;
 
-    #[cfg(feature = "tmux_1_2")]
-    pub mod server_option_tests;
+    //#[cfg(feature = "tmux_1_2")]
+    //pub mod server_option_tests;
 }

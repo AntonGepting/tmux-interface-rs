@@ -268,8 +268,9 @@ pub use crate::options::window::*;
 //}
 //
 
-use crate::{SetOption, ShowOptions, TmuxCommand};
+use crate::{SetOption, ShowOptions, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
+use std::fmt;
 
 /// common trait for getting options, allowing different implementations for different object options
 pub trait GetOptionExt {
@@ -306,5 +307,17 @@ pub trait SetOptionExt {
             None => SetOption::new().option(name),
         };
         cmd.build()
+    }
+
+    fn set_array<'a, S: fmt::Display>(name: S, value: Option<Vec<String>>) -> TmuxCommands<'a> {
+        let mut cmds = TmuxCommands::new();
+        if let Some(data) = value {
+            for (i, item) in data.iter().enumerate() {
+                cmds.push(Self::set(format!("{}[{}]", name, i), Some(item.to_owned())));
+            }
+        } else {
+            cmds.push(Self::set(format!("{}", name), Some("")));
+        }
+        cmds
     }
 }

@@ -56,15 +56,15 @@ impl SetSessionOption for SetLocalSessionOption {}
 // option value
 //
 pub trait SetSessionOption: SetOptionExt {
-    fn set_array<'a, S: fmt::Display>(name: S, value: Option<Vec<String>>) -> TmuxCommands<'a> {
-        let mut cmds = TmuxCommands::new();
-        if let Some(data) = value {
-            for (i, item) in data.iter().enumerate() {
-                cmds.push(Self::set(format!("{}[{}]", name, i), Some(item.to_owned())));
-            }
-        }
-        cmds
-    }
+    //fn set_array<'a, S: fmt::Display>(name: S, value: Option<Vec<String>>) -> TmuxCommands<'a> {
+    //let mut cmds = TmuxCommands::new();
+    //if let Some(data) = value {
+    //for (i, item) in data.iter().enumerate() {
+    //cmds.push(Self::set(format!("{}[{}]", name, i), Some(item.to_owned())));
+    //}
+    //}
+    //cmds
+    //}
 
     //pub fn get<T: Into<Cow<'a, str>>>(&self, name: T) -> TmuxCommand<'a> {
     //(self.getter)(name.into())
@@ -193,16 +193,16 @@ pub trait SetSessionOption: SetOptionExt {
         Self::set(DEFAULT_TERMINAL, terminal)
     }
 
-    //// ### Manual
-    ////
-    //// tmux ^2.9:
-    //// ```text
-    //// default-size XxY
-    //// ```
-    //#[cfg(feature = "tmux_2_9")]
-    //fn default_size<'a>(size: ) -> TmuxCommand<'a> {
-    //Self::set(DEFAULT_SIZE, size.map(|s| s.to_string()))
-    //}
+    /// ### Manual
+    ///
+    /// tmux ^2.9:
+    /// ```text
+    /// default-size XxY
+    /// ```
+    #[cfg(feature = "tmux_2_9")]
+    fn default_size<'a>(size: Option<(usize, usize)>) -> TmuxCommand<'a> {
+        Self::set(DEFAULT_SIZE, size.map(|s| format!("{}x{}", s.0, s.1)))
+    }
 
     /// ### Manual
     ///
@@ -695,8 +695,8 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn status_format<'a, S: Into<Cow<'a, str>>>(format: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_FORMAT, format)
+    fn status_format<'a>(format: Option<Vec<String>>) -> TmuxCommands<'a> {
+        Self::set_array(STATUS_FORMAT, format)
     }
 
     /// ### Manual

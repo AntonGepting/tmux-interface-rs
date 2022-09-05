@@ -14,7 +14,7 @@ impl GetWindowOption for GetLocalWindowOption {}
 
 impl GetOptionExt for GetLocalWindowOption {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().window().option(name).value().build()
+        ShowOptions::new().window().option(name).build()
     }
 }
 
@@ -28,7 +28,6 @@ impl GetOptionExt for GetGlobalWindowOption {
             .window()
             .option(name)
             .global()
-            .value()
             .build()
     }
 }

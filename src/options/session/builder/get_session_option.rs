@@ -12,7 +12,7 @@ pub struct GetGlobalSessionOption;
 
 impl GetOptionExt for GetGlobalSessionOption {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().option(name).global().value().build()
+        ShowOptions::new().option(name).global().build()
     }
 }
 
@@ -22,7 +22,7 @@ pub struct GetLocalSessionOption;
 
 impl GetOptionExt for GetLocalSessionOption {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().option(name).value().build()
+        ShowOptions::new().option(name).build()
     }
 }
 

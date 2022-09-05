@@ -169,7 +169,7 @@ fn get_session_options() {
 
     let options = options.options.to_string();
 
-    let cmd = "show -g -v";
+    let cmd = "show -g";
     let separator = " ; ";
 
     let mut origin = Vec::new();

@@ -53,7 +53,7 @@ fn set_local_session_option_tests() {
     #[cfg(feature = "tmux_2_9")]
     {
         let origin = format!("{} {} {}", cmd, "default-size", "80x24");
-        let set_option = SetLocalSessionOption::default_size(Some("80x24")).to_string();
+        let set_option = SetLocalSessionOption::default_size(Some((80, 24))).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
@@ -453,7 +453,7 @@ fn set_global_session_option_tests() {
     #[cfg(feature = "tmux_2_9")]
     {
         let origin = format!("{} {} {}", cmd, "default-size", "80x24");
-        let set_option = SetGlobalSessionOption::default_size(Some("80x24")).to_string();
+        let set_option = SetGlobalSessionOption::default_size(Some((80, 24))).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]

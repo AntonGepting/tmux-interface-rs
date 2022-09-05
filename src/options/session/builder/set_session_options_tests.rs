@@ -304,7 +304,7 @@ fn set_local_session_options_tests() {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     let options = options.status_fg(Some("colour12"));
     #[cfg(feature = "tmux_2_9")]
-    let options = options.status_format(Some(vec!["#"]));
+    let options = options.status_format(Some(vec!["#[0]".to_string(), "#[1]".to_string()]));
     #[cfg(feature = "tmux_1_0")]
     let options = options.status_interval(Some(2));
     #[cfg(feature = "tmux_1_0")]
@@ -668,7 +668,7 @@ fn set_global_session_options_tests() {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     let options = options.status_fg(Some("colour12"));
     #[cfg(feature = "tmux_2_9")]
-    let options = options.status_format(Some(vec!["#"]));
+    let options = options.status_format(Some(vec!["#[0]".to_string(), "#[1]".to_string()]));
     #[cfg(feature = "tmux_1_0")]
     let options = options.status_interval(Some(2));
     #[cfg(feature = "tmux_1_0")]

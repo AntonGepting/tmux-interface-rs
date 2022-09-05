@@ -6,7 +6,7 @@ fn get_local_session_option_tests() {
         StatusPosition, Switch,
     };
 
-    let cmd = "show -v";
+    let cmd = "show";
 
     #[cfg(feature = "tmux_2_6")]
     {
@@ -244,14 +244,8 @@ fn get_local_session_option_tests() {
     }
     #[cfg(feature = "tmux_2_9")]
     {
-        let origin0 = format!("{} {}", cmd, "status-format[0]");
-        let origin1 = format!("{} {}", cmd, "status-format[1]");
-        let origin = format!("{} ; {}", origin0, origin1);
-        let set_option = GetLocalSessionOption::status_format(Some(vec![
-            "#[0]".to_string(),
-            "#[1]".to_string(),
-        ]))
-        .to_string();
+        let origin = format!("{} {}", cmd, "status-format");
+        let set_option = GetLocalSessionOption::status_format().to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]

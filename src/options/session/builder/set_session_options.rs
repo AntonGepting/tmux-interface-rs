@@ -240,20 +240,20 @@ pub trait SetSessionOptions<'a> {
         self
     }
 
-    //// ### Manual
-    ////
-    //// tmux ^2.9:
-    //// ```text
-    //// default-size XxY
-    //// ```
-    //#[cfg(feature = "tmux_2_9")]
-    //fn default_size(mut self, size: Option<WindowSize>) -> Self
-    //where
-    //Self: Sized,
-    //{
-    //self.push(Self::Setter::default_size(size));
-    //self
-    //}
+    /// ### Manual
+    ///
+    /// tmux ^2.9:
+    /// ```text
+    /// default-size XxY
+    /// ```
+    #[cfg(feature = "tmux_2_9")]
+    fn default_size(mut self, size: Option<(usize, usize)>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::default_size(size));
+        self
+    }
 
     /// ### Manual
     ///
@@ -919,11 +919,11 @@ pub trait SetSessionOptions<'a> {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn status_format<S: Into<Cow<'a, str>>>(mut self, format: Option<S>) -> Self
+    fn status_format(mut self, format: Option<Vec<String>>) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::status_format(format));
+        self.push_cmds(Self::Setter::status_format(format));
         self
     }
 

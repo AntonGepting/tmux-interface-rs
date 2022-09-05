@@ -120,11 +120,16 @@ fn set_server_option() {
 
     #[cfg(feature = "tmux_3_2")]
     {
-        let origin = format!("{} {} {}", cmd, "terminal-features");
-        let set_option = SetServerOption::terminal_features(vec![
-            "xterm*:clipboard:ccolour:cstyle:focus:title",
-            "screen*:title",
-        ])
+        let origin0 = format!(
+            "{} {} {}",
+            cmd, "terminal-features[0]", "xterm*:clipboard:ccolour:cstyle:focus:title"
+        );
+        let origin1 = format!("{} {} {}", cmd, "terminal-features[1]", "screen*:title");
+        let origin = format!("{} ; {}", origin0, origin1);
+        let set_option = SetServerOption::terminal_features(Some(vec![
+            "xterm*:clipboard:ccolour:cstyle:focus:title".to_string(),
+            "screen*:title".to_string(),
+        ]))
         .to_string();
         assert_eq!(origin, set_option);
     }
@@ -139,7 +144,7 @@ fn set_server_option() {
     #[cfg(feature = "tmux_3_0")]
     {
         let origin = format!("{} {} {}", cmd, "user-keys", "");
-        let set_option = SetServerOption::user_keys(Some("")).to_string();
+        let set_option = SetServerOption::user_keys(None).to_string();
         assert_eq!(origin, set_option);
     }
 

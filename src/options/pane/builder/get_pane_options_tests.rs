@@ -47,7 +47,7 @@ fn get_server_options() {
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     v.push(format!("{} {}", cmd, "detach-on-destroy"));
 
-    v.push(format!("{} {}", cmd, "@user-option-name"));
+    v.push(format!("{} {}", cmd, "@user_option_name"));
     let origin = v.join(" ; ");
 
     //dbg!(&options);
@@ -63,10 +63,10 @@ fn get_server_options() {
     let options = options.default_terminal();
     #[cfg(feature = "tmux_3_2")]
     let options = options.copy_command();
-    #[cfg(feature = "tmux_3_2")]
-    let options = options.editor();
     #[cfg(feature = "tmux_1_2")]
     let options = options.escape_time();
+    #[cfg(feature = "tmux_3_2")]
+    let options = options.editor();
     #[cfg(feature = "tmux_2_7")]
     let options = options.exit_empty();
     #[cfg(feature = "tmux_1_4")]
@@ -93,7 +93,7 @@ fn get_server_options() {
     let options = options.quiet();
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     let options = options.detach_on_destroy();
-    let options = options.user_option("user-option-name");
+    let options = options.user_option("user_option_name");
 
     let options = options.build().to_string();
 

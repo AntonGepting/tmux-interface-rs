@@ -10,7 +10,7 @@
 fn get_server_option() {
     use crate::options::get_server_option::GetServerOption;
 
-    let cmd = "show -s -v";
+    let cmd = "show -s";
 
     #[cfg(feature = "tmux_3_1")]
     {
