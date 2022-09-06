@@ -13,7 +13,7 @@ pub struct SetGlobalWindowOption;
 
 impl SetWindowOptionExt for SetLocalWindowOption {
     fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().option(name).unset().build()
+        SetOption::new().window().option(name).unset().build()
     }
 
     // unset if value = None
@@ -22,8 +22,8 @@ impl SetWindowOptionExt for SetLocalWindowOption {
         value: Option<S>,
     ) -> TmuxCommand<'a> {
         let cmd = match value {
-            Some(data) => SetOption::new().option(name).value(data),
-            None => SetOption::new().option(name),
+            Some(data) => SetOption::new().window().option(name).value(data),
+            None => SetOption::new().window().option(name),
         };
         cmd.build()
     }
@@ -31,7 +31,12 @@ impl SetWindowOptionExt for SetLocalWindowOption {
 
 impl SetWindowOptionExt for SetGlobalWindowOption {
     fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().global().option(name).unset().build()
+        SetOption::new()
+            .global()
+            .window()
+            .option(name)
+            .unset()
+            .build()
     }
 
     // unset if value = None
@@ -40,8 +45,8 @@ impl SetWindowOptionExt for SetGlobalWindowOption {
         value: Option<S>,
     ) -> TmuxCommand<'a> {
         let cmd = match value {
-            Some(data) => SetOption::new().global().option(name).value(data),
-            None => SetOption::new().global().option(name),
+            Some(data) => SetOption::new().window().global().option(name).value(data),
+            None => SetOption::new().window().global().option(name),
         };
         cmd.build()
     }
