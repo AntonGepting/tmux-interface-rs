@@ -12,6 +12,8 @@ pub struct GetLocalWindowOption;
 
 impl GetWindowOption for GetLocalWindowOption {}
 
+impl GetUserOption for GetLocalWindowOption {}
+
 impl GetOptionExt for GetLocalWindowOption {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
         ShowOptions::new().window().option(name).build()
@@ -22,13 +24,11 @@ pub struct GetGlobalWindowOption;
 
 impl GetWindowOption for GetGlobalWindowOption {}
 
+impl GetUserOption for GetGlobalWindowOption {}
+
 impl GetOptionExt for GetGlobalWindowOption {
     fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new()
-            .window()
-            .option(name)
-            .global()
-            .build()
+        ShowOptions::new().window().option(name).global().build()
     }
 }
 
@@ -813,7 +813,4 @@ pub trait GetWindowOption: GetOptionExt {
     fn xterm_keys<'a>() -> TmuxCommand<'a> {
         Self::get(XTERM_KEYS)
     }
-
-    // XXX: user options?
-    //pub user_options: Option<HashMap<String, String>>
 }

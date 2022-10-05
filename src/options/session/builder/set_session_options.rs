@@ -1,20 +1,15 @@
 // NOTE: DRY, global and local session options structures have same methods therefore common setter
 // and getter traits were choosen for common use super::set_session_option::Self::Setter;
 //
-use crate::{Action, Activity, DetachOnDestroy, Status, StatusJustify};
 use crate::{
-    SetGlobalSessionOption, SetLocalSessionOption, SetSessionOption, StatusKeys, StatusPosition,
-    Switch, TmuxCommand, TmuxCommands,
+    Action, Activity, DetachOnDestroy, SetGlobalSessionOption, SetLocalSessionOption,
+    SetSessionOption, SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
+    TmuxCommand, TmuxCommands,
 };
 use std::borrow::Cow;
 
 #[derive(Debug)]
 pub struct SetLocalSessionOptions<'a> {
-    pub options: TmuxCommands<'a>,
-}
-
-#[derive(Debug)]
-pub struct SetGlobalSessionOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
@@ -40,6 +35,19 @@ impl<'a> SetSessionOptions<'a> for SetLocalSessionOptions<'a> {
     }
 }
 
+impl<'a> SetUserOptions<'a> for SetLocalSessionOptions<'a> {
+    type Setter = SetLocalSessionOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+}
+
+#[derive(Debug)]
+pub struct SetGlobalSessionOptions<'a> {
+    pub options: TmuxCommands<'a>,
+}
+
 impl<'a> SetSessionOptions<'a> for SetGlobalSessionOptions<'a> {
     type Setter = SetGlobalSessionOption;
 
@@ -59,6 +67,14 @@ impl<'a> SetSessionOptions<'a> for SetGlobalSessionOptions<'a> {
 
     fn build(self) -> TmuxCommands<'a> {
         self.options
+    }
+}
+
+impl<'a> SetUserOptions<'a> for SetGlobalSessionOptions<'a> {
+    type Setter = SetGlobalSessionOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
     }
 }
 

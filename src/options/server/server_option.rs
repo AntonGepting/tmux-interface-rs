@@ -96,6 +96,75 @@
 //}
 //}
 
+use crate::{Error, GetServerOption, GetServerOptionTrait, TmuxCommand, TmuxOutput};
+
+pub struct ServerOption<'a> {
+    pub invoker: &'a dyn Fn(&TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+}
+
+impl<'a> ServerOption<'a> {
+    pub fn new(invoker: &'a dyn Fn(&TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
+        ServerOption { invoker }
+    }
+
+    //pub fn get(&self, option: usize) {
+    ////"1".parse().ok();
+    ////match option {}
+    //}
+
+    /// `backspace key`
+    #[cfg(feature = "tmux_3_1")]
+    pub fn backspace(&self) -> Option<Cow<'a, str>> {
+        let cmd = GetServerOption::backspace();
+        let output = (self.invoker)(&cmd).ok()?;
+        //ServerOption::from_str(&output)
+    }
+
+    /// `buffer-limit number`
+    #[cfg(feature = "tmux_1_5")]
+    pub fn buffer_limit(&self) -> Option<usize> {
+        let cmd = GetServerOption::buffer_limit();
+        let output = (self.invoker)(&cmd).ok()?;
+        //ServerOption::from_str(&output)
+        dbg!(&output);
+        output.to_string().parse().ok()
+    }
+}
+
+#[test]
+fn server_option123() {
+    use crate::Tmux;
+
+    //let c = ServerOption::new(&|cmd| Tmux::with_command(cmd).output());
+    //let buffer_limit = c.buffer_limit();
+    //dbg!(buffer_limit);
+}
+
+//impl<'a> FromStr for ServerOption<'a> {
+//type Err = Error;
+
+//fn from_str(s: &str) -> Result<Self, Self::Err> {
+//for line in s.lines() {
+//let option: SingleLineServerOption = line.parse()?;
+
+//match option {
+//#[cfg(feature = "tmux_3_1")]
+//SingleLineServerOption::Backspace(value) => {
+//server_options.backspace = value.map(|s| s.into())
+//}
+//#[cfg(feature = "tmux_1_5")]
+//SingleLineServerOption::BufferLimit(value) => server_options.buffer_limit = value,
+//#[cfg(feature = "tmux_2_4")]
+//SingleLineServerOption::CommandAlias(value) => {
+//array_insert(&mut server_options.command_alias, value)
+//}
+//#[cfg(feature = "tmux_2_1")]
+//SingleLineServerOption::DefaultTerminal(value) => {}
+//}
+//}
+//}
+//}
+
 //impl fmt::Display for ServerOptionName {
 //fn fmt<'a>(&self, f: &mut fmt::Formatter) -> fmt::Result {
 //let s: Cow<'a, str> = self.into();

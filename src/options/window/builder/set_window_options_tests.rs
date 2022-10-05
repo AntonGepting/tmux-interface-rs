@@ -1,8 +1,10 @@
 #[test]
 fn set_window_options() {
+    #[cfg(feature = "tmux_2_9")]
+    use crate::WindowSize;
     use crate::{
-        ClockModeStyle, PaneBorderStatus, SetGlobalWindowOptions, SetWindowOptions, StatusKeys,
-        Switch,
+        ClockModeStyle, PaneBorderStatus, SetGlobalWindowOptions, SetUserOptions, SetWindowOptions,
+        StatusKeys, Switch,
     };
 
     let options = SetGlobalWindowOptions::new();
@@ -163,7 +165,7 @@ fn set_window_options() {
     #[cfg(feature = "tmux_1_9")]
     let options = options.window_status_style(Some("fg=colour247,bg=#282c34,none"));
     #[cfg(feature = "tmux_2_9")]
-    let options = options.window_size(Some("latest"));
+    let options = options.window_size(Some(WindowSize::Largest));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
     let options = options.word_separators(Some(""));
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
@@ -173,8 +175,7 @@ fn set_window_options() {
     #[cfg(feature = "tmux_1_0")]
     let options = options.xterm_keys(Some(Switch::On));
 
-    // XXX: user options?
-    //pub user_options: Option<HashMap<String, String>>
+    let options = options.user_option("user-option-name", Some("value"));
 
     let options = options.options.to_string();
 
@@ -370,7 +371,7 @@ fn set_window_options() {
         cmd, "window-status-style", "fg=colour247,bg=#282c34,none"
     ));
     #[cfg(feature = "tmux_2_9")]
-    origin.push(format!("{} {} {}", cmd, "window-size", ""));
+    origin.push(format!("{} {} {}", cmd, "window-size", "largest"));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
     origin.push(format!("{} {} {}", cmd, "word-separators", ""));
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
@@ -382,6 +383,8 @@ fn set_window_options() {
     origin.push(format!("{} {} {}", cmd, "wrap-search", "on"));
     #[cfg(feature = "tmux_1_0")]
     origin.push(format!("{} {} {}", cmd, "xterm-keys", "on"));
+
+    origin.push(format!("{} {} {}", cmd, "@user-option-name", "value"));
 
     let origin = origin.join(separator);
 

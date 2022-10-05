@@ -2,7 +2,8 @@
 fn set_local_session_options_tests() {
     use crate::{
         Action, Activity, DetachOnDestroy, SetGlobalSessionOptions, SetLocalSessionOptions,
-        SetSessionOptions, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
+        SetSessionOptions, SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition,
+        Switch,
     };
 
     let cmd = "set";
@@ -190,7 +191,7 @@ fn set_local_session_options_tests() {
         "{} {} {}",
         cmd, "word-separators", "!\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~"
     ));
-    //v.push(format!("{} {}", cmd, "@user_option_name"));
+    v.push(format!("{} {} {}", cmd, "@user-option-name", "value"));
     let origin = v.join(" ; ");
 
     let options = SetLocalSessionOptions::new();
@@ -356,6 +357,7 @@ fn set_local_session_options_tests() {
     let options = options.visual_silence(Some(Activity::Off));
     #[cfg(feature = "tmux_1_6")]
     let options = options.word_separators(Some("!\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~"));
+    let options = options.user_option("user-option-name", Some("value"));
 
     let options = options.build().to_string();
 
@@ -366,7 +368,8 @@ fn set_local_session_options_tests() {
 fn set_global_session_options_tests() {
     use crate::{
         Action, Activity, DetachOnDestroy, SetGlobalSessionOptions, SetLocalSessionOptions,
-        SetSessionOptions, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
+        SetSessionOptions, SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition,
+        Switch,
     };
 
     let cmd = "set -g";
@@ -554,7 +557,7 @@ fn set_global_session_options_tests() {
         "{} {} {}",
         cmd, "word-separators", "!\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~"
     ));
-    //v.push(format!("{} {}", cmd, "@user_option_name"));
+    v.push(format!("{} {} {}", cmd, "@user-option-name", "value"));
     let origin = v.join(" ; ");
 
     let options = SetGlobalSessionOptions::new();
@@ -720,6 +723,7 @@ fn set_global_session_options_tests() {
     let options = options.visual_silence(Some(Activity::Off));
     #[cfg(feature = "tmux_1_6")]
     let options = options.word_separators(Some("!\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~"));
+    let options = options.user_option("user-option-name", Some("value"));
 
     let options = options.build().to_string();
 

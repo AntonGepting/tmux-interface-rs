@@ -8,7 +8,7 @@
 
 #[test]
 fn get_server_option() {
-    use crate::options::get_server_option::GetServerOption;
+    use crate::{GetServerOption, GetServerOptionTrait, GetUserOption};
 
     let cmd = "show -s";
 
@@ -153,8 +153,8 @@ fn get_server_option() {
     }
 
     {
-        let origin = format!("{} {}", cmd, "@user_option_name");
-        let get_option = GetServerOption::user_option("user_option_name").to_string();
+        let origin = format!("{} {}", cmd, "@user-option-name");
+        let get_option = GetServerOption::user_option("user-option-name").to_string();
         assert_eq!(origin, get_option);
     }
 }

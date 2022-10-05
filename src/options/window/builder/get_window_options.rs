@@ -1,15 +1,10 @@
-use crate::options::window::get_window_option::{
-    GetGlobalWindowOption, GetLocalWindowOption, GetWindowOption,
+use crate::{
+    GetGlobalWindowOption, GetLocalWindowOption, GetUserOptions, GetWindowOption, TmuxCommand,
+    TmuxCommands,
 };
-use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
 pub struct GetGlobalWindowOptions<'a> {
-    pub options: TmuxCommands<'a>,
-}
-
-#[derive(Debug)]
-pub struct GetLocalWindowOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
@@ -33,6 +28,19 @@ impl<'a> GetWindowOptions<'a, GetLocalWindowOption> for GetLocalWindowOptions<'a
     }
 }
 
+impl<'a> GetUserOptions<'a> for GetGlobalWindowOptions<'a> {
+    type Getter = GetGlobalWindowOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+}
+
+#[derive(Debug)]
+pub struct GetLocalWindowOptions<'a> {
+    pub options: TmuxCommands<'a>,
+}
+
 // XXX: both are same, optimize
 impl<'a> GetWindowOptions<'a, GetGlobalWindowOption> for GetGlobalWindowOptions<'a> {
     fn new() -> Self
@@ -50,6 +58,14 @@ impl<'a> GetWindowOptions<'a, GetGlobalWindowOption> for GetGlobalWindowOptions<
 
     fn into_commands(self) -> TmuxCommands<'a> {
         self.options
+    }
+}
+
+impl<'a> GetUserOptions<'a> for GetLocalWindowOptions<'a> {
+    type Getter = GetLocalWindowOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
     }
 }
 

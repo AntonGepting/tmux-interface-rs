@@ -1,5 +1,6 @@
-use crate::GetPaneOption;
-use crate::TmuxCommands;
+use crate::{
+    GetPaneOption, GetPaneOptionTrait, GetUserOption, GetUserOptions, TmuxCommand, TmuxCommands,
+};
 use std::fmt;
 
 #[derive(Debug)]
@@ -7,12 +8,47 @@ pub struct GetPaneOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
-impl<'a> GetPaneOptions<'a> {
-    pub fn new() -> Self {
+impl<'a> GetPaneOptionsTrait<'a> for GetPaneOptions<'a> {
+    type Getter = GetPaneOption;
+
+    fn new() -> Self
+    where
+        Self: Sized,
+    {
         Self {
             options: TmuxCommands::new(),
         }
     }
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+
+    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
+        self.options.push_cmds(options);
+    }
+
+    fn build(self) -> TmuxCommands<'a> {
+        self.options
+    }
+}
+
+impl<'a> GetUserOptions<'a> for GetPaneOptions<'a> {
+    type Getter = GetPaneOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+}
+
+pub trait GetPaneOptionsTrait<'a> {
+    type Getter: GetPaneOptionTrait;
+
+    fn new() -> Self;
+
+    fn push(&mut self, option: TmuxCommand<'a>);
+
+    fn push_cmds(&mut self, options: TmuxCommands<'a>);
 
     /// ### Manual
     ///
@@ -21,8 +57,11 @@ impl<'a> GetPaneOptions<'a> {
     /// allow-rename [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn allow_rename(mut self) -> Self {
-        self.options.push(GetPaneOption::allow_rename());
+    fn allow_rename(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(GetPaneOption::allow_rename());
         self
     }
     /// ### Manual
@@ -32,8 +71,11 @@ impl<'a> GetPaneOptions<'a> {
     /// alternate-screen [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn alternate_screen(mut self) -> Self {
-        self.options.push(GetPaneOption::alternate_screen());
+    fn alternate_screen(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(GetPaneOption::alternate_screen());
         self
     }
 
@@ -49,8 +91,11 @@ impl<'a> GetPaneOptions<'a> {
     /// remain-on-exit [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn remain_on_exit(mut self) -> Self {
-        self.options.push(GetPaneOption::remain_on_exit());
+    fn remain_on_exit(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(GetPaneOption::remain_on_exit());
         self
     }
 
@@ -61,8 +106,11 @@ impl<'a> GetPaneOptions<'a> {
     /// window-active-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn window_active_style(mut self) -> Self {
-        self.options.push(GetPaneOption::window_active_style());
+    fn window_active_style(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(GetPaneOption::window_active_style());
         self
     }
 
@@ -73,8 +121,11 @@ impl<'a> GetPaneOptions<'a> {
     /// window-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn window_style(mut self) -> Self {
-        self.options.push(GetPaneOption::window_style());
+    fn window_style(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(GetPaneOption::window_style());
         self
     }
 
@@ -85,22 +136,13 @@ impl<'a> GetPaneOptions<'a> {
     /// synchronize-panes [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn synchronize_panes(mut self) -> Self {
-        self.options.push(GetPaneOption::synchronize_panes());
+    fn synchronize_panes(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(GetPaneOption::synchronize_panes());
         self
     }
 
-    /// ### Manual
-    ///
-    /// ```text
-    /// user option
-    /// ```
-    pub fn user_option<T: fmt::Display>(mut self, name: T) -> Self {
-        self.options.push(GetPaneOption::user_option(name));
-        self
-    }
-
-    pub fn build(self) -> TmuxCommands<'a> {
-        self.options
-    }
+    fn build(self) -> TmuxCommands<'a>;
 }

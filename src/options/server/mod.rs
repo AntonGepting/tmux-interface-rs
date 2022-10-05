@@ -61,15 +61,15 @@ pub mod builder;
 pub mod common;
 pub mod parser;
 
-//pub mod server_option;
-//pub mod server_options;
+pub mod server_option;
+pub mod server_options;
 
 pub use builder::*;
 pub use common::*;
 pub use parser::*;
 
-//pub use server_option::*;
-//pub use server_options::*;
+pub use server_option::*;
+pub use server_options::*;
 
 #[cfg(test)]
 #[path = "."]

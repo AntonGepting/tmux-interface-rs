@@ -2,7 +2,7 @@
 fn set_local_session_option_tests() {
     use crate::{
         Action, Activity, DetachOnDestroy, SetGlobalSessionOptions, SetLocalSessionOption,
-        SetLocalSessionOptions, SetSessionOption, Status, StatusJustify, StatusKeys,
+        SetLocalSessionOptions, SetSessionOption, SetUserOption, Status, StatusJustify, StatusKeys,
         StatusPosition, Switch,
     };
 
@@ -395,14 +395,19 @@ fn set_local_session_option_tests() {
                 .to_string();
         assert_eq!(origin, set_option);
     }
-    //v.push(format!("{} {}", cmd, "@user_option_name"));
+    {
+        let origin = format!("{} {} {}", cmd, "@user-option-name", "value");
+        let set_option =
+            SetLocalSessionOption::user_option("user-option-name", Some("value")).to_string();
+        assert_eq!(origin, set_option);
+    }
 }
 
 #[test]
 fn set_global_session_option_tests() {
     use crate::{
         Action, Activity, DetachOnDestroy, SetGlobalSessionOption, SetGlobalSessionOptions,
-        SetLocalSessionOptions, SetSessionOption, Status, StatusJustify, StatusKeys,
+        SetLocalSessionOptions, SetSessionOption, SetUserOption, Status, StatusJustify, StatusKeys,
         StatusPosition, Switch,
     };
 
@@ -795,5 +800,10 @@ fn set_global_session_option_tests() {
                 .to_string();
         assert_eq!(origin, set_option);
     }
-    //v.push(format!("{} {}", cmd, "@user_option_name"));
+    {
+        let origin = format!("{} {} {}", cmd, "@user-option-name", "value");
+        let set_option =
+            SetGlobalSessionOption::user_option("user-option-name", Some("value")).to_string();
+        assert_eq!(origin, set_option);
+    }
 }

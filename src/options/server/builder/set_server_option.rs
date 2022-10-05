@@ -1,9 +1,12 @@
 use crate::options::*;
 use crate::{SetOption, SetOptionExt, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
-use std::fmt;
 
 pub struct SetServerOption;
+
+impl SetServerOptionTrait for SetServerOption {}
+
+impl SetUserOption for SetServerOption {}
 
 impl SetOptionExt for SetServerOption {
     fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
@@ -30,18 +33,43 @@ impl SetOptionExt for SetServerOption {
     }
 }
 
-impl SetServerOption {
-    fn set_array<'a, S: fmt::Display>(name: S, value: Option<Vec<String>>) -> TmuxCommands<'a> {
-        let mut cmds = TmuxCommands::new();
-        if let Some(data) = value {
-            for (i, item) in data.iter().enumerate() {
-                cmds.push(Self::set(format!("{}[{}]", name, i), Some(item.to_owned())));
-            }
-        } else {
-            cmds.push(Self::set(format!("{}", name), Some("")));
-        }
-        cmds
-    }
+//impl SetOptionExt for SetServerOption {
+//fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
+//SetOption::new().server().option(name).unset().build()
+//}
+
+//fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+//name: T,
+//value: Option<S>,
+//) -> TmuxCommand<'a> {
+//Self::set_ext(name, value)
+//}
+
+//// unset if value = None
+//fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+//name: T,
+//value: Option<S>,
+//) -> TmuxCommand<'a> {
+//let cmd = match value {
+//Some(data) => SetOption::new().server().option(name).value(data),
+//None => SetOption::new().server().option(name),
+//};
+//cmd.build()
+//}
+//}
+
+pub trait SetServerOptionTrait: SetOptionExt {
+    //fn set_array<'a, S: fmt::Display>(name: S, value: Option<Vec<String>>) -> TmuxCommands<'a> {
+    //let mut cmds = TmuxCommands::new();
+    //if let Some(data) = value {
+    //for (i, item) in data.iter().enumerate() {
+    //cmds.push(Self::set(format!("{}[{}]", name, i), Some(item.to_owned())));
+    //}
+    //} else {
+    //cmds.push(Self::set(format!("{}", name), Some("")));
+    //}
+    //cmds
+    //}
 
     /// ### Manual
     ///
@@ -50,7 +78,7 @@ impl SetServerOption {
     /// backspace key
     /// ```
     #[cfg(feature = "tmux_3_1")]
-    pub fn backspace<'a, S: Into<Cow<'a, str>>>(backspace: Option<S>) -> TmuxCommand<'a> {
+    fn backspace<'a, S: Into<Cow<'a, str>>>(backspace: Option<S>) -> TmuxCommand<'a> {
         Self::set(BACKSPACE, backspace)
     }
 
@@ -61,7 +89,7 @@ impl SetServerOption {
     /// buffer-limit number
     /// ```
     #[cfg(feature = "tmux_1_5")]
-    pub fn buffer_limit<'a>(buffer_limit: Option<usize>) -> TmuxCommand<'a> {
+    fn buffer_limit<'a>(buffer_limit: Option<usize>) -> TmuxCommand<'a> {
         Self::set(BUFFER_LIMIT, buffer_limit.map(|s| s.to_string()))
     }
 
@@ -72,7 +100,7 @@ impl SetServerOption {
     /// command-alias[] name=value
     /// ```
     #[cfg(feature = "tmux_2_4")]
-    pub fn command_alias<'a>(command_alias: Option<Vec<String>>) -> TmuxCommands<'a> {
+    fn command_alias<'a, S: Into<Cow<'a, str>>>(command_alias: Option<Vec<S>>) -> TmuxCommands<'a> {
         Self::set_array(COMMAND_ALIAS, command_alias)
     }
 
@@ -83,7 +111,7 @@ impl SetServerOption {
     /// default-terminal terminal
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn copy_command<'a, S: Into<Cow<'a, str>>>(copy_command: Option<S>) -> TmuxCommand<'a> {
+    fn copy_command<'a, S: Into<Cow<'a, str>>>(copy_command: Option<S>) -> TmuxCommand<'a> {
         Self::set(COPY_COMMAND, copy_command)
     }
 
@@ -94,9 +122,7 @@ impl SetServerOption {
     /// copy-command shell-command
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    pub fn default_terminal<'a, S: Into<Cow<'a, str>>>(
-        default_terminal: Option<S>,
-    ) -> TmuxCommand<'a> {
+    fn default_terminal<'a, S: Into<Cow<'a, str>>>(default_terminal: Option<S>) -> TmuxCommand<'a> {
         Self::set(DEFAULT_TERMINAL, default_terminal)
     }
 
@@ -107,7 +133,7 @@ impl SetServerOption {
     /// escape-time time
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    pub fn escape_time<'a>(escape_time: Option<usize>) -> TmuxCommand<'a> {
+    fn escape_time<'a>(escape_time: Option<usize>) -> TmuxCommand<'a> {
         Self::set(ESCAPE_TIME, escape_time.map(|s| s.to_string()))
     }
 
@@ -118,7 +144,7 @@ impl SetServerOption {
     /// editor shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn editor<'a, S: Into<Cow<'a, str>>>(editor: Option<S>) -> TmuxCommand<'a> {
+    fn editor<'a, S: Into<Cow<'a, str>>>(editor: Option<S>) -> TmuxCommand<'a> {
         Self::set(EDITOR, editor)
     }
 
@@ -129,7 +155,7 @@ impl SetServerOption {
     /// exit-empty [on | off]
     /// ```
     #[cfg(feature = "tmux_2_7")]
-    pub fn exit_empty<'a>(exit_empty: Option<Switch>) -> TmuxCommand<'a> {
+    fn exit_empty<'a>(exit_empty: Option<Switch>) -> TmuxCommand<'a> {
         Self::set_ext(EXIT_EMPTY, exit_empty.map(|s| s.to_string()))
     }
 
@@ -140,7 +166,7 @@ impl SetServerOption {
     /// exit-unattached [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    pub fn exit_unattached<'a>(exit_unattached: Option<Switch>) -> TmuxCommand<'a> {
+    fn exit_unattached<'a>(exit_unattached: Option<Switch>) -> TmuxCommand<'a> {
         Self::set_ext(EXIT_UNATTACHED, exit_unattached.map(|s| s.to_string()))
     }
 
@@ -151,7 +177,7 @@ impl SetServerOption {
     /// extended-keys [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn extended_keys<'a>(extended_keys: Option<Switch>) -> TmuxCommand<'a> {
+    fn extended_keys<'a>(extended_keys: Option<Switch>) -> TmuxCommand<'a> {
         Self::set_ext(EXTENDED_KEYS, extended_keys.map(|s| s.to_string()))
     }
 
@@ -162,7 +188,7 @@ impl SetServerOption {
     /// focus-events [on | off]
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn focus_events<'a>(focus_events: Option<Switch>) -> TmuxCommand<'a> {
+    fn focus_events<'a>(focus_events: Option<Switch>) -> TmuxCommand<'a> {
         Self::set_ext(FOCUS_EVENTS, focus_events.map(|s| s.to_string()))
     }
 
@@ -173,7 +199,7 @@ impl SetServerOption {
     /// history-file path
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    pub fn history_file<'a, S: Into<Cow<'a, str>>>(history_file: Option<S>) -> TmuxCommand<'a> {
+    fn history_file<'a, S: Into<Cow<'a, str>>>(history_file: Option<S>) -> TmuxCommand<'a> {
         Self::set(HISTORY_FILE, history_file)
     }
 
@@ -184,7 +210,7 @@ impl SetServerOption {
     /// message-limit number
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    pub fn message_limit<'a>(message_limit: Option<usize>) -> TmuxCommand<'a> {
+    fn message_limit<'a>(message_limit: Option<usize>) -> TmuxCommand<'a> {
         Self::set(MESSAGE_LIMIT, message_limit.map(|s| s.to_string()))
     }
 
@@ -195,8 +221,11 @@ impl SetServerOption {
     /// prompt-history-limit number
     /// ```
     #[cfg(feature = "tmux_3_3")]
-    pub fn prompt_history_limit<'a>(prompt_history_limit: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(PROMPT_HISTORY_LIMIT, prompt_history_limit.to_string())
+    fn prompt_history_limit<'a>(prompt_history_limit: Option<usize>) -> TmuxCommand<'a> {
+        Self::set(
+            PROMPT_HISTORY_LIMIT,
+            prompt_history_limit.map(|s| s.to_string()),
+        )
     }
 
     /// ### Manual
@@ -206,7 +235,7 @@ impl SetServerOption {
     /// set-clipboard [on | external | off]
     /// ```
     #[cfg(feature = "tmux_1_5")]
-    pub fn set_clipboard<'a>(set_clipboard: Option<SetClipboard>) -> TmuxCommand<'a> {
+    fn set_clipboard<'a>(set_clipboard: Option<SetClipboard>) -> TmuxCommand<'a> {
         Self::set_ext(SET_CLIPBOARD, set_clipboard.map(|s| s.to_string()))
     }
 
@@ -217,7 +246,9 @@ impl SetServerOption {
     /// terminal-features[] string
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn terminal_features<'a>(terminal_features: Option<Vec<String>>) -> TmuxCommands<'a> {
+    fn terminal_features<'a, S: Into<Cow<'a, str>>>(
+        terminal_features: Option<Vec<S>>,
+    ) -> TmuxCommands<'a> {
         Self::set_array(TERMINAL_FEATURES, terminal_features)
     }
 
@@ -228,7 +259,9 @@ impl SetServerOption {
     /// terminal-overrides[] string
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    pub fn terminal_overrides<'a>(terminal_overrides: Option<Vec<String>>) -> TmuxCommands<'a> {
+    fn terminal_overrides<'a, S: Into<Cow<'a, str>>>(
+        terminal_overrides: Option<Vec<S>>,
+    ) -> TmuxCommands<'a> {
         Self::set_array(TERMINAL_OVERRIDES, terminal_overrides)
     }
 
@@ -239,7 +272,7 @@ impl SetServerOption {
     /// user-keys[] key
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn user_keys<'a>(user_keys: Option<Vec<String>>) -> TmuxCommands<'a> {
+    fn user_keys<'a, S: Into<Cow<'a, str>>>(user_keys: Option<Vec<S>>) -> TmuxCommands<'a> {
         Self::set_array(USER_KEYS, user_keys)
     }
 
@@ -250,7 +283,7 @@ impl SetServerOption {
     /// quiet [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    pub fn quiet<'a>(quiet: Option<Switch>) -> TmuxCommand<'a> {
+    fn quiet<'a>(quiet: Option<Switch>) -> TmuxCommand<'a> {
         Self::set_ext(QUIET, quiet.map(|s| s.to_string()))
     }
 
@@ -261,16 +294,7 @@ impl SetServerOption {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    pub fn detach_on_destroy<'a>(detach_on_destroy: Option<Switch>) -> TmuxCommand<'a> {
+    fn detach_on_destroy<'a>(detach_on_destroy: Option<Switch>) -> TmuxCommand<'a> {
         Self::set_ext(DETACH_ON_DESTROY, detach_on_destroy.map(|s| s.to_string()))
-    }
-
-    /// ### Manual
-    ///
-    /// ```text
-    /// user option
-    /// ```
-    pub fn user_option<'a, S: fmt::Display>(name: S, value: Option<String>) -> TmuxCommand<'a> {
-        Self::set(format!("{}{}", USER_OPTION_MARKER, name), value)
     }
 }

@@ -1,4 +1,3 @@
-
 // custom storage (custom_struct and pointers to it's fields)
 pub enum TmuxServerOptionOutputStore<'a> {
     // backspace key
@@ -238,5 +237,3 @@ impl<'a> TmuxServerOptionsOutputStore<'a> {
     //}
     //}
 }
-
-

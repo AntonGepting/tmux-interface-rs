@@ -1,7 +1,6 @@
 #[test]
 fn get_session_options() {
-    use crate::options::session::get_session_options::GetGlobalSessionOptions;
-    use crate::options::session::get_session_options::GetSessionOptions;
+    use crate::{GetGlobalSessionOptions, GetSessionOptions, GetUserOptions};
 
     let options = GetGlobalSessionOptions::new();
     #[cfg(feature = "tmux_2_6")]
@@ -166,6 +165,7 @@ fn get_session_options() {
     let options = options.visual_silence();
     #[cfg(feature = "tmux_1_6")]
     let options = options.word_separators();
+    let options = options.user_option("user-option-name");
 
     let options = options.options.to_string();
 
@@ -335,6 +335,7 @@ fn get_session_options() {
     origin.push(format!("{} {}", cmd, "visual-silence"));
     #[cfg(feature = "tmux_1_6")]
     origin.push(format!("{} {}", cmd, "word-separators"));
+    origin.push(format!("{} {}", cmd, "@user-option-name"));
 
     let origin = origin.join(separator);
 

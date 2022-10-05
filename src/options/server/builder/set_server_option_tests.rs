@@ -1,6 +1,9 @@
 #[test]
 fn set_server_option() {
-    use crate::{SetClipboard, SetServerOption, Switch};
+    use crate::{
+        SetClipboard, SetOptionExt, SetServerOption, SetServerOptionTrait, SetUserOption,
+        SetUserOptions, Switch,
+    };
 
     let cmd = "set -s";
 
@@ -137,14 +140,14 @@ fn set_server_option() {
     #[cfg(feature = "tmux_2_0")]
     {
         let origin = format!("{} {} {}", cmd, "terminal-overrides", "");
-        let set_option = SetServerOption::terminal_overrides(None).to_string();
+        let set_option = SetServerOption::terminal_overrides(None::<Vec<String>>).to_string();
         assert_eq!(origin, set_option);
     }
 
     #[cfg(feature = "tmux_3_0")]
     {
         let origin = format!("{} {} {}", cmd, "user-keys", "");
-        let set_option = SetServerOption::user_keys(None).to_string();
+        let set_option = SetServerOption::user_keys(None::<Vec<String>>).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -163,9 +166,9 @@ fn set_server_option() {
     }
 
     {
-        let origin = format!("{} {} {}", cmd, "@user_option_name", "value");
+        let origin = format!("{} {} {}", cmd, "@user-option-name", "value");
         let set_option =
-            SetServerOption::user_option("user_option_name", Some("value".to_string())).to_string();
+            SetServerOption::user_option("user-option-name", Some("value".to_string())).to_string();
         assert_eq!(origin, set_option);
     }
 }

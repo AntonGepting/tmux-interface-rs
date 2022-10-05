@@ -1,6 +1,6 @@
 #[test]
 fn get_local_window_option_tests() {
-    use crate::{GetLocalWindowOption, GetWindowOption};
+    use crate::{GetLocalWindowOption, GetUserOption, GetWindowOption};
 
     let cmd = "show -w";
 
@@ -919,6 +919,9 @@ fn get_local_window_option_tests() {
         assert_eq!(origin, set_option);
     }
 
-    // XXX: user options?
-    //pub user_options: Option<HashMap<String, String>>
+    {
+        let origin = format!("{} {}", cmd, "@user-option-name");
+        let set_option = GetLocalWindowOption::user_option("user-option-name").to_string();
+        assert_eq!(origin, set_option);
+    }
 }

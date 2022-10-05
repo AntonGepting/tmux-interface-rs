@@ -51,12 +51,12 @@ pub struct ServerOptions<'a> {
     /// `command-alias[] name=value`
     #[cfg(feature = "tmux_2_4")]
     pub command_alias: Option<Vec<String>>,
-    /// `default-terminal terminal`
-    #[cfg(feature = "tmux_2_1")]
-    pub default_terminal: Option<Cow<'a, str>>,
     /// `copy-command shell-command`
     #[cfg(feature = "tmux_3_2")]
     pub copy_command: Option<Cow<'a, str>>,
+    /// `default-terminal terminal`
+    #[cfg(feature = "tmux_2_1")]
+    pub default_terminal: Option<Cow<'a, str>>,
     /// `escape-time time`
     #[cfg(feature = "tmux_1_2")]
     pub escape_time: Option<usize>,
@@ -102,7 +102,7 @@ pub struct ServerOptions<'a> {
     /// `detach-on-destroy [on | off]`
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     pub detach_on_destroy: Option<Switch>,
-    // `@USER_OPTION`
+    // `@user-option-name value`
     //pub user_options: Option<HashMap<String, String>>
 }
 
@@ -204,20 +204,8 @@ impl<'a> ServerOptions<'a> {
     /// command-alias[] name=value
     /// ```
     #[cfg(feature = "tmux_2_4")]
-    pub fn command_alias(mut self, command_alias: Vec<&str>) -> Self {
-        self.command_alias = Some(command_alias.iter().map(|s| (*s).to_string()).collect());
-        self
-    }
-
-    /// ### Manual
-    ///
-    /// tmux ^2.1:
-    /// ```text
-    /// default-terminal terminal
-    /// ```
-    #[cfg(feature = "tmux_2_1")]
-    pub fn default_terminal<S: Into<Cow<'a, str>>>(mut self, default_terminal: S) -> Self {
-        self.default_terminal = Some(default_terminal.into());
+    pub fn command_alias(mut self, command_alias: Vec<String>) -> Self {
+        self.command_alias = Some(command_alias);
         self
     }
 
@@ -230,6 +218,18 @@ impl<'a> ServerOptions<'a> {
     #[cfg(feature = "tmux_3_2")]
     pub fn copy_command<S: Into<Cow<'a, str>>>(mut self, copy_command: S) -> Self {
         self.copy_command = Some(copy_command.into());
+        self
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^2.1:
+    /// ```text
+    /// default-terminal terminal
+    /// ```
+    #[cfg(feature = "tmux_2_1")]
+    pub fn default_terminal<S: Into<Cow<'a, str>>>(mut self, default_terminal: S) -> Self {
+        self.default_terminal = Some(default_terminal.into());
         self
     }
 
@@ -329,7 +329,17 @@ impl<'a> ServerOptions<'a> {
         self
     }
 
-    // `prompt-history-limit number`
+    /// ### Manual
+    ///
+    /// tmux ^3.3:
+    /// ```text
+    /// prompt-history-limit number
+    /// ```
+    #[cfg(feature = "tmux_3_3")]
+    pub fn prompt_history_limit(mut self, prompt_history_limit: usize) -> Self {
+        self.prompt_history_limit = Some(prompt_history_limit);
+        self
+    }
 
     /// ### Manual
     ///
@@ -343,7 +353,17 @@ impl<'a> ServerOptions<'a> {
         self
     }
 
-    // `terminal-features[] string`
+    /// ### Manual
+    ///
+    /// tmux ^3.2:
+    /// ```text
+    /// terminal-features[] string
+    /// ```
+    #[cfg(feature = "tmux_3_2")]
+    pub fn terminal_features(mut self, terminal_features: Vec<String>) -> Self {
+        self.terminal_features = Some(terminal_features.iter().map(|s| (*s).to_string()).collect());
+        self
+    }
 
     /// ### Manual
     ///
@@ -352,7 +372,7 @@ impl<'a> ServerOptions<'a> {
     /// terminal-overrides[] string
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    pub fn terminal_overrides(mut self, terminal_overrides: Vec<&str>) -> Self {
+    pub fn terminal_overrides(mut self, terminal_overrides: Vec<String>) -> Self {
         self.terminal_overrides = Some(
             terminal_overrides
                 .iter()
@@ -370,30 +390,61 @@ impl<'a> ServerOptions<'a> {
     /// ```
     #[cfg(feature = "tmux_3_0")]
     pub fn user_keys(mut self, user_keys: Vec<String>) -> Self {
-        self.user_keys = Some(user_keys);
+        self.user_keys = Some(user_keys.iter().map(|s| (*s).to_string()).collect());
         self
     }
 
-    // `quiet [on | off]`
+    /// ### Manual
+    ///
+    /// tmux ^1.2 v2.0:
+    /// ```text
+    /// quiet [on | off]
+    /// ```
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+    fn quiet(mut self, quiet: bool) -> Self {
+        self.quiet = Some(quiet);
+        self
+    }
 
-    // `detach-on-destroy [on | off]`
+    /// ### Manual
+    ///
+    /// tmux ^1.3 v1.4:
+    /// ```text
+    /// detach-on-destroy [on | off]
+    /// ```
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+    fn detach_on_destroy(mut self, detach_on_destroy: bool) -> Self {
+        self.detach_on_destroy = Some(detach_on_destroy);
+        self
+    }
 
     // `@USER_OPTION`
-    //pub user_options: Option<HashMap<String, String>>
+    //fn user_options(mut self, user_options: HashMap<String, String>) -> Self {
+    //unimplemented!()
+    //}
 }
 
-//pub struct ServerOptionsController {
-//pub getter:
+//pub struct ServerOptionsCtl {
+//pub getter: &dyn Fn(&TmuxCommand<'a>) -> String
 //pub setter:
 //pub get_global:
 //}
 
 impl<'a> ServerOptions<'a> {
-    pub fn get() -> TmuxCommand<'a> {
-        ShowOptions::new().server().build()
+    //pub fn get() -> Result<Self, Error> {
+    //Self::get_ext(&|cmd| Tmux::with_command(&cmd).output())
+    //}
+
+    pub fn get_ext(invoke: &dyn Fn(&mut TmuxCommand<'a>) -> String) -> Result<Self, Error> {
+        let mut cmd = ShowOptions::new().server().build();
+        let output = invoke(&mut cmd);
+        ServerOptions::from_str(&output)
     }
 
-    pub fn set(self) -> TmuxCommands<'a> {
+    pub fn set_ext(
+        self,
+        invoke: &dyn Fn(&TmuxCommands<'a>) -> Result<String, Error>,
+    ) -> Result<String, Error> {
         let cmds = SetServerOptions::new();
 
         #[cfg(feature = "tmux_3_1")]
@@ -405,11 +456,11 @@ impl<'a> ServerOptions<'a> {
         #[cfg(feature = "tmux_2_4")]
         let cmds = cmds.command_alias(self.command_alias);
 
-        #[cfg(feature = "tmux_2_1")]
-        let cmds = cmds.default_terminal(self.default_terminal);
-
         #[cfg(feature = "tmux_3_2")]
         let cmds = cmds.copy_command(self.copy_command);
+
+        #[cfg(feature = "tmux_2_1")]
+        let cmds = cmds.default_terminal(self.default_terminal);
 
         #[cfg(feature = "tmux_1_2")]
         let cmds = cmds.escape_time(self.escape_time);
@@ -458,22 +509,36 @@ impl<'a> ServerOptions<'a> {
 
         // `@USER_OPTION`
 
-        cmds.build()
+        let cmds = cmds.build();
+
+        invoke(&cmds)
     }
 }
 
 #[test]
-fn server_options23() {
+fn server_options223() {
     use crate::Tmux;
 
-    let s = Tmux::new().commands(
-        ServerOptions::new()
-            .message_limit(10)
-            .buffer_limit(50)
-            .set(),
-    );
-    dbg!(s.build().to_string());
+    let server_options = ServerOptions::get_ext(&|cmd| {
+        let output = Tmux::new().command(cmd.to_owned()).output();
+        output.unwrap().to_string()
+    });
+
+    dbg!(server_options);
 }
+
+//#[test]
+//fn server_options23() {
+//use crate::Tmux;
+
+//let s = Tmux::new().commands(
+//ServerOptions::new()
+//.message_limit(10)
+//.buffer_limit(50)
+//.set(),
+//);
+//dbg!(s.build().to_string());
+//}
 
 // XXX: bitmask is overkill now, mb later use for multiple select
 // NOTE: not allows selective get by bitmask
@@ -579,7 +644,9 @@ impl<'a> FromStr for ServerOptions<'a> {
 
             match option {
                 #[cfg(feature = "tmux_3_1")]
-                SingleLineServerOption::Backspace(value) => server_options.backspace = value,
+                SingleLineServerOption::Backspace(value) => {
+                    server_options.backspace = value.map(|s| s.into())
+                }
                 #[cfg(feature = "tmux_1_5")]
                 SingleLineServerOption::BufferLimit(value) => server_options.buffer_limit = value,
                 #[cfg(feature = "tmux_2_4")]
@@ -591,11 +658,15 @@ impl<'a> FromStr for ServerOptions<'a> {
                     server_options.default_terminal = value.map(|s| s.into())
                 }
                 #[cfg(feature = "tmux_3_2")]
-                SingleLineServerOption::CopyCommand(value) => server_options.copy_command = value,
+                SingleLineServerOption::CopyCommand(value) => {
+                    server_options.copy_command = value.map(|s| s.into())
+                }
                 #[cfg(feature = "tmux_1_2")]
                 SingleLineServerOption::EscapeTime(value) => server_options.escape_time = value,
                 #[cfg(feature = "tmux_3_2")]
-                SingleLineServerOption::Editor(value) => server_options.editor = value,
+                SingleLineServerOption::Editor(value) => {
+                    server_options.editor = value.map(|s| s.into())
+                }
                 #[cfg(feature = "tmux_2_7")]
                 SingleLineServerOption::ExitEmpty(value) => server_options.exit_empty = value,
                 #[cfg(feature = "tmux_1_4")]
@@ -636,7 +707,7 @@ impl<'a> FromStr for ServerOptions<'a> {
                 SingleLineServerOption::DetachOnDestroy(value) => {
                     server_options.detach_on_destroy = value
                 }
-
+                // XXX: error or just skip decide?
                 _ => return Err(Error::Tmux(format!("unknown option:"))),
             }
         }

@@ -45,18 +45,13 @@
 //! ```text
 //! ```
 
-use crate::options::session::get_session_option::{
-    GetGlobalSessionOption, GetLocalSessionOption, GetSessionOption,
+use crate::{
+    GetGlobalSessionOption, GetLocalSessionOption, GetSessionOption, GetUserOptions, TmuxCommand,
+    TmuxCommands,
 };
-use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
 pub struct GetGlobalSessionOptions<'a> {
-    pub options: TmuxCommands<'a>,
-}
-
-#[derive(Debug)]
-pub struct GetLocalSessionOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
@@ -80,6 +75,19 @@ impl<'a> GetSessionOptions<'a, GetLocalSessionOption> for GetLocalSessionOptions
     }
 }
 
+#[derive(Debug)]
+pub struct GetLocalSessionOptions<'a> {
+    pub options: TmuxCommands<'a>,
+}
+
+impl<'a> GetUserOptions<'a> for GetGlobalSessionOptions<'a> {
+    type Getter = GetGlobalSessionOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+}
+
 // XXX: both are same, optimize
 impl<'a> GetSessionOptions<'a, GetGlobalSessionOption> for GetGlobalSessionOptions<'a> {
     fn new() -> Self
@@ -97,6 +105,14 @@ impl<'a> GetSessionOptions<'a, GetGlobalSessionOption> for GetGlobalSessionOptio
 
     fn into_commands(self) -> TmuxCommands<'a> {
         self.options
+    }
+}
+
+impl<'a> GetUserOptions<'a> for GetLocalSessionOptions<'a> {
+    type Getter = GetLocalSessionOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
     }
 }
 

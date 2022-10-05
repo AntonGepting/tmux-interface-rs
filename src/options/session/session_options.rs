@@ -263,9 +263,15 @@ use std::borrow::Cow;
 //}
 
 impl<'a> SessionOptions<'a> {
-    pub fn get() -> TmuxCommand<'a> {
-        ShowOptions::new().build()
-        //GetServerOptions::new();
+    //pub fn get() -> TmuxCommand<'a> {
+    //ShowOptions::new().build()
+    ////GetServerOptions::new();
+    //}
+
+    pub fn get_ext(invoke: &dyn Fn(&TmuxCommand<'a>) -> String) -> Result<Self, Error> {
+        let cmd = ShowOptions::new().server().build();
+        let output = invoke(&cmd);
+        SessionOptions::from_str(&output)
     }
 
     pub fn set(self) -> TmuxCommands<'a> {

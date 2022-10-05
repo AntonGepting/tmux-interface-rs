@@ -4,18 +4,13 @@
 #[cfg(feature = "tmux_2_9")]
 use crate::WindowSize;
 use crate::{
-    ClockModeStyle, PaneBorderStatus, SetGlobalWindowOption, SetLocalWindowOption,
+    ClockModeStyle, PaneBorderStatus, SetGlobalWindowOption, SetLocalWindowOption, SetUserOptions,
     SetWindowOptionExt, StatusKeys, Switch, TmuxCommand, TmuxCommands,
 };
 use std::borrow::Cow;
 
 #[derive(Debug)]
 pub struct SetLocalWindowOptions<'a> {
-    pub options: TmuxCommands<'a>,
-}
-
-#[derive(Debug)]
-pub struct SetGlobalWindowOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
@@ -41,6 +36,19 @@ impl<'a> SetWindowOptions<'a> for SetLocalWindowOptions<'a> {
     }
 }
 
+impl<'a> SetUserOptions<'a> for SetLocalWindowOptions<'a> {
+    type Setter = SetLocalWindowOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+}
+
+#[derive(Debug)]
+pub struct SetGlobalWindowOptions<'a> {
+    pub options: TmuxCommands<'a>,
+}
+
 impl<'a> SetWindowOptions<'a> for SetGlobalWindowOptions<'a> {
     type Setter = SetGlobalWindowOption;
 
@@ -63,19 +71,13 @@ impl<'a> SetWindowOptions<'a> for SetGlobalWindowOptions<'a> {
     }
 }
 
-//impl<'a> SetGlobalWindowOptions<'a> {}
+impl<'a> SetUserOptions<'a> for SetGlobalWindowOptions<'a> {
+    type Setter = SetGlobalWindowOption;
 
-//impl<'a> SetLocalWindowOptions<'a> {
-//pub fn new() -> Self{
-//Self {
-//options: TmuxCommands::new(),
-//}
-//}
-
-////pub fn push(&mut self, option: TmuxCommand<'a>) {
-////self.push(option);
-////}
-//}
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+}
 
 pub trait SetWindowOptions<'a> {
     type Setter: SetWindowOptionExt;

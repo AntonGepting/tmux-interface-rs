@@ -1,7 +1,6 @@
 #[test]
 fn get_window_options() {
-    use crate::GetGlobalWindowOptions;
-    use crate::GetWindowOptions;
+    use crate::{GetGlobalWindowOptions, GetUserOptions, GetWindowOptions};
 
     let options = GetGlobalWindowOptions::new();
 
@@ -146,8 +145,7 @@ fn get_window_options() {
     #[cfg(feature = "tmux_1_0")]
     let options = options.xterm_keys();
 
-    // XXX: user options?
-    //pub user_options: Option<HashMap<String, String>>
+    let options = options.user_option("user-option-name");
 
     let options = options.options.to_string();
 
@@ -295,6 +293,8 @@ fn get_window_options() {
     origin.push(format!("{} {}", cmd, "wrap-search"));
     #[cfg(feature = "tmux_1_0")]
     origin.push(format!("{} {}", cmd, "xterm-keys"));
+
+    origin.push(format!("{} {}", cmd, "@user-option-name"));
 
     let origin = origin.join(separator);
 

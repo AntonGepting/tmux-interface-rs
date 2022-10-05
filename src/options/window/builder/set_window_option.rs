@@ -1,7 +1,7 @@
 use crate::options::*;
 #[cfg(feature = "tmux_2_9")]
 use crate::WindowSize;
-use crate::{SetOption, StatusKeys, TmuxCommand, TmuxCommands};
+use crate::{SetOption, SetUserOption, StatusKeys, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 use std::fmt;
 
@@ -9,9 +9,8 @@ use std::fmt;
 
 pub struct SetLocalWindowOption;
 
-pub struct SetGlobalWindowOption;
-
-impl SetWindowOptionExt for SetLocalWindowOption {
+//impl SetWindowOptionExt for SetLocalWindowOption {
+impl SetOptionExt for SetLocalWindowOption {
     fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
         SetOption::new().window().option(name).unset().build()
     }
@@ -29,7 +28,14 @@ impl SetWindowOptionExt for SetLocalWindowOption {
     }
 }
 
-impl SetWindowOptionExt for SetGlobalWindowOption {
+impl SetWindowOptionExt for SetLocalWindowOption {}
+
+impl SetUserOption for SetLocalWindowOption {}
+
+pub struct SetGlobalWindowOption;
+
+//impl SetWindowOptionExt for SetGlobalWindowOption {
+impl SetOptionExt for SetGlobalWindowOption {
     fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
         SetOption::new()
             .global()
@@ -52,38 +58,42 @@ impl SetWindowOptionExt for SetGlobalWindowOption {
     }
 }
 
+impl SetWindowOptionExt for SetGlobalWindowOption {}
+
+impl SetUserOption for SetGlobalWindowOption {}
+
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-pub trait SetWindowOptionExt {
-    fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        match value {
-            Some(data) => Self::set_ext(name, Some(data)),
-            None => Self::unset(name),
-        }
-    }
+pub trait SetWindowOptionExt: SetOptionExt {
+    //fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+    //name: T,
+    //value: Option<S>,
+    //) -> TmuxCommand<'a> {
+    //match value {
+    //Some(data) => Self::set_ext(name, Some(data)),
+    //None => Self::unset(name),
+    //}
+    //}
 
-    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().option(name).unset().build()
-    }
+    //fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
+    //SetOption::new().option(name).unset().build()
+    //}
 
-    // unset if value = None
-    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        //(self.setter)(name.into(), value.map(|s| s.into()))
-        let cmd = match value {
-            Some(data) => SetOption::new().option(name).value(data),
-            None => SetOption::new().option(name),
-        };
-        cmd.build()
-    }
+    //// unset if value = None
+    //fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+    //name: T,
+    //value: Option<S>,
+    //) -> TmuxCommand<'a> {
+    ////(self.setter)(name.into(), value.map(|s| s.into()))
+    //let cmd = match value {
+    //Some(data) => SetOption::new().option(name).value(data),
+    //None => SetOption::new().option(name),
+    //};
+    //cmd.build()
+    //}
 
     fn set_array<'a, S: fmt::Display>(name: S, value: Option<Vec<String>>) -> TmuxCommands<'a> {
         let mut cmds = TmuxCommands::new();

@@ -2,7 +2,6 @@ use crate::options::SetOptionExt;
 use crate::options::*;
 use crate::{Action, Activity, DetachOnDestroy, SetOption, Status, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
-use std::fmt;
 
 // TODO: all options exist in get/set?
 
@@ -28,6 +27,8 @@ impl SetOptionExt for SetGlobalSessionOption {
 
 impl SetSessionOption for SetGlobalSessionOption {}
 
+impl SetUserOption for SetGlobalSessionOption {}
+
 pub struct SetLocalSessionOption;
 
 impl SetOptionExt for SetLocalSessionOption {
@@ -49,6 +50,8 @@ impl SetOptionExt for SetLocalSessionOption {
 }
 
 impl SetSessionOption for SetLocalSessionOption {}
+
+impl SetUserOption for SetLocalSessionOption {}
 
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned
@@ -695,7 +698,7 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn status_format<'a>(format: Option<Vec<String>>) -> TmuxCommands<'a> {
+    fn status_format<'a, S: Into<Cow<'a, str>>>(format: Option<Vec<S>>) -> TmuxCommands<'a> {
         Self::set_array(STATUS_FORMAT, format)
     }
 
@@ -915,7 +918,7 @@ pub trait SetSessionOption: SetOptionExt {
     /// update-environment[] variable
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn update_environment<'a>(variable: Option<Vec<String>>) -> TmuxCommands<'a> {
+    fn update_environment<'a, S: Into<Cow<'a, str>>>(variable: Option<Vec<S>>) -> TmuxCommands<'a> {
         Self::set_array(UPDATE_ENVIRONMENT, variable)
     }
 

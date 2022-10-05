@@ -1,6 +1,6 @@
 #[test]
 fn set_server_options() {
-    use crate::{SetClipboard, SetServerOptions, Switch};
+    use crate::{SetClipboard, SetServerOptions, SetServerOptionsTrait, SetUserOptions, Switch};
 
     let cmd = "set -s";
 
@@ -68,7 +68,7 @@ fn set_server_options() {
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     v.push(format!("{} {} {}", cmd, "detach-on-destroy", ""));
 
-    v.push(format!("{} {} {}", cmd, "@user_option_name", "value"));
+    v.push(format!("{} {} {}", cmd, "@user-option-name", "value"));
     let origin = v.join(" ; ");
 
     let options = SetServerOptions::new();
@@ -111,9 +111,9 @@ fn set_server_options() {
         "screen*:title".to_string(),
     ]));
     #[cfg(feature = "tmux_2_0")]
-    let options = options.terminal_overrides(None);
+    let options = options.terminal_overrides(None::<Vec<String>>);
     #[cfg(feature = "tmux_3_0")]
-    let options = options.user_keys(None);
+    let options = options.user_keys(None::<Vec<String>>);
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
     let options = options.quiet(Some(""));
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
@@ -121,7 +121,7 @@ fn set_server_options() {
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     let options = options.detach_on_destroy(Some(""));
 
-    let options = options.user_option("user_option_name", Some("value".to_string()));
+    let options = options.user_option("user-option-name", Some("value".to_string()));
 
     let options = options.build().to_string();
 

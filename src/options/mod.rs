@@ -229,6 +229,15 @@
 // 3. need builder / parser for single option
 // mb separated crate later, and tmux_commands as underlying layer
 //
+//! [`GetOptionExt`] trait implements common getter method for all options
+//! [`SetOptionExt`] trait implements common setter methods
+//!
+//! [`GetUserOption`] traits implements getter method for user option (`@user-option-name value`)
+//! [`GetUserOptions`] traits implements getter method for user option (`@user-option-name value`),
+//! used by selective options builder
+//!
+use std::iter::Iterator;
+
 pub mod common;
 
 #[cfg(feature = "tmux_3_1")]
@@ -279,6 +288,36 @@ pub trait GetOptionExt {
     }
 }
 
+pub trait GetUserOption: GetOptionExt {
+    /// ### Manual
+    ///
+    /// ```text
+    /// @user-option-name value
+    /// ```
+    fn user_option<'a, S: Into<Cow<'a, str>>>(name: S) -> TmuxCommand<'a> {
+        Self::get(format!("{}{}", USER_OPTION_MARKER, name.into()))
+    }
+}
+
+pub trait GetUserOptions<'a> {
+    type Getter: GetUserOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>);
+
+    /// ### Manual
+    ///
+    /// ```text
+    /// @user-option-name value
+    /// ```
+    fn user_option<S: Into<Cow<'a, str>>>(mut self, name: S) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::user_option(name));
+        self
+    }
+}
+
 // TODO: optimize set/set_ext are the same
 /// common trait for setting options, allowing different implementations for different object options
 pub trait SetOptionExt {
@@ -309,7 +348,28 @@ pub trait SetOptionExt {
         cmd.build()
     }
 
-    fn set_array<'a, S: fmt::Display>(name: S, value: Option<Vec<String>>) -> TmuxCommands<'a> {
+    fn set_array<'a, S, I, T>(name: S, value: Option<I>) -> TmuxCommands<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        I: IntoIterator<Item = T>,
+        T: Into<Cow<'a, str>>,
+    {
+        let mut cmds = TmuxCommands::new();
+        let name = name.into();
+        if let Some(data) = value {
+            for (i, item) in data.into_iter().enumerate() {
+                cmds.push(Self::set(format!("{}[{}]", name, i), Some(item.into())));
+            }
+        } else {
+            cmds.push(Self::set(format!("{}", name), Some("")));
+        }
+        cmds
+    }
+
+    fn set_array_original<'a, S: fmt::Display>(
+        name: S,
+        value: Option<Vec<String>>,
+    ) -> TmuxCommands<'a> {
         let mut cmds = TmuxCommands::new();
         if let Some(data) = value {
             for (i, item) in data.iter().enumerate() {
@@ -319,5 +379,57 @@ pub trait SetOptionExt {
             cmds.push(Self::set(format!("{}", name), Some("")));
         }
         cmds
+    }
+
+    // ### Manual
+    //
+    // ```text
+    // user option
+    // ```
+    //fn user_option<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
+    //name: S,
+    //value: Option<T>,
+    //) -> TmuxCommand<'a> {
+    //Self::set(format!("{}{}", USER_OPTION_MARKER, name.into()), value)
+    //}
+}
+
+pub trait SetUserOption: SetOptionExt {
+    /// ### Manual
+    ///
+    /// ```text
+    /// @user-option-name value
+    /// ```
+    fn user_option<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
+        name: S,
+        value: Option<T>,
+    ) -> TmuxCommand<'a>
+    where
+        Self: Sized,
+    {
+        Self::set(format!("{}{}", USER_OPTION_MARKER, name.into()), value)
+    }
+}
+
+pub trait SetUserOptions<'a> {
+    type Setter: SetUserOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>);
+
+    /// ### Manual
+    ///
+    /// ```text
+    /// @user-option-name value
+    /// ```
+    fn user_option<S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
+        mut self,
+        name: S,
+        value: Option<T>,
+    ) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Setter::user_option(name, value));
+        self
     }
 }

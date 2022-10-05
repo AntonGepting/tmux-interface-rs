@@ -1,8 +1,10 @@
 #[test]
 fn set_local_window_option_tests() {
+    #[cfg(feature = "tmux_2_9")]
+    use crate::WindowSize;
     use crate::{
-        ClockModeStyle, PaneBorderStatus, SetLocalWindowOption, SetWindowOptionExt, StatusKeys,
-        Switch,
+        ClockModeStyle, PaneBorderStatus, SetLocalWindowOption, SetUserOption, SetWindowOptionExt,
+        StatusKeys, Switch,
     };
 
     let cmd = "set -w";
@@ -936,6 +938,10 @@ fn set_local_window_option_tests() {
         assert_eq!(origin, set_option);
     }
 
-    // XXX: user options?
-    //pub user_options: Option<HashMap<String, String>>
+    {
+        let origin = format!("{} {} {}", cmd, "@user-option-name", "value");
+        let set_option =
+            SetLocalWindowOption::user_option("user-option-name", Some("value")).to_string();
+        assert_eq!(origin, set_option);
+    }
 }

@@ -1,18 +1,52 @@
-use crate::{RemainOnExit, SetPaneOption, Switch, TmuxCommands};
+use crate::{
+    RemainOnExit, SetPaneOption, SetPaneOptionTrait, SetUserOptions, Switch, TmuxCommand,
+    TmuxCommands,
+};
 use std::borrow::Cow;
-use std::fmt;
 
 #[derive(Debug)]
 pub struct SetPaneOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
-impl<'a> SetPaneOptions<'a> {
-    pub fn new() -> Self {
+impl<'a> SetPaneOptionsTrait<'a> for SetPaneOptions<'a> {
+    type Setter = SetPaneOption;
+
+    fn new() -> Self {
         Self {
             options: TmuxCommands::new(),
         }
     }
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+
+    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
+        self.options.push_cmds(options);
+    }
+
+    fn build(self) -> TmuxCommands<'a> {
+        self.options
+    }
+}
+
+impl<'a> SetUserOptions<'a> for SetPaneOptions<'a> {
+    type Setter = SetPaneOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+}
+
+pub trait SetPaneOptionsTrait<'a> {
+    type Setter: SetPaneOptionTrait;
+
+    fn new() -> Self;
+
+    fn push(&mut self, option: TmuxCommand<'a>);
+
+    fn push_cmds(&mut self, options: TmuxCommands<'a>);
 
     /// ### Manual
     ///
@@ -21,8 +55,11 @@ impl<'a> SetPaneOptions<'a> {
     /// allow-rename [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn allow_rename(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetPaneOption::allow_rename(switch));
+    fn allow_rename(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(SetPaneOption::allow_rename(switch));
         self
     }
     /// ### Manual
@@ -32,8 +69,11 @@ impl<'a> SetPaneOptions<'a> {
     /// alternate-screen [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn alternate_screen(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetPaneOption::alternate_screen(switch));
+    fn alternate_screen(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(SetPaneOption::alternate_screen(switch));
         self
     }
 
@@ -49,8 +89,11 @@ impl<'a> SetPaneOptions<'a> {
     /// remain-on-exit [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn remain_on_exit(mut self, switch: Option<RemainOnExit>) -> Self {
-        self.options.push(SetPaneOption::remain_on_exit(switch));
+    fn remain_on_exit(mut self, switch: Option<RemainOnExit>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(SetPaneOption::remain_on_exit(switch));
         self
     }
 
@@ -61,8 +104,11 @@ impl<'a> SetPaneOptions<'a> {
     /// window-active-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn window_active_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self {
-        self.options.push(SetPaneOption::window_active_style(style));
+    fn window_active_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(SetPaneOption::window_active_style(style));
         self
     }
 
@@ -73,8 +119,11 @@ impl<'a> SetPaneOptions<'a> {
     /// window-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn window_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self {
-        self.options.push(SetPaneOption::window_style(style));
+    fn window_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(SetPaneOption::window_style(style));
         self
     }
 
@@ -85,22 +134,13 @@ impl<'a> SetPaneOptions<'a> {
     /// synchronize-panes [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn synchronize_panes(mut self, switch: Option<Switch>) -> Self {
-        self.options.push(SetPaneOption::synchronize_panes(switch));
+    fn synchronize_panes(mut self, switch: Option<Switch>) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(SetPaneOption::synchronize_panes(switch));
         self
     }
 
-    /// ### Manual
-    ///
-    /// ```text
-    /// user option
-    /// ```
-    pub fn user_option<S: fmt::Display>(mut self, name: S, value: Option<String>) -> Self {
-        self.options.push(SetPaneOption::user_option(name, value));
-        self
-    }
-
-    pub fn build(self) -> TmuxCommands<'a> {
-        self.options
-    }
+    fn build(self) -> TmuxCommands<'a>;
 }

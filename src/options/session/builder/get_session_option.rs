@@ -1,5 +1,5 @@
 use crate::options::*;
-use crate::{ShowOptions, TmuxCommand};
+use crate::{GetUserOption, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
 // NOTE: ADR: compile time or run time parametrisation for global local option set/get
@@ -16,6 +16,8 @@ impl GetOptionExt for GetGlobalSessionOption {
     }
 }
 
+impl GetUserOption for GetGlobalSessionOption {}
+
 impl GetSessionOption for GetGlobalSessionOption {}
 
 pub struct GetLocalSessionOption;
@@ -25,6 +27,8 @@ impl GetOptionExt for GetLocalSessionOption {
         ShowOptions::new().option(name).build()
     }
 }
+
+impl GetUserOption for GetLocalSessionOption {}
 
 impl GetSessionOption for GetLocalSessionOption {}
 
@@ -956,8 +960,6 @@ pub trait GetSessionOption: GetOptionExt {
     fn word_separators<'a>() -> TmuxCommand<'a> {
         Self::get(WORD_SEPARATORS)
     }
-
-    //pub user_options: Option<HashMap<String, String>>
 }
 
 //#[test]

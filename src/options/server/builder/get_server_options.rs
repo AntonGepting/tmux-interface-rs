@@ -1,18 +1,48 @@
-use super::get_server_option::GetServerOption;
-use crate::TmuxCommands;
-use std::fmt;
+use crate::{GetServerOption, GetServerOptionTrait, GetUserOptions, TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
 pub struct GetServerOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
-impl<'a> GetServerOptions<'a> {
-    pub fn new() -> Self {
+impl<'a> GetServerOptionsTrait<'a> for GetServerOptions<'a> {
+    type Getter = GetServerOption;
+
+    fn new() -> Self {
         Self {
             options: TmuxCommands::new(),
         }
     }
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+
+    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
+        self.options.push_cmds(options);
+    }
+
+    fn build(self) -> TmuxCommands<'a> {
+        self.options
+    }
+}
+
+impl<'a> GetUserOptions<'a> for GetServerOptions<'a> {
+    type Getter = GetServerOption;
+
+    fn push(&mut self, option: TmuxCommand<'a>) {
+        self.options.push(option);
+    }
+}
+
+pub trait GetServerOptionsTrait<'a> {
+    type Getter: GetServerOptionTrait;
+
+    fn new() -> Self;
+
+    fn push(&mut self, option: TmuxCommand<'a>);
+
+    fn push_cmds(&mut self, options: TmuxCommands<'a>);
 
     /// ### Manual
     ///
@@ -21,8 +51,11 @@ impl<'a> GetServerOptions<'a> {
     /// backspace key
     /// ```
     #[cfg(feature = "tmux_3_1")]
-    pub fn backspace(mut self) -> Self {
-        self.options.push(GetServerOption::backspace());
+    fn backspace(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::backspace());
         self
     }
 
@@ -33,8 +66,11 @@ impl<'a> GetServerOptions<'a> {
     /// buffer-limit number
     /// ```
     #[cfg(feature = "tmux_1_5")]
-    pub fn buffer_limit(mut self) -> Self {
-        self.options.push(GetServerOption::buffer_limit());
+    fn buffer_limit(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::buffer_limit());
         self
     }
 
@@ -45,8 +81,11 @@ impl<'a> GetServerOptions<'a> {
     /// command-alias[] name=value
     /// ```
     #[cfg(feature = "tmux_2_4")]
-    pub fn command_alias(mut self) -> Self {
-        self.options.push(GetServerOption::command_alias());
+    fn command_alias(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::command_alias());
         self
     }
 
@@ -57,8 +96,11 @@ impl<'a> GetServerOptions<'a> {
     /// default-terminal terminal
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn copy_command(mut self) -> Self {
-        self.options.push(GetServerOption::copy_command());
+    fn copy_command(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::copy_command());
         self
     }
 
@@ -69,8 +111,11 @@ impl<'a> GetServerOptions<'a> {
     /// copy-command shell-command
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    pub fn default_terminal(mut self) -> Self {
-        self.options.push(GetServerOption::default_terminal());
+    fn default_terminal(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::default_terminal());
         self
     }
 
@@ -81,8 +126,11 @@ impl<'a> GetServerOptions<'a> {
     /// escape-time time
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    pub fn escape_time(mut self) -> Self {
-        self.options.push(GetServerOption::escape_time());
+    fn escape_time(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::escape_time());
         self
     }
 
@@ -93,8 +141,11 @@ impl<'a> GetServerOptions<'a> {
     /// editor shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn editor(mut self) -> Self {
-        self.options.push(GetServerOption::editor());
+    fn editor(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::editor());
         self
     }
 
@@ -105,8 +156,11 @@ impl<'a> GetServerOptions<'a> {
     /// exit-empty [on | off]
     /// ```
     #[cfg(feature = "tmux_2_7")]
-    pub fn exit_empty(mut self) -> Self {
-        self.options.push(GetServerOption::exit_empty());
+    fn exit_empty(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::exit_empty());
         self
     }
 
@@ -117,8 +171,11 @@ impl<'a> GetServerOptions<'a> {
     /// exit-unattached [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    pub fn exit_unattached(mut self) -> Self {
-        self.options.push(GetServerOption::exit_unattached());
+    fn exit_unattached(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::exit_unattached());
         self
     }
 
@@ -129,8 +186,11 @@ impl<'a> GetServerOptions<'a> {
     /// extended-keys [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn extended_keys(mut self) -> Self {
-        self.options.push(GetServerOption::extended_keys());
+    fn extended_keys(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::extended_keys());
         self
     }
 
@@ -141,8 +201,11 @@ impl<'a> GetServerOptions<'a> {
     /// focus-events [on | off]
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn focus_events(mut self) -> Self {
-        self.options.push(GetServerOption::focus_events());
+    fn focus_events(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::focus_events());
         self
     }
 
@@ -153,8 +216,11 @@ impl<'a> GetServerOptions<'a> {
     /// history-file path
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    pub fn history_file(mut self) -> Self {
-        self.options.push(GetServerOption::history_file());
+    fn history_file(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::history_file());
         self
     }
 
@@ -165,8 +231,11 @@ impl<'a> GetServerOptions<'a> {
     /// message-limit number
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    pub fn message_limit(mut self) -> Self {
-        self.options.push(GetServerOption::message_limit());
+    fn message_limit(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::message_limit());
         self
     }
 
@@ -177,8 +246,11 @@ impl<'a> GetServerOptions<'a> {
     /// prompt-history-limit number
     /// ```
     #[cfg(feature = "tmux_3_3")]
-    pub fn prompt_history_limit(mut self) -> Self {
-        self.options.push(GetServerOption::prompt_history_limit());
+    fn prompt_history_limit(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::prompt_history_limit());
         self
     }
 
@@ -189,8 +261,11 @@ impl<'a> GetServerOptions<'a> {
     /// set-clipboard [on | external | off]
     /// ```
     #[cfg(feature = "tmux_1_5")]
-    pub fn set_clipboard(mut self) -> Self {
-        self.options.push(GetServerOption::set_clipboard());
+    fn set_clipboard(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::set_clipboard());
         self
     }
 
@@ -201,8 +276,11 @@ impl<'a> GetServerOptions<'a> {
     /// terminal-features[] string
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn terminal_features(mut self) -> Self {
-        self.options.push(GetServerOption::terminal_features());
+    fn terminal_features(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::terminal_features());
         self
     }
 
@@ -213,8 +291,11 @@ impl<'a> GetServerOptions<'a> {
     /// terminal-overrides[] string
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    pub fn terminal_overrides(mut self) -> Self {
-        self.options.push(GetServerOption::terminal_overrides());
+    fn terminal_overrides(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::terminal_overrides());
         self
     }
 
@@ -225,8 +306,11 @@ impl<'a> GetServerOptions<'a> {
     /// user-keys[] key
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn user_keys(mut self) -> Self {
-        self.options.push(GetServerOption::user_keys());
+    fn user_keys(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::user_keys());
         self
     }
 
@@ -237,8 +321,11 @@ impl<'a> GetServerOptions<'a> {
     /// quiet [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    pub fn quiet(mut self) -> Self {
-        self.options.push(GetServerOption::quiet());
+    fn quiet(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::quiet());
         self
     }
 
@@ -249,22 +336,13 @@ impl<'a> GetServerOptions<'a> {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    pub fn detach_on_destroy(mut self) -> Self {
-        self.options.push(GetServerOption::detach_on_destroy());
+    fn detach_on_destroy(mut self) -> Self
+    where
+        Self: Sized,
+    {
+        self.push(Self::Getter::detach_on_destroy());
         self
     }
 
-    /// ### Manual
-    ///
-    /// ```text
-    /// user option
-    /// ```
-    pub fn user_option<T: fmt::Display>(mut self, name: T) -> Self {
-        self.options.push(GetServerOption::user_option(name));
-        self
-    }
-
-    pub fn build(self) -> TmuxCommands<'a> {
-        self.options
-    }
+    fn build(self) -> TmuxCommands<'a>;
 }

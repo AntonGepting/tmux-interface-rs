@@ -1,6 +1,6 @@
 #[test]
 fn set_pane_option() {
-    use crate::{RemainOnExit, SetPaneOption, Switch};
+    use crate::{RemainOnExit, SetPaneOption, SetPaneOptionTrait, Switch};
 
     let cmd = "set -p";
 
