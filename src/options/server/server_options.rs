@@ -50,7 +50,7 @@ pub struct ServerOptions<'a> {
     pub buffer_limit: Option<usize>,
     /// `command-alias[] name=value`
     #[cfg(feature = "tmux_2_4")]
-    pub command_alias: Option<Vec<String>>,
+    pub command_alias: Option<Vec<Cow<'a, str>>>,
     /// `copy-command shell-command`
     #[cfg(feature = "tmux_3_2")]
     pub copy_command: Option<Cow<'a, str>>,
@@ -89,13 +89,13 @@ pub struct ServerOptions<'a> {
     pub set_clipboard: Option<SetClipboard>,
     /// `terminal-features[] string`
     #[cfg(feature = "tmux_3_2")]
-    pub terminal_features: Option<Vec<String>>,
+    pub terminal_features: Option<Vec<Cow<'a, str>>>,
     /// `terminal-overrides[] string`
     #[cfg(feature = "tmux_2_0")]
-    pub terminal_overrides: Option<Vec<String>>,
+    pub terminal_overrides: Option<Vec<Cow<'a, str>>>,
     /// `user-keys[] key`
     #[cfg(feature = "tmux_3_0")]
-    pub user_keys: Option<Vec<String>>,
+    pub user_keys: Option<Vec<Cow<'a, str>>>,
     /// `quiet [on | off]`
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
     pub quiet: Option<Switch>,
@@ -180,8 +180,8 @@ impl<'a> ServerOptions<'a> {
     /// backspace key
     /// ```
     #[cfg(feature = "tmux_3_1")]
-    pub fn backspace<S: Into<Cow<'a, str>>>(mut self, backspace: S) -> Self {
-        self.backspace = Some(backspace.into());
+    pub fn backspace<S: Into<Cow<'a, str>>>(mut self, backspace: Option<S>) -> Self {
+        self.backspace = backspace.map(|s| s.into());
         self
     }
 
@@ -192,8 +192,8 @@ impl<'a> ServerOptions<'a> {
     /// buffer-limit number
     /// ```
     #[cfg(feature = "tmux_1_5")]
-    pub fn buffer_limit(mut self, buffer_limit: usize) -> Self {
-        self.buffer_limit = Some(buffer_limit);
+    pub fn buffer_limit(mut self, buffer_limit: Option<usize>) -> Self {
+        self.buffer_limit = buffer_limit;
         self
     }
 
@@ -204,8 +204,13 @@ impl<'a> ServerOptions<'a> {
     /// command-alias[] name=value
     /// ```
     #[cfg(feature = "tmux_2_4")]
-    pub fn command_alias(mut self, command_alias: Vec<String>) -> Self {
-        self.command_alias = Some(command_alias);
+    pub fn command_alias<I, S>(mut self, command_alias: Option<I>) -> Self
+    where
+        I: Iterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
+        self.command_alias =
+            command_alias.and_then(|v| Some(v.into_iter().map(|s| s.into()).collect()));
         self
     }
 
@@ -216,8 +221,8 @@ impl<'a> ServerOptions<'a> {
     /// copy-command shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn copy_command<S: Into<Cow<'a, str>>>(mut self, copy_command: S) -> Self {
-        self.copy_command = Some(copy_command.into());
+    pub fn copy_command<S: Into<Cow<'a, str>>>(mut self, copy_command: Option<S>) -> Self {
+        self.copy_command = copy_command.map(|s| s.into());
         self
     }
 
@@ -228,8 +233,8 @@ impl<'a> ServerOptions<'a> {
     /// default-terminal terminal
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    pub fn default_terminal<S: Into<Cow<'a, str>>>(mut self, default_terminal: S) -> Self {
-        self.default_terminal = Some(default_terminal.into());
+    pub fn default_terminal<S: Into<Cow<'a, str>>>(mut self, default_terminal: Option<S>) -> Self {
+        self.default_terminal = default_terminal.map(|s| s.into());
         self
     }
 
@@ -240,8 +245,8 @@ impl<'a> ServerOptions<'a> {
     /// escape-time time
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    pub fn escape_time(mut self, escape_time: usize) -> Self {
-        self.escape_time = Some(escape_time);
+    pub fn escape_time(mut self, escape_time: Option<usize>) -> Self {
+        self.escape_time = escape_time;
         self
     }
 
@@ -252,8 +257,8 @@ impl<'a> ServerOptions<'a> {
     /// editor shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn editor<S: Into<Cow<'a, str>>>(mut self, editor: S) -> Self {
-        self.editor = Some(editor.into());
+    pub fn editor<S: Into<Cow<'a, str>>>(mut self, editor: Option<S>) -> Self {
+        self.editor = editor.map(|s| s.into());
         self
     }
 
@@ -264,8 +269,8 @@ impl<'a> ServerOptions<'a> {
     /// exit-empty [on | off]
     /// ```
     #[cfg(feature = "tmux_2_7")]
-    pub fn exit_empty(mut self, exit_empty: Switch) -> Self {
-        self.exit_empty = Some(exit_empty);
+    pub fn exit_empty(mut self, exit_empty: Option<Switch>) -> Self {
+        self.exit_empty = exit_empty;
         self
     }
 
@@ -276,8 +281,8 @@ impl<'a> ServerOptions<'a> {
     /// exit-unattached [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    pub fn exit_unattached(mut self, exit_unattached: Switch) -> Self {
-        self.exit_unattached = Some(exit_unattached);
+    pub fn exit_unattached(mut self, exit_unattached: Option<Switch>) -> Self {
+        self.exit_unattached = exit_unattached;
         self
     }
 
@@ -288,8 +293,8 @@ impl<'a> ServerOptions<'a> {
     /// extended-keys [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn extended_keys(mut self, extended_keys: Switch) -> Self {
-        self.extended_keys = Some(extended_keys);
+    pub fn extended_keys(mut self, extended_keys: Option<Switch>) -> Self {
+        self.extended_keys = extended_keys;
         self
     }
 
@@ -300,8 +305,8 @@ impl<'a> ServerOptions<'a> {
     /// focus-events [on | off]
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    pub fn focus_events(mut self, focus_events: Switch) -> Self {
-        self.focus_events = Some(focus_events);
+    pub fn focus_events(mut self, focus_events: Option<Switch>) -> Self {
+        self.focus_events = focus_events;
         self
     }
 
@@ -312,8 +317,8 @@ impl<'a> ServerOptions<'a> {
     /// history-file path
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    pub fn history_file<S: Into<Cow<'a, str>>>(mut self, history_file: S) -> Self {
-        self.history_file = Some(history_file.into());
+    pub fn history_file<S: Into<Cow<'a, str>>>(mut self, history_file: Option<S>) -> Self {
+        self.history_file = history_file.map(|s| s.into());
         self
     }
 
@@ -324,8 +329,8 @@ impl<'a> ServerOptions<'a> {
     /// message-limit number
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    pub fn message_limit(mut self, message_limit: usize) -> Self {
-        self.message_limit = Some(message_limit);
+    pub fn message_limit(mut self, message_limit: Option<usize>) -> Self {
+        self.message_limit = message_limit;
         self
     }
 
@@ -336,8 +341,8 @@ impl<'a> ServerOptions<'a> {
     /// prompt-history-limit number
     /// ```
     #[cfg(feature = "tmux_3_3")]
-    pub fn prompt_history_limit(mut self, prompt_history_limit: usize) -> Self {
-        self.prompt_history_limit = Some(prompt_history_limit);
+    pub fn prompt_history_limit(mut self, prompt_history_limit: Option<usize>) -> Self {
+        self.prompt_history_limit = prompt_history_limit;
         self
     }
 
@@ -348,8 +353,8 @@ impl<'a> ServerOptions<'a> {
     /// set-clipboard [on | external | off]
     /// ```
     #[cfg(feature = "tmux_1_5")]
-    pub fn set_clipboard(mut self, set_clipboard: SetClipboard) -> Self {
-        self.set_clipboard = Some(set_clipboard);
+    pub fn set_clipboard(mut self, set_clipboard: Option<SetClipboard>) -> Self {
+        self.set_clipboard = set_clipboard;
         self
     }
 
@@ -360,8 +365,13 @@ impl<'a> ServerOptions<'a> {
     /// terminal-features[] string
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn terminal_features(mut self, terminal_features: Vec<String>) -> Self {
-        self.terminal_features = Some(terminal_features.iter().map(|s| (*s).to_string()).collect());
+    pub fn terminal_features<I, S>(mut self, terminal_features: Option<I>) -> Self
+    where
+        I: Iterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
+        self.terminal_features =
+            terminal_features.and_then(|v| Some(v.into_iter().map(|s| s.into()).collect()));
         self
     }
 
@@ -372,13 +382,13 @@ impl<'a> ServerOptions<'a> {
     /// terminal-overrides[] string
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    pub fn terminal_overrides(mut self, terminal_overrides: Vec<String>) -> Self {
-        self.terminal_overrides = Some(
-            terminal_overrides
-                .iter()
-                .map(|s| (*s).to_string())
-                .collect(),
-        );
+    pub fn terminal_overrides<I, S>(mut self, terminal_overrides: Option<Vec<Cow<'a, str>>>) -> Self
+    where
+        I: Iterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
+        self.terminal_overrides =
+            terminal_overrides.and_then(|v| Some(v.into_iter().map(|s| s.into()).collect()));
         self
     }
 
@@ -389,8 +399,12 @@ impl<'a> ServerOptions<'a> {
     /// user-keys[] key
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn user_keys(mut self, user_keys: Vec<String>) -> Self {
-        self.user_keys = Some(user_keys.iter().map(|s| (*s).to_string()).collect());
+    pub fn user_keys<I, S>(mut self, user_keys: Option<Vec<String>>) -> Self
+    where
+        I: Iterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
+        self.user_keys = user_keys.and_then(|v| Some(v.into_iter().map(|s| s.into()).collect()));
         self
     }
 
@@ -401,8 +415,8 @@ impl<'a> ServerOptions<'a> {
     /// quiet [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    fn quiet(mut self, quiet: bool) -> Self {
-        self.quiet = Some(quiet);
+    fn quiet(mut self, quiet: Option<bool>) -> Self {
+        self.quiet = quiet;
         self
     }
 
@@ -413,8 +427,8 @@ impl<'a> ServerOptions<'a> {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    fn detach_on_destroy(mut self, detach_on_destroy: bool) -> Self {
-        self.detach_on_destroy = Some(detach_on_destroy);
+    fn detach_on_destroy(mut self, detach_on_destroy: Option<bool>) -> Self {
+        self.detach_on_destroy = detach_on_destroy;
         self
     }
 
@@ -618,13 +632,9 @@ fn server_options223() {
 //(name, index, value)
 //}
 
-//fn array_insert<T: FromStr>(v: &mut Option<Vec<T>>, index: Option<usize>, value: Option<T>) {
-//index.and_then(|i| value.and_then(|data| Some(v.get_or_insert(Vec::new()).insert(i, data))));
-//}
-
-fn array_insert<T: FromStr>(v: &mut Option<Vec<T>>, value: Option<(usize, T)>) {
+fn array_insert<'a>(v: &mut Option<Vec<Cow<'a, str>>>, value: Option<(usize, String)>) {
     match value {
-        Some((i, data)) => v.get_or_insert(Vec::new()).insert(i, data),
+        Some((i, data)) => v.get_or_insert(Vec::new()).insert(i, data.into()),
         None => *v = None,
     }
 }
