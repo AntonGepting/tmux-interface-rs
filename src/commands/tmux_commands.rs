@@ -47,6 +47,13 @@ impl<'a> TmuxCommands<'a> {
         self.0.to_vec()
     }
 
+    // XXX: optimize
+    pub fn push_cmds(&mut self, cmds: TmuxCommands<'a>) {
+        for cmd in cmds.0.commands {
+            self.push(TmuxCommand(cmd));
+        }
+    }
+
     // XXX: ugly
     //pub fn output(self) -> Vec<Result<TmuxOutput, Error>> {
     //let mut v = Vec::new();

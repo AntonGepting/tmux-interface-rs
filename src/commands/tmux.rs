@@ -402,8 +402,12 @@ impl<'a> Tmux<'a> {
     }
 
     // XXX: command or subcommand better name?
-    pub fn with_command<T: Into<TmuxCommand<'a>>>(command: T) -> Tmux<'a> {
+    pub fn with_command<T: Into<TmuxCommand<'a>>>(command: T) -> Self {
         Tmux::new().command(command.into())
+    }
+
+    pub fn with_commands(commands: TmuxCommands<'a>) -> Self {
+        Tmux::new().commands(commands)
     }
 
     // XXX: ?
@@ -411,6 +415,11 @@ impl<'a> Tmux<'a> {
         self.command
             .get_or_insert(TmuxCommands::new())
             .push(command.into());
+        self
+    }
+
+    pub fn commands(mut self, commands: TmuxCommands<'a>) -> Self {
+        self.command = Some(commands);
         self
     }
 }
