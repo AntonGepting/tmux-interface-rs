@@ -30,7 +30,7 @@ pub struct DisplayPopup<'a> {
     pub no_border: bool,
 
     /// `[-C]` - closes any popup on the client
-    #[cfg(feature = "tmux_3_3")]
+    #[cfg(feature = "tmux_3_2")]
     pub close: bool,
 
     /// `[-E]` - closes the popup automatically when shell-command exits
@@ -134,7 +134,7 @@ impl<'a> DisplayPopup<'a> {
 
     /// `[-b border-lines]` - sets the type of border line for the popup.  When -B is specified, the
     /// -b option is ignored.  See popup-border-lines for possible values for border-lines
-    #[cfg(feature = "tmux_3_2")]
+    #[cfg(feature = "tmux_3_3")]
     pub fn border_lines(mut self, border_lines: PopupBorderLinesType) -> Self {
         self.border_lines = Some(border_lines);
         self
