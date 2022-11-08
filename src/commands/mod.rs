@@ -103,7 +103,10 @@
 pub mod common;
 
 pub mod constants;
+
 pub mod tmux;
+pub mod tmux_macro;
+
 pub mod tmux_command;
 pub mod tmux_commands;
 pub mod tmux_output;

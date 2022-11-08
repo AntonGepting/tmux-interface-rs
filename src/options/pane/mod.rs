@@ -1,18 +1,16 @@
-#[cfg(feature = "tmux_3_0")]
-pub mod remain_on_exit;
+pub mod builder;
+pub mod common;
 
-pub mod pane_options;
+//pub mod pane_options;
 
-#[cfg(feature = "tmux_3_0")]
-pub use remain_on_exit::RemainOnExit;
+pub use builder::*;
+pub use common::*;
 
-pub use pane_options::*;
+//pub use pane_options::*;
 
 #[cfg(test)]
 #[path = "."]
 mod pane_tests {
-    #[cfg(feature = "tmux_3_1")]
-    pub mod pane_options_tests;
-    #[cfg(feature = "tmux_3_0")]
-    pub mod remain_on_exit_tests;
+    //#[cfg(feature = "tmux_3_1")]
+    //pub mod pane_options_tests;
 }

@@ -5,6 +5,9 @@ use crate::TmuxCommand;
 #[cfg(feature = "tmux_0_8")]
 pub mod attach_session;
 #[cfg(feature = "tmux_0_8")]
+pub mod attach_session_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod detach_client;
 #[cfg(feature = "tmux_0_8")]
 pub mod has_session;
@@ -22,8 +25,12 @@ pub mod list_sessions;
 pub mod lock_client;
 #[cfg(feature = "tmux_1_1")]
 pub mod lock_session;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod new_session;
+#[cfg(feature = "tmux_0_8")]
+pub mod new_session_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod refresh_client;
 #[cfg(feature = "tmux_0_8")]
