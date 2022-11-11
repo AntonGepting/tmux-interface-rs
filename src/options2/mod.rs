@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
 
+// XXX: typealias name value
 #[derive(Debug, Default)]
 pub struct TmuxOptionsMap(HashMap<String, Option<String>>);
 
