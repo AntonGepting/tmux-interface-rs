@@ -54,7 +54,7 @@ use std::process::{Child, Command, ExitStatus, Stdio};
 /// tmux [-28dqUuVv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 // XXX: using environment vars
-#[derive(Debug, Default)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Tmux<'a> {
     /// `[-2]` - Force tmux to assume the terminal supports 256 colours
     #[cfg(feature = "tmux_0_8")]
@@ -110,7 +110,7 @@ pub struct Tmux<'a> {
 
     /// `[-c shell-command]` - Execute shell-command using the default shell
     #[cfg(feature = "tmux_1_1")]
-    pub shell_cmd: Option<Cow<'a, str>>,
+    pub shell_command: Option<Cow<'a, str>>,
 
     /// `[-f file]` - Specify an alternative configuration file
     #[cfg(feature = "tmux_0_8")]
@@ -230,8 +230,8 @@ impl<'a> Tmux<'a> {
 
     /// `[-c shell-command]` - Execute shell-command using the default shell
     #[cfg(feature = "tmux_1_1")]
-    pub fn shell_cmd<S: Into<Cow<'a, str>>>(mut self, shell_cmd: S) -> Self {
-        self.shell_cmd = Some(shell_cmd.into());
+    pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
+        self.shell_command = Some(shell_command.into());
         self
     }
 
@@ -356,8 +356,8 @@ impl<'a> Tmux<'a> {
 
         // `[-c shell-command]` - Execute shell-command using the default shell
         #[cfg(feature = "tmux_1_1")]
-        if let Some(shell_cmd) = self.shell_cmd {
-            cmd.push_option(C_LOWERCASE_KEY, shell_cmd);
+        if let Some(shell_command) = self.shell_command {
+            cmd.push_option(C_LOWERCASE_KEY, shell_command);
         }
 
         // `[-f file]` - Specify an alternative configuration file

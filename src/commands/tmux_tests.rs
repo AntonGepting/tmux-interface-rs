@@ -81,7 +81,7 @@ fn tmux() {
     #[cfg(feature = "tmux_0_8")]
     let tmux = tmux.version();
     #[cfg(feature = "tmux_1_1")]
-    let tmux = tmux.shell_cmd("1");
+    let tmux = tmux.shell_command("1");
     #[cfg(feature = "tmux_0_8")]
     let tmux = tmux.file("2");
     #[cfg(feature = "tmux_0_8")]
