@@ -70,67 +70,6 @@
 /// ```
 #[macro_export]
 macro_rules! new_session {
-    // `[-c start-directory]` - specify starting directory
-    (@cmd ($cmd:expr) -c $start_directory:tt, $($tail:tt)*) => {{
-        $crate::new_session!(@cmd ({
-            $cmd.start_directory($start_directory)
-        }) $($tail)*)
-    }};
-    // `[-e environment]` - takes the form ‘VARIABLE=value’ and sets an environment variable for the
-    // newly created session; it may be specified multiple times
-    (@cmd ($cmd:expr) -e $environment:tt, $($tail:tt)*) => {{
-        $crate::new_session!(@cmd ({
-            $cmd.environment($environment)
-        }) $($tail)*)
-    }};
-    // `[-f flags]` - comma-separated list of client flags
-    (@cmd ($cmd:expr) -e $flags:tt, $($tail:tt)*) => {{
-        $crate::new_session!(@cmd ({
-            $cmd.flags($flags)
-        }) $($tail)*)
-    }};
-    // `[-F format]` - specify different format
-    (@cmd ($cmd:expr) -F $format:tt, $($tail:tt)*) => {{
-        $crate::new_session!(@cmd ({
-            $cmd.format($format)
-        }) $($tail)*)
-    }};
-    // `[-n window-name]` - window name of the initial window
-    (@cmd ($cmd:expr) -n $window_name:tt, $($tail:tt)*) => {{
-        $crate::new_session!(@cmd ({
-            $cmd.window_name($window_name)
-        }) $($tail)*)
-    }};
-    // `[-s session-name]` - specify a session name
-    (@cmd ($cmd:expr) -s $session_name:tt, $($tail:tt)*) => {{
-        $crate::new_session!(@cmd ({
-            $cmd.session_name($session_name)
-        }) $($tail)*)
-    }};
-    // `[-t group-name]` - specify a session group
-    (@cmd ($cmd:expr) -t $group_name:tt, $($tail:tt)*) => {{
-        $crate::new_session!(@cmd ({
-            $cmd.group_name($group_name)
-        }) $($tail)*)
-    }};
-    // `[-x width]` - specify a different width
-    (@cmd ($cmd:expr) -x $width:tt, $($tail:tt)*) => {{
-        $crate::new_session!(@cmd ({
-            $cmd.width($width)
-        }) $($tail)*)
-    }};
-    // `[-y height]` - specify a different height
-    (@cmd ($cmd:expr) -y $height:tt, $($tail:tt)*) => {{
-        $crate::new_session!(@cmd ({
-            $cmd.height($height)
-        }) $($tail)*)
-    }};
-    // `[shell-command]` - shell command to execute in the initial window
-    (@cmd ($cmd:expr) $shell_command:tt, $($tail:tt)*) => {{
-        $crate::new_session!(@cmd ({
-            $cmd.shell_command($shell_command)
-        }) $($tail)*)
-    }};
     // `[-A]` - behave like `attach-session` if `session-name` already exists
     (@cmd ($cmd:expr) -A, $($tail:tt)*) => {{
         $crate::new_session!(@cmd ({
@@ -167,6 +106,67 @@ macro_rules! new_session {
             $cmd.parent_sighup()
         }) $($tail)*)
     }};
+    // `[-c start-directory]` - specify starting directory
+    (@cmd ($cmd:expr) -c $start_directory:expr, $($tail:tt)*) => {{
+        $crate::new_session!(@cmd ({
+            $cmd.start_directory($start_directory)
+        }) $($tail)*)
+    }};
+    // `[-e environment]` - takes the form ‘VARIABLE=value’ and sets an environment variable for the
+    // newly created session; it may be specified multiple times
+    (@cmd ($cmd:expr) -e $environment:expr, $($tail:tt)*) => {{
+        $crate::new_session!(@cmd ({
+            $cmd.environment($environment)
+        }) $($tail)*)
+    }};
+    // `[-f flags]` - comma-separated list of client flags
+    (@cmd ($cmd:expr) -e $flags:expr, $($tail:tt)*) => {{
+        $crate::new_session!(@cmd ({
+            $cmd.flags($flags)
+        }) $($tail)*)
+    }};
+    // `[-F format]` - specify different format
+    (@cmd ($cmd:expr) -F $format:expr, $($tail:tt)*) => {{
+        $crate::new_session!(@cmd ({
+            $cmd.format($format)
+        }) $($tail)*)
+    }};
+    // `[-n window-name]` - window name of the initial window
+    (@cmd ($cmd:expr) -n $window_name:expr, $($tail:tt)*) => {{
+        $crate::new_session!(@cmd ({
+            $cmd.window_name($window_name)
+        }) $($tail)*)
+    }};
+    // `[-s session-name]` - specify a session name
+    (@cmd ($cmd:expr) -s $session_name:expr, $($tail:tt)*) => {{
+        $crate::new_session!(@cmd ({
+            $cmd.session_name($session_name)
+        }) $($tail)*)
+    }};
+    // `[-t group-name]` - specify a session group
+    (@cmd ($cmd:expr) -t $group_name:expr, $($tail:tt)*) => {{
+        $crate::new_session!(@cmd ({
+            $cmd.group_name($group_name)
+        }) $($tail)*)
+    }};
+    // `[-x width]` - specify a different width
+    (@cmd ($cmd:expr) -x $width:expr, $($tail:tt)*) => {{
+        $crate::new_session!(@cmd ({
+            $cmd.width($width)
+        }) $($tail)*)
+    }};
+    // `[-y height]` - specify a different height
+    (@cmd ($cmd:expr) -y $height:expr, $($tail:tt)*) => {{
+        $crate::new_session!(@cmd ({
+            $cmd.height($height)
+        }) $($tail)*)
+    }};
+    // `[shell-command]` - shell command to execute in the initial window
+    (@cmd ($cmd:expr) $shell_command:expr, $($tail:tt)*) => {{
+        $crate::new_session!(@cmd ({
+            $cmd.shell_command($shell_command)
+        }) $($tail)*)
+    }};
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -175,6 +175,9 @@ macro_rules! new_session {
     }};
     () => {{
         $crate::NewSession::new()
+    }};
+    (($cmd:expr), $($tail:tt)*) => {{
+        $crate::new_session!(@cmd ($cmd) $($tail)*,)
     }};
     ($($tail:tt)*) => {{
         $crate::new_session!(@cmd ({ $crate::NewSession::new() }) $($tail)*,)

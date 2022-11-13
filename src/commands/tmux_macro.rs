@@ -177,6 +177,9 @@ macro_rules! tmux {
     () => {{
         $crate::Tmux::new()
     }};
+    (($cmd:expr), $($tail:tt)*) => {{
+        $crate::tmux!(@cmd ($cmd) $($tail)*,)
+    }};
     ($($tail:tt)*) => {{
         $crate::tmux!(@cmd ({ $crate::Tmux::new() }) $($tail)*,)
     }};
@@ -184,15 +187,141 @@ macro_rules! tmux {
 
 #[test]
 fn tmux_macro() {
-    #[macro_use]
     use crate::attach_session;
+    use crate::Tmux;
+    use std::borrow::Cow;
 
-    let cmd = tmux!();
-    dbg!(cmd);
-    let cmd = tmux!(-v, -V);
-    dbg!(cmd);
-    let cmd = tmux!(-v, -V, attach_session!());
-    dbg!(cmd);
+    // This structure is used to store execution parameters of `tmux`, including binary
+    // name. Full description of fields can be found using `man tmux`.
+    // [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#DESCRIPTION)
+    //
+    // # Manual
+    //
+    // tmux ^3.2:
+    // ```text
+    // tmux [-2CDluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [-T features] [command [flags]]
+    // ```
+    //
+    // tmux ^2.1:
+    // ```text
+    // tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+    // ```
+    //
+    // tmux ^1.9:
+    // ```text
+    // tmux [-2lCquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+    // ```
+    //
+    // tmux ^1.8:
+    // ```text
+    // tmux [-28lCquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]
+    // ```
+    //
+    // tmux ^1.4:
+    // ```text
+    // tmux [-28lquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+    // ```
+    //
+    // tmux ^1.1:
+    // ```text
+    // tmux [-28lquv] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+    // ```
+    //
+    // tmux ^1.0:
+    // ```text
+    // tmux [-28dlqUuv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+    // ```
+    //
+    // tmux ^0.9:
+    // ```text
+    // tmux [-28dqUuv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+    // ```
+    //
+    // tmux ^0.8:
+    // ```text
+    // tmux [-28dqUuVv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
+    // ```
+    let mut tmux = tmux!();
+    #[cfg(feature = "tmux_0_8")]
+    let tmux = tmux!((tmux), -2);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    let tmux = tmux!((tmux), -8);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    let tmux = tmux!((tmux), -d);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
+    let tmux = tmux!((tmux), -q);
+    #[cfg(feature = "tmux_1_8")]
+    let tmux = tmux!((tmux), -C);
+    #[cfg(feature = "tmux_1_8")]
+    let tmux = tmux!((tmux), -CC);
+    #[cfg(feature = "tmux_3_2")]
+    let tmux = tmux!((tmux), -D);
+    #[cfg(feature = "tmux_1_0")]
+    let tmux = tmux!((tmux), -l);
+    #[cfg(feature = "tmux_3_2")]
+    let tmux = tmux!((tmux), -N);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    let tmux = tmux!((tmux), -U);
+    #[cfg(feature = "tmux_0_8")]
+    let tmux = tmux!((tmux), -u);
+    #[cfg(feature = "tmux_0_8")]
+    let tmux = tmux!((tmux), -v);
+    #[cfg(feature = "tmux_0_8")]
+    let tmux = tmux!((tmux), -V);
+    #[cfg(feature = "tmux_1_1")]
+    let tmux = tmux!((tmux), -c "1");
+    #[cfg(feature = "tmux_0_8")]
+    let tmux = tmux!((tmux), -f "2");
+    #[cfg(feature = "tmux_0_8")]
+    let tmux = tmux!((tmux), -L "3");
+    #[cfg(feature = "tmux_0_8")]
+    let tmux = tmux!((tmux), -S "4");
+    #[cfg(feature = "tmux_3_2")]
+    let tmux = tmux!((tmux), -T "5");
 
-    //let cmds = TmuxCommands::new().
+    let mut s = Vec::new();
+
+    s.push("tmux");
+
+    #[cfg(feature = "tmux_0_8")]
+    s.push("-2");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    s.push("-8");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    s.push("-d");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
+    s.push("-q");
+    #[cfg(feature = "tmux_1_8")]
+    s.push("-C");
+    #[cfg(feature = "tmux_1_8")]
+    s.push("-CC");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-D");
+    #[cfg(feature = "tmux_1_0")]
+    s.push("-l");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-N");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    s.push("-U");
+    #[cfg(feature = "tmux_0_8")]
+    s.push("-u");
+    #[cfg(feature = "tmux_0_8")]
+    s.push("-v");
+    #[cfg(feature = "tmux_0_8")]
+    s.push("-V");
+    #[cfg(feature = "tmux_1_1")]
+    s.extend_from_slice(&["-c", "1"]);
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-f", "2"]);
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-L", "3"]);
+    #[cfg(feature = "tmux_0_8")]
+    s.extend_from_slice(&["-S", "4"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-T", "5"]);
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+
+    let tmux = tmux.build().to_vec();
+
+    assert_eq!(tmux, s);
 }

@@ -10,19 +10,41 @@ pub mod attach_session_macro;
 #[cfg(feature = "tmux_0_8")]
 pub mod detach_client;
 #[cfg(feature = "tmux_0_8")]
+pub mod detach_client_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod has_session;
+#[cfg(feature = "tmux_0_8")]
+pub mod has_session_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod kill_server;
 #[cfg(feature = "tmux_0_8")]
+pub mod kill_server_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod kill_session;
+#[cfg(feature = "tmux_0_8")]
+pub mod kill_session_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod list_clients;
 #[cfg(feature = "tmux_0_8")]
+pub mod list_clients_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod list_commands;
 #[cfg(feature = "tmux_0_8")]
+pub mod list_commands_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod list_sessions;
+#[cfg(feature = "tmux_0_8")]
+pub mod list_sessions_macro;
+
 #[cfg(feature = "tmux_1_1")]
 pub mod lock_client;
+
 #[cfg(feature = "tmux_1_1")]
 pub mod lock_session;
 
@@ -34,19 +56,42 @@ pub mod new_session_macro;
 #[cfg(feature = "tmux_0_8")]
 pub mod refresh_client;
 #[cfg(feature = "tmux_0_8")]
+pub mod refresh_client_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod rename_session;
+#[cfg(feature = "tmux_0_8")]
+pub mod rename_session_macro;
+
 #[cfg(feature = "tmux_3_3")]
 pub mod server_access;
+#[cfg(feature = "tmux_3_3")]
+pub mod server_access_macro;
+
 #[cfg(feature = "tmux_1_2")]
 pub mod show_messages;
+#[cfg(feature = "tmux_1_2")]
+pub mod show_messages_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod source_file;
 #[cfg(feature = "tmux_0_8")]
+pub mod source_file_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod start_server;
+#[cfg(feature = "tmux_0_8")]
+pub mod start_server_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod suspend_client;
 #[cfg(feature = "tmux_0_8")]
+pub mod suspend_client_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod switch_client;
+#[cfg(feature = "tmux_0_8")]
+pub mod switch_client_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub use attach_session::AttachSession;
