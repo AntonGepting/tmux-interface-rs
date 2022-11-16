@@ -24,11 +24,11 @@ fn list_commands() {
     // list-commands
     // (alias: lscm)
     // ```
-    let mut list_commands = ListCommands::new();
+    let list_commands = ListCommands::new();
     #[cfg(feature = "tmux_2_3")]
-    let mut list_commands = list_commands.format("1");
+    let list_commands = list_commands.format("1");
     #[cfg(feature = "tmux_3_2")]
-    let mut list_commands = list_commands.command("2");
+    let list_commands = list_commands.command("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-commands";
