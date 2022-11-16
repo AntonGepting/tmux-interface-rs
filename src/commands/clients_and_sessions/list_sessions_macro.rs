@@ -39,7 +39,6 @@ macro_rules! list_sessions {
 
 #[test]
 fn list_sessions_macro() {
-    use crate::ListSessions;
     use std::borrow::Cow;
 
     // List all sessions managed by the server

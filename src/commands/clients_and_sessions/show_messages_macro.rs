@@ -60,7 +60,6 @@ macro_rules! show_messages {
 
 #[test]
 fn show_messages_macro() {
-    use crate::ShowMessages;
     use std::borrow::Cow;
 
     // Show client messages or server information

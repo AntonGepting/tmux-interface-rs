@@ -54,7 +54,7 @@ macro_rules! kill_session {
 
 #[test]
 fn kill_session_macro() {
-    use crate::{KillSession, TargetSession};
+    use crate::TargetSession;
     use std::borrow::Cow;
 
     // Destroy the given session

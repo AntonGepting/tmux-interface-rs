@@ -27,8 +27,6 @@ macro_rules! kill_server {
 
 #[test]
 fn kill_server_macro() {
-    use crate::kill_server;
-    use crate::KillServer;
     use std::borrow::Cow;
 
     // Kill the tmux server and clients and destroy all sessions

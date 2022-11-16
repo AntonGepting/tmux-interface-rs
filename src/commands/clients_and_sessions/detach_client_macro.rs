@@ -75,7 +75,7 @@ macro_rules! detach_client {
 #[test]
 fn detach_client_macro() {
     use crate::detach_client;
-    use crate::{DetachClient, TargetSession};
+    use crate::TargetSession;
     use std::borrow::Cow;
 
     // Structure for detaching the current client

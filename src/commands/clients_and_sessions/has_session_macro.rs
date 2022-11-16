@@ -35,8 +35,6 @@ macro_rules! has_session {
 
 #[test]
 fn has_session_macro() {
-    use crate::has_session;
-    use crate::HasSession;
     use std::borrow::Cow;
 
     // Report if the specified session exist

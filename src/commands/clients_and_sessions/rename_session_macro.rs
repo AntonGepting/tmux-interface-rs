@@ -40,7 +40,7 @@ macro_rules! rename_session {
 
 #[test]
 fn rename_session_macro() {
-    use crate::{RenameSession, TargetSession};
+    use crate::TargetSession;
     use std::borrow::Cow;
 
     // Rename the session to `new-name`

@@ -108,7 +108,7 @@ macro_rules! switch_client {
 
 #[test]
 fn switch_client_macro() {
-    use crate::{SwitchClient, TargetSession};
+    use crate::TargetSession;
     use std::borrow::Cow;
 
     // Structure to switch the current session for client `target-client` to `target-session`

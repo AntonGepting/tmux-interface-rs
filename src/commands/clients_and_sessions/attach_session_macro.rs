@@ -112,7 +112,7 @@ fn attach_session_macro() {
     use crate::attach_session;
     #[cfg(feature = "tmux_3_2")]
     use crate::ClientFlags;
-    use crate::{AttachSession, TargetSession};
+    use crate::TargetSession;
     use std::borrow::Cow;
 
     // Structure for attaching client to already existing session

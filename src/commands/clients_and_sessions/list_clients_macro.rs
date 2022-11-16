@@ -52,7 +52,7 @@ macro_rules! list_clients {
 
 #[test]
 fn list_clients_macro() {
-    use crate::{ListClients, TargetSession};
+    use crate::TargetSession;
     use std::borrow::Cow;
 
     // List all clients attached to the server

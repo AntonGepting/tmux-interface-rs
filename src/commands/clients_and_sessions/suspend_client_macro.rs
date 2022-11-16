@@ -32,19 +32,18 @@ macro_rules! suspend_client {
         $cmd
     }};
     () => {{
-        $crate::SourceFile::new()
+        $crate::SuspendClient::new()
     }};
     (($cmd:expr), $($tail:tt)*) => {{
         $crate::suspend_client!(@cmd ($cmd) $($tail)*,)
     }};
     ($($tail:tt)*) => {{
-        $crate::suspend_client!(@cmd ({ $crate::SourceFile::new() }) $($tail)*,)
+        $crate::suspend_client!(@cmd ({ $crate::SuspendClient::new() }) $($tail)*,)
     }};
 }
 
 #[test]
 fn suspend_client_macro() {
-    use crate::SuspendClient;
     use std::borrow::Cow;
 
     // Suspend a client by sending SIGTSTP (tty stop)

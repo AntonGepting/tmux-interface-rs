@@ -28,7 +28,6 @@ macro_rules! start_server {
 
 #[test]
 fn start_server_macro() {
-    use crate::StartServer;
     use std::borrow::Cow;
 
     // Start the tmux server, if not already running, without creating any sessions

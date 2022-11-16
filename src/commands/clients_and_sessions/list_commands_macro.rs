@@ -52,7 +52,6 @@ macro_rules! list_commands {
 
 #[test]
 fn list_commands_macro() {
-    use crate::ListCommands;
     use std::borrow::Cow;
 
     // List the syntax of all commands supported by tmux
@@ -76,11 +75,11 @@ fn list_commands_macro() {
     // list-commands
     // (alias: lscm)
     // ```
-    let mut list_commands = list_commands!();
+    let list_commands = list_commands!();
     #[cfg(feature = "tmux_2_3")]
-    let mut list_commands = list_commands!((list_commands), -F "1");
+    let list_commands = list_commands!((list_commands), -F "1");
     #[cfg(feature = "tmux_3_2")]
-    let mut list_commands = list_commands!((list_commands), "2");
+    let list_commands = list_commands!((list_commands), "2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-commands";

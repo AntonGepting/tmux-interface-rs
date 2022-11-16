@@ -161,7 +161,6 @@ macro_rules! refresh_client {
 fn refresh_client_macro() {
     #[cfg(feature = "tmux_2_9a")]
     use crate::ClientFlags;
-    use crate::RefreshClient;
     #[cfg(feature = "tmux_3_2")]
     use crate::State;
     use std::borrow::Cow;
@@ -213,38 +212,38 @@ fn refresh_client_macro() {
     // ```
     let refresh_client = refresh_client!();
     #[cfg(feature = "tmux_2_9a")]
-    let refresh_client = refresh_client!(-c);
+    let refresh_client = refresh_client!((refresh_client), -c);
     #[cfg(feature = "tmux_2_9a")]
-    let refresh_client = refresh_client!(-D);
+    let refresh_client = refresh_client!((refresh_client), -D);
     #[cfg(feature = "tmux_2_9a")]
-    let refresh_client = refresh_client!(-l);
+    let refresh_client = refresh_client!((refresh_client), -l);
     #[cfg(all(feature = "tmux_3_3", not(feature = "tmux_3_2a")))]
-    let refresh_client = refresh_client!(-l "1");
+    let refresh_client = refresh_client!((refresh_client), -l "1");
     #[cfg(feature = "tmux_2_9a")]
-    let refresh_client = refresh_client!(-L);
+    let refresh_client = refresh_client!((refresh_client), -L);
     #[cfg(feature = "tmux_2_9a")]
-    let refresh_client = refresh_client!(-R);
+    let refresh_client = refresh_client!((refresh_client), -R);
     #[cfg(feature = "tmux_1_6")]
-    let refresh_client = refresh_client!(-S);
+    let refresh_client = refresh_client!((refresh_client), -S);
     #[cfg(feature = "tmux_2_9a")]
-    let refresh_client = refresh_client!(-U);
+    let refresh_client = refresh_client!((refresh_client), -U);
     //#[cfg(feature = "tmux_3_2")]
-    //let refresh_client = refresh_client!(-A "0"; State::On);
+    //let refresh_client = refresh_client!((refresh_client), -A "0"; State::On);
     //#[cfg(feature = "tmux_3_2")]
-    //let refresh_client = refresh_client!(-B "0"; None; None);
+    //let refresh_client = refresh_client!((refresh_client), -B "0"; None; None);
     //#[cfg(feature = "tmux_2_4")]
-    //let refresh_client = refresh_client!((1, 2));
+    //let refresh_client = refresh_client!((refresh_client), (1, 2));
     #[cfg(feature = "tmux_2_9a")]
     let flags = ClientFlags {
         active_pane: Some(true),
         ..Default::default()
     };
     #[cfg(feature = "tmux_2_9a")]
-    let refresh_client = refresh_client!(-F flags);
+    let refresh_client = refresh_client!((refresh_client), -F flags);
     #[cfg(feature = "tmux_0_8")]
-    let refresh_client = refresh_client!(-t "4");
+    let refresh_client = refresh_client!((refresh_client), -t "4");
     #[cfg(feature = "tmux_2_9a")]
-    let refresh_client = refresh_client!(5);
+    let refresh_client = refresh_client!((refresh_client), 5);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "refresh-client";

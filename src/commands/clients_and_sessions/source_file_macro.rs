@@ -71,7 +71,6 @@ macro_rules! source_file {
 
 #[test]
 fn source_file_macro() {
-    use crate::SourceFile;
     use std::borrow::Cow;
 
     // Execute commands from path
