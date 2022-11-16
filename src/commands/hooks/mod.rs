@@ -5,7 +5,12 @@ use crate::TmuxCommand;
 #[cfg(feature = "tmux_2_2")]
 pub mod set_hook;
 #[cfg(feature = "tmux_2_2")]
+pub mod set_hook_macro;
+
+#[cfg(feature = "tmux_2_2")]
 pub mod show_hooks;
+#[cfg(feature = "tmux_2_2")]
+pub mod show_hooks_macro;
 
 #[cfg(feature = "tmux_2_2")]
 pub use set_hook::SetHook;

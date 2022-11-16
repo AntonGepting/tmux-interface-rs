@@ -5,7 +5,12 @@ use crate::TmuxCommand;
 #[cfg(feature = "tmux_1_0")]
 pub mod set_environment;
 #[cfg(feature = "tmux_1_0")]
+pub mod set_environment_macro;
+
+#[cfg(feature = "tmux_1_0")]
 pub mod show_environment;
+#[cfg(feature = "tmux_1_0")]
+pub mod show_environment_macro;
 
 #[cfg(feature = "tmux_1_0")]
 pub use set_environment::SetEnvironment;

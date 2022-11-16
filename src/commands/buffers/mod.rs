@@ -4,24 +4,50 @@ use crate::TmuxCommand;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#BUFFERS))
 #[cfg(feature = "tmux_1_3")]
 pub mod choose_buffer;
+#[cfg(feature = "tmux_1_3")]
+pub mod choose_buffer_macro;
+
 #[cfg(feature = "tmux_0_9")]
 pub mod clear_history;
+#[cfg(feature = "tmux_0_9")]
+pub mod clear_history_macro;
+
 //#[cfg(feature = "tmux_1_0")]
 //pub mod copy_buffer;
 #[cfg(feature = "tmux_0_8")]
 pub mod delete_buffer;
 #[cfg(feature = "tmux_0_8")]
+pub mod delete_buffer_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod list_buffers;
+#[cfg(feature = "tmux_0_8")]
+pub mod list_buffers_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod load_buffer;
 #[cfg(feature = "tmux_0_8")]
+pub mod load_buffer_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod paste_buffer;
+#[cfg(feature = "tmux_0_8")]
+pub mod paste_buffer_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod save_buffer;
 #[cfg(feature = "tmux_0_8")]
+pub mod save_buffer_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod set_buffer;
 #[cfg(feature = "tmux_0_8")]
+pub mod set_buffer_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod show_buffer;
+#[cfg(feature = "tmux_0_8")]
+pub mod show_buffer_macro;
 
 #[cfg(feature = "tmux_1_3")]
 pub use choose_buffer::ChooseBuffer;
