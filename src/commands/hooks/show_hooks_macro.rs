@@ -52,7 +52,7 @@ fn show_hooks_macro() {
     #[cfg(feature = "tmux_2_2")]
     let show_hooks = show_hooks!((show_hooks), -g);
     #[cfg(feature = "tmux_2_2")]
-    let show_hooks = show_hooks!((show_hooks), &target_session);
+    let show_hooks = show_hooks!((show_hooks), -t & target_session);
 
     let cmd = "show-hooks";
 
