@@ -107,9 +107,9 @@ fn set_environment_macro() {
     let set_environment = set_environment!();
     #[cfg(feature = "tmux_3_2")]
     let set_environment = set_environment!((set_environment), -F);
-    #[cfg(feature = "tmux_1_0")]
-    let set_environment = set_environment!((set_environment), -h);
     #[cfg(feature = "tmux_3_2")]
+    let set_environment = set_environment!((set_environment), -h);
+    #[cfg(feature = "tmux_1_0")]
     let set_environment = set_environment!((set_environment), -g);
     #[cfg(feature = "tmux_1_0")]
     let set_environment = set_environment!((set_environment), -r);

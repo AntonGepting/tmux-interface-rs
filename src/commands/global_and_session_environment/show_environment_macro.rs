@@ -50,9 +50,9 @@ macro_rules! show_environment {
         }) $($tail)*)
     }};
     // `[variable]`
-    (@cmd ($cmd:expr) $name:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) $variable:expr, $($tail:tt)*) => {{
         $crate::show_environment!(@cmd ({
-            $cmd.name($name)
+            $cmd.variable($variable)
         }) $($tail)*)
     }};
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
