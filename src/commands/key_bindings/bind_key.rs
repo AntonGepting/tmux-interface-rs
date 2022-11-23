@@ -2,6 +2,7 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+// FIXME: -c flag support
 /// Structure binding key `key` to command
 ///
 /// # Manual

@@ -38,7 +38,7 @@ fn show_buffer() {
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     s.extend_from_slice(&["-b", "2"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-    s.extend_from_slice(&["-b", "3"]);
+    s.extend_from_slice(&["-t", "3"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let show_buffer = show_buffer.build().to_vec();

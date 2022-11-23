@@ -43,7 +43,7 @@ pub struct RespawnWindow<'a> {
     #[cfg(feature = "tmux_3_0")]
     pub environment: Option<Cow<'a, str>>,
 
-    /// `[-t target-pane]` - target-pane
+    /// `[-t target-window]` - target-window
     #[cfg(feature = "tmux_0_8")]
     pub target_window: Option<Cow<'a, str>>,
 

@@ -45,6 +45,7 @@ use std::borrow::Cow;
 /// unbind-key key
 /// (alias: unbind)
 /// ```
+// FIXME: -t -T flags
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct UnbindKey<'a> {
     /// `[-a]`

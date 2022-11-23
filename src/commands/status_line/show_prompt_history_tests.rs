@@ -1,5 +1,5 @@
 #[test]
-fn clear_prompt_history() {
+fn show_prompt_history() {
     use crate::ClearPromptHistory;
     use std::borrow::Cow;
 

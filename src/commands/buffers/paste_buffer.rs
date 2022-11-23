@@ -58,6 +58,7 @@ pub struct PasteBuffer<'a> {
     /// `[-t target-window]` - specify the target window
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
     pub target_window: Option<Cow<'a, str>>,
+    // buffer-index
 }
 
 impl<'a> PasteBuffer<'a> {
