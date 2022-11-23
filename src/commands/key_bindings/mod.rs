@@ -5,13 +5,27 @@ use crate::TmuxCommand;
 #[cfg(feature = "tmux_0_8")]
 pub mod bind_key;
 #[cfg(feature = "tmux_0_8")]
+pub mod bind_key_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod list_keys;
+#[cfg(feature = "tmux_0_8")]
+pub mod list_keys_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod send_keys;
 #[cfg(feature = "tmux_0_8")]
+pub mod send_keys_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod send_prefix;
 #[cfg(feature = "tmux_0_8")]
+pub mod send_prefix_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod unbind_key;
+#[cfg(feature = "tmux_0_8")]
+pub mod unbind_key_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub use bind_key::BindKey;

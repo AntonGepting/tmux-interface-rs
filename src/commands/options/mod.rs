@@ -5,11 +5,22 @@ use crate::TmuxCommand;
 #[cfg(feature = "tmux_0_8")]
 pub mod set_option;
 #[cfg(feature = "tmux_0_8")]
+pub mod set_option_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod set_window_option;
+#[cfg(feature = "tmux_0_8")]
+pub mod set_window_option_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod show_options;
 #[cfg(feature = "tmux_0_8")]
+pub mod show_options_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod show_window_options;
+#[cfg(feature = "tmux_0_8")]
+pub mod show_window_options_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub use set_option::SetOption;

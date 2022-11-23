@@ -4,82 +4,193 @@ use crate::TmuxCommand;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#WINDOWS_AND_PANES))
 #[cfg(feature = "tmux_0_8")]
 pub mod break_pane;
+#[cfg(feature = "tmux_0_8")]
+pub mod break_pane_macro;
+
 #[cfg(feature = "tmux_1_2")]
 pub mod capture_pane;
+#[cfg(feature = "tmux_1_2")]
+pub mod capture_pane_macro;
+
 #[cfg(feature = "tmux_1_0")]
 pub mod choose_client;
+#[cfg(feature = "tmux_1_0")]
+pub mod choose_client_macro;
+
 //#[cfg(feature = "tmux_1_0")]
 //pub mod choose_session;
+
 #[cfg(feature = "tmux_1_7")]
 pub mod choose_tree;
+#[cfg(feature = "tmux_1_7")]
+pub mod choose_tree_macro;
+
 //#[cfg(feature = "tmux_1_0")]
 //pub mod choose_window;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod copy_mode;
+#[cfg(feature = "tmux_0_8")]
+pub mod copy_mode_macro;
+
 #[cfg(feature = "tmux_1_0")]
 pub mod display_panes;
+#[cfg(feature = "tmux_1_0")]
+pub mod display_panes_macro;
+
 //#[cfg(feature = "tmux_1_0")]
 //pub mod down_pane;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod find_window;
+#[cfg(feature = "tmux_0_8")]
+pub mod find_window_macro;
+
 #[cfg(feature = "tmux_1_2")]
 pub mod join_pane;
+#[cfg(feature = "tmux_1_2")]
+pub mod join_pane_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod kill_pane;
 #[cfg(feature = "tmux_0_8")]
+pub mod kill_pane_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod kill_window;
+#[cfg(feature = "tmux_0_8")]
+pub mod kill_window_macro;
+
 #[cfg(feature = "tmux_1_4")]
 pub mod last_pane;
+#[cfg(feature = "tmux_1_4")]
+pub mod last_pane_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod last_window;
 #[cfg(feature = "tmux_0_8")]
+pub mod last_window_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod link_window;
+#[cfg(feature = "tmux_0_8")]
+pub mod link_window_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod list_panes;
 #[cfg(feature = "tmux_0_8")]
+pub mod list_panes_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod list_windows;
+#[cfg(feature = "tmux_0_8")]
+pub mod list_windows_macro;
+
 #[cfg(feature = "tmux_1_7")]
 pub mod move_pane;
+#[cfg(feature = "tmux_1_7")]
+pub mod move_pane_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod move_window;
 #[cfg(feature = "tmux_0_8")]
+pub mod move_window_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod new_window;
+#[cfg(feature = "tmux_0_8")]
+pub mod new_window_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod next_layout;
 #[cfg(feature = "tmux_0_8")]
+pub mod next_layout_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod next_window;
+#[cfg(feature = "tmux_0_8")]
+pub mod next_window_macro;
+
 #[cfg(feature = "tmux_1_1")]
 pub mod pipe_pane;
+#[cfg(feature = "tmux_1_1")]
+pub mod pipe_pane_macro;
+
 #[cfg(feature = "tmux_1_3")]
 pub mod previous_layout;
+#[cfg(feature = "tmux_1_3")]
+pub mod previous_layout_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod previous_window;
 #[cfg(feature = "tmux_0_8")]
+pub mod previous_window_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod rename_window;
+#[cfg(feature = "tmux_0_8")]
+pub mod rename_window_macro;
+
 #[cfg(feature = "tmux_0_9")]
 pub mod resize_pane;
+#[cfg(feature = "tmux_0_9")]
+pub mod resize_pane_macro;
+
 #[cfg(feature = "tmux_2_9")]
 pub mod resize_window;
+#[cfg(feature = "tmux_2_9")]
+pub mod resize_window_macro;
+
 #[cfg(feature = "tmux_1_5")]
 pub mod respawn_pane;
+#[cfg(feature = "tmux_1_5")]
+pub mod respawn_pane_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod respawn_window;
 #[cfg(feature = "tmux_0_8")]
+pub mod respawn_window_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod rotate_window;
+#[cfg(feature = "tmux_0_8")]
+pub mod rotate_window_macro;
+
 #[cfg(feature = "tmux_0_9")]
 pub mod select_layout;
+#[cfg(feature = "tmux_0_9")]
+pub mod select_layout_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod select_pane;
 #[cfg(feature = "tmux_0_8")]
+pub mod select_pane_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod select_window;
+#[cfg(feature = "tmux_0_8")]
+pub mod select_window_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod split_window;
 #[cfg(feature = "tmux_0_8")]
+pub mod split_window_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod swap_pane;
+#[cfg(feature = "tmux_0_8")]
+pub mod swap_pane_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod swap_window;
 #[cfg(feature = "tmux_0_8")]
+pub mod swap_window_macro;
+
+#[cfg(feature = "tmux_0_8")]
 pub mod unlink_window;
+#[cfg(feature = "tmux_0_8")]
+pub mod unlink_window_macro;
+
 //#[cfg(feature = "tmux_1_0")]
 //pub mod up_pane;
 

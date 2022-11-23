@@ -4,20 +4,40 @@ use crate::TmuxCommand;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#STATUS_LINE))
 #[cfg(feature = "tmux_3_3")]
 pub mod clear_prompt_history;
+#[cfg(feature = "tmux_3_3")]
+pub mod clear_prompt_history_macro;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod command_prompt;
+#[cfg(feature = "tmux_0_8")]
+pub mod command_prompt_macro;
+
 #[cfg(feature = "tmux_0_9")]
 pub mod confirm_before;
+#[cfg(feature = "tmux_0_9")]
+pub mod confirm_before_macro;
+
 #[cfg(feature = "tmux_3_0")]
 pub mod display_menu;
+#[cfg(feature = "tmux_3_0")]
+pub mod display_menu_macro;
+
 #[cfg(feature = "tmux_1_0")]
 pub mod display_message;
+#[cfg(feature = "tmux_1_0")]
+pub mod display_message_macro;
+
 //#[cfg(feature = "tmux_1_0")]
 //pub mod select_prompt;
 #[cfg(feature = "tmux_3_2")]
 pub mod display_popup;
+#[cfg(feature = "tmux_3_2")]
+pub mod display_popup_macro;
+
 #[cfg(feature = "tmux_3_3")]
 pub mod show_prompt_history;
+#[cfg(feature = "tmux_3_3")]
+pub mod show_prompt_history_macro;
 
 #[cfg(feature = "tmux_3_3")]
 pub use clear_prompt_history::ClearPromptHistory;

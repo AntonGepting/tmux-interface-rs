@@ -187,8 +187,6 @@ macro_rules! tmux {
 
 #[test]
 fn tmux_macro() {
-    use crate::attach_session;
-    use crate::Tmux;
     use std::borrow::Cow;
 
     // This structure is used to store execution parameters of `tmux`, including binary
