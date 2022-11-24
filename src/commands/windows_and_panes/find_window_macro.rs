@@ -56,7 +56,7 @@ macro_rules! find_window {
         }) $($tail)*)
     }};
     // `[-t target-pane]` - target-pane
-    (@cmd ($cmd:expr) -c $target_pane:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
         $crate::find_window!(@cmd ({
             $cmd.target_pane($target_pane)
         }) $($tail)*)

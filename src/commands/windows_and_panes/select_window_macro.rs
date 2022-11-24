@@ -46,7 +46,7 @@ macro_rules! select_window {
         }) $($tail)*)
     }};
     // `[-t target-window]` - target-window
-    (@cmd ($cmd:expr) -c $target_window:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -t $target_window:expr, $($tail:tt)*) => {{
         $crate::select_window!(@cmd ({
             $cmd.target_window($target_window)
         }) $($tail)*)

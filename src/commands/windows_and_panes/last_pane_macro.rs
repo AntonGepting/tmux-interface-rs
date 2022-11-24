@@ -41,7 +41,7 @@ macro_rules! last_pane {
         }) $($tail)*)
     }};
     // `[-t target-window]`
-    (@cmd ($cmd:expr) -c $target_window:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -t $target_window:expr, $($tail:tt)*) => {{
         $crate::last_pane!(@cmd ({
             $cmd.target_window($target_window)
         }) $($tail)*)

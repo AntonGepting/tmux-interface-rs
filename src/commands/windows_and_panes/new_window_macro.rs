@@ -228,7 +228,7 @@ fn new_window_macro() {
     #[cfg(feature = "tmux_0_8")]
     let new_window = new_window!((new_window), -t & target_window);
     #[cfg(feature = "tmux_1_2")]
-    let new_window = new_window!("6");
+    let new_window = new_window!((new_window), "6");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "new-window";

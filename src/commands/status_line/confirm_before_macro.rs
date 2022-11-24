@@ -68,7 +68,7 @@ fn confirm_before_macro() {
     #[cfg(feature = "tmux_0_9")]
     let confirm_before = confirm_before!((confirm_before), -t "2");
     #[cfg(feature = "tmux_0_9")]
-    let confirm_before = confirm_before!("3");
+    let confirm_before = confirm_before!((confirm_before), "3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "confirm-before";

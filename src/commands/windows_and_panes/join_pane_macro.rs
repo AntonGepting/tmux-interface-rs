@@ -29,7 +29,7 @@ macro_rules! join_pane {
         }) $($tail)*)
     }};
     // `[-d]` -
-    (@cmd ($cmd:expr) -l, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -d, $($tail:tt)*) => {{
         $crate::join_pane!(@cmd ({
             $cmd.detached()
         }) $($tail)*)

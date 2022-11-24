@@ -39,54 +39,58 @@
 /// ```
 #[macro_export]
 macro_rules! switch_client {
+    // `[-E]` - update-environment option will not be applied
     (@cmd ($cmd:expr) -E, $($tail:tt)*) => {{
         $crate::switch_client!(@cmd ({
             $cmd.not_update_env()
         }) $($tail)*)
     }};
+    // `[-l]` - move to the last session
     (@cmd ($cmd:expr) -l, $($tail:tt)*) => {{
         $crate::switch_client!(@cmd ({
             $cmd.last_session()
         }) $($tail)*)
     }};
+    // `[-n]` - move to the next session
     (@cmd ($cmd:expr) -n, $($tail:tt)*) => {{
         $crate::switch_client!(@cmd ({
             $cmd.next_session()
         }) $($tail)*)
     }};
+    // `[-p]` - move to the previous session
     (@cmd ($cmd:expr) -p, $($tail:tt)*) => {{
         $crate::switch_client!(@cmd ({
             $cmd.previous_session()
         }) $($tail)*)
     }};
+    // `[-r]` - toggle whether a client is read-only
     (@cmd ($cmd:expr) -r, $($tail:tt)*) => {{
         $crate::switch_client!(@cmd ({
             $cmd.read_only()
         }) $($tail)*)
     }};
+    // `[-Z]` - keep the window zoomed if it was zoomed
     (@cmd ($cmd:expr) -Z, $($tail:tt)*) => {{
         $crate::switch_client!(@cmd ({
             $cmd.keep_zoomed()
         }) $($tail)*)
     }};
+    // `[-c target-client]` - specify the target-client
     (@cmd ($cmd:expr) -c $target_client:expr, $($tail:tt)*) => {{
         $crate::switch_client!(@cmd ({
             $cmd.target_client($target_client)
         }) $($tail)*)
     }};
+    // `[-t target-session]` - specify the target session
     (@cmd ($cmd:expr) -t $target_session:expr, $($tail:tt)*) => {{
         $crate::switch_client!(@cmd ({
             $cmd.target_session($target_session)
         }) $($tail)*)
     }};
+    // `[-T key-table]` - set the client's key table
     (@cmd ($cmd:expr) -T $key_table:expr, $($tail:tt)*) => {{
         $crate::switch_client!(@cmd ({
             $cmd.key_table($key_table)
-        }) $($tail)*)
-    }};
-    (@cmd ($cmd:expr) $shell_command:expr, $($tail:tt)*) => {{
-        $crate::switch_client!(@cmd ({
-            $cmd.shell_command($shell_command)
         }) $($tail)*)
     }};
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{

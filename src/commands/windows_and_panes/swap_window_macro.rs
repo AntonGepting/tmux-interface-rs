@@ -11,19 +11,19 @@
 macro_rules! swap_window {
     // `[-d]`
     (@cmd ($cmd:expr) -d, $($tail:tt)*) => {{
-        $crate::switch_client!(@cmd ({
+        $crate::swap_window!(@cmd ({
             $cmd.detached()
         }) $($tail)*)
     }};
     // `[-s src-window]`
     (@cmd ($cmd:expr) -s $src_window:expr, $($tail:tt)*) => {{
-        $crate::switch_client!(@cmd ({
+        $crate::swap_window!(@cmd ({
             $cmd.src_window($src_window)
         }) $($tail)*)
     }};
     // `[-t dst-window]`
     (@cmd ($cmd:expr) -t $dst_window:expr, $($tail:tt)*) => {{
-        $crate::switch_client!(@cmd ({
+        $crate::swap_window!(@cmd ({
             $cmd.dst_window($dst_window)
         }) $($tail)*)
     }};
@@ -34,13 +34,13 @@ macro_rules! swap_window {
         $cmd
     }};
     () => {{
-        $crate::SwitchClient::new()
+        $crate::SwapWindow::new()
     }};
     (($cmd:expr), $($tail:tt)*) => {{
-        $crate::switch_client!(@cmd ($cmd) $($tail)*,)
+        $crate::swap_window!(@cmd ($cmd) $($tail)*,)
     }};
     ($($tail:tt)*) => {{
-        $crate::switch_client!(@cmd ({ $crate::SwitchClient::new() }) $($tail)*,)
+        $crate::swap_window!(@cmd ({ $crate::SwapWindow::new() }) $($tail)*,)
     }};
 }
 
