@@ -21,7 +21,7 @@ fn next_window() {
     let next_window = NextWindow::new();
     let next_window = next_window.attach();
     #[cfg(feature = "tmux_0_8")]
-    let next_window = next_window.target_window("1");
+    let next_window = next_window.target_session("1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "next-window";

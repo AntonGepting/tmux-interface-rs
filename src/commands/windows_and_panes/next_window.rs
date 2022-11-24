@@ -25,7 +25,7 @@ pub struct NextWindow<'a> {
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_0_8")]
-    pub target_window: Option<Cow<'a, str>>,
+    pub target_session: Option<Cow<'a, str>>,
 }
 
 impl<'a> NextWindow<'a> {
@@ -42,8 +42,8 @@ impl<'a> NextWindow<'a> {
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
-        self.target_window = Some(target_window.into());
+    pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
+        self.target_session = Some(target_session.into());
         self
     }
 
@@ -60,8 +60,8 @@ impl<'a> NextWindow<'a> {
 
         // `[-t target-session]`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(target_window) = self.target_window {
-            cmd.push_option(T_LOWERCASE_KEY, target_window);
+        if let Some(target_session) = self.target_session {
+            cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
         cmd
