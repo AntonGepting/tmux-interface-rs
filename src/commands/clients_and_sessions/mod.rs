@@ -55,8 +55,9 @@ pub mod new_session_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod refresh_client;
-#[cfg(feature = "tmux_0_8")]
-pub mod refresh_client_macro;
+// FIXME
+//#[cfg(feature = "tmux_0_8")]
+//pub mod refresh_client_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod rename_session;

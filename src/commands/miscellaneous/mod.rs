@@ -9,8 +9,9 @@ pub mod clock_mode_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod if_shell;
-#[cfg(feature = "tmux_0_8")]
-pub mod if_shell_macro;
+// FIXME
+//#[cfg(feature = "tmux_0_8")]
+//pub mod if_shell_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod lock_server;

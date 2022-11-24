@@ -4,13 +4,15 @@ use crate::TmuxCommand;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#OPTIONS))
 #[cfg(feature = "tmux_0_8")]
 pub mod set_option;
-#[cfg(feature = "tmux_0_8")]
-pub mod set_option_macro;
+// FIXME
+//#[cfg(feature = "tmux_0_8")]
+//pub mod set_option_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod set_window_option;
-#[cfg(feature = "tmux_0_8")]
-pub mod set_window_option_macro;
+// FIXME
+//#[cfg(feature = "tmux_0_8")]
+//pub mod set_window_option_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod show_options;

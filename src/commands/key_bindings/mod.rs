@@ -4,8 +4,9 @@ use crate::TmuxCommand;
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#KEY_BINDINGS))
 #[cfg(feature = "tmux_0_8")]
 pub mod bind_key;
-#[cfg(feature = "tmux_0_8")]
-pub mod bind_key_macro;
+// FIXME
+//#[cfg(feature = "tmux_0_8")]
+//pub mod bind_key_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod list_keys;
