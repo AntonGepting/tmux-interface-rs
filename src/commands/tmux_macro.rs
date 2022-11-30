@@ -46,6 +46,86 @@
 /// ```text
 /// tmux [-28dqUuVv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
+// Description of `some_command!` macro
+//
+// what it does
+// * recursive call
+// what it does not
+//
+// Matching parts:
+//  * `@cmd ($cmd:expr)` - inner variable by recursive invokations
+//  * `$($tail:tt)*` - rest of the macro command arguments (like args)
+//  * `-x,`
+//  * `-o $output:tt,`
+//  * `$input:expr,`
+//
+// Matching arms:
+//  * Set `SomeCommand` arguments:
+//      1. flag (`[-a]`)
+//      2. option (`[-o output]`)
+//      3. parameter (`[input]`)
+//  * ? Last argument (end of recursion)
+//  * Create `SomeCommand` with no arguments
+//  * Set `SomeCommand` arguments, do not create it (recursively)
+//  * Create `SomeCommand` with arguments (recursively)
+//
+// Matching arms with implementation:
+// * Set `SomeCommand` arguments
+//     1. `-x` - single flag
+//     ```
+//        (@cmd ($cmd:expr) -x, $($tail:tt)*) => {{
+//            $crate::some_command!(@cmd ({
+//                $cmd.x()
+//            }) $($tail)*)
+//        }};
+//     ```
+//
+//     2. `-x $file:expr` - single option with flag
+//     ```
+//        (@cmd ($cmd:expr) -o $output:tt, $($tail:tt)*) => {{
+//            $crate::some_command!(@cmd ({
+//                $cmd.output($output)
+//            }) $($tail)*)
+//        }};
+//     ```
+//
+//     3. `$param:expr` - single parameter, without flag
+//     ```
+//        (@cmd ($cmd:expr) $input:expr, $($tail:tt)*) => {{
+//            $crate::some_command!(@cmd ({
+//                $cmd.input($input)
+//            }) $($tail)*)
+//        }};
+//     ```
+//
+// * ? Last argument (end of recursion)
+//     ```
+//        (@cmd ($cmd:expr)) => {{
+//            $cmd
+//        }};
+//     ```
+//
+// * Create `SomeCommand` with no arguments
+//    ```
+//       () => {{
+//           $crate::SomeCommand::new()
+//       }};
+//    ```
+//
+// * Set arguments, do not create `SomeCommand` recursive call
+//     ```
+//        (($cmd:expr), $($tail:tt)*) => {{
+//            $crate::some_command!(@cmd ($cmd) $($tail)*,)
+//        }};
+//     ```
+//
+// * Create `SomeCommand` with arguments, recursive call
+//     ```
+//        ($($tail:tt)*) => {{
+//            $crate::some_command!(@cmd ({ $crate::SomeCommand::new() }) $($tail)*,)
+//        }};
+//     ```
+//
 #[macro_export]
 macro_rules! tmux {
     // `[-c shell-command]` - Execute shell-command using the default shell
@@ -174,12 +254,15 @@ macro_rules! tmux {
     (@cmd ($cmd:expr)) => {{
         $cmd
     }};
+    // If `SomeCommand` default creation only needed
     () => {{
         $crate::Tmux::new()
     }};
+    // If `SomeCommand` was already created before, just setting of arguments needed
     (($cmd:expr), $($tail:tt)*) => {{
         $crate::tmux!(@cmd ($cmd) $($tail)*,)
     }};
+    // If `SomeCommand` creation with arguments needed
     ($($tail:tt)*) => {{
         $crate::tmux!(@cmd ({ $crate::Tmux::new() }) $($tail)*,)
     }};
