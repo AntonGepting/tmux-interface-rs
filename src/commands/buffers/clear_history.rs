@@ -27,7 +27,7 @@ pub struct ClearHistory<'a> {
     #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
     pub pane_index: Option<Cow<'a, str>>,
 
-    /// `[-t target-pane]`
+    /// `[-t target-window]`
     #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
     pub target_window: Option<Cow<'a, str>>,
 }
@@ -51,7 +51,7 @@ impl<'a> ClearHistory<'a> {
         self
     }
 
-    /// `[-t target-pane]`
+    /// `[-t target-window]`
     #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
     pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
@@ -75,7 +75,7 @@ impl<'a> ClearHistory<'a> {
             cmd.push_option(P_LOWERCASE_KEY, pane_index);
         }
 
-        // `[-t target-pane]`
+        // `[-t target-window]`
         #[cfg(all(feature = "tmux_0_9", not(feature = "tmux_1_0")))]
         if let Some(target_window) = self.target_window {
             cmd.push_option(T_LOWERCASE_KEY, target_window);
