@@ -859,7 +859,7 @@ use crate::Switch;
 
 // TODO: check types
 // 31 Available window options are:
-#[derive(Default, PartialEq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct WindowOptions {
     //aggressive-resize [on | off]
     #[cfg(feature = "tmux_1_0")]
@@ -1076,7 +1076,351 @@ pub struct WindowOptions {
     //pub user_options: Option<HashMap<String, String>>
 }
 
+/// ```text
+/// tmux show-options -g -w
+/// ```
+///
+/// ```text
+/// aggressive-resize off
+/// allow-rename off
+/// alternate-screen on
+/// automatic-rename on
+/// automatic-rename-format "#{?pane_in_mode,[tmux],#{pane_current_command}}#{?pane_dead,[dead],}"
+/// clock-mode-colour colour135
+/// clock-mode-style 24
+/// main-pane-height 24
+/// main-pane-width 80
+/// mode-keys vi
+/// mode-style fg=colour196,bg=colour238,bright
+/// monitor-activity off
+/// monitor-bell on
+/// monitor-silence 0
+/// other-pane-height 0
+/// other-pane-width 0
+/// pane-active-border-style fg=colour114,bg=colour235
+/// pane-base-index 0
+/// pane-border-format "#{?pane_active,#[reverse],}#{pane_index}#[default] \"#{pane_title}\""
+/// pane-border-status off
+/// pane-border-style fg=colour238,bg=colour235
+/// remain-on-exit off
+/// synchronize-panes off
+/// window-active-style fg=colour253,bg=colour235
+/// window-size latest
+/// window-style fg=colour247,bg=colour238
+/// window-status-activity-style reverse
+/// window-status-bell-style fg=colour253,bg=colour1,bright
+/// window-status-current-format " #I: #W #F "
+/// window-status-current-style fg=colour22,bg=colour114
+/// window-status-format " #I: #W #F "
+/// window-status-last-style default
+/// window-status-separator " "
+/// window-status-style fg=colour247,bg=#282c34
+/// wrap-search on
+/// xterm-keys on
+/// ```
+impl Default for WindowOptions {
+    fn default() -> Self {
+        let options = WindowOptions::new();
+
+        #[cfg(feature = "tmux_1_0")]
+        let options = options.aggressive_resize(Some(Switch::Off));
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
+        let options = options.allow_rename(Some(Switch::Off));
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
+        let options = options.alternate_screen(Some(Switch::On));
+        #[cfg(feature = "tmux_1_0")] // 0.8
+        let options = options.automatic_rename(Some(Switch::On));
+        #[cfg(feature = "tmux_1_9")]
+        let options = options.automatic_rename_format(Some(String::from(
+            "#{?pane_in_mode,[tmux],#{pane_current_command}}#{?pane_dead,[dead],}",
+        )));
+        #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+        let options = options.c0_change_interval(None);
+        #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+        let options = options.c0_change_trigger(None);
+        #[cfg(feature = "tmux_1_0")]
+        let options = options.clock_mode_colour(Some(String::from("colour135")));
+        #[cfg(feature = "tmux_1_0")]
+        let options = options.clock_mode_style(Some(ClockModeStyle::_24));
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
+        let options = options.force_height(None);
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
+        let options = options.force_width(None);
+        #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
+        let options = options.layout_history_limit(Some());
+        #[cfg(feature = "tmux_1_0")]
+        let options = options.main_pane_height(Some(24));
+        #[cfg(feature = "tmux_1_0")]
+        let options = options.main_pane_width(Some(80));
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let options = options.mode_attr(Some());
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let options = options.mode_bg(Some());
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let options = options.mode_fg(Some());
+        #[cfg(feature = "tmux_1_0")]
+        let options = options.mode_keys(Some(StatusKeys::Vi));
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+        let options = options.mode_mouse(Some());
+        #[cfg(feature = "tmux_1_9")]
+        let options = options.mode_style(Some(String::from("fg=colour196,bg=colour238,bright")));
+        #[cfg(feature = "tmux_1_0")]
+        let options = options.monitor_activity(Some(Switch::Off));
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+        let options = options.monitor_content(Some());
+        #[cfg(feature = "tmux_2_6")]
+        let options = options.monitor_bell(Some(Switch::On));
+        #[cfg(feature = "tmux_1_4")]
+        let options = options.monitor_silence(Some(0));
+        #[cfg(feature = "tmux_1_4")]
+        let options = options.other_pane_height(Some(0));
+        #[cfg(feature = "tmux_1_4")]
+        let options = options.other_pane_width(Some(0));
+        #[cfg(feature = "tmux_2_0")]
+        let options =
+            options.pane_active_border_style(Some(String::from("fg=colour114,bg=colour235")));
+        #[cfg(feature = "tmux_1_6")]
+        let options = options.pane_base_index(Some(0));
+        #[cfg(feature = "tmux_2_3")]
+        let options = options.pane_border_format(Some(String::from(
+            "#{?pane_active,#[reverse],}#{pane_index}#[default] \"#{pane_title}\"",
+        )));
+        #[cfg(feature = "tmux_2_3")]
+        let options = options.pane_border_status(Some(PaneBorderStatus::Off));
+        #[cfg(feature = "tmux_2_0")]
+        let options = options.pane_border_style(Some(String::from("fg=colour238,bg=colour235")));
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
+        let options = options.remain_on_exit(Some(Switch::Off));
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
+        let options = options.synchronize_panes(Some(Switch::Off));
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
+        let options = options.utf8(Some());
+        #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
+        let options = options.window_active_style(Some(String::from("fg=colour253,bg=colour235")));
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let options = options.window_status_bell_attr(Some());
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let options = options.window_status_bell_bg(Some());
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let options = options.window_status_bell_fg(Some());
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let options = options.window_status_content_attr(Some());
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let options = options.window_status_content_bg(Some());
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let options = options.window_status_content_fg(Some());
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let options = options.window_status_activity_attr(Some());
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let options = options.window_status_activity_bg(Some());
+        #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+        let options = options.window_status_activity_fg(Some());
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let options = options.window_status_attr(Some());
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let options = options.window_status_bg(Some());
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let options = options.window_status_fg(Some());
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let options = options.window_status_current_attr(Some());
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let options = options.window_status_current_bg(Some());
+        #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+        let options = options.window_status_current_fg(Some());
+        #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+        let options = options.window_status_alert_attr(Some());
+        #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+        let options = options.window_status_alert_bg(Some());
+        #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+        let options = options.window_status_alert_fg(Some());
+        #[cfg(feature = "tmux_1_9")]
+        let options = options.window_status_activity_style(Some(String::from("Reverse")));
+        #[cfg(feature = "tmux_1_9")]
+        let options =
+            options.window_status_bell_style(Some(String::from("fg=colour253,bg=colour1,bright")));
+        #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+        let options = options.window_status_content_style(Some());
+        #[cfg(feature = "tmux_1_2")]
+        let options = options.window_status_current_format(Some(String::from(" #I: #W #F ")));
+        #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+        let options = options.window_status_last_attr(Some());
+        #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+        let options = options.window_status_last_bg(Some());
+        #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+        let options = options.window_status_last_fg(Some());
+        #[cfg(feature = "tmux_1_9")]
+        let options =
+            options.window_status_current_style(Some(String::from("fg=colour22,bg=colour114")));
+        #[cfg(feature = "tmux_1_2")]
+        let options = options.window_status_format(Some(String::from(" #I: #W #F ")));
+        #[cfg(feature = "tmux_1_9")]
+        let options = options.window_status_last_style(Some(String::from("default")));
+        #[cfg(feature = "tmux_1_7")]
+        let options = options.window_status_separator(Some(String::from(" ")));
+        #[cfg(feature = "tmux_1_9")]
+        let options = options.window_status_style(Some(String::from("fg=colour247,bg=#282c34")));
+        #[cfg(feature = "tmux_2_9")]
+        let options = options.window_size(Some(Latest));
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
+        let options = options.word_separators(Some());
+        #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
+        let options = options.window_style(Some(String::from("fg=colour247,bg=colour238")));
+        #[cfg(feature = "tmux_1_7")]
+        let options = options.wrap_search(Some(Switch::On));
+        #[cfg(feature = "tmux_1_0")]
+        let options = options.xterm_keys(Some(Switch::On));
+        options
+    }
+}
+
 impl WindowOptions {
+    pub fn new() -> Self {
+        WindowOptions {
+            #[cfg(feature = "tmux_1_0")]
+            aggressive_resize: None,
+            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
+            allow_rename:None,
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
+            alternate_screen: None,
+            #[cfg(feature = "tmux_1_0")] // 0.8
+            automatic_rename: None,
+            #[cfg(feature = "tmux_1_9")]
+            automatic_rename_format: None,
+            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+            c0_change_interval: None,
+            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+            c0_change_trigger: None,
+            #[cfg(feature = "tmux_1_0")]
+            clock_mode_colour: None,
+            #[cfg(feature = "tmux_1_0")]
+            clock_mode_style: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
+            force_height: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
+            force_width: None,
+            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
+            layout_history_limit: None,
+            #[cfg(feature = "tmux_1_0")]
+            main_pane_height: None,
+            #[cfg(feature = "tmux_1_0")]
+            main_pane_width: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+            mode_attr: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+            mode_bg: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+            mode_fg: None,
+            #[cfg(feature = "tmux_1_0")]
+            mode_keys: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+            mode_mouse: None,
+            #[cfg(feature = "tmux_1_9")]
+            mode_style: None,
+            #[cfg(feature = "tmux_1_0")]
+            monitor_activity: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+            monitor_content: None,
+            #[cfg(feature = "tmux_2_6")]
+            monitor_bell: None,
+            #[cfg(feature = "tmux_1_4")]
+            monitor_silence: None,
+            #[cfg(feature = "tmux_1_4")]
+            other_pane_height: None,
+            #[cfg(feature = "tmux_1_4")]
+            other_pane_width: None,
+            #[cfg(feature = "tmux_2_0")]
+            pane_active_border_style: None,
+            #[cfg(feature = "tmux_1_6")]
+            pane_base_index: None,
+            #[cfg(feature = "tmux_2_3")]
+            pane_border_format: None,
+            #[cfg(feature = "tmux_2_3")]
+            pane_border_status: None,
+            #[cfg(feature = "tmux_2_0")]
+            pane_border_style: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
+            remain_on_exit: None,
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
+            synchronize_panes: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
+            utf8: None,
+            #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
+            window_active_style: None,
+            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+            window_status_bell_attr: None,
+            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+            window_status_bell_bg: None,
+            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+            window_status_bell_fg: None,
+            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+            window_status_content_attr: None,
+            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+            window_status_content_bg: None,
+            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+            window_status_content_fg: None,
+            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+            window_status_activity_attr: None,
+            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+            window_status_activity_bg: None,
+            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+            window_status_activity_fg: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+            window_status_attr: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+            window_status_bg: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+            window_status_fg: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+            window_status_current_attr: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+            window_status_current_bg: None,
+            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+            window_status_current_fg: None,
+            #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+            window_status_alert_attr: None,
+            #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+            window_status_alert_bg: None,
+            #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+            window_status_alert_fg: None,
+            #[cfg(feature = "tmux_1_9")]
+            window_status_activity_style: None,
+            #[cfg(feature = "tmux_1_9")]
+            window_status_bell_style: None,
+            #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+            window_status_content_style: None,
+            #[cfg(feature = "tmux_1_2")]
+            window_status_current_format: None,
+            #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+            window_status_last_attr: None,
+            #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+            window_status_last_bg: None,
+            #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+            window_status_last_fg: None,
+            #[cfg(feature = "tmux_1_9")]
+            window_status_current_style: None,
+            #[cfg(feature = "tmux_1_2")]
+            window_status_format: None,
+            #[cfg(feature = "tmux_1_9")]
+            window_status_last_style: None,
+            #[cfg(feature = "tmux_1_7")]
+            window_status_separator: None,
+            #[cfg(feature = "tmux_1_9")]
+            window_status_style: None,
+            #[cfg(feature = "tmux_2_9")]
+            window_size: None,
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
+            word_separators: None,
+            #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
+            window_style: None,
+            #[cfg(feature = "tmux_1_7")]
+            wrap_search: None,
+            #[cfg(feature = "tmux_1_0")]
+            xterm_keys: None,
+            // XXX: user options?
+            //pub user_options: Option<HashMap<String, String>>
+        }
+    }
+
     //pub fn get_all() -> Result<Self, Error> {
     //ShowOptions::new()
     //.global()
@@ -1167,478 +1511,587 @@ impl WindowOptions {
 //}
 //}
 
-#[derive(Default, Debug)]
-pub struct WindowOptionsBuilder<'a> {
+//#[derive(Default, Debug)]
+//pub struct WindowOptionsBuilder<'a> {
+//#[cfg(feature = "tmux_1_0")]
+//pub aggressive_resize: Option<Switch>,
+//#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
+//pub allow_rename: Option<Switch>,
+//#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
+//pub alternate_screen: Option<Switch>,
+//#[cfg(feature = "tmux_1_0")] // 0.8
+//pub automatic_rename: Option<Switch>,
+//#[cfg(feature = "tmux_1_9")]
+//pub automatic_rename_format: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+//pub c0_change_interval: Option<usize>,
+//#[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+//pub c0_change_trigger: Option<usize>,
+//#[cfg(feature = "tmux_1_0")]
+//pub clock_mode_colour: Option<&'a str>,
+//#[cfg(feature = "tmux_1_0")]
+//pub clock_mode_style: Option<ClockModeStyle>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
+//pub force_height: Option<usize>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
+//pub force_width: Option<usize>,
+//#[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
+//pub layout_history_limit: Option<usize>,
+//#[cfg(feature = "tmux_1_0")]
+//pub main_pane_height: Option<usize>,
+//#[cfg(feature = "tmux_1_0")]
+//pub main_pane_width: Option<usize>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+//pub mode_attr: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+//pub mode_bg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+//pub mode_fg: Option<&'a str>,
+//#[cfg(feature = "tmux_1_0")]
+//pub mode_keys: Option<StatusKeys>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+//pub mode_mouse: Option<Switch>,
+//#[cfg(feature = "tmux_1_9")]
+//pub mode_style: Option<&'a str>,
+//#[cfg(feature = "tmux_1_0")]
+//pub monitor_activity: Option<Switch>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+//pub monitor_content: Option<&'a str>,
+//#[cfg(feature = "tmux_2_6")]
+//pub monitor_bell: Option<Switch>,
+//#[cfg(feature = "tmux_1_4")]
+//pub monitor_silence: Option<usize>,
+//#[cfg(feature = "tmux_1_4")]
+//pub other_pane_height: Option<usize>,
+//#[cfg(feature = "tmux_1_4")]
+//pub other_pane_width: Option<usize>,
+//#[cfg(feature = "tmux_2_0")]
+//pub pane_active_border_style: Option<&'a str>,
+//#[cfg(feature = "tmux_1_6")]
+//pub pane_base_index: Option<usize>,
+//#[cfg(feature = "tmux_2_3")]
+//pub pane_border_format: Option<&'a str>,
+//#[cfg(feature = "tmux_2_3")]
+//pub pane_border_status: Option<PaneBorderStatus>,
+//#[cfg(feature = "tmux_2_0")]
+//pub pane_border_style: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
+//pub remain_on_exit: Option<Switch>,
+//#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
+//pub synchronize_panes: Option<Switch>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
+//pub utf8: Option<Switch>,
+//#[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
+//pub window_active_style: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+//pub window_status_bell_attr: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+//pub window_status_bell_bg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+//pub window_status_bell_fg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+//pub window_status_content_attr: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+//pub window_status_content_bg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+//pub window_status_content_fg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+//pub window_status_activity_attr: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+//pub window_status_activity_bg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+//pub window_status_activity_fg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+//pub window_status_attr: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+//pub window_status_bg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+//pub window_status_fg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+//pub window_status_current_attr: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+//pub window_status_current_bg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+//pub window_status_current_fg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+//pub window_status_alert_attr: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+//pub window_status_alert_bg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+//pub window_status_alert_fg: Option<&'a str>,
+//#[cfg(feature = "tmux_1_9")]
+//pub window_status_activity_style: Option<&'a str>,
+//#[cfg(feature = "tmux_1_9")]
+//pub window_status_bell_style: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+//pub window_status_content_style: Option<&'a str>,
+//#[cfg(feature = "tmux_1_2")]
+//pub window_status_current_format: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+//pub window_status_last_attr: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+//pub window_status_last_bg: Option<&'a str>,
+//#[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+//pub window_status_last_fg: Option<&'a str>,
+//#[cfg(feature = "tmux_1_9")]
+//pub window_status_current_style: Option<&'a str>,
+//#[cfg(feature = "tmux_1_2")]
+//pub window_status_format: Option<&'a str>,
+//#[cfg(feature = "tmux_1_9")]
+//pub window_status_last_style: Option<&'a str>,
+//#[cfg(feature = "tmux_1_7")]
+//pub window_status_separator: Option<&'a str>,
+//#[cfg(feature = "tmux_1_9")]
+//pub window_status_style: Option<&'a str>,
+//#[cfg(feature = "tmux_2_9")]
+//pub window_size: Option<WindowSize>,
+//#[cfg(feature = "tmux_1_2")]
+//pub word_separators: Option<&'a str>,
+//#[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
+//pub window_style: Option<&'a str>,
+//#[cfg(feature = "tmux_1_7")]
+//pub wrap_search: Option<Switch>,
+//#[cfg(feature = "tmux_1_0")]
+//pub xterm_keys: Option<Switch>,
+//}
+
+impl WindowOptions {
     #[cfg(feature = "tmux_1_0")]
-    pub aggressive_resize: Option<Switch>,
+    pub fn aggressive_resize(mut self, aggressive_resize: Option<Switch>) -> Self {
+        self.aggressive_resize = aggressive_resize;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
-    pub allow_rename: Option<Switch>,
+    pub fn allow_rename(mut self, allow_rename: Option<Switch>) -> Self {
+        self.allow_rename = allow_rename;
+        self
+    }
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-    pub alternate_screen: Option<Switch>,
-    #[cfg(feature = "tmux_1_0")] // 0.8
-    pub automatic_rename: Option<Switch>,
+    pub fn alternate_screen(mut self, alternate_screen: Option<Switch>) -> Self {
+        self.alternate_screen = alternate_screen;
+        self
+    }
+
+    #[cfg(feature = "tmux_1_2")]
+    pub fn automatic_rename(mut self, automatic_rename: Option<Switch>) -> Self {
+        self.automatic_rename = automatic_rename;
+        self
+    }
+
     #[cfg(feature = "tmux_1_9")]
-    pub automatic_rename_format: Option<&'a str>,
+    pub fn automatic_rename_format(mut self, automatic_rename_format: Option<String>) -> Self {
+        self.automatic_rename_format = automatic_rename_format;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    pub c0_change_interval: Option<usize>,
+    pub fn c0_change_interval(mut self, c0_change_interval: Option<String>) -> Self {
+        self.c0_change_interval = c0_change_interval;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    pub c0_change_trigger: Option<usize>,
+    pub fn c0_change_trigger(mut self, c0_change_trigger: Option<String>) -> Self {
+        self.c0_change_trigger = c0_change_trigger;
+        self
+    }
+
     #[cfg(feature = "tmux_1_0")]
-    pub clock_mode_colour: Option<&'a str>,
+    pub fn clock_mode_colour(mut self, clock_mode_colour: Option<String>) -> Self {
+        self.clock_mode_colour = clock_mode_colour;
+        self
+    }
+
     #[cfg(feature = "tmux_1_0")]
-    pub clock_mode_style: Option<ClockModeStyle>,
+    pub fn clock_mode_style(mut self, clock_mode_style: Option<ClockModeStyle>) -> Self {
+        self.clock_mode_style = clock_mode_style;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-    pub force_height: Option<usize>,
+    pub fn force_height(mut self, force_height: Option<usize>) -> Self {
+        self.force_height = force_height;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-    pub force_width: Option<usize>,
+    pub fn force_width(mut self, force_width: Option<usize>) -> Self {
+        self.force_width = force_width;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
-    pub layout_history_limit: Option<usize>,
-    #[cfg(feature = "tmux_1_0")]
-    pub main_pane_height: Option<usize>,
-    #[cfg(feature = "tmux_1_0")]
-    pub main_pane_width: Option<usize>,
+    pub fn layout_history_limit(mut self, layout_history_limit: Option<usize>) -> Self {
+        self.layout_history_limit = layout_history_limit;
+        self
+    }
+
+    #[cfg(feature = "tmux_1_9")]
+    pub fn main_pane_height(mut self, main_pane_height: Option<usize>) -> Self {
+        self.main_pane_height = main_pane_height;
+        self
+    }
+
+    #[cfg(feature = "tmux_1_2")]
+    pub fn main_pane_width(mut self, main_pane_width: Option<usize>) -> Self {
+        self.main_pane_width = main_pane_width;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub mode_attr: Option<&'a str>,
+    pub fn mode_attr(mut self, mode_attr: Option<String>) -> Self {
+        self.mode_attr = mode_attr;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub mode_bg: Option<&'a str>,
+    pub fn mode_bg(mut self, mode_bg: Option<String>) -> Self {
+        self.mode_bg = mode_bg;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub mode_fg: Option<&'a str>,
+    pub fn mode_fg(mut self, mode_fg: Option<String>) -> Self {
+        self.mode_fg = mode_fg;
+        self
+    }
+
     #[cfg(feature = "tmux_1_0")]
-    pub mode_keys: Option<StatusKeys>,
+    pub fn mode_keys(mut self, mode_keys: Option<StatusKeys>) -> Self {
+        self.mode_keys = mode_keys;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    pub mode_mouse: Option<Switch>,
+    pub fn mode_mouse(mut self, mode_mouse: Option<Switch>) -> Self {
+        self.mode_mouse = mode_mouse;
+        self
+    }
+
     #[cfg(feature = "tmux_1_9")]
-    pub mode_style: Option<&'a str>,
-    #[cfg(feature = "tmux_1_0")]
-    pub monitor_activity: Option<Switch>,
+    pub fn mode_style(mut self, mode_style: Option<String>) -> Self {
+        self.mode_style = mode_style;
+        self
+    }
+
+    #[cfg(feature = "tmux_1_2")]
+    pub fn monitor_activity(mut self, monitor_activity: Option<Switch>) -> Self {
+        self.monitor_activity = monitor_activity;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    pub monitor_content: Option<&'a str>,
+    pub fn monitor_content(mut self, monitor_content: Option<usize>) -> Self {
+        self.monitor_content = monitor_content;
+        self
+    }
+
     #[cfg(feature = "tmux_2_6")]
-    pub monitor_bell: Option<Switch>,
+    pub fn monitor_bell(mut self, monitor_bell: Option<Switch>) -> Self {
+        self.monitor_bell = monitor_bell;
+        self
+    }
+
     #[cfg(feature = "tmux_1_4")]
-    pub monitor_silence: Option<usize>,
+    pub fn monitor_silence(mut self, monitor_silence: Option<usize>) -> Self {
+        self.monitor_silence = monitor_silence;
+        self
+    }
+
     #[cfg(feature = "tmux_1_4")]
-    pub other_pane_height: Option<usize>,
+    pub fn other_pane_height(mut self, other_pane_height: Option<usize>) -> Self {
+        self.other_pane_height = other_pane_height;
+        self
+    }
+
     #[cfg(feature = "tmux_1_4")]
-    pub other_pane_width: Option<usize>,
+    pub fn other_pane_width(mut self, other_pane_width: Option<usize>) -> Self {
+        self.other_pane_width = other_pane_width;
+        self
+    }
+
     #[cfg(feature = "tmux_2_0")]
-    pub pane_active_border_style: Option<&'a str>,
+    pub fn pane_active_border_style(mut self, pane_active_border_style: Option<String>) -> Self {
+        self.pane_active_border_style = pane_active_border_style;
+        self
+    }
+
     #[cfg(feature = "tmux_1_6")]
-    pub pane_base_index: Option<usize>,
+    pub fn pane_base_index(mut self, pane_base_index: Option<usize>) -> Self {
+        self.pane_base_index = pane_base_index;
+        self
+    }
+
     #[cfg(feature = "tmux_2_3")]
-    pub pane_border_format: Option<&'a str>,
+    pub fn pane_border_format(mut self, pane_border_format: Option<String>) -> Self {
+        self.pane_border_format = pane_border_format;
+        self
+    }
+
     #[cfg(feature = "tmux_2_3")]
-    pub pane_border_status: Option<PaneBorderStatus>,
+    pub fn pane_border_status(mut self, pane_border_status: Option<PaneBorderStatus>) -> Self {
+        self.pane_border_status = pane_border_status;
+        self
+    }
+
     #[cfg(feature = "tmux_2_0")]
-    pub pane_border_style: Option<&'a str>,
+    pub fn pane_border_style(mut self, pane_border_style: Option<String>) -> Self {
+        self.pane_border_style = pane_border_style;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
-    pub remain_on_exit: Option<Switch>,
+    pub fn remain_on_exit(mut self, remain_on_exit: Option<Switch>) -> Self {
+        self.remain_on_exit = remain_on_exit;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
-    pub synchronize_panes: Option<Switch>,
+    pub fn synchronize_panes(mut self, synchronize_panes: Option<Switch>) -> Self {
+        self.synchronize_panes = synchronize_panes;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    pub utf8: Option<Switch>,
+    pub fn utf8(mut self, utf8: Option<String>) -> Self {
+        self.utf8 = utf8;
+        self
+    }
+
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-    pub window_active_style: Option<&'a str>,
+    pub fn window_active_style(mut self, window_active_style: Option<String>) -> Self {
+        self.window_active_style = window_active_style;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub window_status_bell_attr: Option<&'a str>,
+    pub fn window_status_bell_attr(mut self, window_status_bell_attr: Option<Switch>) -> Self {
+        self.window_status_bell_attr = window_status_bell_attr;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub window_status_bell_bg: Option<&'a str>,
+    pub fn window_status_bell_bg(mut self, window_status_bell_bg: Option<String>) -> Self {
+        self.window_status_bell_bg = window_status_bell_bg;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub window_status_bell_fg: Option<&'a str>,
+    pub fn window_status_bell_fg(mut self, window_status_bell_fg: Option<String>) -> Self {
+        self.window_status_bell_fg = window_status_bell_fg;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub window_status_content_attr: Option<&'a str>,
+    pub fn window_status_content_attr(
+        mut self,
+        window_status_content_attr: Option<String>,
+    ) -> Self {
+        self.window_status_content_attr = window_status_content_attr;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub window_status_content_bg: Option<&'a str>,
+    pub fn window_status_content_bg(mut self, window_status_content_bg: Option<String>) -> Self {
+        self.window_status_content_bg = window_status_content_bg;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub window_status_content_fg: Option<&'a str>,
+    pub fn window_status_content_fg(mut self, window_status_content_fg: Option<String>) -> Self {
+        self.window_status_content_fg = window_status_content_fg;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub window_status_activity_attr: Option<&'a str>,
+    pub fn window_status_activity_attr(
+        mut self,
+        window_status_activity_attr: Option<String>,
+    ) -> Self {
+        self.window_status_activity_attr = window_status_activity_attr;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub window_status_activity_bg: Option<&'a str>,
+    pub fn window_status_activity_bg(mut self, window_status_activity_bg: Option<String>) -> Self {
+        self.window_status_activity_bg = window_status_activity_bg;
+        self
+    }
+
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub window_status_activity_fg: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub window_status_attr: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub window_status_bg: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub window_status_fg: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub window_status_current_attr: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub window_status_current_bg: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    pub window_status_current_fg: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    pub window_status_alert_attr: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    pub window_status_alert_bg: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    pub window_status_alert_fg: Option<&'a str>,
-    #[cfg(feature = "tmux_1_9")]
-    pub window_status_activity_style: Option<&'a str>,
-    #[cfg(feature = "tmux_1_9")]
-    pub window_status_bell_style: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    pub window_status_content_style: Option<&'a str>,
-    #[cfg(feature = "tmux_1_2")]
-    pub window_status_current_format: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    pub window_status_last_attr: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    pub window_status_last_bg: Option<&'a str>,
-    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    pub window_status_last_fg: Option<&'a str>,
-    #[cfg(feature = "tmux_1_9")]
-    pub window_status_current_style: Option<&'a str>,
-    #[cfg(feature = "tmux_1_2")]
-    pub window_status_format: Option<&'a str>,
-    #[cfg(feature = "tmux_1_9")]
-    pub window_status_last_style: Option<&'a str>,
-    #[cfg(feature = "tmux_1_7")]
-    pub window_status_separator: Option<&'a str>,
-    #[cfg(feature = "tmux_1_9")]
-    pub window_status_style: Option<&'a str>,
-    #[cfg(feature = "tmux_2_9")]
-    pub window_size: Option<WindowSize>,
-    #[cfg(feature = "tmux_1_2")]
-    pub word_separators: Option<&'a str>,
-    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-    pub window_style: Option<&'a str>,
-    #[cfg(feature = "tmux_1_7")]
-    pub wrap_search: Option<Switch>,
-    #[cfg(feature = "tmux_1_0")]
-    pub xterm_keys: Option<Switch>,
-}
-
-impl<'a> WindowOptionsBuilder<'a> {
-    pub fn new() -> Self {
-        Default::default()
-    }
-
-    #[cfg(feature = "tmux_1_2")]
-    pub fn aggressive_resize(&mut self, aggressive_resize: Switch) -> &mut Self {
-        self.aggressive_resize = Some(aggressive_resize);
+    pub fn window_status_activity_fg(mut self, window_status_activity_fg: Option<String>) -> Self {
+        self.window_status_activity_fg = window_status_activity_fg;
         self
     }
 
-    #[cfg(feature = "tmux_1_2")]
-    pub fn automatic_rename(&mut self, automatic_rename: Switch) -> &mut Self {
-        self.automatic_rename = Some(automatic_rename);
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    pub fn window_status_attr(mut self, window_status_attr: Option<String>) -> Self {
+        self.window_status_attr = window_status_attr;
         self
     }
 
-    #[cfg(feature = "tmux_1_9")]
-    pub fn automatic_rename_format(&mut self, automatic_rename_format: &'a str) -> &mut Self {
-        self.automatic_rename_format = Some(automatic_rename_format);
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    pub fn window_status_bg(mut self, window_status_bg: Option<String>) -> Self {
+        self.window_status_bg = window_status_bg;
         self
     }
 
-    #[cfg(feature = "tmux_1_2")]
-    pub fn clock_mode_colour(&mut self, clock_mode_colour: &'a str) -> &mut Self {
-        self.clock_mode_colour = Some(clock_mode_colour);
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    pub fn window_status_fg(mut self, window_status_fg: Option<String>) -> Self {
+        self.window_status_fg = window_status_fg;
         self
     }
 
-    #[cfg(feature = "tmux_1_2")]
-    pub fn clock_mode_style(&mut self, clock_mode_style: ClockModeStyle) -> &mut Self {
-        self.clock_mode_style = Some(clock_mode_style);
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    pub fn window_status_current_attr(
+        mut self,
+        window_status_current_attr: Option<String>,
+    ) -> Self {
+        self.window_status_current_attr = window_status_current_attr;
         self
     }
 
-    #[cfg(feature = "tmux_1_9")]
-    pub fn main_pane_height(&mut self, main_pane_height: usize) -> &mut Self {
-        self.main_pane_height = Some(main_pane_height);
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    pub fn window_status_current_bg(mut self, window_status_current_bg: Option<String>) -> Self {
+        self.window_status_current_bg = window_status_current_bg;
         self
     }
 
-    #[cfg(feature = "tmux_1_2")]
-    pub fn main_pane_width(&mut self, main_pane_width: usize) -> &mut Self {
-        self.main_pane_width = Some(main_pane_width);
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    pub fn window_status_current_fg(mut self, window_status_current_fg: Option<String>) -> Self {
+        self.window_status_current_fg = window_status_current_fg;
         self
     }
 
-    #[cfg(feature = "tmux_1_2")]
-    pub fn mode_keys(&mut self, mode_keys: StatusKeys) -> &mut Self {
-        self.mode_keys = Some(mode_keys);
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    pub fn window_status_alert_attr(mut self, window_status_alert_attr: Option<String>) -> Self {
+        self.window_status_alert_attr = window_status_alert_attr;
         self
     }
 
-    #[cfg(feature = "tmux_1_9")]
-    pub fn mode_style(&mut self, mode_style: &'a str) -> &mut Self {
-        self.mode_style = Some(mode_style);
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    pub fn window_status_alert_bg(mut self, window_status_alert_bg: Option<String>) -> Self {
+        self.window_status_alert_bg = window_status_alert_bg;
         self
     }
 
-    #[cfg(feature = "tmux_1_2")]
-    pub fn monitor_activity(&mut self, monitor_activity: Switch) -> &mut Self {
-        self.monitor_activity = Some(monitor_activity);
-        self
-    }
-
-    #[cfg(feature = "tmux_2_6")]
-    pub fn monitor_bell(&mut self, monitor_bell: Switch) -> &mut Self {
-        self.monitor_bell = Some(monitor_bell);
-        self
-    }
-
-    #[cfg(feature = "tmux_1_4")]
-    pub fn monitor_silence(&mut self, monitor_silence: usize) -> &mut Self {
-        self.monitor_silence = Some(monitor_silence);
-        self
-    }
-
-    #[cfg(feature = "tmux_1_4")]
-    pub fn other_pane_height(&mut self, other_pane_height: usize) -> &mut Self {
-        self.other_pane_height = Some(other_pane_height);
-        self
-    }
-
-    #[cfg(feature = "tmux_1_4")]
-    pub fn other_pane_width(&mut self, other_pane_width: usize) -> &mut Self {
-        self.other_pane_width = Some(other_pane_width);
-        self
-    }
-
-    #[cfg(feature = "tmux_2_0")]
-    pub fn pane_active_border_style(&mut self, pane_active_border_style: &'a str) -> &mut Self {
-        self.pane_active_border_style = Some(pane_active_border_style);
-        self
-    }
-
-    #[cfg(feature = "tmux_1_6")]
-    pub fn pane_base_index(&mut self, pane_base_index: usize) -> &mut Self {
-        self.pane_base_index = Some(pane_base_index);
-        self
-    }
-
-    #[cfg(feature = "tmux_2_3")]
-    pub fn pane_border_format(&mut self, pane_border_format: &'a str) -> &mut Self {
-        self.pane_border_format = Some(pane_border_format);
-        self
-    }
-
-    #[cfg(feature = "tmux_2_3")]
-    pub fn pane_border_status(&mut self, pane_border_status: PaneBorderStatus) -> &mut Self {
-        self.pane_border_status = Some(pane_border_status);
-        self
-    }
-
-    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
-    pub fn synchronize_panes(&mut self, synchronize_panes: Switch) -> &mut Self {
-        self.synchronize_panes = Some(synchronize_panes);
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    pub fn window_status_alert_fg(mut self, window_status_alert_fg: Option<String>) -> Self {
+        self.window_status_alert_fg = window_status_alert_fg;
         self
     }
 
     #[cfg(feature = "tmux_1_9")]
     pub fn window_status_activity_style(
-        &mut self,
-        window_status_activity_style: &'a str,
-    ) -> &mut Self {
-        self.window_status_activity_style = Some(window_status_activity_style);
+        mut self,
+        window_status_activity_style: Option<String>,
+    ) -> Self {
+        self.window_status_activity_style = window_status_activity_style;
         self
     }
 
     #[cfg(feature = "tmux_1_9")]
-    pub fn window_status_bell_style(&mut self, window_status_bell_style: &'a str) -> &mut Self {
-        self.window_status_bell_style = Some(window_status_bell_style);
+    pub fn window_status_bell_style(mut self, window_status_bell_style: Option<String>) -> Self {
+        self.window_status_bell_style = window_status_bell_style;
+        self
+    }
+
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+    pub fn window_status_content_style(
+        mut self,
+        window_status_content_style: Option<String>,
+    ) -> Self {
+        self.window_status_content_style = window_status_content_style;
         self
     }
 
     #[cfg(feature = "tmux_1_2")]
     pub fn window_status_current_format(
-        &mut self,
-        window_status_current_format: &'a str,
-    ) -> &mut Self {
-        self.window_status_current_format = Some(window_status_current_format);
+        mut self,
+        window_status_current_format: Option<String>,
+    ) -> Self {
+        self.window_status_current_format = window_status_current_format;
         self
     }
 
-    #[cfg(feature = "tmux_1_2")]
-    pub fn window_status_format(&mut self, window_status_format: &'a str) -> &mut Self {
-        self.window_status_format = Some(window_status_format);
+    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+    pub fn window_status_last_attr(mut self, window_status_last_attr: Option<String>) -> Self {
+        self.window_status_last_attr = window_status_last_attr;
+        self
+    }
+
+    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+    pub fn window_status_last_bg(mut self, window_status_last_bg: Option<String>) -> Self {
+        self.window_status_last_bg = window_status_last_bg;
+        self
+    }
+
+    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+    pub fn window_status_last_fg(mut self, window_status_last_fg: Option<String>) -> Self {
+        self.window_status_last_fg = window_status_last_fg;
         self
     }
 
     #[cfg(feature = "tmux_1_9")]
-    pub fn window_status_last_style(&mut self, window_status_last_style: &'a str) -> &mut Self {
-        self.window_status_last_style = Some(window_status_last_style);
+    pub fn window_status_current_style(
+        mut self,
+        window_status_current_style: Option<String>,
+    ) -> Self {
+        self.window_status_current_style = window_status_current_style;
+        self
+    }
+    #[cfg(feature = "tmux_1_2")]
+    pub fn window_status_format(mut self, window_status_format: Option<String>) -> Self {
+        self.window_status_format = window_status_format;
+        self
+    }
+
+    #[cfg(feature = "tmux_1_9")]
+    pub fn window_status_last_style(mut self, window_status_last_style: Option<String>) -> Self {
+        self.window_status_last_style = window_status_last_style;
         self
     }
 
     #[cfg(feature = "tmux_1_7")]
-    pub fn window_status_separator(&mut self, window_status_separator: &'a str) -> &mut Self {
-        self.window_status_separator = Some(window_status_separator);
+    pub fn window_status_separator(mut self, window_status_separator: Option<String>) -> Self {
+        self.window_status_separator = window_status_separator;
         self
     }
 
     #[cfg(feature = "tmux_1_9")]
-    pub fn window_status_style(&mut self, window_status_style: &'a str) -> &mut Self {
-        self.window_status_style = Some(window_status_style);
+    pub fn window_status_style(mut self, window_status_style: Option<String>) -> Self {
+        self.window_status_style = window_status_style;
         self
     }
 
     #[cfg(feature = "tmux_2_9")]
-    pub fn window_size(&mut self, window_size: WindowSize) -> &mut Self {
-        self.window_size = Some(window_size);
+    pub fn window_size(mut self, window_size: Option<WindowSize>) -> Self {
+        self.window_size = window_size;
+        self
+    }
+
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
+    pub fn word_separators(mut self, word_separators: Option<Switch>) -> Self {
+        self.word_separators = word_separators;
+        self
+    }
+
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
+    pub fn window_style(mut self, window_style: Option<String>) -> Self {
+        self.window_style = window_style;
         self
     }
 
     #[cfg(feature = "tmux_1_7")]
-    pub fn wrap_search(&mut self, wrap_search: Switch) -> &mut Self {
-        self.wrap_search = Some(wrap_search);
+    pub fn wrap_search(mut self, wrap_search: Option<Switch>) -> Self {
+        self.wrap_search = wrap_search;
         self
     }
 
-    #[cfg(feature = "tmux_1_2")]
-    pub fn xterm_keys(&mut self, xterm_keys: Switch) -> &mut Self {
-        self.xterm_keys = Some(xterm_keys);
+    #[cfg(feature = "tmux_1_0")]
+    pub fn xterm_keys(mut self, xterm_keys: Option<Switch>) -> Self {
+        self.xterm_keys = xterm_keys;
         self
-    }
-
-    // XXX: clone rly needed?
-    pub fn build(&self) -> WindowOptions {
-        WindowOptions {
-            #[cfg(feature = "tmux_1_0")]
-            aggressive_resize: self.aggressive_resize.clone(),
-            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
-            allow_rename: self.allow_rename.clone(),
-            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-            alternate_screen: self.alternate_screen.clone(),
-            #[cfg(feature = "tmux_1_0")]
-            automatic_rename: self.automatic_rename.clone(),
-            #[cfg(feature = "tmux_1_9")]
-            automatic_rename_format: self.automatic_rename_format.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-            c0_change_interval: self.c0_change_interval,
-            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-            c0_change_trigger: self.c0_change_trigger,
-            #[cfg(feature = "tmux_1_2")]
-            clock_mode_colour: self.clock_mode_colour.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_2")]
-            clock_mode_style: self.clock_mode_style.clone(),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-            force_height: self.force_height,
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-            force_width: self.force_width,
-            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
-            layout_history_limit: self.layout_history_limit,
-            #[cfg(feature = "tmux_1_2")]
-            main_pane_height: self.main_pane_height,
-            #[cfg(feature = "tmux_1_2")]
-            main_pane_width: self.main_pane_width,
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-            mode_attr: self.mode_attr.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-            mode_bg: self.mode_bg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-            mode_fg: self.mode_fg.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_2")]
-            mode_keys: self.mode_keys.clone(),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-            mode_mouse: self.mode_mouse.clone(),
-            #[cfg(feature = "tmux_1_9")]
-            mode_style: self.mode_style.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_0")]
-            monitor_activity: self.monitor_activity.clone(),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-            monitor_content: self.monitor_content.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_2_6")]
-            monitor_bell: self.monitor_bell.clone(),
-            #[cfg(feature = "tmux_1_4")]
-            monitor_silence: self.monitor_silence,
-            #[cfg(feature = "tmux_1_4")]
-            other_pane_height: self.other_pane_height,
-            #[cfg(feature = "tmux_1_4")]
-            other_pane_width: self.other_pane_width,
-            #[cfg(feature = "tmux_2_0")]
-            pane_active_border_style: self.pane_active_border_style.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_6")]
-            pane_base_index: self.pane_base_index,
-            #[cfg(feature = "tmux_2_3")]
-            pane_border_format: self.pane_border_format.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_2_3")]
-            pane_border_status: self.pane_border_status.clone(),
-            #[cfg(feature = "tmux_2_0")]
-            pane_border_style: self.pane_border_style.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
-            remain_on_exit: self.remain_on_exit.clone(),
-            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
-            synchronize_panes: self.synchronize_panes.clone(),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-            utf8: self.utf8.clone(),
-            #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-            window_active_style: self.window_active_style.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-            window_status_bell_attr: self.window_status_bell_attr.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-            window_status_bell_bg: self.window_status_bell_bg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-            window_status_bell_fg: self.window_status_bell_fg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-            window_status_content_attr: self.window_status_content_attr.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-            window_status_content_bg: self.window_status_content_bg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-            window_status_content_fg: self.window_status_content_fg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-            window_status_activity_attr: self.window_status_activity_attr.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-            window_status_activity_bg: self.window_status_activity_bg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-            window_status_activity_fg: self.window_status_activity_fg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-            window_status_attr: self.window_status_attr.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-            window_status_bg: self.window_status_bg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-            window_status_fg: self.window_status_fg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-            window_status_current_attr: self.window_status_current_attr.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-            window_status_current_bg: self.window_status_current_bg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-            window_status_current_fg: self.window_status_current_fg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-            window_status_alert_attr: self.window_status_alert_attr.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-            window_status_alert_bg: self.window_status_alert_bg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-            window_status_alert_fg: self.window_status_alert_fg.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_9")]
-            window_status_activity_style: self.window_status_activity_style.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_9")]
-            window_status_bell_style: self.window_status_bell_style.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-            window_status_content_style: self.window_status_content_style.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_2")]
-            window_status_current_format: self.window_status_current_format.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-            window_status_last_attr: self.window_status_last_attr.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-            window_status_last_bg: self.window_status_last_bg.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-            window_status_last_fg: self.window_status_last_fg.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_9")]
-            window_status_current_style: self.window_status_current_style.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_2")]
-            window_status_format: self.window_status_format.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_9")]
-            window_status_last_style: self.window_status_last_style.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_7")]
-            window_status_separator: self.window_status_separator.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_9")]
-            window_status_style: self.window_status_style.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_2_9")]
-            window_size: self.window_size.clone(),
-            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
-            word_separators: self.word_separators.map(|s| s.to_string()),
-            #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-            window_style: self.window_style.map(|s| s.to_string()),
-            #[cfg(feature = "tmux_1_7")]
-            wrap_search: self.wrap_search.clone(),
-            #[cfg(feature = "tmux_1_2")]
-            xterm_keys: self.xterm_keys.clone(),
-        }
     }
 }

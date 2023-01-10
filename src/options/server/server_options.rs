@@ -40,7 +40,7 @@ use std::str::FromStr;
 // TODO: Vec variables solution for arrays
 // TODO: check types
 // TODO: command_alias and terminal_overrides both as String and as Vec<String> see tmux versions
-#[derive(Default, PartialEq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct ServerOptions<'a> {
     /// `backspace key`
     #[cfg(feature = "tmux_3_1")]
@@ -124,6 +124,100 @@ fn option_array_to_string<S: fmt::Display>(
     }
 }
 
+// tmux.h
+#[cfg(feature = "tmux_2_1")]
+const DEFAULT_TERMINAL_DEFAULT: &str = "screen";
+
+// compat.h
+#[cfg(feature = "tmux_3_2")]
+const EDITOR_DEFAULT: &str = "/usr/bin/vi";
+
+#[cfg(feature = "tmux_1_5")]
+const BUFFER_LIMIT_DEFAULT: usize = 50;
+
+/// ```text
+/// tmux show-options -g -s
+/// ```
+///
+/// ```text
+/// backspace C-?
+/// buffer-limit 50
+/// command-alias[0] split-pane=split-window
+/// command-alias[1] splitp=split-window
+/// command-alias[2] "server-info=show-messages -JT"
+/// command-alias[3] "info=show-messages -JT"
+/// command-alias[4] "choose-window=choose-tree -w"
+/// command-alias[5] "choose-session=choose-tree -s"
+/// default-terminal screen-256color
+/// escape-time 500
+/// exit-empty on
+/// exit-unattached off
+/// focus-events off
+/// history-file
+/// message-limit 100
+/// set-clipboard external
+/// terminal-overrides[0] "xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q"
+/// terminal-overrides[1] screen*:XT
+/// user-keys
+/// ```
+impl<'a> Default for ServerOptions<'a> {
+    fn default() -> Self {
+        let options = ServerOptions::new();
+        #[cfg(feature = "tmux_3_1")]
+        let options = options.backspace(None);
+        #[cfg(feature = "tmux_1_5")]
+        let options = options.buffer_limit(Some(BUFFER_LIMIT_DEFAULT));
+        #[cfg(feature = "tmux_2_4")]
+        let options = options.command_alias(Some(vec![
+            "split-pane=split-window,",
+            "splitp=split-window,",
+            "server-info=show-messages -JT,",
+            "info=show-messages -JT,",
+            "choose-window=choose-tree -w,",
+            "choose-session=choose-tree -s",
+        ]));
+        #[cfg(feature = "tmux_2_1")]
+        let options = options.default_terminal(Some(DEFAULT_TERMINAL_DEFAULT));
+        #[cfg(feature = "tmux_3_2")]
+        let options = options.editor(Some(EDITOR_DEFAULT));
+        #[cfg(feature = "tmux_3_2")]
+        let options = options.copy_command(Some(""));
+        #[cfg(feature = "tmux_1_2")]
+        let options = options.escape_time(Some(500));
+        #[cfg(feature = "tmux_2_7")]
+        let options = options.exit_empty(Some(Switch::On));
+        #[cfg(feature = "tmux_1_4")]
+        let options = options.exit_unattached(Some(Switch::Off));
+        #[cfg(feature = "tmux_3_2")]
+        let options = options.extended_keys(Some(0));
+        #[cfg(feature = "tmux_1_9")]
+        let options = options.focus_events(Some(Switch::Off));
+        #[cfg(feature = "tmux_2_1")]
+        let options = options.history_file(Some(""));
+        #[cfg(feature = "tmux_2_0")]
+        let options = options.message_limit(Some(1000));
+        #[cfg(feature = "tmux_3_3")]
+        let options = options.prompt_history_limit(Some(100));
+        #[cfg(feature = "tmux_1_5")]
+        let options = options.set_clipboard(Some(SetClipboard::Off));
+        #[cfg(feature = "tmux_2_0")]
+        let options = options.terminal_overrides(Some(vec![""]));
+        #[cfg(feature = "tmux_3_2")]
+        let options = options.terminal_features(Some(vec![
+            "xterm*:clipboard:ccolour:cstyle:focus:title,",
+            "screen*:title,",
+            "rxvt*:ignorefkeys",
+        ]));
+        #[cfg(feature = "tmux_3_0")]
+        let options = options.user_keys(Some(""));
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+        let options = options.quiet(None);
+        #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+        let options = options.detach_on_destroy(None);
+        options
+    }
+}
+
 impl<'a> fmt::Display for ServerOptions<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut v = Vec::new();
@@ -170,7 +264,42 @@ impl<'a> fmt::Display for ServerOptions<'a> {
 // XXX: Cow?
 impl<'a> ServerOptions<'a> {
     pub fn new() -> Self {
-        Default::default()
+        Self {
+            #[cfg(feature = "tmux_3_1")]
+            backspace: None,
+            #[cfg(feature = "tmux_1_5")]
+            buffer_limit: None,
+            #[cfg(feature = "tmux_2_4")]
+            command_alias: None,
+            #[cfg(feature = "tmux_2_1")]
+            default_terminal: None,
+            #[cfg(feature = "tmux_3_2")]
+            copy_command: None,
+            #[cfg(feature = "tmux_1_2")]
+            escape_time: None,
+            #[cfg(feature = "tmux_2_7")]
+            exit_empty: None,
+            #[cfg(feature = "tmux_1_4")]
+            exit_unattached: None,
+            #[cfg(feature = "tmux_3_2")]
+            extended_keys: None,
+            #[cfg(feature = "tmux_1_9")]
+            focus_events: None,
+            #[cfg(feature = "tmux_2_1")]
+            history_file: None,
+            #[cfg(feature = "tmux_2_0")]
+            message_limit: None,
+            #[cfg(feature = "tmux_1_5")]
+            set_clipboard: None,
+            #[cfg(feature = "tmux_2_0")]
+            terminal_overrides: None,
+            #[cfg(feature = "tmux_3_0")]
+            user_keys: None,
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+            quiet: None,
+            #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+            detach_on_destroy: None,
+        }
     }
 
     /// ### Manual
@@ -206,7 +335,7 @@ impl<'a> ServerOptions<'a> {
     #[cfg(feature = "tmux_2_4")]
     pub fn command_alias<I, S>(mut self, command_alias: Option<I>) -> Self
     where
-        I: Iterator<Item = S>,
+        I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
     {
         self.command_alias =
@@ -382,9 +511,9 @@ impl<'a> ServerOptions<'a> {
     /// terminal-overrides[] string
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    pub fn terminal_overrides<I, S>(mut self, terminal_overrides: Option<Vec<Cow<'a, str>>>) -> Self
+    pub fn terminal_overrides<I, S>(mut self, terminal_overrides: Option<I>) -> Self
     where
-        I: Iterator<Item = S>,
+        I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
     {
         self.terminal_overrides =
