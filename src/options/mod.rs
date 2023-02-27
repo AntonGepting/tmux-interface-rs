@@ -239,6 +239,7 @@
 use std::iter::Iterator;
 
 pub mod common;
+pub mod tmux_options_map;
 
 #[cfg(feature = "tmux_3_1")]
 pub mod pane;

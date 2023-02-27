@@ -100,15 +100,33 @@ pub trait SetServerOptionTrait: SetOptionExt {
     /// command-alias[] name=value
     /// ```
     #[cfg(feature = "tmux_2_4")]
-    fn command_alias<'a, S: Into<Cow<'a, str>>>(command_alias: Option<Vec<S>>) -> TmuxCommands<'a> {
+    fn command_alias<'a, I, S>(command_alias: Option<I>) -> TmuxCommands<'a>
+    where
+        I: IntoIterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
         Self::set_array(COMMAND_ALIAS, command_alias)
     }
 
     /// ### Manual
     ///
-    /// tmux ^3.2:
+    /// tmux ^2.4:
     /// ```text
-    /// default-terminal terminal
+    /// command-alias[] name=value
+    /// ```
+    #[cfg(feature = "tmux_2_4")]
+    fn command_alias_ext<'a, S: Into<Cow<'a, str>>>(
+        i: usize,
+        command_alias: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(format!("{}[{}]", COMMAND_ALIAS, i), command_alias)
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^2.1:
+    /// ```text
+    /// copy-command shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
     fn copy_command<'a, S: Into<Cow<'a, str>>>(copy_command: Option<S>) -> TmuxCommand<'a> {
@@ -117,9 +135,9 @@ pub trait SetServerOptionTrait: SetOptionExt {
 
     /// ### Manual
     ///
-    /// tmux ^2.1:
+    /// tmux ^3.2:
     /// ```text
-    /// copy-command shell-command
+    /// default-terminal terminal
     /// ```
     #[cfg(feature = "tmux_2_1")]
     fn default_terminal<'a, S: Into<Cow<'a, str>>>(default_terminal: Option<S>) -> TmuxCommand<'a> {
@@ -246,9 +264,11 @@ pub trait SetServerOptionTrait: SetOptionExt {
     /// terminal-features[] string
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn terminal_features<'a, S: Into<Cow<'a, str>>>(
-        terminal_features: Option<Vec<S>>,
-    ) -> TmuxCommands<'a> {
+    fn terminal_features<'a, I, S>(terminal_features: Option<I>) -> TmuxCommands<'a>
+    where
+        I: IntoIterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
         Self::set_array(TERMINAL_FEATURES, terminal_features)
     }
 
@@ -259,9 +279,11 @@ pub trait SetServerOptionTrait: SetOptionExt {
     /// terminal-overrides[] string
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    fn terminal_overrides<'a, S: Into<Cow<'a, str>>>(
-        terminal_overrides: Option<Vec<S>>,
-    ) -> TmuxCommands<'a> {
+    fn terminal_overrides<'a, I, S>(terminal_overrides: Option<I>) -> TmuxCommands<'a>
+    where
+        I: IntoIterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
         Self::set_array(TERMINAL_OVERRIDES, terminal_overrides)
     }
 
@@ -272,7 +294,11 @@ pub trait SetServerOptionTrait: SetOptionExt {
     /// user-keys[] key
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn user_keys<'a, S: Into<Cow<'a, str>>>(user_keys: Option<Vec<S>>) -> TmuxCommands<'a> {
+    fn user_keys<'a, I, S>(user_keys: Option<Vec<S>>) -> TmuxCommands<'a>
+    where
+        I: IntoIterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
         Self::set_array(USER_KEYS, user_keys)
     }
 

@@ -1,3 +1,23 @@
+//! [`GetServerOption`] trait is used for getting tmux server options, using
+//! tmux command builder. The returned result is the option name **with** the option value.
+//!
+//! Tmux command example:
+//! ```text
+//! show-option -s backspace
+//! # output
+//! backspace C-?
+//! ```
+//!
+//! Library equivalent example:
+//! ```
+//! use tmux_interface::{ShowOptions, Tmux};
+//!
+//! let option_name = "backspace";
+//! let show_option = ShowOptions::new().server().option(option_name).build();
+//! let output = Tmux::with_command(show_option).output();
+//! let value = output.unwrap();
+//! ```
+//!
 use crate::options::*;
 use crate::{GetOptionExt, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
@@ -69,9 +89,9 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
 
     /// ### Manual
     ///
-    /// tmux ^3.2:
+    /// tmux ^2.1:
     /// ```text
-    /// default-terminal terminal
+    /// copy-command shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
     fn copy_command<'a>() -> TmuxCommand<'a> {
@@ -80,9 +100,9 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
 
     /// ### Manual
     ///
-    /// tmux ^2.1:
+    /// tmux ^3.2:
     /// ```text
-    /// copy-command shell-command
+    /// default-terminal terminal
     /// ```
     #[cfg(feature = "tmux_2_1")]
     fn default_terminal<'a>() -> TmuxCommand<'a> {

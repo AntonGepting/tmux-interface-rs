@@ -91,9 +91,9 @@ pub trait GetServerOptionsTrait<'a> {
 
     /// ### Manual
     ///
-    /// tmux ^3.2:
+    /// tmux ^2.1:
     /// ```text
-    /// default-terminal terminal
+    /// copy-command shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
     fn copy_command(mut self) -> Self
@@ -106,9 +106,9 @@ pub trait GetServerOptionsTrait<'a> {
 
     /// ### Manual
     ///
-    /// tmux ^2.1:
+    /// tmux ^3.2:
     /// ```text
-    /// copy-command shell-command
+    /// default-terminal terminal
     /// ```
     #[cfg(feature = "tmux_2_1")]
     fn default_terminal(mut self) -> Self

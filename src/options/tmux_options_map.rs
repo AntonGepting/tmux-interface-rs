@@ -1,7 +1,18 @@
-use crate::Error;
+use crate::options::*;
+use crate::{
+    Error, GetServerOptions, GetServerOptionsTrait, ShowOptions, Tmux, TmuxCommand, TmuxOutput,
+};
 use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
+
+// hashmap for options -> String, String
+//  - string only
+//      buffer_limit(&self) -> Option<String>
+//      buffer_limit_mut(&self) -> Option<&mut String> // usize could be better
+//
+// struct for options -> <name>, <T>
+//  + types supported
 
 // XXX: typealias name value
 #[derive(Debug, Default)]
@@ -21,9 +32,101 @@ impl fmt::Display for TmuxOptionsMap {
     }
 }
 
+//pub struct TmuxOptionsCtl<'a> {
+//pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+//}
+
+//impl<'a> Default for TmuxOptionsCtl<'a> {
+//fn default() -> Self {
+//Self {
+//invoker: |cmd| Tmux::with_command(cmd).output(),
+//}
+//}
+//}
+
+//impl<'a> TmuxOptionsCtl<'a> {
+//pub fn load_options(&self) -> Result<TmuxServerOptions, Error> {
+//let cmd = ShowOptions::new().server().build();
+//self.get(cmd)
+//}
+
+//pub fn get(&self, cmd: TmuxCommand<'a>) -> Result<TmuxServerOptions, Error> {
+//let output = (self.invoker)(cmd)?;
+//let result = output.to_string().parse()?;
+//Ok(TmuxServerOptions(result))
+//}
+//}
+
+pub struct ServerOptionsCtl<'a> {
+    pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+}
+
+impl<'a> Default for ServerOptionsCtl<'a> {
+    fn default() -> Self {
+        Self {
+            invoker: |cmd| Tmux::with_command(cmd).output(),
+        }
+    }
+}
+
+// XXX: merge with ServerOptionCtl
+impl<'a> ServerOptionsCtl<'a> {
+    pub fn load_options(&self) -> Result<TmuxServerOptions, Error> {
+        let cmd = ShowOptions::new().server().build();
+        self.get(cmd)
+    }
+
+    pub fn get(&self, cmd: TmuxCommand<'a>) -> Result<TmuxServerOptions, Error> {
+        let output = (self.invoker)(cmd)?;
+        let result = output.to_string().parse()?;
+        Ok(TmuxServerOptions(result))
+    }
+}
+
+pub struct TmuxServerOptions(TmuxOptionsMap);
+
+impl TmuxServerOptions {
+    /// ### Manual
+    ///
+    /// tmux ^1.5:
+    /// ```text
+    /// buffer-limit number
+    /// ```
+    #[cfg(feature = "tmux_1_5")]
+    pub fn buffer_limit(&self) -> Option<String> {
+        self.0.get(BUFFER_LIMIT).unwrap()
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^1.5:
+    /// ```text
+    /// buffer-limit number
+    /// ```
+    #[cfg(feature = "tmux_1_5")]
+    pub fn buffer_limit_mut(&mut self) -> Option<&mut String> {
+        self.0.get(BUFFER_LIMIT).unwrap()
+    }
+}
+
+#[test]
+fn server_options_ctl() {
+    let options_ctl = ServerOptionsCtl::default();
+    let result = options_ctl.load_options();
+    dbg!(result);
+}
+
 impl TmuxOptionsMap {
+    // XXX: mb result with an error if not in list
     pub fn get(&self, name: &str) -> Option<&Option<String>> {
         self.0.get(name)
+    }
+
+    // XXX: result
+    pub fn set<T: std::fmt::Display>(&mut self, name: &str, value: Option<T>) {
+        self.0
+            .get_mut(name)
+            .and_then(|v| Some(*v = value.and_then(|s| Some(s.to_string()))));
     }
 
     pub fn get_mut(&mut self, name: &str) -> Option<&mut Option<String>> {
@@ -201,10 +304,50 @@ user-keys
     //dbg!(&value);
 }
 
-pub struct TmuxServerOptionsMap;
+#[test]
+fn tmux_options_map_get() {
+    use crate::{
+        GetServerOption, GetServerOptionTrait, GetServerOptions, GetServerOptionsTrait, Tmux,
+    };
 
-impl TmuxServerOptionsMap {
-    pub fn load() {}
+    //let cmd = GetServerOption::escape_time();
+    //let cmd = GetServerOptions::new().build();
+    let cmd = GetServerOptions::new()
+        .escape_time()
+        .exit_unattached()
+        .command_alias()
+        .build();
+    let tmux = Tmux::with_commands(cmd);
+    dbg!(&tmux);
+    let output = tmux.output().unwrap().to_string();
+    dbg!(&output);
 
-    pub fn save() {}
+    let mut map = output.parse::<TmuxOptionsMap>().unwrap();
+    dbg!(&map);
+
+    let value = map.get("escape-time");
+    dbg!(&value);
+
+    map.set("escape-time", Some(1));
+    dbg!(&map);
 }
+
+// Build command - getter setter builder with custom invoker
+// Convert into Map - Result as TmuxOptionsMap as ServerOptionsMap
+//
+// map.escape_time() -> Option<Value>
+// map.escape_time_mut() -> Option<&mut Value> (not exists, problem create, but if not set?)
+//
+// server_options_struct.get/set
+
+//pub struct TmuxServerOptionsMap;
+
+//impl TmuxServerOptionsMap {
+//pub fn new(invoker: &'a dyn Fn(&TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
+//ServerOption { invoker }
+//}
+
+//pub fn load() {}
+
+//pub fn save() {}
+//}
