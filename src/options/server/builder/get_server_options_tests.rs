@@ -1,6 +1,6 @@
 #[test]
 fn get_server_options() {
-    use crate::{GetServerOptions, GetServerOptionsTrait, GetUserOptions, SetClipboard, Switch};
+    use crate::{GetServerOptions, GetServerOptionsTrait, GetUserOptions};
 
     let cmd = "show -s";
 

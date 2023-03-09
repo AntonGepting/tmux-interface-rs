@@ -1,9 +1,8 @@
 #[test]
 fn set_local_session_options_tests() {
     use crate::{
-        Action, Activity, DetachOnDestroy, SetGlobalSessionOptions, SetLocalSessionOptions,
-        SetSessionOptions, SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition,
-        Switch,
+        Action, Activity, DetachOnDestroy, SetLocalSessionOptions, SetSessionOptions,
+        SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
     };
 
     let cmd = "set";
@@ -367,9 +366,8 @@ fn set_local_session_options_tests() {
 #[test]
 fn set_global_session_options_tests() {
     use crate::{
-        Action, Activity, DetachOnDestroy, SetGlobalSessionOptions, SetLocalSessionOptions,
-        SetSessionOptions, SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition,
-        Switch,
+        Action, Activity, DetachOnDestroy, SetGlobalSessionOptions, SetSessionOptions,
+        SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
     };
 
     let cmd = "set -g";

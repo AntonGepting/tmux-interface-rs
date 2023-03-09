@@ -1,10 +1,6 @@
 #[test]
 fn get_local_session_option_tests() {
-    use crate::{
-        Action, Activity, DetachOnDestroy, GetGlobalSessionOptions, GetLocalSessionOption,
-        GetLocalSessionOptions, GetSessionOption, GetUserOption, Status, StatusJustify, StatusKeys,
-        StatusPosition, Switch,
-    };
+    use crate::{GetLocalSessionOption, GetSessionOption, GetUserOption};
 
     let cmd = "show";
 

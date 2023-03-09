@@ -1,9 +1,11 @@
 pub mod get_pane_option;
+pub mod get_pane_option_value;
 pub mod get_pane_options;
 pub mod set_pane_option;
 pub mod set_pane_options;
 
 pub use get_pane_option::*;
+pub use get_pane_option_value::*;
 pub use get_pane_options::*;
 pub use set_pane_option::*;
 pub use set_pane_options::*;

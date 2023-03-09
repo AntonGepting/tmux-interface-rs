@@ -45,76 +45,7 @@
 //! ```text
 //! ```
 
-use crate::{
-    GetGlobalSessionOption, GetLocalSessionOption, GetSessionOption, GetUserOptions, TmuxCommand,
-    TmuxCommands,
-};
-
-#[derive(Debug)]
-pub struct GetGlobalSessionOptions<'a> {
-    pub options: TmuxCommands<'a>,
-}
-
-// XXX: both are same, optimize
-impl<'a> GetSessionOptions<'a, GetLocalSessionOption> for GetLocalSessionOptions<'a> {
-    fn new() -> Self
-    where
-        Self: Sized,
-    {
-        Self {
-            options: TmuxCommands::new(),
-        }
-    }
-
-    fn push<T: Into<TmuxCommand<'a>>>(&mut self, cmd: T) {
-        self.options.push(cmd.into())
-    }
-
-    fn into_commands(self) -> TmuxCommands<'a> {
-        self.options
-    }
-}
-
-#[derive(Debug)]
-pub struct GetLocalSessionOptions<'a> {
-    pub options: TmuxCommands<'a>,
-}
-
-impl<'a> GetUserOptions<'a> for GetGlobalSessionOptions<'a> {
-    type Getter = GetGlobalSessionOption;
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-}
-
-// XXX: both are same, optimize
-impl<'a> GetSessionOptions<'a, GetGlobalSessionOption> for GetGlobalSessionOptions<'a> {
-    fn new() -> Self
-    where
-        Self: Sized,
-    {
-        Self {
-            options: TmuxCommands::new(),
-        }
-    }
-
-    fn push<T: Into<TmuxCommand<'a>>>(&mut self, cmd: T) {
-        self.options.push(cmd.into())
-    }
-
-    fn into_commands(self) -> TmuxCommands<'a> {
-        self.options
-    }
-}
-
-impl<'a> GetUserOptions<'a> for GetLocalSessionOptions<'a> {
-    type Getter = GetLocalSessionOption;
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-}
+use crate::{GetSessionOption, TmuxCommand, TmuxCommands};
 
 pub trait GetSessionOptions<'a, Getter: GetSessionOption> {
     fn new() -> Self;

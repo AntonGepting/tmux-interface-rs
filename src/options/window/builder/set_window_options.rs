@@ -4,80 +4,10 @@
 #[cfg(feature = "tmux_2_9")]
 use crate::WindowSize;
 use crate::{
-    ClockModeStyle, PaneBorderStatus, SetGlobalWindowOption, SetLocalWindowOption, SetUserOptions,
-    SetWindowOptionExt, StatusKeys, Switch, TmuxCommand, TmuxCommands,
+    ClockModeStyle, PaneBorderStatus, SetWindowOptionExt, StatusKeys, Switch, TmuxCommand,
+    TmuxCommands,
 };
 use std::borrow::Cow;
-
-#[derive(Debug)]
-pub struct SetLocalWindowOptions<'a> {
-    pub options: TmuxCommands<'a>,
-}
-
-impl<'a> SetWindowOptions<'a> for SetLocalWindowOptions<'a> {
-    type Setter = SetLocalWindowOption;
-
-    fn new() -> Self {
-        Self {
-            options: TmuxCommands::new(),
-        }
-    }
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-
-    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
-        self.options.push_cmds(options);
-    }
-
-    fn build(self) -> TmuxCommands<'a> {
-        self.options
-    }
-}
-
-impl<'a> SetUserOptions<'a> for SetLocalWindowOptions<'a> {
-    type Setter = SetLocalWindowOption;
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-}
-
-#[derive(Debug)]
-pub struct SetGlobalWindowOptions<'a> {
-    pub options: TmuxCommands<'a>,
-}
-
-impl<'a> SetWindowOptions<'a> for SetGlobalWindowOptions<'a> {
-    type Setter = SetGlobalWindowOption;
-
-    fn new() -> Self {
-        Self {
-            options: TmuxCommands::new(),
-        }
-    }
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-
-    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
-        self.options.push_cmds(options);
-    }
-
-    fn build(self) -> TmuxCommands<'a> {
-        self.options
-    }
-}
-
-impl<'a> SetUserOptions<'a> for SetGlobalWindowOptions<'a> {
-    type Setter = SetGlobalWindowOption;
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-}
 
 pub trait SetWindowOptions<'a> {
     type Setter: SetWindowOptionExt;

@@ -14,15 +14,19 @@
 //!         * [`SetServerOptions`] multiple options
 //!
 pub mod get_server_option;
+pub mod get_server_option_trait;
 pub mod get_server_option_value;
 pub mod get_server_options;
 pub mod set_server_option;
+pub mod set_server_option_trait;
 pub mod set_server_options;
 
 pub use get_server_option::*;
+pub use get_server_option_trait::GetServerOptionTrait;
 pub use get_server_option_value::*;
 pub use get_server_options::*;
 pub use set_server_option::*;
+pub use set_server_option_trait::SetServerOptionTrait;
 pub use set_server_options::*;
 
 #[cfg(test)]

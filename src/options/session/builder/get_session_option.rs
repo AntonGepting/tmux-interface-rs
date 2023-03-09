@@ -1,36 +1,5 @@
 use crate::options::*;
-use crate::{GetUserOption, ShowOptions, TmuxCommand};
-use std::borrow::Cow;
-
-// NOTE: ADR: compile time or run time parametrisation for global local option set/get
-// * compile time: trais
-// * runtime: struct field with user given setter/getter
-
-// TODO: all options exist in get/set?
-
-pub struct GetGlobalSessionOption;
-
-impl GetOptionExt for GetGlobalSessionOption {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().option(name).global().build()
-    }
-}
-
-impl GetUserOption for GetGlobalSessionOption {}
-
-impl GetSessionOption for GetGlobalSessionOption {}
-
-pub struct GetLocalSessionOption;
-
-impl GetOptionExt for GetLocalSessionOption {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().option(name).build()
-    }
-}
-
-impl GetUserOption for GetLocalSessionOption {}
-
-impl GetSessionOption for GetLocalSessionOption {}
+use crate::TmuxCommand;
 
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned

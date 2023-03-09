@@ -1,67 +1,11 @@
 use crate::options::*;
 #[cfg(feature = "tmux_2_9")]
 use crate::WindowSize;
-use crate::{SetOption, SetUserOption, StatusKeys, TmuxCommand, TmuxCommands};
+use crate::{StatusKeys, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 use std::fmt;
 
 // TODO: all options exist in get/set?
-
-pub struct SetLocalWindowOption;
-
-//impl SetWindowOptionExt for SetLocalWindowOption {
-impl SetOptionExt for SetLocalWindowOption {
-    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().window().option(name).unset().build()
-    }
-
-    // unset if value = None
-    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        let cmd = match value {
-            Some(data) => SetOption::new().window().option(name).value(data),
-            None => SetOption::new().window().option(name),
-        };
-        cmd.build()
-    }
-}
-
-impl SetWindowOptionExt for SetLocalWindowOption {}
-
-impl SetUserOption for SetLocalWindowOption {}
-
-pub struct SetGlobalWindowOption;
-
-//impl SetWindowOptionExt for SetGlobalWindowOption {
-impl SetOptionExt for SetGlobalWindowOption {
-    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new()
-            .global()
-            .window()
-            .option(name)
-            .unset()
-            .build()
-    }
-
-    // unset if value = None
-    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        let cmd = match value {
-            Some(data) => SetOption::new().window().global().option(name).value(data),
-            None => SetOption::new().window().global().option(name),
-        };
-        cmd.build()
-    }
-}
-
-impl SetWindowOptionExt for SetGlobalWindowOption {}
-
-impl SetUserOption for SetGlobalWindowOption {}
-
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned
 // back) bc. not possible to differentiate between multi line array option value and single line
@@ -136,7 +80,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// ```
     #[cfg(feature = "tmux_1_0")]
     fn aggressive_resize<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(AGGRESIVE_RESIZE, switch.map(|s| s.to_string()))
+        Self::set(AGGRESSIVE_RESIZE, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual

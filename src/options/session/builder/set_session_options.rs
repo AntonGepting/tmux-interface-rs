@@ -2,95 +2,10 @@
 // and getter traits were choosen for common use super::set_session_option::Self::Setter;
 //
 use crate::{
-    Action, Activity, DetachOnDestroy, SetGlobalSessionOption, SetLocalSessionOption,
-    SetSessionOption, SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
-    TmuxCommand, TmuxCommands,
+    Action, Activity, DetachOnDestroy, SetSessionOption, Status, StatusJustify, StatusKeys,
+    StatusPosition, Switch, TmuxCommand, TmuxCommands,
 };
 use std::borrow::Cow;
-
-#[derive(Debug)]
-pub struct SetLocalSessionOptions<'a> {
-    pub options: TmuxCommands<'a>,
-}
-
-impl<'a> SetSessionOptions<'a> for SetLocalSessionOptions<'a> {
-    type Setter = SetLocalSessionOption;
-
-    fn new() -> Self {
-        Self {
-            options: TmuxCommands::new(),
-        }
-    }
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-
-    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
-        self.options.push_cmds(options);
-    }
-
-    fn build(self) -> TmuxCommands<'a> {
-        self.options
-    }
-}
-
-impl<'a> SetUserOptions<'a> for SetLocalSessionOptions<'a> {
-    type Setter = SetLocalSessionOption;
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-}
-
-#[derive(Debug)]
-pub struct SetGlobalSessionOptions<'a> {
-    pub options: TmuxCommands<'a>,
-}
-
-impl<'a> SetSessionOptions<'a> for SetGlobalSessionOptions<'a> {
-    type Setter = SetGlobalSessionOption;
-
-    fn new() -> Self {
-        Self {
-            options: TmuxCommands::new(),
-        }
-    }
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-
-    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
-        self.options.push_cmds(options);
-    }
-
-    fn build(self) -> TmuxCommands<'a> {
-        self.options
-    }
-}
-
-impl<'a> SetUserOptions<'a> for SetGlobalSessionOptions<'a> {
-    type Setter = SetGlobalSessionOption;
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-}
-
-//impl<'a> SetGlobalSessionOptions<'a> {}
-
-//impl<'a> SetLocalSessionOptions<'a> {
-//pub fn new() -> Self{
-//Self {
-//options: TmuxCommands::new(),
-//}
-//}
-
-////pub fn push(&mut self, option: TmuxCommand<'a>) {
-////self.push(option);
-////}
-//}
 
 pub trait SetSessionOptions<'a> {
     type Setter: SetSessionOption;

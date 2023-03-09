@@ -1,57 +1,7 @@
 use crate::options::SetOptionExt;
 use crate::options::*;
-use crate::{Action, Activity, DetachOnDestroy, SetOption, Status, TmuxCommand, TmuxCommands};
+use crate::{Action, Activity, DetachOnDestroy, Status, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
-
-// TODO: all options exist in get/set?
-
-pub struct SetGlobalSessionOption;
-
-impl SetOptionExt for SetGlobalSessionOption {
-    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().global().option(name).unset().build()
-    }
-
-    // unset if value = None
-    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        let cmd = match value {
-            Some(data) => SetOption::new().global().option(name).value(data),
-            None => SetOption::new().global().option(name),
-        };
-        cmd.build()
-    }
-}
-
-impl SetSessionOption for SetGlobalSessionOption {}
-
-impl SetUserOption for SetGlobalSessionOption {}
-
-pub struct SetLocalSessionOption;
-
-impl SetOptionExt for SetLocalSessionOption {
-    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().option(name).unset().build()
-    }
-
-    // unset if value = None
-    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        let cmd = match value {
-            Some(data) => SetOption::new().option(name).value(data),
-            None => SetOption::new().option(name),
-        };
-        cmd.build()
-    }
-}
-
-impl SetSessionOption for SetLocalSessionOption {}
-
-impl SetUserOption for SetLocalSessionOption {}
 
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned

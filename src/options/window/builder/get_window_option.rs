@@ -1,37 +1,11 @@
 use crate::options::*;
-use crate::{ShowOptions, TmuxCommand};
-use std::borrow::Cow;
+use crate::TmuxCommand;
 
 // NOTE: ADR: compile time or run time parametrisation for global local option set/get
 // * compile time: trais
 // * runtime: struct field with user given setter/getter
 
 // TODO: all options exist in get/set?
-
-pub struct GetLocalWindowOption;
-
-impl GetWindowOption for GetLocalWindowOption {}
-
-impl GetUserOption for GetLocalWindowOption {}
-
-impl GetOptionExt for GetLocalWindowOption {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().window().option(name).build()
-    }
-}
-
-pub struct GetGlobalWindowOption;
-
-impl GetWindowOption for GetGlobalWindowOption {}
-
-impl GetUserOption for GetGlobalWindowOption {}
-
-impl GetOptionExt for GetGlobalWindowOption {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().window().option(name).global().build()
-    }
-}
-
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned
 // back) bc. not possible to differentiate between multi line array option value and single line
@@ -47,7 +21,7 @@ pub trait GetWindowOption: GetOptionExt {
     /// ```
     #[cfg(feature = "tmux_1_0")]
     fn aggressive_resize<'a>() -> TmuxCommand<'a> {
-        Self::get(AGGRESIVE_RESIZE)
+        Self::get(AGGRESSIVE_RESIZE)
     }
 
     /// ### Manual
