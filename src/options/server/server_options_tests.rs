@@ -8,18 +8,6 @@ fn show_generated_struct() {
     //dbg!(_server_options);
 }
 
-//#[test]
-//fn bitflags() {
-//use crate::{SERVER_OPTIONS_ALL, SERVER_OPTIONS_NONE};
-//let bitflags =
-//// 15_____8_7______0
-//0b_11111111_11111111;
-////println!("{:b}", SERVER_OPTIONS_ALL);
-////println!("{:b}", &bitflags);
-//assert_eq!(bitflags, SERVER_OPTIONS_ALL);
-//assert_eq!(0, SERVER_OPTIONS_NONE);
-//}
-
 // FIXME: conditionals
 #[test]
 fn parse() {
@@ -27,17 +15,17 @@ fn parse() {
     use crate::SetClipboard;
     use crate::{ServerOptions, Switch};
 
-    let mut options = ServerOptions::new();
-    let options = options.buffer_limit(50);
+    let options = ServerOptions::new();
+    let options = options.buffer_limit(Some(50));
     #[cfg(feature = "tmux_2_1")]
-    let options = options.default_terminal("\"screen-256color\"");
+    let options = options.default_terminal(Some("\"screen-256color\""));
     #[cfg(feature = "tmux_2_7")]
-    let options = options.exit_empty(Switch::On);
+    let options = options.exit_empty(Some(Switch::On));
     #[cfg(feature = "tmux_2_4")]
-    let options = options.command_alias(vec![
+    let options = options.command_alias(Some(vec![
         "\"split-pane=split-window\"",
         "\"splitp=split-window\"",
-    ]);
+    ]));
     let server_options_default = options;
 
     // test int, string, enum, vec
@@ -50,34 +38,34 @@ command-alias[1] "splitp=split-window"
     let server_options = server_options_str.parse::<ServerOptions>().unwrap();
     assert_eq!(server_options_default, server_options);
 
-    let mut options = ServerOptions::new();
-    let options = options.buffer_limit(50);
+    let options = ServerOptions::new();
+    let options = options.buffer_limit(Some(50));
     #[cfg(feature = "tmux_2_4")]
-    let options = options.command_alias(vec![
+    let options = options.command_alias(Some(vec![
         "\"split-pane=split-window\"",
         "\"splitp=split-window\"",
         "\"server-info=show-messages -JT\"",
         "\"info=show-messages -JT\"",
         "\"choose-window=choose-tree -w\"",
         "\"choose-session=choose-tree -s\"",
-    ]);
+    ]));
     #[cfg(feature = "tmux_2_1")]
-    let options = options.default_terminal("\"screen-256color\"");
-    let options = options.escape_time(500);
+    let options = options.default_terminal(Some("\"screen-256color\""));
+    let options = options.escape_time(Some(500));
     #[cfg(feature = "tmux_2_7")]
-    let options = options.exit_empty(Switch::On);
-    let options = options.exit_unattached(Switch::Off);
+    let options = options.exit_empty(Some(Switch::On));
+    let options = options.exit_unattached(Some(Switch::Off));
     #[cfg(feature = "tmux_1_9")]
-    let options = options.focus_events(Switch::Off);
+    let options = options.focus_events(Some(Switch::Off));
     #[cfg(feature = "tmux_2_1")]
-    let options = options.history_file("\"\"");
+    let options = options.history_file(Some("\"\""));
     #[cfg(feature = "tmux_2_0")]
-    let options = options.message_limit(100);
+    let options = options.message_limit(Some(100));
     #[cfg(feature = "tmux_2_6")]
-    let options = options.set_clipboard(SetClipboard::External);
+    let options = options.set_clipboard(Some(SetClipboard::External));
     #[cfg(feature = "tmux_2_0")]
-    let options = options.terminal_overrides(vec!["\"xterm*:XT:Ms=\\\\E]52;%p1%s;%p2%s\\\\007:Cs=\\\\E]12;%p1%s\\\\007:Cr=\\\\E]112\\\\007:Ss=\\\\E[%p1%d q:Se=\\\\E[2 q\"",
-"\"screen*:XT\""]);
+    let options = options.terminal_overrides(Some(vec!["\"xterm*:XT:Ms=\\\\E]52;%p1%s;%p2%s\\\\007:Cs=\\\\E]12;%p1%s\\\\007:Cr=\\\\E]112\\\\007:Ss=\\\\E[%p1%d q:Se=\\\\E[2 q\"",
+"\"screen*:XT\""]));
     //#[cfg(feature = "tmux_3_0")]
     //builder.user_keys = None;
 
@@ -120,7 +108,7 @@ fn to_string() {
     //use crate::ServerOptionsBuilder;
     use crate::ServerOptions;
 
-    let server_options = ServerOptions::new().buffer_limit(50);
+    let server_options = ServerOptions::new().buffer_limit(Some(50));
     assert_eq!(server_options.to_string(), "buffer-limit 50");
 }
 
@@ -224,53 +212,53 @@ fn server_options_from_str() {
 
     let origin = ServerOptions::new();
     #[cfg(feature = "tmux_3_1")]
-    let origin = origin.backspace("");
+    let origin = origin.backspace(Some(""));
     #[cfg(feature = "tmux_1_5")]
-    let origin = origin.buffer_limit(50);
+    let origin = origin.buffer_limit(Some(50));
     #[cfg(feature = "tmux_2_4")]
-    let origin = origin.command_alias(vec![
+    let origin = origin.command_alias(Some(vec![
         "\"split-pane=split-window\"",
         "\"splitp=split-window\"",
         "\"server-info=show-messages -JT\"",
         "\"info=show-messages -JT\"",
         "\"choose-window=choose-tree -w\"",
         "\"choose-session=choose-tree -s\"",
-    ]);
+    ]));
 
     #[cfg(feature = "tmux_2_1")]
-    let origin = origin.default_terminal("\"screen-256color\"");
+    let origin = origin.default_terminal(Some("\"screen-256color\""));
     #[cfg(feature = "tmux_3_2")]
-    let origin = origin.copy_command("");
+    let origin = origin.copy_command(Some(""));
     #[cfg(feature = "tmux_1_2")]
-    let origin = origin.escape_time(500);
+    let origin = origin.escape_time(Some(500));
     #[cfg(feature = "tmux_3_2")]
-    let origin = origin.editor("");
+    let origin = origin.editor(Some(""));
     #[cfg(feature = "tmux_2_7")]
-    let origin = origin.exit_empty(Switch::On);
+    let origin = origin.exit_empty(Some(Switch::On));
     #[cfg(feature = "tmux_1_4")]
-    let origin = origin.exit_unattached(Switch::Off);
+    let origin = origin.exit_unattached(Some(Switch::Off));
     #[cfg(feature = "tmux_3_2")]
-    let origin = origin.extended_keys("");
+    let origin = origin.extended_keys(Some(""));
     #[cfg(feature = "tmux_1_9")]
-    let origin = origin.focus_events(Switch::Off);
+    let origin = origin.focus_events(Some(Switch::Off));
     #[cfg(feature = "tmux_2_1")]
-    let origin = origin.history_file("\"\"");
+    let origin = origin.history_file(Some("\"\""));
     #[cfg(feature = "tmux_2_0")]
-    let origin = origin.message_limit(100);
+    let origin = origin.message_limit(Some(100));
     #[cfg(feature = "tmux_3_3")]
-    let origin = origin.prompt_history_limit("");
+    let origin = origin.prompt_history_limit(Some(""));
     #[cfg(feature = "tmux_1_5")]
-    let origin = origin.set_clipboard(SetClipboard::External);
+    let origin = origin.set_clipboard(Some(SetClipboard::External));
     #[cfg(feature = "tmux_3_2")]
-    let origin = origin.terminal_features("");
+    let origin = origin.terminal_features(Some(""));
     #[cfg(feature = "tmux_2_0")]
-    let origin = origin.terminal_overrides(vec!["\"xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q\"", "\"screen*:XT\""]);
+    let origin = origin.terminal_overrides(Some(vec!["\"xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q\"", "\"screen*:XT\""]));
     #[cfg(feature = "tmux_3_0")]
-    let origin = origin.user_keys("");
+    let origin = origin.user_keys(Some(""));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    let origin = origin.quiet("");
+    let origin = origin.quiet(Some(""));
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    let origin = origin.detach_on_destroy("");
+    let origin = origin.detach_on_destroy(Some(""));
 
     assert_eq!(origin, options);
 

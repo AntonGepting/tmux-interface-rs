@@ -1,24 +1,10 @@
-//#[test]
-//fn show_generated_struct() {
-//use crate::WindowOptions;
+#[test]
+fn window_options_default() {
+    use crate::WindowOptions;
 
-//let _window_options = WindowOptions {
-//..Default::default()
-//};
-////dbg!(window_options);
-//}
-
-//#[test]
-//fn bitflags() {
-//use crate::{WINDOW_OPTIONS_ALL, WINDOW_OPTIONS_NONE};
-//let bitflags =
-//// 69___64_63____________________________32_31_____________________________0
-//0b_0111111_11111111111111111111111111111111_11111111111111111111111111111111;
-////println!("{:b}", WINDOW_OPTIONS_ALL);
-////println!("{:b}", &bitflags);
-//assert_eq!(bitflags, WINDOW_OPTIONS_ALL);
-//assert_eq!(0, WINDOW_OPTIONS_NONE);
-//}
+    let window_options = WindowOptions::default();
+    dbg!(window_options);
+}
 
 //#[test]
 //fn parse() {

@@ -117,28 +117,28 @@
 //!   <tbody>
 //!     <tr>
 //!       <td></td>
-//!       <td>Global</td>
+//!       <td>Global (`show/set -g`)</td>
 //!       <td>Local</td>
 //!     </tr>
 //!     <tr>
 //!       <td>ServerOptions</td>
 //!       <td></td>
-//!       <td>x</td>
+//!       <td>x (`show/set -s`)</td>
 //!     </tr>
 //!     <tr>
 //!       <td>SessionOptions</td>
-//!       <td>x</td>
-//!       <td>x</td>
+//!       <td>x (`show/set -g`) </td>
+//!       <td>x (`show/set`)</td>
 //!     </tr>
 //!     <tr>
 //!       <td>WindowOptions</td>
-//!       <td>x</td>
-//!       <td>x</td>
+//!       <td>x (`show/set -wg`)</td>
+//!       <td>x (`show/set -w`)</td>
 //!     </tr>
 //!     <tr>
 //!       <td>PaneOptions</td>
 //!       <td></td>
-//!       <td>x</td>
+//!       <td>x (`show/set -p`)</td>
 //!     </tr>
 //!   </tbody>
 //! </table>

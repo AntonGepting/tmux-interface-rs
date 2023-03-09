@@ -1,7 +1,5 @@
 use crate::options::*;
-use crate::{
-    Error, GetServerOptions, GetServerOptionsTrait, ShowOptions, Tmux, TmuxCommand, TmuxOutput,
-};
+use crate::Error;
 use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
@@ -30,90 +28,6 @@ impl fmt::Display for TmuxOptionsMap {
         let output = v.join("\n");
         write!(f, "{}", output)
     }
-}
-
-//pub struct TmuxOptionsCtl<'a> {
-//pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
-//}
-
-//impl<'a> Default for TmuxOptionsCtl<'a> {
-//fn default() -> Self {
-//Self {
-//invoker: |cmd| Tmux::with_command(cmd).output(),
-//}
-//}
-//}
-
-//impl<'a> TmuxOptionsCtl<'a> {
-//pub fn load_options(&self) -> Result<TmuxServerOptions, Error> {
-//let cmd = ShowOptions::new().server().build();
-//self.get(cmd)
-//}
-
-//pub fn get(&self, cmd: TmuxCommand<'a>) -> Result<TmuxServerOptions, Error> {
-//let output = (self.invoker)(cmd)?;
-//let result = output.to_string().parse()?;
-//Ok(TmuxServerOptions(result))
-//}
-//}
-
-pub struct ServerOptionsCtl<'a> {
-    pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
-}
-
-impl<'a> Default for ServerOptionsCtl<'a> {
-    fn default() -> Self {
-        Self {
-            invoker: |cmd| Tmux::with_command(cmd).output(),
-        }
-    }
-}
-
-// XXX: merge with ServerOptionCtl
-impl<'a> ServerOptionsCtl<'a> {
-    pub fn load_options(&self) -> Result<TmuxServerOptions, Error> {
-        let cmd = ShowOptions::new().server().build();
-        self.get(cmd)
-    }
-
-    pub fn get(&self, cmd: TmuxCommand<'a>) -> Result<TmuxServerOptions, Error> {
-        let output = (self.invoker)(cmd)?;
-        let result = output.to_string().parse()?;
-        Ok(TmuxServerOptions(result))
-    }
-}
-
-pub struct TmuxServerOptions(TmuxOptionsMap);
-
-impl TmuxServerOptions {
-    /// ### Manual
-    ///
-    /// tmux ^1.5:
-    /// ```text
-    /// buffer-limit number
-    /// ```
-    #[cfg(feature = "tmux_1_5")]
-    pub fn buffer_limit(&self) -> Option<String> {
-        self.0.get(BUFFER_LIMIT).unwrap()
-    }
-
-    /// ### Manual
-    ///
-    /// tmux ^1.5:
-    /// ```text
-    /// buffer-limit number
-    /// ```
-    #[cfg(feature = "tmux_1_5")]
-    pub fn buffer_limit_mut(&mut self) -> Option<&mut String> {
-        self.0.get(BUFFER_LIMIT).unwrap()
-    }
-}
-
-#[test]
-fn server_options_ctl() {
-    let options_ctl = ServerOptionsCtl::default();
-    let result = options_ctl.load_options();
-    dbg!(result);
 }
 
 impl TmuxOptionsMap {
@@ -306,9 +220,7 @@ user-keys
 
 #[test]
 fn tmux_options_map_get() {
-    use crate::{
-        GetServerOption, GetServerOptionTrait, GetServerOptions, GetServerOptionsTrait, Tmux,
-    };
+    use crate::{GetServerOptions, GetServerOptionsTrait, Tmux};
 
     //let cmd = GetServerOption::escape_time();
     //let cmd = GetServerOptions::new().build();

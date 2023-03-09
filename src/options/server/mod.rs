@@ -4,24 +4,19 @@
 //!
 //! * Command Builder
 //!
-//!     * Getter Command Builder
+//!     * 1. Getter Command Builder
+//!         * 1.1. [get single option (returned option name value pair)](#11-get-single-option) [`GetServerOption`]
+//!         * 1.2. [get single option (returned option value only)](#12-get-single-option-value) [`GetServerOptionValue`]
+//!         * 1.3. [get multiple options](#13-get-multiple-options) [`GetServerOptions`]
 //!
-//!         * [`GetServerOption`](#get-single-option) - get single option
-//!         * [`GetServerOptions`](#get-multiple-options) - get multiple options
-//!
-//!     * Setter Command Builder
-//!
-//!         * [`SetServerOption`](crate::SetServerOption) - set single option
-//!         * [`SetServerOptions`](crate::SetServerOptions) - set multiple options
-//!
-//! * Parser
-//!    * ServerOptionOutput
-//!    * ServerOptionsOutput
+//!     * 2. Setter Command Builder
+//!         * 2.1. [set single option](#21-set-single-option) [`SetServerOption`]
+//!         * 2.2. [set multiple options](#22-set-server-options) [`SetServerOptions`]
 //!
 //!
-//! ## Get Single Option
+//! ## 1.1. Get Single Option
 //!
-//! [`GetServerOption`](crate::GetServerOption) Module
+//! [`GetServerOption`] Module
 //!
 //! ### Example
 //!
@@ -31,10 +26,21 @@
 //! let output = Tmux::with_command(GetServerOption::buffer_limit()).output();
 //! ```
 //!
+//! ## 1.2. Get Single Option Value
 //!
-//! ## Get Multiple Options
+//! [`GetServerOptionValue`] Module
 //!
-//! [`GetServerOptions`](crate::GetServerOptions) Module
+//! ### Example
+//!
+//! ```
+//! use crate::{GetServerOptionValue, Tmux};
+//!
+//! let output = Tmux::with_command(GetServerOptionValue::buffer_limit()).output();
+//! ```
+//!
+//! ## 1.3. Get Multiple Options
+//!
+//! [`GetServerOptions`] Module
 //!
 //! ### Example
 //!
@@ -59,24 +65,22 @@
 
 pub mod builder;
 pub mod common;
-pub mod parser;
 
-pub mod server_option;
 pub mod server_options;
+pub mod server_options_ctl;
 
 pub use builder::*;
 pub use common::*;
-pub use parser::*;
 
-pub use server_option::*;
 pub use server_options::*;
+pub use server_options_ctl::*;
 
 #[cfg(test)]
 #[path = "."]
 mod server_tests {
-    //#[cfg(feature = "tmux_1_2")]
-    //pub mod server_options_tests;
+    #[cfg(feature = "tmux_1_2")]
+    pub mod server_options_tests;
 
     #[cfg(feature = "tmux_1_2")]
-    pub mod server_option_tests;
+    pub mod server_options_ctl_tests;
 }

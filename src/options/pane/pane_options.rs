@@ -1,6 +1,7 @@
 use super::constants::*;
 use crate::{Error, Switch};
 use crate::{SetOption, ShowOptions, Tmux};
+use std::borrow::Cow;
 use std::fmt;
 use std::str::FromStr;
 
@@ -8,69 +9,11 @@ use std::str::FromStr;
 use crate::RemainOnExit;
 
 // TODO: waiting for const generics stabilization https://github.com/rust-lang/rust/issues/44580
-pub const PANE_OPTIONS: [(
-    &str,
-    fn(p: &mut PaneOptions, i: Option<usize>, s: &str),
-    fn(p: &PaneOptions) -> Option<String>,
-    usize,
-); PANE_OPTIONS_NUM] = [
-    #[cfg(feature = "tmux_3_0")]
-    (
-        "allow-rename",
-        |p, _, s| p.allow_rename = s.parse().ok(),
-        |p| p.allow_rename.as_ref().map(|v| v.to_string()),
-        ALLOW_RENAME,
-    ),
-    #[cfg(feature = "tmux_3_0")]
-    (
-        "alternate-screen",
-        |p, _, s| p.alternate_screen = s.parse().ok(),
-        |p| p.alternate_screen.as_ref().map(|v| v.to_string()),
-        ALTERNATE_SCREEN,
-    ),
-    // XXX: check lower versions
-    #[cfg(feature = "tmux_3_0")]
-    (
-        "remain-on-exit",
-        |p, _, s| p.remain_on_exit = s.parse().ok(),
-        |p| p.remain_on_exit.as_ref().map(|v| v.to_string()),
-        REMAIN_ON_EXIT,
-    ),
-    #[cfg(feature = "tmux_3_0")]
-    (
-        "window-active-style",
-        |p, _, s| p.window_active_style = Some(s.to_string()),
-        |p| {
-            p.window_active_style
-                .as_ref()
-                .map(|v| format!("\"{}\"", v.to_string()))
-        },
-        WINDOW_ACTIVE_STYLE,
-    ),
-    #[cfg(feature = "tmux_3_0")]
-    (
-        "window-style",
-        |p, _, s| p.window_style = Some(s.to_string()),
-        |p| {
-            p.window_style
-                .as_ref()
-                .map(|v| format!("\"{}\"", v.to_string()))
-        },
-        WINDOW_STYLE,
-    ),
-    #[cfg(feature = "tmux_3_2")]
-    (
-        "synchronize-panes",
-        |p, _, s| p.synchronize_panes = s.parse().ok(),
-        |p| p.synchronize_panes.as_ref().map(|v| v.to_string()),
-        SYNCHRONIZE_PANES,
-    ),
-];
 
 // TODO: check types
 // 5 Available pane options are:
 #[derive(Default, PartialEq, Clone, Debug)]
-pub struct PaneOptions {
+pub struct PaneOptions<'a> {
     //allow-rename [on | off]
     #[cfg(feature = "tmux_3_0")]
     pub allow_rename: Option<Switch>,
@@ -83,17 +26,17 @@ pub struct PaneOptions {
     pub remain_on_exit: Option<RemainOnExit>,
     //window-active-style style
     #[cfg(feature = "tmux_3_0")]
-    pub window_active_style: Option<String>,
+    pub window_active_style: Option<Cow<'a, str>>,
     //window-style style
     #[cfg(feature = "tmux_3_0")]
-    pub window_style: Option<String>,
+    pub window_style: Option<Cow<'a, str>>,
     //pub user_options: Option<HashMap<String, String>>
     //synchronize-panes [on | off]
     #[cfg(feature = "tmux_3_2")]
     pub synchronize_panes: Option<Switch>,
 }
 
-impl PaneOptions {
+impl<'a> PaneOptions<'a> {
     pub fn get_all() -> Result<Self, Error> {
         let s = Tmux::with_command(ShowOptions::new().global())
             .output()?
@@ -135,36 +78,7 @@ impl PaneOptions {
     }
 }
 
-// command_alias[0] = "alias1" => command_alias["alias1"]
-// command_alias[1] = "alias2" => command_alias["alias2"]
-// ...
-// command_alias[n] = "aliasN" => command_alias["aliasN"]
-// TODO: optimization, merge server, session, window, pane?
-impl FromStr for PaneOptions {
-    type Err = Error;
-
-    fn from_str(options: &str) -> Result<Self, Self::Err> {
-        let mut pane_options: PaneOptions = Default::default();
-        let mut v: Vec<&str>;
-        let mut arr: Vec<&str>;
-        for option in options.lines() {
-            v = option.trim().splitn(2, ' ').collect();
-            arr = v[0].split(|c| c == '[' || c == ']').collect();
-            for pane_var in PANE_OPTIONS.iter() {
-                if pane_var.0 == arr[0] {
-                    pane_var.1(
-                        &mut pane_options,
-                        arr.get(1).and_then(|i| i.parse::<usize>().ok()),
-                        v.get(1).unwrap_or(&""),
-                    )
-                }
-            }
-        }
-        Ok(pane_options)
-    }
-}
-
-impl fmt::Display for PaneOptions {
+impl<'a> fmt::Display for PaneOptions<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // pane option
         for var in PANE_OPTIONS.iter() {
@@ -175,23 +89,6 @@ impl fmt::Display for PaneOptions {
         }
         Ok(())
     }
-}
-
-// XXX: mb &Switch
-#[derive(Default, Debug)]
-pub struct PaneOptionsBuilder<'a> {
-    #[cfg(feature = "tmux_3_0")]
-    pub allow_rename: Option<Switch>,
-    #[cfg(feature = "tmux_3_0")]
-    pub alternate_screen: Option<Switch>,
-    #[cfg(feature = "tmux_3_0")]
-    pub remain_on_exit: Option<RemainOnExit>,
-    #[cfg(feature = "tmux_3_0")]
-    pub window_active_style: Option<&'a str>,
-    #[cfg(feature = "tmux_3_0")]
-    pub window_style: Option<&'a str>,
-    #[cfg(feature = "tmux_3_2")]
-    pub synchronize_panes: Option<Switch>,
 }
 
 impl<'a> PaneOptionsBuilder<'a> {
@@ -251,5 +148,88 @@ impl<'a> PaneOptionsBuilder<'a> {
             #[cfg(feature = "tmux_3_2")]
             synchronize_panes: self.synchronize_panes.clone(),
         }
+    }
+}
+
+//const SEPARATOR: &str = " ";
+
+fn array_insert<'a>(v: &mut Option<Vec<Cow<'a, str>>>, i: Option<usize>, value: Option<String>) {
+    if let Some(i) = i {
+        match value {
+            Some(data) => v.get_or_insert(Vec::new()).insert(i, data.into()),
+            None => *v = None,
+        }
+    }
+}
+
+fn cow_parse<'a>(value: Option<&str>) -> Option<Cow<'a, str>> {
+    value.and_then(|s| Some(Cow::Owned(s.into())))
+}
+
+// command_alias[0] = "alias1" => command_alias["alias1"]
+// command_alias[1] = "alias2" => command_alias["alias2"]
+// ...
+// command_alias[n] = "aliasN" => command_alias["aliasN"]
+// TODO: optimization, merge server, session, window, pane?
+// split string in 3 parts, name, index (if option is an array) and value
+// TODO: rename
+pub fn get_parts(s: &str) -> Option<(&str, Option<usize>, Option<&str>)> {
+    let v: Vec<&str> = s.trim().splitn(2, SEPARATOR).collect();
+    let value = v.get(1).copied();
+    match v.get(0) {
+        Some(name) => {
+            let v: Vec<&str> = name.split(|c| c == '[').collect();
+            match v.get(0) {
+                Some(name) => {
+                    let index = v.get(1).and_then(|i| i.parse().ok());
+                    Some((name, index, value))
+                }
+                None => None,
+            }
+        }
+        None => None,
+    }
+}
+
+impl<'a> FromStr for ServerOptions<'a> {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut pane_options = PaneOptions::new();
+
+        for line in s.lines() {
+            if let Some((name, i, value)) = get_parts(line) {
+                match name {
+                    #[cfg(feature = "tmux_3_0")]
+                    ALLOW_RENAME => pane_options.allow_rename = value.map(|s| s.parse().ok()),
+                    #[cfg(feature = "tmux_3_0")]
+                    ALTERNATE_SCREEN => {
+                        pane_options.alternate_screen = value.map(|s| s.parse().ok())
+                    }
+                    #[cfg(feature = "tmux_3_0")]
+                    REMAIN_ON_EXIT => pane_options.remain_on_exit = value.map(|s| s.parse().ok()),
+                    #[cfg(feature = "tmux_3_0")]
+                    WINDOW_ACTIVE_STYLE => {
+                        pane_options.window_active_style = value.map(|s| s.parse().ok())
+                    }
+                    #[cfg(feature = "tmux_3_0")]
+                    WINDOW_STYLE => pane_options.window_style = value.map(|s| s.parse().ok()),
+                    #[cfg(feature = "tmux_3_2")]
+                    SYNCHRONIZE_PANES => {
+                        pane_options.synchronize_panes = value.map(|s| s.parse().ok())
+                    }
+                    _ => {
+                        // if user option (@user_option value)
+                        if let Some(name) = name.strip_prefix('@') {
+                            pane_options
+                                .user_options
+                                .insert(name.to_string(), cow_parse(value));
+                        }
+                    }
+                }
+            }
+        }
+
+        Ok(pane_options)
     }
 }

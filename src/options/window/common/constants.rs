@@ -1,6 +1,6 @@
 // aggressive-resize [on | off]
 #[cfg(feature = "tmux_1_0")]
-pub const AGGRESIVE_RESIZE: &str = "aggressive-resize";
+pub const AGGRESSIVE_RESIZE: &str = "aggressive-resize";
 // allow-rename [on | off]
 #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
 pub const ALLOW_RENAME: &str = "allow-rename";

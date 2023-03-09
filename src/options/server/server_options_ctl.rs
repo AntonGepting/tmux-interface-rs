@@ -1,4 +1,5 @@
 use std::borrow::Cow;
+use std::str::FromStr;
 //oneline
 //multiline
 
@@ -36,12 +37,14 @@ use std::borrow::Cow;
 // }
 
 use crate::{
-    Error, GetServerOption, GetServerOptionTrait, GetServerOptionValue, SetClipboard,
-    SetServerOption, SetServerOptionTrait, Switch, Tmux, TmuxCommand, TmuxCommands, TmuxOutput,
+    Error, GetServerOptionTrait, GetServerOptionValue, ServerOptions, SetClipboard,
+    SetServerOption, SetServerOptionTrait, SetServerOptions, SetServerOptionsTrait, ShowOptions,
+    Switch, Tmux, TmuxCommand, TmuxCommands, TmuxOutput,
 };
 
 // XXX: rename ServerOptionCtl?
-pub struct ServerOption<'a> {
+// trait top level options, then server session window pane
+pub struct ServerOptionsCtl<'a> {
     // TODO: comment/doc
     //
     // function used for executing the given option get/set command
@@ -52,7 +55,7 @@ pub struct ServerOption<'a> {
     pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
 }
 
-impl<'a> Default for ServerOption<'a> {
+impl<'a> Default for ServerOptionsCtl<'a> {
     fn default() -> Self {
         Self {
             invoker: |cmd| Tmux::with_command(cmd).output(),
@@ -60,11 +63,155 @@ impl<'a> Default for ServerOption<'a> {
     }
 }
 
-impl<'a> ServerOption<'a> {
+impl<'a> ServerOptionsCtl<'a> {
     pub fn new(invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
-        ServerOption { invoker }
+        ServerOptionsCtl { invoker }
     }
 
+    //pub fn get(&self) -> Result<Self, Error> {
+    //let mut cmd = ShowOptions::new().server().build();
+    //let output = self.invoker(&mut cmd);
+    //dbg!(&output);
+    //ServerOptions::from_str(&output)
+    //}
+
+    pub fn get_all(&self) -> Result<ServerOptions<'a>, Error> {
+        let cmd = ShowOptions::new().server().build();
+        let output = (self.invoker)(cmd)?.to_string();
+        dbg!(&output);
+        ServerOptions::from_str(&output)
+    }
+
+    pub fn get_all_ext(
+        invoke: &dyn Fn(&mut TmuxCommand<'a>) -> String,
+    ) -> Result<ServerOptions<'a>, Error> {
+        let mut cmd = ShowOptions::new().server().build();
+        let output = invoke(&mut cmd);
+        dbg!(&output);
+        ServerOptions::from_str(&output)
+    }
+
+
+    pub fn set_all_ext(
+        self,
+        invoke: &dyn Fn(&TmuxCommands<'a>) -> Result<String, Error>,
+        server_options: ServerOptions<'a>,
+    ) -> Result<String, Error> {
+        let cmds = SetServerOptions::new();
+
+        #[cfg(feature = "tmux_3_1")]
+        let cmds = cmds.backspace(server_options.backspace);
+
+        #[cfg(feature = "tmux_1_5")]
+        let cmds = cmds.buffer_limit(server_options.buffer_limit);
+
+        #[cfg(feature = "tmux_2_4")]
+        let cmds = cmds.command_alias(server_options.command_alias);
+
+        #[cfg(feature = "tmux_3_2")]
+        let cmds = cmds.copy_command(server_options.copy_command);
+
+        #[cfg(feature = "tmux_2_1")]
+        let cmds = cmds.default_terminal(server_options.default_terminal);
+
+        #[cfg(feature = "tmux_1_2")]
+        let cmds = cmds.escape_time(server_options.escape_time);
+
+        #[cfg(feature = "tmux_3_2")]
+        let cmds = cmds.editor(server_options.editor);
+
+        #[cfg(feature = "tmux_2_7")]
+        let cmds = cmds.exit_empty(server_options.exit_empty);
+
+        #[cfg(feature = "tmux_1_4")]
+        let cmds = cmds.exit_unattached(server_options.exit_unattached);
+
+        #[cfg(feature = "tmux_3_2")]
+        let cmds = cmds.extended_keys(server_options.extended_keys);
+
+        #[cfg(feature = "tmux_1_9")]
+        let cmds = cmds.focus_events(server_options.focus_events);
+
+        #[cfg(feature = "tmux_2_1")]
+        let cmds = cmds.history_file(server_options.history_file);
+
+        #[cfg(feature = "tmux_2_0")]
+        let cmds = cmds.message_limit(server_options.message_limit);
+
+        #[cfg(feature = "tmux_3_3")]
+        let cmds = cmds.prompt_history_limit(server_options.prompt_history_limit);
+
+        #[cfg(feature = "tmux_1_5")]
+        let cmds = cmds.set_clipboard(server_options.set_clipboard);
+
+        #[cfg(feature = "tmux_3_2")]
+        let cmds = cmds.terminal_features(server_options.terminal_features);
+
+        #[cfg(feature = "tmux_2_0")]
+        let cmds = cmds.terminal_overrides(server_options.terminal_overrides);
+
+        #[cfg(feature = "tmux_3_0")]
+        let cmds = cmds.user_keys(server_options.user_keys);
+
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+        let cmds = cmds.quiet(server_options.quiet);
+
+        #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+        let cmds = cmds.detach_on_destroy(server_options.detach_on_destroy);
+
+        // `@USER_OPTION`
+
+        let cmds = cmds.build();
+
+        invoke(&cmds)
+    }
+
+    // get and parse single line option
+    pub fn get<T: std::str::FromStr>(&self, cmd: TmuxCommand<'a>) -> Result<Option<T>, Error> {
+        Ok((self.invoker)(cmd)?.to_string().trim().parse::<T>().ok())
+    }
+
+    pub fn set(&self, cmd: TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
+        (self.invoker)(cmd)
+    }
+
+    // FIXME: full array support
+    // Tmux binary
+    //
+    // 1. multiple binary call
+    // tmux set -s command-alias[0] value0
+    // tmux set -s command-alias[1] value1
+    // tmux set -s command-alias[2] value2
+    //
+    // 2. single binary call
+    // tmux set -s command-alias[0] value0 ; set -s command-alias[1] ; set -s command-alias[2]
+    //
+    // Control Mode
+    //
+    // 1. multiple control mode commands
+    // set -s command-alias[0] value0
+    // set -s command-alias[1] value1
+    // set -s command-alias[2] value2
+    //
+    // 2. single control mode command
+    // set -s command-alias[0] value0 ; set -s command-alias[1] ; set -s command-alias[2]
+    //
+    pub fn get_array(&self, get_option_cmd: TmuxCommand<'a>) -> Result<Option<Vec<String>>, Error> {
+        let output = (self.invoker)(get_option_cmd)?;
+        let v: Vec<String> = output
+            .to_string()
+            .lines()
+            .map(|s| s.trim().into())
+            .collect();
+        let result = match v.is_empty() {
+            true => None,
+            false => Some(v),
+        };
+        Ok(result)
+    }
+}
+
+impl<'a> ServerOptionsCtl<'a> {
     /// ### Manual
     ///
     /// tmux ^3.1:
@@ -548,49 +695,5 @@ impl<'a> ServerOption<'a> {
         detach_on_destroy: Option<Switch>,
     ) -> Result<TmuxOutput, Error> {
         self.set(SetServerOption::detach_on_destroy(detach_on_destroy))
-    }
-
-    // get and parse single line option
-    pub fn get<T: std::str::FromStr>(&self, cmd: TmuxCommand<'a>) -> Result<Option<T>, Error> {
-        Ok((self.invoker)(cmd)?.to_string().trim().parse::<T>().ok())
-    }
-
-    pub fn set(&self, cmd: TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
-        (self.invoker)(cmd)
-    }
-
-    // FIXME: full array support
-    // Tmux binary
-    //
-    // 1. multiple binary call
-    // tmux set -s command-alias[0] value0
-    // tmux set -s command-alias[1] value1
-    // tmux set -s command-alias[2] value2
-    //
-    // 2. single binary call
-    // tmux set -s command-alias[0] value0 ; set -s command-alias[1] ; set -s command-alias[2]
-    //
-    // Control Mode
-    //
-    // 1. multiple control mode commands
-    // set -s command-alias[0] value0
-    // set -s command-alias[1] value1
-    // set -s command-alias[2] value2
-    //
-    // 2. single control mode command
-    // set -s command-alias[0] value0 ; set -s command-alias[1] ; set -s command-alias[2]
-    //
-    pub fn get_array(&self, get_option_cmd: TmuxCommand<'a>) -> Result<Option<Vec<String>>, Error> {
-        let output = (self.invoker)(get_option_cmd)?;
-        let v: Vec<String> = output
-            .to_string()
-            .lines()
-            .map(|s| s.trim().into())
-            .collect();
-        let result = match v.is_empty() {
-            true => None,
-            false => Some(v),
-        };
-        Ok(result)
     }
 }
