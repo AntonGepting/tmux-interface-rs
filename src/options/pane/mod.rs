@@ -1,14 +1,14 @@
 pub mod builder;
 pub mod common;
+pub mod parser;
 
 pub mod pane_options;
-pub mod pane_options_ctl;
 
 pub use builder::*;
 pub use common::*;
+pub use parser::*;
 
 pub use pane_options::*;
-pub use pane_options_ctl::*;
 
 pub use pane_options::*;
 
@@ -17,7 +17,4 @@ pub use pane_options::*;
 mod pane_tests {
     #[cfg(feature = "tmux_3_1")]
     pub mod pane_options_tests;
-
-    #[cfg(feature = "tmux_3_1")]
-    pub mod pane_options_ctl_tests;
 }

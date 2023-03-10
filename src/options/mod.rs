@@ -65,45 +65,58 @@
 //!     * Global
 //!     * Local
 //!
-//! * by Methods
+//! * by Access
 //!     * All
 //!     * Single
 //!     * Multiple Selective
 //!
 //! * by Object
-//!     * [`Server`](super::options::server)
-//!     * [`Session`]()
-//!     * [`Window`]()
-//!     * [`Pane`]()
+//!     * [`Server`](self::server)
+//!     * [`Session`](self::session)
+//!     * [`Window`](self::window)
+//!     * [`Pane`](self::pane)
 //!
-//! * by Setting
+//! * by Setting Methods
 //!     * Set
 //!     * Unset
 //!     * Toggle (for `on | off | ...` options)
 //!
-//! Scope
-//!
-//! * Global Options
-//!     * Session
-//!         * [`GetGlobalSessionOption`](crate::GetGlobalSessionOption)
-//!         * [`SetGlobalSessionOption`](crate::SetGlobalSessionOption)
-//!     * Window
-//!         * [`GetGlobalWindowOption`](crate::GetGlobalWindowOption)
-//!         * [`SetGlobalWindowOption`](crate::SetGlobalWindowOption)
-//!
-//! * Local Options
-//!     * Server
-//!         * [`GetServerOption`](crate::GetServerOption)
-//!         * [`SetServerOption`](crate::SetServerOption)
-//!     * Session
-//!         * [`GetLocalSessionOption`](crate::GetLocalSessionOption)
-//!         * [`SetLocalSessionOption`](crate::SetLocalSessionOption)
-//!     * Window
-//!         * [`GetLocalSessionOption`](crate::GetLocalSessionOption)
-//!         * [`SetLocalSessionOption`](crate::SetLocalSessionOption)
-//!     * Pane
-//!         * [`GetPaneOption`](crate::GetPaneOption)
-//!         * [`SetPaneOption`](crate::SetPaneOption)
+//! Tmux Options
+//! * [`Server`](self::server)
+//!     * [`GetServerOption`]
+//!     * [`GetServerOptionValue`]
+//!     * [`SetServerOption`]
+//! * [`Session`](self::session)
+//!     * [`Builder`](self::session::builder)
+//!         * [`global`](self::session::builder::global)
+//!             * [`GetGlobalSessionOption`]
+//!             * [`GetGlobalSessionOptionValue`]
+//!             * [`SetGlobalSessionOption`]
+//!         * [`local`](self::session::builder::local)
+//!             * [`GetLocalSessionOption`]
+//!             * [`GetLocalSessionOptionValue`]
+//!             * [`SetLocalSessionOption`]
+//!     * [`Parser`](self::session::parser)
+//!         * [`SessionOptionsCtl`](self::session::parser::session_options_ctl)
+//!         * [`GlobalSessionOptionsCtl`](self::session::parser::global_session_options_ctl)
+//!         * [`LocalSessionOptionsCtl`](self::session::parser::local_session_options_ctl)
+//! * [`Window`](self::window)
+//!     * [`Builder`](self::window::builder)
+//!         * [`global`](self::window::builder::global)
+//!             * [`GetGlobalWindowOption`]
+//!             * [`GetGlobalWindowOptionValue`]
+//!             * [`SetGlobalWindowOption`]
+//!         * [`local`](self::window::builder::local)
+//!             * [`GetLocalWindowOption`]
+//!             * [`GetLocalWindowOptionValue`]
+//!             * [`SetLocalWindowOption`]
+//!     * [`Parser`](self::window::parser)
+//!         * [`WindowOptionsCtl`](self::window::parser::window_options_ctl)
+//!         * [`GlobalWindowOptionsCtl`](self::window::parser::global_window_options_ctl)
+//! * [`Pane`](self::pane)
+//!     * [`GetPaneOption`]
+//!     * [`GetPaneOptionValue`]
+//!     * [`SetPaneOption`]
 //!
 //!
 //! **Table**: Tmux Options
@@ -251,6 +264,7 @@ pub mod session;
 pub mod window;
 
 pub use crate::options::common::*;
+pub use user_option::*;
 
 #[cfg(feature = "tmux_3_1")]
 pub use crate::options::pane::*;
@@ -278,159 +292,8 @@ pub use crate::options::window::*;
 //}
 //
 
-use crate::{SetOption, ShowOptions, TmuxCommand, TmuxCommands};
-use std::borrow::Cow;
-use std::fmt;
+pub mod get_option_ext;
+pub mod set_option_ext;
 
-/// common trait for getting options, allowing different implementations for different object options
-pub trait GetOptionExt {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().option(name).value().build()
-    }
-}
-
-pub trait GetUserOption: GetOptionExt {
-    /// ### Manual
-    ///
-    /// ```text
-    /// @user-option-name value
-    /// ```
-    fn user_option<'a, S: Into<Cow<'a, str>>>(name: S) -> TmuxCommand<'a> {
-        Self::get(format!("{}{}", USER_OPTION_MARKER, name.into()))
-    }
-}
-
-pub trait GetUserOptions<'a> {
-    type Getter: GetUserOption;
-
-    fn push(&mut self, option: TmuxCommand<'a>);
-
-    /// ### Manual
-    ///
-    /// ```text
-    /// @user-option-name value
-    /// ```
-    fn user_option<S: Into<Cow<'a, str>>>(mut self, name: S) -> Self
-    where
-        Self: Sized,
-    {
-        self.push(Self::Getter::user_option(name));
-        self
-    }
-}
-
-// TODO: optimize set/set_ext are the same
-/// common trait for setting options, allowing different implementations for different object options
-pub trait SetOptionExt {
-    fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        match value {
-            Some(data) => Self::set_ext(name, Some(data)),
-            None => Self::unset(name),
-        }
-    }
-
-    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().option(name).unset().build()
-    }
-
-    // unset if value = None
-    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        //(self.setter)(name.into(), value.map(|s| s.into()))
-        let cmd = match value {
-            Some(data) => SetOption::new().option(name).value(data),
-            None => SetOption::new().option(name),
-        };
-        cmd.build()
-    }
-
-    fn set_array<'a, S, I, T>(name: S, value: Option<I>) -> TmuxCommands<'a>
-    where
-        S: Into<Cow<'a, str>>,
-        I: IntoIterator<Item = T>,
-        T: Into<Cow<'a, str>>,
-    {
-        let mut cmds = TmuxCommands::new();
-        let name = name.into();
-        if let Some(data) = value {
-            for (i, item) in data.into_iter().enumerate() {
-                cmds.push(Self::set(format!("{}[{}]", name, i), Some(item.into())));
-            }
-        } else {
-            cmds.push(Self::set(format!("{}", name), Some("")));
-        }
-        cmds
-    }
-
-    fn set_array_original<'a, S: fmt::Display>(
-        name: S,
-        value: Option<Vec<String>>,
-    ) -> TmuxCommands<'a> {
-        let mut cmds = TmuxCommands::new();
-        if let Some(data) = value {
-            for (i, item) in data.iter().enumerate() {
-                cmds.push(Self::set(format!("{}[{}]", name, i), Some(item.to_owned())));
-            }
-        } else {
-            cmds.push(Self::set(format!("{}", name), Some("")));
-        }
-        cmds
-    }
-
-    // ### Manual
-    //
-    // ```text
-    // user option
-    // ```
-    //fn user_option<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
-    //name: S,
-    //value: Option<T>,
-    //) -> TmuxCommand<'a> {
-    //Self::set(format!("{}{}", USER_OPTION_MARKER, name.into()), value)
-    //}
-}
-
-pub trait SetUserOption: SetOptionExt {
-    /// ### Manual
-    ///
-    /// ```text
-    /// @user-option-name value
-    /// ```
-    fn user_option<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
-        name: S,
-        value: Option<T>,
-    ) -> TmuxCommand<'a>
-    where
-        Self: Sized,
-    {
-        Self::set(format!("{}{}", USER_OPTION_MARKER, name.into()), value)
-    }
-}
-
-pub trait SetUserOptions<'a> {
-    type Setter: SetUserOption;
-
-    fn push(&mut self, option: TmuxCommand<'a>);
-
-    /// ### Manual
-    ///
-    /// ```text
-    /// @user-option-name value
-    /// ```
-    fn user_option<S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
-        mut self,
-        name: S,
-        value: Option<T>,
-    ) -> Self
-    where
-        Self: Sized,
-    {
-        self.push(Self::Setter::user_option(name, value));
-        self
-    }
-}
+pub use get_option_ext::GetOptionExt;
+pub use set_option_ext::SetOptionExt;

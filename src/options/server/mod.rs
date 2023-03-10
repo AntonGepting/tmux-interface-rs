@@ -65,22 +65,19 @@
 
 pub mod builder;
 pub mod common;
+pub mod parser;
 
 pub mod server_options;
-pub mod server_options_ctl;
 
 pub use builder::*;
 pub use common::*;
+pub use parser::*;
 
 pub use server_options::*;
-pub use server_options_ctl::*;
 
 #[cfg(test)]
 #[path = "."]
 mod server_tests {
     #[cfg(feature = "tmux_1_2")]
     pub mod server_options_tests;
-
-    #[cfg(feature = "tmux_1_2")]
-    pub mod server_options_ctl_tests;
 }
