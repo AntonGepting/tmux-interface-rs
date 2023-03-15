@@ -82,6 +82,14 @@
 //!     * Toggle (for `on | off | ...` options)
 //!
 //! Tmux Options
+//! * Common
+//!     * [`UserOptions`](self::common::user_option)
+//!         * [`GetUserOption`]
+//!         * [`GetUserOptions`]
+//!         * [`SetUserOption`]
+//!         * [`SetUserOptions`]
+//!     * [`SetOptionExt`]
+//!     * [`GetOptionExt`]
 //! * [`Server`](self::server)
 //!     * [`GetServerOption`]
 //!     * [`GetServerOptionValue`]
@@ -156,6 +164,123 @@
 //!   </tbody>
 //! </table>
 //!
+//! # Options submodules, traits and structures schematic hierarchy
+//! ```text
+//! Get/Set options control traits
+//!                           Global
+//!                           +-------------------------+     +------------------------+
+//!                           | GlobalSessionOptionsCtl |     | GlobalWindowOptionsCtl |
+//!                           +-------------------------+     +------------------------+
+//!                             * .get_<OPTION>()               ...
+//!                             * .set_<OPTION>()
+//!                             * ...
+//!                             * .get_all()
+//!                             * .set_all()
+//!                           Local
+//!                           +------------------------+      +-----------------------+
+//!                           | LocalSessionOptionsCtl |      | LocalWindowOptionsCtl |
+//!                           +------------------------+      +-----------------------+
+//!                            ...                             ...
+//!
+//!  +------------------+     +-------------------+           +------------------+          +----------------+
+//!  | ServerOptionsCtl |     | SessionOptionsCtl |           | WindowOptionsCtl |          | PaneOptionsCtl |
+//!  +------------------+     +-------------------+           +------------------+          +----------------+
+//!   ...                      ...                             ...                           ...
+//!
+//! Get/Set options command builder traits (by target, by scope, by access)
+//!
+//!                           Global
+//!                            single option
+//!                           +------------------------+      +-----------------------+
+//!                           | GetGlobalSessionOption |      | GetGlobalWindowOption |
+//!                           +------------------------+      +-----------------------+
+//!                            ...                             ...
+//!                            single value only
+//!                           +-----------------------------+ +----------------------------+
+//!                           | GetGlobalSessionOptionValue | | GetGlobalWindowOptionValue |
+//!                           +-----------------------------+ +----------------------------+
+//!                            ...                             ...
+//!                            multiple options
+//!                           +-------------------------+     +------------------------+
+//!                           | GetGlobalSessionOptions |     | GetGlobalWindowOptions |
+//!                           +-------------------------+     +------------------------+
+//!                            ...                             ...
+//!                            single option
+//!                           +------------------------+      +-----------------------+
+//!                           | SetGlobalSessionOption |      | SetGlobalWindowOption |
+//!                           +------------------------+      +-----------------------+
+//!                            ...                             ...
+//!                            multiple options
+//!                           +-------------------------+     +------------------------+
+//!                           | SetGlobalSessionOptions |     | SetGlobalWindowOptions |
+//!                           +-------------------------+     +------------------------+
+//!                            ...                             ...
+//!  Local
+//!   single option
+//!  +----------------+       +-----------------------+       +----------------------+       +---------------+
+//!  | GetServerOpton |       | GetLocalSessionOption |       | GetLocalWindowOption |       | GetPaneOption |
+//!  +----------------+       +-----------------------+       +----------------------+       +---------------+
+//!   ...                      ...                             ...                            ...
+//!   single value only
+//!  +---------------------+  +----------------------------+  +---------------------------+  +--------------------+
+//!  | GetServerOptonValue |  | GetLocalSessionOptionValue |  | GetLocalWindowOptionValue |  | GetPaneOptionValue |
+//!  +---------------------+  +----------------------------+  +---------------------------+  +--------------------+
+//!   ...                      ...                             ...                            ...
+//!   multiple options
+//!  +-----------------+      +------------------------+      +-----------------------+      +----------------+
+//!  | GetServerOptons |      | GetLocalSessionOptions |      | GetLocalWindowOptions |      | GetPaneOptions |
+//!  +-----------------+      +------------------------+      +-----------------------+      +----------------+
+//!   ...                      ...                             ...                            ...
+//!   single option
+//!  +----------------+       +-----------------------+       +----------------------+       +---------------+
+//!  | SetServerOpton |       | SetLocalSessionOption |       | SetLocalWindowOption |       | SetPaneOption |
+//!  +----------------+       +-----------------------+       +----------------------+       +---------------+
+//!   ...                      ...                             ...                            ...
+//!   multiple options
+//!  +-----------------+      +------------------------+      +-----------------------+      +----------------+
+//!  | SetServerOptons |      | SetLocalSessionOptions |      | SetLocalWindowOptions |      | SetPaneOptions |
+//!  +-----------------+      +------------------------+      +-----------------------+      +----------------+
+//!   ...                      ...                             ...                            ...
+//! Options Structures
+//!  +---------------+        +----------------+              +---------------+              +-------------+
+//!  | ServerOptions |        | SessionOptions |              | WindowOptions |              | PaneOptions |
+//!  +---------------+        +----------------+              +---------------+              +-------------+
+//!   ...                      ...                             ...                            ...
+//! Get/Set user options command builder traits (custom get/set implementations for user options `@name value`)
+//!  +---------------+            +---------------+
+//!  | GetUserOption |            | SetUserOption |
+//!  +---------------+            +---------------+
+//!   ...                          ...
+//!  +----------------+           +----------------+
+//!  | GetUserOptions |           | SetUserOptions |
+//!  +----------------+           +----------------+
+//!   ...                          ...
+//! Get/Set options command builder traits (custom get/set implementations for server/session/window/pane)
+//!  +--------------+             +--------------+
+//!  | GetOptionExt |             | SetOptionExt |
+//!  +--------------+             +--------------+
+//!   ...                          ...
+//!
+//! Get/Set options commands builder structures (named methods for server/session/window/pane and other)
+//!  +------------+               +-----------+
+//!  | ShowOption |               | SetOption |
+//!  +------------+               +-----------+
+//!   ...                          ...
+//!
+//! Tmux interface command structures (command, flags, options, parameters)
+//!  +-------------+
+//!  | TmuxCommand |
+//!  +-------------+
+//!   ...
+//!  +--------------+
+//!  | TmuxCommands |
+//!  +--------------+
+//!   ...
+//! Tmux command (resulting command as `std::process::Command` or `String`)
+//!  +--------------------------+ +---------------------------------+
+//!  | `show [-FLAGS] <OPTION>` | | `set [-FLAGS] <OPTION> <VALUE>` |
+//!  +--------------------------+ +---------------------------------+
+//! ```
 //
 // Tmux boundary conditions
 //
@@ -252,7 +377,16 @@
 use std::iter::Iterator;
 
 pub mod common;
-pub mod tmux_options_map;
+pub mod get_option_ext;
+pub mod options_ctl;
+pub mod set_option_ext;
+
+pub use common::*;
+
+pub use get_option_ext::GetOptionExt;
+pub use set_option_ext::SetOptionExt;
+
+pub use options_ctl::*;
 
 #[cfg(feature = "tmux_3_1")]
 pub mod pane;
@@ -263,37 +397,11 @@ pub mod session;
 #[cfg(feature = "tmux_1_2")]
 pub mod window;
 
-pub use crate::options::common::*;
-pub use user_option::*;
-
 #[cfg(feature = "tmux_3_1")]
-pub use crate::options::pane::*;
+pub use pane::*;
 #[cfg(feature = "tmux_1_2")]
-pub use crate::options::server::*;
+pub use server::*;
 #[cfg(feature = "tmux_1_0")]
-pub use crate::options::session::*;
+pub use session::*;
 #[cfg(feature = "tmux_1_2")]
-pub use crate::options::window::*;
-
-//#[cfg(feature = "tmux_1_0")]
-//pub struct Options<'a> {
-////pub server_options: ServerOptions<'a>,
-////pub session_options: SessionOptions<'a>,
-////pub global_session_options: SessionOptions<'a>,
-//pub window_options: WindowOptions,
-//pub global_window_options: WindowOptions,
-//#[cfg(feature = "tmux_3_1")]
-//pub pane_options: PaneOptions,
-//}
-
-//pub struct OptionsController {
-//}
-//pub fn set_server
-//}
-//
-
-pub mod get_option_ext;
-pub mod set_option_ext;
-
-pub use get_option_ext::GetOptionExt;
-pub use set_option_ext::SetOptionExt;
+pub use window::*;
