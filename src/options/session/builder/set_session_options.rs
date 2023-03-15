@@ -204,7 +204,7 @@ pub trait SetSessionOptions<'a> {
     /// ### Manual
     ///
     /// tmux ^3.2:
-    /// ```
+    /// ```text
     /// detach-on-destroy [on | off | no-detached]
     /// ```
     ///
@@ -1183,7 +1183,7 @@ pub trait SetSessionOptions<'a> {
     /// ```
     ///
     /// tmux 1.0:
-    /// ```
+    /// ```text
     /// visual-activity [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
@@ -1203,7 +1203,7 @@ pub trait SetSessionOptions<'a> {
     /// ```
     ///
     /// tmux 1.0:
-    /// ```
+    /// ```text
     /// visual-bell [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]

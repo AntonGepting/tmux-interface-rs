@@ -21,7 +21,7 @@
 //! ### Example
 //!
 //! ```
-//! use crate::{GetServerOption, Tmux};
+//! use tmux_interface::{GetServerOption, GetServerOptionTrait, Tmux};
 //!
 //! let output = Tmux::with_command(GetServerOption::buffer_limit()).output();
 //! ```
@@ -33,7 +33,7 @@
 //! ### Example
 //!
 //! ```
-//! use crate::{GetServerOptionValue, Tmux};
+//! use tmux_interface::{GetServerOptionValue, GetServerOptionTrait, Tmux};
 //!
 //! let output = Tmux::with_command(GetServerOptionValue::buffer_limit()).output();
 //! ```
@@ -45,9 +45,9 @@
 //! ### Example
 //!
 //! ```
-//! use crate::{GetServerOptions, Tmux};
+//! use tmux_interface::{GetServerOptions, GetServerOptionsTrait, Tmux};
 //!
-//! let output = Tmux::with_command(
+//! let output = Tmux::with_commands(
 //!     GetServerOptions::new()
 //!         .buffer_limit()
 //!         .history_file()

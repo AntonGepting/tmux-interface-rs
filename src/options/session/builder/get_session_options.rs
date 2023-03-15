@@ -9,7 +9,9 @@
 //! ### Examples
 //!
 //! ```
-//! let options = GetGlobalSessionOptions::new().activity_action().assume_paste_time();
+//! use tmux_interface::{Tmux, GetGlobalSessionOptions, GetSessionOptions};
+//!
+//! let options = GetGlobalSessionOptions::new().activity_action().assume_paste_time().into_commands();
 //! let output = Tmux::with_commands(options).output().unwrap();
 //! // parse
 //! ```
@@ -31,7 +33,9 @@
 //! ### Examples
 //!
 //! ```
-//! let options = GetLocalSessionOptions::new().activity_action().assume_paste_time();
+//! use tmux_interface::{Tmux, GetLocalSessionOptions, GetSessionOptions};
+//!
+//! let options = GetLocalSessionOptions::new().activity_action().assume_paste_time().into_commands();
 //! let output = Tmux::with_commands(options).output().unwrap();
 //! // parse
 //! ```

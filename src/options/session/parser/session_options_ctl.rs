@@ -63,7 +63,7 @@ pub trait SessionOptionsCtl<'a> {
     /// ### Manual
     ///
     /// tmux ^1.0:
-    /// ```
+    /// ```text
     /// base-index index
     /// ```
     #[cfg(feature = "tmux_1_0")]
@@ -74,7 +74,7 @@ pub trait SessionOptionsCtl<'a> {
     /// ### Manual
     ///
     /// tmux ^1.0:
-    /// ```
+    /// ```text
     /// base-index index
     /// ```
     #[cfg(feature = "tmux_1_0")]
@@ -84,12 +84,12 @@ pub trait SessionOptionsCtl<'a> {
 
     /// ### Manual
     ///
-    /// ```
+    /// ```text
     /// bell-action [any | none | current | other]
     /// ```
     ///
     /// tmux ^1.0:
-    /// ```
+    /// ```text
     /// bell-action [any | none | other]
     /// ```
     #[cfg(feature = "tmux_1_0")]
@@ -99,12 +99,12 @@ pub trait SessionOptionsCtl<'a> {
 
     /// ### Manual
     ///
-    /// ```
+    /// ```text
     /// bell-action [any | none | current | other]
     /// ```
     ///
     /// tmux ^1.0:
-    /// ```
+    /// ```text
     /// bell-action [any | none | other]
     /// ```
     #[cfg(feature = "tmux_1_0")]
@@ -115,7 +115,7 @@ pub trait SessionOptionsCtl<'a> {
     /// ### Manual
     ///
     /// tmux ^1.5 v2.6:
-    /// ```
+    /// ```text
     /// bell-on-alert [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
@@ -126,7 +126,7 @@ pub trait SessionOptionsCtl<'a> {
     /// ### Manual
     ///
     /// tmux ^1.5 v2.6:
-    /// ```
+    /// ```text
     /// bell-on-alert [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
@@ -137,7 +137,7 @@ pub trait SessionOptionsCtl<'a> {
     /// ### Manual
     ///
     /// tmux ^1.0 v1.4:
-    /// ```
+    /// ```text
     /// buffer-limit limit
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
@@ -148,7 +148,7 @@ pub trait SessionOptionsCtl<'a> {
     /// ### Manual
     ///
     /// tmux ^1.0 v1.4:
-    /// ```
+    /// ```text
     /// buffer-limit limit
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]

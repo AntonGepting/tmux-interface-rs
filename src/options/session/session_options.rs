@@ -575,11 +575,13 @@ impl<'a> SessionOptions<'a> {
 //}
 //}
 
+/// Default
+///
 /// ```text
 /// tmux show-options -g
 /// ```
 ///
-/// ```
+/// ```text
 /// activity-action other
 /// assume-paste-time 1
 /// base-index 1
