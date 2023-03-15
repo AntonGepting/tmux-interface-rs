@@ -1,14 +1,3 @@
-#[test]
-fn global_window_options_ctl() {
-    use crate::{GlobalWindowOptionsCtl, WindowOptionsCtl};
-
-    let window_options_ctl = GlobalWindowOptionsCtl::default();
-
-    let value = window_options_ctl.get_all().unwrap();
-
-    dbg!(&value);
-}
-
 //#[test]
 //fn session_options_ctl() {
 //use crate::{SessionOptionsCtl, Tmux};
@@ -82,16 +71,4 @@ fn global_window_options_ctl() {
 //server_option_ctl.set_buffer_limit(buffer_limit);
 //let buffer_limit = server_option_ctl.get_buffer_limit();
 //dbg!(buffer_limit);
-//}
-
-//#[test]
-//fn server_option_commands() {
-//let mut cmds = TmuxCommands::new();
-//cmds.push(SetServerOption::command_alias_ext(0, Some("123")));
-//cmds.push(SetServerOption::command_alias_ext(1, Some("123")));
-//cmds.push(SetServerOption::command_alias_ext(2, Some("123")));
-
-//let mut cmd = TmuxCommand::new();
-//cmd.push_cmds(cmds);
-//dbg!(cmd.to_string());
 //}
