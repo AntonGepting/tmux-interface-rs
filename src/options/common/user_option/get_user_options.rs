@@ -7,16 +7,18 @@ pub trait GetUserOptions<'a> {
 
     fn push(&mut self, option: TmuxCommand<'a>);
 
-    /// ### Manual
+    /// # Manual
     ///
     /// ```text
     /// @user-option-name value
     /// ```
-    fn user_option<S: Into<Cow<'a, str>>>(mut self, name: S) -> Self
+    fn user_option<T, S>(mut self, target: Option<T>, name: S) -> Self
     where
         Self: Sized,
+        T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
     {
-        self.push(Self::Getter::user_option(name));
+        self.push(Self::Getter::user_option(target, name));
         self
     }
 }
