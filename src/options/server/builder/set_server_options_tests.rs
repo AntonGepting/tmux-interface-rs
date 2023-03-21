@@ -3,6 +3,7 @@ fn set_server_options() {
     use crate::{SetClipboard, SetServerOptions, SetServerOptionsTrait, SetUserOptions, Switch};
 
     let cmd = "set -s";
+    let target = Some(":");
 
     let mut v = Vec::new();
 
@@ -73,55 +74,61 @@ fn set_server_options() {
 
     let options = SetServerOptions::new();
     #[cfg(feature = "tmux_3_1")]
-    let options = options.backspace(Some("C-?"));
+    let options = options.backspace(target, Some("C-?"));
     #[cfg(feature = "tmux_1_5")]
-    let options = options.buffer_limit(Some(50));
+    let options = options.buffer_limit(target, Some(50));
     #[cfg(feature = "tmux_2_4")]
-    let options = options.command_alias(Some(vec![
-        "split-pane=split-window".to_string(),
-        "splitp=split-window".to_string(),
-    ]));
+    let options = options.command_alias(
+        target,
+        Some(vec![
+            "split-pane=split-window".to_string(),
+            "splitp=split-window".to_string(),
+        ]),
+    );
     #[cfg(feature = "tmux_3_2")]
-    let options = options.copy_command(Some(""));
+    let options = options.copy_command(target, Some(""));
     #[cfg(feature = "tmux_2_1")]
-    let options = options.default_terminal(Some("screen-256color"));
+    let options = options.default_terminal(target, Some("screen-256color"));
     #[cfg(feature = "tmux_1_2")]
-    let options = options.escape_time(Some(500));
+    let options = options.escape_time(target, Some(500));
     #[cfg(feature = "tmux_3_2")]
-    let options = options.editor(Some("/usr/bin/vi"));
+    let options = options.editor(target, Some("/usr/bin/vi"));
     #[cfg(feature = "tmux_2_7")]
-    let options = options.exit_empty(Some(Switch::On));
+    let options = options.exit_empty(target, Some(Switch::On));
     #[cfg(feature = "tmux_1_4")]
-    let options = options.exit_unattached(Some(Switch::Off));
+    let options = options.exit_unattached(target, Some(Switch::Off));
     #[cfg(feature = "tmux_3_2")]
-    let options = options.extended_keys(Some(Switch::Off));
+    let options = options.extended_keys(target, Some(Switch::Off));
     #[cfg(feature = "tmux_1_9")]
-    let options = options.focus_events(Some(Switch::Off));
+    let options = options.focus_events(target, Some(Switch::Off));
     #[cfg(feature = "tmux_2_1")]
-    let options = options.history_file(Some(""));
+    let options = options.history_file(target, Some(""));
     #[cfg(feature = "tmux_2_0")]
-    let options = options.message_limit(Some(1000));
+    let options = options.message_limit(target, Some(1000));
     #[cfg(feature = "tmux_3_3")]
-    let options = options.prompt_history_limit(Some(100));
+    let options = options.prompt_history_limit(target, Some(100));
     #[cfg(feature = "tmux_1_5")]
-    let options = options.set_clipboard(Some(SetClipboard::External));
+    let options = options.set_clipboard(target, Some(SetClipboard::External));
     #[cfg(feature = "tmux_3_2")]
-    let options = options.terminal_features(Some(vec![
-        "xterm*:clipboard:ccolour:cstyle:focus:title".to_string(),
-        "screen*:title".to_string(),
-    ]));
+    let options = options.terminal_features(
+        target,
+        Some(vec![
+            "xterm*:clipboard:ccolour:cstyle:focus:title".to_string(),
+            "screen*:title".to_string(),
+        ]),
+    );
     #[cfg(feature = "tmux_2_0")]
-    let options = options.terminal_overrides(None::<Vec<String>>);
+    let options = options.terminal_overrides(target, None::<Vec<String>>);
     #[cfg(feature = "tmux_3_0")]
-    let options = options.user_keys(None::<Vec<String>>);
+    let options = options.user_keys(target, None::<Vec<String>>);
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    let options = options.quiet(Some(""));
+    let options = options.quiet(target, Some(""));
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    let options = options.detach_on_destroy(Some(""));
+    let options = options.detach_on_destroy(target, Some(""));
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    let options = options.detach_on_destroy(Some(""));
+    let options = options.detach_on_destroy(target, Some(""));
 
-    let options = options.user_option("user-option-name", Some("value".to_string()));
+    let options = options.user_option(target, "user-option-name", Some("value".to_string()));
 
     let options = options.build().to_string();
 

@@ -72,15 +72,3 @@ fn server_options_ctl() {
 //let buffer_limit = server_option_ctl.get_buffer_limit();
 //dbg!(buffer_limit);
 //}
-
-//#[test]
-//fn server_option_commands() {
-//let mut cmds = TmuxCommands::new();
-//cmds.push(SetServerOption::command_alias_ext(0, Some("123")));
-//cmds.push(SetServerOption::command_alias_ext(1, Some("123")));
-//cmds.push(SetServerOption::command_alias_ext(2, Some("123")));
-
-//let mut cmd = TmuxCommand::new();
-//cmd.push_cmds(cmds);
-//dbg!(cmd.to_string());
-//}

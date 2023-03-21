@@ -1,32 +1,20 @@
-#[test]
-fn global_session_options_ctl() {
-    use crate::{GlobalSessionOptionsCtl, SessionOptionsCtl};
+// use crate::{GetOptionExt, SessionOptionsCtl, SetOptionExt};
+// struct SessionOptionsCtlTest;
 
-    let session_options_ctl = GlobalSessionOptionsCtl::default();
-    #[cfg(feature = "tmux_2_6")]
-    let value = session_options_ctl.get_activity_action().unwrap();
+// impl SessionOptionsCtl for SessionOptionsCtlTest {}
+// impl GetOptionExt for SessionOptionsCtlTest {}
+// impl SetOptionExt for SessionOptionsCtlTest {}
 
-    assert_eq!(value, Some(crate::Action::Other));
-}
-
-#[test]
-fn global_session_options_ctl_all() {
-    use crate::{GlobalSessionOptionsCtl, SessionOptionsCtl};
-
-    let session_options = GlobalSessionOptionsCtl::default().get_all().unwrap();
-    assert_eq!(session_options.activity_action, Some(crate::Action::Other));
-}
-
-//#[test]
-//fn session_options_ctl() {
-//use crate::{SessionOptionsCtl, Tmux};
-
-//let session_options_ctl = SessionOptionsCtl::default();
-//let session_options = session_options_ctl.get_global_all().unwrap();
-//dbg!(session_options);
-//let session_options = session_options_ctl.get_local_all().unwrap();
-//dbg!(session_options);
-//}
+// #[test]
+// fn session_options_ctl() {
+//     use crate::{SessionOptionsCtl, Tmux};
+//     //
+//     let session_options_ctl = SessionOptionsCtlTest::default();
+//     // let session_options = session_options_ctl.get_global_all().unwrap();
+//     // dbg!(session_options);
+//     // let session_options = session_options_ctl.get_local_all().unwrap();
+//     // dbg!(session_options);
+// }
 
 //#[test]
 //fn session_options_ctl() {

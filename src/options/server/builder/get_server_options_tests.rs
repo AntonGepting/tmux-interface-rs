@@ -3,6 +3,7 @@ fn get_server_options() {
     use crate::{GetServerOptions, GetServerOptionsTrait, GetUserOptions};
 
     let cmd = "show -s";
+    let target = Some(":");
 
     let mut v = Vec::new();
 
@@ -54,46 +55,46 @@ fn get_server_options() {
 
     let options = GetServerOptions::new();
     #[cfg(feature = "tmux_3_1")]
-    let options = options.backspace();
+    let options = options.backspace(target);
     #[cfg(feature = "tmux_1_5")]
-    let options = options.buffer_limit();
+    let options = options.buffer_limit(target);
     #[cfg(feature = "tmux_2_4")]
-    let options = options.command_alias();
+    let options = options.command_alias(target);
     #[cfg(feature = "tmux_2_1")]
-    let options = options.default_terminal();
+    let options = options.default_terminal(target);
     #[cfg(feature = "tmux_3_2")]
-    let options = options.copy_command();
+    let options = options.copy_command(target);
     #[cfg(feature = "tmux_3_2")]
-    let options = options.editor();
+    let options = options.editor(target);
     #[cfg(feature = "tmux_1_2")]
-    let options = options.escape_time();
+    let options = options.escape_time(target);
     #[cfg(feature = "tmux_2_7")]
-    let options = options.exit_empty();
+    let options = options.exit_empty(target);
     #[cfg(feature = "tmux_1_4")]
-    let options = options.exit_unattached();
+    let options = options.exit_unattached(target);
     #[cfg(feature = "tmux_3_2")]
-    let options = options.extended_keys();
+    let options = options.extended_keys(target);
     #[cfg(feature = "tmux_1_9")]
-    let options = options.focus_events();
+    let options = options.focus_events(target);
     #[cfg(feature = "tmux_2_1")]
-    let options = options.history_file();
+    let options = options.history_file(target);
     #[cfg(feature = "tmux_2_0")]
-    let options = options.message_limit();
+    let options = options.message_limit(target);
     #[cfg(feature = "tmux_3_3")]
-    let options = options.prompt_history_limit();
+    let options = options.prompt_history_limit(target);
     #[cfg(feature = "tmux_1_5")]
-    let options = options.set_clipboard();
+    let options = options.set_clipboard(target);
     #[cfg(feature = "tmux_3_2")]
-    let options = options.terminal_features();
+    let options = options.terminal_features(target);
     #[cfg(feature = "tmux_2_0")]
-    let options = options.terminal_overrides();
+    let options = options.terminal_overrides(target);
     #[cfg(feature = "tmux_3_0")]
-    let options = options.user_keys();
+    let options = options.user_keys(target);
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    let options = options.quiet();
+    let options = options.quiet(target);
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    let options = options.detach_on_destroy();
-    let options = options.user_option("user-option-name");
+    let options = options.detach_on_destroy(target);
+    let options = options.user_option(target, "user-option-name");
 
     let options = options.build().to_string();
 

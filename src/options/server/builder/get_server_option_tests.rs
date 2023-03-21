@@ -11,150 +11,151 @@ fn get_server_option() {
     use crate::{GetServerOption, GetServerOptionTrait, GetUserOption};
 
     let cmd = "show -s";
+    let target = Some(":");
 
     #[cfg(feature = "tmux_3_1")]
     {
         let origin = format!("{} {}", cmd, "backspace");
-        let get_option = GetServerOption::backspace().to_string();
+        let get_option = GetServerOption::backspace(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_1_5")]
     {
         let origin = format!("{} {}", cmd, "buffer-limit");
-        let get_option = GetServerOption::buffer_limit().to_string();
+        let get_option = GetServerOption::buffer_limit(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_2_4")]
     {
         let origin = format!("{} {}", cmd, "command-alias");
-        let get_option = GetServerOption::command_alias().to_string();
+        let get_option = GetServerOption::command_alias(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_3_2")]
     {
         let origin = format!("{} {}", cmd, "copy-command");
-        let get_option = GetServerOption::copy_command().to_string();
+        let get_option = GetServerOption::copy_command(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_2_1")]
     {
         let origin = format!("{} {}", cmd, "default-terminal");
-        let get_option = GetServerOption::default_terminal().to_string();
+        let get_option = GetServerOption::default_terminal(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_1_2")]
     {
         let origin = format!("{} {}", cmd, "escape-time");
-        let get_option = GetServerOption::escape_time().to_string();
+        let get_option = GetServerOption::escape_time(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_3_2")]
     {
         let origin = format!("{} {}", cmd, "editor");
-        let get_option = GetServerOption::editor().to_string();
+        let get_option = GetServerOption::editor(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_2_7")]
     {
         let origin = format!("{} {}", cmd, "exit-empty");
-        let get_option = GetServerOption::exit_empty().to_string();
+        let get_option = GetServerOption::exit_empty(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_1_4")]
     {
         let origin = format!("{} {}", cmd, "exit-unattached");
-        let get_option = GetServerOption::exit_unattached().to_string();
+        let get_option = GetServerOption::exit_unattached(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_3_2")]
     {
         let origin = format!("{} {}", cmd, "extended-keys");
-        let get_option = GetServerOption::extended_keys().to_string();
+        let get_option = GetServerOption::extended_keys(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_1_9")]
     {
         let origin = format!("{} {}", cmd, "focus-events");
-        let get_option = GetServerOption::focus_events().to_string();
+        let get_option = GetServerOption::focus_events(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_2_1")]
     {
         let origin = format!("{} {}", cmd, "history-file");
-        let get_option = GetServerOption::history_file().to_string();
+        let get_option = GetServerOption::history_file(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_2_0")]
     {
         let origin = format!("{} {}", cmd, "message-limit");
-        let get_option = GetServerOption::message_limit().to_string();
+        let get_option = GetServerOption::message_limit(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_3_3")]
     {
         let origin = format!("{} {}", cmd, "prompt-history-limit");
-        let get_option = GetServerOption::prompt_history_limit().to_string();
+        let get_option = GetServerOption::prompt_history_limit(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_1_5")]
     {
         let origin = format!("{} {}", cmd, "set-clipboard");
-        let get_option = GetServerOption::set_clipboard().to_string();
+        let get_option = GetServerOption::set_clipboard(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_3_2")]
     {
         let origin = format!("{} {}", cmd, "terminal-features");
-        let get_option = GetServerOption::terminal_features().to_string();
+        let get_option = GetServerOption::terminal_features(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_2_0")]
     {
         let origin = format!("{} {}", cmd, "terminal-overrides");
-        let get_option = GetServerOption::terminal_overrides().to_string();
+        let get_option = GetServerOption::terminal_overrides(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(feature = "tmux_3_0")]
     {
         let origin = format!("{} {}", cmd, "user-keys");
-        let get_option = GetServerOption::user_keys().to_string();
+        let get_option = GetServerOption::user_keys(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
     {
         let origin = format!("{} {}", cmd, "quiet");
-        let get_option = GetServerOption::quiet().to_string();
+        let get_option = GetServerOption::quiet(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     {
         let origin = format!("{} {}", cmd, "detach-on-destroy");
-        let get_option = GetServerOption::detach_on_destroy().to_string();
+        let get_option = GetServerOption::detach_on_destroy(target).to_string();
         assert_eq!(origin, get_option);
     }
 
     {
         let origin = format!("{} {}", cmd, "@user-option-name");
-        let get_option = GetServerOption::user_option("user-option-name").to_string();
+        let get_option = GetServerOption::user_option(target, "user-option-name").to_string();
         assert_eq!(origin, get_option);
     }
 }

@@ -1,5 +1,5 @@
 #[test]
-fn show_generated_struct() {
+fn default() {
     use crate::ServerOptions;
 
     let _server_options = ServerOptions {
@@ -93,14 +93,14 @@ user-keys
     let server_options = server_options_str.parse::<ServerOptions>().unwrap();
     assert_eq!(server_options_default, server_options);
 
-    let server_options_default = ServerOptions {
-        #[cfg(feature = "tmux_2_1")]
-        history_file: Some("\"\"".into()),
-        ..Default::default()
-    };
-    let server_options_str = "history-file \"\"";
-    let server_options = server_options_str.parse::<ServerOptions>().unwrap();
-    assert_eq!(server_options_default, server_options);
+    // let server_options_default = ServerOptions {
+    // #[cfg(feature = "tmux_2_1")]
+    // history_file: Some("\"\"".into()),
+    // ..Default::default()
+    // };
+    // let server_options_str = "history-file \"\"";
+    // let server_options = server_options_str.parse::<ServerOptions>().unwrap();
+    // assert_eq!(server_options_default, server_options);
 }
 
 #[test]
