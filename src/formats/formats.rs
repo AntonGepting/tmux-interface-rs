@@ -738,7 +738,7 @@ impl Formats {
         self
     }
 
-    /// `pane_search_string` - Last search Option<String> in copy mode
+    /// `pane_search_string` - Last search `Option<String>` in copy mode
     #[cfg(feature = "tmux_2_5")]
     pub fn pane_search_string(&mut self) -> &mut Self {
         self.push(Variable::PaneSearchString);

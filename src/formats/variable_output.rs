@@ -315,7 +315,7 @@ pub enum VariableOutput<'a> {
     /// `pane_right` - Right of pane
     #[cfg(feature = "tmux_2_0")]
     PaneRight(&'a mut Option<usize>),
-    /// `Last` search Option<String> in copy mode
+    /// `Last` search `Option<String>` in copy mode
     #[cfg(feature = "tmux_2_5")]
     PaneSearchString(&'a mut Option<usize>),
     /// `pane_start_command` - Command pane started with
