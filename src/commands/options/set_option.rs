@@ -199,14 +199,14 @@ impl<'a> SetOption<'a> {
 
     /// `[-t target-session | target-window]`
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-    pub fn target(mut self, target: &'a str) -> Self {
+    pub fn target<S: Into<Cow<'a, str>>>(mut self, target: S) -> Self {
         self.target = Some(target.into());
         self
     }
 
     /// `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_2")))]
-    pub fn target_session(mut self, target_session: &'a str) -> Self {
+    pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }

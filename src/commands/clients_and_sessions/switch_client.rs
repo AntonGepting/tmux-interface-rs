@@ -132,7 +132,7 @@ impl<'a> SwitchClient<'a> {
 
     /// `[-c target-client]` - specify the target-client
     #[cfg(feature = "tmux_1_0")]
-    pub fn target_client(mut self, target_client: &'a str) -> Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }

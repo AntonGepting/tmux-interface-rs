@@ -237,7 +237,7 @@ impl<'a> RefreshClient<'a> {
 
     /// `[-t target-client]` - specify the client
     #[cfg(feature = "tmux_0_8")]
-    pub fn target_client(mut self, target_client: &'a str) -> Self {
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
