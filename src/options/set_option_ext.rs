@@ -93,15 +93,19 @@ pub trait SetOptionExt {
         S: Into<Cow<'a, str>> + std::fmt::Display,
         I: IntoIterator<Item = T>,
         T: Into<Cow<'a, str>>,
-        U: Into<Cow<'a, str>> + Copy,
+        U: Into<Cow<'a, str>> + Clone,
     {
         let mut cmds = TmuxCommands::new();
         if let Some(value) = value {
             for (i, item) in value.into_iter().enumerate() {
-                cmds.push(Self::set(target, format!("{}[{}]", name, i), Some(item)));
+                cmds.push(Self::set(
+                    target.clone(),
+                    format!("{}[{}]", name, i),
+                    Some(item),
+                ));
             }
         } else {
-            cmds.push(Self::set(target, format!("{}", name), Some("")));
+            cmds.push(Self::set(target.clone(), format!("{}", name), Some("")));
         }
         cmds
     }

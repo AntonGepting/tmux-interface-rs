@@ -1,4 +1,5 @@
 use super::*;
+use crate::options::common::{array_insert, cow_parse, get_parts};
 use crate::options::StatusKeys;
 use crate::Switch;
 use crate::{Action, Activity, DetachOnDestroy, Error, Status, StatusJustify, StatusPosition};
@@ -1506,41 +1507,6 @@ impl<'a> SessionOptions<'a> {
     pub fn word_separators<S: Into<Cow<'a, str>>>(mut self, word_separators: Option<S>) -> Self {
         self.word_separators = word_separators.map(|s| s.into());
         self
-    }
-}
-
-const SEPARATOR: &str = " ";
-
-fn array_insert<'a>(v: &mut Option<Vec<Cow<'a, str>>>, i: Option<usize>, value: Option<String>) {
-    if let Some(i) = i {
-        match value {
-            Some(data) => v.get_or_insert(Vec::new()).insert(i, data.into()),
-            None => *v = None,
-        }
-    }
-}
-
-fn cow_parse<'a>(value: Option<&str>) -> Option<Cow<'a, str>> {
-    value.and_then(|s| Some(Cow::Owned(s.into())))
-}
-
-// split string in 3 parts, name, index (if option is an array) and value
-// TODO: rename
-pub fn get_parts(s: &str) -> Option<(&str, Option<usize>, Option<&str>)> {
-    let v: Vec<&str> = s.trim().splitn(2, SEPARATOR).collect();
-    let value = v.get(1).copied();
-    match v.get(0) {
-        Some(name) => {
-            let v: Vec<&str> = name.split(|c| c == '[').collect();
-            match v.get(0) {
-                Some(name) => {
-                    let index = v.get(1).and_then(|i| i.parse().ok());
-                    Some((name, index, value))
-                }
-                None => None,
-            }
-        }
-        None => None,
     }
 }
 

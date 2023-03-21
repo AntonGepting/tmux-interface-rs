@@ -374,19 +374,14 @@
 //! [`GetUserOptions`] traits implements getter method for user option (`@user-option-name value`),
 //! used by selective options builder
 //!
-use std::iter::Iterator;
-
 pub mod common;
 pub mod get_option_ext;
-pub mod options_ctl;
 pub mod set_option_ext;
 
 pub use common::*;
 
 pub use get_option_ext::GetOptionExt;
 pub use set_option_ext::SetOptionExt;
-
-pub use options_ctl::*;
 
 #[cfg(feature = "tmux_3_1")]
 pub mod pane;
@@ -405,3 +400,11 @@ pub use server::*;
 pub use session::*;
 #[cfg(feature = "tmux_1_2")]
 pub use window::*;
+
+#[cfg(test)]
+#[path = "."]
+mod options_tests {
+    pub mod get_option_ext_tests;
+
+    pub mod set_option_ext_tests;
+}

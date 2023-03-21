@@ -38,7 +38,7 @@ fn window_options_111() {
         WindowOptionsCtl,
     };
 
-    let _cmd = GetGlobalWindowOption::allow_rename();
+    let _cmd = GetGlobalWindowOption::allow_rename(Some(":"));
     let cmd = ShowOptions::new()
         .target("")
         .global()

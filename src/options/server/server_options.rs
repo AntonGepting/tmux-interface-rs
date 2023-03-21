@@ -1,6 +1,7 @@
 //#[cfg(feature = "tmux_2_0")]
 //use super::create_insert_vec;
 use super::*;
+use crate::options::common::{array_insert, cow_parse, get_parts};
 use crate::{Error, Switch};
 use std::borrow::Cow;
 use std::collections::HashMap;
@@ -543,64 +544,6 @@ impl<'a> ServerOptions<'a> {
     //fn user_options(mut self, user_options: HashMap<String, String>) -> Self {
     //unimplemented!()
     //}
-}
-
-//pub fn set_array(name: &str, value: Option<Vec<String>>) {
-//if let Some(data) = value {
-//for (i, item) in data.iter().enumerate() {
-//let array_name = format!("{}[{}]", name, i);
-////Self::set(&array_name, Some(item));
-//Tmux::new()
-//.command(SetOption::new().server().option(array_name).value(item))
-//.output()
-//.unwrap();
-//}
-//}
-//}
-
-//pub fn parse_single_option(s: &str) -> Self {
-//}
-//}
-
-// command_alias[0] = "alias1" => command_alias["alias1"]
-// command_alias[1] = "alias2" => command_alias["alias2"]
-// ...
-// command_alias[n] = "aliasN" => command_alias["aliasN"]
-// TODO: optimization, merge server, session, window, pane?
-
-//const SEPARATOR: &str = " ";
-
-fn array_insert<'a>(v: &mut Option<Vec<Cow<'a, str>>>, i: Option<usize>, value: Option<String>) {
-    if let Some(i) = i {
-        match value {
-            Some(data) => v.get_or_insert(Vec::new()).insert(i, data.into()),
-            None => *v = None,
-        }
-    }
-}
-
-fn cow_parse<'a>(value: Option<&str>) -> Option<Cow<'a, str>> {
-    value.and_then(|s| Some(Cow::Owned(s.into())))
-}
-
-// split string in 3 parts, name, index (if option is an array) and value
-// TODO: rename
-pub fn get_parts(s: &str) -> Option<(&str, Option<usize>, Option<&str>)> {
-    let v: Vec<&str> = s.trim().splitn(2, SEPARATOR).collect();
-    let value = v.get(1).copied();
-    match v.get(0) {
-        Some(name) => {
-            let v: Vec<&str> = name.split(|c| c == '[').collect();
-            match v.get(0) {
-                Some(name) => {
-                    let index = v.get(1).and_then(|i| i.parse().ok());
-                    Some((name, index, value))
-                }
-                None => None,
-            }
-        }
-        None => None,
-    }
 }
 
 impl<'a> FromStr for ServerOptions<'a> {

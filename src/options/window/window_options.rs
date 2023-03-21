@@ -1341,7 +1341,7 @@ pub fn get_parts(s: &str) -> Option<(&str, Option<usize>, Option<&str>)> {
     let value = v.get(1).copied();
     match v.get(0) {
         Some(name) => {
-            let v: Vec<&str> = name.split(|c| c == '[').collect();
+            let v: Vec<&str> = name.split(|c| c == '[' || c == ']').collect();
             match v.get(0) {
                 Some(name) => {
                     let index = v.get(1).and_then(|i| i.parse().ok());
