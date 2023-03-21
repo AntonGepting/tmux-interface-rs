@@ -1,9 +1,8 @@
 use crate::options::*;
 #[cfg(feature = "tmux_2_9")]
 use crate::WindowSize;
-use crate::{StatusKeys, TmuxCommand, TmuxCommands};
+use crate::{StatusKeys, TmuxCommand};
 use std::borrow::Cow;
-use std::fmt;
 
 // TODO: all options exist in get/set?
 // NOTE: method avoiding names like set_set_clipboard
@@ -12,55 +11,6 @@ use std::fmt;
 // option value
 //
 pub trait SetWindowOptionExt: SetOptionExt {
-    //fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-    //name: T,
-    //value: Option<S>,
-    //) -> TmuxCommand<'a> {
-    //match value {
-    //Some(data) => Self::set_ext(name, Some(data)),
-    //None => Self::unset(name),
-    //}
-    //}
-
-    //fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-    //SetOption::new().option(name).unset().build()
-    //}
-
-    //// unset if value = None
-    //fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-    //name: T,
-    //value: Option<S>,
-    //) -> TmuxCommand<'a> {
-    ////(self.setter)(name.into(), value.map(|s| s.into()))
-    //let cmd = match value {
-    //Some(data) => SetOption::new().option(name).value(data),
-    //None => SetOption::new().option(name),
-    //};
-    //cmd.build()
-    //}
-
-    fn set_array<'a, S: fmt::Display>(name: S, value: Option<Vec<String>>) -> TmuxCommands<'a> {
-        let mut cmds = TmuxCommands::new();
-        if let Some(data) = value {
-            for (i, item) in data.iter().enumerate() {
-                cmds.push(Self::set(format!("{}[{}]", name, i), Some(item.to_owned())));
-            }
-        }
-        cmds
-    }
-
-    //pub fn get<T: Into<Cow<'a, str>>>(&self, name: T) -> TmuxCommand<'a> {
-    //(self.getter)(name.into())
-    //}
-
-    //pub fn gets<'a>(names: ServerOptionB) -> TmuxCommands<'a> {
-    //let mut cmds = TmuxCommands::new();
-    //for name in names.0 {
-    //cmds.push(Self::get(name));
-    //}
-    //cmds
-    //}
-
     /// ### Manual
     ///
     /// tmux ^2.6:
@@ -68,8 +18,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// activity-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    fn activity_action<'a>(activity: Option<Activity>) -> TmuxCommand<'a> {
-        Self::set(ACTIVITY_ACTION, activity.map(|s| s.to_string()))
+    fn activity_action<'a, S>(target: Option<S>, activity: Option<Activity>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, ACTIVITY_ACTION, activity.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -79,8 +32,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// aggressive-resize [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn aggressive_resize<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(AGGRESSIVE_RESIZE, switch.map(|s| s.to_string()))
+    fn aggressive_resize<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, AGGRESSIVE_RESIZE, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -90,8 +46,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// allow-rename [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
-    fn allow_rename<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(ALLOW_RENAME, switch.map(|s| s.to_string()))
+    fn allow_rename<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, ALLOW_RENAME, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -101,8 +60,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// alternate-screen [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-    fn alternate_screen<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(ALTERNATE_SCREEN, switch.map(|s| s.to_string()))
+    fn alternate_screen<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, ALTERNATE_SCREEN, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -112,8 +74,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// automatic-rename [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")] // 0.8
-    fn automatic_rename<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(AUTOMATIC_RENAME, switch.map(|s| s.to_string()))
+    fn automatic_rename<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, AUTOMATIC_RENAME, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -123,8 +88,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// automatic-rename-format format
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn automatic_rename_format<'a, S: Into<Cow<'a, str>>>(format: Option<S>) -> TmuxCommand<'a> {
-        Self::set(AUTOMATIC_RENAME_FORMAT, format)
+    fn automatic_rename_format<'a, S, T>(target: Option<S>, format: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, AUTOMATIC_RENAME_FORMAT, format)
     }
 
     /// ### Manual
@@ -134,8 +103,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// c0-change-interval interval
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    fn c0_change_interval<'a>(interval: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(C0_CHANGE_INTERVAL, interval.map(|s| s.to_string()))
+    fn c0_change_interval<'a, S>(target: Option<S>, interval: Option<usize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, C0_CHANGE_INTERVAL, interval.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -145,8 +117,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// c0-change-trigger trigger
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    fn c0_change_trigger<'a>(trigger: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(C0_CHANGE_TRIGGER, trigger.map(|s| s.to_string()))
+    fn c0_change_trigger<'a, S>(target: Option<S>, trigger: Option<usize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, C0_CHANGE_TRIGGER, trigger.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -156,8 +131,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// clock-mode-colour colour
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn clock_mode_colour<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(CLOCK_MODE_COLOUR, colour)
+    fn clock_mode_colour<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, CLOCK_MODE_COLOUR, colour)
     }
 
     /// ### Manual
@@ -167,8 +146,18 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// clock-mode-style [12 | 24]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn clock_mode_style<'a>(clock_mode_style: Option<ClockModeStyle>) -> TmuxCommand<'a> {
-        Self::set(CLOCK_MODE_STYLE, clock_mode_style.map(|s| s.to_string()))
+    fn clock_mode_style<'a, S>(
+        target: Option<S>,
+        clock_mode_style: Option<ClockModeStyle>,
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(
+            target,
+            CLOCK_MODE_STYLE,
+            clock_mode_style.map(|s| s.to_string()),
+        )
     }
 
     /// ### Manual
@@ -178,8 +167,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// force-height height
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-    fn force_height<'a>(height: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(FORCE_HEIGHT, height.map(|s| s.to_string()))
+    fn force_height<'a, S>(target: Option<S>, height: Option<usize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, FORCE_HEIGHT, height.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -189,8 +181,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// force-width width
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-    fn force_width<'a>(width: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(FORCE_WIDTH, width.map(|s| s.to_string()))
+    fn force_width<'a, S>(target: Option<S>, width: Option<usize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, FORCE_WIDTH, width.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -200,8 +195,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// layout-history-limit limit
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
-    fn layout_history_limit<'a>(limit: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(LAYOUT_HISTORY_LIMIT, limit.map(|s| s.to_string()))
+    fn layout_history_limit<'a, S>(target: Option<S>, limit: Option<usize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, LAYOUT_HISTORY_LIMIT, limit.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -211,8 +209,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// main-pane-height height
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn main_pane_height<'a>(height: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(MAIN_PANE_HEIGHT, height.map(|s| s.to_string()))
+    fn main_pane_height<'a, S>(target: Option<S>, height: Option<usize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MAIN_PANE_HEIGHT, height.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -222,8 +223,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// main-pane-width width
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn main_pane_width<'a>(width: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(MAIN_PANE_WIDTH, width.map(|s| s.to_string()))
+    fn main_pane_width<'a, S>(target: Option<S>, width: Option<usize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MAIN_PANE_WIDTH, width.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -233,8 +237,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// mode-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn mode_attr<'a, S: Into<Cow<'a, str>>>(attributes: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MODE_ATTR, attributes)
+    fn mode_attr<'a, S, T>(target: Option<S>, attributes: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MODE_ATTR, attributes)
     }
 
     /// ### Manual
@@ -244,8 +252,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// mode-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn mode_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MODE_BG, colour)
+    fn mode_bg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MODE_BG, colour)
     }
 
     /// ### Manual
@@ -255,8 +267,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// mode-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn mode_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MODE_FG, colour)
+    fn mode_fg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MODE_FG, colour)
     }
 
     /// ### Manual
@@ -266,8 +282,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// mode-keys [vi | emacs]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn mode_keys<'a>(mode_keys: Option<StatusKeys>) -> TmuxCommand<'a> {
-        Self::set(MODE_KEYS, mode_keys.map(|s| s.to_string()))
+    fn mode_keys<'a, S>(target: Option<S>, mode_keys: Option<StatusKeys>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MODE_KEYS, mode_keys.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -282,8 +301,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// mode-mouse [on | off | copy-mode]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    fn mode_mouse<'a, S: Into<Cow<'a, str>>>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(MODE_MOUSE, switch.map(|s| s.to_string()))
+    fn mode_mouse<'a, S, T>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MODE_MOUSE, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -293,8 +316,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// mode-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn mode_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MODE_STYLE, style)
+    fn mode_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MODE_STYLE, style)
     }
 
     /// ### Manual
@@ -304,8 +331,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// monitor-activity [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn monitor_activity<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(MONITOR_ACTIVITY, switch.map(|s| s.to_string()))
+    fn monitor_activity<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MONITOR_ACTIVITY, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -315,8 +345,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// monitor-content match-string
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    fn monitor_content<'a, S: Into<Cow<'a, str>>>(match_string: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MONITOR_CONTENT, match_string)
+    fn monitor_content<'a, S, T>(target: Option<S>, match_string: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MONITOR_CONTENT, match_string)
     }
 
     /// ### Manual
@@ -326,8 +360,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// monitor-bell [on | off]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    fn monitor_bell<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(MONITOR_BELL, switch.map(|s| s.to_string()))
+    fn monitor_bell<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MONITOR_BELL, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -337,8 +374,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// monitor-silence [interval]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn monitor_silence<'a>(interval: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(MONITOR_SILENCE, interval.map(|s| s.to_string()))
+    fn monitor_silence<'a, S>(target: Option<S>, interval: Option<usize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, MONITOR_SILENCE, interval.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -348,8 +388,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// other-pane-height height
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn other_pane_height<'a>(height: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(OTHER_PANE_HEIGHT, height.map(|s| s.to_string()))
+    fn other_pane_height<'a, S>(target: Option<S>, height: Option<usize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, OTHER_PANE_HEIGHT, height.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -359,8 +402,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// other-pane-width width
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn other_pane_width<'a>(width: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(OTHER_PANE_WIDTH, width.map(|s| s.to_string()))
+    fn other_pane_width<'a, S>(target: Option<S>, width: Option<usize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, OTHER_PANE_WIDTH, width.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -370,8 +416,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// pane-active-border-style style
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    fn pane_active_border_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(PANE_ACTIVE_BORDER_STYLE, style)
+    fn pane_active_border_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, PANE_ACTIVE_BORDER_STYLE, style)
     }
 
     /// ### Manual
@@ -381,8 +431,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// pane-base-index index
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    fn pane_base_index<'a>(index: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(PANE_BASE_INDEX, index.map(|s| s.to_string()))
+    fn pane_base_index<'a, S>(target: Option<S>, index: Option<usize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, PANE_BASE_INDEX, index.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -392,8 +445,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// pane-border-format format
     /// ```
     #[cfg(feature = "tmux_2_3")]
-    fn pane_border_format<'a, S: Into<Cow<'a, str>>>(format: Option<S>) -> TmuxCommand<'a> {
-        Self::set(PANE_BORDER_FORMAT, format)
+    fn pane_border_format<'a, S, T>(target: Option<S>, format: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, PANE_BORDER_FORMAT, format)
     }
 
     /// ### Manual
@@ -403,8 +460,15 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// pane-border-status [off | top | bottom]
     /// ```
     #[cfg(feature = "tmux_2_3")]
-    fn pane_border_status<'a>(pane_border_status: Option<PaneBorderStatus>) -> TmuxCommand<'a> {
+    fn pane_border_status<'a, S>(
+        target: Option<S>,
+        pane_border_status: Option<PaneBorderStatus>,
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
         Self::set(
+            target,
             PANE_BORDER_STATUS,
             pane_border_status.map(|s| s.to_string()),
         )
@@ -417,8 +481,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// pane-border-style style
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    fn pane_border_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(PANE_BORDER_STYLE, style)
+    fn pane_border_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, PANE_BORDER_STYLE, style)
     }
 
     /// ### Manual
@@ -428,8 +496,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// remain-on-exit [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
-    fn remain_on_exit<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(REMAIN_ON_EXIT, switch.map(|s| s.to_string()))
+    fn remain_on_exit<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, REMAIN_ON_EXIT, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -439,8 +510,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// synchronize-panes [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
-    fn synchronize_panes<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
+    fn synchronize_panes<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -450,8 +524,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    fn utf8<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(UTF8, switch.map(|s| s.to_string()))
+    fn utf8<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, UTF8, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -461,8 +538,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-active-style style
     /// ```
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-    fn window_active_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_ACTIVE_STYLE, style)
+    fn window_active_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_ACTIVE_STYLE, style)
     }
 
     /// ### Manual
@@ -472,10 +553,15 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-bell-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_bell_attr<'a, S: Into<Cow<'a, str>>>(
-        attributes: Option<S>,
-    ) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_BELL_ATTR, attributes)
+    fn window_status_bell_attr<'a, S, T>(
+        target: Option<S>,
+        attributes: Option<T>,
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_BELL_ATTR, attributes)
     }
 
     /// ### Manual
@@ -485,8 +571,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-bell-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_bell_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_BELL_BG, colour)
+    fn window_status_bell_bg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_BELL_BG, colour)
     }
 
     /// ### Manual
@@ -496,8 +586,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-bell-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_bell_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_BELL_FG, colour)
+    fn window_status_bell_fg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_BELL_FG, colour)
     }
 
     /// ### Manual
@@ -507,10 +601,15 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-content-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_content_attr<'a, S: Into<Cow<'a, str>>>(
+    fn window_status_content_attr<'a, S, T>(
+        target: Option<S>,
         attributes: Option<S>,
-    ) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_CONTENT_ATTR, attributes)
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_CONTENT_ATTR, attributes)
     }
 
     /// ### Manual
@@ -520,8 +619,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-content-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_content_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_CONTENT_BG, colour)
+    fn window_status_content_bg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_CONTENT_BG, colour)
     }
 
     /// ### Manual
@@ -531,8 +634,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-content-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_content_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_CONTENT_FG, colour)
+    fn window_status_content_fg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_CONTENT_FG, colour)
     }
 
     /// ### Manual
@@ -542,10 +649,15 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-activity-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_activity_attr<'a, S: Into<Cow<'a, str>>>(
+    fn window_status_activity_attr<'a, S, T>(
+        target: Option<S>,
         attributes: Option<S>,
-    ) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_ACTIVITY_ATTR, attributes)
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_ACTIVITY_ATTR, attributes)
     }
 
     /// ### Manual
@@ -555,10 +667,15 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-activity-bg attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_activity_bg<'a, S: Into<Cow<'a, str>>>(
+    fn window_status_activity_bg<'a, S, T>(
+        target: Option<S>,
         attributes: Option<S>,
-    ) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_ACTIVITY_BG, attributes)
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_ACTIVITY_BG, attributes)
     }
 
     /// ### Manual
@@ -568,10 +685,15 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-activity-fg attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_activity_fg<'a, S: Into<Cow<'a, str>>>(
+    fn window_status_activity_fg<'a, S, T>(
+        target: Option<S>,
         attributes: Option<S>,
-    ) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_ACTIVITY_FG, attributes)
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_ACTIVITY_FG, attributes)
     }
 
     /// ### Manual
@@ -581,8 +703,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_attr<'a, S: Into<Cow<'a, str>>>(attributes: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_ATTR, attributes)
+    fn window_status_attr<'a, S, T>(target: Option<S>, attributes: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_ATTR, attributes)
     }
 
     /// ### Manual
@@ -592,8 +718,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_BG, colour)
+    fn window_status_bg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_BG, colour)
     }
 
     /// ### Manual
@@ -603,8 +733,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_FG, colour)
+    fn window_status_fg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_FG, colour)
     }
 
     /// ### Manual
@@ -614,10 +748,15 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-current-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_current_attr<'a, S: Into<Cow<'a, str>>>(
+    fn window_status_current_attr<'a, S, T>(
+        target: Option<S>,
         attributes: Option<S>,
-    ) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_CURRENT_ATTR, attributes)
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_CURRENT_ATTR, attributes)
     }
 
     /// ### Manual
@@ -627,8 +766,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-current-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_current_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_CURRENT_BG, colour)
+    fn window_status_current_bg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_CURRENT_BG, colour)
     }
 
     /// ### Manual
@@ -638,8 +781,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-current-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_current_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_CURRENT_FG, colour)
+    fn window_status_current_fg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_CURRENT_FG, colour)
     }
 
     /// ### Manual
@@ -649,10 +796,15 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-alert-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    fn window_status_alert_attr<'a, S: Into<Cow<'a, str>>>(
+    fn window_status_alert_attr<'a, S, T>(
+        target: Option<S>,
         attributes: Option<S>,
-    ) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_ALERT_ATTR, attributes)
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_ALERT_ATTR, attributes)
     }
 
     /// ### Manual
@@ -662,8 +814,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-alert-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    fn window_status_alert_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_ALEERT_BG, colour)
+    fn window_status_alert_bg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_ALEERT_BG, colour)
     }
 
     /// ### Manual
@@ -673,8 +829,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-alert-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    fn window_status_alert_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_ALERT_FG, colour)
+    fn window_status_alert_fg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_ALERT_FG, colour)
     }
 
     /// ### Manual
@@ -684,10 +844,15 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-activity-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn window_status_activity_style<'a, S: Into<Cow<'a, str>>>(
+    fn window_status_activity_style<'a, S, T>(
+        target: Option<T>,
         style: Option<S>,
-    ) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_ACTIVITY_STYLE, style)
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_ACTIVITY_STYLE, style)
     }
 
     /// ### Manual
@@ -697,8 +862,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-bell-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn window_status_bell_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_BELL_STYLE, style)
+    fn window_status_bell_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_BELL_STYLE, style)
     }
 
     /// ### Manual
@@ -708,8 +877,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-content-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    fn window_status_content_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_CONTENT_STYLE, style)
+    fn window_status_content_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_CONTENT_STYLE, style)
     }
 
     /// ### Manual
@@ -719,10 +892,15 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-current-format string
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    fn window_status_current_format<'a, S: Into<Cow<'a, str>>>(
+    fn window_status_current_format<'a, S, T>(
+        target: Option<T>,
         string: Option<S>,
-    ) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_CURRENT_FORMAT, string)
+    ) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_CURRENT_FORMAT, string)
     }
 
     /// ### Manual
@@ -732,10 +910,15 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-last-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    fn window_status_last_attr<'a, S: Into<Cow<'a, str>>>(
+    fn window_status_last_attr<'a, S, T>(
+        target: Option<S>,
         attributes: Option<S>,
-    ) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_LAST_ATTR, attributes)
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_LAST_ATTR, attributes)
     }
 
     /// ### Manual
@@ -745,8 +928,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-last-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    fn window_status_last_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_LAST_BG, colour)
+    fn window_status_last_bg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_LAST_BG, colour)
     }
 
     /// ### Manual
@@ -756,8 +943,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-last-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    fn window_status_last_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_LAST_FG, colour)
+    fn window_status_last_fg<'a, S, T>(target: Option<S>, colour: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_LAST_FG, colour)
     }
 
     /// ### Manual
@@ -767,8 +958,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-current-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn window_status_current_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_CURRENT_STYLE, style)
+    fn window_status_current_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_CURRENT_STYLE, style)
     }
 
     /// ### Manual
@@ -778,8 +973,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-format string
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    fn window_status_format<'a, S: Into<Cow<'a, str>>>(string: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_FORMAT, string)
+    fn window_status_format<'a, S, T>(target: Option<S>, string: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_FORMAT, string)
     }
 
     /// ### Manual
@@ -789,8 +988,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-last-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn window_status_last_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_LAST_STYLE, style)
+    fn window_status_last_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_LAST_STYLE, style)
     }
 
     /// ### Manual
@@ -800,8 +1003,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-separator string
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    fn window_status_separator<'a, S: Into<Cow<'a, str>>>(string: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_SEPARATOR, string)
+    fn window_status_separator<'a, S, T>(target: Option<S>, string: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_SEPARATOR, string)
     }
 
     /// ### Manual
@@ -811,8 +1018,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-status-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn window_status_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STATUS_STYLE, style)
+    fn window_status_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STATUS_STYLE, style)
     }
 
     /// ### Manual
@@ -822,8 +1033,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-size largest | smallest | manual | latest
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn window_size<'a>(window_size: Option<WindowSize>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_SIZE, window_size.map(|s| s.to_string()))
+    fn window_size<'a, S>(target: Option<S>, window_size: Option<WindowSize>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_SIZE, window_size.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -833,8 +1047,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// word-separators string
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
-    fn word_separators<'a, S: Into<Cow<'a, str>>>(string: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WORD_SEPARATORS, string)
+    fn word_separators<'a, S, T>(target: Option<S>, string: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WORD_SEPARATORS, string)
     }
 
     /// ### Manual
@@ -844,8 +1062,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// window-style style
     /// ```
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-    fn window_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STYLE, style)
+    fn window_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STYLE, style)
     }
 
     /// ### Manual
@@ -855,8 +1077,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// wrap-search [on | off]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    fn wrap_search<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(WRAP_SEARCH, switch.map(|s| s.to_string()))
+    fn wrap_search<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WRAP_SEARCH, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -866,8 +1091,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// xterm-keys [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn xterm_keys<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(XTERM_KEYS, switch.map(|s| s.to_string()))
+    fn xterm_keys<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, XTERM_KEYS, switch.map(|s| s.to_string()))
     }
 
     // XXX: user options?

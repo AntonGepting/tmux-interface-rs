@@ -2,6 +2,7 @@ use crate::{
     Error, GetLocalWindowOptionValue, SetLocalWindowOption, SetLocalWindowOptions, ShowOptions,
     Tmux, TmuxCommand, TmuxOutput, WindowOptions, WindowOptionsCtl,
 };
+use std::borrow::Cow;
 use std::str::FromStr;
 
 // XXX: rename WindowOptionCtl?
@@ -15,19 +16,24 @@ pub struct LocalWindowOptionsCtl<'a> {
     // let tmux = Tmux::new();
     // ```
     pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    pub target: Option<Cow<'a, str>>,
 }
 
 impl<'a> Default for LocalWindowOptionsCtl<'a> {
     fn default() -> Self {
         Self {
             invoker: |cmd| Tmux::with_command(cmd).output(),
+            target: None,
         }
     }
 }
 
 impl<'a> LocalWindowOptionsCtl<'a> {
     pub fn new(invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
-        Self { invoker }
+        Self {
+            invoker,
+            target: None,
+        }
     }
 
     // get and parse single line option
@@ -83,6 +89,10 @@ impl<'a> WindowOptionsCtl<'a> for LocalWindowOptionsCtl<'a> {
     type Getter = GetLocalWindowOptionValue;
     type Setter = SetLocalWindowOption;
     type SetterMultiple = SetLocalWindowOptions<'a>;
+
+    fn target(&self) -> Option<Cow<'a, str>> {
+        self.target.to_owned()
+    }
 
     fn get_all(&self) -> Result<WindowOptions<'a>, Error> {
         let cmd = ShowOptions::new().window().build();

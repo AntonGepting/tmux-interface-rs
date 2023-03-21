@@ -9,28 +9,6 @@ use std::borrow::Cow;
 // option value
 //
 pub trait SetSessionOption: SetOptionExt {
-    //fn set_array<'a, S: fmt::Display>(name: S, value: Option<Vec<String>>) -> TmuxCommands<'a> {
-    //let mut cmds = TmuxCommands::new();
-    //if let Some(data) = value {
-    //for (i, item) in data.iter().enumerate() {
-    //cmds.push(Self::set(format!("{}[{}]", name, i), Some(item.to_owned())));
-    //}
-    //}
-    //cmds
-    //}
-
-    //pub fn get<T: Into<Cow<'a, str>>>(&self, name: T) -> TmuxCommand<'a> {
-    //(self.getter)(name.into())
-    //}
-
-    //pub fn gets<'a>(names: ServerOptionB) -> TmuxCommands<'a> {
-    //let mut cmds = TmuxCommands::new();
-    //for name in names.0 {
-    //cmds.push(Self::get(name));
-    //}
-    //cmds
-    //}
-
     /// ### Manual
     ///
     /// tmux ^2.6:
@@ -38,8 +16,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// activity-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    fn activity_action<'a>(action: Option<Action>) -> TmuxCommand<'a> {
-        Self::set(ACTIVITY_ACTION, action.map(|s| s.to_string()))
+    fn activity_action<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        action: Option<Action>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, ACTIVITY_ACTION, action.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -49,8 +30,15 @@ pub trait SetSessionOption: SetOptionExt {
     /// assume-paste-time milliseconds
     /// ```
     #[cfg(feature = "tmux_1_8")]
-    fn assume_paste_time<'a>(milliseconds: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(ASSUME_PASTE_TIME, milliseconds.map(|s| s.to_string()))
+    fn assume_paste_time<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        milliseconds: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(
+            target,
+            ASSUME_PASTE_TIME,
+            milliseconds.map(|s| s.to_string()),
+        )
     }
 
     /// ### Manual
@@ -60,8 +48,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// base-index index
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn base_index<'a>(index: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(BASE_INDEX, index.map(|s| s.to_string()))
+    fn base_index<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        index: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, BASE_INDEX, index.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -76,8 +67,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// bell-action [any | none | other]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn bell_action<'a>(action: Option<Action>) -> TmuxCommand<'a> {
-        Self::set(BELL_ACTION, action.map(|s| s.to_string()))
+    fn bell_action<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        action: Option<Action>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, BELL_ACTION, action.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -87,8 +81,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// bell-on-alert [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
-    fn bell_on_alert<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(BELL_ON_ALERT, switch.map(|s| s.to_string()))
+    fn bell_on_alert<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, BELL_ON_ALERT, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -98,8 +95,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// buffer-limit limit
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
-    fn buffer_limit<'a>(limit: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(BUFFER_LIMIT, limit.map(|s| s.to_string()))
+    fn buffer_limit<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        limit: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, BUFFER_LIMIT, limit.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -109,8 +109,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// default-command shell-command
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn default_command<'a, S: Into<Cow<'a, str>>>(shell_command: Option<S>) -> TmuxCommand<'a> {
-        Self::set(DEFAULT_COMMAND, shell_command)
+    fn default_command<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        shell_command: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, DEFAULT_COMMAND, shell_command)
     }
 
     /// ### Manual
@@ -120,8 +123,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// default-shell path
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn default_shell<'a, S: Into<Cow<'a, str>>>(path: Option<S>) -> TmuxCommand<'a> {
-        Self::set(DEFAULT_SHELL, path)
+    fn default_shell<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        path: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, DEFAULT_SHELL, path)
     }
 
     /// ### Manual
@@ -131,8 +137,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// default-path path
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn default_path<'a, S: Into<Cow<'a, str>>>(path: Option<S>) -> TmuxCommand<'a> {
-        Self::set(DEFAULT_PATH, path)
+    fn default_path<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        path: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, DEFAULT_PATH, path)
     }
 
     /// ### Manual
@@ -142,8 +151,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// default-terminal terminal
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    fn default_terminal<'a, S: Into<Cow<'a, str>>>(terminal: Option<S>) -> TmuxCommand<'a> {
-        Self::set(DEFAULT_TERMINAL, terminal)
+    fn default_terminal<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        terminal: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, DEFAULT_TERMINAL, terminal)
     }
 
     /// ### Manual
@@ -153,8 +165,15 @@ pub trait SetSessionOption: SetOptionExt {
     /// default-size XxY
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn default_size<'a>(size: Option<(usize, usize)>) -> TmuxCommand<'a> {
-        Self::set(DEFAULT_SIZE, size.map(|s| format!("{}x{}", s.0, s.1)))
+    fn default_size<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        size: Option<(usize, usize)>,
+    ) -> TmuxCommand<'a> {
+        Self::set(
+            target,
+            DEFAULT_SIZE,
+            size.map(|s| format!("{}x{}", s.0, s.1)),
+        )
     }
 
     /// ### Manual
@@ -164,8 +183,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// destroy-unattached [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn destroy_unattached<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(DESTROY_UNATTACHED, switch.map(|s| s.to_string()))
+    fn destroy_unattached<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, DESTROY_UNATTACHED, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -180,8 +202,15 @@ pub trait SetSessionOption: SetOptionExt {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn detach_on_destroy<'a>(detach_on_destroy: Option<DetachOnDestroy>) -> TmuxCommand<'a> {
-        Self::set(DETACH_ON_DESTROY, detach_on_destroy.map(|s| s.to_string()))
+    fn detach_on_destroy<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        detach_on_destroy: Option<DetachOnDestroy>,
+    ) -> TmuxCommand<'a> {
+        Self::set(
+            target,
+            DETACH_ON_DESTROY,
+            detach_on_destroy.map(|s| s.to_string()),
+        )
     }
 
     /// ### Manual
@@ -191,10 +220,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// display-panes-active-colour colour
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    fn display_panes_active_colour<'a, S: Into<Cow<'a, str>>>(
+    fn display_panes_active_colour<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(DISPLAY_PANES_ACTIVE_COLOUR, colour)
+        Self::set(target, DISPLAY_PANES_ACTIVE_COLOUR, colour)
     }
 
     /// ### Manual
@@ -204,8 +234,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// display-panes-colour colour
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn display_panes_colour<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(DISPLAY_PANES_COLOUR, colour)
+    fn display_panes_colour<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, DISPLAY_PANES_COLOUR, colour)
     }
 
     /// ### Manual
@@ -215,8 +248,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// display-panes-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn display_panes_time<'a>(time: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(DISPLAY_PANES_TIME, time.map(|s| s.to_string()))
+    fn display_panes_time<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        time: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, DISPLAY_PANES_TIME, time.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -226,8 +262,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// display-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn display_time<'a>(time: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(DISPLAY_TIME, time.map(|s| s.to_string()))
+    fn display_time<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        time: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, DISPLAY_TIME, time.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -237,8 +276,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// history-limit lines
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn history_limit<'a>(lines: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(HISTORY_LIMIT, lines.map(|s| s.to_string()))
+    fn history_limit<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        lines: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, HISTORY_LIMIT, lines.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -248,8 +290,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// key-table key-table
     /// ```
     #[cfg(feature = "tmux_2_2")]
-    fn key_table<'a, S: Into<Cow<'a, str>>>(key_table: Option<S>) -> TmuxCommand<'a> {
-        Self::set(KEY_TABLE, key_table)
+    fn key_table<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        key_table: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, KEY_TABLE, key_table)
     }
 
     /// ### Manual
@@ -259,8 +304,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// lock-after-time number
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn lock_after_time<'a>(number: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(LOCK_AFTER_TIME, number.map(|s| s.to_string()))
+    fn lock_after_time<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        number: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, LOCK_AFTER_TIME, number.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -270,8 +318,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// lock-command shell-command
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn lock_command<'a, S: Into<Cow<'a, str>>>(shell_command: Option<S>) -> TmuxCommand<'a> {
-        Self::set(LOCK_COMMAND, shell_command)
+    fn lock_command<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        shell_command: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, LOCK_COMMAND, shell_command)
     }
 
     /// ### Manual
@@ -281,8 +332,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// lock-server [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
-    fn lock_server<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(LOCK_SERVER, switch.map(|s| s.to_string()))
+    fn lock_server<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, LOCK_SERVER, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -292,8 +346,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// message-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn message_attr<'a, S: Into<Cow<'a, str>>>(attributes: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MESSAGE_ATTR, attributes)
+    fn message_attr<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        attributes: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MESSAGE_ATTR, attributes)
     }
 
     /// ### Manual
@@ -303,8 +360,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// message-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn message_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MESSAGE_BG, colour)
+    fn message_bg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MESSAGE_BG, colour)
     }
 
     /// ### Manual
@@ -314,8 +374,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// message-command-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn message_command_attr<'a, S: Into<Cow<'a, str>>>(attributes: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MESSAGE_COMMAND_ATTR, attributes)
+    fn message_command_attr<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        attributes: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MESSAGE_COMMAND_ATTR, attributes)
     }
 
     /// ### Manual
@@ -325,8 +388,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// message-command-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn message_command_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MESSAGE_COMMAND_BG, colour)
+    fn message_command_bg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MESSAGE_COMMAND_BG, colour)
     }
 
     /// ### Manual
@@ -336,8 +402,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// message-command-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn message_command_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MESSAGE_COMMAND_FG, colour)
+    fn message_command_fg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MESSAGE_COMMAND_FG, colour)
     }
 
     /// ### Manual
@@ -347,8 +416,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// message-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn message_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MESSAGE_FG, colour)
+    fn message_fg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MESSAGE_FG, colour)
     }
 
     /// ### Manual
@@ -358,8 +430,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// message-command-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn message_command_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MESSAGE_COMMAND_STYLE, style)
+    fn message_command_style<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        style: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MESSAGE_COMMAND_STYLE, style)
     }
 
     /// ### Manual
@@ -369,8 +444,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// message-limit number
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    fn message_limit<'a>(number: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(MESSAGE_LIMIT, number.map(|s| s.to_string()))
+    fn message_limit<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        number: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MESSAGE_LIMIT, number.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -380,8 +458,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// message-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn message_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(MESSAGE_STYLE, style)
+    fn message_style<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        style: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MESSAGE_STYLE, style)
     }
 
     /// ### Manual
@@ -391,8 +472,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// mouse-resize-pane [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    fn mouse_resize_pane<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(MOUSE_RESIZE_PANE, switch.map(|s| s.to_string()))
+    fn mouse_resize_pane<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MOUSE_RESIZE_PANE, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -402,8 +486,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// mouse-select-pane [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    fn mouse_select_pane<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(MOUSE_SELECT_PANE, switch.map(|s| s.to_string()))
+    fn mouse_select_pane<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MOUSE_SELECT_PANE, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -413,8 +500,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// mouse-select-window [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    fn mouse_select_window<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(MOUSE_SELECT_WINDOW, switch.map(|s| s.to_string()))
+    fn mouse_select_window<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MOUSE_SELECT_WINDOW, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -424,8 +514,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// mouse [on | off]
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    fn mouse<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(MOUSE, switch.map(|s| s.to_string()))
+    fn mouse<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MOUSE, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -435,8 +528,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// mouse-utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
-    fn mouse_utf8<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(MOUSE_UTF8, switch.map(|s| s.to_string()))
+    fn mouse_utf8<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, MOUSE_UTF8, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -446,8 +542,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// pane-active-border-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn pane_active_border_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(PANE_ACTIVE_BORDER_BG, colour)
+    fn pane_active_border_bg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, PANE_ACTIVE_BORDER_BG, colour)
     }
 
     /// ### Manual
@@ -457,8 +556,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// pane-active-border-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn pane_active_border_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(PANE_ACTIVE_BORDER_FG, colour)
+    fn pane_active_border_fg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, PANE_ACTIVE_BORDER_FG, colour)
     }
 
     /// ### Manual
@@ -468,8 +570,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// pane-border-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn pane_border_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(PANE_BORDER_BG, colour)
+    fn pane_border_bg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, PANE_BORDER_BG, colour)
     }
 
     /// ### Manual
@@ -479,8 +584,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// pane-border-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn pane_border_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(PANE_BORDER_FG, colour)
+    fn pane_border_fg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, PANE_BORDER_FG, colour)
     }
 
     /// ### Manual
@@ -490,8 +598,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// pane-active-border-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    fn pane_active_border_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(PANE_ACTIVE_BORDER_STYLE, style)
+    fn pane_active_border_style<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        style: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, PANE_ACTIVE_BORDER_STYLE, style)
     }
 
     /// ### Manual
@@ -501,8 +612,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// pane-border-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    fn pane_border_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(PANE_BORDER_STYLE, style)
+    fn pane_border_style<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        style: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, PANE_BORDER_STYLE, style)
     }
 
     /// ### Manual
@@ -512,8 +626,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// prefix key
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn prefix<'a, S: Into<Cow<'a, str>>>(key: Option<S>) -> TmuxCommand<'a> {
-        Self::set(PREFIX, key)
+    fn prefix<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        key: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, PREFIX, key)
     }
 
     /// ### Manual
@@ -523,8 +640,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// prefix2 key
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    fn prefix2<'a, S: Into<Cow<'a, str>>>(key: Option<S>) -> TmuxCommand<'a> {
-        Self::set(PREFIX2, key)
+    fn prefix2<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        key: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, PREFIX2, key)
     }
 
     /// ### Manual
@@ -534,8 +654,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// renumber-windows [on | off]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    fn renumber_windows<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(RENUMBER_WINDOWS, switch.map(|s| s.to_string()))
+    fn renumber_windows<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, RENUMBER_WINDOWS, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -545,8 +668,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// repeat-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn repeat_time<'a>(time: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(REPEAT_TIME, time.map(|s| s.to_string()))
+    fn repeat_time<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        time: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, REPEAT_TIME, time.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -556,8 +682,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// set-remain-on-exit [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-    fn set_remain_on_exit<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(SET_REMAIN_ON_EXIT, switch.map(|s| s.to_string()))
+    fn set_remain_on_exit<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, SET_REMAIN_ON_EXIT, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -567,8 +696,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// set-titles [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_titles<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(SET_TITLES, switch.map(|s| s.to_string()))
+    fn set_titles<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, SET_TITLES, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -578,8 +710,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// set-titles-string string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_titles_string<'a, S: Into<Cow<'a, str>>>(string: Option<S>) -> TmuxCommand<'a> {
-        Self::set(SET_TITLES_STRING, string)
+    fn set_titles_string<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        string: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, SET_TITLES_STRING, string)
     }
 
     /// ### Manual
@@ -589,8 +724,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// silence-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    fn silence_action<'a>(action: Option<Action>) -> TmuxCommand<'a> {
-        Self::set(SILENCE_ACTION, action.map(|s| s.to_string()))
+    fn silence_action<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        action: Option<Action>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, SILENCE_ACTION, action.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -604,8 +742,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status [off | on]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn status<'a>(status: Option<Status>) -> TmuxCommand<'a> {
-        Self::set(STATUS, status.map(|s| s.to_string()))
+    fn status<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        status: Option<Status>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS, status.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -615,8 +756,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_attr<'a, S: Into<Cow<'a, str>>>(attributes: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_ATTR, attributes)
+    fn status_attr<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        attributes: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_ATTR, attributes)
     }
 
     /// ### Manual
@@ -626,8 +770,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_BG, colour)
+    fn status_bg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_BG, colour)
     }
 
     /// ### Manual
@@ -637,8 +784,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_FG, colour)
+    fn status_fg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_FG, colour)
     }
 
     /// ### Manual
@@ -648,8 +798,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn status_format<'a, S: Into<Cow<'a, str>>>(format: Option<Vec<S>>) -> TmuxCommands<'a> {
-        Self::set_array(STATUS_FORMAT, format)
+    fn status_format<'a, T: Into<Cow<'a, str>> + Clone, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        format: Option<Vec<S>>,
+    ) -> TmuxCommands<'a> {
+        Self::set_array(target, STATUS_FORMAT, format)
     }
 
     /// ### Manual
@@ -659,8 +812,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-interval interval
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn status_interval<'a>(interval: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(STATUS_INTERVAL, interval.map(|s| s.to_string()))
+    fn status_interval<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        interval: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_INTERVAL, interval.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -670,8 +826,15 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-justify [left | centre | right]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn status_justify<'a>(status_justify: Option<StatusJustify>) -> TmuxCommand<'a> {
-        Self::set(STATUS_JUSTIFY, status_justify.map(|s| s.to_string()))
+    fn status_justify<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        status_justify: Option<StatusJustify>,
+    ) -> TmuxCommand<'a> {
+        Self::set(
+            target,
+            STATUS_JUSTIFY,
+            status_justify.map(|s| s.to_string()),
+        )
     }
 
     /// ### Manual
@@ -681,8 +844,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-keys [vi | emacs]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn status_keys<'a>(status_keys: Option<StatusKeys>) -> TmuxCommand<'a> {
-        Self::set(STATUS_KEYS, status_keys.map(|s| s.to_string()))
+    fn status_keys<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        status_keys: Option<StatusKeys>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_KEYS, status_keys.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -692,8 +858,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-left string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn status_left<'a, S: Into<Cow<'a, str>>>(string: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_LEFT, string)
+    fn status_left<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        string: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_LEFT, string)
     }
 
     /// ### Manual
@@ -703,8 +872,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-left-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_left_attr<'a, S: Into<Cow<'a, str>>>(attributes: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_LEFT_ATTR, attributes)
+    fn status_left_attr<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        attributes: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_LEFT_ATTR, attributes)
     }
 
     /// ### Manual
@@ -714,8 +886,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-left-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_left_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_LEFT_BG, colour.map(|s| s.to_string()))
+    fn status_left_bg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_LEFT_BG, colour.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -725,8 +900,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-left-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_left_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_LEFT_FG, colour.map(|s| s.to_string()))
+    fn status_left_fg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_LEFT_FG, colour.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -736,8 +914,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-left-length length
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn status_left_length<'a>(length: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(STATUS_LEFT_LENGTH, length.map(|s| s.to_string()))
+    fn status_left_length<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        length: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_LEFT_LENGTH, length.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -747,8 +928,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-left-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn status_left_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_LEFT_STYLE, style)
+    fn status_left_style<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        style: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_LEFT_STYLE, style)
     }
 
     /// ### Manual
@@ -758,8 +942,15 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-position [top | bottom]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    fn status_position<'a>(status_position: Option<StatusPosition>) -> TmuxCommand<'a> {
-        Self::set(STATUS_POSITION, status_position.map(|s| s.to_string()))
+    fn status_position<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        status_position: Option<StatusPosition>,
+    ) -> TmuxCommand<'a> {
+        Self::set(
+            target,
+            STATUS_POSITION,
+            status_position.map(|s| s.to_string()),
+        )
     }
 
     /// ### Manual
@@ -769,8 +960,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-right string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn status_right<'a, S: Into<Cow<'a, str>>>(string: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_RIGHT, string)
+    fn status_right<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        string: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_RIGHT, string)
     }
 
     /// ### Manual
@@ -780,8 +974,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-right-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_right_attr<'a, S: Into<Cow<'a, str>>>(attributes: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_RIGHT_ATTR, attributes)
+    fn status_right_attr<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        attributes: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_RIGHT_ATTR, attributes)
     }
 
     /// ### Manual
@@ -791,8 +988,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-right-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_right_bg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_RIGHT_BG, colour.map(|s| s.to_string()))
+    fn status_right_bg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_RIGHT_BG, colour.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -802,8 +1002,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-right-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_right_fg<'a, S: Into<Cow<'a, str>>>(colour: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_RIGHT_FG, colour.map(|s| s.to_string()))
+    fn status_right_fg<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        colour: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_RIGHT_FG, colour.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -813,8 +1016,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-right-length length
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn status_right_length<'a>(length: Option<usize>) -> TmuxCommand<'a> {
-        Self::set(STATUS_RIGHT_LENGTH, length.map(|s| s.to_string()))
+    fn status_right_length<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        length: Option<usize>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_RIGHT_LENGTH, length.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -824,8 +1030,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-right-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn status_right_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_RIGHT_STYLE, style)
+    fn status_right_style<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        style: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_RIGHT_STYLE, style)
     }
 
     /// ### Manual
@@ -835,8 +1044,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn status_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(STATUS_STYLE, style)
+    fn status_style<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        style: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_STYLE, style)
     }
 
     /// ### Manual
@@ -846,8 +1058,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    fn status_utf8<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(STATUS_UTF8, switch.map(|s| s.to_string()))
+    fn status_utf8<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, STATUS_UTF8, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -857,8 +1072,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// terminal-overrides string
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    fn terminal_overrides<'a, S: Into<Cow<'a, str>>>(string: Option<S>) -> TmuxCommand<'a> {
-        Self::set(TERMINAL_OVERRIDES, string)
+    fn terminal_overrides<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        string: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, TERMINAL_OVERRIDES, string)
     }
 
     /// ### Manual
@@ -868,8 +1086,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// update-environment[] variable
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn update_environment<'a, S: Into<Cow<'a, str>>>(variable: Option<Vec<S>>) -> TmuxCommands<'a> {
-        Self::set_array(UPDATE_ENVIRONMENT, variable)
+    fn update_environment<'a, T: Into<Cow<'a, str>> + Clone, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        variable: Option<Vec<S>>,
+    ) -> TmuxCommands<'a> {
+        Self::set_array(target, UPDATE_ENVIRONMENT, variable)
     }
 
     /// ### Manual
@@ -879,8 +1100,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// user-keys[] key
     /// ```
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
-    fn user_keys<'a, S: Into<Cow<'a, str>>>(key: Option<S>) -> TmuxCommand<'a> {
-        Self::set(USER_KEYS, key)
+    fn user_keys<'a, T: Into<Cow<'a, str>> + Clone, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        key: Option<Vec<S>>,
+    ) -> TmuxCommands<'a> {
+        Self::set_array(target, USER_KEYS, key)
     }
 
     /// ### Manual
@@ -895,8 +1119,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// visual-activity [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn visual_activity<'a>(activity: Option<Activity>) -> TmuxCommand<'a> {
-        Self::set(VISUAL_ACTIVITY, activity.map(|s| s.to_string()))
+    fn visual_activity<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        activity: Option<Activity>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, VISUAL_ACTIVITY, activity.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -911,8 +1138,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// visual-bell [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn visual_bell<'a>(activity: Option<Activity>) -> TmuxCommand<'a> {
-        Self::set(VISUAL_BELL, activity.map(|s| s.to_string()))
+    fn visual_bell<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        activity: Option<Activity>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, VISUAL_BELL, activity.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -922,8 +1152,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// visual-content [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    fn visual_content<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(VISUAL_CONTENT, switch.map(|s| s.to_string()))
+    fn visual_content<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        switch: Option<Switch>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, VISUAL_CONTENT, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -933,8 +1166,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// visual-silence [on | off | both]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn visual_silence<'a>(activity: Option<Activity>) -> TmuxCommand<'a> {
-        Self::set(VISUAL_SILENCE, activity.map(|s| s.to_string()))
+    fn visual_silence<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        activity: Option<Activity>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, VISUAL_SILENCE, activity.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -944,8 +1180,11 @@ pub trait SetSessionOption: SetOptionExt {
     /// word-separators string
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    fn word_separators<'a, S: Into<Cow<'a, str>>>(string: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WORD_SEPARATORS, string)
+    fn word_separators<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        string: Option<S>,
+    ) -> TmuxCommand<'a> {
+        Self::set(target, WORD_SEPARATORS, string)
     }
 
     //pub user_options: Option<HashMap<String, String>>

@@ -9,12 +9,15 @@ impl GetWindowOption for GetGlobalWindowOptionValue {}
 impl GetUserOption for GetGlobalWindowOptionValue {}
 
 impl GetOptionExt for GetGlobalWindowOptionValue {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new()
-            .window()
-            .value()
-            .option(name)
-            .global()
-            .build()
+    fn get<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<S>,
+        name: T,
+    ) -> TmuxCommand<'a> {
+        let cmd = ShowOptions::new().window().global().option(name).value();
+        let cmd = match target {
+            Some(target) => cmd.target(target),
+            None => cmd,
+        };
+        cmd.build()
     }
 }

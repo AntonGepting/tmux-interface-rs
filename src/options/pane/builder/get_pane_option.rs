@@ -6,8 +6,16 @@ use std::fmt;
 pub struct GetPaneOption;
 
 impl GetOptionExt for GetPaneOption {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new().pane().option(name.into()).build()
+    fn get<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<S>,
+        name: T,
+    ) -> TmuxCommand<'a> {
+        let cmd = ShowOptions::new().pane().option(name);
+        let cmd = match target {
+            Some(target) => cmd.target(target),
+            None => cmd,
+        };
+        cmd.build()
     }
 }
 

@@ -1,8 +1,9 @@
 use crate::options::{
     GetGlobalSessionOptionValue, SessionOptions, SessionOptionsCtl, SetGlobalSessionOption,
-    SetGlobalSessionOptions, SetSessionOptions,
+    SetGlobalSessionOptions,
 };
 use crate::{Error, ShowOptions, Tmux, TmuxCommand, TmuxOutput};
+use std::borrow::Cow;
 use std::str::FromStr;
 
 // XXX: rename SessionOptionCtl?
@@ -16,19 +17,24 @@ pub struct GlobalSessionOptionsCtl<'a> {
     // let tmux = Tmux::new();
     // ```
     pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    pub target: Option<Cow<'a, str>>,
 }
 
 impl<'a> Default for GlobalSessionOptionsCtl<'a> {
     fn default() -> Self {
         Self {
             invoker: |cmd| Tmux::with_command(cmd).output(),
+            target: None,
         }
     }
 }
 
 impl<'a> GlobalSessionOptionsCtl<'a> {
     pub fn new(invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
-        Self { invoker }
+        Self {
+            invoker,
+            target: None,
+        }
     }
 
     // get and parse single line option
@@ -79,6 +85,11 @@ impl<'a> GlobalSessionOptionsCtl<'a> {
 impl<'a> SessionOptionsCtl<'a> for GlobalSessionOptionsCtl<'a> {
     type Getter = GetGlobalSessionOptionValue;
     type Setter = SetGlobalSessionOption;
+    type SetterMultiple = SetGlobalSessionOptions<'a>;
+
+    fn target(&self) -> Option<Cow<'a, str>> {
+        self.target.to_owned()
+    }
 
     /// # Examples
     ///
@@ -94,22 +105,7 @@ impl<'a> SessionOptionsCtl<'a> for GlobalSessionOptionsCtl<'a> {
         SessionOptions::from_str(&output)
     }
 
-    fn set_all(self, server_options: SessionOptions<'a>) -> Result<TmuxOutput, Error> {
-        //let cmd = ShowOptions::new().build();
-
-        let cmds = SetGlobalSessionOptions::new();
-
-        #[cfg(feature = "tmux_2_6")]
-        let cmds = cmds.activity_action(server_options.activity_action);
-
-        #[cfg(feature = "tmux_1_8")]
-        let cmds = cmds.assume_paste_time(server_options.assume_paste_time);
-
-        let cmd = TmuxCommand::with_cmds(cmds.build());
-
-        (self.invoker)(cmd)
-    }
-
+    // get and parse single line option
     fn get<T: std::str::FromStr>(&self, cmd: TmuxCommand<'a>) -> Result<Option<T>, Error> {
         Ok((self.invoker)(cmd)?.to_string().trim().parse::<T>().ok())
     }

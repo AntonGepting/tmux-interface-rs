@@ -10,29 +10,32 @@ impl SetPaneOptionTrait for SetPaneOption {}
 impl SetUserOption for SetPaneOption {}
 
 impl SetOptionExt for SetPaneOption {
-    fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        match value {
-            Some(data) => Self::set_ext(name, Some(data)),
-            None => Self::unset(name),
-        }
-    }
-
-    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().pane().option(name).unset().build()
-    }
-
     // unset if value = None
-    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+    fn set<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<U>,
         name: T,
         value: Option<S>,
     ) -> TmuxCommand<'a> {
-        //(self.setter)(name.into(), value.map(|s| s.into()))
+        let cmd = SetOption::new().pane().option(name);
+        let cmd = match target {
+            Some(target) => cmd.target(target),
+            None => cmd,
+        };
         let cmd = match value {
-            Some(data) => SetOption::new().pane().option(name).value(data),
-            None => SetOption::new().pane().option(name),
+            Some(value) => cmd.value(value),
+            None => cmd.unset(),
+        };
+        cmd.build()
+    }
+
+    fn unset<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
+        target: Option<S>,
+        name: T,
+    ) -> TmuxCommand<'a> {
+        let cmd = SetOption::new().pane().option(name).unset();
+        let cmd = match target {
+            Some(target) => cmd.target(target),
+            None => cmd,
         };
         cmd.build()
     }

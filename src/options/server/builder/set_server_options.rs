@@ -55,11 +55,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// backspace key
     /// ```
     #[cfg(feature = "tmux_3_1")]
-    fn backspace<S: Into<Cow<'a, str>>>(mut self, backspace: Option<S>) -> Self
+    fn backspace<T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        backspace: Option<S>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::backspace(backspace));
+        self.push(Self::Setter::backspace(target, backspace));
         self
     }
 
@@ -70,11 +74,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// buffer-limit number
     /// ```
     #[cfg(feature = "tmux_1_5")]
-    fn buffer_limit(mut self, buffer_limit: Option<usize>) -> Self
+    fn buffer_limit<T: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        buffer_limit: Option<usize>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::buffer_limit(buffer_limit));
+        self.push(Self::Setter::buffer_limit(target, buffer_limit));
         self
     }
 
@@ -85,11 +93,13 @@ pub trait SetServerOptionsTrait<'a> {
     /// command-alias[] name=value
     /// ```
     #[cfg(feature = "tmux_2_4")]
-    fn command_alias<S: Into<Cow<'a, str>>>(mut self, command_alias: Option<Vec<S>>) -> Self
+    fn command_alias<T, S>(mut self, target: Option<T>, command_alias: Option<Vec<S>>) -> Self
     where
         Self: Sized,
+        T: Into<Cow<'a, str>> + Clone,
+        S: Into<Cow<'a, str>>,
     {
-        self.push_cmds(Self::Setter::command_alias(command_alias));
+        self.push_cmds(Self::Setter::command_alias(target, command_alias));
         self
     }
 
@@ -100,11 +110,14 @@ pub trait SetServerOptionsTrait<'a> {
     /// copy-command shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn copy_command<S: Into<Cow<'a, str>>>(mut self, copy_command: Option<S>) -> Self
+    fn copy_command<T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        mut self,
+        copy_command: Option<S>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::copy_command(copy_command));
+        self.push(Self::Setter::copy_command(target, copy_command));
         self
     }
 
@@ -115,11 +128,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// default-terminal terminal
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    fn default_terminal<S: Into<Cow<'a, str>>>(mut self, default_terminal: Option<S>) -> Self
+    fn default_terminal<T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        default_terminal: Option<S>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::default_terminal(default_terminal));
+        self.push(Self::Setter::default_terminal(target, default_terminal));
         self
     }
 
@@ -130,11 +147,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// escape-time time
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    fn escape_time(mut self, escape_time: Option<usize>) -> Self
+    fn escape_time<T: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        escape_time: Option<usize>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::escape_time(escape_time));
+        self.push(Self::Setter::escape_time(target, escape_time));
         self
     }
 
@@ -145,11 +166,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// editor shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn editor<S: Into<Cow<'a, str>>>(mut self, editor: Option<S>) -> Self
+    fn editor<T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        editor: Option<S>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::editor(editor));
+        self.push(Self::Setter::editor(target, editor));
         self
     }
 
@@ -160,11 +185,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// exit-empty [on | off]
     /// ```
     #[cfg(feature = "tmux_2_7")]
-    fn exit_empty(mut self, exit_empty: Option<Switch>) -> Self
+    fn exit_empty<T: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        exit_empty: Option<Switch>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::exit_empty(exit_empty));
+        self.push(Self::Setter::exit_empty(target, exit_empty));
         self
     }
 
@@ -175,11 +204,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// exit-unattached [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn exit_unattached(mut self, exit_unattached: Option<Switch>) -> Self
+    fn exit_unattached<T: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        exit_unattached: Option<Switch>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::exit_unattached(exit_unattached));
+        self.push(Self::Setter::exit_unattached(target, exit_unattached));
         self
     }
 
@@ -189,11 +222,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// extended-keys [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn extended_keys(mut self, extended_keys: Option<Switch>) -> Self
+    fn extended_keys<T: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        extended_keys: Option<Switch>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::extended_keys(extended_keys));
+        self.push(Self::Setter::extended_keys(target, extended_keys));
         self
     }
 
@@ -204,11 +241,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// focus-events [on | off]
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn focus_events(mut self, focus_events: Option<Switch>) -> Self
+    fn focus_events<T: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        focus_events: Option<Switch>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::focus_events(focus_events));
+        self.push(Self::Setter::focus_events(target, focus_events));
         self
     }
 
@@ -219,11 +260,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// history-file path
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    fn history_file<S: Into<Cow<'a, str>>>(mut self, history_file: Option<S>) -> Self
+    fn history_file<T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        history_file: Option<S>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::history_file(history_file));
+        self.push(Self::Setter::history_file(target, history_file));
         self
     }
 
@@ -234,11 +279,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// message-limit number
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    fn message_limit(mut self, message_limit: Option<usize>) -> Self
+    fn message_limit<T: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        message_limit: Option<usize>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::message_limit(message_limit));
+        self.push(Self::Setter::message_limit(target, message_limit));
         self
     }
 
@@ -249,11 +298,18 @@ pub trait SetServerOptionsTrait<'a> {
     /// prompt-history-limit number
     /// ```
     #[cfg(feature = "tmux_3_3")]
-    fn prompt_history_limit(mut self, prompt_history_limit: Option<usize>) -> Self
+    fn prompt_history_limit<T: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        prompt_history_limit: Option<usize>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(SetServerOption::prompt_history_limit(prompt_history_limit));
+        self.push(SetServerOption::prompt_history_limit(
+            target,
+            prompt_history_limit,
+        ));
         self
     }
 
@@ -264,11 +320,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// set-clipboard [on | external | off]
     /// ```
     #[cfg(feature = "tmux_1_5")]
-    fn set_clipboard(mut self, set_clipboard: Option<SetClipboard>) -> Self
+    fn set_clipboard<T: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        set_clipboard: Option<SetClipboard>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::set_clipboard(set_clipboard));
+        self.push(Self::Setter::set_clipboard(target, set_clipboard));
         self
     }
 
@@ -279,11 +339,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// terminal-features[] string
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn terminal_features<S: Into<Cow<'a, str>>>(mut self, terminal_features: Option<Vec<S>>) -> Self
+    fn terminal_features<T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        terminal_features: Option<Vec<S>>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push_cmds(Self::Setter::terminal_features(terminal_features));
+        self.push_cmds(Self::Setter::terminal_features(target, terminal_features));
         self
     }
 
@@ -294,14 +358,17 @@ pub trait SetServerOptionsTrait<'a> {
     /// terminal-overrides[] string
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    fn terminal_overrides<S: Into<Cow<'a, str>>>(
+    fn terminal_overrides<T, S>(
         mut self,
+        target: Option<T>,
         terminal_overrides: Option<Vec<S>>,
     ) -> Self
     where
         Self: Sized,
+        T: Into<Cow<'a, str>> + Clone,
+        S: Into<Cow<'a, str>>,
     {
-        self.push_cmds(Self::Setter::terminal_overrides(terminal_overrides));
+        self.push_cmds(Self::Setter::terminal_overrides(target, terminal_overrides));
         self
     }
 
@@ -312,11 +379,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// user-keys[] key
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn user_keys<S: Into<Cow<'a, str>>>(mut self, user_keys: Option<Vec<S>>) -> Self
+    fn user_keys<T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        user_keys: Option<Vec<S>>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push_cmds(Self::Setter::user_keys(user_keys));
+        self.push_cmds(Self::Setter::user_keys(target, user_keys));
         self
     }
 
@@ -327,11 +398,11 @@ pub trait SetServerOptionsTrait<'a> {
     /// quiet [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    fn quiet(mut self, quiet: Option<Switch>) -> Self
+    fn quiet<T: Into<Cow<'a, str>>>(mut self, target: Option<T>, quiet: Option<Switch>) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::quiet(quiet));
+        self.push(Self::Setter::quiet(target, quiet));
         self
     }
 
@@ -342,11 +413,15 @@ pub trait SetServerOptionsTrait<'a> {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    fn detach_on_destroy(mut self, detach_on_destroy: Option<Switch>) -> Self
+    fn detach_on_destroy<T: Into<Cow<'a, str>>>(
+        mut self,
+        target: Option<T>,
+        detach_on_destroy: Option<Switch>,
+    ) -> Self
     where
         Self: Sized,
     {
-        self.push(Self::Setter::detach_on_destroy(detach_on_destroy));
+        self.push(Self::Setter::detach_on_destroy(target, detach_on_destroy));
         self
     }
 

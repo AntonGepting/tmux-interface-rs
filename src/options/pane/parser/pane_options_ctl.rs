@@ -53,6 +53,7 @@ pub struct PaneOptionsCtl<'a> {
     // let tmux = Tmux::new();
     // ```
     pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    pub target: Option<Cow<'a, str>>,
 }
 
 impl<'a> Default for PaneOptionsCtl<'a> {
@@ -66,6 +67,10 @@ impl<'a> Default for PaneOptionsCtl<'a> {
 impl<'a> PaneOptionsCtl<'a> {
     pub fn new(invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
         PaneOptionsCtl { invoker }
+    }
+
+    fn target(&self) -> Option<Cow<'a, str>> {
+        self.target.to_owned()
     }
 
     //pub fn get(&self) -> Result<Self, Error> {

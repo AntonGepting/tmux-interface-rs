@@ -27,12 +27,16 @@ use std::borrow::Cow;
 pub struct GetServerOptionValue;
 
 impl GetOptionExt for GetServerOptionValue {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new()
-            .server()
-            .value()
-            .option(name.into())
-            .build()
+    fn get<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<S>,
+        name: T,
+    ) -> TmuxCommand<'a> {
+        let cmd = ShowOptions::new().server().option(name).value();
+        let cmd = match target {
+            Some(target) => cmd.target(target),
+            None => cmd,
+        };
+        cmd.build()
     }
 }
 

@@ -25,12 +25,16 @@ use std::borrow::Cow;
 pub struct GetGlobalSessionOptionValue;
 
 impl GetOptionExt for GetGlobalSessionOptionValue {
-    fn get<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        ShowOptions::new()
-            .global()
-            .value()
-            .option(name.into())
-            .build()
+    fn get<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        name: S,
+    ) -> TmuxCommand<'a> {
+        let cmd = ShowOptions::new().global().option(name).value();
+        let cmd = match target {
+            Some(target) => cmd.target(target),
+            None => cmd,
+        };
+        cmd.build()
     }
 }
 

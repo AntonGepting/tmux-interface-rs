@@ -10,6 +10,8 @@ pub trait WindowOptionsCtl<'a> {
     type Setter: SetWindowOptionExt;
     type SetterMultiple: SetWindowOptions<'a>;
 
+    fn target(&self) -> Option<Cow<'a, str>>;
+
     fn get_all(&self) -> Result<WindowOptions<'a>, Error>;
 
     // XXX: split in build command custom run command
@@ -17,146 +19,172 @@ pub trait WindowOptionsCtl<'a> {
         let cmds = Self::SetterMultiple::new();
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.aggressive_resize(window_options.aggressive_resize);
+        let cmds = cmds.aggressive_resize(self.target(), window_options.aggressive_resize);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
-        let cmds = cmds.allow_rename(window_options.allow_rename);
+        let cmds = cmds.allow_rename(self.target(), window_options.allow_rename);
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-        let cmds = cmds.alternate_screen(window_options.alternate_screen);
+        let cmds = cmds.alternate_screen(self.target(), window_options.alternate_screen);
         #[cfg(feature = "tmux_1_0")] // 0.8
-        let cmds = cmds.automatic_rename(window_options.automatic_rename);
-        //#[cfg(feature = "tmux_1_9")]
-        //let cmds = cmds.automatic_rename_format(window_options.automatic_rename_format);
+        let cmds = cmds.automatic_rename(self.target(), window_options.automatic_rename);
+        #[cfg(feature = "tmux_1_9")]
+        let cmds =
+            cmds.automatic_rename_format(self.target(), window_options.automatic_rename_format);
         #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-        let cmds = cmds.c0_change_interval(window_options.c0_change_interval);
+        let cmds = cmds.c0_change_interval(self.target(), window_options.c0_change_interval);
         #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-        let cmds = cmds.c0_change_trigger(window_options.c0_change_trigger);
+        let cmds = cmds.c0_change_trigger(self.target(), window_options.c0_change_trigger);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.clock_mode_colour(window_options.clock_mode_colour);
+        let cmds = cmds.clock_mode_colour(self.target(), window_options.clock_mode_colour);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.clock_mode_style(window_options.clock_mode_style);
+        let cmds = cmds.clock_mode_style(self.target(), window_options.clock_mode_style);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-        let cmds = cmds.force_height(window_options.force_height);
+        let cmds = cmds.force_height(self.target(), window_options.force_height);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-        let cmds = cmds.force_width(window_options.force_width);
+        let cmds = cmds.force_width(self.target(), window_options.force_width);
         #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
-        let cmds = cmds.layout_history_limit(window_options.layout_history_limit);
+        let cmds = cmds.layout_history_limit(self.target(), window_options.layout_history_limit);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.main_pane_height(window_options.main_pane_height);
+        let cmds = cmds.main_pane_height(self.target(), window_options.main_pane_height);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.main_pane_width(window_options.main_pane_width);
+        let cmds = cmds.main_pane_width(self.target(), window_options.main_pane_width);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.mode_attr(window_options.mode_attr);
+        let cmds = cmds.mode_attr(self.target(), window_options.mode_attr);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.mode_bg(window_options.mode_bg);
+        let cmds = cmds.mode_bg(self.target(), window_options.mode_bg);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.mode_fg(window_options.mode_fg);
+        let cmds = cmds.mode_fg(self.target(), window_options.mode_fg);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.mode_keys(window_options.mode_keys);
+        let cmds = cmds.mode_keys(self.target(), window_options.mode_keys);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-        let cmds = cmds.mode_mouse(window_options.mode_mouse);
+        let cmds = cmds.mode_mouse(self.target(), window_options.mode_mouse);
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.mode_style(window_options.mode_style);
+        let cmds = cmds.mode_style(self.target(), window_options.mode_style);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.monitor_activity(window_options.monitor_activity);
+        let cmds = cmds.monitor_activity(self.target(), window_options.monitor_activity);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-        let cmds = cmds.monitor_content(window_options.monitor_content);
+        let cmds = cmds.monitor_content(self.target(), window_options.monitor_content);
         #[cfg(feature = "tmux_2_6")]
-        let cmds = cmds.monitor_bell(window_options.monitor_bell);
+        let cmds = cmds.monitor_bell(self.target(), window_options.monitor_bell);
         #[cfg(feature = "tmux_1_4")]
-        let cmds = cmds.monitor_silence(window_options.monitor_silence);
+        let cmds = cmds.monitor_silence(self.target(), window_options.monitor_silence);
         #[cfg(feature = "tmux_1_4")]
-        let cmds = cmds.other_pane_height(window_options.other_pane_height);
+        let cmds = cmds.other_pane_height(self.target(), window_options.other_pane_height);
         #[cfg(feature = "tmux_1_4")]
-        let cmds = cmds.other_pane_width(window_options.other_pane_width);
+        let cmds = cmds.other_pane_width(self.target(), window_options.other_pane_width);
         #[cfg(feature = "tmux_2_0")]
-        let cmds = cmds.pane_active_border_style(window_options.pane_active_border_style);
+        let cmds =
+            cmds.pane_active_border_style(self.target(), window_options.pane_active_border_style);
         #[cfg(feature = "tmux_1_6")]
-        let cmds = cmds.pane_base_index(window_options.pane_base_index);
+        let cmds = cmds.pane_base_index(self.target(), window_options.pane_base_index);
         #[cfg(feature = "tmux_2_3")]
-        let cmds = cmds.pane_border_format(window_options.pane_border_format);
+        let cmds = cmds.pane_border_format(self.target(), window_options.pane_border_format);
         #[cfg(feature = "tmux_2_3")]
-        let cmds = cmds.pane_border_status(window_options.pane_border_status);
+        let cmds = cmds.pane_border_status(self.target(), window_options.pane_border_status);
         #[cfg(feature = "tmux_2_0")]
-        let cmds = cmds.pane_border_style(window_options.pane_border_style);
+        let cmds = cmds.pane_border_style(self.target(), window_options.pane_border_style);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
-        let cmds = cmds.remain_on_exit(window_options.remain_on_exit);
+        let cmds = cmds.remain_on_exit(self.target(), window_options.remain_on_exit);
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
-        let cmds = cmds.synchronize_panes(window_options.synchronize_panes);
+        let cmds = cmds.synchronize_panes(self.target(), window_options.synchronize_panes);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-        let cmds = cmds.utf8(window_options.utf8);
+        let cmds = cmds.utf8(self.target(), window_options.utf8);
         #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-        let cmds = cmds.window_active_style(window_options.window_active_style);
+        let cmds = cmds.window_active_style(self.target(), window_options.window_active_style);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_bell_attr(window_options.window_status_bell_attr);
+        let cmds =
+            cmds.window_status_bell_attr(self.target(), window_options.window_status_bell_attr);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_bell_bg(window_options.window_status_bell_bg);
+        let cmds = cmds.window_status_bell_bg(self.target(), window_options.window_status_bell_bg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_bell_fg(window_options.window_status_bell_fg);
+        let cmds = cmds.window_status_bell_fg(self.target(), window_options.window_status_bell_fg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_content_attr(window_options.window_status_content_attr);
+        let cmds = cmds
+            .window_status_content_attr(self.target(), window_options.window_status_content_attr);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_content_bg(window_options.window_status_content_bg);
+        let cmds =
+            cmds.window_status_content_bg(self.target(), window_options.window_status_content_bg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_content_fg(window_options.window_status_content_fg);
+        let cmds =
+            cmds.window_status_content_fg(self.target(), window_options.window_status_content_fg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_activity_attr(window_options.window_status_activity_attr);
+        let cmds = cmds
+            .window_status_activity_attr(self.target(), window_options.window_status_activity_attr);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_activity_bg(window_options.window_status_activity_bg);
+        let cmds =
+            cmds.window_status_activity_bg(self.target(), window_options.window_status_activity_bg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_activity_fg(window_options.window_status_activity_fg);
+        let cmds =
+            cmds.window_status_activity_fg(self.target(), window_options.window_status_activity_fg);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_attr(window_options.window_status_attr);
+        let cmds = cmds.window_status_attr(self.target(), window_options.window_status_attr);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_bg(window_options.window_status_bg);
+        let cmds = cmds.window_status_bg(self.target(), window_options.window_status_bg);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_fg(window_options.window_status_fg);
+        let cmds = cmds.window_status_fg(self.target(), window_options.window_status_fg);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_current_attr(window_options.window_status_current_attr);
+        let cmds = cmds
+            .window_status_current_attr(self.target(), window_options.window_status_current_attr);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_current_bg(window_options.window_status_current_bg);
+        let cmds =
+            cmds.window_status_current_bg(self.target(), window_options.window_status_current_bg);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_current_fg(window_options.window_status_current_fg);
+        let cmds =
+            cmds.window_status_current_fg(self.target(), window_options.window_status_current_fg);
         #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-        let cmds = cmds.window_status_alert_attr(window_options.window_status_alert_attr);
+        let cmds =
+            cmds.window_status_alert_attr(self.target(), window_options.window_status_alert_attr);
         #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-        let cmds = cmds.window_status_alert_bg(window_options.window_status_alert_bg);
+        let cmds =
+            cmds.window_status_alert_bg(self.target(), window_options.window_status_alert_bg);
         #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-        let cmds = cmds.window_status_alert_fg(window_options.window_status_alert_fg);
+        let cmds =
+            cmds.window_status_alert_fg(self.target(), window_options.window_status_alert_fg);
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.window_status_activity_style(window_options.window_status_activity_style);
+        let cmds = cmds.window_status_activity_style(
+            self.target(),
+            window_options.window_status_activity_style,
+        );
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.window_status_bell_style(window_options.window_status_bell_style);
+        let cmds =
+            cmds.window_status_bell_style(self.target(), window_options.window_status_bell_style);
         #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-        let cmds = cmds.window_status_content_style(window_options.window_status_content_style);
+        let cmds = cmds
+            .window_status_content_style(self.target(), window_options.window_status_content_style);
         #[cfg(feature = "tmux_1_2")]
-        let cmds = cmds.window_status_current_format(window_options.window_status_current_format);
+        let cmds = cmds.window_status_current_format(
+            self.target(),
+            window_options.window_status_current_format,
+        );
         #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_last_attr(window_options.window_status_last_attr);
+        let cmds =
+            cmds.window_status_last_attr(self.target(), window_options.window_status_last_attr);
         #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_last_bg(window_options.window_status_last_bg);
+        let cmds = cmds.window_status_last_bg(self.target(), window_options.window_status_last_bg);
         #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_last_fg(window_options.window_status_last_fg);
+        let cmds = cmds.window_status_last_fg(self.target(), window_options.window_status_last_fg);
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.window_status_current_style(window_options.window_status_current_style);
+        let cmds = cmds
+            .window_status_current_style(self.target(), window_options.window_status_current_style);
         #[cfg(feature = "tmux_1_2")]
-        let cmds = cmds.window_status_format(window_options.window_status_format);
+        let cmds = cmds.window_status_format(self.target(), window_options.window_status_format);
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.window_status_last_style(window_options.window_status_last_style);
+        let cmds =
+            cmds.window_status_last_style(self.target(), window_options.window_status_last_style);
         #[cfg(feature = "tmux_1_7")]
-        let cmds = cmds.window_status_separator(window_options.window_status_separator);
+        let cmds =
+            cmds.window_status_separator(self.target(), window_options.window_status_separator);
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.window_status_style(window_options.window_status_style);
+        let cmds = cmds.window_status_style(self.target(), window_options.window_status_style);
         #[cfg(feature = "tmux_2_9")]
-        let cmds = cmds.window_size(window_options.window_size);
+        let cmds = cmds.window_size(self.target(), window_options.window_size);
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
-        let cmds = cmds.word_separators(window_options.word_separators);
+        let cmds = cmds.word_separators(self.target(), window_options.word_separators);
         #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-        let cmds = cmds.window_style(window_options.window_style);
+        let cmds = cmds.window_style(self.target(), window_options.window_style);
         #[cfg(feature = "tmux_1_7")]
-        let cmds = cmds.wrap_search(window_options.wrap_search);
+        let cmds = cmds.wrap_search(self.target(), window_options.wrap_search);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.xterm_keys(window_options.xterm_keys);
-
+        let cmds = cmds.xterm_keys(self.target(), window_options.xterm_keys);
         let cmd = TmuxCommand::with_cmds(cmds.build());
         let output = Tmux::new().command(cmd).output();
         output
@@ -174,7 +202,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn get_aggressive_resize(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::aggressive_resize())
+        self.get(Self::Getter::aggressive_resize(self.target()))
     }
 
     // # Manual
@@ -188,7 +216,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         aggressive_resize: Option<Switch>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::aggressive_resize(aggressive_resize))
+        self.set(Self::Setter::aggressive_resize(
+            self.target(),
+            aggressive_resize,
+        ))
     }
 
     // # Manual
@@ -199,7 +230,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
     fn get_allow_rename(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::allow_rename())
+        self.get(Self::Getter::allow_rename(self.target()))
     }
 
     // # Manual
@@ -210,7 +241,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
     fn set_allow_rename(&self, allow_rename: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::allow_rename(allow_rename))
+        self.set(Self::Setter::allow_rename(self.target(), allow_rename))
     }
 
     // # Manual
@@ -221,7 +252,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     fn get_alternate_screen(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::alternate_screen())
+        self.get(Self::Getter::alternate_screen(self.target()))
     }
 
     // # Manual
@@ -232,7 +263,10 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     fn set_alternate_screen(&self, alternate_screen: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::alternate_screen(alternate_screen))
+        self.set(Self::Setter::alternate_screen(
+            self.target(),
+            alternate_screen,
+        ))
     }
 
     // # Manual
@@ -243,7 +277,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")] // 0.8
     fn get_automatic_rename(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::automatic_rename())
+        self.get(Self::Getter::automatic_rename(self.target()))
     }
 
     // # Manual
@@ -254,7 +288,10 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")] // 0.8
     fn set_automatic_rename(&self, automatic_rename: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::automatic_rename(automatic_rename))
+        self.set(Self::Setter::automatic_rename(
+            self.target(),
+            automatic_rename,
+        ))
     }
 
     // # Manual
@@ -265,7 +302,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_9")]
     fn get_automatic_rename_format(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::automatic_rename_format())
+        self.get(Self::Getter::automatic_rename_format(self.target()))
     }
 
     // # Manual
@@ -280,6 +317,7 @@ pub trait WindowOptionsCtl<'a> {
         automatic_rename_format: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::automatic_rename_format(
+            self.target(),
             automatic_rename_format,
         ))
     }
@@ -292,7 +330,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     fn get_c0_change_interval(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::c0_change_interval())
+        self.get(Self::Getter::c0_change_interval(self.target()))
     }
 
     // # Manual
@@ -306,7 +344,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         c0_change_interval: Option<usize>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::c0_change_interval(c0_change_interval))
+        self.set(Self::Setter::c0_change_interval(
+            self.target(),
+            c0_change_interval,
+        ))
     }
 
     // # Manual
@@ -317,7 +358,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     fn get_c0_change_trigger(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::automatic_rename())
+        self.get(Self::Getter::automatic_rename(self.target()))
     }
 
     // # Manual
@@ -328,7 +369,10 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     fn set_c0_change_trigger(&self, c0_change_trigger: Option<usize>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::c0_change_trigger(c0_change_trigger))
+        self.set(Self::Setter::c0_change_trigger(
+            self.target(),
+            c0_change_trigger,
+        ))
     }
 
     // # Manual
@@ -339,7 +383,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn get_clock_mode_colour(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::clock_mode_colour())
+        self.get(Self::Getter::clock_mode_colour(self.target()))
     }
 
     // # Manual
@@ -353,7 +397,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         clock_mode_colour: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::clock_mode_colour(clock_mode_colour))
+        self.set(Self::Setter::clock_mode_colour(
+            self.target(),
+            clock_mode_colour,
+        ))
     }
 
     // # Manual
@@ -364,7 +411,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn get_clock_mode_style(&self) -> Result<Option<ClockModeStyle>, Error> {
-        self.get(Self::Getter::clock_mode_style())
+        self.get(Self::Getter::clock_mode_style(self.target()))
     }
 
     // # Manual
@@ -378,7 +425,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         clock_mode_style: Option<ClockModeStyle>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::clock_mode_style(clock_mode_style))
+        self.set(Self::Setter::clock_mode_style(
+            self.target(),
+            clock_mode_style,
+        ))
     }
 
     // # Manual
@@ -389,7 +439,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
     fn get_force_height(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::force_height())
+        self.get(Self::Getter::force_height(self.target()))
     }
 
     // # Manual
@@ -400,7 +450,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
     fn set_force_height(&self, force_height: Option<usize>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::force_height(force_height))
+        self.set(Self::Setter::force_height(self.target(), force_height))
     }
 
     // # Manual
@@ -411,7 +461,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
     fn get_force_width(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::force_width())
+        self.get(Self::Getter::force_width(self.target()))
     }
 
     // # Manual
@@ -422,7 +472,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
     fn set_force_width(&self, force_width: Option<usize>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::force_width(force_width))
+        self.set(Self::Setter::force_width(self.target(), force_width))
     }
 
     // # Manual
@@ -433,7 +483,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
     fn get_layout_history_limit(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::layout_history_limit())
+        self.get(Self::Getter::layout_history_limit(self.target()))
     }
 
     // # Manual
@@ -447,7 +497,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         layout_history_limit: Option<usize>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::layout_history_limit(layout_history_limit))
+        self.set(Self::Setter::layout_history_limit(
+            self.target(),
+            layout_history_limit,
+        ))
     }
 
     // # Manual
@@ -458,7 +511,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn get_main_pane_height(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::main_pane_height())
+        self.get(Self::Getter::main_pane_height(self.target()))
     }
 
     // # Manual
@@ -469,7 +522,10 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn set_main_pane_height(&self, main_pane_height: Option<usize>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::main_pane_height(main_pane_height))
+        self.set(Self::Setter::main_pane_height(
+            self.target(),
+            main_pane_height,
+        ))
     }
 
     // # Manual
@@ -480,7 +536,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn get_main_pane_width(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::main_pane_width())
+        self.get(Self::Getter::main_pane_width(self.target()))
     }
 
     // # Manual
@@ -491,7 +547,10 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn set_main_pane_width(&self, main_pane_width: Option<usize>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::main_pane_width(main_pane_width))
+        self.set(Self::Setter::main_pane_width(
+            self.target(),
+            main_pane_width,
+        ))
     }
 
     // # Manual
@@ -502,7 +561,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn get_mode_attr(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::mode_attr())
+        self.get(Self::Getter::mode_attr(self.target()))
     }
 
     // # Manual
@@ -513,7 +572,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn set_mode_attr(&self, mode_attr: Option<Cow<'a, str>>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mode_attr(mode_attr))
+        self.set(Self::Setter::mode_attr(self.target(), mode_attr))
     }
 
     // # Manual
@@ -524,7 +583,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn get_mode_bg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::mode_bg())
+        self.get(Self::Getter::mode_bg(self.target()))
     }
 
     // # Manual
@@ -535,7 +594,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn set_mode_bg(&self, mode_bg: Option<Cow<'a, str>>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mode_bg(mode_bg))
+        self.set(Self::Setter::mode_bg(self.target(), mode_bg))
     }
 
     // # Manual
@@ -546,7 +605,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn get_mode_fg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::mode_fg())
+        self.get(Self::Getter::mode_fg(self.target()))
     }
 
     // # Manual
@@ -557,7 +616,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn set_mode_fg(&self, mode_fg: Option<Cow<'a, str>>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mode_fg())
+        self.set(Self::Setter::mode_fg(self.target()))
     }
 
     // # Manual
@@ -568,7 +627,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn get_mode_keys(&self) -> Result<Option<StatusKeys>, Error> {
-        self.get(Self::Getter::mode_keys())
+        self.get(Self::Getter::mode_keys(self.target()))
     }
 
     // # Manual
@@ -579,7 +638,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn set_mode_keys(&self, mode_keys: Option<StatusKeys>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mode_keys(mode_keys))
+        self.set(Self::Setter::mode_keys(self.target(), mode_keys))
     }
 
     // # Manual
@@ -595,7 +654,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
     fn get_mode_mouse(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::mode_mouse())
+        self.get(Self::Getter::mode_mouse(self.target()))
     }
 
     // # Manual
@@ -611,7 +670,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
     fn set_mode_mouse(&self, mode_mouse: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mode_mouse())
+        self.set(Self::Setter::mode_mouse(self.target()))
     }
 
     // # Manual
@@ -622,7 +681,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_9")]
     fn get_mode_style(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::mode_style())
+        self.get(Self::Getter::mode_style(self.target()))
     }
 
     // # Manual
@@ -633,7 +692,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_9")]
     fn set_mode_style(&self, mode_style: Option<Cow<'a, str>>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mode_style(mode_style))
+        self.set(Self::Setter::mode_style(self.target(), mode_style))
     }
 
     // # Manual
@@ -644,7 +703,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn get_monitor_activity(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::monitor_activity())
+        self.get(Self::Getter::monitor_activity(self.target()))
     }
 
     // # Manual
@@ -655,7 +714,10 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn set_monitor_activity(&self, monitor_activity: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::monitor_activity(monitor_activity))
+        self.set(Self::Setter::monitor_activity(
+            self.target(),
+            monitor_activity,
+        ))
     }
 
     // # Manual
@@ -666,7 +728,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
     fn get_monitor_content(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::monitor_content())
+        self.get(Self::Getter::monitor_content(self.target()))
     }
 
     // # Manual
@@ -680,7 +742,7 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         monitor_content: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::monitor_content())
+        self.set(Self::Setter::monitor_content(self.target()))
     }
 
     // # Manual
@@ -691,7 +753,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_2_6")]
     fn get_monitor_bell(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::monitor_bell())
+        self.get(Self::Getter::monitor_bell(self.target()))
     }
 
     // # Manual
@@ -702,7 +764,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_2_6")]
     fn set_monitor_bell(&self, monitor_bell: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::monitor_bell(monitor_bell))
+        self.set(Self::Setter::monitor_bell(self.target(), monitor_bell))
     }
 
     // # Manual
@@ -713,7 +775,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_4")]
     fn get_monitor_silence(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::monitor_silence())
+        self.get(Self::Getter::monitor_silence(self.target()))
     }
 
     // # Manual
@@ -724,7 +786,10 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_4")]
     fn set_monitor_silence(&self, monitor_silence: Option<usize>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::monitor_silence(monitor_silence))
+        self.set(Self::Setter::monitor_silence(
+            self.target(),
+            monitor_silence,
+        ))
     }
 
     // # Manual
@@ -735,7 +800,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_4")]
     fn get_other_pane_height(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::other_pane_height())
+        self.get(Self::Getter::other_pane_height(self.target()))
     }
 
     // # Manual
@@ -746,7 +811,10 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_4")]
     fn set_other_pane_height(&self, other_pane_height: Option<usize>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::other_pane_height(other_pane_height))
+        self.set(Self::Setter::other_pane_height(
+            self.target(),
+            other_pane_height,
+        ))
     }
 
     // # Manual
@@ -757,7 +825,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_4")]
     fn get_other_pane_width(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::other_pane_width())
+        self.get(Self::Getter::other_pane_width(self.target()))
     }
 
     // # Manual
@@ -768,7 +836,10 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_4")]
     fn set_other_pane_width(&self, other_pane_width: Option<usize>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::other_pane_width(other_pane_width))
+        self.set(Self::Setter::other_pane_width(
+            self.target(),
+            other_pane_width,
+        ))
     }
 
     // # Manual
@@ -779,7 +850,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_2_0")]
     fn get_pane_active_border_style(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::pane_active_border_style())
+        self.get(Self::Getter::pane_active_border_style(self.target()))
     }
 
     // # Manual
@@ -794,6 +865,7 @@ pub trait WindowOptionsCtl<'a> {
         pane_active_border_style: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::pane_active_border_style(
+            self.target(),
             pane_active_border_style,
         ))
     }
@@ -806,7 +878,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_6")]
     fn get_pane_base_index(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::pane_base_index())
+        self.get(Self::Getter::pane_base_index(self.target()))
     }
 
     // # Manual
@@ -817,7 +889,10 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_6")]
     fn set_pane_base_index(&self, pane_base_index: Option<usize>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::pane_base_index(pane_base_index))
+        self.set(Self::Setter::pane_base_index(
+            self.target(),
+            pane_base_index,
+        ))
     }
 
     // # Manual
@@ -828,7 +903,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_2_3")]
     fn get_pane_border_format(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::pane_border_format())
+        self.get(Self::Getter::pane_border_format(self.target()))
     }
 
     // # Manual
@@ -842,7 +917,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         pane_border_format: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::pane_border_format(pane_border_format))
+        self.set(Self::Setter::pane_border_format(
+            self.target(),
+            pane_border_format,
+        ))
     }
 
     // # Manual
@@ -853,7 +931,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_2_3")]
     fn get_pane_border_status(&self) -> Result<Option<PaneBorderStatus>, Error> {
-        self.get(Self::Getter::pane_border_status())
+        self.get(Self::Getter::pane_border_status(self.target()))
     }
 
     // # Manual
@@ -867,7 +945,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         pane_border_status: Option<PaneBorderStatus>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::pane_border_status(pane_border_status))
+        self.set(Self::Setter::pane_border_status(
+            self.target(),
+            pane_border_status,
+        ))
     }
 
     // # Manual
@@ -878,7 +959,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_2_0")]
     fn get_pane_border_style(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::pane_border_style())
+        self.get(Self::Getter::pane_border_style(self.target()))
     }
 
     // # Manual
@@ -892,7 +973,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         pane_border_style: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::pane_border_style(pane_border_style))
+        self.set(Self::Setter::pane_border_style(
+            self.target(),
+            pane_border_style,
+        ))
     }
 
     // # Manual
@@ -903,7 +987,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
     fn get_remain_on_exit(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::remain_on_exit())
+        self.get(Self::Getter::remain_on_exit(self.target()))
     }
 
     // # Manual
@@ -914,7 +998,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
     fn set_remain_on_exit(&self, remain_on_exit: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::remain_on_exit(remain_on_exit))
+        self.set(Self::Setter::remain_on_exit(self.target(), remain_on_exit))
     }
 
     // # Manual
@@ -925,7 +1009,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
     fn get_synchronize_panes(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::synchronize_panes())
+        self.get(Self::Getter::synchronize_panes(self.target()))
     }
 
     // # Manual
@@ -939,7 +1023,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         synchronize_panes: Option<Switch>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::synchronize_panes(synchronize_panes))
+        self.set(Self::Setter::synchronize_panes(
+            self.target(),
+            synchronize_panes,
+        ))
     }
 
     // # Manual
@@ -950,7 +1037,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
     fn get_utf8(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::utf8())
+        self.get(Self::Getter::utf8(self.target()))
     }
 
     // # Manual
@@ -961,7 +1048,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
     fn set_utf8(&self, utf8: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::utf8(utf8))
+        self.set(Self::Setter::utf8(self.target(), utf8))
     }
 
     // # Manual
@@ -972,7 +1059,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     fn get_window_active_style(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_active_style())
+        self.get(Self::Getter::window_active_style(self.target()))
     }
 
     // # Manual
@@ -986,7 +1073,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_active_style: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_active_style(window_active_style))
+        self.set(Self::Setter::window_active_style(
+            self.target(),
+            window_active_style,
+        ))
     }
 
     // # Manual
@@ -997,7 +1087,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn get_window_status_bell_attr(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_bell_attr())
+        self.get(Self::Getter::window_status_bell_attr(self.target()))
     }
 
     // # Manual
@@ -1012,6 +1102,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_bell_attr: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_bell_attr(
+            self.target(),
             window_status_bell_attr,
         ))
     }
@@ -1024,7 +1115,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn get_window_status_bell_bg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_bell_bg())
+        self.get(Self::Getter::window_status_bell_bg(self.target()))
     }
 
     // # Manual
@@ -1038,7 +1129,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_status_bell_bg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_status_bell_bg(window_status_bell_bg))
+        self.set(Self::Setter::window_status_bell_bg(
+            self.target(),
+            window_status_bell_bg,
+        ))
     }
 
     // # Manual
@@ -1049,7 +1143,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn get_window_status_bell_fg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_bell_fg())
+        self.get(Self::Getter::window_status_bell_fg(self.target()))
     }
 
     // # Manual
@@ -1063,7 +1157,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_status_bell_fg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_status_bell_fg(window_status_bell_fg))
+        self.set(Self::Setter::window_status_bell_fg(
+            self.target(),
+            window_status_bell_fg,
+        ))
     }
 
     // # Manual
@@ -1074,7 +1171,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn get_window_status_content_attr(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_content_attr())
+        self.get(Self::Getter::window_status_content_attr(self.target()))
     }
 
     // # Manual
@@ -1089,6 +1186,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_content_attr: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_content_attr(
+            self.target(),
             window_status_content_attr,
         ))
     }
@@ -1101,7 +1199,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn get_window_status_content_bg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_content_bg())
+        self.get(Self::Getter::window_status_content_bg(self.target()))
     }
 
     // # Manual
@@ -1116,6 +1214,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_content_bg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_content_bg(
+            self.target(),
             window_status_content_bg,
         ))
     }
@@ -1128,7 +1227,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn get_window_status_content_fg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_content_fg())
+        self.get(Self::Getter::window_status_content_fg(self.target()))
     }
 
     // # Manual
@@ -1143,6 +1242,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_content_fg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_content_fg(
+            self.target(),
             window_status_content_fg,
         ))
     }
@@ -1155,7 +1255,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn get_window_status_activity_attr(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_activity_attr())
+        self.get(Self::Getter::window_status_activity_attr(self.target()))
     }
 
     // # Manual
@@ -1170,6 +1270,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_activity_attr: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_activity_attr(
+            self.target(),
             window_status_activity_attr,
         ))
     }
@@ -1182,7 +1283,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn get_window_status_activity_bg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_activity_bg())
+        self.get(Self::Getter::window_status_activity_bg(self.target()))
     }
 
     // # Manual
@@ -1197,6 +1298,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_activity_bg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_activity_bg(
+            self.target(),
             window_status_activity_bg,
         ))
     }
@@ -1209,7 +1311,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn get_window_status_activity_fg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_activity_fg())
+        self.get(Self::Getter::window_status_activity_fg(self.target()))
     }
 
     // # Manual
@@ -1224,6 +1326,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_activity_fg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_activity_fg(
+            self.target(),
             window_status_activity_fg,
         ))
     }
@@ -1236,7 +1339,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn get_window_status_attr(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_attr())
+        self.get(Self::Getter::window_status_attr(self.target()))
     }
 
     // # Manual
@@ -1250,7 +1353,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_status_attr: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_status_attr(window_status_attr))
+        self.set(Self::Setter::window_status_attr(
+            self.target(),
+            window_status_attr,
+        ))
     }
 
     // # Manual
@@ -1261,7 +1367,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn get_window_status_bg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_bg())
+        self.get(Self::Getter::window_status_bg(self.target()))
     }
 
     // # Manual
@@ -1275,7 +1381,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_status_bg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_status_bg(window_status_bg))
+        self.set(Self::Setter::window_status_bg(
+            self.target(),
+            window_status_bg,
+        ))
     }
     // # Manual
     //
@@ -1285,7 +1394,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn get_window_status_fg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_fg())
+        self.get(Self::Getter::window_status_fg(self.target()))
     }
 
     // # Manual
@@ -1299,7 +1408,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_status_fg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_status_fg(window_status_fg))
+        self.set(Self::Setter::window_status_fg(
+            self.target(),
+            window_status_fg,
+        ))
     }
 
     // # Manual
@@ -1310,7 +1422,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn get_window_status_current_attr(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_current_attr())
+        self.get(Self::Getter::window_status_current_attr(self.target()))
     }
 
     // # Manual
@@ -1325,6 +1437,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_current_attr: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_current_attr(
+            self.target(),
             window_status_current_attr,
         ))
     }
@@ -1336,7 +1449,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn get_window_status_current_bg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_current_bg())
+        self.get(Self::Getter::window_status_current_bg(self.target()))
     }
 
     // # Manual
@@ -1351,6 +1464,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_current_bg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_current_bg(
+            self.target(),
             window_status_current_bg,
         ))
     }
@@ -1363,7 +1477,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn get_window_status_current_fg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_current_fg())
+        self.get(Self::Getter::window_status_current_fg(self.target()))
     }
 
     // # Manual
@@ -1378,6 +1492,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_current_fg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_current_fg(
+            self.target(),
             window_status_current_fg,
         ))
     }
@@ -1390,7 +1505,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     fn get_window_status_alert_attr(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_alert_attr())
+        self.get(Self::Getter::window_status_alert_attr(self.target()))
     }
 
     // # Manual
@@ -1405,6 +1520,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_alert_attr: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_alert_attr(
+            self.target(),
             window_status_alert_attr,
         ))
     }
@@ -1417,7 +1533,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     fn get_window_status_alert_bg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_alert_bg())
+        self.get(Self::Getter::window_status_alert_bg(self.target()))
     }
 
     // # Manual
@@ -1431,7 +1547,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_status_alert_bg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_status_alert_bg(window_status_alert_bg))
+        self.set(Self::Setter::window_status_alert_bg(
+            self.target(),
+            window_status_alert_bg,
+        ))
     }
 
     // # Manual
@@ -1442,7 +1561,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     fn get_window_status_alert_fg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_alert_fg())
+        self.get(Self::Getter::window_status_alert_fg(self.target()))
     }
 
     // # Manual
@@ -1456,7 +1575,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_status_alert_fg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_status_alert_fg(window_status_alert_fg))
+        self.set(Self::Setter::window_status_alert_fg(
+            self.target(),
+            window_status_alert_fg,
+        ))
     }
 
     // # Manual
@@ -1467,7 +1589,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_9")]
     fn get_window_status_activity_style(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_activity_style())
+        self.get(Self::Getter::window_status_activity_style(self.target()))
     }
 
     // # Manual
@@ -1482,6 +1604,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_activity_style: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_activity_style(
+            self.target(),
             window_status_activity_style,
         ))
     }
@@ -1494,7 +1617,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_9")]
     fn get_window_status_bell_style(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_bell_style())
+        self.get(Self::Getter::window_status_bell_style(self.target()))
     }
 
     // # Manual
@@ -1509,6 +1632,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_bell_style: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_bell_style(
+            self.target(),
             window_status_bell_style,
         ))
     }
@@ -1521,7 +1645,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
     fn get_window_status_content_style(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_content_style())
+        self.get(Self::Getter::window_status_content_style(self.target()))
     }
 
     // # Manual
@@ -1536,6 +1660,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_content_style: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_content_style(
+            self.target(),
             window_status_content_style,
         ))
     }
@@ -1548,7 +1673,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_2")]
     fn get_window_status_current_format(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_current_format())
+        self.get(Self::Getter::window_status_current_format(self.target()))
     }
 
     // # Manual
@@ -1563,6 +1688,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_current_format: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_current_format(
+            self.target(),
             window_status_current_format,
         ))
     }
@@ -1575,7 +1701,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
     fn get_window_status_last_attr(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_last_attr())
+        self.get(Self::Getter::window_status_last_attr(self.target()))
     }
 
     // # Manual
@@ -1590,6 +1716,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_last_attr: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_last_attr(
+            self.target(),
             window_status_last_attr,
         ))
     }
@@ -1602,7 +1729,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
     fn get_window_status_last_bg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_last_bg())
+        self.get(Self::Getter::window_status_last_bg(self.target()))
     }
 
     // # Manual
@@ -1616,7 +1743,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_status_last_bg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_status_last_bg(window_status_last_bg))
+        self.set(Self::Setter::window_status_last_bg(
+            self.target(),
+            window_status_last_bg,
+        ))
     }
 
     // # Manual
@@ -1627,7 +1757,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
     fn get_window_status_last_fg(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_last_fg())
+        self.get(Self::Getter::window_status_last_fg(self.target()))
     }
 
     // # Manual
@@ -1641,7 +1771,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_status_last_fg: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_status_last_fg(window_status_last_fg))
+        self.set(Self::Setter::window_status_last_fg(
+            self.target(),
+            window_status_last_fg,
+        ))
     }
 
     // # Manual
@@ -1652,7 +1785,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_9")]
     fn get_window_status_current_style(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_current_style())
+        self.get(Self::Getter::window_status_current_style(self.target()))
     }
 
     // # Manual
@@ -1667,6 +1800,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_current_style: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_current_style(
+            self.target(),
             window_status_current_style,
         ))
     }
@@ -1679,7 +1813,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_2")]
     fn get_window_status_format(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_format())
+        self.get(Self::Getter::window_status_format(self.target()))
     }
 
     // # Manual
@@ -1693,7 +1827,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_status_format: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_status_format(window_status_format))
+        self.set(Self::Setter::window_status_format(
+            self.target(),
+            window_status_format,
+        ))
     }
 
     // # Manual
@@ -1704,7 +1841,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_9")]
     fn get_window_status_last_style(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_last_style())
+        self.get(Self::Getter::window_status_last_style(self.target()))
     }
 
     // # Manual
@@ -1719,6 +1856,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_last_style: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_last_style(
+            self.target(),
             window_status_last_style,
         ))
     }
@@ -1731,7 +1869,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_7")]
     fn get_window_status_separator(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_separator())
+        self.get(Self::Getter::window_status_separator(self.target()))
     }
 
     // # Manual
@@ -1746,6 +1884,7 @@ pub trait WindowOptionsCtl<'a> {
         window_status_separator: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::window_status_separator(
+            self.target(),
             window_status_separator,
         ))
     }
@@ -1758,7 +1897,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_9")]
     fn get_window_status_style(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_status_style())
+        self.get(Self::Getter::window_status_style(self.target()))
     }
 
     // # Manual
@@ -1772,7 +1911,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         window_status_style: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_status_style(window_status_style))
+        self.set(Self::Setter::window_status_style(
+            self.target(),
+            window_status_style,
+        ))
     }
 
     // # Manual
@@ -1783,7 +1925,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_2_9")]
     fn get_window_size(&self) -> Result<Option<WindowSize>, Error> {
-        self.get(Self::Getter::window_size())
+        self.get(Self::Getter::window_size(self.target()))
     }
 
     // # Manual
@@ -1794,7 +1936,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_2_9")]
     fn set_window_size(&self, window_size: Option<WindowSize>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_size(window_size))
+        self.set(Self::Setter::window_size(self.target(), window_size))
     }
 
     // # Manual
@@ -1805,7 +1947,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
     fn get_word_separators(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::word_separators())
+        self.get(Self::Getter::word_separators(self.target()))
     }
 
     // # Manual
@@ -1819,7 +1961,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         word_separators: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::word_separators(word_separators))
+        self.set(Self::Setter::word_separators(
+            self.target(),
+            word_separators,
+        ))
     }
 
     // # Manual
@@ -1830,7 +1975,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     fn get_window_style(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::window_style())
+        self.get(Self::Getter::window_style(self.target()))
     }
 
     // # Manual
@@ -1841,7 +1986,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     fn set_window_style(&self, window_style: Option<Cow<'a, str>>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::window_style(window_style))
+        self.set(Self::Setter::window_style(self.target(), window_style))
     }
 
     // # Manual
@@ -1852,7 +1997,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_7")]
     fn get_wrap_search(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::wrap_search())
+        self.get(Self::Getter::wrap_search(self.target()))
     }
 
     // # Manual
@@ -1863,7 +2008,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_7")]
     fn set_wrap_search(&self, wrap_search: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::wrap_search(wrap_search))
+        self.set(Self::Setter::wrap_search(self.target(), wrap_search))
     }
 
     // # Manual
@@ -1874,7 +2019,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn get_xterm_keys(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::xterm_keys())
+        self.get(Self::Getter::xterm_keys(self.target()))
     }
 
     // # Manual
@@ -1885,7 +2030,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(feature = "tmux_1_0")]
     fn set_xterm_keys(&self, xterm_keys: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::xterm_keys(xterm_keys))
+        self.set(Self::Setter::xterm_keys(self.target(), xterm_keys))
     }
 
     // # Manual
@@ -1894,7 +2039,7 @@ pub trait WindowOptionsCtl<'a> {
     // @user-option value
     // ```
     // fn get_user_options(&self) -> Result<Option<HashMap<String, Option<Cow<'a, str>>>>, Error> {
-    //     self.get(Self::Getter::user_options())
+    //     self.get(Self::Getter::user_options(self.target(), ))
     // }
 
     // # Manual
@@ -1903,6 +2048,6 @@ pub trait WindowOptionsCtl<'a> {
     // @user-option value
     // ```
     // fn set_user_options(&self, user_options: Option<HashMap<String<>>>) -> Result<TmuxOutput, Error> {
-    //     self.set(Self::Setter::user_options(user_options))
+    //     self.set(Self::Setter::user_options(self.target(), user_options))
     // }
 }

@@ -20,6 +20,7 @@
 //!
 use crate::options::*;
 use crate::{GetOptionExt, TmuxCommand};
+use std::borrow::Cow;
 
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned
@@ -34,7 +35,7 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     //pub fn gets<'a>(names: ServerOptionB) -> TmuxCommands<'a> {
     //let mut cmds = TmuxCommands::new();
     //for name in names.0 {
-    //cmds.push(Self::get(name));
+    //cmds.push(Self::get(target, name));
     //}
     //cmds
     //}
@@ -46,8 +47,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// backspace key
     /// ```
     #[cfg(feature = "tmux_3_1")]
-    fn backspace<'a>() -> TmuxCommand<'a> {
-        Self::get(BACKSPACE)
+    fn backspace<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, BACKSPACE)
     }
 
     /// ### Manual
@@ -57,8 +58,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// buffer-limit number
     /// ```
     #[cfg(feature = "tmux_1_5")]
-    fn buffer_limit<'a>() -> TmuxCommand<'a> {
-        Self::get(BUFFER_LIMIT)
+    fn buffer_limit<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, BUFFER_LIMIT)
     }
 
     /// ### Manual
@@ -68,8 +69,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// command-alias[] name=value
     /// ```
     #[cfg(feature = "tmux_2_4")]
-    fn command_alias<'a>() -> TmuxCommand<'a> {
-        Self::get(COMMAND_ALIAS)
+    fn command_alias<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, COMMAND_ALIAS)
     }
 
     /// ### Manual
@@ -79,8 +80,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// copy-command shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn copy_command<'a>() -> TmuxCommand<'a> {
-        Self::get(COPY_COMMAND)
+    fn copy_command<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, COPY_COMMAND)
     }
 
     /// ### Manual
@@ -90,8 +91,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// default-terminal terminal
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    fn default_terminal<'a>() -> TmuxCommand<'a> {
-        Self::get(DEFAULT_TERMINAL)
+    fn default_terminal<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, DEFAULT_TERMINAL)
     }
 
     /// ### Manual
@@ -101,8 +102,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// escape-time time
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    fn escape_time<'a>() -> TmuxCommand<'a> {
-        Self::get(ESCAPE_TIME)
+    fn escape_time<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, ESCAPE_TIME)
     }
 
     /// ### Manual
@@ -112,8 +113,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// editor shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn editor<'a>() -> TmuxCommand<'a> {
-        Self::get(EDITOR)
+    fn editor<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, EDITOR)
     }
 
     /// ### Manual
@@ -123,8 +124,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// exit-empty [on | off]
     /// ```
     #[cfg(feature = "tmux_2_7")]
-    fn exit_empty<'a>() -> TmuxCommand<'a> {
-        Self::get(EXIT_EMPTY)
+    fn exit_empty<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, EXIT_EMPTY)
     }
 
     /// ### Manual
@@ -134,8 +135,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// exit-unattached [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn exit_unattached<'a>() -> TmuxCommand<'a> {
-        Self::get(EXIT_UNATTACHED)
+    fn exit_unattached<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, EXIT_UNATTACHED)
     }
 
     /// ### Manual
@@ -145,8 +146,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// extended-keys [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn extended_keys<'a>() -> TmuxCommand<'a> {
-        Self::get(EXTENDED_KEYS)
+    fn extended_keys<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, EXTENDED_KEYS)
     }
 
     /// ### Manual
@@ -156,8 +157,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// focus-events [on | off]
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn focus_events<'a>() -> TmuxCommand<'a> {
-        Self::get(FOCUS_EVENTS)
+    fn focus_events<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, FOCUS_EVENTS)
     }
 
     /// ### Manual
@@ -167,8 +168,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// history-file path
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    fn history_file<'a>() -> TmuxCommand<'a> {
-        Self::get(HISTORY_FILE)
+    fn history_file<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, HISTORY_FILE)
     }
 
     /// ### Manual
@@ -178,8 +179,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// message-limit number
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    fn message_limit<'a>() -> TmuxCommand<'a> {
-        Self::get(MESSAGE_LIMIT)
+    fn message_limit<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, MESSAGE_LIMIT)
     }
 
     /// ### Manual
@@ -189,8 +190,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// prompt-history-limit number
     /// ```
     #[cfg(feature = "tmux_3_3")]
-    fn prompt_history_limit<'a>() -> TmuxCommand<'a> {
-        Self::get(PROMPT_HISTORY_LIMIT)
+    fn prompt_history_limit<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, PROMPT_HISTORY_LIMIT)
     }
 
     /// ### Manual
@@ -200,8 +201,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     ///set-clipboard [on | external | off]
     /// ```
     #[cfg(feature = "tmux_1_5")]
-    fn set_clipboard<'a>() -> TmuxCommand<'a> {
-        Self::get(SET_CLIPBOARD)
+    fn set_clipboard<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, SET_CLIPBOARD)
     }
 
     /// ### Manual
@@ -211,8 +212,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// terminal-features[] string
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn terminal_features<'a>() -> TmuxCommand<'a> {
-        Self::get(TERMINAL_FEATURES)
+    fn terminal_features<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, TERMINAL_FEATURES)
     }
 
     /// ### Manual
@@ -222,8 +223,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// terminal-overrides[] string
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    fn terminal_overrides<'a>() -> TmuxCommand<'a> {
-        Self::get(TERMINAL_OVERRIDES)
+    fn terminal_overrides<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, TERMINAL_OVERRIDES)
     }
 
     /// ### Manual
@@ -233,8 +234,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// user-keys[] key
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn user_keys<'a>() -> TmuxCommand<'a> {
-        Self::get(USER_KEYS)
+    fn user_keys<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, USER_KEYS)
     }
 
     /// ### Manual
@@ -244,8 +245,8 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// quiet [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    fn quiet<'a>() -> TmuxCommand<'a> {
-        Self::get(QUIET)
+    fn quiet<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, QUIET)
     }
 
     /// ### Manual
@@ -255,7 +256,7 @@ pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    fn detach_on_destroy<'a>() -> TmuxCommand<'a> {
-        Self::get(DETACH_ON_DESTROY)
+    fn detach_on_destroy<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get(target, DETACH_ON_DESTROY)
     }
 }

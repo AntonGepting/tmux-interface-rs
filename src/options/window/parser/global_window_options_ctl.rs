@@ -2,6 +2,7 @@ use crate::{
     Error, GetGlobalWindowOptionValue, SetGlobalWindowOption, SetGlobalWindowOptions,
     SetWindowOptions, ShowOptions, Tmux, TmuxCommand, TmuxOutput, WindowOptions, WindowOptionsCtl,
 };
+use std::borrow::Cow;
 use std::str::FromStr;
 
 // XXX: rename WindowOptionCtl?
@@ -16,19 +17,24 @@ pub struct GlobalWindowOptionsCtl<'a> {
     // let tmux = Tmux::new();
     // ```
     pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    pub target: Option<Cow<'a, str>>,
 }
 
 impl<'a> Default for GlobalWindowOptionsCtl<'a> {
     fn default() -> Self {
         Self {
             invoker: |cmd| Tmux::with_command(cmd).output(),
+            target: None,
         }
     }
 }
 
 impl<'a> GlobalWindowOptionsCtl<'a> {
     pub fn new(invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
-        Self { invoker }
+        Self {
+            invoker,
+            target: None,
+        }
     }
 
     // get and parse single line option
@@ -80,6 +86,10 @@ impl<'a> WindowOptionsCtl<'a> for GlobalWindowOptionsCtl<'a> {
     type Getter = GetGlobalWindowOptionValue;
     type Setter = SetGlobalWindowOption;
     type SetterMultiple = SetGlobalWindowOptions<'a>;
+
+    fn target(&self) -> Option<Cow<'a, str>> {
+        self.target.to_owned()
+    }
 
     fn get_all(&self) -> Result<WindowOptions<'a>, Error> {
         let cmd = ShowOptions::new().global().window().build();

@@ -6,18 +6,32 @@ pub struct SetLocalWindowOption;
 
 //impl SetWindowOptionExt for SetLocalWindowOption {
 impl SetOptionExt for SetLocalWindowOption {
-    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().window().option(name).unset().build()
-    }
-
     // unset if value = None
-    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+    fn set<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<U>,
         name: T,
         value: Option<S>,
     ) -> TmuxCommand<'a> {
+        let cmd = SetOption::new().window().option(name);
+        let cmd = match target {
+            Some(target) => cmd.target(target),
+            None => cmd,
+        };
         let cmd = match value {
-            Some(data) => SetOption::new().window().option(name).value(data),
-            None => SetOption::new().window().option(name),
+            Some(value) => cmd.value(value),
+            None => cmd.unset(),
+        };
+        cmd.build()
+    }
+
+    fn unset<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
+        target: Option<S>,
+        name: T,
+    ) -> TmuxCommand<'a> {
+        let cmd = SetOption::new().window().option(name).unset();
+        let cmd = match target {
+            Some(target) => cmd.target(target),
+            None => cmd,
         };
         cmd.build()
     }

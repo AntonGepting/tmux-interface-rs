@@ -7,18 +7,32 @@ use std::borrow::Cow;
 pub struct SetGlobalSessionOption;
 
 impl SetOptionExt for SetGlobalSessionOption {
-    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
-        SetOption::new().global().option(name).unset().build()
-    }
-
     // unset if value = None
-    fn set_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+    fn set<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+        target: Option<U>,
         name: T,
         value: Option<S>,
     ) -> TmuxCommand<'a> {
+        let cmd = SetOption::new().global().option(name);
+        let cmd = match target {
+            Some(target) => cmd.target(target),
+            None => cmd,
+        };
         let cmd = match value {
-            Some(data) => SetOption::new().global().option(name).value(data),
-            None => SetOption::new().global().option(name),
+            Some(value) => cmd.value(value),
+            None => cmd.unset(),
+        };
+        cmd.build()
+    }
+
+    fn unset<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
+        target: Option<S>,
+        name: T,
+    ) -> TmuxCommand<'a> {
+        let cmd = SetOption::new().global().option(name).unset();
+        let cmd = match target {
+            Some(target) => cmd.target(target),
+            None => cmd,
         };
         cmd.build()
     }

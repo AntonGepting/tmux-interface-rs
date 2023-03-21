@@ -1,5 +1,6 @@
 use crate::options::*;
 use crate::TmuxCommand;
+use std::borrow::Cow;
 
 // NOTE: ADR: compile time or run time parametrisation for global local option set/get
 // * compile time: trais
@@ -20,8 +21,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// aggressive-resize [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn aggressive_resize<'a>() -> TmuxCommand<'a> {
-        Self::get(AGGRESSIVE_RESIZE)
+    fn aggressive_resize<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, AGGRESSIVE_RESIZE)
     }
 
     /// ### Manual
@@ -31,8 +35,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// allow-rename [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
-    fn allow_rename<'a>() -> TmuxCommand<'a> {
-        Self::get(ALLOW_RENAME)
+    fn allow_rename<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, ALLOW_RENAME)
     }
 
     /// ### Manual
@@ -42,8 +49,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// alternate-screen [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-    fn alternate_screen<'a>() -> TmuxCommand<'a> {
-        Self::get(ALTERNATE_SCREEN)
+    fn alternate_screen<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, ALTERNATE_SCREEN)
     }
 
     /// ### Manual
@@ -53,8 +63,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// automatic-rename [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")] // 0.8
-    fn automatic_rename<'a>() -> TmuxCommand<'a> {
-        Self::get(AUTOMATIC_RENAME)
+    fn automatic_rename<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, AUTOMATIC_RENAME)
     }
 
     /// ### Manual
@@ -64,8 +77,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// automatic-rename-format format
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn automatic_rename_format<'a>() -> TmuxCommand<'a> {
-        Self::get(AUTOMATIC_RENAME_FORMAT)
+    fn automatic_rename_format<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, AUTOMATIC_RENAME_FORMAT)
     }
 
     /// ### Manual
@@ -75,8 +91,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// c0-change-interval interval
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    fn c0_change_interval<'a>() -> TmuxCommand<'a> {
-        Self::get(C0_CHANGE_INTERVAL)
+    fn c0_change_interval<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, C0_CHANGE_INTERVAL)
     }
 
     /// ### Manual
@@ -86,8 +105,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// c0-change-trigger trigger
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    fn c0_change_trigger<'a>() -> TmuxCommand<'a> {
-        Self::get(C0_CHANGE_TRIGGER)
+    fn c0_change_trigger<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, C0_CHANGE_TRIGGER)
     }
 
     /// ### Manual
@@ -97,8 +119,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// clock-mode-colour colour
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn clock_mode_colour<'a>() -> TmuxCommand<'a> {
-        Self::get(CLOCK_MODE_COLOUR)
+    fn clock_mode_colour<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, CLOCK_MODE_COLOUR)
     }
 
     /// ### Manual
@@ -108,8 +133,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// clock-mode-style [12 | 24]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn clock_mode_style<'a>() -> TmuxCommand<'a> {
-        Self::get(CLOCK_MODE_STYLE)
+    fn clock_mode_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, CLOCK_MODE_STYLE)
     }
 
     /// ### Manual
@@ -119,8 +147,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// force-height height
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-    fn force_height<'a>() -> TmuxCommand<'a> {
-        Self::get(FORCE_HEIGHT)
+    fn force_height<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, FORCE_HEIGHT)
     }
 
     /// ### Manual
@@ -130,8 +161,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// force-width width
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-    fn force_width<'a>() -> TmuxCommand<'a> {
-        Self::get(FORCE_WIDTH)
+    fn force_width<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, FORCE_WIDTH)
     }
 
     /// ### Manual
@@ -141,8 +175,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// layout-history-limit limit
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
-    fn layout_history_limit<'a>() -> TmuxCommand<'a> {
-        Self::get(LAYOUT_HISTORY_LIMIT)
+    fn layout_history_limit<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, LAYOUT_HISTORY_LIMIT)
     }
 
     /// ### Manual
@@ -152,8 +189,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// main-pane-height height
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn main_pane_height<'a>() -> TmuxCommand<'a> {
-        Self::get(MAIN_PANE_HEIGHT)
+    fn main_pane_height<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MAIN_PANE_HEIGHT)
     }
 
     /// ### Manual
@@ -163,8 +203,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// main-pane-width width
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn main_pane_width<'a>() -> TmuxCommand<'a> {
-        Self::get(MAIN_PANE_WIDTH)
+    fn main_pane_width<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MAIN_PANE_WIDTH)
     }
 
     /// ### Manual
@@ -174,8 +217,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// mode-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn mode_attr<'a>() -> TmuxCommand<'a> {
-        Self::get(MODE_ATTR)
+    fn mode_attr<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MODE_ATTR)
     }
 
     /// ### Manual
@@ -185,8 +231,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// mode-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn mode_bg<'a>() -> TmuxCommand<'a> {
-        Self::get(MODE_BG)
+    fn mode_bg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MODE_BG)
     }
 
     /// ### Manual
@@ -196,8 +245,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// mode-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn mode_fg<'a>() -> TmuxCommand<'a> {
-        Self::get(MODE_FG)
+    fn mode_fg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MODE_FG)
     }
 
     /// ### Manual
@@ -207,8 +259,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// mode-keys [vi | emacs]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn mode_keys<'a>() -> TmuxCommand<'a> {
-        Self::get(MODE_KEYS)
+    fn mode_keys<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MODE_KEYS)
     }
 
     /// ### Manual
@@ -223,8 +278,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// mode-mouse [on | off | copy-mode]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    fn mode_mouse<'a>() -> TmuxCommand<'a> {
-        Self::get(MODE_MOUSE)
+    fn mode_mouse<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MODE_MOUSE)
     }
 
     /// ### Manual
@@ -234,8 +292,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// mode-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn mode_style<'a>() -> TmuxCommand<'a> {
-        Self::get(MODE_STYLE)
+    fn mode_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MODE_STYLE)
     }
 
     /// ### Manual
@@ -245,8 +306,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// monitor-activity [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn monitor_activity<'a>() -> TmuxCommand<'a> {
-        Self::get(MONITOR_ACTIVITY)
+    fn monitor_activity<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MONITOR_ACTIVITY)
     }
 
     /// ### Manual
@@ -256,8 +320,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// monitor-content match-string
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    fn monitor_content<'a>() -> TmuxCommand<'a> {
-        Self::get(MONITOR_CONTENT)
+    fn monitor_content<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MONITOR_CONTENT)
     }
 
     /// ### Manual
@@ -267,8 +334,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// monitor-bell [on | off]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    fn monitor_bell<'a>() -> TmuxCommand<'a> {
-        Self::get(MONITOR_BELL)
+    fn monitor_bell<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MONITOR_BELL)
     }
 
     /// ### Manual
@@ -278,8 +348,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// monitor-silence [interval]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn monitor_silence<'a>() -> TmuxCommand<'a> {
-        Self::get(MONITOR_SILENCE)
+    fn monitor_silence<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, MONITOR_SILENCE)
     }
 
     /// ### Manual
@@ -289,8 +362,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// other-pane-height height
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn other_pane_height<'a>() -> TmuxCommand<'a> {
-        Self::get(OTHER_PANE_HEIGHT)
+    fn other_pane_height<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, OTHER_PANE_HEIGHT)
     }
 
     /// ### Manual
@@ -300,8 +376,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// other-pane-width width
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn other_pane_width<'a>() -> TmuxCommand<'a> {
-        Self::get(OTHER_PANE_WIDTH)
+    fn other_pane_width<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, OTHER_PANE_WIDTH)
     }
 
     /// ### Manual
@@ -311,8 +390,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// pane-active-border-style style
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    fn pane_active_border_style<'a>() -> TmuxCommand<'a> {
-        Self::get(PANE_ACTIVE_BORDER_STYLE)
+    fn pane_active_border_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, PANE_ACTIVE_BORDER_STYLE)
     }
 
     /// ### Manual
@@ -322,8 +404,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// pane-base-index index
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    fn pane_base_index<'a>() -> TmuxCommand<'a> {
-        Self::get(PANE_BASE_INDEX)
+    fn pane_base_index<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, PANE_BASE_INDEX)
     }
 
     /// ### Manual
@@ -333,8 +418,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// pane-border-format format
     /// ```
     #[cfg(feature = "tmux_2_3")]
-    fn pane_border_format<'a>() -> TmuxCommand<'a> {
-        Self::get(PANE_BORDER_FORMAT)
+    fn pane_border_format<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, PANE_BORDER_FORMAT)
     }
 
     /// ### Manual
@@ -344,8 +432,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// pane-border-status [off | top | bottom]
     /// ```
     #[cfg(feature = "tmux_2_3")]
-    fn pane_border_status<'a>() -> TmuxCommand<'a> {
-        Self::get(PANE_BORDER_STATUS)
+    fn pane_border_status<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, PANE_BORDER_STATUS)
     }
 
     /// ### Manual
@@ -355,8 +446,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// pane-border-style style
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    fn pane_border_style<'a>() -> TmuxCommand<'a> {
-        Self::get(PANE_BORDER_STYLE)
+    fn pane_border_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, PANE_BORDER_STYLE)
     }
 
     /// ### Manual
@@ -366,8 +460,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// remain-on-exit [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
-    fn remain_on_exit<'a>() -> TmuxCommand<'a> {
-        Self::get(REMAIN_ON_EXIT)
+    fn remain_on_exit<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, REMAIN_ON_EXIT)
     }
 
     /// ### Manual
@@ -377,8 +474,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// synchronize-panes [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
-    fn synchronize_panes<'a>() -> TmuxCommand<'a> {
-        Self::get(SYNCHRONIZE_PANES)
+    fn synchronize_panes<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, SYNCHRONIZE_PANES)
     }
 
     /// ### Manual
@@ -388,8 +488,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    fn utf8<'a>() -> TmuxCommand<'a> {
-        Self::get(UTF8)
+    fn utf8<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, UTF8)
     }
 
     /// ### Manual
@@ -399,8 +502,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-active-style style
     /// ```
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-    fn window_active_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_ACTIVE_STYLE)
+    fn window_active_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_ACTIVE_STYLE)
     }
 
     /// ### Manual
@@ -410,8 +516,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-bell-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_bell_attr<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_BELL_ATTR)
+    fn window_status_bell_attr<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_BELL_ATTR)
     }
 
     /// ### Manual
@@ -421,8 +530,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-bell-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_bell_bg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_BELL_BG)
+    fn window_status_bell_bg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_BELL_BG)
     }
 
     /// ### Manual
@@ -432,8 +544,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-bell-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_bell_fg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_BELL_FG)
+    fn window_status_bell_fg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_BELL_FG)
     }
 
     /// ### Manual
@@ -443,8 +558,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-content-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_content_attr<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_CONTENT_ATTR)
+    fn window_status_content_attr<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_CONTENT_ATTR)
     }
 
     /// ### Manual
@@ -454,8 +572,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-content-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_content_bg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_CONTENT_BG)
+    fn window_status_content_bg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_CONTENT_BG)
     }
 
     /// ### Manual
@@ -465,8 +586,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-content-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_content_fg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_CONTENT_FG)
+    fn window_status_content_fg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_CONTENT_FG)
     }
 
     /// ### Manual
@@ -476,8 +600,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-activity-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_activity_attr<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_ACTIVITY_ATTR)
+    fn window_status_activity_attr<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_ACTIVITY_ATTR)
     }
 
     /// ### Manual
@@ -487,8 +614,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-activity-bg attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_activity_bg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_ACTIVITY_BG)
+    fn window_status_activity_bg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_ACTIVITY_BG)
     }
 
     /// ### Manual
@@ -498,8 +628,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-activity-fg attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_activity_fg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_ACTIVITY_FG)
+    fn window_status_activity_fg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_ACTIVITY_FG)
     }
 
     /// ### Manual
@@ -509,8 +642,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_attr<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_ATTR)
+    fn window_status_attr<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_ATTR)
     }
 
     /// ### Manual
@@ -520,8 +656,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_bg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_BG)
+    fn window_status_bg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_BG)
     }
 
     /// ### Manual
@@ -531,8 +670,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_fg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_FG)
+    fn window_status_fg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_FG)
     }
 
     /// ### Manual
@@ -542,8 +684,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-current-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_current_attr<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_CURRENT_ATTR)
+    fn window_status_current_attr<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_CURRENT_ATTR)
     }
 
     /// ### Manual
@@ -553,8 +698,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-current-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_current_bg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_CURRENT_BG)
+    fn window_status_current_bg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_CURRENT_BG)
     }
 
     /// ### Manual
@@ -564,8 +712,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-current-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn window_status_current_fg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_CURRENT_FG)
+    fn window_status_current_fg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_CURRENT_FG)
     }
 
     /// ### Manual
@@ -575,8 +726,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-alert-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    fn window_status_alert_attr<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_ALERT_ATTR)
+    fn window_status_alert_attr<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_ALERT_ATTR)
     }
 
     /// ### Manual
@@ -586,8 +740,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-alert-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    fn window_status_alert_bg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_ALERT_BG)
+    fn window_status_alert_bg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_ALERT_BG)
     }
 
     /// ### Manual
@@ -597,8 +754,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-alert-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    fn window_status_alert_fg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_ALERT_FG)
+    fn window_status_alert_fg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_ALERT_FG)
     }
 
     /// ### Manual
@@ -608,8 +768,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-activity-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn window_status_activity_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_ACTIVITY_STYLE)
+    fn window_status_activity_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_ACTIVITY_STYLE)
     }
 
     /// ### Manual
@@ -619,8 +782,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-bell-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn window_status_bell_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_BELL_STYLE)
+    fn window_status_bell_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_BELL_STYLE)
     }
 
     /// ### Manual
@@ -630,8 +796,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-content-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    fn window_status_content_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_CONTENT_STYLE)
+    fn window_status_content_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_CONTENT_STYLE)
     }
 
     /// ### Manual
@@ -641,8 +810,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-current-format string
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    fn window_status_current_format<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_CURRENT_FORMAT)
+    fn window_status_current_format<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_CURRENT_FORMAT)
     }
 
     /// ### Manual
@@ -652,8 +824,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-last-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    fn window_status_last_attr<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_LAST_ATTR)
+    fn window_status_last_attr<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_LAST_ATTR)
     }
 
     /// ### Manual
@@ -663,8 +838,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-last-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    fn window_status_last_bg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_LAST_BG)
+    fn window_status_last_bg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_LAST_BG)
     }
 
     /// ### Manual
@@ -674,8 +852,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-last-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    fn window_status_last_fg<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_LAST_FG)
+    fn window_status_last_fg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_LAST_FG)
     }
 
     /// ### Manual
@@ -685,8 +866,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-current-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn window_status_current_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_CURRENT_STYLE)
+    fn window_status_current_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_CURRENT_STYLE)
     }
 
     /// ### Manual
@@ -696,8 +880,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-format string
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    fn window_status_format<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_FORMAT)
+    fn window_status_format<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_FORMAT)
     }
 
     /// ### Manual
@@ -707,8 +894,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-last-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn window_status_last_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_LAST_STYLE)
+    fn window_status_last_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_LAST_STYLE)
     }
 
     /// ### Manual
@@ -718,8 +908,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-separator string
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    fn window_status_separator<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_SEPARATOR)
+    fn window_status_separator<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_SEPARATOR)
     }
 
     /// ### Manual
@@ -729,8 +922,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-status-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn window_status_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STATUS_STYLE)
+    fn window_status_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STATUS_STYLE)
     }
 
     /// ### Manual
@@ -740,8 +936,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-size largest | smallest | manual | latest
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn window_size<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_SIZE)
+    fn window_size<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_SIZE)
     }
 
     /// ### Manual
@@ -751,8 +950,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// word-separators string
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
-    fn word_separators<'a>() -> TmuxCommand<'a> {
-        Self::get(WORD_SEPARATORS)
+    fn word_separators<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WORD_SEPARATORS)
     }
 
     /// ### Manual
@@ -762,8 +964,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// window-style style
     /// ```
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-    fn window_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STYLE)
+    fn window_style<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STYLE)
     }
 
     /// ### Manual
@@ -773,8 +978,11 @@ pub trait GetWindowOption: GetOptionExt {
     /// wrap-search [on | off]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    fn wrap_search<'a>() -> TmuxCommand<'a> {
-        Self::get(WRAP_SEARCH)
+    fn wrap_search<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WRAP_SEARCH)
     }
 
     /// ### Manual
@@ -784,7 +992,10 @@ pub trait GetWindowOption: GetOptionExt {
     /// xterm-keys [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn xterm_keys<'a>() -> TmuxCommand<'a> {
-        Self::get(XTERM_KEYS)
+    fn xterm_keys<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get(target, XTERM_KEYS)
     }
 }
