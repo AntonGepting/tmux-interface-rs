@@ -322,7 +322,7 @@ fn tmux_macro() {
     // ```text
     // tmux [-28dqUuVv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
     // ```
-    let mut tmux = tmux!();
+    let tmux = tmux!();
     #[cfg(feature = "tmux_0_8")]
     let tmux = tmux!((tmux), -2);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
