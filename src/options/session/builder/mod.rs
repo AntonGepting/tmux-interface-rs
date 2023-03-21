@@ -22,7 +22,7 @@ mod session_tests {
     #[cfg(feature = "tmux_0_8")]
     pub mod get_session_option_tests;
     #[cfg(feature = "tmux_0_8")]
-    // pub mod get_session_options_tests;
+    pub mod get_session_options_tests;
     #[cfg(feature = "tmux_0_8")]
     pub mod set_session_option_tests;
     #[cfg(feature = "tmux_0_8")]
