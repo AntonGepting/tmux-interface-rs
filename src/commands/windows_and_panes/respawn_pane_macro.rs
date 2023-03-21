@@ -70,7 +70,7 @@ macro_rules! respawn_pane {
 
 #[test]
 fn respawn_pane_macro() {
-    use crate::{RespawnPane, TargetPane};
+    use crate::TargetPane;
     use std::borrow::Cow;
 
     // Reactivate a pane in which the command has exited

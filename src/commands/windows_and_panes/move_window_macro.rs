@@ -94,7 +94,7 @@ macro_rules! move_window {
 
 #[test]
 fn move_window_macro() {
-    use crate::{MoveWindow, TargetWindow};
+    use crate::TargetWindow;
     use std::borrow::Cow;
 
     // Like join-pane, but `src-pane` and `dst-pane` may belong to the same window
