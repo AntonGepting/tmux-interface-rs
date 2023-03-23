@@ -1,5 +1,5 @@
 #[test]
-fn get_window_options() {
+fn get_global_window_options() {
     use crate::{GetGlobalWindowOptions, GetUserOptions, GetWindowOptions};
 
     let options = GetGlobalWindowOptions::new();
@@ -151,6 +151,7 @@ fn get_window_options() {
     let options = options.options.to_string();
 
     let cmd = "show -g -w";
+    let cmd = format!("{} -t {}", cmd, target);
     let separator = " ; ";
 
     let mut origin = Vec::new();

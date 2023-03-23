@@ -1,14 +1,10 @@
 #[test]
-fn set_local_window_option_tests() {
-    #[cfg(feature = "tmux_2_9")]
-    use crate::WindowSize;
-    use crate::{
-        ClockModeStyle, PaneBorderStatus, SetLocalWindowOption, SetUserOption, SetWindowOptionExt,
-        StatusKeys, Switch,
-    };
+fn get_global_window_option_tests() {
+    use crate::{GetGlobalWindowOption, GetUserOption, GetWindowOption};
 
-    let cmd = "set -w";
+    let cmd = "show -g -w";
     let target = ":";
+    let cmd = format!("{} -t {}", cmd, target);
 
     // ### Manual
     //
@@ -18,9 +14,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_0")]
     {
-        let origin = format!("{} {} {}", cmd, "aggressive-resize", "on");
-        let set_option =
-            SetLocalWindowOption::aggressive_resize(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "aggressive-resize");
+        let set_option = GetGlobalWindowOption::aggressive_resize(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -32,9 +27,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
     {
-        let origin = format!("{} {} {}", cmd, "allow-rename", "on");
-        let set_option =
-            SetLocalWindowOption::allow_rename(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "allow-rename");
+        let set_option = GetGlobalWindowOption::allow_rename(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -46,9 +40,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     {
-        let origin = format!("{} {} {}", cmd, "alternate-screen", "on");
-        let set_option =
-            SetLocalWindowOption::alternate_screen(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "alternate-screen");
+        let set_option = GetGlobalWindowOption::alternate_screen(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -60,9 +53,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_0")] // 0.8
     {
-        let origin = format!("{} {} {}", cmd, "automatic-rename", "on");
-        let set_option =
-            SetLocalWindowOption::automatic_rename(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "automatic-rename");
+        let set_option = GetGlobalWindowOption::automatic_rename(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -74,9 +66,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_9")]
     {
-        let origin = format!("{} {} {}", cmd, "automatic-rename-format", "2");
-        let set_option =
-            SetLocalWindowOption::automatic_rename_format(Some(target), Some("2")).to_string();
+        let origin = format!("{} {}", cmd, "automatic-rename-format");
+        let set_option = GetGlobalWindowOption::automatic_rename_format(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -88,9 +79,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     {
-        let origin = format!("{} {} {}", cmd, "c0-change-interval", "2");
-        let set_option =
-            SetLocalWindowOption::c0_change_interval(Some(target), Some("2")).to_string();
+        let origin = format!("{} {}", cmd, "c0-change-interval");
+        let set_option = GetGlobalWindowOption::c0_change_interval(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -102,9 +92,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     {
-        let origin = format!("{} {} {}", cmd, "c0-change-trigger", "3");
-        let set_option =
-            SetLocalWindowOption::c0_change_trigger(Some(target), Some("3")).to_string();
+        let origin = format!("{} {}", cmd, "c0-change-trigger");
+        let set_option = GetGlobalWindowOption::c0_change_trigger(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -116,9 +105,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_0")]
     {
-        let origin = format!("{} {} {}", cmd, "clock-mode-colour", "colour");
-        let set_option =
-            SetLocalWindowOption::clock_mode_colour(Some(target), Some("colour")).to_string();
+        let origin = format!("{} {}", cmd, "clock-mode-colour");
+        let set_option = GetGlobalWindowOption::clock_mode_colour(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -130,10 +118,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_0")]
     {
-        let origin = format!("{} {} {}", cmd, "clock-mode-style", "12");
-        let set_option =
-            SetLocalWindowOption::clock_mode_style(Some(target), Some(ClockModeStyle::_12))
-                .to_string();
+        let origin = format!("{} {}", cmd, "clock-mode-style");
+        let set_option = GetGlobalWindowOption::clock_mode_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -145,8 +131,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "force-height", "1");
-        let set_option = SetLocalWindowOption::force_height(Some(target), Some(1)).to_string();
+        let origin = format!("{} {}", cmd, "force-height");
+        let set_option = GetGlobalWindowOption::force_height(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -158,8 +144,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "force-width", "2");
-        let set_option = SetLocalWindowOption::force_width(Some(target), Some(2)).to_string();
+        let origin = format!("{} {}", cmd, "force-width");
+        let set_option = GetGlobalWindowOption::force_width(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -171,9 +157,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
     {
-        let origin = format!("{} {} {}", cmd, "layout-history-limit", "3");
-        let set_option =
-            SetLocalWindowOption::layout_history_limit(Some(target), Some(3)).to_string();
+        let origin = format!("{} {}", cmd, "layout-history-limit");
+        let set_option = GetGlobalWindowOption::layout_history_limit(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -185,8 +170,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_0")]
     {
-        let origin = format!("{} {} {}", cmd, "main-pane-height", "4");
-        let set_option = SetLocalWindowOption::main_pane_height(Some(target), Some(4)).to_string();
+        let origin = format!("{} {}", cmd, "main-pane-height");
+        let set_option = GetGlobalWindowOption::main_pane_height(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -198,8 +183,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_0")]
     {
-        let origin = format!("{} {} {}", cmd, "main-pane-width", "5");
-        let set_option = SetLocalWindowOption::main_pane_width(Some(target), Some(5)).to_string();
+        let origin = format!("{} {}", cmd, "main-pane-width");
+        let set_option = GetGlobalWindowOption::main_pane_width(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -211,8 +196,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "mode-attr", "6");
-        let set_option = SetLocalWindowOption::mode_attr(Some(target), Some(6)).to_string();
+        let origin = format!("{} {}", cmd, "mode-attr");
+        let set_option = GetGlobalWindowOption::mode_attr(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -224,8 +209,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "mode-bg", "colour");
-        let set_option = SetLocalWindowOption::mode_bg(Some(target), Some(colour)).to_string();
+        let origin = format!("{} {}", cmd, "mode-bg");
+        let set_option = GetGlobalWindowOption::mode_bg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -237,8 +222,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "mode-fg", "colour");
-        let set_option = SetLocalWindowOption::mode_fg(Some(target), Some(colour)).to_string();
+        let origin = format!("{} {}", cmd, "mode-fg");
+        let set_option = GetGlobalWindowOption::mode_fg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -250,9 +235,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_0")]
     {
-        let origin = format!("{} {} {}", cmd, "mode-keys", "emacs");
-        let set_option =
-            SetLocalWindowOption::mode_keys(Some(target), Some(StatusKeys::Emacs)).to_string();
+        let origin = format!("{} {}", cmd, "mode-keys");
+        let set_option = GetGlobalWindowOption::mode_keys(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -269,9 +253,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
     {
-        let origin = format!("{} {} {}", cmd, "mode_mouse", "on");
-        let set_option =
-            SetLocalWindowOption::mode_mouse(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "mode_mouse");
+        let set_option = GetGlobalWindowOption::mode_mouse(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -283,8 +266,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_9")]
     {
-        let origin = format!("{} {} {}", cmd, "mode-style", "style");
-        let set_option = SetLocalWindowOption::mode_style(Some(target), Some("style")).to_string();
+        let origin = format!("{} {}", cmd, "mode-style");
+        let set_option = GetGlobalWindowOption::mode_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -296,9 +279,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_0")]
     {
-        let origin = format!("{} {} {}", cmd, "monitor-activity", "on");
-        let set_option =
-            SetLocalWindowOption::monitor_activity(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "monitor-activity");
+        let set_option = GetGlobalWindowOption::monitor_activity(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -310,9 +292,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
     {
-        let origin = format!("{} {} {}", cmd, "monitor-content", "match-string");
-        let set_option =
-            SetLocalWindowOption::monitor_content(Some(target), Some("match-string")).to_string();
+        let origin = format!("{} {}", cmd, "monitor-content");
+        let set_option = GetGlobalWindowOption::monitor_content(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -324,9 +305,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_2_6")]
     {
-        let origin = format!("{} {} {}", cmd, "monitor-bell", "on");
-        let set_option =
-            SetLocalWindowOption::monitor_bell(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "monitor-bell");
+        let set_option = GetGlobalWindowOption::monitor_bell(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -338,8 +318,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_4")]
     {
-        let origin = format!("{} {} {}", cmd, "monitor-silence", "1");
-        let set_option = SetLocalWindowOption::monitor_silence(Some(target), Some(1)).to_string();
+        let origin = format!("{} {}", cmd, "monitor-silence");
+        let set_option = GetGlobalWindowOption::monitor_silence(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -351,8 +331,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_4")]
     {
-        let origin = format!("{} {} {}", cmd, "other-pane-height", "1");
-        let set_option = SetLocalWindowOption::other_pane_height(Some(target), Some(1)).to_string();
+        let origin = format!("{} {}", cmd, "other-pane-height");
+        let set_option = GetGlobalWindowOption::other_pane_height(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -364,8 +344,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_4")]
     {
-        let origin = format!("{} {} {}", cmd, "other-pane-width", "2");
-        let set_option = SetLocalWindowOption::other_pane_width(Some(target), Some(2)).to_string();
+        let origin = format!("{} {}", cmd, "other-pane-width");
+        let set_option = GetGlobalWindowOption::other_pane_width(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -377,9 +357,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_2_0")]
     {
-        let origin = format!("{} {} {}", cmd, "pane-active-border-style", "style");
-        let set_option =
-            SetLocalWindowOption::pane_active_border_style(Some(target), Some("style")).to_string();
+        let origin = format!("{} {}", cmd, "pane-active-border-style");
+        let set_option = GetGlobalWindowOption::pane_active_border_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -391,8 +370,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_6")]
     {
-        let origin = format!("{} {} {}", cmd, "pane-base-index", "5");
-        let set_option = SetLocalWindowOption::pane_base_index(Some(target), Some(5)).to_string();
+        let origin = format!("{} {}", cmd, "pane-base-index");
+        let set_option = GetGlobalWindowOption::pane_base_index(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -404,9 +383,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_2_3")]
     {
-        let origin = format!("{} {} {}", cmd, "pane-border-format", "format");
-        let set_option =
-            SetLocalWindowOption::pane_border_format(Some(target), Some("format")).to_string();
+        let origin = format!("{} {}", cmd, "pane-border-format");
+        let set_option = GetGlobalWindowOption::pane_border_format(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -418,10 +396,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_2_3")]
     {
-        let origin = format!("{} {} {}", cmd, "pane-border-status", "top");
-        let set_option =
-            SetLocalWindowOption::pane_border_status(Some(target), Some(PaneBorderStatus::Top))
-                .to_string();
+        let origin = format!("{} {}", cmd, "pane-border-status");
+        let set_option = GetGlobalWindowOption::pane_border_status(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -433,9 +409,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_2_0")]
     {
-        let origin = format!("{} {} {}", cmd, "pane-border-style", "style");
-        let set_option =
-            SetLocalWindowOption::pane_border_style(Some(target), Some("style")).to_string();
+        let origin = format!("{} {}", cmd, "pane-border-style");
+        let set_option = GetGlobalWindowOption::pane_border_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -447,9 +422,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
     {
-        let origin = format!("{} {} {}", cmd, "remain-on-exit", "on");
-        let set_option =
-            SetLocalWindowOption::remain_on_exit(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "remain-on-exit");
+        let set_option = GetGlobalWindowOption::remain_on_exit(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -461,9 +435,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
     {
-        let origin = format!("{} {} {}", cmd, "synchronize-panes", "on");
-        let set_option =
-            SetLocalWindowOption::synchronize_panes(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "synchronize-panes");
+        let set_option = GetGlobalWindowOption::synchronize_panes(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -475,8 +448,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
     {
-        let origin = format!("{} {} {}", cmd, "utf8", "on");
-        let set_option = SetLocalWindowOption::utf8(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "utf8");
+        let set_option = GetGlobalWindowOption::utf8(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -488,9 +461,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-active-style", "style");
-        let set_option =
-            SetLocalWindowOption::window_active_style(Some(target), Some("style")).to_string();
+        let origin = format!("{} {}", cmd, "window-active-style");
+        let set_option = GetGlobalWindowOption::window_active_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -502,10 +474,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-bell-attr", "attributes");
-        let set_option =
-            SetLocalWindowOption::window_status_bell_attr(Some(target), Some("attributes"))
-                .to_string();
+        let origin = format!("{} {}", cmd, "window-status-bell-attr");
+        let set_option = GetGlobalWindowOption::window_status_bell_attr(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -517,9 +487,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-bell-bg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_bell_bg(Some(target), Some("colour")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-bell-bg");
+        let set_option = GetGlobalWindowOption::window_status_bell_bg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -531,9 +500,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-bell-fg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_bell_fg(Some(target), Some("colour")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-bell-fg");
+        let set_option = GetGlobalWindowOption::window_status_bell_fg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -545,10 +513,9 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-content-attr", "attributes");
+        let origin = format!("{} {}", cmd, "window-status-content-attr");
         let set_option =
-            SetLocalWindowOption::window_status_content_attr(Some(target), Some("attributes"))
-                .to_string();
+            GetGlobalWindowOption::window_status_content_attr(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -560,10 +527,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-content-bg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_content_bg(Some(target), Some("colour"))
-                .to_string();
+        let origin = format!("{} {}", cmd, "window-status-content-bg");
+        let set_option = GetGlobalWindowOption::window_status_content_bg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -575,10 +540,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-content-fg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_content_fg(Some(target), Some("colour"))
-                .to_string();
+        let origin = format!("{} {}", cmd, "window-status-content-fg");
+        let set_option = GetGlobalWindowOption::window_status_content_fg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -590,10 +553,9 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-activity-attr", "attributes");
+        let origin = format!("{} {}", cmd, "window-status-activity-attr");
         let set_option =
-            SetLocalWindowOption::window_status_activity_attr(Some(target), Some("attributes"))
-                .to_string();
+            GetGlobalWindowOption::window_status_activity_attr(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -605,10 +567,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-activity-bg", "attributes");
-        let set_option =
-            SetLocalWindowOption::window_status_activity_bg(Some(target), Some("attributes"))
-                .to_string();
+        let origin = format!("{} {}", cmd, "window-status-activity-bg");
+        let set_option = GetGlobalWindowOption::window_status_activity_bg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -620,10 +580,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-activity-fg", "attributes");
-        let set_option =
-            SetLocalWindowOption::window_status_activity_fg(Some(target), Some("attributes"))
-                .to_string();
+        let origin = format!("{} {}", cmd, "window-status-activity-fg");
+        let set_option = GetGlobalWindowOption::window_status_activity_fg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -635,9 +593,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-attr", "attributes");
-        let set_option =
-            SetLocalWindowOption::window_status_attr(Some(target), Some("attributes")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-attr");
+        let set_option = GetGlobalWindowOption::window_status_attr(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -649,9 +606,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-bg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_bg(Some(target), Some("colour")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-bg");
+        let set_option = GetGlobalWindowOption::window_status_bg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -663,9 +619,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-fg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_fg(Some(target), Some("colour")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-fg");
+        let set_option = GetGlobalWindowOption::window_status_fg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -677,10 +632,9 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-current-attr", "attributes");
+        let origin = format!("{} {}", cmd, "window-status-current-attr");
         let set_option =
-            SetLocalWindowOption::window_status_current_attr(Some(target), Some("attributes"))
-                .to_string();
+            GetGlobalWindowOption::window_status_current_attr(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -692,10 +646,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-current-bg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_current_bg(Some(target), Some("colour"))
-                .to_string();
+        let origin = format!("{} {}", cmd, "window-status-current-bg");
+        let set_option = GetGlobalWindowOption::window_status_current_bg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -707,10 +659,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-current-fg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_current_fg(Some(target), Some("colour"))
-                .to_string();
+        let origin = format!("{} {}", cmd, "window-status-current-fg");
+        let set_option = GetGlobalWindowOption::window_status_current_fg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -722,10 +672,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-alert-attr", "attributes");
-        let set_option =
-            SetLocalWindowOption::window_status_alert_attr(Some(target), Some("attributes"))
-                .to_string();
+        let origin = format!("{} {}", cmd, "window-status-alert-attr");
+        let set_option = GetGlobalWindowOption::window_status_alert_attr(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -737,9 +685,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-alert-bg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_alert_bg(Some(target), Some("colour")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-alert-bg");
+        let set_option = GetGlobalWindowOption::window_status_alert_bg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -751,9 +698,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-alert-fg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_alert_fg(Some(target), Some("colour")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-alert-fg");
+        let set_option = GetGlobalWindowOption::window_status_alert_fg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -765,10 +711,9 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_9")]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-activity-style", "style");
+        let origin = format!("{} {}", cmd, "window-status-activity-style");
         let set_option =
-            SetLocalWindowOption::window_status_activity_style(Some(target), Some("style"))
-                .to_string();
+            GetGlobalWindowOption::window_status_activity_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -780,9 +725,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_9")]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-bell-style", "style");
-        let set_option =
-            SetLocalWindowOption::window_status_bell_style(Some(target), Some("style")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-bell-style");
+        let set_option = GetGlobalWindowOption::window_status_bell_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -794,10 +738,9 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-content-style", "style");
+        let origin = format!("{} {}", cmd, "window-status-content-style");
         let set_option =
-            SetLocalWindowOption::window_status_content_style(Some(target), Some("style"))
-                .to_string();
+            GetGlobalWindowOption::window_status_content_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -809,10 +752,9 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_2")]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-current-format", "string");
+        let origin = format!("{} {}", cmd, "window-status-current-format");
         let set_option =
-            SetLocalWindowOption::window_status_current_format(Some(target), Some("string"))
-                .to_string();
+            GetGlobalWindowOption::window_status_current_format(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -824,10 +766,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-last-attr", "attributes");
-        let set_option =
-            SetLocalWindowOption::window_status_last_attr(Some(target), Some("attributes"))
-                .to_string();
+        let origin = format!("{} {}", cmd, "window-status-last-attr");
+        let set_option = GetGlobalWindowOption::window_status_last_attr(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -839,9 +779,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-last-bg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_last_bg(Some(target), Some("colour")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-last-bg");
+        let set_option = GetGlobalWindowOption::window_status_last_bg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -853,9 +792,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-last-fg", "colour");
-        let set_option =
-            SetLocalWindowOption::window_status_last_fg(Some(target), Some("colour")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-last-fg");
+        let set_option = GetGlobalWindowOption::window_status_last_fg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -867,10 +805,9 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_9")]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-current-style", "style");
+        let origin = format!("{} {}", cmd, "window-status-current-style");
         let set_option =
-            SetLocalWindowOption::window_status_current_style(Some(target), Some("style"))
-                .to_string();
+            GetGlobalWindowOption::window_status_current_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -882,9 +819,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_2")]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-format", "string");
-        let set_option =
-            SetLocalWindowOption::window_status_format(Some(target), Some("string")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-format");
+        let set_option = GetGlobalWindowOption::window_status_format(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -896,9 +832,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_9")]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-last-style", "style");
-        let set_option =
-            SetLocalWindowOption::window_status_last_style(Some(target), Some("style")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-last-style");
+        let set_option = GetGlobalWindowOption::window_status_last_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -910,9 +845,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_7")]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-separator", "string");
-        let set_option =
-            SetLocalWindowOption::window_status_separator(Some(target), Some("string")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-separator");
+        let set_option = GetGlobalWindowOption::window_status_separator(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -924,9 +858,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_9")]
     {
-        let origin = format!("{} {} {}", cmd, "window-status-style", "style");
-        let set_option =
-            SetLocalWindowOption::window_status_style(Some(target), Some("style")).to_string();
+        let origin = format!("{} {}", cmd, "window-status-style");
+        let set_option = GetGlobalWindowOption::window_status_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -938,9 +871,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_2_9")]
     {
-        let origin = format!("{} {} {}", cmd, "window-size", "largest");
-        let set_option =
-            SetLocalWindowOption::window_size(Some(target), Some(WindowSize::Largest)).to_string();
+        let origin = format!("{} {}", cmd, "window-size");
+        let set_option = GetGlobalWindowOption::window_size(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -952,9 +884,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
     {
-        let origin = format!("{} {} {}", cmd, "word-separators", "string");
-        let set_option =
-            SetLocalWindowOption::word_separators(Some(target), Some("string")).to_string();
+        let origin = format!("{} {}", cmd, "word-separators");
+        let set_option = GetGlobalWindowOption::word_separators(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -966,9 +897,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     {
-        let origin = format!("{} {} {}", cmd, "window-style", "style");
-        let set_option =
-            SetLocalWindowOption::window_style(Some(target), Some("style")).to_string();
+        let origin = format!("{} {}", cmd, "window-style");
+        let set_option = GetGlobalWindowOption::window_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -980,9 +910,8 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_7")]
     {
-        let origin = format!("{} {} {}", cmd, "wrap-search", "on");
-        let set_option =
-            SetLocalWindowOption::wrap_search(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "wrap-search");
+        let set_option = GetGlobalWindowOption::wrap_search(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -994,17 +923,15 @@ fn set_local_window_option_tests() {
     // ```
     #[cfg(feature = "tmux_1_0")]
     {
-        let origin = format!("{} {} {}", cmd, "xterm-keys", "on");
-        let set_option =
-            SetLocalWindowOption::xterm_keys(Some(target), Some(Switch::On)).to_string();
+        let origin = format!("{} {}", cmd, "xterm-keys");
+        let set_option = GetGlobalWindowOption::xterm_keys(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
 
     {
-        let origin = format!("{} {} {}", cmd, "@user-option-name", "value");
+        let origin = format!("{} {}", cmd, "@user-option-name");
         let set_option =
-            SetLocalWindowOption::user_option(Some(target), "user-option-name", Some("value"))
-                .to_string();
+            GetGlobalWindowOption::user_option(Some(target), "user-option-name").to_string();
         assert_eq!(origin, set_option);
     }
 }

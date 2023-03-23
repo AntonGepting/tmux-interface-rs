@@ -1,5 +1,5 @@
 #[test]
-fn set_window_options() {
+fn set_global_window_options() {
     #[cfg(feature = "tmux_2_9")]
     use crate::WindowSize;
     use crate::{
@@ -183,6 +183,7 @@ fn set_window_options() {
     let options = options.options.to_string();
 
     let cmd = "set -g -w";
+    let cmd = format!("{} -t {}", cmd, target);
     let separator = " ; ";
 
     let mut origin = Vec::new();
