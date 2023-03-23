@@ -15,16 +15,3 @@ pub use set_session_option::SetSessionOption;
 
 pub use get_session_options::GetSessionOptions;
 pub use set_session_options::SetSessionOptions;
-
-#[cfg(test)]
-#[path = "."]
-mod session_tests {
-    #[cfg(feature = "tmux_0_8")]
-    pub mod get_session_option_tests;
-    #[cfg(feature = "tmux_0_8")]
-    pub mod get_session_options_tests;
-    #[cfg(feature = "tmux_0_8")]
-    pub mod set_session_option_tests;
-    #[cfg(feature = "tmux_0_8")]
-    pub mod set_session_options_tests;
-}

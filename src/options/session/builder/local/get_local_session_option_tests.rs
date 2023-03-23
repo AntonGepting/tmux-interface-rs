@@ -3,30 +3,31 @@ fn get_local_session_option_tests() {
     use crate::{GetLocalSessionOption, GetSessionOption, GetUserOption};
 
     let cmd = "show";
-    let target = Some(":");
+    let target = ":";
+    let cmd = format!("{} -t {}", cmd, target);
 
     #[cfg(feature = "tmux_2_6")]
     {
         let origin = format!("{} {}", cmd, "activity-action");
-        let set_option = GetLocalSessionOption::activity_action(target).to_string();
+        let set_option = GetLocalSessionOption::activity_action(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_8")]
     {
         let origin = format!("{} {}", cmd, "assume-paste-time");
-        let set_option = GetLocalSessionOption::assume_paste_time(target).to_string();
+        let set_option = GetLocalSessionOption::assume_paste_time(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "base-index");
-        let set_option = GetLocalSessionOption::base_index(target).to_string();
+        let set_option = GetLocalSessionOption::base_index(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "bell-action");
-        let set_option = GetLocalSessionOption::bell_action(target).to_string();
+        let set_option = GetLocalSessionOption::bell_action(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
@@ -36,13 +37,13 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "default-command");
-        let set_option = GetLocalSessionOption::default_command(target).to_string();
+        let set_option = GetLocalSessionOption::default_command(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "default-shell");
-        let set_option = GetLocalSessionOption::default_shell(target).to_string();
+        let set_option = GetLocalSessionOption::default_shell(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
@@ -50,7 +51,7 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_2_9")]
     {
         let origin = format!("{} {}", cmd, "default-size");
-        let set_option = GetLocalSessionOption::default_size(target).to_string();
+        let set_option = GetLocalSessionOption::default_size(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
@@ -58,61 +59,62 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_1_4")]
     {
         let origin = format!("{} {}", cmd, "destroy-unattached");
-        let set_option = GetLocalSessionOption::destroy_unattached(target).to_string();
+        let set_option = GetLocalSessionOption::destroy_unattached(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_4")]
     {
         let origin = format!("{} {}", cmd, "detach-on-destroy");
-        let set_option = GetLocalSessionOption::detach_on_destroy(target).to_string();
+        let set_option = GetLocalSessionOption::detach_on_destroy(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_2")]
     {
         let origin = format!("{} {}", cmd, "display-panes-active-colour");
-        let set_option = GetLocalSessionOption::display_panes_active_colour(target).to_string();
+        let set_option =
+            GetLocalSessionOption::display_panes_active_colour(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "display-panes-colour");
-        let set_option = GetLocalSessionOption::display_panes_colour(target).to_string();
+        let set_option = GetLocalSessionOption::display_panes_colour(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "display-panes-time");
-        let set_option = GetLocalSessionOption::display_panes_time(target).to_string();
+        let set_option = GetLocalSessionOption::display_panes_time(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "display-time");
-        let set_option = GetLocalSessionOption::display_time(target).to_string();
+        let set_option = GetLocalSessionOption::display_time(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "history-limit");
-        let set_option = GetLocalSessionOption::history_limit(target).to_string();
+        let set_option = GetLocalSessionOption::history_limit(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_2_2")]
     {
         let origin = format!("{} {}", cmd, "key-table");
-        let set_option = GetLocalSessionOption::key_table(target).to_string();
+        let set_option = GetLocalSessionOption::key_table(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "lock-after-time");
-        let set_option = GetLocalSessionOption::lock_after_time(target).to_string();
+        let set_option = GetLocalSessionOption::lock_after_time(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_1")]
     {
         let origin = format!("{} {}", cmd, "lock-command");
-        let set_option = GetLocalSessionOption::lock_command(target).to_string();
+        let set_option = GetLocalSessionOption::lock_command(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
@@ -132,7 +134,7 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_1_9")]
     {
         let origin = format!("{} {}", cmd, "message-command-style");
-        let set_option = GetLocalSessionOption::message_command_style(target).to_string();
+        let set_option = GetLocalSessionOption::message_command_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
@@ -140,7 +142,7 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_1_9")]
     {
         let origin = format!("{} {}", cmd, "message-style");
-        let set_option = GetLocalSessionOption::message_style(target).to_string();
+        let set_option = GetLocalSessionOption::message_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
@@ -152,7 +154,7 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_2_1")]
     {
         let origin = format!("{} {}", cmd, "mouse");
-        let set_option = GetLocalSessionOption::mouse(target).to_string();
+        let set_option = GetLocalSessionOption::mouse(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
@@ -172,25 +174,25 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "prefix");
-        let set_option = GetLocalSessionOption::prefix(target).to_string();
+        let set_option = GetLocalSessionOption::prefix(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_6")]
     {
         let origin = format!("{} {}", cmd, "prefix2");
-        let set_option = GetLocalSessionOption::prefix2(target).to_string();
+        let set_option = GetLocalSessionOption::prefix2(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_7")]
     {
         let origin = format!("{} {}", cmd, "renumber-windows");
-        let set_option = GetLocalSessionOption::renumber_windows(target).to_string();
+        let set_option = GetLocalSessionOption::renumber_windows(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "repeat-time");
-        let set_option = GetLocalSessionOption::repeat_time(target).to_string();
+        let set_option = GetLocalSessionOption::repeat_time(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
@@ -198,25 +200,25 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "set-titles");
-        let set_option = GetLocalSessionOption::set_titles(target).to_string();
+        let set_option = GetLocalSessionOption::set_titles(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "set-titles-string");
-        let set_option = GetLocalSessionOption::set_titles_string(target).to_string();
+        let set_option = GetLocalSessionOption::set_titles_string(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_2_6")]
     {
         let origin = format!("{} {}", cmd, "silence-action");
-        let set_option = GetLocalSessionOption::silence_action(target).to_string();
+        let set_option = GetLocalSessionOption::silence_action(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "status");
-        let set_option = GetLocalSessionOption::status(target).to_string();
+        let set_option = GetLocalSessionOption::status(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
@@ -224,49 +226,49 @@ fn get_local_session_option_tests() {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
         let origin = format!("{} {}", cmd, "status-bg");
-        let set_option = GetLocalSessionOption::status_bg(target).to_string();
+        let set_option = GetLocalSessionOption::status_bg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
         let origin = format!("{} {}", cmd, "status-fg");
-        let set_option = GetLocalSessionOption::status_fg(target).to_string();
+        let set_option = GetLocalSessionOption::status_fg(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_2_9")]
     {
         let origin = format!("{} {}", cmd, "assume-paste-time");
-        let set_option = GetLocalSessionOption::assume_paste_time(target).to_string();
+        let set_option = GetLocalSessionOption::assume_paste_time(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_2_9")]
     {
         let origin = format!("{} {}", cmd, "status-format");
-        let set_option = GetLocalSessionOption::status_format(target).to_string();
+        let set_option = GetLocalSessionOption::status_format(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "status-interval");
-        let set_option = GetLocalSessionOption::status_interval(target).to_string();
+        let set_option = GetLocalSessionOption::status_interval(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "status-justify");
-        let set_option = GetLocalSessionOption::status_justify(target).to_string();
+        let set_option = GetLocalSessionOption::status_justify(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "status-keys");
-        let set_option = GetLocalSessionOption::status_keys(target).to_string();
+        let set_option = GetLocalSessionOption::status_keys(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "status-left");
-        let set_option = GetLocalSessionOption::status_left(target).to_string();
+        let set_option = GetLocalSessionOption::status_left(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
@@ -278,25 +280,25 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "status-left-length");
-        let set_option = GetLocalSessionOption::status_left_length(target).to_string();
+        let set_option = GetLocalSessionOption::status_left_length(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_9")]
     {
         let origin = format!("{} {}", cmd, "status-left-style");
-        let set_option = GetLocalSessionOption::status_left_style(target).to_string();
+        let set_option = GetLocalSessionOption::status_left_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_7")]
     {
         let origin = format!("{} {}", cmd, "status-position");
-        let set_option = GetLocalSessionOption::status_position(target).to_string();
+        let set_option = GetLocalSessionOption::status_position(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "status-right");
-        let set_option = GetLocalSessionOption::status_right(target).to_string();
+        let set_option = GetLocalSessionOption::status_right(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
@@ -308,19 +310,19 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "status-right-length");
-        let set_option = GetLocalSessionOption::status_right_length(target).to_string();
+        let set_option = GetLocalSessionOption::status_right_length(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_9")]
     {
         let origin = format!("{} {}", cmd, "status-right-style");
-        let set_option = GetLocalSessionOption::status_right_style(target).to_string();
+        let set_option = GetLocalSessionOption::status_right_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_9")]
     {
         let origin = format!("{} {}", cmd, "status-style");
-        let set_option = GetLocalSessionOption::status_style(target).to_string();
+        let set_option = GetLocalSessionOption::status_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
@@ -330,25 +332,25 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "assume-paste-time");
-        let set_option = GetLocalSessionOption::assume_paste_time(target).to_string();
+        let set_option = GetLocalSessionOption::assume_paste_time(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "update-environment");
-        let set_option = GetLocalSessionOption::update_environment(target).to_string();
+        let set_option = GetLocalSessionOption::update_environment(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "visual-activity");
-        let set_option = GetLocalSessionOption::visual_activity(target).to_string();
+        let set_option = GetLocalSessionOption::visual_activity(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]
     {
         let origin = format!("{} {}", cmd, "visual-bell");
-        let set_option = GetLocalSessionOption::visual_bell(target).to_string();
+        let set_option = GetLocalSessionOption::visual_bell(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
@@ -356,18 +358,19 @@ fn get_local_session_option_tests() {
     #[cfg(feature = "tmux_1_4")]
     {
         let origin = format!("{} {}", cmd, "visual-silence");
-        let set_option = GetLocalSessionOption::visual_silence(target).to_string();
+        let set_option = GetLocalSessionOption::visual_silence(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_6")]
     {
         let origin = format!("{} {}", cmd, "word-separators");
-        let set_option = GetLocalSessionOption::word_separators(target).to_string();
+        let set_option = GetLocalSessionOption::word_separators(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     {
         let origin = format!("{} {}", cmd, "@user-option-name");
-        let set_option = GetLocalSessionOption::user_option(target, "user-option-name").to_string();
+        let set_option =
+            GetLocalSessionOption::user_option(Some(target), "user-option-name").to_string();
         assert_eq!(origin, set_option);
     }
 }

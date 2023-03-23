@@ -173,6 +173,7 @@ fn get_session_options() {
 
     let cmd = "show -g";
     let separator = " ; ";
+    let cmd = format!("{} -t {}", cmd, target);
 
     let mut origin = Vec::new();
     #[cfg(feature = "tmux_2_6")]
