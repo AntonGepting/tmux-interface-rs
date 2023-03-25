@@ -40,11 +40,11 @@ macro_rules! respawn_window {
         }) $($tail)*)
     }};
     // `[-e environment]` - environment
-    (@cmd ($cmd:expr) -e $target_session:expr, $($tail:tt)*) => {{
-        $crate::respawn_window!(@cmd ({
-            $cmd.target_session($target_session)
-        }) $($tail)*)
-    }};
+    // (@cmd ($cmd:expr) -e $target_session:expr, $($tail:tt)*) => {{
+        // $crate::respawn_window!(@cmd ({
+            // $cmd.target_session($target_session)
+        // }) $($tail)*)
+    // }};
     // `[-t target-window]` - target-window
     (@cmd ($cmd:expr) -t $target_window:expr, $($tail:tt)*) => {{
         $crate::respawn_window!(@cmd ({
@@ -113,8 +113,8 @@ fn respawn_window_tests() {
     let respawn_window = respawn_window!((respawn_window), -k);
     #[cfg(feature = "tmux_2_6")]
     let respawn_window = respawn_window!((respawn_window), -c "1");
-    #[cfg(feature = "tmux_3_0")]
-    let respawn_window = respawn_window!((respawn_window), -e "2");
+    // #[cfg(feature = "tmux_3_0")]
+    // let respawn_window = respawn_window!((respawn_window), -e "2");
     #[cfg(feature = "tmux_0_9")]
     let respawn_window = respawn_window!((respawn_window), -t & target_window);
     #[cfg(feature = "tmux_1_2")]

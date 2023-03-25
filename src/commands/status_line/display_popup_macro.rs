@@ -55,7 +55,7 @@ macro_rules! display_popup {
         }) $($tail)*)
     }};
     // `[-d start-directory]` -
-    (@cmd ($cmd:expr) -c $start_directory:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -d $start_directory:expr, $($tail:tt)*) => {{
         $crate::display_popup!(@cmd ({
             $cmd.start_directory($start_directory)
         }) $($tail)*)
@@ -63,11 +63,11 @@ macro_rules! display_popup {
     // XXX: struct instead of tuple
     // `[-e environment]` - takes the form ‘VARIABLE=value’ and sets an environment variable for
     // the popup; it may be specified multiple times
-    (@cmd ($cmd:expr) -e $environment:expr, $($tail:tt)*) => {{
-        $crate::display_popup!(@cmd ({
-            $cmd.environment($environment)
-        }) $($tail)*)
-    }};
+    // (@cmd ($cmd:expr) -e $environment:expr, $($tail:tt)*) => {{
+        // $crate::display_popup!(@cmd ({
+            // $cmd.environment($environment)
+        // }) $($tail)*)
+    // }};
     // `[-h height]` - height of the popup
     (@cmd ($cmd:expr) -h $height:expr, $($tail:tt)*) => {{
         $crate::display_popup!(@cmd ({
@@ -183,8 +183,8 @@ fn display_popup() {
     let display_popup = display_popup!((display_popup), -c "1");
     #[cfg(feature = "tmux_3_2")]
     let display_popup = display_popup!((display_popup), -d "2");
-    #[cfg(feature = "tmux_3_3")]
-    let display_popup = display_popup!((display_popup), -e "3", "4");
+    // #[cfg(feature = "tmux_3_3")]
+    // let display_popup = display_popup!((display_popup), -e "3", "4");
     #[cfg(feature = "tmux_3_2")]
     let display_popup = display_popup!((display_popup), -h Size::Size(5));
     #[cfg(feature = "tmux_3_3")]

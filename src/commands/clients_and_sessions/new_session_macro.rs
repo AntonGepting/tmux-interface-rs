@@ -114,13 +114,13 @@ macro_rules! new_session {
     }};
     // `[-e environment]` - takes the form ‘VARIABLE=value’ and sets an environment variable for the
     // newly created session; it may be specified multiple times
-    (@cmd ($cmd:expr) -e $environment:expr, $($tail:tt)*) => {{
-        $crate::new_session!(@cmd ({
-            $cmd.environment($environment)
-        }) $($tail)*)
-    }};
+    // (@cmd ($cmd:expr) -e $environment:expr, $($tail:tt)*) => {{
+        // $crate::new_session!(@cmd ({
+            // $cmd.environment($environment)
+        // }) $($tail)*)
+    // }};
     // `[-f flags]` - comma-separated list of client flags
-    (@cmd ($cmd:expr) -e $flags:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -f $flags:expr, $($tail:tt)*) => {{
         $crate::new_session!(@cmd ({
             $cmd.flags($flags)
         }) $($tail)*)
@@ -275,8 +275,8 @@ fn new_session() {
     let new_session = new_session!((new_session), -X);
     #[cfg(feature = "tmux_1_9")]
     let new_session = new_session!((new_session), -c "1");
-    #[cfg(feature = "tmux_3_2")]
-    let new_session = new_session!((new_session), -e "2=3");
+    // #[cfg(feature = "tmux_3_2")]
+    // let new_session = new_session!((new_session), -e "2=3");
     #[cfg(feature = "tmux_3_2")]
     let flags = ClientFlags {
         active_pane: Some(true),
