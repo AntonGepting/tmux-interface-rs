@@ -213,7 +213,7 @@ macro_rules! tmux {
         }) $($tail)*)
     }};
     // `[-N]` - Do not start the server even if the command would normally do so (for example new-session or start-server).
-    (@cmd ($cmd:expr) -D, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -N, $($tail:tt)*) => {{
         $crate::tmux!(@cmd ({
             $cmd.no_start()
         }) $($tail)*)
