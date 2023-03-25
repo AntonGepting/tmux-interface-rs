@@ -37,9 +37,8 @@ use std::str::FromStr;
 // }
 
 use crate::{
-    Error, GetPaneOptionTrait, GetPaneOptionValue, PaneOptions, SetClipboard, SetPaneOption,
-    SetPaneOptionTrait, SetPaneOptions, SetPaneOptionsTrait, ShowOptions, Switch, Tmux,
-    TmuxCommand, TmuxCommands, TmuxOutput,
+    Error, PaneOptions, SetPaneOptions, SetPaneOptionsTrait, ShowOptions, Tmux, TmuxCommand,
+    TmuxCommands, TmuxOutput,
 };
 
 // XXX: rename PaneOptionCtl?
@@ -60,16 +59,20 @@ impl<'a> Default for PaneOptionsCtl<'a> {
     fn default() -> Self {
         Self {
             invoker: |cmd| Tmux::with_command(cmd).output(),
+            target: None,
         }
     }
 }
 
 impl<'a> PaneOptionsCtl<'a> {
     pub fn new(invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
-        PaneOptionsCtl { invoker }
+        PaneOptionsCtl {
+            invoker,
+            target: None,
+        }
     }
 
-    fn target(&self) -> Option<Cow<'a, str>> {
+    pub fn target(&self) -> Option<Cow<'a, str>> {
         self.target.to_owned()
     }
 

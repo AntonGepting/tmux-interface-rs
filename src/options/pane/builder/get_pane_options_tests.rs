@@ -1,8 +1,10 @@
 #[test]
 fn get_pane_options() {
-    use crate::{GetPaneOptions, GetPaneOptionsTrait, GetUserOption, GetUserOptions, Switch};
+    use crate::{GetPaneOptions, GetPaneOptionsTrait, GetUserOptions};
 
     let cmd = "show -p";
+    let target = ":";
+    let cmd = format!("{} -t {}", cmd, target);
 
     let mut v = Vec::new();
 
@@ -27,18 +29,18 @@ fn get_pane_options() {
     let options = GetPaneOptions::new();
 
     #[cfg(feature = "tmux_3_0")]
-    let options = options.allow_rename();
+    let options = options.allow_rename(Some(target));
     #[cfg(feature = "tmux_3_0")]
-    let options = options.alternate_screen();
+    let options = options.alternate_screen(Some(target));
     #[cfg(feature = "tmux_3_0")]
-    let options = options.remain_on_exit();
+    let options = options.remain_on_exit(Some(target));
     #[cfg(feature = "tmux_3_0")]
-    let options = options.window_active_style();
+    let options = options.window_active_style(Some(target));
     #[cfg(feature = "tmux_3_0")]
-    let options = options.window_style();
+    let options = options.window_style(Some(target));
     #[cfg(feature = "tmux_3_2")]
-    let options = options.synchronize_panes();
-    let options = options.user_option("user-option-name");
+    let options = options.synchronize_panes(Some(target));
+    let options = options.user_option(Some(target), "user-option-name");
     let options = options.build().to_string();
 
     assert_eq!(options, origin);

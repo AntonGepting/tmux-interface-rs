@@ -19,6 +19,25 @@ pub use user_option::*;
 const SEPARATOR: &str = " ";
 
 use std::borrow::Cow;
+use std::fmt;
+
+pub fn option_to_string<S: fmt::Display>(v: &mut Vec<String>, name: &str, value: &Option<S>) {
+    if let Some(data) = value {
+        v.push(format!("{} {}", name, data))
+    }
+}
+
+pub fn option_array_to_string<S: fmt::Display>(
+    v: &mut Vec<String>,
+    name: &str,
+    value: &Option<Vec<S>>,
+) {
+    if let Some(data) = value {
+        for item in data {
+            v.push(format!("{} {}", name, item))
+        }
+    }
+}
 
 pub fn array_insert<'a>(
     v: &mut Option<Vec<Cow<'a, str>>>,

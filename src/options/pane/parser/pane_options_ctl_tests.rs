@@ -5,7 +5,8 @@ fn server_options_ctl() {
     let server_options = ServerOptionsCtl::get_all_ext(&|cmd| {
         let output = Tmux::new().command(cmd.to_owned()).output();
         output.unwrap().to_string()
-    });
+    })
+    .unwrap();
 
     dbg!(server_options);
 }

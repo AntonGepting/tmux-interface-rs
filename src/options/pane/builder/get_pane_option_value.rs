@@ -1,7 +1,6 @@
 use crate::options::*;
 use crate::{GetOptionExt, GetUserOption, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
-use std::fmt;
 
 pub struct GetPaneOptionValue;
 

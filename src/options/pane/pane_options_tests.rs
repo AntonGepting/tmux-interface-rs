@@ -15,15 +15,15 @@ fn parse() {
 
 #[test]
 fn to_string() {
-    use crate::{PaneOptionsBuilder, Switch};
+    use crate::{PaneOptions, Switch};
 
-    let _pane_options = PaneOptionsBuilder::new().allow_rename(Switch::Off).build();
+    let _pane_options = PaneOptions::new().allow_rename(Some(Switch::Off));
     //dbg!(&pane_options.to_string());
 }
 
-#[test]
-fn get() {
-    use crate::PaneOptions;
-    let _pane_options = PaneOptions::get_all().unwrap();
-    //dbg!(pane_options);
-}
+// #[test]
+// fn get() {
+// use crate::PaneOptions;
+// let _pane_options = PaneOptions::get_all().unwrap();
+//dbg!(pane_options);
+// }

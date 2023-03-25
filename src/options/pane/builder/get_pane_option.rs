@@ -1,7 +1,6 @@
 use crate::options::*;
 use crate::{GetOptionExt, GetUserOption, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
-use std::fmt;
 
 pub struct GetPaneOption;
 
@@ -36,8 +35,11 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     /// allow-rename [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn allow_rename<'a>() -> TmuxCommand<'a> {
-        Self::get(ALLOW_RENAME)
+    fn allow_rename<'a, S>(target: Option<S>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::get(target, ALLOW_RENAME)
     }
 
     /// ### Manual
@@ -47,8 +49,11 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     /// alternate-screen [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn alternate_screen<'a>() -> TmuxCommand<'a> {
-        Self::get(ALTERNATE_SCREEN)
+    fn alternate_screen<'a, S>(target: Option<S>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::get(target, ALTERNATE_SCREEN)
     }
 
     /// ### Manual
@@ -63,8 +68,11 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     /// remain-on-exit [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn remain_on_exit<'a>() -> TmuxCommand<'a> {
-        Self::get(REMAIN_ON_EXIT)
+    fn remain_on_exit<'a, S>(target: Option<S>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::get(target, REMAIN_ON_EXIT)
     }
 
     /// ### Manual
@@ -74,8 +82,11 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     /// window-active-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn window_active_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_ACTIVE_STYLE)
+    fn window_active_style<'a, S>(target: Option<S>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_ACTIVE_STYLE)
     }
 
     /// ### Manual
@@ -85,8 +96,11 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     /// window-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn window_style<'a>() -> TmuxCommand<'a> {
-        Self::get(WINDOW_STYLE)
+    fn window_style<'a, S>(target: Option<S>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::get(target, WINDOW_STYLE)
     }
 
     /// ### Manual
@@ -96,8 +110,11 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     /// synchronize-panes [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn synchronize_panes<'a>() -> TmuxCommand<'a> {
-        Self::get(SYNCHRONIZE_PANES)
+    fn synchronize_panes<'a, S>(target: Option<S>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::get(target, SYNCHRONIZE_PANES)
     }
 }
 

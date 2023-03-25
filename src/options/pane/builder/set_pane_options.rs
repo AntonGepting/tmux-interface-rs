@@ -55,11 +55,12 @@ pub trait SetPaneOptionsTrait<'a> {
     /// allow-rename [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn allow_rename(mut self, switch: Option<Switch>) -> Self
+    fn allow_rename<S>(mut self, target: Option<S>, switch: Option<Switch>) -> Self
     where
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(SetPaneOption::allow_rename(switch));
+        self.push(SetPaneOption::allow_rename(target, switch));
         self
     }
     /// ### Manual
@@ -69,11 +70,12 @@ pub trait SetPaneOptionsTrait<'a> {
     /// alternate-screen [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn alternate_screen(mut self, switch: Option<Switch>) -> Self
+    fn alternate_screen<S>(mut self, target: Option<S>, switch: Option<Switch>) -> Self
     where
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(SetPaneOption::alternate_screen(switch));
+        self.push(SetPaneOption::alternate_screen(target, switch));
         self
     }
 
@@ -89,11 +91,12 @@ pub trait SetPaneOptionsTrait<'a> {
     /// remain-on-exit [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn remain_on_exit(mut self, switch: Option<RemainOnExit>) -> Self
+    fn remain_on_exit<S>(mut self, target: Option<S>, switch: Option<RemainOnExit>) -> Self
     where
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(SetPaneOption::remain_on_exit(switch));
+        self.push(SetPaneOption::remain_on_exit(target, switch));
         self
     }
 
@@ -104,11 +107,13 @@ pub trait SetPaneOptionsTrait<'a> {
     /// window-active-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn window_active_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self
+    fn window_active_style<S, T>(mut self, target: Option<T>, style: Option<S>) -> Self
     where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(SetPaneOption::window_active_style(style));
+        self.push(SetPaneOption::window_active_style(target, style));
         self
     }
 
@@ -119,11 +124,13 @@ pub trait SetPaneOptionsTrait<'a> {
     /// window-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn window_style<S: Into<Cow<'a, str>>>(mut self, style: Option<S>) -> Self
+    fn window_style<S, T>(mut self, target: Option<S>, style: Option<T>) -> Self
     where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(SetPaneOption::window_style(style));
+        self.push(SetPaneOption::window_style(target, style));
         self
     }
 
@@ -134,11 +141,12 @@ pub trait SetPaneOptionsTrait<'a> {
     /// synchronize-panes [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn synchronize_panes(mut self, switch: Option<Switch>) -> Self
+    fn synchronize_panes<S>(mut self, target: Option<S>, switch: Option<Switch>) -> Self
     where
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(SetPaneOption::synchronize_panes(switch));
+        self.push(SetPaneOption::synchronize_panes(target, switch));
         self
     }
 

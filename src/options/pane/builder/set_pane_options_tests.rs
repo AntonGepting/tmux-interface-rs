@@ -1,8 +1,10 @@
 #[test]
-fn get_server_options() {
-    use crate::{GetServerOptions, SetClipboard, SetUserOption, Switch};
+fn set_server_options() {
+    use crate::{SetClipboard, SetPaneOptions, SetUserOption, Switch};
 
     let cmd = "show -s";
+    let target = ":";
+    let cmd = format!("{} -t {}", cmd, target);
 
     let mut v = Vec::new();
 
@@ -52,7 +54,7 @@ fn get_server_options() {
 
     //dbg!(&options);
 
-    let options = GetServerOptions::new();
+    let options = SetPaneOptions::new();
     #[cfg(feature = "tmux_3_1")]
     let options = options.backspace();
     #[cfg(feature = "tmux_1_5")]

@@ -1,7 +1,6 @@
 use crate::options::*;
-use crate::{SetUserOption, ShowOptions, TmuxCommand};
+use crate::{SetOption, SetUserOption, TmuxCommand};
 use std::borrow::Cow;
-use std::fmt;
 
 pub struct SetPaneOption;
 
@@ -18,7 +17,10 @@ impl SetOptionExt for SetPaneOption {
     ) -> TmuxCommand<'a> {
         let cmd = SetOption::new().pane().option(name);
         let cmd = match target {
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             Some(target) => cmd.target(target),
+            #[cfg(feature = "tmux_3_0")]
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         let cmd = match value {
@@ -34,7 +36,10 @@ impl SetOptionExt for SetPaneOption {
     ) -> TmuxCommand<'a> {
         let cmd = SetOption::new().pane().option(name).unset();
         let cmd = match target {
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             Some(target) => cmd.target(target),
+            #[cfg(feature = "tmux_3_0")]
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()
@@ -54,8 +59,11 @@ pub trait SetPaneOptionTrait: SetOptionExt {
     /// allow-rename [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn allow_rename<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(ALLOW_RENAME, switch.map(|s| s.to_string()))
+    fn allow_rename<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, ALLOW_RENAME, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -65,8 +73,11 @@ pub trait SetPaneOptionTrait: SetOptionExt {
     /// alternate-screen [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn alternate_screen<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(ALTERNATE_SCREEN, switch.map(|s| s.to_string()))
+    fn alternate_screen<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, ALTERNATE_SCREEN, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -81,8 +92,18 @@ pub trait SetPaneOptionTrait: SetOptionExt {
     /// remain-on-exit [on | off]
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn remain_on_exit<'a>(remain_on_exit: Option<RemainOnExit>) -> TmuxCommand<'a> {
-        Self::set(REMAIN_ON_EXIT, remain_on_exit.map(|s| s.to_string()))
+    fn remain_on_exit<'a, S>(
+        target: Option<S>,
+        remain_on_exit: Option<RemainOnExit>,
+    ) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(
+            target,
+            REMAIN_ON_EXIT,
+            remain_on_exit.map(|s| s.to_string()),
+        )
     }
 
     /// ### Manual
@@ -92,8 +113,12 @@ pub trait SetPaneOptionTrait: SetOptionExt {
     /// window-active-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn window_active_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_ACTIVE_STYLE, style)
+    fn window_active_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_ACTIVE_STYLE, style)
     }
 
     /// ### Manual
@@ -103,8 +128,12 @@ pub trait SetPaneOptionTrait: SetOptionExt {
     /// window-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn window_style<'a, S: Into<Cow<'a, str>>>(style: Option<S>) -> TmuxCommand<'a> {
-        Self::set(WINDOW_STYLE, style)
+    fn window_style<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, WINDOW_STYLE, style)
     }
 
     /// ### Manual
@@ -114,8 +143,11 @@ pub trait SetPaneOptionTrait: SetOptionExt {
     /// synchronize-panes [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn synchronize_panes<'a>(switch: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set(SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
+    fn synchronize_panes<'a, S>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::set(target, SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -123,7 +155,11 @@ pub trait SetPaneOptionTrait: SetOptionExt {
     /// ```text
     /// user option
     /// ```
-    fn user_option<'a, S: fmt::Display>(name: S, value: Option<String>) -> TmuxCommand<'a> {
-        Self::set(format!("{}{}", USER_OPTION_MARKER, name), value)
+    fn user_option<'a, S, T>(target: Option<S>, name: T, value: Option<String>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>> + std::fmt::Display,
+    {
+        Self::set(target, format!("{}{}", USER_OPTION_MARKER, name), value)
     }
 }
