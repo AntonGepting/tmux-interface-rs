@@ -38,9 +38,9 @@ macro_rules! run_shell {
         }) $($tail)*)
     }};
     // `[-d delay]`
-    (@cmd ($cmd:expr) -d, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -d $delay:expr, $($tail:tt)*) => {{
         $crate::run_shell!(@cmd ({
-            $cmd.delay()
+            $cmd.delay($delay)
         }) $($tail)*)
     }};
     // `[-t target-pane]`
@@ -116,7 +116,7 @@ fn run_shell_macro() {
     #[cfg(feature = "tmux_3_2")]
     let run_shell = run_shell!((run_shell), -C);
     #[cfg(feature = "tmux_3_2")]
-    let run_shell = run_shell!((run_shell), -1);
+    let run_shell = run_shell!((run_shell), -d 1);
     #[cfg(feature = "tmux_1_8")]
     let run_shell = run_shell!((run_shell), -t & target_pane);
     #[cfg(feature = "tmux_1_2")]
