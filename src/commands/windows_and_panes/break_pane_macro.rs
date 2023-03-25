@@ -88,27 +88,27 @@ macro_rules! break_pane {
         }) $($tail)*)
     }};
     // `[-t dst-window]` - dst-window
-    (@cmd ($cmd:expr) -t $dst_window:expr, $($tail:tt)*) => {{
-        $crate::break_pane!(@cmd ({
-            $cmd.dst_window($dst_window)
-        }) $($tail)*)
-    }};
     // `[-t dst-pane]` - dst-pane
-    (@cmd ($cmd:expr) -t $dst_pane:expr, $($tail:tt)*) => {{
-        $crate::break_pane!(@cmd ({
-            $cmd.dst_pane($dst_pane)
-        }) $($tail)*)
-    }};
     // `[-t target-window]` - target-window
-    (@cmd ($cmd:expr) -t $target_window:expr, $($tail:tt)*) => {{
-        $crate::break_pane!(@cmd ({
-            $cmd.target_window($target_window)
-        }) $($tail)*)
-    }};
     // `[-t target-pane]` - target-pane
-    (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -t $target:expr, $($tail:tt)*) => {{
         $crate::break_pane!(@cmd ({
-            $cmd.target_pane($target_pane)
+            #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_2")))]
+            {
+                $cmd.dst_pane($target)
+            }
+            #[cfg(feature = "tmux_2_2")]
+            {
+                $cmd.dst_window($target)
+            }
+            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+            {
+                $cmd.target_window($target)
+            }
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+            {
+                $cmd.target_pane($target)
+            }
         }) $($tail)*)
     }};
     // FIXME:

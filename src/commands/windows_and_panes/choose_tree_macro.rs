@@ -97,15 +97,17 @@ macro_rules! choose_tree {
         }) $($tail)*)
     }};
     // `[-t target-pane]` - target-pane
-    (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
-        $crate::choose_tree!(@cmd ({
-            $cmd.target_pane($target_pane)
-        }) $($tail)*)
-    }};
     // `[-t target-window]` - target-window
-    (@cmd ($cmd:expr) -t $target_window:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -t $target:expr, $($tail:tt)*) => {{
         $crate::choose_tree!(@cmd ({
-            $cmd.target_window($target_window)
+            #[cfg(feature = "tmux_2_6")]
+            {
+                $cmd.target_pane($target)
+            }
+            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
+            {
+                $cmd.target_window($target)
+            }
         }) $($tail)*)
     }};
     (@cmd ($cmd:expr) $template:expr, $($tail:tt)*) => {{
