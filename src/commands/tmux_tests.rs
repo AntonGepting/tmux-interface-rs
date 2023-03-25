@@ -53,7 +53,7 @@ fn tmux() {
     // ```text
     // tmux [-28dqUuVv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
     // ```
-    let mut tmux = Tmux::new();
+    let tmux = Tmux::new();
     #[cfg(feature = "tmux_0_8")]
     let tmux = tmux.colours256();
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
