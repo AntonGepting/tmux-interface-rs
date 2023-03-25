@@ -1,10 +1,14 @@
 #[test]
 fn set_global_window_option_tests() {
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+    use crate::ModeMouse;
+    #[cfg(feature = "tmux_2_3")]
+    use crate::PaneBorderStatus;
     #[cfg(feature = "tmux_2_9")]
     use crate::WindowSize;
     use crate::{
-        ClockModeStyle, PaneBorderStatus, SetGlobalWindowOption, SetUserOption, SetWindowOptionExt,
-        StatusKeys, Switch,
+        ClockModeStyle, SetGlobalWindowOption, SetUserOption, SetWindowOptionExt, StatusKeys,
+        Switch,
     };
 
     let cmd = "set -g -w";
@@ -91,7 +95,7 @@ fn set_global_window_option_tests() {
     {
         let origin = format!("{} {} {}", cmd, "c0-change-interval", "2");
         let set_option =
-            SetGlobalWindowOption::c0_change_interval(Some(target), Some("2")).to_string();
+            SetGlobalWindowOption::c0_change_interval(Some(target), Some(2)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -272,7 +276,7 @@ fn set_global_window_option_tests() {
     {
         let origin = format!("{} {} {}", cmd, "mode_mouse", "on");
         let set_option =
-            SetGlobalWindowOption::mode_mouse(Some(target), Some(Switch::On)).to_string();
+            SetGlobalWindowOption::mode_mouse(Some(target), Some(ModeMouse::On)).to_string();
         assert_eq!(origin, set_option);
     }
 

@@ -112,6 +112,7 @@ pub trait SetServerOptionsTrait<'a> {
     #[cfg(feature = "tmux_3_2")]
     fn copy_command<T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         mut self,
+        target: Option<T>,
         copy_command: Option<S>,
     ) -> Self
     where
@@ -339,12 +340,11 @@ pub trait SetServerOptionsTrait<'a> {
     /// terminal-features[] string
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn terminal_features<T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        terminal_features: Option<Vec<S>>,
-    ) -> Self
+    fn terminal_features<T, S, I>(mut self, target: Option<T>, terminal_features: Option<I>) -> Self
     where
+        T: Into<Cow<'a, str>> + Clone,
+        I: IntoIterator<Item = S>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push_cmds(Self::Setter::terminal_features(target, terminal_features));
@@ -379,12 +379,10 @@ pub trait SetServerOptionsTrait<'a> {
     /// user-keys[] key
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn user_keys<T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        user_keys: Option<Vec<S>>,
-    ) -> Self
+    fn user_keys<T, S>(mut self, target: Option<T>, user_keys: Option<Vec<S>>) -> Self
     where
+        T: Into<Cow<'a, str>> + Clone,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push_cmds(Self::Setter::user_keys(target, user_keys));

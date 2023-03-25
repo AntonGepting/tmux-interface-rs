@@ -1,7 +1,14 @@
 use crate::{
-    ClockModeStyle, Error, GetWindowOption, PaneBorderStatus, SetWindowOptionExt, SetWindowOptions,
-    StatusKeys, Switch, Tmux, TmuxCommand, TmuxOutput, WindowOptions,
+    ClockModeStyle, Error, GetWindowOption, SetWindowOptionExt, SetWindowOptions, StatusKeys,
+    Switch, Tmux, TmuxCommand, TmuxOutput, WindowOptions,
 };
+
+#[cfg(feature = "tmux_2_3")]
+use crate::PaneBorderStatus;
+
+#[cfg(feature = "tmux_2_9")]
+use crate::WindowSize;
+
 use std::borrow::Cow;
 
 // trait, subtrai for global local

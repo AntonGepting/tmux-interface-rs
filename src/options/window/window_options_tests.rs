@@ -1,6 +1,12 @@
 #[test]
 fn default() {
-    use crate::{ClockModeStyle, PaneBorderStatus, StatusKeys, Switch, WindowOptions};
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+    use crate::ModeMouse;
+    #[cfg(feature = "tmux_2_3")]
+    use crate::PaneBorderStatus;
+    #[cfg(feature = "tmux_2_9")]
+    use crate::WindowSize;
+    use crate::{ClockModeStyle, StatusKeys, Switch, WindowOptions};
 
     let default_window_options = WindowOptions::default();
     let window_options = WindowOptions::new();
@@ -44,7 +50,7 @@ fn default() {
     #[cfg(feature = "tmux_1_0")]
     let window_options = window_options.mode_keys(Some(StatusKeys::Vi));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    let window_options = window_options.mode_mouse(Some());
+    let window_options = window_options.mode_mouse(Some(ModeMouse::Off));
     #[cfg(feature = "tmux_1_9")]
     let window_options = window_options.mode_style(Some("fg=black,bg=yellow"));
     #[cfg(feature = "tmux_1_0")]
@@ -76,7 +82,7 @@ fn default() {
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
     let window_options = window_options.synchronize_panes(Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    let window_options = window_options.utf8(Some());
+    let window_options = window_options.utf8(Some(Switch::Off));
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     let window_options = window_options.window_active_style(Some("fg=colour253,bg=colour235"));
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
@@ -144,7 +150,7 @@ fn default() {
     #[cfg(feature = "tmux_1_9")]
     let window_options = window_options.window_status_style(Some("default"));
     #[cfg(feature = "tmux_2_9")]
-    let window_options = window_options.window_size(Some(Latest));
+    let window_options = window_options.window_size(Some(WindowSize::Largest));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
     let window_options = window_options.word_separators(Some());
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]

@@ -798,10 +798,12 @@ pub trait SetSessionOption: SetOptionExt {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn status_format<'a, T: Into<Cow<'a, str>> + Clone, S: Into<Cow<'a, str>>>(
-        target: Option<T>,
-        format: Option<Vec<S>>,
-    ) -> TmuxCommands<'a> {
+    fn status_format<'a, T, I, S>(target: Option<T>, format: Option<I>) -> TmuxCommands<'a>
+    where
+        T: Into<Cow<'a, str>> + Clone,
+        I: IntoIterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
         Self::set_array(target, STATUS_FORMAT, format)
     }
 

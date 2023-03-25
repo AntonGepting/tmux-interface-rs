@@ -16,9 +16,13 @@ impl SetOptionExt for SetServerOption {
     ) -> TmuxCommand<'a> {
         let cmd = SetOption::new().server().option(name);
         let cmd = match target {
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             Some(target) => cmd.target(target),
+            #[cfg(feature = "tmux_3_0")]
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
+
         let cmd = match value {
             Some(value) => cmd.value(value),
             None => cmd.unset(),
@@ -32,7 +36,10 @@ impl SetOptionExt for SetServerOption {
     ) -> TmuxCommand<'a> {
         let cmd = SetOption::new().server().option(name).unset();
         let cmd = match target {
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             Some(target) => cmd.target(target),
+            #[cfg(feature = "tmux_3_0")]
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()

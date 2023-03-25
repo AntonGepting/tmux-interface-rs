@@ -121,9 +121,9 @@ fn set_server_option() {
 
     #[cfg(feature = "tmux_1_5")]
     {
-        let origin = format!("{} {} {}", cmd, "set-clipboard", "external");
+        let origin = format!("{} {} {}", cmd, "set-clipboard", "off");
         let set_option =
-            SetServerOption::set_clipboard(Some(target), Some(SetClipboard::External)).to_string();
+            SetServerOption::set_clipboard(Some(target), Some(SetClipboard::Off)).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -136,7 +136,7 @@ fn set_server_option() {
         let origin1 = format!("{} {} {}", cmd, "terminal-features[1]", "screen*:title");
         let origin = format!("{} ; {}", origin0, origin1);
         let set_option = SetServerOption::terminal_features(
-            target,
+            Some(target),
             Some(vec![
                 "xterm*:clipboard:ccolour:cstyle:focus:title".to_string(),
                 "screen*:title".to_string(),

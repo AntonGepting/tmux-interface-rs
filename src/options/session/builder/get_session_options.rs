@@ -140,7 +140,7 @@ pub trait GetSessionOptions<'a, Getter: GetSessionOption> {
         S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(Getter::BELL_ON_ALERT(target));
+        self.push(Getter::bell_on_alert(target));
         self
     }
 

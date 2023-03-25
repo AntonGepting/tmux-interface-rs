@@ -232,6 +232,7 @@ impl<'a> ServerOptionsCtl<'a> {
     /// ```
     #[cfg(feature = "tmux_3_1")]
     pub fn get_backspace<S: Into<Cow<'a, str>>>(
+        &self,
         target: Option<S>,
     ) -> Result<Option<String>, Error> {
         self.get(GetServerOptionValue::backspace(target))
@@ -245,6 +246,7 @@ impl<'a> ServerOptionsCtl<'a> {
     /// ```
     #[cfg(feature = "tmux_3_1")]
     pub fn set_backspace<T: Into<Cow<'a, str>>>(
+        &self,
         target: Option<T>,
         key: Option<String>,
     ) -> Result<TmuxOutput, Error> {
@@ -425,11 +427,15 @@ impl<'a> ServerOptionsCtl<'a> {
     /// editor shell-command
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn set_editor<T: Into<Cow<'a, str>>>(
+    pub fn set_editor<T, S>(
         &self,
         target: Option<S>,
-        editor: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
+        editor: Option<T>,
+    ) -> Result<TmuxOutput, Error>
+    where
+        T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
+    {
         self.set(SetServerOption::editor(target, editor))
     }
 
@@ -689,7 +695,7 @@ impl<'a> ServerOptionsCtl<'a> {
     /// terminal-features[] string
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    pub fn set_terminal_features<I, T>(
+    pub fn set_terminal_features<I, S, T>(
         &self,
         target: Option<S>,
         terminal_features: Option<I>,
@@ -697,6 +703,7 @@ impl<'a> ServerOptionsCtl<'a> {
     where
         I: IntoIterator<Item = T>,
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>> + Clone,
     {
         self.set(TmuxCommand::with_cmds(SetServerOption::terminal_features(
             target,
@@ -762,15 +769,15 @@ impl<'a> ServerOptionsCtl<'a> {
     /// user-keys[] key
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn set_user_keys<U, I, T>(
+    pub fn set_user_keys<T, I, S>(
         &self,
-        target: Option<U>,
+        target: Option<T>,
         user_keys: Option<I>,
     ) -> Result<TmuxOutput, Error>
     where
+        T: Into<Cow<'a, str>> + Clone,
         I: IntoIterator<Item = T>,
-        T: Into<Cow<'a, str>>,
-        U: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
     {
         self.set(TmuxCommand::with_cmds(SetServerOption::user_keys(
             target, user_keys,

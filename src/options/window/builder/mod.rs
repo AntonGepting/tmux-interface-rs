@@ -15,25 +15,25 @@ pub use get_window_options::*;
 pub use set_window_option::*;
 pub use set_window_options::*;
 
-#[test]
-fn window_options_111() {
-    use crate::{
-        GetGlobalWindowOption, GlobalWindowOptionsCtl, ShowOptions, Tmux, WindowOptions,
-        WindowOptionsCtl,
-    };
+// #[test]
+// fn window_options_111() {
+//     use crate::{
+//         GetGlobalWindowOption, GlobalWindowOptionsCtl, ShowOptions, Tmux, WindowOptions,
+//         WindowOptionsCtl,
+//     };
 
-    let _cmd = GetGlobalWindowOption::allow_rename(Some(":"));
-    let cmd = ShowOptions::new()
-        .target(":")
-        .global()
-        .option("allow-rename")
-        .build();
-    let output = Tmux::with_command(cmd).output().unwrap();
-    let value: WindowOptions = output.to_string().parse().unwrap();
-    dbg!(value);
+//     let _cmd = GetGlobalWindowOption::allow_rename(Some(":"));
+//     let cmd = ShowOptions::new()
+//         .target(":")
+//         .global()
+//         .option("allow-rename")
+//         .build();
+//     let output = Tmux::with_command(cmd).output().unwrap();
+//     let value: WindowOptions = output.to_string().parse().unwrap();
+//     dbg!(value);
 
-    let value = GlobalWindowOptionsCtl::default()
-        .get_allow_rename()
-        .unwrap();
-    dbg!(value);
-}
+//     let value = GlobalWindowOptionsCtl::default()
+//         .get_allow_rename()
+//         .unwrap();
+//     dbg!(value);
+// }

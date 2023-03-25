@@ -185,11 +185,11 @@ pub trait SetServerOptionTrait: SetOptionExt {
     /// extended-keys [on | off]
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn extended_keys<'a, T: Into<Cow<'a, str>>>(
-        target: Option<T>,
-        extended_keys: Option<Switch>,
-    ) -> TmuxCommand<'a> {
-        Self::set_ext(target, EXTENDED_KEYS, extended_keys.map(|s| s.to_string()))
+    fn extended_keys<'a, T>(target: Option<T>, extended_keys: Option<Switch>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set(target, EXTENDED_KEYS, extended_keys.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -273,12 +273,14 @@ pub trait SetServerOptionTrait: SetOptionExt {
     /// terminal-features[] string
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn terminal_features<'a, T: Into<Cow<'a, str>>, I, S>(
+    fn terminal_features<'a, T, I, S>(
+        target: Option<T>,
         terminal_features: Option<I>,
     ) -> TmuxCommands<'a>
     where
         I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>> + Clone,
     {
         Self::set_array(target, TERMINAL_FEATURES, terminal_features)
     }
@@ -309,8 +311,9 @@ pub trait SetServerOptionTrait: SetOptionExt {
     /// user-keys[] key
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn user_keys<'a, T: Into<Cow<'a, str>>, I, S>(user_keys: Option<Vec<S>>) -> TmuxCommands<'a>
+    fn user_keys<'a, T, I, S>(target: Option<T>, user_keys: Option<I>) -> TmuxCommands<'a>
     where
+        T: Into<Cow<'a, str>> + Clone,
         I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
     {

@@ -174,12 +174,9 @@ pub trait SetSessionOptions<'a> {
     /// default-terminal terminal
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    fn default_terminal<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        terminal: Option<S>,
-    ) -> Self
+    fn default_terminal<S, T>(mut self, target: Option<T>, terminal: Option<S>) -> Self
     where
+        S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
         Self: Sized,
     {
@@ -967,7 +964,7 @@ pub trait SetSessionOptions<'a> {
     #[cfg(feature = "tmux_2_9")]
     fn status_format<T>(mut self, target: Option<T>, format: Option<Vec<String>>) -> Self
     where
-        T: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>> + Clone,
         Self: Sized,
     {
         self.push_cmds(Self::Setter::status_format(target, format));

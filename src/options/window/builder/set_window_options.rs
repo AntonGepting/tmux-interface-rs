@@ -1,12 +1,14 @@
 // NOTE: DRY, global and local window options structures have same methods therefore common setter
 // and getter traits were choosen for common use super::set_window_option::Self::Setter;
 //
+// use crate::ModeMouse;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+use crate::ModeMouse;
+#[cfg(feature = "tmux_2_3")]
+use crate::PaneBorderStatus;
 #[cfg(feature = "tmux_2_9")]
 use crate::WindowSize;
-use crate::{
-    ClockModeStyle, PaneBorderStatus, SetWindowOptionExt, StatusKeys, Switch, TmuxCommand,
-    TmuxCommands,
-};
+use crate::{ClockModeStyle, SetWindowOptionExt, StatusKeys, Switch, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 
 pub trait SetWindowOptions<'a> {
@@ -106,12 +108,12 @@ pub trait SetWindowOptions<'a> {
     /// c0-change-interval interval
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    fn c0_change_interval(mut self) -> Self
+    fn c0_change_interval<T>(mut self, target: Option<T>, c0_change_interval: Option<usize>) -> Self
     where
         T: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(Self::Setter::c0_change_interval(target));
+        self.push(Self::Setter::c0_change_interval(target, c0_change_interval));
         self
     }
 
@@ -122,13 +124,13 @@ pub trait SetWindowOptions<'a> {
     /// c0-change-trigger trigger
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    fn c0_change_trigger<S, T>(mut self, target: Option<T>, trigger: Option<S>) -> Self
+    fn c0_change_trigger<S, T>(mut self, target: Option<T>, c0_change_trigger: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
         S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(Self::Setter::c0_change_trigger(target));
+        self.push(Self::Setter::c0_change_trigger(target, c0_change_trigger));
         self
     }
 

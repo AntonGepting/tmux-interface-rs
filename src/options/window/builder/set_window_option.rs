@@ -117,11 +117,12 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// c0-change-trigger trigger
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    fn c0_change_trigger<'a, S>(target: Option<S>, trigger: Option<usize>) -> TmuxCommand<'a>
+    fn c0_change_trigger<'a, S, T>(target: Option<S>, trigger: Option<T>) -> TmuxCommand<'a>
     where
         S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
     {
-        Self::set(target, C0_CHANGE_TRIGGER, trigger.map(|s| s.to_string()))
+        Self::set(target, C0_CHANGE_TRIGGER, trigger)
     }
 
     /// ### Manual
@@ -301,12 +302,11 @@ pub trait SetWindowOptionExt: SetOptionExt {
     /// mode-mouse [on | off | copy-mode]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    fn mode_mouse<'a, S, T>(target: Option<S>, switch: Option<Switch>) -> TmuxCommand<'a>
+    fn mode_mouse<'a, S>(target: Option<S>, mode_mouse: Option<ModeMouse>) -> TmuxCommand<'a>
     where
         S: Into<Cow<'a, str>>,
-        T: Into<Cow<'a, str>>,
     {
-        Self::set(target, MODE_MOUSE, switch.map(|s| s.to_string()))
+        Self::set(target, MODE_MOUSE, mode_mouse.map(|s| s.to_string()))
     }
 
     /// ### Manual

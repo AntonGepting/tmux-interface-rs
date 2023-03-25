@@ -1,10 +1,13 @@
 #[test]
 fn set_local_window_options() {
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+    use crate::ModeMouse;
+    #[cfg(feature = "tmux_2_3")]
+    use crate::PaneBorderStatus;
     #[cfg(feature = "tmux_2_9")]
     use crate::WindowSize;
     use crate::{
-        ClockModeStyle, PaneBorderStatus, SetLocalWindowOptions, SetUserOptions, SetWindowOptions,
-        StatusKeys, Switch,
+        ClockModeStyle, SetLocalWindowOptions, SetUserOptions, SetWindowOptions, StatusKeys, Switch,
     };
 
     let options = SetLocalWindowOptions::new();
@@ -27,9 +30,9 @@ fn set_local_window_options() {
         Some("#{?pane_in_mode,[tmux],#{pane_current_command}}#{?pane_dead,[dead],}".to_string()),
     );
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    let options = options.c0_change_interval(Some(target));
+    let options = options.c0_change_interval(Some(target), Some(0));
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    let options = options.c0_change_trigger(Some(target));
+    let options = options.c0_change_trigger(Some(target), Some(""));
     #[cfg(feature = "tmux_1_0")]
     let options = options.clock_mode_colour(Some(target), Some("colour135"));
     #[cfg(feature = "tmux_1_0")]
@@ -58,7 +61,7 @@ fn set_local_window_options() {
     #[cfg(feature = "tmux_1_0")]
     let options = options.mode_keys(Some(target), Some(StatusKeys::Vi));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    let options = options.mode_mouse(Some(target));
+    let options = options.mode_mouse(Some(target), Some(ModeMouse::Off));
     #[cfg(feature = "tmux_1_9")]
     let options = options.mode_style(Some(target), Some("fg=colour196,bg=colour238,bold"));
     #[cfg(feature = "tmux_1_0")]
@@ -95,7 +98,7 @@ fn set_local_window_options() {
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
     let options = options.synchronize_panes(Some(target), Some(Switch::On));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    let options = options.utf8(Some(target), Some(""));
+    let options = options.utf8(Some(target), Some(Switch::Off));
     //popup-style default
     //popup-border-style default
     //popup-border-lines single

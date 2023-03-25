@@ -49,7 +49,7 @@ fn set_server_options() {
     #[cfg(feature = "tmux_3_3")]
     v.push(format!("{} {} {}", cmd, "prompt-history-limit", "100"));
     #[cfg(feature = "tmux_1_5")]
-    v.push(format!("{} {} {}", cmd, "set-clipboard", "external"));
+    v.push(format!("{} {} {}", cmd, "set-clipboard", "off"));
     #[cfg(feature = "tmux_3_2")]
     {
         v.push(format!(
@@ -81,10 +81,7 @@ fn set_server_options() {
     #[cfg(feature = "tmux_2_4")]
     let options = options.command_alias(
         Some(target),
-        Some(vec![
-            "split-pane=split-window".to_string(),
-            "splitp=split-window".to_string(),
-        ]),
+        Some(vec!["split-pane=split-window", "splitp=split-window"]),
     );
     #[cfg(feature = "tmux_3_2")]
     let options = options.copy_command(Some(target), Some(""));
@@ -109,13 +106,13 @@ fn set_server_options() {
     #[cfg(feature = "tmux_3_3")]
     let options = options.prompt_history_limit(Some(target), Some(100));
     #[cfg(feature = "tmux_1_5")]
-    let options = options.set_clipboard(Some(target), Some(SetClipboard::External));
+    let options = options.set_clipboard(Some(target), Some(SetClipboard::Off));
     #[cfg(feature = "tmux_3_2")]
     let options = options.terminal_features(
-        target,
+        Some(target),
         Some(vec![
-            "xterm*:clipboard:ccolour:cstyle:focus:title".to_string(),
-            "screen*:title".to_string(),
+            "xterm*:clipboard:ccolour:cstyle:focus:title",
+            "screen*:title",
         ]),
     );
     #[cfg(feature = "tmux_2_0")]

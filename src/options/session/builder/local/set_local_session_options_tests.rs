@@ -240,7 +240,7 @@ fn set_local_session_options_tests() {
     #[cfg(feature = "tmux_1_1")]
     let options = options.lock_command(Some(target), Some("lock -np"));
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
-    let options = options.lock_server(Some(target), Some("17"));
+    let options = options.lock_server(Some(target), Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     let options = options.message_attr(Some(target), Some("18"));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]

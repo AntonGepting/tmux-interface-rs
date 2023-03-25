@@ -14,7 +14,10 @@ impl SetOptionExt for SetGlobalWindowOption {
     ) -> TmuxCommand<'a> {
         let cmd = SetOption::new().window().global().option(name);
         let cmd = match target {
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             Some(target) => cmd.target(target),
+            #[cfg(feature = "tmux_3_0")]
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         let cmd = match value {
@@ -30,7 +33,10 @@ impl SetOptionExt for SetGlobalWindowOption {
     ) -> TmuxCommand<'a> {
         let cmd = SetOption::new().window().global().option(name).unset();
         let cmd = match target {
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             Some(target) => cmd.target(target),
+            #[cfg(feature = "tmux_3_0")]
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()

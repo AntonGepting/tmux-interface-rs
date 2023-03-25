@@ -185,7 +185,7 @@ fn server_options_from_str() {
     #[cfg(feature = "tmux_3_3")]
     v.push("prompt-history-limit 100");
     #[cfg(feature = "tmux_1_5")]
-    v.push("set-clipboard external");
+    v.push("set-clipboard off");
     #[cfg(feature = "tmux_3_2")]
     {
         v.push("terminal-features[0] \"xterm*:clipboard:ccolour:cstyle:focus:title\"");
@@ -238,7 +238,7 @@ fn server_options_from_str() {
     #[cfg(feature = "tmux_1_4")]
     let origin = origin.exit_unattached(Some(Switch::Off));
     #[cfg(feature = "tmux_3_2")]
-    let origin = origin.extended_keys(Some(""));
+    let origin = origin.extended_keys(Some(Switch::Off));
     #[cfg(feature = "tmux_1_9")]
     let origin = origin.focus_events(Some(Switch::Off));
     #[cfg(feature = "tmux_2_1")]
@@ -246,15 +246,15 @@ fn server_options_from_str() {
     #[cfg(feature = "tmux_2_0")]
     let origin = origin.message_limit(Some(100));
     #[cfg(feature = "tmux_3_3")]
-    let origin = origin.prompt_history_limit(Some(""));
+    let origin = origin.prompt_history_limit(Some(0));
     #[cfg(feature = "tmux_1_5")]
-    let origin = origin.set_clipboard(Some(SetClipboard::External));
+    let origin = origin.set_clipboard(Some(SetClipboard::Off));
     #[cfg(feature = "tmux_3_2")]
-    let origin = origin.terminal_features(Some(""));
+    let origin = origin.terminal_features(Some(vec![""]));
     #[cfg(feature = "tmux_2_0")]
     let origin = origin.terminal_overrides(Some(vec!["\"xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q\"", "\"screen*:XT\""]));
     #[cfg(feature = "tmux_3_0")]
-    let origin = origin.user_keys(Some(""));
+    let origin = origin.user_keys(Some(vec![""]));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
     let origin = origin.quiet(Some(""));
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]

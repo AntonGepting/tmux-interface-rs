@@ -1,7 +1,9 @@
 //#[cfg(feature = "tmux_2_0")]
 //use super::create_insert_vec;
 use super::*;
-use crate::options::common::{array_insert, cow_parse, get_parts};
+use crate::options::common::{
+    array_insert, cow_parse, get_parts, option_array_to_string, option_to_string,
+};
 use crate::{Error, Switch};
 use std::borrow::Cow;
 use std::collections::HashMap;
@@ -84,24 +86,6 @@ pub struct ServerOptions<'a> {
     pub user_options: HashMap<String, Option<Cow<'a, str>>>,
 }
 
-fn option_to_string<S: fmt::Display>(v: &mut Vec<String>, name: &str, value: &Option<S>) {
-    if let Some(data) = value {
-        v.push(format!("{} {}", name, data))
-    }
-}
-
-fn option_array_to_string<S: fmt::Display>(
-    v: &mut Vec<String>,
-    name: &str,
-    value: &Option<Vec<S>>,
-) {
-    if let Some(data) = value {
-        for item in data {
-            v.push(format!("{} {}", name, item))
-        }
-    }
-}
-
 // tmux.h
 #[cfg(feature = "tmux_2_1")]
 const DEFAULT_TERMINAL_DEFAULT: &str = "screen";
@@ -142,7 +126,7 @@ impl<'a> Default for ServerOptions<'a> {
     fn default() -> Self {
         let options = ServerOptions::new();
         #[cfg(feature = "tmux_3_1")]
-        let options = options.backspace(None);
+        let options = options.backspace(Some(""));
         #[cfg(feature = "tmux_1_5")]
         let options = options.buffer_limit(Some(BUFFER_LIMIT_DEFAULT));
         #[cfg(feature = "tmux_2_4")]
@@ -167,7 +151,7 @@ impl<'a> Default for ServerOptions<'a> {
         #[cfg(feature = "tmux_1_4")]
         let options = options.exit_unattached(Some(Switch::Off));
         #[cfg(feature = "tmux_3_2")]
-        let options = options.extended_keys(Some(0));
+        let options = options.extended_keys(Some(Switch::Off));
         #[cfg(feature = "tmux_1_9")]
         let options = options.focus_events(Some(Switch::Off));
         #[cfg(feature = "tmux_2_1")]
@@ -187,7 +171,7 @@ impl<'a> Default for ServerOptions<'a> {
             "rxvt*:ignorefkeys",
         ]));
         #[cfg(feature = "tmux_3_0")]
-        let options = options.user_keys(Some(""));
+        let options = options.user_keys(Some(vec![""]));
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
         let options = options.quiet(None);
         #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
@@ -225,8 +209,10 @@ impl<'a> fmt::Display for ServerOptions<'a> {
         option_to_string(&mut v, MESSAGE_LIMIT, &self.message_limit);
         #[cfg(feature = "tmux_1_5")]
         option_to_string(&mut v, SET_CLIPBOARD, &self.set_clipboard);
+        #[cfg(feature = "tmux_3_2")]
+        option_array_to_string(&mut v, TERMINAL_FEATURES, &self.terminal_features);
         #[cfg(feature = "tmux_2_0")]
-        option_array_to_string(&mut v, TERMINAL_OVERRIDES, &self.command_alias);
+        option_array_to_string(&mut v, TERMINAL_OVERRIDES, &self.terminal_overrides);
         #[cfg(feature = "tmux_3_0")]
         option_array_to_string(&mut v, USER_KEYS, &self.user_keys);
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
@@ -249,12 +235,14 @@ impl<'a> ServerOptions<'a> {
             buffer_limit: None,
             #[cfg(feature = "tmux_2_4")]
             command_alias: None,
-            #[cfg(feature = "tmux_2_1")]
-            default_terminal: None,
             #[cfg(feature = "tmux_3_2")]
             copy_command: None,
+            #[cfg(feature = "tmux_2_1")]
+            default_terminal: None,
             #[cfg(feature = "tmux_1_2")]
             escape_time: None,
+            #[cfg(feature = "tmux_3_2")]
+            editor: None,
             #[cfg(feature = "tmux_2_7")]
             exit_empty: None,
             #[cfg(feature = "tmux_1_4")]
@@ -267,8 +255,12 @@ impl<'a> ServerOptions<'a> {
             history_file: None,
             #[cfg(feature = "tmux_2_0")]
             message_limit: None,
+            #[cfg(feature = "tmux_3_3")]
+            prompt_history_limit: None,
             #[cfg(feature = "tmux_1_5")]
             set_clipboard: None,
+            #[cfg(feature = "tmux_3_2")]
+            terminal_features: None,
             #[cfg(feature = "tmux_2_0")]
             terminal_overrides: None,
             #[cfg(feature = "tmux_3_0")]
@@ -475,7 +467,7 @@ impl<'a> ServerOptions<'a> {
     #[cfg(feature = "tmux_3_2")]
     pub fn terminal_features<I, S>(mut self, terminal_features: Option<I>) -> Self
     where
-        I: Iterator<Item = S>,
+        I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
     {
         self.terminal_features =
@@ -507,9 +499,9 @@ impl<'a> ServerOptions<'a> {
     /// user-keys[] key
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn user_keys<I, S>(mut self, user_keys: Option<Vec<String>>) -> Self
+    pub fn user_keys<I, S>(mut self, user_keys: Option<I>) -> Self
     where
-        I: Iterator<Item = S>,
+        I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
     {
         self.user_keys = user_keys.and_then(|v| Some(v.into_iter().map(|s| s.into()).collect()));
@@ -541,9 +533,9 @@ impl<'a> ServerOptions<'a> {
     }
 
     // `@USER_OPTION`
-    //fn user_options(mut self, user_options: HashMap<String, String>) -> Self {
-    //unimplemented!()
-    //}
+    // fn user_options(mut self, user_options: HashMap<String, String>) -> Self {
+    // unimplemented!()
+    // }
 }
 
 impl<'a> FromStr for ServerOptions<'a> {
@@ -642,16 +634,3 @@ impl<'a> FromStr for ServerOptions<'a> {
         Ok(server_options)
     }
 }
-
-// universal insert in vec
-//pub fn insert_vec<T: >(server_options: &mut ServerOptions, i: usize, value: Option<T>) {
-//match value {
-//Some((i, data)) => server_options
-//.command_alias
-//.get_or_insert(Vec::new())
-//.insert(i, data),
-//None => (),
-//};
-//}
-//
-//

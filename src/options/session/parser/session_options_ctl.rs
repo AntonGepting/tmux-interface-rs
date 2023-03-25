@@ -200,8 +200,9 @@ pub trait SessionOptionsCtl<'a> {
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
         let cmds = cmds.status_fg(self.target(), session_options.status_fg);
 
-        #[cfg(feature = "tmux_2_9")]
-        let cmds = cmds.status_format(self.target(), session_options.status_format);
+        // #[cfg(feature = "tmux_2_9")]
+        // let cmds = cmds.status_format(self.target(), session_options.status_format);
+        unimplemented!();
 
         #[cfg(feature = "tmux_1_0")]
         let cmds = cmds.status_interval(self.target(), session_options.status_interval);
@@ -601,7 +602,8 @@ pub trait SessionOptionsCtl<'a> {
         &self,
         target: Option<S>,
     ) -> Result<Option<(usize, usize)>, Error> {
-        self.get(Self::Getter::default_size(target))
+        unimplemented!()
+        // self.get(Self::Getter::default_size(target))
     }
 
     /// ### Manual
@@ -1251,8 +1253,9 @@ pub trait SessionOptionsCtl<'a> {
     /// mouse-resize-pane [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    fn set_mouse_resize_pane(
+    fn set_mouse_resize_pane<S: Into<Cow<'a, str>>>(
         &self,
+        target: Option<S>,
         mouse_resize_pane: Option<Switch>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::mouse_resize_pane(target, mouse_resize_pane))
@@ -1687,8 +1690,9 @@ pub trait SessionOptionsCtl<'a> {
     /// set-remain-on-exit [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-    fn set_set_remain_on_exit(
+    fn set_set_remain_on_exit<S: Into<Cow<'a, str>>>(
         &self,
+        target: Option<S>,
         set_remain_on_exit: Option<Switch>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::set_remain_on_exit(target, set_remain_on_exit))
@@ -1926,12 +1930,18 @@ pub trait SessionOptionsCtl<'a> {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn set_status_format<S: Into<Cow<'a, str>>>(
+    fn set_status_format<S, I, T>(
         &self,
-        target: Option<S>,
-        status_format: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_format(target, status_format))
+        target: Option<T>,
+        status_format: Option<I>,
+    ) -> Result<TmuxOutput, Error>
+    where
+        T: Into<Cow<'a, str>> + Clone,
+        S: Into<Cow<'a, str>>,
+        I: IntoIterator<Item = S>,
+    {
+        unimplemented!();
+        // self.set(Self::Setter::status_format(target, status_format))
     }
 
     /// ### Manual
@@ -2492,10 +2502,13 @@ pub trait SessionOptionsCtl<'a> {
     /// ```text
     /// update-environment[] variable
     /// ```
-    // #[cfg(feature = "tmux_1_0")]
-    // fn get_update_environment<S: Into<Cow<'a, str>>>(&self, target: Option<S>) -> Result<Option<String>, Error> {
-    // self.get(Self::Getter::update_environment(target, ))
-    // }
+    #[cfg(feature = "tmux_1_0")]
+    fn get_update_environment<S: Into<Cow<'a, str>>>(
+        &self,
+        target: Option<S>,
+    ) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::update_environment(target))
+    }
 
     /// ### Manual
     ///
@@ -2503,10 +2516,20 @@ pub trait SessionOptionsCtl<'a> {
     /// ```text
     /// update-environment[] variable
     /// ```
-    // #[cfg(feature = "tmux_1_0")]
-    // fn set_update_environment<S: Into<Cow<'a, str>>>(&self, target: Option<S>, update_environment: Option<Vec<String>>) -> Result<TmuxOutput, Error> {
-    // self.set(Self::Setter::update_environment(target, update_environment))
-    // }
+    #[cfg(feature = "tmux_1_0")]
+    fn set_update_environment<T, I, S>(
+        &self,
+        target: Option<T>,
+        update_environment: Option<I>,
+    ) -> Result<TmuxOutput, Error>
+    where
+        T: Into<Cow<'a, str>> + Clone,
+        I: IntoIterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
+        unimplemented!()
+        // self.set(Self::Setter::update_environment(target, update_environment))
+    }
 
     /// ### Manual
     ///

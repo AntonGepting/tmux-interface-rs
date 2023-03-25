@@ -31,7 +31,10 @@ pub trait SetOptionExt {
     {
         let cmd = SetOption::new().option(name);
         let cmd = match target {
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             Some(target) => cmd.target(target),
+            #[cfg(feature = "tmux_3_0")]
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         let cmd = match value {
@@ -52,7 +55,10 @@ pub trait SetOptionExt {
     {
         let cmd = SetOption::new().option(name).unset();
         let cmd = match target {
+            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             Some(target) => cmd.target(target),
+            #[cfg(feature = "tmux_3_0")]
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()
