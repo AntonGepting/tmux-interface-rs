@@ -95,7 +95,7 @@ macro_rules! display_menu {
 
 #[test]
 fn display_menu_macro() {
-    use crate::{DisplayMenu, TargetPane};
+    use crate::TargetPane;
     use std::borrow::Cow;
 
     // Structure for displaying a menu on target-client
