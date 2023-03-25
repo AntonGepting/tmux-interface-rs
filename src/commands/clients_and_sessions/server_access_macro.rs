@@ -10,32 +10,32 @@
 macro_rules! server_access {
     (@cmd ($cmd:expr) -a, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
-            $cmd.attach()
+            $cmd.add()
         }) $($tail)*)
     }};
     (@cmd ($cmd:expr) -d, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
-            $cmd.detached()
+            $cmd.delete()
         }) $($tail)*)
     }};
     (@cmd ($cmd:expr) -l, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
-            $cmd.detach_other()
+            $cmd.list()
         }) $($tail)*)
     }};
     (@cmd ($cmd:expr) -r, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
-            $cmd.not_update_env()
+            $cmd.read()
         }) $($tail)*)
     }};
     (@cmd ($cmd:expr) -w, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
-            $cmd.print()
+            $cmd.write()
         }) $($tail)*)
     }};
     (@cmd ($cmd:expr) $user:expr, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
-            $cmd.shell_command($user)
+            $cmd.user($user)
         }) $($tail)*)
     }};
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
@@ -57,7 +57,6 @@ macro_rules! server_access {
 
 #[test]
 fn server_access_macro() {
-    use crate::ServerAccess;
     use std::borrow::Cow;
 
     // Execute commands from path
@@ -81,7 +80,7 @@ fn server_access_macro() {
     #[cfg(feature = "tmux_3_3")]
     let server_access = server_access!((server_access), -w);
     #[cfg(feature = "tmux_3_3")]
-    let source_file = server_access!((server_access), "1");
+    let server_access = server_access!((server_access), "1");
 
     let cmd = "server-access";
 
