@@ -5,8 +5,6 @@ use crate::TmuxCommand;
 #[cfg(feature = "tmux_3_2")]
 use crate::{AllowActions, State, Subscribe};
 use std::borrow::Cow;
-#[cfg(feature = "tmux_3_2")]
-use std::fmt;
 
 /// Structure for refreshing the current client
 ///
