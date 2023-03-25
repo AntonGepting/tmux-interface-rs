@@ -41,14 +41,14 @@ fn show_prompt_history_macro() {
     // clear-prompt-history [-T prompt-type]
     // (alias: clearphist)
     // ```
-    let clear_prompt_history = show_prompt_history!();
+    let show_prompt_history = show_prompt_history!();
     #[cfg(feature = "tmux_3_3")]
-    let clear_prompt_history = clear_prompt_history!((show_prompt_history), -T "1");
+    let show_prompt_history = show_prompt_history!((show_prompt_history), -T "1");
 
     #[cfg(not(feature = "cmd_alias"))]
-    let cmd = "clear-prompt-history";
+    let cmd = "show-prompt-history";
     #[cfg(feature = "cmd_alias")]
-    let cmd = "clearphist";
+    let cmd = "showhist";
 
     let mut s = Vec::new();
     s.push(cmd);
@@ -56,7 +56,7 @@ fn show_prompt_history_macro() {
     s.extend_from_slice(&["-T", "1"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
-    let clear_prompt_history = clear_prompt_history.build().to_vec();
+    let show_prompt_history = show_prompt_history.build().to_vec();
 
-    assert_eq!(clear_prompt_history, s);
+    assert_eq!(show_prompt_history, s);
 }
