@@ -1,11 +1,67 @@
+use crate::Switch;
+
 #[test]
 fn default() {
-    use crate::ServerOptions;
+    use crate::{ServerOptions, SetClipboard, Switch};
 
-    let _server_options = ServerOptions {
+    let server_options = ServerOptions {
         ..Default::default()
     };
-    //dbg!(_server_options);
+
+    let options = ServerOptions::new();
+    #[cfg(feature = "tmux_3_1")]
+    let options = options.backspace(Some(""));
+    #[cfg(feature = "tmux_1_5")]
+    let options = options.buffer_limit(Some(50));
+    #[cfg(feature = "tmux_2_4")]
+    let options = options.command_alias(Some(vec![
+        "split-pane=split-window,",
+        "splitp=split-window,",
+        "server-info=show-messages -JT,",
+        "info=show-messages -JT,",
+        "choose-window=choose-tree -w,",
+        "choose-session=choose-tree -s",
+    ]));
+    #[cfg(feature = "tmux_2_1")]
+    let options = options.default_terminal(Some("screen"));
+    #[cfg(feature = "tmux_3_2")]
+    let options = options.editor(Some("/usr/bin/vi"));
+    #[cfg(feature = "tmux_3_2")]
+    let options = options.copy_command(Some(""));
+    #[cfg(feature = "tmux_1_2")]
+    let options = options.escape_time(Some(500));
+    #[cfg(feature = "tmux_2_7")]
+    let options = options.exit_empty(Some(Switch::On));
+    #[cfg(feature = "tmux_1_4")]
+    let options = options.exit_unattached(Some(Switch::Off));
+    #[cfg(feature = "tmux_3_2")]
+    let options = options.extended_keys(Some(Switch::Off));
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.focus_events(Some(Switch::Off));
+    #[cfg(feature = "tmux_2_1")]
+    let options = options.history_file(Some(""));
+    #[cfg(feature = "tmux_2_0")]
+    let options = options.message_limit(Some(1000));
+    #[cfg(feature = "tmux_3_3")]
+    let options = options.prompt_history_limit(Some(100));
+    #[cfg(feature = "tmux_1_5")]
+    let options = options.set_clipboard(Some(SetClipboard::External));
+    #[cfg(feature = "tmux_2_0")]
+    let options = options.terminal_overrides(Some(vec![""]));
+    #[cfg(feature = "tmux_3_2")]
+    let options = options.terminal_features(Some(vec![
+        "xterm*:clipboard:ccolour:cstyle:focus:title,",
+        "screen*:title,",
+        "rxvt*:ignorefkeys",
+    ]));
+    #[cfg(feature = "tmux_3_0")]
+    let options = options.user_keys(Some(vec![""]));
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+    let options = options.quiet(None);
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+    let options = options.detach_on_destroy(None);
+
+    assert_eq!(server_options, options);
 }
 
 // FIXME: conditionals

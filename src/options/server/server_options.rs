@@ -86,96 +86,53 @@ pub struct ServerOptions<'a> {
     pub user_options: HashMap<String, Option<Cow<'a, str>>>,
 }
 
-// tmux.h
-#[cfg(feature = "tmux_2_1")]
-const DEFAULT_TERMINAL_DEFAULT: &str = "screen";
-
-// compat.h
-#[cfg(feature = "tmux_3_2")]
-const EDITOR_DEFAULT: &str = "/usr/bin/vi";
-
-#[cfg(feature = "tmux_1_5")]
-const BUFFER_LIMIT_DEFAULT: usize = 50;
-
 /// ```text
 /// tmux show-options -g -s
 /// ```
-///
-/// ```text
-/// backspace C-?
-/// buffer-limit 50
-/// command-alias[0] split-pane=split-window
-/// command-alias[1] splitp=split-window
-/// command-alias[2] "server-info=show-messages -JT"
-/// command-alias[3] "info=show-messages -JT"
-/// command-alias[4] "choose-window=choose-tree -w"
-/// command-alias[5] "choose-session=choose-tree -s"
-/// default-terminal screen-256color
-/// escape-time 500
-/// exit-empty on
-/// exit-unattached off
-/// focus-events off
-/// history-file
-/// message-limit 100
-/// set-clipboard external
-/// terminal-overrides[0] "xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q"
-/// terminal-overrides[1] screen*:XT
-/// user-keys
-/// ```
+
 impl<'a> Default for ServerOptions<'a> {
     fn default() -> Self {
         let options = ServerOptions::new();
         #[cfg(feature = "tmux_3_1")]
-        let options = options.backspace(Some(""));
+        let options = options.backspace(Some(BACKSPACE_DEFAULT));
         #[cfg(feature = "tmux_1_5")]
         let options = options.buffer_limit(Some(BUFFER_LIMIT_DEFAULT));
         #[cfg(feature = "tmux_2_4")]
-        let options = options.command_alias(Some(vec![
-            "split-pane=split-window,",
-            "splitp=split-window,",
-            "server-info=show-messages -JT,",
-            "info=show-messages -JT,",
-            "choose-window=choose-tree -w,",
-            "choose-session=choose-tree -s",
-        ]));
+        let options = options.command_alias(Some(COMMAND_ALIAS_DEFAULT));
         #[cfg(feature = "tmux_2_1")]
         let options = options.default_terminal(Some(DEFAULT_TERMINAL_DEFAULT));
         #[cfg(feature = "tmux_3_2")]
         let options = options.editor(Some(EDITOR_DEFAULT));
         #[cfg(feature = "tmux_3_2")]
-        let options = options.copy_command(Some(""));
+        let options = options.copy_command(Some(COPY_COMMAND_DEFAULT));
         #[cfg(feature = "tmux_1_2")]
-        let options = options.escape_time(Some(500));
+        let options = options.escape_time(Some(ESCAPE_TIME_DEFAULT));
         #[cfg(feature = "tmux_2_7")]
-        let options = options.exit_empty(Some(Switch::On));
+        let options = options.exit_empty(Some(EXIT_EMPTY_DEFAULT));
         #[cfg(feature = "tmux_1_4")]
-        let options = options.exit_unattached(Some(Switch::Off));
+        let options = options.exit_unattached(Some(EXIT_UNATTACHED_DEFAULT));
         #[cfg(feature = "tmux_3_2")]
-        let options = options.extended_keys(Some(Switch::Off));
+        let options = options.extended_keys(Some(EXTENDED_KEYS_DEFAULT));
         #[cfg(feature = "tmux_1_9")]
-        let options = options.focus_events(Some(Switch::Off));
+        let options = options.focus_events(Some(FOCUS_EVENTS_DEFAULT));
         #[cfg(feature = "tmux_2_1")]
-        let options = options.history_file(Some(""));
+        let options = options.history_file(Some(HISTORY_FILE_DEFAULT));
         #[cfg(feature = "tmux_2_0")]
-        let options = options.message_limit(Some(1000));
+        let options = options.message_limit(Some(MESSAGE_LIMIT_DEFAULT));
         #[cfg(feature = "tmux_3_3")]
-        let options = options.prompt_history_limit(Some(100));
+        let options = options.prompt_history_limit(Some(PROMPT_HISTORY_LIMIT_DEFAULT));
         #[cfg(feature = "tmux_1_5")]
-        let options = options.set_clipboard(Some(SetClipboard::Off));
+        let options = options.set_clipboard(Some(SET_CLIPBOARD_DEFAULT));
         #[cfg(feature = "tmux_2_0")]
-        let options = options.terminal_overrides(Some(vec![""]));
+        let options = options.terminal_overrides(Some(TERMINAL_OVERRIDES_DEFAULT));
         #[cfg(feature = "tmux_3_2")]
-        let options = options.terminal_features(Some(vec![
-            "xterm*:clipboard:ccolour:cstyle:focus:title,",
-            "screen*:title,",
-            "rxvt*:ignorefkeys",
-        ]));
+        let options = options.terminal_features(Some(TERMINAL_FEATURES_DEFAULT));
         #[cfg(feature = "tmux_3_0")]
-        let options = options.user_keys(Some(vec![""]));
+        let options = options.user_keys(Some(USER_KEYS_DEFAULT));
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-        let options = options.quiet(None);
+        let options = options.quiet(Some(QUIET_DEFAULT));
         #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-        let options = options.detach_on_destroy(None);
+        let options = options.detach_on_destroy(Some(DETACH_ON_DESTROY_DEFAULT));
         options
     }
 }
