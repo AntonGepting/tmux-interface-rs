@@ -20,6 +20,6 @@ mod pane_tests {
 
     #[cfg(feature = "tmux_3_0")]
     pub mod set_pane_option_tests;
-    // #[cfg(feature = "tmux_3_0")]
-    // pub mod set_pane_options_tests;
+    #[cfg(feature = "tmux_3_0")]
+    pub mod set_pane_options_tests;
 }
