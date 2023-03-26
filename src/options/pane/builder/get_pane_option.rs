@@ -117,27 +117,3 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
         Self::get(target, SYNCHRONIZE_PANES)
     }
 }
-
-//#[test]
-//fn get_pane_option() {
-////let cmd = Tmux::new()
-////.command(GetPaneOption::get(BUFFER_LIMIT))
-////.output()
-////.unwrap();
-//let cmd = Tmux::new()
-//.command(GetPaneOption::synchronize_panes())
-//.command(GetPaneOption::window_size())
-//.output()
-//.unwrap();
-//dbg!(&cmd);
-
-////let cmd = Tmux::new()
-////.command(GetPaneOption::command_alias())
-////.output()
-////.unwrap();
-////let cmd = TmuxServerOptionOutput::from(cmd).command_alias();
-////dbg!(&cmd);
-
-////let cmds = SetPaneOption::command_alias(Some(vec!["asdf".to_string(), "a".to_string()]));
-////dbg!(&cmds);
-//}
