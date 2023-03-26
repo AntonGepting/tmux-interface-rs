@@ -41,55 +41,23 @@ impl<'a> PaneOptions<'a> {
     // pub fn set(&self, bitflags: usize) -> Result<(), Error> {
 }
 
-/// tmux ^3.0:
-/// ```text
-/// allow-rename off
-/// ```
+/// Default options
 ///
-/// tmux ^3.0:
-/// ```text
-/// alternate-screen on
-/// ```
-///
-/// tmux ^3.0:
-/// ```text
-/// remain-on-exit off
-/// ```
-///
-/// tmux ^3.0:
-/// ```text
-/// window-active-style default
-/// ```
-///
-/// tmux ^3.0:
-/// ```text
-/// window-style default
-/// ```
-///
-/// tmux ^3.2:
-/// ```text
-/// synchronize-panes off
-/// ```
-///
-/// tmux ^3.0:
-/// ```text
-/// @user-option value
-/// ```
 impl<'a> Default for PaneOptions<'a> {
     fn default() -> Self {
         let pane_options = PaneOptions::new();
         #[cfg(feature = "tmux_3_0")]
-        let pane_options = pane_options.allow_rename(Some(Switch::Off));
+        let pane_options = pane_options.allow_rename(Some(ALLOW_RENAME_DEFAULT));
         #[cfg(feature = "tmux_3_0")]
-        let pane_options = pane_options.alternate_screen(Some(Switch::On));
+        let pane_options = pane_options.alternate_screen(Some(ALTERNATE_SCREEN_DEFAULT));
         #[cfg(feature = "tmux_3_0")]
-        let pane_options = pane_options.remain_on_exit(Some(RemainOnExit::Off));
+        let pane_options = pane_options.remain_on_exit(Some(REMAIN_ON_EXIT_DEFAULT));
         #[cfg(feature = "tmux_3_0")]
-        let pane_options = pane_options.window_active_style(Some("default"));
+        let pane_options = pane_options.window_active_style(Some(WINDOW_ACTIVE_STYLE_DEFAULT));
         #[cfg(feature = "tmux_3_0")]
-        let pane_options = pane_options.window_style(Some("default"));
+        let pane_options = pane_options.window_style(Some(WINDOW_STYLE_DEFAULT));
         #[cfg(feature = "tmux_3_2")]
-        let pane_options = pane_options.synchronize_panes(Some(Switch::Off));
+        let pane_options = pane_options.synchronize_panes(Some(SYNCHRONIZE_PANES_DEFAULT));
         // #[cfg(feature = "tmux_3_0")]
         // let pane_options = pane_options.user_options();
         pane_options
