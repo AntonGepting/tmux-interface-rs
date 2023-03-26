@@ -1088,10 +1088,12 @@ pub trait SetSessionOption: SetOptionExt {
     /// update-environment[] variable
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn update_environment<'a, T: Into<Cow<'a, str>> + Clone, S: Into<Cow<'a, str>>>(
-        target: Option<T>,
-        variable: Option<Vec<S>>,
-    ) -> TmuxCommands<'a> {
+    fn update_environment<'a, T, I, S>(target: Option<T>, variable: Option<I>) -> TmuxCommands<'a>
+    where
+        T: Into<Cow<'a, str>> + Clone,
+        I: IntoIterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
         Self::set_array(target, UPDATE_ENVIRONMENT, variable)
     }
 
@@ -1102,10 +1104,12 @@ pub trait SetSessionOption: SetOptionExt {
     /// user-keys[] key
     /// ```
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
-    fn user_keys<'a, T: Into<Cow<'a, str>> + Clone, S: Into<Cow<'a, str>>>(
-        target: Option<T>,
-        key: Option<Vec<S>>,
-    ) -> TmuxCommands<'a> {
+    fn user_keys<'a, T, I, S>(target: Option<T>, key: Option<I>) -> TmuxCommands<'a>
+    where
+        T: Into<Cow<'a, str>> + Clone,
+        I: IntoIterator<Item = S>,
+        S: Into<Cow<'a, str>>,
+    {
         Self::set_array(target, USER_KEYS, key)
     }
 
@@ -1191,57 +1195,3 @@ pub trait SetSessionOption: SetOptionExt {
 
     //pub user_options: Option<HashMap<String, String>>
 }
-
-//#[test]
-//fn parse_server_option() {
-//use crate::options::get_server_option::{GetServerOption, TmuxServerOptionOutput};
-//use crate::Tmux;
-
-//#[cfg(feature = "tmux_3_1")]
-//{
-//let origin = "C-?";
-//let output = Tmux::new()
-//.command(GetServerOption::backspace())
-//.output()
-//.unwrap();
-//let value = TmuxServerOptionOutput::from(output).backspace().unwrap();
-//assert_eq!(origin, value);
-//}
-
-//#[cfg(feature = "tmux_1_5")]
-//{
-//let origin = 50;
-//let output = Tmux::new()
-//.command(GetServerOption::buffer_limit())
-//.output()
-//.unwrap();
-//let value = TmuxServerOptionOutput::from(output).buffer_limit().unwrap();
-//assert_eq!(origin, value);
-//}
-//}
-
-//#[test]
-//fn get_server_option_c() {
-//let cmd = Tmux::new()
-//.command(GetServerOption::get(BUFFER_LIMIT))
-//.output()
-//.unwrap();
-//let cmd = Tmux::new()
-//.command(GetServerOption::buffer_limit())
-//.command(GetServerOption::set_clipboard())
-//.output()
-//.unwrap();
-//dbg!(&cmd);
-//let cmd = TmuxServerOptionOutput::from(cmd).buffer_limit();
-//dbg!(&cmd);
-
-//let cmd = Tmux::new()
-//.command(GetServerOption::command_alias())
-//.output()
-//.unwrap();
-//let cmd = TmuxServerOptionOutput::from(cmd).command_alias();
-//dbg!(&cmd);
-
-//let cmds = SetServerOption::command_alias(Some(vec!["asdf".to_string(), "a".to_string()]));
-//dbg!(&cmds);
-//}

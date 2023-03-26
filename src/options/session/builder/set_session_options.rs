@@ -962,9 +962,11 @@ pub trait SetSessionOptions<'a> {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn status_format<T>(mut self, target: Option<T>, format: Option<Vec<String>>) -> Self
+    fn status_format<T, I, S>(mut self, target: Option<T>, format: Option<I>) -> Self
     where
         T: Into<Cow<'a, str>> + Clone,
+        I: IntoIterator<Item = S>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push_cmds(Self::Setter::status_format(target, format));
@@ -1315,9 +1317,10 @@ pub trait SetSessionOptions<'a> {
     /// update-environment[] variable
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn update_environment<T, S>(mut self, target: Option<T>, variable: Option<Vec<S>>) -> Self
+    fn update_environment<T, I, S>(mut self, target: Option<T>, variable: Option<I>) -> Self
     where
         T: Into<Cow<'a, str>> + Clone,
+        I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
         Self: Sized,
     {
@@ -1332,9 +1335,10 @@ pub trait SetSessionOptions<'a> {
     /// user-keys[] key
     /// ```
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
-    fn user_keys<T, S>(mut self, target: Option<T>, key: Option<Vec<S>>) -> Self
+    fn user_keys<T, I, S>(mut self, target: Option<T>, key: Option<I>) -> Self
     where
         T: Into<Cow<'a, str>> + Clone,
+        I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
         Self: Sized,
     {
