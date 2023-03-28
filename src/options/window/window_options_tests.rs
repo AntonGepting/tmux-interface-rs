@@ -24,9 +24,9 @@ fn default() {
         "#{?pane_in_mode,[tmux],#{pane_current_command}}#{?pane_dead,[dead],}",
     ));
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    let window_options = window_options.c0_change_interval(None);
+    let window_options = window_options.c0_change_interval(Some(""));
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    let window_options = window_options.c0_change_trigger(None);
+    let window_options = window_options.c0_change_trigger(Some(""));
     #[cfg(feature = "tmux_1_0")]
     let window_options = window_options.clock_mode_colour(Some("blue"));
     #[cfg(feature = "tmux_1_0")]
@@ -146,7 +146,7 @@ fn default() {
     #[cfg(feature = "tmux_1_9")]
     let window_options = window_options.window_status_last_style(Some("default"));
     #[cfg(feature = "tmux_1_7")]
-    let window_options = window_options.window_status_separator(Some("\" \""));
+    let window_options = window_options.window_status_separator(Some(" "));
     #[cfg(feature = "tmux_1_9")]
     let window_options = window_options.window_status_style(Some("default"));
     #[cfg(feature = "tmux_2_9")]
