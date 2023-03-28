@@ -1,12 +1,189 @@
-//#[test]
-//fn session_options_default() {
-//use crate::SessionOptions;
+#[test]
+fn default() {
+    use crate::{
+        Action, Activity, DetachOnDestroy, SessionOptions, Status, StatusJustify, StatusKeys,
+        StatusPosition, Switch,
+    };
 
-//let session_options = SessionOptions {
-//..Default::default()
-//};
-//dbg!(&session_options);
-//}
+    let session_options = SessionOptions::default();
+
+    let options = SessionOptions::new();
+    #[cfg(feature = "tmux_2_6")]
+    let options = options.activity_action(Some(Action::Other));
+    #[cfg(feature = "tmux_1_8")]
+    let options = options.assume_paste_time(Some(1));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.base_index(Some(0));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.bell_action(Some(Action::Any));
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+    let options = options.bell_on_alert(Some());
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
+    let options = options.buffer_limit(Some());
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.default_command(Some(""));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.default_shell(Some("/bin/bash"));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.default_path(Some());
+    #[cfg(feature = "tmux_2_9")]
+    let options = options.default_size(Some((80, 24)));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+    let options = options.default_terminal(Some());
+    #[cfg(feature = "tmux_1_4")]
+    let options = options.destroy_unattached(Some(Switch::Off));
+    #[cfg(feature = "tmux_1_4")]
+    let options = options.detach_on_destroy(Some(DetachOnDestroy::On));
+    #[cfg(feature = "tmux_1_2")]
+    let options = options.display_panes_active_colour(Some("red"));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.display_panes_colour(Some("blue"));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.display_panes_time(Some(1000));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.display_time(Some(750));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.history_limit(Some(2000));
+    #[cfg(feature = "tmux_2_2")]
+    let options = options.key_table(Some("root"));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.lock_after_time(Some(0));
+    #[cfg(feature = "tmux_1_1")]
+    let options = options.lock_command(Some("lock -np"));
+    #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
+    let options = options.lock_server(Some());
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.message_attr(Some());
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.message_bg(Some());
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.message_command_attr(Some());
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.message_command_bg(Some());
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.message_command_fg(Some());
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.message_fg(Some());
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.message_command_style(Some("fg=yellow,bg=black"));
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+    let options = options.message_limit(Some());
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.message_style(Some("fg=black,bg=yellow"));
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+    let options = options.mouse_resize_pane(Some());
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+    let options = options.mouse_select_pane(Some());
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+    let options = options.mouse_select_window(Some());
+    #[cfg(feature = "tmux_2_1")]
+    let options = options.mouse(Some(Switch::Off));
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
+    let options = options.mouse_utf8(Some());
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+    let options = options.pane_active_border_bg(Some());
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+    let options = options.pane_active_border_fg(Some());
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+    let options = options.pane_border_bg(Some());
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+    let options = options.pane_border_fg(Some());
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+    let options = options.pane_active_border_style(Some());
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+    let options = options.pane_border_style(Some());
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.prefix(Some("C-b"));
+    #[cfg(feature = "tmux_1_6")]
+    let options = options.prefix2(Some("Invalid#1fff00000000")); // KEYC_NONE = 0xfff
+    #[cfg(feature = "tmux_1_7")]
+    let options = options.renumber_windows(Some(Switch::Off));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.repeat_time(Some(500));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
+    let options = options.set_remain_on_exit(Some());
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.set_titles(Some(Switch::Off));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.set_titles_string(Some("#S:#I:#W - \"#T\" #{session_alerts}"));
+    #[cfg(feature = "tmux_2_6")]
+    let options = options.silence_action(Some(Action::Other));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.status(Some(Status::On));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.status_attr(Some());
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.status_bg(Some());
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.status_fg(Some());
+    #[cfg(feature = "tmux_2_9")]
+    let options = options.status_format(Some(vec!["#[align=left range=left #{status-left-style}]#[push-default]#{T;=/#{status-left-length}:status-left}#[pop-default]#[norange default]#[list=on align=#{status-justify}]#[list=left-marker]<#[list=right-marker]>#[list=on]#{W:#[range=window|#{window_index} #{window-status-style}#{?#{&&:#{window_last_flag},#{!=:#{window-status-last-style},default}}, #{window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{window-status-bell-style},default}}, #{window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{window-status-activity-style},default}}, #{window-status-activity-style},}}]#[push-default]#{T:window-status-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}},#[range=window|#{window_index} list=focus #{?#{!=:#{window-status-current-style},default},#{window-status-current-style},#{window-status-style}}#{?#{&&:#{window_last_flag},#{!=:#{window-status-last-style},default}}, #{window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{window-status-bell-style},default}}, #{window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{window-status-activity-style},default}}, #{window-status-activity-style},}}]#[push-default]#{T:window-status-current-format}#[pop-default]#[norange list=on default]#{?window_end_flag,,#{window-status-separator}}}#[nolist align=right range=right #{status-right-style}]#[push-default]#{T;=/#{status-right-length}:status-right}#[pop-default]#[norange default]",
+    "#[align=centre]#{P:#{?pane_active,#[reverse],}#{pane_index}[#{pane_width}x#{pane_height}]#[default] }"
+    ]));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.status_interval(Some(15));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.status_justify(Some(StatusJustify::Left));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.status_keys(Some(StatusKeys::Vi));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.status_left(Some("[#S] "));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.status_left_attr(Some());
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.status_left_bg(Some());
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.status_left_fg(Some());
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.status_left_length(Some(10));
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.status_left_style(Some("default"));
+    #[cfg(feature = "tmux_1_7")]
+    let options = options.status_position(Some(StatusPosition::Bottom));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.status_right(Some("#{?window_bigger,[#{window_offset_x}#,#{window_offset_y}] ,}\"#{=21:pane_title}\" %H:%M %d-%b-%y"));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.status_right_attr(Some());
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.status_right_bg(Some());
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.status_right_fg(Some());
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.status_right_length(Some(40));
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.status_right_style(Some("default"));
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.status_style(Some("fg=black,bg=green"));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
+    let options = options.status_utf8(Some());
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+    let options = options.terminal_overrides(Some());
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.update_environment(Some(vec![
+        "DISPLAY",
+        "KRB5CCNAME",
+        "SSH_ASKPASS",
+        "SSH_AUTH_SOCK",
+        "SSH_AGENT_PID",
+        "SSH_CONNECTION",
+        "WINDOWID",
+        "XAUTHORITY",
+    ]));
+    #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
+    let options = options.user_keys(Some());
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.visual_activity(Some(Activity::Off));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.visual_bell(Some(Activity::Off));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+    let options = options.visual_content(Some());
+    #[cfg(feature = "tmux_1_4")]
+    let options = options.visual_silence(Some(Activity::Off));
+    #[cfg(feature = "tmux_1_6")]
+    let options = options.word_separators(Some(" "));
+
+    assert_eq!(session_options, options);
+}
 
 #[test]
 fn session_options_parse() {

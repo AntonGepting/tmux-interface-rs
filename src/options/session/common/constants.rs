@@ -1,3 +1,7 @@
+use crate::{
+    Action, Activity, DetachOnDestroy, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
+};
+
 //activity-action [any | none | current | other]
 #[cfg(feature = "tmux_2_6")]
 pub const ACTIVITY_ACTION: &str = "activity-action";
@@ -250,3 +254,576 @@ pub const VISUAL_SILENCE: &str = "visual-silence";
 pub const WORD_SEPARATORS: &str = "word-separators";
 
 //pub user_options: Option<HashMap<String, String>>
+
+/// tmux ^2.6:
+/// ```text
+/// activity-action other
+/// ```
+#[cfg(feature = "tmux_2_6")]
+pub const ACTIVITY_ACTION_DEFAULT: Action = Action::Other;
+
+/// tmux ^1.8:
+/// ```text
+/// assume-paste-time 1
+/// ```
+#[cfg(feature = "tmux_1_8")]
+pub const ASSUME_PASTE_TIME_DEFAULT: usize = 1;
+
+/// tmux ^1.0:
+/// ```text
+/// base-index 0
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const BASE_INDEX_DEFAULT: usize = 0;
+
+/// tmux ^1.0:
+/// ```text
+/// bell-action none
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const BELL_ACTION_DEFAULT: Action = Action::Any;
+
+/// tmux ^1.5 v2.6:
+/// ```text
+/// bell-on-alert off
+/// ```
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+pub const BELL_ON_ALERT_DEFAULT: Switch = Switch::Off;
+
+/// tmux ^1.0 v1.4:
+/// ```text
+/// buffer-limit 20
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
+pub const BUFFER_LIMIT_DEFAULT: usize = 20; // conditionals?
+
+/// tmux ^1.0:
+/// ```text
+/// default-command
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const DEFAULT_COMMAND_DEFAULT: &str = "";
+
+/// tmux ^1.0:
+/// ```text
+/// default-shell /bin/bash
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const DEFAULT_SHELL_DEFAULT: &str = "/bin/bash"; // _PATH_BSHELL
+
+/// tmux ^1.0 v2.1:
+/// ```text
+/// default-path ""
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+pub const DEFAULT_PATH_DEFAULT: &str = "";
+
+/// tmux ^2.9:
+/// ```text
+/// default-size 80x24
+/// ```
+#[cfg(feature = "tmux_2_9")]
+pub const DEFAULT_SIZE_DEFAULT: (usize, usize) = (80, 24);
+
+/// tmux ^1.0 v2.1:
+/// ```text
+/// default-terminal
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+pub const DEFAULT_TERMINAL_DEFAULT: &str = "screen";
+
+/// tmux ^1.4:
+/// ```text
+/// destroy-unattached off
+/// ```
+#[cfg(feature = "tmux_1_4")]
+pub const DESTROY_UNATTACHED_DEFAULT: Switch = Switch::Off;
+
+/// tmux ^1.4:
+/// ```text
+/// detach-on-destroy on
+/// ```
+#[cfg(feature = "tmux_1_4")]
+pub const DETACH_ON_DESTROY_DEFAULT: DetachOnDestroy = DetachOnDestroy::On;
+
+/// tmux ^1.2:
+/// ```text
+/// display-panes-active-colour red
+/// ```
+#[cfg(feature = "tmux_1_2")]
+pub const DISPLAY_PANES_ACTIVE_COLOUR_DEFAULT: &str = "red";
+
+/// tmux ^1.0:
+/// ```text
+/// display-panes-colour blue
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const DISPLAY_PANES_COLOUR_DEFAULT: &str = "blue";
+
+/// tmux ^1.0:
+/// ```text
+/// display-panes-time 1000
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const DISPLAY_PANES_TIME_DEFAULT: usize = 1000;
+
+/// tmux ^1.0:
+/// ```text
+/// display-time 750
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const DISPLAY_TIME_DEFAULT: usize = 750;
+
+/// tmux ^1.0:
+/// ```text
+/// history-limit 2000
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const HISTORY_LIMIT_DEFAULT: usize = 2000;
+
+/// tmux ^2.2:
+/// ```text
+/// key-table root
+/// ```
+#[cfg(feature = "tmux_2_2")]
+pub const KEY_TABLE_DEFAULT: &str = "root";
+
+/// tmux ^1.0:
+/// ```text
+/// lock-after-time 0
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const LOCK_AFTER_TIME_DEFAULT: usize = 0;
+
+/// tmux ^1.1:
+/// ```text
+/// lock-command "lock -np"
+/// ```
+#[cfg(feature = "tmux_1_1")]
+pub const LOCK_COMMAND_DEFAULT: &str = "lock -np";
+
+/// tmux ^1.1 v2.1:
+/// ```text
+/// lock-server off
+/// ```
+#[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
+pub const LOCK_SERVER_DEFAULT: Switch = Switch::Off;
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// message-attr ?
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const MESSAGE_ATTR_DEFAULT: &str = "";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// message-bg ?
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const MESSAGE_BG_DEFAULT: &str = "";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// message-command-attr ?
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const MESSAGE_COMMAND_ATTR_DEFAULT: &str = "";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// message-command-bg ?
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const MESSAGE_COMMAND_BG_DEFAULT: &str = "";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// message-command-fg ?
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const MESSAGE_COMMAND_FG_DEFAULT: &str = "";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// message-fg ?
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const MESSAGE_FG_DEFAULT: &str = "";
+
+/// tmux ^1.9:
+/// ```text
+/// message-command-style bg=black,fg=blue
+/// ```
+#[cfg(feature = "tmux_1_9")]
+pub const MESSAGE_COMMAND_STYLE_DEFAULT: &str = "fg=yellow,bg=black";
+
+/// tmux ^1.2 v2.0:
+/// ```text
+/// message-limit ?
+/// ```
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+pub const MESSAGE_LIMIT: usize = 0;
+
+/// tmux ^1.9:
+/// ```text
+/// message-style bg=yellow,fg=black
+/// ```
+#[cfg(feature = "tmux_1_9")]
+pub const MESSAGE_STYLE_DEFAULT: &str = "fg=black,bg=yellow";
+
+/// tmux ^1.5 v2.1:
+/// ```text
+/// mouse-resize-pane off
+/// ```
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+pub const MOUSE_RESIZE_PANE_DEFAULT: Switch = Switch::Off;
+
+/// tmux ^1.5 v2.1:
+/// ```text
+/// mouse-select-pane off
+/// ```
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+pub const MOUSE_SELECT_PANE_DEFAULT: Switch = Switch::Off;
+
+/// tmux ^1.5 v2.1:
+/// ```text
+/// mouse-select-window off
+/// ```
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
+pub const MOUSE_SELECT_WINDOW_DEFAULT: Switch = Switch::Off;
+
+/// tmux ^2.1:
+/// ```text
+/// mouse on
+/// ```
+#[cfg(feature = "tmux_2_1")]
+pub const MOUSE_DEFAULT: Switch = Switch::Off;
+
+/// tmux ^1.5 v2.2:
+/// ```text
+/// mouse-utf8 off
+/// ```
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
+pub const MOUSE_UTF8_DEFAULT: Switch = Switch::Off;
+
+/// tmux ^1.2 v1.9:
+/// ```text
+/// pane-active-border-bg
+/// ```
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+pub const PANE_ACTIVE_BORDER_BG_DEFAULT: &str = "";
+
+/// tmux ^1.2 v1.9:
+/// ```text
+/// pane-active-border-fg
+/// ```
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+pub const PANE_ACTIVE_BORDER_FG_DEFAULT: &str = "";
+
+/// tmux ^1.2 v1.9:
+/// ```text
+/// pane-border-bg
+/// ```
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+pub const PANE_BORDER_BG_DEFAULT: &str = "";
+
+/// tmux ^1.2 v1.9:
+/// ```text
+/// pane-border-fg
+/// ```
+#[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
+pub const PANE_BORDER_FG_DEFAULT: &str = "";
+
+/// tmux ^1.9 v2.0:
+/// ```text
+/// pane-active-border-style
+/// ```
+#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+pub const PANE_ACTIVE_BORDER_STYLE_DEFAULT: &str = "";
+
+/// tmux ^1.9 v2.0:
+/// ```text
+/// pane-border-style
+/// ```
+#[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+pub const PANE_BORDER_STYLE_DEFAULT: &str = "";
+
+/// tmux ^1.0:
+/// ```text
+/// prefix C-a
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const PREFIX_DEFAULT: &str = "C-b";
+
+/// tmux ^1.6:
+/// ```text
+/// prefix2 Invalid#1fff00000000
+/// ```
+#[cfg(feature = "tmux_1_6")]
+pub const PREFIX2_DEFAULT: &str = "Invalid#1fff00000000";
+
+/// tmux ^1.7:
+/// ```text
+/// renumber-windows off
+/// ```
+#[cfg(feature = "tmux_1_7")]
+pub const RENUMBER_WINDOWS_DEFAULT: Switch = Switch::Off;
+
+/// tmux ^1.0:
+/// ```text
+/// repeat-time 500
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const REPEAT_TIME_DEFAULT: usize = 500;
+
+/// tmux ^1.0 v2.4:
+/// ```text
+/// set-remain-on-exit off
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
+pub const SET_REMAIN_ON_EXIT: Switch = Switch::Off;
+
+/// tmux ^1.0:
+/// ```text
+/// set-titles off
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const SET_TITLES_DEFAULT: Switch = Switch::Off;
+
+/// tmux ^1.0:
+/// ```text
+/// set-titles-string "#S:#I:#W - \"#T\" #{session_alerts}"
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const SET_TITLES_STRING_DEFAULT: &str = "#S:#I:#W - \"#T\" #{session_alerts}";
+
+/// tmux ^2.6:
+/// ```text
+/// silence-action other
+/// ```
+#[cfg(feature = "tmux_2_6")]
+pub const SILENCE_ACTION_DEFAULT: Action = Action::Other;
+
+/// tmux ^1.0:
+/// ```text
+/// status on
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const STATUS_DEFAULT: Status = Status::On;
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// status-attr
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const STATUS_ATTR_DEFAULT: &str = "";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// status-bg #282c34
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const STATUS_BG_DEFAULT: &str = "";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// status-fg colour247
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const STATUS_FG_DEFAULT: &str = "";
+
+/// tmux ^2.9:
+/// ```text
+/// status-format[0] "#[align=left range=left #{status-left-style}]#[push-default]#{T;=/#{status-left-length}:status-left}#[pop-default]#[norange default]#[list=on align=#{status-justify}]#[list=left-marker]<#[list=right-marker]>#[list=on]#{W:#[range=window|#{window_index} #{window-status-style}#{?#{&&:#{window_last_flag},#{!=:#{window-status-last-style},default}}, #{window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{window-status-bell-style},default}}, #{window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{window-status-activity-style},default}}, #{window-status-activity-style},}}]#[push-default]#{T:window-status-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}},#[range=window|#{window_index} list=focus #{?#{!=:#{window-status-current-style},default},#{window-status-current-style},#{window-status-style}}#{?#{&&:#{window_last_flag},#{!=:#{window-status-last-style},default}}, #{window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{window-status-bell-style},default}}, #{window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{window-status-activity-style},default}}, #{window-status-activity-style},}}]#[push-default]#{T:window-status-current-format}#[pop-default]#[norange list=on default]#{?window_end_flag,,#{window-status-separator}}}#[nolist align=right range=right #{status-right-style}]#[push-default]#{T;=/#{status-right-length}:status-right}#[pop-default]#[norange default]"
+/// status-format[1] "#[align=centre]#{P:#{?pane_active,#[reverse],}#{pane_index}[#{pane_width}x#{pane_height}]#[default] }"
+/// ```
+#[cfg(feature = "tmux_2_9")]
+pub const STATUS_FORMAT_DEFAULT: [&str; 2] = [ 
+    "#[align=left range=left #{status-left-style}]#[push-default]#{T;=/#{status-left-length}:status-left}#[pop-default]#[norange default]#[list=on align=#{status-justify}]#[list=left-marker]<#[list=right-marker]>#[list=on]#{W:#[range=window|#{window_index} #{window-status-style}#{?#{&&:#{window_last_flag},#{!=:#{window-status-last-style},default}}, #{window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{window-status-bell-style},default}}, #{window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{window-status-activity-style},default}}, #{window-status-activity-style},}}]#[push-default]#{T:window-status-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}},#[range=window|#{window_index} list=focus #{?#{!=:#{window-status-current-style},default},#{window-status-current-style},#{window-status-style}}#{?#{&&:#{window_last_flag},#{!=:#{window-status-last-style},default}}, #{window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{window-status-bell-style},default}}, #{window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{window-status-activity-style},default}}, #{window-status-activity-style},}}]#[push-default]#{T:window-status-current-format}#[pop-default]#[norange list=on default]#{?window_end_flag,,#{window-status-separator}}}#[nolist align=right range=right #{status-right-style}]#[push-default]#{T;=/#{status-right-length}:status-right}#[pop-default]#[norange default]",
+    "#[align=centre]#{P:#{?pane_active,#[reverse],}#{pane_index}[#{pane_width}x#{pane_height}]#[default] }"
+];
+
+/// tmux ^1.0:
+/// ```text
+/// status-interval 2
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const STATUS_INTERVAL_DEFAULT: usize = 15;
+
+/// tmux ^1.0:
+/// ```text
+/// status-justify left
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const STATUS_JUSTIFY_DEFAULT: StatusJustify = StatusJustify::Left;
+
+/// tmux ^1.0:
+/// ```text
+/// status-keys emacs
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const STATUS_KEYS_DEFAULT: StatusKeys = StatusKeys::Vi;
+
+/// tmux ^1.0:
+/// ```text
+/// status-left " #(whoami)@#H:#[fg=#dcdfe4, bg=#282c34] #S   "
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const STATUS_LEFT_DEFAULT: &str = "[#S] ";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// status-left " #(whoami)@#H:#[fg=#dcdfe4, bg=#282c34] #S   "
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const STATUS_LEFT_ATTR_DEFAULT: &str = "";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// status-left " #(whoami)@#H:#[fg=#dcdfe4, bg=#282c34] #S   "
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const STATUS_LEFT_BG_DEFAULT: &str = "";
+
+/// ```text
+/// tmux ^1.0 v1.9:
+/// status-left " #(whoami)@#H:#[fg=#dcdfe4, bg=#282c34] #S   "
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const STATUS_LEFT_FG_DEFAULT: &str = "";
+
+/// tmux ^1.0:
+/// ```text
+/// status-left-length 50
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const STATUS_LEFT_LENGTH_DEFAULT: usize = 10;
+
+/// tmux ^1.9:
+/// ```text
+/// status-left-style default
+/// ```
+#[cfg(feature = "tmux_1_9")]
+pub const STATUS_LEFT_STYLE_DEFAULT: &str = "default";
+
+/// tmux ^1.7:
+/// ```text
+/// status-position bottom
+/// ```
+#[cfg(feature = "tmux_1_7")]
+pub const STATUS_POSITION_DEFAULT: StatusPosition = StatusPosition::Bottom;
+
+/// tmux ^1.0:
+/// ```text
+/// status-right "#[fg=colour247, bg=#282c34] %a, %e. %b %H:%M "
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const STATUS_RIGHT_DEFAULT: &str = "#{?window_bigger,[#{window_offset_x}#,#{window_offset_y}] ,}\"#{=21:pane_title}\" %H:%M %d-%b-%y";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// status-right-attr
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const STATUS_RIGHT_ATTR_DEFAULT: &str = "";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// status-right-bg
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const STATUS_RIGHT_BG_DEFAULT: &str = "";
+
+/// tmux ^1.0 v1.9:
+/// ```text
+/// status-right-fg
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+pub const STATUS_RIGHT_FG_DEFAULT: &str = "";
+
+/// tmux ^1.0:
+/// ```text
+/// status-right-length 50
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const STATUS_RIGHT_LENGTH_DEFAULT: usize = 40;
+
+/// tmux ^1.9:
+/// ```text
+/// status-right-style default
+/// ```
+#[cfg(feature = "tmux_1_9")]
+pub const STATUS_RIGHT_STYLE_DEFAULT: &str = "default";
+
+/// tmux ^1.9:
+/// ```text
+/// status-style fg=colour247,bg=#282c34
+/// ```
+#[cfg(feature = "tmux_1_9")]
+pub const STATUS_STYLE_DEFAULT: &str = "fg=black,bg=green";
+
+/// tmux ^1.0:
+/// ```text
+/// update-environment[0] DISPLAY
+/// update-environment[1] KRB5CCNAME
+/// update-environment[2] SSH_ASKPASS
+/// update-environment[3] SSH_AUTH_SOCK
+/// update-environment[4] SSH_AGENT_PID
+/// update-environment[5] SSH_CONNECTION
+/// update-environment[6] WINDOWID
+/// update-environment[7] XAUTHORITY
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const UPDATE_ENVIRONMENT_DEFAULT: [&str; 8] = [
+        "DISPLAY",
+        "KRB5CCNAME",
+        "SSH_ASKPASS",
+        "SSH_AUTH_SOCK",
+        "SSH_AGENT_PID",
+        "SSH_CONNECTION",
+        "WINDOWID",
+        "XAUTHORITY",
+];
+
+/// tmux ^2.6 v3.0:
+/// ```text
+/// user-keys[]
+/// ```
+#[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
+pub const USER_KEYS_DEFAULT: [&str; 1] = [""];
+
+/// tmux ^1.0:
+/// ```text
+/// visual-activity off
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const VISUAL_ACTIVITY_DEFAULT: Activity = Activity::Off;
+
+/// tmux ^1.0:
+/// ```text
+/// visual-bell off
+/// ```
+#[cfg(feature = "tmux_1_0")]
+pub const VISUAL_BELL_DEFAULT: Activity = Activity::Off;
+
+/// tmux ^1.0 v2.0:
+/// ```text
+/// visual-content off
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+pub const VISUAL_CONTENT_DEFAULT: Switch = Switch::Off;
+
+/// tmux ^1.4:
+/// ```text
+/// visual-silence off
+/// ```
+#[cfg(feature = "tmux_1_4")]
+pub const VISUAL_SILENCE_DEFAULT: Activity = Activity::Off;
+
+/// tmux ^1.6:
+/// ```text
+/// word-separators " "
+/// ```
+#[cfg(feature = "tmux_1_6")]
+pub const WORD_SEPARATORS_DEFAULT: &str = " ";
