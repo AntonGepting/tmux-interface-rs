@@ -17,8 +17,6 @@ fn default() {
     let options = options.window_style(Some("default"));
     #[cfg(feature = "tmux_3_2")]
     let options = options.synchronize_panes(Some(Switch::Off));
-    // #[cfg(feature = "tmux_3_0")]
-    // let pane_options = pane_options.user_options();
 
     assert_eq!(pane_options, options);
 }
