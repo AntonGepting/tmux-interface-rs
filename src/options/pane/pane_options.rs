@@ -10,7 +10,7 @@ use std::str::FromStr;
 use crate::RemainOnExit;
 
 // TODO: check types
-#[derive(PartialEq, Clone, Debug)]
+#[derive(PartialEq, Default, Clone, Debug)]
 pub struct PaneOptions<'a> {
     // allow-rename [on | off]
     #[cfg(feature = "tmux_3_0")]
@@ -41,29 +41,6 @@ impl<'a> PaneOptions<'a> {
     // pub fn set(&self, bitflags: usize) -> Result<(), Error> {
 }
 
-/// Default options
-///
-impl<'a> Default for PaneOptions<'a> {
-    fn default() -> Self {
-        let pane_options = PaneOptions::new();
-        #[cfg(feature = "tmux_3_0")]
-        let pane_options = pane_options.allow_rename(Some(ALLOW_RENAME_DEFAULT));
-        #[cfg(feature = "tmux_3_0")]
-        let pane_options = pane_options.alternate_screen(Some(ALTERNATE_SCREEN_DEFAULT));
-        #[cfg(feature = "tmux_3_0")]
-        let pane_options = pane_options.remain_on_exit(Some(REMAIN_ON_EXIT_DEFAULT));
-        #[cfg(feature = "tmux_3_0")]
-        let pane_options = pane_options.window_active_style(Some(WINDOW_ACTIVE_STYLE_DEFAULT));
-        #[cfg(feature = "tmux_3_0")]
-        let pane_options = pane_options.window_style(Some(WINDOW_STYLE_DEFAULT));
-        #[cfg(feature = "tmux_3_2")]
-        let pane_options = pane_options.synchronize_panes(Some(SYNCHRONIZE_PANES_DEFAULT));
-        // #[cfg(feature = "tmux_3_0")]
-        // let pane_options = pane_options.user_options();
-        pane_options
-    }
-}
-
 impl<'a> fmt::Display for PaneOptions<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut v = Vec::new();
@@ -89,22 +66,22 @@ impl<'a> fmt::Display for PaneOptions<'a> {
 
 impl<'a> PaneOptions<'a> {
     pub fn new() -> Self {
-        Self {
-            #[cfg(feature = "tmux_3_0")]
-            allow_rename: None,
-            #[cfg(feature = "tmux_3_0")]
-            alternate_screen: None,
-            #[cfg(feature = "tmux_3_0")]
-            remain_on_exit: None,
-            #[cfg(feature = "tmux_3_0")]
-            window_active_style: None,
-            #[cfg(feature = "tmux_3_0")]
-            window_style: None,
-            #[cfg(feature = "tmux_3_2")]
-            synchronize_panes: None,
-            #[cfg(feature = "tmux_3_0")]
-            user_options: HashMap::new(),
-        }
+        let pane_options = PaneOptions::default();
+        #[cfg(feature = "tmux_3_0")]
+        let pane_options = pane_options.allow_rename(Some(ALLOW_RENAME_DEFAULT));
+        #[cfg(feature = "tmux_3_0")]
+        let pane_options = pane_options.alternate_screen(Some(ALTERNATE_SCREEN_DEFAULT));
+        #[cfg(feature = "tmux_3_0")]
+        let pane_options = pane_options.remain_on_exit(Some(REMAIN_ON_EXIT_DEFAULT));
+        #[cfg(feature = "tmux_3_0")]
+        let pane_options = pane_options.window_active_style(Some(WINDOW_ACTIVE_STYLE_DEFAULT));
+        #[cfg(feature = "tmux_3_0")]
+        let pane_options = pane_options.window_style(Some(WINDOW_STYLE_DEFAULT));
+        #[cfg(feature = "tmux_3_2")]
+        let pane_options = pane_options.synchronize_panes(Some(SYNCHRONIZE_PANES_DEFAULT));
+        // #[cfg(feature = "tmux_3_0")]
+        // let pane_options = pane_options.user_options();
+        pane_options
     }
 
     #[cfg(feature = "tmux_3_0")]
@@ -150,7 +127,7 @@ impl<'a> FromStr for PaneOptions<'a> {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut pane_options = PaneOptions::new();
+        let mut pane_options = PaneOptions::default();
 
         for line in s.lines() {
             if let Some((name, _, value)) = get_parts(line) {

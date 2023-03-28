@@ -20,7 +20,7 @@ use std::str::FromStr;
 // TODO: Vec variables solution for arrays
 // TODO: check types
 // TODO: command_alias and terminal_overrides both as String and as Vec<String> see tmux versions
-#[derive(PartialEq, Clone, Debug)]
+#[derive(PartialEq, Default, Clone, Debug)]
 pub struct ServerOptions<'a> {
     /// `backspace key`
     #[cfg(feature = "tmux_3_1")]
@@ -90,53 +90,6 @@ pub struct ServerOptions<'a> {
 /// tmux show-options -g -s
 /// ```
 
-impl<'a> Default for ServerOptions<'a> {
-    fn default() -> Self {
-        let options = ServerOptions::new();
-        #[cfg(feature = "tmux_3_1")]
-        let options = options.backspace(Some(BACKSPACE_DEFAULT));
-        #[cfg(feature = "tmux_1_5")]
-        let options = options.buffer_limit(Some(BUFFER_LIMIT_DEFAULT));
-        #[cfg(feature = "tmux_2_4")]
-        let options = options.command_alias(Some(COMMAND_ALIAS_DEFAULT));
-        #[cfg(feature = "tmux_2_1")]
-        let options = options.default_terminal(Some(DEFAULT_TERMINAL_DEFAULT));
-        #[cfg(feature = "tmux_3_2")]
-        let options = options.editor(Some(EDITOR_DEFAULT));
-        #[cfg(feature = "tmux_3_2")]
-        let options = options.copy_command(Some(COPY_COMMAND_DEFAULT));
-        #[cfg(feature = "tmux_1_2")]
-        let options = options.escape_time(Some(ESCAPE_TIME_DEFAULT));
-        #[cfg(feature = "tmux_2_7")]
-        let options = options.exit_empty(Some(EXIT_EMPTY_DEFAULT));
-        #[cfg(feature = "tmux_1_4")]
-        let options = options.exit_unattached(Some(EXIT_UNATTACHED_DEFAULT));
-        #[cfg(feature = "tmux_3_2")]
-        let options = options.extended_keys(Some(EXTENDED_KEYS_DEFAULT));
-        #[cfg(feature = "tmux_1_9")]
-        let options = options.focus_events(Some(FOCUS_EVENTS_DEFAULT));
-        #[cfg(feature = "tmux_2_1")]
-        let options = options.history_file(Some(HISTORY_FILE_DEFAULT));
-        #[cfg(feature = "tmux_2_0")]
-        let options = options.message_limit(Some(MESSAGE_LIMIT_DEFAULT));
-        #[cfg(feature = "tmux_3_3")]
-        let options = options.prompt_history_limit(Some(PROMPT_HISTORY_LIMIT_DEFAULT));
-        #[cfg(feature = "tmux_1_5")]
-        let options = options.set_clipboard(Some(SET_CLIPBOARD_DEFAULT));
-        #[cfg(feature = "tmux_2_0")]
-        let options = options.terminal_overrides(Some(TERMINAL_OVERRIDES_DEFAULT));
-        #[cfg(feature = "tmux_3_2")]
-        let options = options.terminal_features(Some(TERMINAL_FEATURES_DEFAULT));
-        #[cfg(feature = "tmux_3_0")]
-        let options = options.user_keys(Some(USER_KEYS_DEFAULT));
-        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-        let options = options.quiet(Some(QUIET_DEFAULT));
-        #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-        let options = options.detach_on_destroy(Some(DETACH_ON_DESTROY_DEFAULT));
-        options
-    }
-}
-
 impl<'a> fmt::Display for ServerOptions<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut v = Vec::new();
@@ -185,49 +138,48 @@ impl<'a> fmt::Display for ServerOptions<'a> {
 // XXX: Cow?
 impl<'a> ServerOptions<'a> {
     pub fn new() -> Self {
-        Self {
-            #[cfg(feature = "tmux_3_1")]
-            backspace: None,
-            #[cfg(feature = "tmux_1_5")]
-            buffer_limit: None,
-            #[cfg(feature = "tmux_2_4")]
-            command_alias: None,
-            #[cfg(feature = "tmux_3_2")]
-            copy_command: None,
-            #[cfg(feature = "tmux_2_1")]
-            default_terminal: None,
-            #[cfg(feature = "tmux_1_2")]
-            escape_time: None,
-            #[cfg(feature = "tmux_3_2")]
-            editor: None,
-            #[cfg(feature = "tmux_2_7")]
-            exit_empty: None,
-            #[cfg(feature = "tmux_1_4")]
-            exit_unattached: None,
-            #[cfg(feature = "tmux_3_2")]
-            extended_keys: None,
-            #[cfg(feature = "tmux_1_9")]
-            focus_events: None,
-            #[cfg(feature = "tmux_2_1")]
-            history_file: None,
-            #[cfg(feature = "tmux_2_0")]
-            message_limit: None,
-            #[cfg(feature = "tmux_3_3")]
-            prompt_history_limit: None,
-            #[cfg(feature = "tmux_1_5")]
-            set_clipboard: None,
-            #[cfg(feature = "tmux_3_2")]
-            terminal_features: None,
-            #[cfg(feature = "tmux_2_0")]
-            terminal_overrides: None,
-            #[cfg(feature = "tmux_3_0")]
-            user_keys: None,
-            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-            quiet: None,
-            #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-            detach_on_destroy: None,
-            user_options: HashMap::new(),
-        }
+        let options = ServerOptions::default();
+        #[cfg(feature = "tmux_3_1")]
+        let options = options.backspace(Some(BACKSPACE_DEFAULT));
+        #[cfg(feature = "tmux_1_5")]
+        let options = options.buffer_limit(Some(BUFFER_LIMIT_DEFAULT));
+        #[cfg(feature = "tmux_2_4")]
+        let options = options.command_alias(Some(COMMAND_ALIAS_DEFAULT));
+        #[cfg(feature = "tmux_2_1")]
+        let options = options.default_terminal(Some(DEFAULT_TERMINAL_DEFAULT));
+        #[cfg(feature = "tmux_3_2")]
+        let options = options.editor(Some(EDITOR_DEFAULT));
+        #[cfg(feature = "tmux_3_2")]
+        let options = options.copy_command(Some(COPY_COMMAND_DEFAULT));
+        #[cfg(feature = "tmux_1_2")]
+        let options = options.escape_time(Some(ESCAPE_TIME_DEFAULT));
+        #[cfg(feature = "tmux_2_7")]
+        let options = options.exit_empty(Some(EXIT_EMPTY_DEFAULT));
+        #[cfg(feature = "tmux_1_4")]
+        let options = options.exit_unattached(Some(EXIT_UNATTACHED_DEFAULT));
+        #[cfg(feature = "tmux_3_2")]
+        let options = options.extended_keys(Some(EXTENDED_KEYS_DEFAULT));
+        #[cfg(feature = "tmux_1_9")]
+        let options = options.focus_events(Some(FOCUS_EVENTS_DEFAULT));
+        #[cfg(feature = "tmux_2_1")]
+        let options = options.history_file(Some(HISTORY_FILE_DEFAULT));
+        #[cfg(feature = "tmux_2_0")]
+        let options = options.message_limit(Some(MESSAGE_LIMIT_DEFAULT));
+        #[cfg(feature = "tmux_3_3")]
+        let options = options.prompt_history_limit(Some(PROMPT_HISTORY_LIMIT_DEFAULT));
+        #[cfg(feature = "tmux_1_5")]
+        let options = options.set_clipboard(Some(SET_CLIPBOARD_DEFAULT));
+        #[cfg(feature = "tmux_2_0")]
+        let options = options.terminal_overrides(Some(TERMINAL_OVERRIDES_DEFAULT));
+        #[cfg(feature = "tmux_3_2")]
+        let options = options.terminal_features(Some(TERMINAL_FEATURES_DEFAULT));
+        #[cfg(feature = "tmux_3_0")]
+        let options = options.user_keys(Some(USER_KEYS_DEFAULT));
+        #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
+        let options = options.quiet(Some(QUIET_DEFAULT));
+        #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
+        let options = options.detach_on_destroy(Some(DETACH_ON_DESTROY_DEFAULT));
+        options
     }
 
     /// ### Manual

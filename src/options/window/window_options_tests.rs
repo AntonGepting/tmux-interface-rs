@@ -8,8 +8,8 @@ fn default() {
     use crate::WindowSize;
     use crate::{ClockModeStyle, StatusKeys, Switch, WindowOptions};
 
-    let default_window_options = WindowOptions::default();
-    let window_options = WindowOptions::new();
+    let default_window_options = WindowOptions::new();
+    let window_options = WindowOptions::default();
 
     #[cfg(feature = "tmux_1_0")]
     let window_options = window_options.aggressive_resize(Some(Switch::Off));

@@ -5,9 +5,9 @@ fn default() {
         StatusPosition, Switch,
     };
 
-    let session_options = SessionOptions::default();
+    let session_options = SessionOptions::new();
 
-    let options = SessionOptions::new();
+    let options = SessionOptions::default();
     #[cfg(feature = "tmux_2_6")]
     let options = options.activity_action(Some(Action::Other));
     #[cfg(feature = "tmux_1_8")]

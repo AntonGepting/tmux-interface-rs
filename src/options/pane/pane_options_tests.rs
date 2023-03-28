@@ -2,9 +2,9 @@
 fn default() {
     use crate::{PaneOptions, RemainOnExit, Switch};
 
-    let pane_options = PaneOptions::default();
+    let pane_options = PaneOptions::new();
 
-    let options = PaneOptions::new();
+    let options = PaneOptions::default();
     #[cfg(feature = "tmux_3_0")]
     let options = options.allow_rename(Some(Switch::Off));
     #[cfg(feature = "tmux_3_0")]

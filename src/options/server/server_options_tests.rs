@@ -2,9 +2,9 @@
 fn default() {
     use crate::{ServerOptions, SetClipboard, Switch};
 
-    let server_options = ServerOptions::default();
+    let server_options = ServerOptions::new();
 
-    let options = ServerOptions::new();
+    let options = ServerOptions::default();
     #[cfg(feature = "tmux_3_1")]
     let options = options.backspace(Some(""));
     #[cfg(feature = "tmux_1_5")]
