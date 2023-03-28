@@ -1,12 +1,8 @@
-use crate::Switch;
-
 #[test]
 fn default() {
     use crate::{ServerOptions, SetClipboard, Switch};
 
-    let server_options = ServerOptions {
-        ..Default::default()
-    };
+    let server_options = ServerOptions::default();
 
     let options = ServerOptions::new();
     #[cfg(feature = "tmux_3_1")]
