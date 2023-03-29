@@ -1,3 +1,7 @@
+// default()
+// to_string()
+// from_str()
+
 #[test]
 fn default() {
     use crate::{
@@ -186,7 +190,10 @@ fn default() {
 }
 
 #[test]
-fn session_options_parse() {
+fn to_stirng() {}
+
+#[test]
+fn from_str() {
     use crate::SessionOptions;
 
     let session_options_str = r#"
@@ -236,12 +243,3 @@ word-separators ""
     let session_options = session_options_str.parse::<SessionOptions>().unwrap();
     dbg!(&session_options);
 }
-
-//#[test]
-//fn get() {
-//use crate::SessionOptions;
-
-//let session_options = SessionOptions::get_all().unwrap();
-
-//dbg!(session_options);
-//}

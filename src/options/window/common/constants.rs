@@ -1,4 +1,5 @@
 use crate::{ClockModeStyle, PaneBorderStatus, StatusKeys, Switch, WindowSize};
+
 // aggressive-resize [on | off]
 #[cfg(feature = "tmux_1_0")]
 pub const AGGRESSIVE_RESIZE: &str = "aggressive-resize";
@@ -589,7 +590,7 @@ pub const WINDOW_STATUS_LAST_STYLE_DEFAULT: &str = "default";
 /// window-status-separator " "
 /// ```
 #[cfg(feature = "tmux_1_7")]
-pub const WINDOW_STATUS_SEPARATOR_DEFAULT: &str = " ";
+pub const WINDOW_STATUS_SEPARATOR_DEFAULT: &str = "\" \"";
 
 /// ```text
 /// window-status-style default

@@ -12,228 +12,511 @@ use std::str::FromStr;
 use crate::ModeMouse;
 
 // TODO: check types
-// 31 Available window options are:
 #[derive(PartialEq, Default, Clone, Debug)]
 pub struct WindowOptions<'a> {
-    //aggressive-resize [on | off]
+    /// tmux ^1.0:
+    /// ```text
+    /// aggressive-resize [on | off]
+    /// ```
     #[cfg(feature = "tmux_1_0")]
     pub aggressive_resize: Option<Switch>,
-    //allow-rename [on | off]
+
+    /// tmux ^1.6 v3.0:
+    /// ```text
+    /// allow-rename [on | off]
+    /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
     pub allow_rename: Option<Switch>,
-    //alternate-screen [on | off]
+
+    /// tmux ^1.2 v3.0:
+    /// ```text
+    // alternate-screen [on | off]
+    /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     pub alternate_screen: Option<Switch>,
-    //automatic-rename [on | off]
+
+    /// tmux ^1.0:
+    /// ```text
+    /// automatic-rename [on | off]
+    /// ```
     #[cfg(feature = "tmux_1_0")] // 0.8
     pub automatic_rename: Option<Switch>,
-    //automatic-rename-format format
+
+    /// tmux ^1.9:
+    /// ```text
+    /// automatic-rename-format format
+    /// ```
     #[cfg(feature = "tmux_1_9")]
     pub automatic_rename_format: Option<Cow<'a, str>>,
-    //c0-change-interval interval
+
+    /// tmux ^1.7 v2.1:
+    /// ```text
+    /// c0-change-interval interval
+    /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     pub c0_change_interval: Option<usize>,
-    //c0-change-trigger trigger
+
+    /// tmux ^1.7 v2.1:
+    /// ```text
+    /// c0-change-trigger trigger
+    /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     pub c0_change_trigger: Option<Cow<'a, str>>,
-    //clock-mode-colour colour
+
+    /// tmux ^1.0:
+    /// ```text
+    /// clock-mode-colour colour
+    /// ```
     #[cfg(feature = "tmux_1_0")]
     pub clock_mode_colour: Option<Cow<'a, str>>,
-    //clock-mode-style [12 | 24]
+
+    /// tmux ^1.0:
+    /// ```text
+    /// clock-mode-style [12 | 24]
+    /// ```
     #[cfg(feature = "tmux_1_0")]
     pub clock_mode_style: Option<ClockModeStyle>,
-    //force-height height
+
+    /// tmux ^1.0 v2.9:
+    /// ```text
+    /// force-height height
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
     pub force_height: Option<usize>,
-    //force-width width
+
+    /// tmux ^1.0 v2.9:
+    /// ```text
+    /// force-width width
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
     pub force_width: Option<usize>,
-    //layout-history-limit limit
+
+    /// tmux ^1.7 v1.8:
+    /// ```text
+    /// layout-history-limit limit
+    /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
     pub layout_history_limit: Option<usize>,
-    //main-pane-height height
+
+    /// tmux ^1.0:
+    /// ```text
+    /// main-pane-height height
+    /// ```
     #[cfg(feature = "tmux_1_0")]
     pub main_pane_height: Option<usize>,
-    //main-pane-width width
+
+    /// tmux ^1.0:
+    /// ```text
+    /// main-pane-width width
+    /// ```
     #[cfg(feature = "tmux_1_0")]
     pub main_pane_width: Option<usize>,
-    //mode-attr attributes
+
+    /// tmux ^1.0 v1.9:
+    /// ```text
+    /// mode-attr attributes
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub mode_attr: Option<Cow<'a, str>>,
-    // mode-bg colour
+
+    /// tmux ^1.0 v1.9:
+    /// ```text
+    /// mode-bg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub mode_bg: Option<Cow<'a, str>>,
-    // mode-fg colour
+
+    /// tmux ^1.0 v1.9:
+    /// ```text
+    /// mode-fg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub mode_fg: Option<Cow<'a, str>>,
-    //mode-keys [vi | emacs]
+
+    /// tmux ^1.0:
+    /// ```text
+    /// mode-keys [vi | emacs]
+    /// ```
     #[cfg(feature = "tmux_1_0")]
     pub mode_keys: Option<StatusKeys>,
-    //mode-mouse [on | off]
-    //tmux 1.6: mode-mouse [on | off | copy-mode]
+
+    /// tmux 1.6:
+    /// ```text
+    /// mode-mouse [on | off | copy-mode]
+    /// ```
+    /// tmux ^1.0 v2.1:
+    /// ```text
+    /// mode-mouse [on | off]
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
     pub mode_mouse: Option<ModeMouse>,
-    //mode-style style
+
+    /// tmux ^1.9:
+    /// ```text
+    ///mode-style style
+    /// ```
     #[cfg(feature = "tmux_1_9")]
     pub mode_style: Option<Cow<'a, str>>,
-    //monitor-activity [on | off]
+
+    /// tmux ^1.0:
+    /// ```text
+    /// monitor-activity [on | off]
+    /// ```
     #[cfg(feature = "tmux_1_0")]
     pub monitor_activity: Option<Switch>,
-    //monitor-content match-string
+
+    /// tmux ^1.0 v2.0:
+    /// ```text
+    /// monitor-content match-string
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
     pub monitor_content: Option<Cow<'a, str>>,
-    //monitor-bell [on | off]
+
+    /// tmux ^2.6:
+    /// ```text
+    /// monitor-bell [on | off]
+    /// ```
     #[cfg(feature = "tmux_2_6")]
     pub monitor_bell: Option<Switch>,
-    //monitor-silence [interval]
+
+    /// tmux ^1.4:
+    /// ```text
+    /// monitor-silence [interval]
+    /// ```
     #[cfg(feature = "tmux_1_4")]
     pub monitor_silence: Option<usize>,
-    //other-pane-height height
+
+    /// tmux ^1.4:
+    /// ```text
+    /// other-pane-height height
+    /// ```
     #[cfg(feature = "tmux_1_4")]
     pub other_pane_height: Option<usize>,
-    //other-pane-width width
+
+    /// tmux ^1.4:
+    /// ```text
+    /// other-pane-width width
+    /// ```
     #[cfg(feature = "tmux_1_4")]
     pub other_pane_width: Option<usize>,
-    //pane-active-border-style style
+
+    /// tmux ^2.0:
+    /// ```text
+    /// pane-active-border-style style
+    /// ```
     #[cfg(feature = "tmux_2_0")]
     pub pane_active_border_style: Option<Cow<'a, str>>,
-    //pane-base-index index
+
+    /// tmux ^1.6:
+    /// ```text
+    /// pane-base-index index
+    /// ```
     #[cfg(feature = "tmux_1_6")]
     pub pane_base_index: Option<usize>,
-    //pane-border-format format
+
+    /// tmux ^2.3:
+    /// ```text
+    /// pane-border-format format
+    /// ```
     #[cfg(feature = "tmux_2_3")]
     pub pane_border_format: Option<Cow<'a, str>>,
-    //pane-border-status [off | top | bottom]
+
+    /// tmux ^2.3:
+    /// ```text
+    /// pane-border-status [off | top | bottom]
+    /// ```
     #[cfg(feature = "tmux_2_3")]
     pub pane_border_status: Option<PaneBorderStatus>,
-    //pane-border-style style
+
+    /// tmux ^2.0:
+    /// ```text
+    /// pane-border-style style
+    /// ```
     #[cfg(feature = "tmux_2_0")]
     pub pane_border_style: Option<Cow<'a, str>>,
-    //remain-on-exit [on | off]
+
+    /// tmux ^1.0 v3.0:
+    /// ```text
+    /// remain-on-exit [on | off]
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
     pub remain_on_exit: Option<Switch>,
-    //synchronize-panes [on | off]
+
+    /// tmux ^1.2 v3.2:
+    /// ```text
+    /// synchronize-panes [on | off]
+    /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
     pub synchronize_panes: Option<Switch>,
-    //utf8 [on | off]
+
+    /// tmux ^1.0 v2.2:
+    /// ```text
+    /// utf8 [on | off]
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
     pub utf8: Option<Switch>,
-    //window-active-style style
+
+    /// tmux ^2.1 v3.0:
+    /// ```text
+    /// window-active-style style
+    /// ```
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     pub window_active_style: Option<Cow<'a, str>>,
-    //window-status-bell-attr attributes
+
+    /// tmux ^1.6 v1.9:
+    /// ```text
+    /// window-status-bell-attr attributes
+    /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     pub window_status_bell_attr: Option<Cow<'a, str>>,
-    //window-status-bell-bg colour
+
+    /// tmux ^1.6 v1.9:
+    /// ```text
+    /// window-status-bell-bg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     pub window_status_bell_bg: Option<Cow<'a, str>>,
-    //window-status-bell-fg colour
+
+    /// tmux ^1.6 v1.9:
+    /// ```text
+    /// window-status-bell-fg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     pub window_status_bell_fg: Option<Cow<'a, str>>,
-    //window-status-content-attr attributes
+
+    /// tmux ^1.6 v1.9:
+    /// ```text
+    /// window-status-content-attr attributes
+    /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     pub window_status_content_attr: Option<Cow<'a, str>>,
-    //window-status-content-bg colour
+
+    /// tmux ^1.6 v1.9:
+    /// ```text
+    /// window-status-content-bg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     pub window_status_content_bg: Option<Cow<'a, str>>,
-    //window-status-content-fg colour
+
+    /// tmux ^1.6 v1.9:
+    /// ```text
+    /// window-status-content-fg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     pub window_status_content_fg: Option<Cow<'a, str>>,
-    //window-status-activity-attr attributes
+
+    /// tmux ^1.6 v1.9:
+    /// ```text
+    /// window-status-activity-attr attributes
+    /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     pub window_status_activity_attr: Option<Cow<'a, str>>,
-    //window-status-activity-bg attributes
+
+    /// tmux ^1.6 v1.9:
+    /// ```text
+    /// window-status-activity-bg attributes
+    /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     pub window_status_activity_bg: Option<Cow<'a, str>>,
-    //window-status-activity-fg attributes
+
+    /// tmux ^1.6 v1.9:
+    /// ```text
+    /// window-status-activity-fg attributes
+    /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     pub window_status_activity_fg: Option<Cow<'a, str>>,
-    //window-status-attr attributes
+
+    /// tmux ^1.0 v1.9:
+    /// ```text
+    /// window-status-attr attributes
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub window_status_attr: Option<Cow<'a, str>>,
-    //window-status-bg colour
+
+    /// tmux ^1.0 v1.9:
+    /// ```text
+    /// window-status-bg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub window_status_bg: Option<Cow<'a, str>>,
-    //window-status-fg colour
+
+    /// tmux ^1.0 v1.9:
+    /// ```text
+    /// window-status-fg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub window_status_fg: Option<Cow<'a, str>>,
-    //window-status-current-attr attributes
+
+    /// tmux ^1.0 v1.9:
+    /// ```text
+    /// window-status-current-attr attributes
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub window_status_current_attr: Option<Cow<'a, str>>,
-    //window-status-current-bg colour
+
+    /// tmux ^1.0 v1.9:
+    /// ```text
+    /// window-status-current-bg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub window_status_current_bg: Option<Cow<'a, str>>,
-    //window-status-current-fg colour
+
+    /// tmux ^1.0 v1.9:
+    /// ```text
+    /// window-status-current-fg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub window_status_current_fg: Option<Cow<'a, str>>,
-    //window-status-alert-attr attributes
+
+    /// tmux ^1.3 v1.6:
+    /// ```text
+    /// window-status-alert-attr attributes
+    /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     pub window_status_alert_attr: Option<Cow<'a, str>>,
-    //window-status-alert-bg colour
+
+    /// tmux ^1.3 v1.6:
+    /// ```text
+    /// window-status-alert-bg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     pub window_status_alert_bg: Option<Cow<'a, str>>,
-    //window-status-alert-fg colour
+
+    /// tmux ^1.3 v1.6:
+    /// ```text
+    /// window-status-alert-fg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     pub window_status_alert_fg: Option<Cow<'a, str>>,
-    //window-status-activity-style style
+
+    /// tmux ^1.9:
+    /// ```text
+    /// window-status-activity-style style
+    /// ```
     #[cfg(feature = "tmux_1_9")]
     pub window_status_activity_style: Option<Cow<'a, str>>,
-    //window-status-bell-style style
+
+    /// tmux ^1.9:
+    /// ```text
+    /// window-status-bell-style style
+    /// ```
     #[cfg(feature = "tmux_1_9")]
     pub window_status_bell_style: Option<Cow<'a, str>>,
-    //window-status-content-style style
+
+    /// tmux ^1.9 v2.0:
+    /// ```text
+    /// window-status-content-style style
+    /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
     pub window_status_content_style: Option<Cow<'a, str>>,
-    //window-status-current-format string
+
+    /// tmux ^1.2:
+    /// ```text
+    /// window-status-current-format string
+    /// ```
     #[cfg(feature = "tmux_1_2")]
     pub window_status_current_format: Option<Cow<'a, str>>,
-    //window-status-last-attr attributes
+
+    /// tmux ^1.8 v1.9:
+    /// ```text
+    /// window-status-last-attr attributes
+    /// ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
     pub window_status_last_attr: Option<Cow<'a, str>>,
-    //window-status-last-bg colour
+
+    /// tmux ^1.8 v1.9:
+    /// ```text
+    /// window-status-last-bg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
     pub window_status_last_bg: Option<Cow<'a, str>>,
-    //window-status-last-fg colour
+
+    /// tmux ^1.8 v1.9:
+    /// ```text
+    /// window-status-last-fg colour
+    /// ```
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
     pub window_status_last_fg: Option<Cow<'a, str>>,
-    //window-status-current-style style
+
+    /// tmux ^1.9:
+    /// ```text
+    /// window-status-current-style style
+    /// ```
     #[cfg(feature = "tmux_1_9")]
     pub window_status_current_style: Option<Cow<'a, str>>,
-    //window-status-format string
+
+    /// tmux ^1.2:
+    /// ```text
+    /// window-status-format string
+    /// ```
     #[cfg(feature = "tmux_1_2")]
     pub window_status_format: Option<Cow<'a, str>>,
-    //window-status-last-style style
+
+    /// tmux ^1.9:
+    /// ```text
+    /// window-status-last-style style
+    /// ```
     #[cfg(feature = "tmux_1_9")]
     pub window_status_last_style: Option<Cow<'a, str>>,
-    //window-status-separator string
+
+    /// tmux ^1.7:
+    /// ```text
+    /// window-status-separator string
+    /// ```
     #[cfg(feature = "tmux_1_7")]
     pub window_status_separator: Option<Cow<'a, str>>,
-    //window-status-style style
+
+    /// tmux ^1.9:
+    /// ```text
+    /// window-status-style style
+    /// ```
     #[cfg(feature = "tmux_1_9")]
     pub window_status_style: Option<Cow<'a, str>>,
-    //window-size largest | smallest | manual | latest
+
+    /// tmux ^2.9:
+    /// ```text
+    /// window-size largest | smallest | manual | latest
+    /// ```
     #[cfg(feature = "tmux_2_9")]
     pub window_size: Option<WindowSize>,
-    //word-separators string
+
+    /// tmux ^1.2 v1.6:
+    /// ```text
+    /// word-separators string
+    /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
     pub word_separators: Option<Cow<'a, str>>,
-    //window-style style
+
+    /// tmux ^2.1 v3.0:
+    /// ```text
+    /// window-style style
+    /// ```
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     pub window_style: Option<Cow<'a, str>>,
-    //wrap-search [on | off]
+
+    /// tmux ^1.7:
+    /// ```text
+    /// wrap-search [on | off]
+    /// ```
     #[cfg(feature = "tmux_1_7")]
     pub wrap_search: Option<Switch>,
-    // xterm-keys [on | off]
+
+    /// tmux ^1.0:
+    /// ```text
+    ///  xterm-keys [on | off]
+    /// ```
     #[cfg(feature = "tmux_1_0")]
     pub xterm_keys: Option<Switch>,
-    // XXX: user options?
+
+    /// tmux ^1.0:
+    /// ```text
+    /// @user-option-name value
+    /// ```
+    #[cfg(feature = "tmux_1_0")]
     pub user_options: HashMap<String, Option<Cow<'a, str>>>,
 }
 
 // TODO: check default values from tmux sources
-/// ```text
-/// tmux show-options -g -w
-/// ```
 
 impl<'a> fmt::Display for WindowOptions<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -468,6 +751,10 @@ impl<'a> fmt::Display for WindowOptions<'a> {
     }
 }
 impl<'a> WindowOptions<'a> {
+    ///
+    /// ```text
+    /// tmux show-options -g -w
+    /// ```
     pub fn new() -> Self {
         let options = WindowOptions::default();
 

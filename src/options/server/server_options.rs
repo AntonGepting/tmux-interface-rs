@@ -451,7 +451,7 @@ impl<'a> FromStr for ServerOptions<'a> {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut server_options = ServerOptions::new();
+        let mut server_options = ServerOptions::default();
 
         for line in s.lines() {
             if let Some((name, i, value)) = get_parts(line) {

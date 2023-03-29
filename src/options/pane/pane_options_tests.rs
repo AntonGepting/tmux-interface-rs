@@ -1,3 +1,7 @@
+// default()
+// to_string()
+// from_str()
+
 #[test]
 fn default() {
     use crate::{PaneOptions, RemainOnExit, Switch};
@@ -22,7 +26,15 @@ fn default() {
 }
 
 #[test]
-fn parse() {
+fn to_string() {
+    use crate::{PaneOptions, Switch};
+
+    let pane_options = PaneOptions::new().allow_rename(Some(Switch::Off));
+    dbg!(&pane_options.to_string());
+}
+
+#[test]
+fn from_str() {
     use crate::PaneOptions;
 
     let pane_options_str = r#"
@@ -32,14 +44,6 @@ fn parse() {
         window-active-style fg=colour253,bg=colour235
         window-style fg=colour247,bg=colour238
     "#;
-    let _pane_options = pane_options_str.parse::<PaneOptions>().unwrap();
-    //dbg!(&pane_options);
-}
-
-#[test]
-fn to_string() {
-    use crate::{PaneOptions, Switch};
-
-    let _pane_options = PaneOptions::new().allow_rename(Some(Switch::Off));
-    //dbg!(&pane_options.to_string());
+    let pane_options = pane_options_str.parse::<PaneOptions>().unwrap();
+    dbg!(&pane_options);
 }

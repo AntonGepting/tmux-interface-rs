@@ -187,11 +187,13 @@ pub const TERMINAL_FEATURES_DEFAULT: [&str; 2] = [
 /// terminal-overrides[0] "xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q"
 /// terminal-overrides[1] screen*:XT
 /// ```
-#[cfg(feature = "tmux_2_0")]
+#[cfg(all(feature = "tmux_2_0", not(feature = "tmux_3_2")))]
 pub const TERMINAL_OVERRIDES_DEFAULT: [&str; 2] = [
     "xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q",
     "screen*:XT"
 ];
+#[cfg(feature = "tmux_3_2")]
+pub const TERMINAL_OVERRIDES_DEFAULT: [&str; 1] = [""];
 
 /// `""`
 /// ```text
