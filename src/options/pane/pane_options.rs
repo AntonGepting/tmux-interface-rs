@@ -12,25 +12,53 @@ use crate::RemainOnExit;
 // TODO: check types
 #[derive(PartialEq, Default, Clone, Debug)]
 pub struct PaneOptions<'a> {
-    // allow-rename [on | off]
+    /// tmux ^3.0:
+    /// ```text
+    /// allow-rename [on | off]
+    /// ```
     #[cfg(feature = "tmux_3_0")]
     pub allow_rename: Option<Switch>,
-    // alternate-screen [on | off]
+
+    /// tmux ^3.0:
+    /// ```text
+    /// alternate-screen [on | off]
+    /// ```
     #[cfg(feature = "tmux_3_0")]
     pub alternate_screen: Option<Switch>,
-    // tmux ^3.2: remain-on-exit [on | off | failed]
-    // remain-on-exit [on | off]
+
+    /// tmux ^3.2:
+    /// ```text
+    /// remain-on-exit [on | off | failed]
+    /// ```
+    ///
+    /// tmux ^3.0:
+    /// ```text
+    /// remain-on-exit [on | off]
+    /// ```
     #[cfg(feature = "tmux_3_0")]
     pub remain_on_exit: Option<RemainOnExit>,
-    // window-active-style style
+
+    /// tmux ^3.0:
+    /// ```text
+    /// window-active-style style
+    /// ```
     #[cfg(feature = "tmux_3_0")]
     pub window_active_style: Option<Cow<'a, str>>,
-    // window-style style
+
+    /// tmux ^3.0:
+    /// ```text
+    /// window-style style
+    /// ```
     #[cfg(feature = "tmux_3_0")]
     pub window_style: Option<Cow<'a, str>>,
-    // synchronize-panes [on | off]
+
+    /// tmux ^3.2:
+    /// ```text
+    /// synchronize-panes [on | off]
+    /// ```
     #[cfg(feature = "tmux_3_2")]
     pub synchronize_panes: Option<Switch>,
+
     #[cfg(feature = "tmux_3_0")]
     pub user_options: HashMap<String, Option<Cow<'a, str>>>,
 }
@@ -84,24 +112,45 @@ impl<'a> PaneOptions<'a> {
         pane_options
     }
 
+    /// tmux ^3.0:
+    /// ```text
+    /// allow-rename [on | off]
+    /// ```
     #[cfg(feature = "tmux_3_0")]
     pub fn allow_rename(mut self, allow_rename: Option<Switch>) -> Self {
         self.allow_rename = allow_rename.map(|s| s.into());
         self
     }
 
+    /// tmux ^3.0:
+    /// ```text
+    /// alternate-screen [on | off]
+    /// ```
     #[cfg(feature = "tmux_3_0")]
     pub fn alternate_screen(mut self, alternate_screen: Option<Switch>) -> Self {
         self.alternate_screen = alternate_screen.map(|s| s.into());
         self
     }
 
+    /// tmux ^3.2:
+    /// ```text
+    /// remain-on-exit [on | off | failed]
+    /// ```
+    ///
+    /// tmux ^3.0:
+    /// ```text
+    /// remain-on-exit [on | off]
+    /// ```
     #[cfg(feature = "tmux_3_0")]
     pub fn remain_on_exit(mut self, remain_on_exit: Option<RemainOnExit>) -> Self {
         self.remain_on_exit = remain_on_exit.map(|s| s.into());
         self
     }
 
+    /// tmux ^3.0:
+    /// ```text
+    /// window-active-style style
+    /// ```
     #[cfg(feature = "tmux_3_0")]
     pub fn window_active_style<S: Into<Cow<'a, str>>>(
         mut self,
@@ -111,12 +160,20 @@ impl<'a> PaneOptions<'a> {
         self
     }
 
+    /// tmux ^3.0:
+    /// ```text
+    /// window-style style
+    /// ```
     #[cfg(feature = "tmux_3_0")]
     pub fn window_style<S: Into<Cow<'a, str>>>(mut self, window_style: Option<S>) -> Self {
         self.window_style = window_style.map(|s| s.into());
         self
     }
 
+    /// tmux ^3.0:
+    /// ```text
+    /// synchronize-panes [on | off]
+    /// ```
     #[cfg(feature = "tmux_3_2")]
     pub fn synchronize_panes(mut self, synchronize_panes: Option<Switch>) -> Self {
         self.synchronize_panes = synchronize_panes.map(|s| s.into());

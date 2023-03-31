@@ -3,7 +3,24 @@
 //!
 //! Command builders and output parsers
 //!
-//! Get
+//! # Table Of Contents
+//! * 1. Quick Start
+//! * 2. Developer Information
+//!     * 2.1. Tmux Manual
+//!     * 2.2. Structure
+//!     * 2.3. Implementation
+//!     * 2.4. Modules Hierarchy
+//!
+//! # 1. Quick Start
+//!
+//! ## Examples
+//!
+//!
+//! # 2. Developer Information
+//!
+//! ## 2.1. Tmux Manual
+//!
+//! Get command
 //! ```text
 //! show-options [-AgHpqsvw] [-t target-pane] [option]
 //! (alias: show)
@@ -20,7 +37,7 @@
 //! such options are marked with an asterisk.
 //! ```
 //!
-//! Set
+//! Set command
 //! ```text
 //! set-option [-aFgopqsuUw] [-t target-pane] option value
 //!       (alias: set)
@@ -59,73 +76,30 @@
 //! a blue foreground.
 //! ```
 //!
-//! * Tmux Options
+//! # 2.2. Structure
 //!
-//! * by [Scope](#scope)
-//!     * Global
-//!     * Local
+//! Briefly, abstractions for working procedures with Tmux options can be done using following principles:
 //!
-//! * by Access
-//!     * All
-//!     * Single
-//!     * Multiple Selective
+//! * by [Scope](#scope) (`-g` flag)
+//!     * Global (`-g` flag)
+//!     * Local (`` flag omitted)
 //!
-//! * by Object
-//!     * [`Server`](self::server)
-//!     * [`Session`](self::session)
-//!     * [`Window`](self::window)
-//!     * [`Pane`](self::pane)
+//! * by access type (`[option]` parameter)
+//!     * All (`[option]` parameter omitted)
+//!     * Value only (`-v` flag)
+//!     * Single (`[option]` parameter)
+//!     * Multiple Selective (multiple `show-option`, `set-option` commands)
 //!
-//! * by Setting Methods
-//!     * Set
-//!     * Unset
-//!     * Toggle (for `on | off | ...` options)
+//! * by object type (`-s`, ` `, `-w`, `-p` flags)
+//!     * [`Server`](self::server) (`-s` flag)
+//!     * [`Session`](self::session) (` ` flag omitted)
+//!     * [`Window`](self::window) (`-w` flag)
+//!     * [`Pane`](self::pane) (`-p` flag)
 //!
-//! Tmux Options
-//! * Common
-//!     * [`UserOptions`](self::common::user_option)
-//!         * [`GetUserOption`]
-//!         * [`GetUserOptions`]
-//!         * [`SetUserOption`]
-//!         * [`SetUserOptions`]
-//!     * [`SetOptionExt`]
-//!     * [`GetOptionExt`]
-//! * [`Server`](self::server)
-//!     * [`GetServerOption`]
-//!     * [`GetServerOptionValue`]
-//!     * [`SetServerOption`]
-//! * [`Session`](self::session)
-//!     * [`Builder`](self::session::builder)
-//!         * [`global`](self::session::builder::global)
-//!             * [`GetGlobalSessionOption`]
-//!             * [`GetGlobalSessionOptionValue`]
-//!             * [`SetGlobalSessionOption`]
-//!         * [`local`](self::session::builder::local)
-//!             * [`GetLocalSessionOption`]
-//!             * [`GetLocalSessionOptionValue`]
-//!             * [`SetLocalSessionOption`]
-//!     * [`Parser`](self::session::parser)
-//!         * [`SessionOptionsCtl`](self::session::parser::session_options_ctl)
-//!         * [`GlobalSessionOptionsCtl`](self::session::parser::global_session_options_ctl)
-//!         * [`LocalSessionOptionsCtl`](self::session::parser::local_session_options_ctl)
-//! * [`Window`](self::window)
-//!     * [`Builder`](self::window::builder)
-//!         * [`global`](self::window::builder::global)
-//!             * [`GetGlobalWindowOption`]
-//!             * [`GetGlobalWindowOptionValue`]
-//!             * [`SetGlobalWindowOption`]
-//!         * [`local`](self::window::builder::local)
-//!             * [`GetLocalWindowOption`]
-//!             * [`GetLocalWindowOptionValue`]
-//!             * [`SetLocalWindowOption`]
-//!     * [`Parser`](self::window::parser)
-//!         * [`WindowOptionsCtl`](self::window::parser::window_options_ctl)
-//!         * [`GlobalWindowOptionsCtl`](self::window::parser::global_window_options_ctl)
-//! * [`Pane`](self::pane)
-//!     * [`GetPaneOption`]
-//!     * [`GetPaneOptionValue`]
-//!     * [`SetPaneOption`]
-//!
+//! * by modifiying methods (`[value]` parameter and `-u` flag)
+//!     * Set (`[value]` parameter is set)
+//!     * Unset (`-u` flag)
+//!     * Toggle (for `on | off | ...` options) (`[value] parameter omitted`)
 //!
 //! **Table**: Tmux Options
 //! <table>
@@ -164,7 +138,62 @@
 //!   </tbody>
 //! </table>
 //!
-//! # Options submodules, traits and structures schematic hierarchy
+//!
+//! # 2.3. Implementation
+//!
+//! implementations derived using previous prinnciples
+//!
+//! * Common
+//!     * [`UserOptions`](self::common::user_option)
+//!         * [`GetUserOption`] getter method for user option (`@user-option-name value`)
+//!         * [`GetUserOptions`] getter method for user options (`@user-option-name value`)
+//!         * [`SetUserOption`] setter method for user option (`@user-option-name value`)
+//!         * [`SetUserOptions`] setter method for user options (`@user-option-name value`)
+//!     * [`GetOptionExt`] common getter method for all options
+//!     * [`SetOptionExt`] common setter method for all options
+//! * [`Server`](self::server)
+//!     * [`GetServerOption`]
+//!     * [`GetServerOptionValue`]
+//!     * [`SetServerOption`]
+//!     * [`Ctl`](self::server::ctl)
+//! * [`Session`](self::session)
+//!     * [`Builder`](self::session::builder)
+//!         * [`global`](self::session::builder::global)
+//!             * [`GetGlobalSessionOption`]
+//!             * [`GetGlobalSessionOptionValue`]
+//!             * [`SetGlobalSessionOption`]
+//!         * [`local`](self::session::builder::local)
+//!             * [`GetLocalSessionOption`]
+//!             * [`GetLocalSessionOptionValue`]
+//!             * [`SetLocalSessionOption`]
+//!     * [`Ctl`](self::session::ctl)
+//!         * [`SessionOptionsCtl`](self::session::ctl::session_options_ctl)
+//!         * [`GlobalSessionOptionsCtl`](self::session::ctl::global_session_options_ctl)
+//!         * [`LocalSessionOptionsCtl`](self::session::ctl::local_session_options_ctl)
+//! * [`Window`](self::window)
+//!     * [`Builder`](self::window::builder)
+//!         * [`global`](self::window::builder::global)
+//!             * [`GetGlobalWindowOption`]
+//!             * [`GetGlobalWindowOptionValue`]
+//!             * [`SetGlobalWindowOption`]
+//!         * [`local`](self::window::builder::local)
+//!             * [`GetLocalWindowOption`]
+//!             * [`GetLocalWindowOptionValue`]
+//!             * [`SetLocalWindowOption`]
+//!     * [`Ctl`](self::window::ctl)
+//!         * [`WindowOptionsCtl`](self::window::ctl::window_options_ctl)
+//!         * [`LocalWindowOptionsCtl`](self::window::ctl::local_window_options_ctl)
+//!         * [`GlobalWindowOptionsCtl`](self::window::ctl::global_window_options_ctl)
+//! * [`Pane`](self::pane)
+//!     * [`GetPaneOption`]
+//!     * [`GetPaneOptionValue`]
+//!     * [`SetPaneOption`]
+//!     * [`Ctl`](self::pane::ctl)
+//!
+//!
+//! ## 2.4. Modules Hierarchy
+//!
+//! Options submodules, traits and structures schematic hierarchy
 //! ```text
 //! Get/Set options control traits
 //!                           Global
@@ -367,13 +396,6 @@
 // 3. need builder / parser for single option
 // mb separated crate later, and tmux_commands as underlying layer
 //
-//! [`GetOptionExt`] trait implements common getter method for all options
-//! [`SetOptionExt`] trait implements common setter methods
-//!
-//! [`GetUserOption`] traits implements getter method for user option (`@user-option-name value`)
-//! [`GetUserOptions`] traits implements getter method for user option (`@user-option-name value`),
-//! used by selective options builder
-//!
 pub mod common;
 pub mod get_option_ext;
 pub mod set_option_ext;
