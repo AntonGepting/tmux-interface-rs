@@ -94,7 +94,6 @@ impl<'a> WindowOptionsCtl<'a> for GlobalWindowOptionsCtl<'a> {
     fn get_all(&self) -> Result<WindowOptions<'a>, Error> {
         let cmd = ShowOptions::new().global().window().build();
         let output = (self.invoker)(cmd)?.to_string();
-        dbg!(&output);
         WindowOptions::from_str(&output)
     }
 

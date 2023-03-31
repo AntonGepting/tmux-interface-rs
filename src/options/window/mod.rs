@@ -1,12 +1,13 @@
+//! Module for working with window options
 pub mod builder;
 pub mod common;
-pub mod parser;
+pub mod ctl;
 
 pub mod window_options;
 
 pub use builder::*;
 pub use common::*;
-pub use parser::*;
+pub use ctl::*;
 
 pub use window_options::*;
 

@@ -4,7 +4,7 @@ fn global_session_options_ctl() {
 
     let session_options_ctl = GlobalSessionOptionsCtl::default();
     #[cfg(feature = "tmux_2_6")]
-    let value = session_options_ctl.get_activity_action(Some(":")).unwrap();
+    let value = session_options_ctl.get_activity_action(None).unwrap();
 
     // assert_eq!(value, Some(crate::Action::Other));
 }

@@ -67,8 +67,8 @@ impl<'a> Default for ServerOptionsCtl<'a> {
 
 impl<'a> ServerOptionsCtl<'a> {
     pub fn new(
-        invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
         target: Option<Cow<'a, str>>,
+        invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Self {
         Self { invoker, target }
     }

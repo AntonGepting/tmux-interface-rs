@@ -1,12 +1,13 @@
+//! Module for working with pane options
 pub mod builder;
 pub mod common;
-pub mod parser;
+pub mod ctl;
 
 pub mod pane_options;
 
 pub use builder::*;
 pub use common::*;
-pub use parser::*;
+pub use ctl::*;
 
 pub use pane_options::*;
 

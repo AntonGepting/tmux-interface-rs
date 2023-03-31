@@ -65,13 +65,13 @@
 
 pub mod builder;
 pub mod common;
-pub mod parser;
+pub mod ctl;
 
 pub mod server_options;
 
 pub use builder::*;
 pub use common::*;
-pub use parser::*;
+pub use ctl::*;
 
 pub use server_options::*;
 
