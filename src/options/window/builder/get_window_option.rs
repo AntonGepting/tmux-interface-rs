@@ -14,6 +14,10 @@ use std::borrow::Cow;
 //
 // default implementation for getting options, by default local options
 pub trait GetWindowOption: GetOptionExt {
+    fn all<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get_all(target)
+    }
+
     /// ### Manual
     ///
     /// tmux ^1.0:
@@ -25,7 +29,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, AGGRESSIVE_RESIZE)
+        Self::get_ext(target, AGGRESSIVE_RESIZE)
     }
 
     /// ### Manual
@@ -67,7 +71,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, AUTOMATIC_RENAME)
+        Self::get_ext(target, AUTOMATIC_RENAME)
     }
 
     /// ### Manual
@@ -81,7 +85,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, AUTOMATIC_RENAME_FORMAT)
+        Self::get_ext(target, AUTOMATIC_RENAME_FORMAT)
     }
 
     /// ### Manual
@@ -123,7 +127,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, CLOCK_MODE_COLOUR)
+        Self::get_ext(target, CLOCK_MODE_COLOUR)
     }
 
     /// ### Manual
@@ -137,7 +141,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, CLOCK_MODE_STYLE)
+        Self::get_ext(target, CLOCK_MODE_STYLE)
     }
 
     /// ### Manual
@@ -193,7 +197,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MAIN_PANE_HEIGHT)
+        Self::get_ext(target, MAIN_PANE_HEIGHT)
     }
 
     /// ### Manual
@@ -207,7 +211,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MAIN_PANE_WIDTH)
+        Self::get_ext(target, MAIN_PANE_WIDTH)
     }
 
     /// ### Manual
@@ -263,7 +267,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MODE_KEYS)
+        Self::get_ext(target, MODE_KEYS)
     }
 
     /// ### Manual
@@ -296,7 +300,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MODE_STYLE)
+        Self::get_ext(target, MODE_STYLE)
     }
 
     /// ### Manual
@@ -310,7 +314,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MONITOR_ACTIVITY)
+        Self::get_ext(target, MONITOR_ACTIVITY)
     }
 
     /// ### Manual
@@ -338,7 +342,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MONITOR_BELL)
+        Self::get_ext(target, MONITOR_BELL)
     }
 
     /// ### Manual
@@ -352,7 +356,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MONITOR_SILENCE)
+        Self::get_ext(target, MONITOR_SILENCE)
     }
 
     /// ### Manual
@@ -366,7 +370,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, OTHER_PANE_HEIGHT)
+        Self::get_ext(target, OTHER_PANE_HEIGHT)
     }
 
     /// ### Manual
@@ -380,7 +384,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, OTHER_PANE_WIDTH)
+        Self::get_ext(target, OTHER_PANE_WIDTH)
     }
 
     /// ### Manual
@@ -394,7 +398,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, PANE_ACTIVE_BORDER_STYLE)
+        Self::get_ext(target, PANE_ACTIVE_BORDER_STYLE)
     }
 
     /// ### Manual
@@ -408,7 +412,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, PANE_BASE_INDEX)
+        Self::get_ext(target, PANE_BASE_INDEX)
     }
 
     /// ### Manual
@@ -422,7 +426,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, PANE_BORDER_FORMAT)
+        Self::get_ext(target, PANE_BORDER_FORMAT)
     }
 
     /// ### Manual
@@ -436,7 +440,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, PANE_BORDER_STATUS)
+        Self::get_ext(target, PANE_BORDER_STATUS)
     }
 
     /// ### Manual
@@ -450,7 +454,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, PANE_BORDER_STYLE)
+        Self::get_ext(target, PANE_BORDER_STYLE)
     }
 
     /// ### Manual
@@ -772,7 +776,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_ACTIVITY_STYLE)
+        Self::get_ext(target, WINDOW_STATUS_ACTIVITY_STYLE)
     }
 
     /// ### Manual
@@ -786,7 +790,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_BELL_STYLE)
+        Self::get_ext(target, WINDOW_STATUS_BELL_STYLE)
     }
 
     /// ### Manual
@@ -814,7 +818,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_CURRENT_FORMAT)
+        Self::get_ext(target, WINDOW_STATUS_CURRENT_FORMAT)
     }
 
     /// ### Manual
@@ -870,7 +874,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_CURRENT_STYLE)
+        Self::get_ext(target, WINDOW_STATUS_CURRENT_STYLE)
     }
 
     /// ### Manual
@@ -884,7 +888,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_FORMAT)
+        Self::get_ext(target, WINDOW_STATUS_FORMAT)
     }
 
     /// ### Manual
@@ -898,7 +902,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_LAST_STYLE)
+        Self::get_ext(target, WINDOW_STATUS_LAST_STYLE)
     }
 
     /// ### Manual
@@ -912,7 +916,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_SEPARATOR)
+        Self::get_ext(target, WINDOW_STATUS_SEPARATOR)
     }
 
     /// ### Manual
@@ -926,7 +930,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_STYLE)
+        Self::get_ext(target, WINDOW_STATUS_STYLE)
     }
 
     /// ### Manual
@@ -940,7 +944,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_SIZE)
+        Self::get_ext(target, WINDOW_SIZE)
     }
 
     /// ### Manual
@@ -982,7 +986,7 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WRAP_SEARCH)
+        Self::get_ext(target, WRAP_SEARCH)
     }
 
     /// ### Manual
@@ -996,6 +1000,6 @@ pub trait GetWindowOption: GetOptionExt {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, XTERM_KEYS)
+        Self::get_ext(target, XTERM_KEYS)
     }
 }

@@ -50,7 +50,8 @@ fn get_pane_option() {
 
     {
         let origin = format!("{} {}", cmd, "@user-option-name");
-        let get_option = GetPaneOption::user_option(Some(target), "user-option-name").to_string();
+        let get_option =
+            GetPaneOption::user_option_ext(Some(target), "user-option-name").to_string();
         assert_eq!(origin, get_option);
     }
 }

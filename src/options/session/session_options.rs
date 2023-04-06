@@ -1252,11 +1252,10 @@ impl<'a> FromStr for SessionOptions<'a> {
                     DEFAULT_TERMINAL => {
                         session_options.default_terminal = value.and_then(|s| s.parse().ok())
                     }
-                    #[cfg(feature = "tmux_2_9")]
-                    DEFAULT_SIZE => {
-                        unimplemented!();
-                        // session_options.default_size = value.and_then(|s| s.parse().ok())
-                    }
+                    // #[cfg(feature = "tmux_2_9")]
+                    // DEFAULT_SIZE => {
+                    // session_options.default_size = value.and_then(|s| s.parse().ok())
+                    // }
                     #[cfg(feature = "tmux_1_4")]
                     DESTROY_UNATTACHED => {
                         session_options.destroy_unattached = value.and_then(|s| s.parse().ok())

@@ -6,7 +6,7 @@ pub struct SetLocalSessionOption;
 
 impl SetOptionExt for SetLocalSessionOption {
     // unset if value = None
-    fn set<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+    fn set_ext<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         target: Option<U>,
         name: T,
         value: Option<S>,
@@ -26,7 +26,7 @@ impl SetOptionExt for SetLocalSessionOption {
         cmd.build()
     }
 
-    fn unset<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
+    fn unset_ext<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
         target: Option<S>,
         name: T,
     ) -> TmuxCommand<'a> {

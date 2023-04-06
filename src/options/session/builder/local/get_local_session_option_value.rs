@@ -27,7 +27,7 @@ use std::borrow::Cow;
 pub struct GetLocalSessionOptionValue;
 
 impl GetOptionExt for GetLocalSessionOptionValue {
-    fn get<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+    fn get_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         target: Option<S>,
         name: T,
     ) -> TmuxCommand<'a> {

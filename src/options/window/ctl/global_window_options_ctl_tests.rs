@@ -1,5 +1,5 @@
 #[test]
-fn global_window_options_ctl_get_all() {
+fn get_all() {
     use crate::{GlobalWindowOptionsCtl, WindowOptionsCtl};
 
     let output = GlobalWindowOptionsCtl::default().get_all().unwrap();

@@ -3,16 +3,23 @@ use crate::TmuxCommand;
 use std::borrow::Cow;
 
 pub trait GetUserOption: GetOptionExt {
+    fn user_option<'a, S>(name: S) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        Self::get(format!("{}{}", USER_OPTION_MARKER, name.into()))
+    }
+
     /// # Manual
     ///
     /// ```text
     /// @user-option-name value
     /// ```
-    fn user_option<'a, T, S>(target: Option<T>, name: S) -> TmuxCommand<'a>
+    fn user_option_ext<'a, T, S>(target: Option<T>, name: S) -> TmuxCommand<'a>
     where
         T: Into<Cow<'a, str>>,
         S: Into<Cow<'a, str>>,
     {
-        Self::get(target, format!("{}{}", USER_OPTION_MARKER, name.into()))
+        Self::get_ext(target, format!("{}{}", USER_OPTION_MARKER, name.into()))
     }
 }

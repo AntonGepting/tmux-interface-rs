@@ -23,7 +23,7 @@
 //! ```
 //! use tmux_interface::{GetServerOption, GetServerOptionTrait, Tmux};
 //!
-//! let output = Tmux::with_command(GetServerOption::buffer_limit()).output();
+//! let output = Tmux::with_command(GetServerOption::buffer_limit(None)).output();
 //! ```
 //!
 //! ## 1.2. Get Single Option Value
@@ -35,7 +35,7 @@
 //! ```
 //! use tmux_interface::{GetServerOptionValue, GetServerOptionTrait, Tmux};
 //!
-//! let output = Tmux::with_command(GetServerOptionValue::buffer_limit()).output();
+//! let output = Tmux::with_command(GetServerOptionValue::buffer_limit(None)).output();
 //! ```
 //!
 //! ## 1.3. Get Multiple Options
@@ -49,8 +49,8 @@
 //!
 //! let output = Tmux::with_commands(
 //!     GetServerOptions::new()
-//!         .buffer_limit()
-//!         .history_file()
+//!         .buffer_limit(None)
+//!         .history_file(None)
 //!         .build())
 //!     .output();
 //! ```

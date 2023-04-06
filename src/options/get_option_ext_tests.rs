@@ -14,7 +14,7 @@ fn get_option_ext_tests() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "show";
 
-    let s = GetOptionExtTest::get(Some(target), name).to_string();
+    let s = GetOptionExtTest::get_ext(Some(target), name).to_string();
 
     let origin = format!("{} -t {} {}", cmd, target, name);
 

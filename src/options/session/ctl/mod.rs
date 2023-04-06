@@ -12,9 +12,6 @@ pub use session_options_ctl::SessionOptionsCtl;
 #[path = "."]
 mod session_tests {
     #[cfg(feature = "tmux_1_0")]
-    pub mod session_options_ctl_tests;
-
-    #[cfg(feature = "tmux_1_0")]
     pub mod global_session_options_ctl_tests;
     #[cfg(feature = "tmux_1_0")]
     pub mod local_session_options_ctl_tests;

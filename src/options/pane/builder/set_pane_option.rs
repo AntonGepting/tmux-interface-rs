@@ -10,7 +10,7 @@ impl SetUserOption for SetPaneOption {}
 
 impl SetOptionExt for SetPaneOption {
     // unset if value = None
-    fn set<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+    fn set_ext<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         target: Option<U>,
         name: T,
         value: Option<S>,
@@ -30,7 +30,7 @@ impl SetOptionExt for SetPaneOption {
         cmd.build()
     }
 
-    fn unset<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
+    fn unset_ext<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
         target: Option<S>,
         name: T,
     ) -> TmuxCommand<'a> {
@@ -63,7 +63,7 @@ pub trait SetPaneOptionTrait: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, ALLOW_RENAME, switch.map(|s| s.to_string()))
+        Self::set_ext(target, ALLOW_RENAME, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -77,13 +77,13 @@ pub trait SetPaneOptionTrait: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, ALTERNATE_SCREEN, switch.map(|s| s.to_string()))
+        Self::set_ext(target, ALTERNATE_SCREEN, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
     ///
     /// tmux ^3.2:
-    /// ```
+    /// ```text
     /// remain-on-exit [on | off | failed]
     /// ```
     ///
@@ -99,7 +99,7 @@ pub trait SetPaneOptionTrait: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(
+        Self::set_ext(
             target,
             REMAIN_ON_EXIT,
             remain_on_exit.map(|s| s.to_string()),
@@ -118,7 +118,7 @@ pub trait SetPaneOptionTrait: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_ACTIVE_STYLE, style)
+        Self::set_ext(target, WINDOW_ACTIVE_STYLE, style)
     }
 
     /// ### Manual
@@ -133,7 +133,7 @@ pub trait SetPaneOptionTrait: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STYLE, style)
+        Self::set_ext(target, WINDOW_STYLE, style)
     }
 
     /// ### Manual
@@ -147,7 +147,7 @@ pub trait SetPaneOptionTrait: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
+        Self::set_ext(target, SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -160,6 +160,6 @@ pub trait SetPaneOptionTrait: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>> + std::fmt::Display,
     {
-        Self::set(target, format!("{}{}", USER_OPTION_MARKER, name), value)
+        Self::set_ext(target, format!("{}{}", USER_OPTION_MARKER, name), value)
     }
 }

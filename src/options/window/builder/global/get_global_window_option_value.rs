@@ -14,7 +14,7 @@ impl GetWindowOption for GetGlobalWindowOptionValue {}
 impl GetUserOption for GetGlobalWindowOptionValue {}
 
 impl GetOptionExt for GetGlobalWindowOptionValue {
-    fn get<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+    fn get_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         target: Option<S>,
         name: T,
     ) -> TmuxCommand<'a> {

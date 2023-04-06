@@ -138,6 +138,22 @@
 //!   </tbody>
 //! </table>
 //!
+//! # 2.3. XXX
+//!
+//! ```
+//! let server_options = GetServerOption::
+//! ```
+//!
+//! # 2.3. Control
+//!
+//! * [`ServerOptionsCtl`]
+//! * [`SessionOptionsCtl`]
+//!     * [`GlobalSessionOptionsCtl`]
+//!     * [`LocalSessionOptionsCtl`]
+//! * [`WindowOptionsCtl`]
+//!     * [`GlobalWindowOptionsCtl`]
+//!     * [`LocalWindowOptionsCtl`]
+//! * [`PaneOptionsCtl`]
 //!
 //! # 2.3. Implementation
 //!

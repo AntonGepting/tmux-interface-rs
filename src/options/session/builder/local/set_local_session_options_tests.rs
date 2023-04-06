@@ -363,7 +363,7 @@ fn set_local_session_options_tests() {
     let options = options.visual_silence(Some(target), Some(Activity::Off));
     #[cfg(feature = "tmux_1_6")]
     let options = options.word_separators(Some(target), Some("!\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~"));
-    let options = options.user_option(Some(target), "user-option-name", Some("value"));
+    let options = options.user_option_ext(Some(target), "user-option-name", Some("value"));
 
     let options = options.build().to_string();
 

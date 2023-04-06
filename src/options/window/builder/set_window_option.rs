@@ -22,7 +22,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, ACTIVITY_ACTION, activity.map(|s| s.to_string()))
+        Self::set_ext(target, ACTIVITY_ACTION, activity.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -36,7 +36,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, AGGRESSIVE_RESIZE, switch.map(|s| s.to_string()))
+        Self::set_ext(target, AGGRESSIVE_RESIZE, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -78,7 +78,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, AUTOMATIC_RENAME, switch.map(|s| s.to_string()))
+        Self::set_ext(target, AUTOMATIC_RENAME, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -93,7 +93,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, AUTOMATIC_RENAME_FORMAT, format)
+        Self::set_ext(target, AUTOMATIC_RENAME_FORMAT, format)
     }
 
     /// ### Manual
@@ -137,7 +137,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, CLOCK_MODE_COLOUR, colour)
+        Self::set_ext(target, CLOCK_MODE_COLOUR, colour)
     }
 
     /// ### Manual
@@ -154,7 +154,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(
+        Self::set_ext(
             target,
             CLOCK_MODE_STYLE,
             clock_mode_style.map(|s| s.to_string()),
@@ -214,7 +214,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, MAIN_PANE_HEIGHT, height.map(|s| s.to_string()))
+        Self::set_ext(target, MAIN_PANE_HEIGHT, height.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -228,7 +228,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, MAIN_PANE_WIDTH, width.map(|s| s.to_string()))
+        Self::set_ext(target, MAIN_PANE_WIDTH, width.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -287,7 +287,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, MODE_KEYS, mode_keys.map(|s| s.to_string()))
+        Self::set_ext(target, MODE_KEYS, mode_keys.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -321,7 +321,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, MODE_STYLE, style)
+        Self::set_ext(target, MODE_STYLE, style)
     }
 
     /// ### Manual
@@ -335,7 +335,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, MONITOR_ACTIVITY, switch.map(|s| s.to_string()))
+        Self::set_ext(target, MONITOR_ACTIVITY, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -364,7 +364,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, MONITOR_BELL, switch.map(|s| s.to_string()))
+        Self::set_ext(target, MONITOR_BELL, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -378,7 +378,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, MONITOR_SILENCE, interval.map(|s| s.to_string()))
+        Self::set_ext(target, MONITOR_SILENCE, interval.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -392,7 +392,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, OTHER_PANE_HEIGHT, height.map(|s| s.to_string()))
+        Self::set_ext(target, OTHER_PANE_HEIGHT, height.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -406,7 +406,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, OTHER_PANE_WIDTH, width.map(|s| s.to_string()))
+        Self::set_ext(target, OTHER_PANE_WIDTH, width.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -421,7 +421,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, PANE_ACTIVE_BORDER_STYLE, style)
+        Self::set_ext(target, PANE_ACTIVE_BORDER_STYLE, style)
     }
 
     /// ### Manual
@@ -435,7 +435,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, PANE_BASE_INDEX, index.map(|s| s.to_string()))
+        Self::set_ext(target, PANE_BASE_INDEX, index.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -450,7 +450,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, PANE_BORDER_FORMAT, format)
+        Self::set_ext(target, PANE_BORDER_FORMAT, format)
     }
 
     /// ### Manual
@@ -467,7 +467,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(
+        Self::set_ext(
             target,
             PANE_BORDER_STATUS,
             pane_border_status.map(|s| s.to_string()),
@@ -486,7 +486,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, PANE_BORDER_STYLE, style)
+        Self::set_ext(target, PANE_BORDER_STYLE, style)
     }
 
     /// ### Manual
@@ -852,7 +852,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_ACTIVITY_STYLE, style)
+        Self::set_ext(target, WINDOW_STATUS_ACTIVITY_STYLE, style)
     }
 
     /// ### Manual
@@ -867,7 +867,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_BELL_STYLE, style)
+        Self::set_ext(target, WINDOW_STATUS_BELL_STYLE, style)
     }
 
     /// ### Manual
@@ -900,7 +900,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         T: Into<Cow<'a, str>>,
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_CURRENT_FORMAT, string)
+        Self::set_ext(target, WINDOW_STATUS_CURRENT_FORMAT, string)
     }
 
     /// ### Manual
@@ -963,7 +963,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_CURRENT_STYLE, style)
+        Self::set_ext(target, WINDOW_STATUS_CURRENT_STYLE, style)
     }
 
     /// ### Manual
@@ -978,7 +978,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_FORMAT, string)
+        Self::set_ext(target, WINDOW_STATUS_FORMAT, string)
     }
 
     /// ### Manual
@@ -993,7 +993,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_LAST_STYLE, style)
+        Self::set_ext(target, WINDOW_STATUS_LAST_STYLE, style)
     }
 
     /// ### Manual
@@ -1008,7 +1008,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_SEPARATOR, string)
+        Self::set_ext(target, WINDOW_STATUS_SEPARATOR, string)
     }
 
     /// ### Manual
@@ -1023,7 +1023,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_STYLE, style)
+        Self::set_ext(target, WINDOW_STATUS_STYLE, style)
     }
 
     /// ### Manual
@@ -1037,7 +1037,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_SIZE, window_size.map(|s| s.to_string()))
+        Self::set_ext(target, WINDOW_SIZE, window_size.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -1081,7 +1081,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, WRAP_SEARCH, switch.map(|s| s.to_string()))
+        Self::set_ext(target, WRAP_SEARCH, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -1095,7 +1095,7 @@ pub trait SetWindowOptionExt: SetOptionExt {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, XTERM_KEYS, switch.map(|s| s.to_string()))
+        Self::set_ext(target, XTERM_KEYS, switch.map(|s| s.to_string()))
     }
 
     // XXX: user options?

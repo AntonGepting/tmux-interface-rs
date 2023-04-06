@@ -5,7 +5,7 @@ use std::borrow::Cow;
 pub struct GetPaneOptionValue;
 
 impl GetOptionExt for GetPaneOptionValue {
-    fn get<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
+    fn get_ext<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
         target: Option<T>,
         name: S,
     ) -> TmuxCommand<'a> {

@@ -9,20 +9,11 @@ impl SetServerOptionTrait for SetServerOption {}
 impl SetUserOption for SetServerOption {}
 
 impl SetOptionExt for SetServerOption {
-    fn set<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        target: Option<U>,
+    fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         name: T,
         value: Option<S>,
     ) -> TmuxCommand<'a> {
         let cmd = SetOption::new().server().option(name);
-        let cmd = match target {
-            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-            Some(target) => cmd.target(target),
-            #[cfg(feature = "tmux_3_0")]
-            Some(target) => cmd.target_pane(target),
-            None => cmd,
-        };
-
         let cmd = match value {
             Some(value) => cmd.value(value),
             None => cmd.unset(),
@@ -30,18 +21,8 @@ impl SetOptionExt for SetServerOption {
         cmd.build()
     }
 
-    fn unset<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
-        target: Option<S>,
-        name: T,
-    ) -> TmuxCommand<'a> {
+    fn unset<'a, T: Into<Cow<'a, str>>>(name: T) -> TmuxCommand<'a> {
         let cmd = SetOption::new().server().option(name).unset();
-        let cmd = match target {
-            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-            Some(target) => cmd.target(target),
-            #[cfg(feature = "tmux_3_0")]
-            Some(target) => cmd.target_pane(target),
-            None => cmd,
-        };
         cmd.build()
     }
 }

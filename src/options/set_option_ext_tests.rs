@@ -15,7 +15,7 @@ fn set_option_ext_tests() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "set";
 
-    let s = SetOptionExtTest::set(Some(target), name, Some(value)).to_string();
+    let s = SetOptionExtTest::set_ext(Some(target), name, Some(value)).to_string();
 
     let origin = format!("{} -t {} {} {}", cmd, target, name, value);
 

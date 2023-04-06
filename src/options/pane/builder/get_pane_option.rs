@@ -4,8 +4,9 @@ use std::borrow::Cow;
 
 pub struct GetPaneOption;
 
+// XXX: get without option  name, get_ext with name?
 impl GetOptionExt for GetPaneOption {
-    fn get<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
+    fn get_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         target: Option<S>,
         name: T,
     ) -> TmuxCommand<'a> {
@@ -39,7 +40,7 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::get(target, ALLOW_RENAME)
+        Self::get_ext(target, ALLOW_RENAME)
     }
 
     /// ### Manual
@@ -53,13 +54,13 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::get(target, ALTERNATE_SCREEN)
+        Self::get_ext(target, ALTERNATE_SCREEN)
     }
 
     /// ### Manual
     ///
     /// tmux ^3.2:
-    /// ```
+    /// ```text
     /// remain-on-exit [on | off | failed]
     /// ```
     ///
@@ -72,7 +73,7 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::get(target, REMAIN_ON_EXIT)
+        Self::get_ext(target, REMAIN_ON_EXIT)
     }
 
     /// ### Manual
@@ -86,7 +87,7 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_ACTIVE_STYLE)
+        Self::get_ext(target, WINDOW_ACTIVE_STYLE)
     }
 
     /// ### Manual
@@ -100,7 +101,7 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STYLE)
+        Self::get_ext(target, WINDOW_STYLE)
     }
 
     /// ### Manual
@@ -114,6 +115,6 @@ pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::get(target, SYNCHRONIZE_PANES)
+        Self::get_ext(target, SYNCHRONIZE_PANES)
     }
 }

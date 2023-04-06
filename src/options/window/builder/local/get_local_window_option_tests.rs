@@ -929,7 +929,7 @@ fn get_local_window_option_tests() {
     {
         let origin = format!("{} {}", cmd, "@user-option-name");
         let set_option =
-            GetLocalWindowOption::user_option(Some(target), "user-option-name").to_string();
+            GetLocalWindowOption::user_option_ext(Some(target), "user-option-name").to_string();
         assert_eq!(origin, set_option);
     }
 }

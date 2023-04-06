@@ -370,7 +370,7 @@ fn get_local_session_option_tests() {
     {
         let origin = format!("{} {}", cmd, "@user-option-name");
         let set_option =
-            GetLocalSessionOption::user_option(Some(target), "user-option-name").to_string();
+            GetLocalSessionOption::user_option_ext(Some(target), "user-option-name").to_string();
         assert_eq!(origin, set_option);
     }
 }

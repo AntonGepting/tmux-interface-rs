@@ -1,9 +1,10 @@
 use crate::options::{GetSessionOption, SessionOptions, SetSessionOption, SetSessionOptions};
 use crate::{
     Action, Activity, DetachOnDestroy, Error, Status, StatusJustify, StatusKeys, StatusPosition,
-    Switch, TmuxCommand, TmuxCommands, TmuxOutput,
+    Switch, TmuxCommand, TmuxOutput,
 };
 use std::borrow::Cow;
+use std::str::FromStr;
 
 // pub struct SessionOptionsCtl;
 
@@ -13,11 +14,38 @@ use std::borrow::Cow;
 pub trait SessionOptionsCtl<'a> {
     type Getter: GetSessionOption;
     type Setter: SetSessionOption;
+    type GetterAll: GetSessionOption;
     type SetterMultiple: SetSessionOptions<'a>;
 
     fn target(&self) -> Option<Cow<'a, str>>;
 
-    fn get_all(&self) -> Result<SessionOptions<'a>, Error>;
+    fn invoker(&self) -> fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>;
+
+    /// # Examples
+    ///
+    /// ```
+    /// use crate::tmux_interface::{LocalSessionOptionsCtl, SessionOptionsCtl};
+    ///
+    /// let session_options = LocalSessionOptionsCtl::default().get_all().unwrap();
+    ///
+    /// println!("{}", session_options);
+    /// ```
+    fn get_all(&self) -> Result<SessionOptions<'a>, Error> {
+        Self::get_all_ext(self.target(), self.invoker())
+    }
+
+    fn get_all_ext(
+        target: Option<Cow<'a, str>>,
+        invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    ) -> Result<SessionOptions<'a>, Error> {
+        let cmd = Self::GetterAll::all(target);
+        let output = (invoker)(cmd)?.to_string();
+        SessionOptions::from_str(&output)
+    }
+
+    fn set_all(&self, session_options: SessionOptions<'a>) -> Result<TmuxOutput, Error> {
+        Self::set_all_ext(self.target(), self.invoker(), session_options)
+    }
 
     /// # Examples
     ///
@@ -28,270 +56,287 @@ pub trait SessionOptionsCtl<'a> {
     /// LocalSessionOptionsCtl::default().set_all(session_options).unwrap();
     /// ```
     fn set_all_ext(
-        &self,
-        invoke: &dyn Fn(&TmuxCommands<'a>) -> Result<TmuxOutput, Error>,
+        target: Option<Cow<'a, str>>,
+        invoke: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
         session_options: SessionOptions<'a>,
     ) -> Result<TmuxOutput, Error> {
         let cmds = Self::SetterMultiple::new();
 
         #[cfg(feature = "tmux_2_6")]
-        let cmds = cmds.activity_action(self.target(), session_options.activity_action);
+        let cmds = cmds.activity_action(target.clone(), session_options.activity_action);
 
         #[cfg(feature = "tmux_1_8")]
-        let cmds = cmds.assume_paste_time(self.target(), session_options.assume_paste_time);
+        let cmds = cmds.assume_paste_time(target.clone(), session_options.assume_paste_time);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.base_index(self.target(), session_options.base_index);
+        let cmds = cmds.base_index(target.clone(), session_options.base_index);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.bell_action(self.target(), session_options.bell_action);
+        let cmds = cmds.bell_action(target.clone(), session_options.bell_action);
 
         #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
-        let cmds = cmds.bell_on_alert(self.target(), session_options.bell_on_alert);
+        let cmds = cmds.bell_on_alert(target.clone(), session_options.bell_on_alert);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
-        let cmds = cmds.buffer_limit(self.target(), session_options.buffer_limit);
+        let cmds = cmds.buffer_limit(target.clone(), session_options.buffer_limit);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.default_command(self.target(), session_options.default_command);
+        let cmds = cmds.default_command(target.clone(), session_options.default_command);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.default_shell(self.target(), session_options.default_shell);
+        let cmds = cmds.default_shell(target.clone(), session_options.default_shell);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.default_path(self.target(), session_options.default_path);
+        let cmds = cmds.default_path(target.clone(), session_options.default_path);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-        let cmds = cmds.default_terminal(self.target(), session_options.default_terminal);
+        let cmds = cmds.default_terminal(target.clone(), session_options.default_terminal);
 
         #[cfg(feature = "tmux_2_9")]
-        let cmds = cmds.default_size(self.target(), session_options.default_size);
+        let cmds = cmds.default_size(target.clone(), session_options.default_size);
 
         #[cfg(feature = "tmux_1_4")]
-        let cmds = cmds.destroy_unattached(self.target(), session_options.destroy_unattached);
+        let cmds = cmds.destroy_unattached(target.clone(), session_options.destroy_unattached);
 
         #[cfg(feature = "tmux_1_4")]
-        let cmds = cmds.detach_on_destroy(self.target(), session_options.detach_on_destroy);
+        let cmds = cmds.detach_on_destroy(target.clone(), session_options.detach_on_destroy);
 
         #[cfg(feature = "tmux_1_2")]
         let cmds = cmds.display_panes_active_colour(
-            self.target(),
+            target.clone(),
             session_options.display_panes_active_colour,
         );
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.display_panes_colour(self.target(), session_options.display_panes_colour);
+        let cmds = cmds.display_panes_colour(target.clone(), session_options.display_panes_colour);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.display_panes_time(self.target(), session_options.display_panes_time);
+        let cmds = cmds.display_panes_time(target.clone(), session_options.display_panes_time);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.display_time(self.target(), session_options.display_time);
+        let cmds = cmds.display_time(target.clone(), session_options.display_time);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.history_limit(self.target(), session_options.history_limit);
+        let cmds = cmds.history_limit(target.clone(), session_options.history_limit);
 
         #[cfg(feature = "tmux_2_2")]
-        let cmds = cmds.key_table(self.target(), session_options.key_table);
+        let cmds = cmds.key_table(target.clone(), session_options.key_table);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.lock_after_time(self.target(), session_options.lock_after_time);
+        let cmds = cmds.lock_after_time(target.clone(), session_options.lock_after_time);
 
         #[cfg(feature = "tmux_1_1")]
-        let cmds = cmds.lock_command(self.target(), session_options.lock_command);
+        let cmds = cmds.lock_command(target.clone(), session_options.lock_command);
 
         #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
-        let cmds = cmds.lock_server(self.target(), session_options.lock_server);
+        let cmds = cmds.lock_server(target.clone(), session_options.lock_server);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.message_attr(self.target(), session_options.message_attr);
+        let cmds = cmds.message_attr(target.clone(), session_options.message_attr);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.message_bg(self.target(), session_options.message_bg);
+        let cmds = cmds.message_bg(target.clone(), session_options.message_bg);
 
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.message_command_attr(self.target(), session_options.message_command_attr);
+        let cmds = cmds.message_command_attr(target.clone(), session_options.message_command_attr);
 
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.message_command_bg(self.target(), session_options.message_command_bg);
+        let cmds = cmds.message_command_bg(target.clone(), session_options.message_command_bg);
 
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.message_command_bg(self.target(), session_options.message_command_bg);
+        let cmds = cmds.message_command_bg(target.clone(), session_options.message_command_bg);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.message_fg(self.target(), session_options.message_fg);
+        let cmds = cmds.message_fg(target.clone(), session_options.message_fg);
 
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.message_command_style(self.target(), session_options.message_command_style);
+        let cmds =
+            cmds.message_command_style(target.clone(), session_options.message_command_style);
 
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-        let cmds = cmds.message_limit(self.target(), session_options.message_limit);
+        let cmds = cmds.message_limit(target.clone(), session_options.message_limit);
 
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.message_style(self.target(), session_options.message_style);
+        let cmds = cmds.message_style(target.clone(), session_options.message_style);
 
         #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-        let cmds = cmds.mouse_resize_pane(self.target(), session_options.mouse_resize_pane);
+        let cmds = cmds.mouse_resize_pane(target.clone(), session_options.mouse_resize_pane);
 
         #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-        let cmds = cmds.mouse_select_pane(self.target(), session_options.mouse_select_pane);
+        let cmds = cmds.mouse_select_pane(target.clone(), session_options.mouse_select_pane);
 
         #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-        let cmds = cmds.mouse_select_window(self.target(), session_options.mouse_select_window);
+        let cmds = cmds.mouse_select_window(target.clone(), session_options.mouse_select_window);
 
         #[cfg(feature = "tmux_2_1")]
-        let cmds = cmds.mouse(self.target(), session_options.mouse);
+        let cmds = cmds.mouse(target.clone(), session_options.mouse);
 
         #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
-        let cmds = cmds.mouse_utf8(self.target(), session_options.mouse_utf8);
+        let cmds = cmds.mouse_utf8(target.clone(), session_options.mouse_utf8);
 
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-        let cmds = cmds.pane_active_border_bg(self.target(), session_options.pane_active_border_bg);
+        let cmds =
+            cmds.pane_active_border_bg(target.clone(), session_options.pane_active_border_bg);
 
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-        let cmds = cmds.pane_active_border_fg(self.target(), session_options.pane_active_border_fg);
+        let cmds =
+            cmds.pane_active_border_fg(target.clone(), session_options.pane_active_border_fg);
 
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-        let cmds = cmds.pane_border_bg(self.target(), session_options.pane_border_bg);
+        let cmds = cmds.pane_border_bg(target.clone(), session_options.pane_border_bg);
 
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-        let cmds = cmds.pane_border_fg(self.target(), session_options.pane_border_fg);
+        let cmds = cmds.pane_border_fg(target.clone(), session_options.pane_border_fg);
 
         #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
         let cmds =
-            cmds.pane_active_border_style(self.target(), session_options.pane_active_border_style);
+            cmds.pane_active_border_style(target.clone(), session_options.pane_active_border_style);
 
         #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-        let cmds = cmds.pane_border_style(self.target(), session_options.pane_border_style);
+        let cmds = cmds.pane_border_style(target.clone(), session_options.pane_border_style);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.prefix(self.target(), session_options.prefix);
+        let cmds = cmds.prefix(target.clone(), session_options.prefix);
 
         #[cfg(feature = "tmux_1_6")]
-        let cmds = cmds.prefix2(self.target(), session_options.prefix2);
+        let cmds = cmds.prefix2(target.clone(), session_options.prefix2);
 
         #[cfg(feature = "tmux_1_7")]
-        let cmds = cmds.renumber_windows(self.target(), session_options.renumber_windows);
+        let cmds = cmds.renumber_windows(target.clone(), session_options.renumber_windows);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.repeat_time(self.target(), session_options.repeat_time);
+        let cmds = cmds.repeat_time(target.clone(), session_options.repeat_time);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-        let cmds = cmds.set_remain_on_exit(self.target(), session_options.set_remain_on_exit);
+        let cmds = cmds.set_remain_on_exit(target.clone(), session_options.set_remain_on_exit);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.set_titles(self.target(), session_options.set_titles);
+        let cmds = cmds.set_titles(target.clone(), session_options.set_titles);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.set_titles_string(self.target(), session_options.set_titles_string);
+        let cmds = cmds.set_titles_string(target.clone(), session_options.set_titles_string);
 
         #[cfg(feature = "tmux_2_6")]
-        let cmds = cmds.silence_action(self.target(), session_options.silence_action);
+        let cmds = cmds.silence_action(target.clone(), session_options.silence_action);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.status(self.target(), session_options.status);
+        let cmds = cmds.status(target.clone(), session_options.status);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.status_attr(self.target(), session_options.status_attr);
+        let cmds = cmds.status_attr(target.clone(), session_options.status_attr);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.status_bg(self.target(), session_options.status_bg);
+        let cmds = cmds.status_bg(target.clone(), session_options.status_bg);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.status_fg(self.target(), session_options.status_fg);
+        let cmds = cmds.status_fg(target.clone(), session_options.status_fg);
 
         // #[cfg(feature = "tmux_2_9")]
-        // let cmds = cmds.status_format(self.target(), session_options.status_format);
-        unimplemented!();
+        // let cmds = cmds.status_format(target.clone(), session_options.status_format);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.status_interval(self.target(), session_options.status_interval);
+        let cmds = cmds.status_interval(target.clone(), session_options.status_interval);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.status_justify(self.target(), session_options.status_justify);
+        let cmds = cmds.status_justify(target.clone(), session_options.status_justify);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.status_keys(self.target(), session_options.status_keys);
+        let cmds = cmds.status_keys(target.clone(), session_options.status_keys);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.status_left(self.target(), session_options.status_left);
+        let cmds = cmds.status_left(target.clone(), session_options.status_left);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.status_left_attr(self.target(), session_options.status_left_attr);
+        let cmds = cmds.status_left_attr(target.clone(), session_options.status_left_attr);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.status_left_bg(self.target(), session_options.status_left_bg);
+        let cmds = cmds.status_left_bg(target.clone(), session_options.status_left_bg);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.status_left_fg(self.target(), session_options.status_left_fg);
+        let cmds = cmds.status_left_fg(target.clone(), session_options.status_left_fg);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.status_left_length(self.target(), session_options.status_left_length);
+        let cmds = cmds.status_left_length(target.clone(), session_options.status_left_length);
 
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.status_left_style(self.target(), session_options.status_left_style);
+        let cmds = cmds.status_left_style(target.clone(), session_options.status_left_style);
 
         #[cfg(feature = "tmux_1_7")]
-        let cmds = cmds.status_position(self.target(), session_options.status_position);
+        let cmds = cmds.status_position(target.clone(), session_options.status_position);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.status_right(self.target(), session_options.status_right);
+        let cmds = cmds.status_right(target.clone(), session_options.status_right);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.status_right_attr(self.target(), session_options.status_right_attr);
+        let cmds = cmds.status_right_attr(target.clone(), session_options.status_right_attr);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.status_right_bg(self.target(), session_options.status_right_bg);
+        let cmds = cmds.status_right_bg(target.clone(), session_options.status_right_bg);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.status_right_fg(self.target(), session_options.status_right_fg);
+        let cmds = cmds.status_right_fg(target.clone(), session_options.status_right_fg);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.status_right_length(self.target(), session_options.status_right_length);
+        let cmds = cmds.status_right_length(target.clone(), session_options.status_right_length);
 
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.status_right_style(self.target(), session_options.status_right_style);
+        let cmds = cmds.status_right_style(target.clone(), session_options.status_right_style);
 
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.status_style(self.target(), session_options.status_style);
+        let cmds = cmds.status_style(target.clone(), session_options.status_style);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-        let cmds = cmds.status_utf8(self.target(), session_options.status_utf8);
+        let cmds = cmds.status_utf8(target.clone(), session_options.status_utf8);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-        let cmds = cmds.terminal_overrides(self.target(), session_options.terminal_overrides);
+        let cmds = cmds.terminal_overrides(target.clone(), session_options.terminal_overrides);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.update_environment(self.target(), session_options.update_environment);
+        let cmds = cmds.update_environment(target.clone(), session_options.update_environment);
 
         #[cfg(all(feature = "tmux_26", not(feature = "tmux_3_0")))]
-        let cmds = cmds.user_keys(self.target(), session_options.user_keys);
+        let cmds = cmds.user_keys(target.clone(), session_options.user_keys);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.visual_activity(self.target(), session_options.visual_activity);
+        let cmds = cmds.visual_activity(target.clone(), session_options.visual_activity);
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.visual_bell(self.target(), session_options.visual_bell);
+        let cmds = cmds.visual_bell(target.clone(), session_options.visual_bell);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-        let cmds = cmds.visual_content(self.target(), session_options.visual_content);
+        let cmds = cmds.visual_content(target.clone(), session_options.visual_content);
 
         #[cfg(feature = "tmux_1_4")]
-        let cmds = cmds.visual_silence(self.target(), session_options.visual_silence);
+        let cmds = cmds.visual_silence(target.clone(), session_options.visual_silence);
 
         #[cfg(feature = "tmux_1_6")]
-        let cmds = cmds.word_separators(self.target(), session_options.word_separators);
+        let cmds = cmds.word_separators(target.clone(), session_options.word_separators);
 
-        // let cmds = cmds.user_options(self.target(), session_options.user_options);
+        // let cmds = cmds.user_options(target.clone(), session_options.user_options);
 
-        // let cmd = TmuxCommand::with_cmds(cmds.build());
+        let cmd = TmuxCommand::with_cmds(cmds.build());
 
-        invoke(&cmds.build())
+        invoke(cmd)
     }
 
-    fn get<T: std::str::FromStr>(&self, cmd: TmuxCommand<'a>) -> Result<Option<T>, Error>;
+    // fn get<T: std::str::FromStr>(&self, cmd: TmuxCommand<'a>) -> Result<Option<T>, Error>;
 
-    fn set(&self, cmd: TmuxCommand<'a>) -> Result<TmuxOutput, Error>;
+    // get and parse single line option
+    fn get<T: std::str::FromStr>(&self, cmd: TmuxCommand<'a>) -> Result<Option<T>, Error> {
+        let output = (self.invoker())(cmd)?.to_string();
+        let value = if output.is_empty() {
+            None
+        } else {
+            output.trim().parse::<T>().ok()
+        };
+        Ok(value)
+        // Ok((self.invoker)(cmd)?.to_string().trim().parse::<T>().ok())
+    }
+
+    // fn set(&self, cmd: TmuxCommand<'a>) -> Result<TmuxOutput, Error>;
+    fn set(&self, cmd: TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
+        (self.invoker())(cmd)
+    }
 
     /// ### Manual
     ///
@@ -300,11 +345,8 @@ pub trait SessionOptionsCtl<'a> {
     /// activity-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    fn get_activity_action<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Action>, Error> {
-        self.get(Self::Getter::activity_action(target))
+    fn get_activity_action(&self) -> Result<Option<Action>, Error> {
+        self.get(Self::Getter::activity_action(self.target()))
     }
 
     /// ### Manual
@@ -314,12 +356,11 @@ pub trait SessionOptionsCtl<'a> {
     /// activity-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    fn set_activity_action<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        activity_action: Option<Action>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::activity_action(target, activity_action))
+    fn set_activity_action(&self, activity_action: Option<Action>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::activity_action(
+            self.target(),
+            activity_action,
+        ))
     }
 
     /// ### Manual
@@ -329,11 +370,8 @@ pub trait SessionOptionsCtl<'a> {
     /// assume-paste-time milliseconds
     /// ```
     #[cfg(feature = "tmux_1_8")]
-    fn get_assume_paste_time<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::assume_paste_time(target))
+    fn get_assume_paste_time(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::assume_paste_time(self.target()))
     }
 
     /// ### Manual
@@ -343,12 +381,11 @@ pub trait SessionOptionsCtl<'a> {
     /// assume-paste-time milliseconds
     /// ```
     #[cfg(feature = "tmux_1_8")]
-    fn set_assume_paste_time<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        assume_paste_time: Option<usize>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::assume_paste_time(target, assume_paste_time))
+    fn set_assume_paste_time(&self, assume_paste_time: Option<usize>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::assume_paste_time(
+            self.target(),
+            assume_paste_time,
+        ))
     }
 
     /// ### Manual
@@ -358,11 +395,8 @@ pub trait SessionOptionsCtl<'a> {
     /// base-index index
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_base_index<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::base_index(target))
+    fn get_base_index(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::base_index(self.target()))
     }
 
     /// ### Manual
@@ -372,12 +406,8 @@ pub trait SessionOptionsCtl<'a> {
     /// base-index index
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_base_index<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        base_index: Option<usize>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::base_index(target, base_index))
+    fn set_base_index(&self, base_index: Option<usize>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::base_index(self.target(), base_index))
     }
 
     /// ### Manual
@@ -391,11 +421,8 @@ pub trait SessionOptionsCtl<'a> {
     /// bell-action [any | none | other]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_bell_action<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Action>, Error> {
-        self.get(Self::Getter::bell_action(target))
+    fn get_bell_action(&self) -> Result<Option<Action>, Error> {
+        self.get(Self::Getter::bell_action(self.target()))
     }
 
     /// ### Manual
@@ -409,12 +436,8 @@ pub trait SessionOptionsCtl<'a> {
     /// bell-action [any | none | other]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_bell_action<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        bell_action: Option<Action>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::bell_action(target, bell_action))
+    fn set_bell_action(&self, bell_action: Option<Action>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::bell_action(self.target(), bell_action))
     }
 
     /// ### Manual
@@ -424,11 +447,8 @@ pub trait SessionOptionsCtl<'a> {
     /// bell-on-alert [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
-    fn get_bell_on_alert<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::bell_on_alert(target))
+    fn get_bell_on_alert(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::bell_on_alert(self.target()))
     }
 
     /// ### Manual
@@ -438,12 +458,8 @@ pub trait SessionOptionsCtl<'a> {
     /// bell-on-alert [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
-    fn set_bell_on_alert<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        bell_on_alert: Option<Switch>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::bell_on_alert(target, bell_on_alert))
+    fn set_bell_on_alert(&self, bell_on_alert: Option<Switch>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::bell_on_alert(self.target(), bell_on_alert))
     }
 
     /// ### Manual
@@ -453,11 +469,8 @@ pub trait SessionOptionsCtl<'a> {
     /// buffer-limit limit
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
-    fn get_buffer_limit<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::buffer_limit(target))
+    fn get_buffer_limit(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::buffer_limit(self.target()))
     }
 
     /// ### Manual
@@ -467,12 +480,8 @@ pub trait SessionOptionsCtl<'a> {
     /// buffer-limit limit
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
-    fn set_buffer_limit<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        buffer_limit: Option<usize>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::buffer_limit(target, buffer_limit))
+    fn set_buffer_limit(&self, buffer_limit: Option<usize>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::buffer_limit(self.target(), buffer_limit))
     }
 
     /// ### Manual
@@ -482,11 +491,8 @@ pub trait SessionOptionsCtl<'a> {
     /// default-command shell-command
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_default_command<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::default_command(target))
+    fn get_default_command(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::default_command(self.target()))
     }
 
     /// ### Manual
@@ -496,12 +502,11 @@ pub trait SessionOptionsCtl<'a> {
     /// default-command shell-command
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_default_command<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        default_command: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::default_command(target, default_command))
+    fn set_default_command(&self, default_command: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::default_command(
+            self.target(),
+            default_command,
+        ))
     }
 
     /// ### Manual
@@ -511,11 +516,8 @@ pub trait SessionOptionsCtl<'a> {
     /// default-shell path
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_default_shell<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::default_shell(target))
+    fn get_default_shell(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::default_shell(self.target()))
     }
 
     /// ### Manual
@@ -525,12 +527,8 @@ pub trait SessionOptionsCtl<'a> {
     /// default-shell path
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_default_shell<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        default_shell: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::default_shell(target, default_shell))
+    fn set_default_shell(&self, default_shell: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::default_shell(self.target(), default_shell))
     }
 
     /// ### Manual
@@ -540,11 +538,8 @@ pub trait SessionOptionsCtl<'a> {
     /// default-path path
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_default_path<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::default_path(target))
+    fn get_default_path(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::default_path(self.target()))
     }
 
     /// ### Manual
@@ -554,12 +549,8 @@ pub trait SessionOptionsCtl<'a> {
     /// default-path path
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_default_path<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        default_path: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::default_path(target, default_path))
+    fn set_default_path(&self, default_path: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::default_path(self.target(), default_path))
     }
 
     /// ### Manual
@@ -569,11 +560,8 @@ pub trait SessionOptionsCtl<'a> {
     /// default-terminal terminal
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    fn get_default_terminal<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::default_terminal(target))
+    fn get_default_terminal(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::default_terminal(self.target()))
     }
 
     /// ### Manual
@@ -583,12 +571,11 @@ pub trait SessionOptionsCtl<'a> {
     /// default-terminal terminal
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    fn set_default_terminal<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        default_terminal: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::default_terminal(target, default_terminal))
+    fn set_default_terminal(&self, default_terminal: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::default_terminal(
+            self.target(),
+            default_terminal,
+        ))
     }
 
     /// ### Manual
@@ -598,12 +585,9 @@ pub trait SessionOptionsCtl<'a> {
     /// default-size XxY
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn get_default_size<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<(usize, usize)>, Error> {
+    fn get_default_size(&self) -> Result<Option<(usize, usize)>, Error> {
         unimplemented!()
-        // self.get(Self::Getter::default_size(target))
+        // self.get(Self::Getter::default_size(self.target()))
     }
 
     /// ### Manual
@@ -613,12 +597,8 @@ pub trait SessionOptionsCtl<'a> {
     /// default-size XxY
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn set_default_size<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        default_size: Option<(usize, usize)>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::default_size(target, default_size))
+    fn set_default_size(&self, default_size: Option<(usize, usize)>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::default_size(self.target(), default_size))
     }
 
     /// ### Manual
@@ -628,11 +608,8 @@ pub trait SessionOptionsCtl<'a> {
     /// destroy-unattached [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn get_destroy_unattached<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::destroy_unattached(target))
+    fn get_destroy_unattached(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::destroy_unattached(self.target()))
     }
     /// ### Manual
     ///
@@ -641,12 +618,15 @@ pub trait SessionOptionsCtl<'a> {
     /// destroy-unattached [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn set_destroy_unattached<S: Into<Cow<'a, str>>>(
+    fn set_destroy_unattached(
         &self,
-        target: Option<S>,
+
         destroy_unattached: Option<Switch>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::destroy_unattached(target, destroy_unattached))
+        self.set(Self::Setter::destroy_unattached(
+            self.target(),
+            destroy_unattached,
+        ))
     }
 
     /// ### Manual
@@ -661,11 +641,8 @@ pub trait SessionOptionsCtl<'a> {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn get_detach_on_destroy<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<DetachOnDestroy>, Error> {
-        self.get(Self::Getter::detach_on_destroy(target))
+    fn get_detach_on_destroy(&self) -> Result<Option<DetachOnDestroy>, Error> {
+        self.get(Self::Getter::detach_on_destroy(self.target()))
     }
 
     /// ### Manual
@@ -680,12 +657,15 @@ pub trait SessionOptionsCtl<'a> {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn set_detach_on_destroy<S: Into<Cow<'a, str>>>(
+    fn set_detach_on_destroy(
         &self,
-        target: Option<S>,
+
         detach_on_destroy: Option<DetachOnDestroy>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::detach_on_destroy(target, detach_on_destroy))
+        self.set(Self::Setter::detach_on_destroy(
+            self.target(),
+            detach_on_destroy,
+        ))
     }
 
     /// ### Manual
@@ -695,11 +675,8 @@ pub trait SessionOptionsCtl<'a> {
     /// display-panes-active-colour colour
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    fn get_display_panes_active_colour<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::display_panes_active_colour(target))
+    fn get_display_panes_active_colour(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::display_panes_active_colour(self.target()))
     }
 
     /// ### Manual
@@ -709,13 +686,13 @@ pub trait SessionOptionsCtl<'a> {
     /// display-panes-active-colour colour
     /// ```
     #[cfg(feature = "tmux_1_2")]
-    fn set_display_panes_active_colour<S: Into<Cow<'a, str>>>(
+    fn set_display_panes_active_colour(
         &self,
-        target: Option<S>,
+
         display_panes_active_colour: Option<String>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::display_panes_active_colour(
-            target,
+            self.target(),
             display_panes_active_colour,
         ))
     }
@@ -727,11 +704,8 @@ pub trait SessionOptionsCtl<'a> {
     /// display-panes-colour colour
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_display_panes_colour<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::display_panes_colour(target))
+    fn get_display_panes_colour(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::display_panes_colour(self.target()))
     }
 
     /// ### Manual
@@ -741,13 +715,13 @@ pub trait SessionOptionsCtl<'a> {
     /// display-panes-colour colour
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_display_panes_colour<S: Into<Cow<'a, str>>>(
+    fn set_display_panes_colour(
         &self,
-        target: Option<S>,
+
         display_panes_colour: Option<String>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::display_panes_colour(
-            target,
+            self.target(),
             display_panes_colour,
         ))
     }
@@ -759,11 +733,8 @@ pub trait SessionOptionsCtl<'a> {
     /// display-panes-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_display_panes_time<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::display_panes_time(target))
+    fn get_display_panes_time(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::display_panes_time(self.target()))
     }
 
     /// ### Manual
@@ -773,12 +744,15 @@ pub trait SessionOptionsCtl<'a> {
     /// display-panes-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_display_panes_time<S: Into<Cow<'a, str>>>(
+    fn set_display_panes_time(
         &self,
-        target: Option<S>,
+
         display_panes_time: Option<usize>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::display_panes_time(target, display_panes_time))
+        self.set(Self::Setter::display_panes_time(
+            self.target(),
+            display_panes_time,
+        ))
     }
 
     /// ### Manual
@@ -788,11 +762,8 @@ pub trait SessionOptionsCtl<'a> {
     /// display-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_display_time<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::display_time(target))
+    fn get_display_time(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::display_time(self.target()))
     }
 
     /// ### Manual
@@ -802,12 +773,8 @@ pub trait SessionOptionsCtl<'a> {
     /// display-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_display_time<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        display_time: Option<usize>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::display_time(target, display_time))
+    fn set_display_time(&self, display_time: Option<usize>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::display_time(self.target(), display_time))
     }
 
     /// ### Manual
@@ -817,11 +784,8 @@ pub trait SessionOptionsCtl<'a> {
     /// history-limit lines
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_history_limit<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::history_limit(target))
+    fn get_history_limit(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::history_limit(self.target()))
     }
 
     /// ### Manual
@@ -831,12 +795,8 @@ pub trait SessionOptionsCtl<'a> {
     /// history-limit lines
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_history_limit<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        history_limit: Option<usize>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::history_limit(target, history_limit))
+    fn set_history_limit(&self, history_limit: Option<usize>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::history_limit(self.target(), history_limit))
     }
 
     /// ### Manual
@@ -846,11 +806,8 @@ pub trait SessionOptionsCtl<'a> {
     /// key-table key-table
     /// ```
     #[cfg(feature = "tmux_2_2")]
-    fn get_key_table<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::key_table(target))
+    fn get_key_table(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::key_table(self.target()))
     }
 
     /// ### Manual
@@ -860,12 +817,8 @@ pub trait SessionOptionsCtl<'a> {
     /// key-table key-table
     /// ```
     #[cfg(feature = "tmux_2_2")]
-    fn set_key_table<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        key_table: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::key_table(target, key_table))
+    fn set_key_table(&self, key_table: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::key_table(self.target(), key_table))
     }
 
     /// ### Manual
@@ -875,11 +828,8 @@ pub trait SessionOptionsCtl<'a> {
     /// lock-after-time number
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_lock_after_time<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::lock_after_time(target))
+    fn get_lock_after_time(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::lock_after_time(self.target()))
     }
 
     /// ### Manual
@@ -889,12 +839,11 @@ pub trait SessionOptionsCtl<'a> {
     /// lock-after-time number
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_lock_after_time<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        lock_after_time: Option<usize>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::lock_after_time(target, lock_after_time))
+    fn set_lock_after_time(&self, lock_after_time: Option<usize>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::lock_after_time(
+            self.target(),
+            lock_after_time,
+        ))
     }
 
     /// ### Manual
@@ -904,11 +853,8 @@ pub trait SessionOptionsCtl<'a> {
     /// lock-command shell-command
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_lock_command<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::lock_command(target))
+    fn get_lock_command(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::lock_command(self.target()))
     }
 
     /// ### Manual
@@ -918,12 +864,8 @@ pub trait SessionOptionsCtl<'a> {
     /// lock-command shell-command
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_lock_command<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        lock_command: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::lock_command(target, lock_command))
+    fn set_lock_command(&self, lock_command: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::lock_command(self.target(), lock_command))
     }
 
     /// ### Manual
@@ -933,11 +875,8 @@ pub trait SessionOptionsCtl<'a> {
     /// lock-server [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
-    fn get_lock_server<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::lock_server(target))
+    fn get_lock_server(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::lock_server(self.target()))
     }
 
     /// ### Manual
@@ -947,12 +886,8 @@ pub trait SessionOptionsCtl<'a> {
     /// lock-server [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
-    fn set_lock_server<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        lock_server: Option<Switch>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::lock_server(target, lock_server))
+    fn set_lock_server(&self, lock_server: Option<Switch>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::lock_server(self.target(), lock_server))
     }
 
     /// ### Manual
@@ -962,11 +897,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_message_attr<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::message_attr(target))
+    fn get_message_attr(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::message_attr(self.target()))
     }
 
     /// ### Manual
@@ -976,12 +908,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_message_attr<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        message_attr: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::message_attr(target, message_attr))
+    fn set_message_attr(&self, message_attr: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::message_attr(self.target(), message_attr))
     }
 
     /// ### Manual
@@ -991,11 +919,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_message_bg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::message_bg(target))
+    fn get_message_bg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::message_bg(self.target()))
     }
 
     /// ### Manual
@@ -1005,12 +930,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_message_bg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        message_bg: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::message_bg(target, message_bg))
+    fn set_message_bg(&self, message_bg: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::message_bg(self.target(), message_bg))
     }
 
     /// ### Manual
@@ -1020,11 +941,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-command-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn get_message_command_attr<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::message_command_attr(target))
+    fn get_message_command_attr(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::message_command_attr(self.target()))
     }
 
     /// ### Manual
@@ -1051,11 +969,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-command-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn get_message_command_bg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::message_command_bg(target))
+    fn get_message_command_bg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::message_command_bg(self.target()))
     }
 
     /// ### Manual
@@ -1069,7 +984,10 @@ pub trait SessionOptionsCtl<'a> {
         &self,
         message_command_bg: Option<String>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::message_command_bg(target, message_command_bg))
+        self.set(Self::Setter::message_command_bg(
+            self.target(),
+            message_command_bg,
+        ))
     }
 
     /// ### Manual
@@ -1079,8 +997,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-command-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn get_default_size<S: Into<Cow<'a, str>>>(&self, target: Option<S>) -> Result<Option, Error> {
-        self.get(Self::Getter::default_size(target))
+    fn get_default_size(&self, target: Option<S>) -> Result<Option, Error> {
+        self.get(Self::Getter::default_size(self.target()))
     }
 
     /// ### Manual
@@ -1090,12 +1008,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-command-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn set_default_size<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        default_size: Option,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::default_size(target, default_size))
+    fn set_default_size(&self, default_size: Option) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::default_size(self.target(), default_size))
     }
 
     /// ### Manual
@@ -1120,11 +1034,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_message_fg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::message_fg(target))
+    fn get_message_fg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::message_fg(self.target()))
     }
 
     /// ### Manual
@@ -1134,12 +1045,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_message_fg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        message_fg: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::message_fg(target, message_fg))
+    fn set_message_fg(&self, message_fg: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::message_fg(self.target(), message_fg))
     }
 
     /// ### Manual
@@ -1149,11 +1056,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-command-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn get_message_command_style<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::message_command_style(target))
+    fn get_message_command_style(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::message_command_style(self.target()))
     }
 
     /// ### Manual
@@ -1163,13 +1067,13 @@ pub trait SessionOptionsCtl<'a> {
     /// message-command-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn set_message_command_style<S: Into<Cow<'a, str>>>(
+    fn set_message_command_style(
         &self,
-        target: Option<S>,
+
         message_command_style: Option<String>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::message_command_style(
-            target,
+            self.target(),
             message_command_style,
         ))
     }
@@ -1181,11 +1085,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-limit number
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    fn get_mesage_limit<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::mesage_limit(target))
+    fn get_mesage_limit(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::mesage_limit(self.target()))
     }
 
     /// ### Manual
@@ -1195,12 +1096,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-limit number
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    fn set_mesage_limit<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        message_limit: Option<usize>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mesage_limit(target, message_limit))
+    fn set_mesage_limit(&self, message_limit: Option<usize>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::mesage_limit(self.target(), message_limit))
     }
 
     /// ### Manual
@@ -1210,11 +1107,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn get_message_style<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::message_style(target))
+    fn get_message_style(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::message_style(self.target()))
     }
 
     /// ### Manual
@@ -1224,12 +1118,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn set_message_style<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        message_style: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::message_style(target, message_style))
+    fn set_message_style(&self, message_style: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::message_style(self.target(), message_style))
     }
 
     /// ### Manual
@@ -1239,11 +1129,8 @@ pub trait SessionOptionsCtl<'a> {
     /// mouse-resize-pane [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    fn get_mouse_resize_pane<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::mouse_resize_pane(target))
+    fn get_mouse_resize_pane(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::mouse_resize_pane(self.target()))
     }
 
     /// ### Manual
@@ -1253,12 +1140,15 @@ pub trait SessionOptionsCtl<'a> {
     /// mouse-resize-pane [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    fn set_mouse_resize_pane<S: Into<Cow<'a, str>>>(
+    fn set_mouse_resize_pane(
         &self,
-        target: Option<S>,
+
         mouse_resize_pane: Option<Switch>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mouse_resize_pane(target, mouse_resize_pane))
+        self.set(Self::Setter::mouse_resize_pane(
+            self.target(),
+            mouse_resize_pane,
+        ))
     }
 
     /// ### Manual
@@ -1268,11 +1158,8 @@ pub trait SessionOptionsCtl<'a> {
     /// mouse-select-pane [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    fn get_mouse_select_pane<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::mouse_select_pane(target))
+    fn get_mouse_select_pane(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::mouse_select_pane(self.target()))
     }
 
     /// ### Manual
@@ -1282,12 +1169,8 @@ pub trait SessionOptionsCtl<'a> {
     /// mouse-select-pane [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    fn set_mouse_select_pane<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        default_size: Option<Switch>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mouse_select_pane(target, default_size))
+    fn set_mouse_select_pane(&self, default_size: Option<Switch>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::mouse_select_pane(self.target(), default_size))
     }
 
     /// ### Manual
@@ -1297,11 +1180,8 @@ pub trait SessionOptionsCtl<'a> {
     /// mouse-select-window [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    fn get_select_window<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::select_window(target))
+    fn get_select_window(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::select_window(self.target()))
     }
 
     /// ### Manual
@@ -1311,12 +1191,8 @@ pub trait SessionOptionsCtl<'a> {
     /// mouse-select-window [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    fn set_select_window<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        select_window: Option<Switch>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::select_window(target, select_window))
+    fn set_select_window(&self, select_window: Option<Switch>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::select_window(self.target(), select_window))
     }
 
     /// ### Manual
@@ -1326,8 +1202,8 @@ pub trait SessionOptionsCtl<'a> {
     /// mouse [on | off]
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    fn get_mouse<S: Into<Cow<'a, str>>>(&self, target: Option<S>) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::mouse(target))
+    fn get_mouse(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::mouse(self.target()))
     }
 
     /// ### Manual
@@ -1337,12 +1213,8 @@ pub trait SessionOptionsCtl<'a> {
     /// mouse [on | off]
     /// ```
     #[cfg(feature = "tmux_2_1")]
-    fn set_mouse<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        mouse: Option<Switch>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mouse(target, mouse))
+    fn set_mouse(&self, mouse: Option<Switch>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::mouse(self.target(), mouse))
     }
 
     /// ### Manual
@@ -1352,11 +1224,8 @@ pub trait SessionOptionsCtl<'a> {
     /// mouse-utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
-    fn get_mouse_utf8<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::mouse_utf8(target))
+    fn get_mouse_utf8(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::mouse_utf8(self.target()))
     }
 
     /// ### Manual
@@ -1366,12 +1235,8 @@ pub trait SessionOptionsCtl<'a> {
     /// mouse-utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
-    fn set_mouse_utf8<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        mouse_utf8: Option<Switch>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mouse_utf8(target, mouse_utf8))
+    fn set_mouse_utf8(&self, mouse_utf8: Option<Switch>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::mouse_utf8(self.target(), mouse_utf8))
     }
 
     /// ### Manual
@@ -1381,11 +1246,8 @@ pub trait SessionOptionsCtl<'a> {
     /// pane-active-border-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn get_pane_active_border_bg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::pane_active_border_bg(target))
+    fn get_pane_active_border_bg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::pane_active_border_bg(self.target()))
     }
 
     /// ### Manual
@@ -1412,11 +1274,8 @@ pub trait SessionOptionsCtl<'a> {
     /// pane-active-border-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn get_pane_active_border_fg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::pane_active_border_fg(target))
+    fn get_pane_active_border_fg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::pane_active_border_fg(self.target()))
     }
 
     /// ### Manual
@@ -1443,11 +1302,8 @@ pub trait SessionOptionsCtl<'a> {
     /// pane-border-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn get_pane_border_bg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::pane_border_bg(target))
+    fn get_pane_border_bg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::pane_border_bg(self.target()))
     }
 
     /// ### Manual
@@ -1457,12 +1313,8 @@ pub trait SessionOptionsCtl<'a> {
     /// pane-border-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn set_pane_border_bg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        pane_border_bg: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::pane_border_bg(target, pane_border_bg))
+    fn set_pane_border_bg(&self, pane_border_bg: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::pane_border_bg(self.target(), pane_border_bg))
     }
 
     /// ### Manual
@@ -1472,11 +1324,8 @@ pub trait SessionOptionsCtl<'a> {
     /// pane-border-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn get_pane_border_fg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::pane_border_fg(target))
+    fn get_pane_border_fg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::pane_border_fg(self.target()))
     }
 
     /// ### Manual
@@ -1486,12 +1335,8 @@ pub trait SessionOptionsCtl<'a> {
     /// pane-border-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn set_pane_border_fg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        pane_border_fg: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::pane_border_fg(target, pane_border_fg))
+    fn set_pane_border_fg(&self, pane_border_fg: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::pane_border_fg(self.target(), pane_border_fg))
     }
 
     /// ### Manual
@@ -1501,11 +1346,8 @@ pub trait SessionOptionsCtl<'a> {
     /// pane-active-border-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    fn get_pane_active_border_style<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::pane_active_border_style(target))
+    fn get_pane_active_border_style(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::pane_active_border_style(self.target()))
     }
 
     /// ### Manual
@@ -1532,11 +1374,8 @@ pub trait SessionOptionsCtl<'a> {
     /// pane-border-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    fn get_pane_border_style<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::pane_border_style(target))
+    fn get_pane_border_style(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::pane_border_style(self.target()))
     }
 
     /// ### Manual
@@ -1550,7 +1389,10 @@ pub trait SessionOptionsCtl<'a> {
         &self,
         pane_border_style: Option<String>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::pane_border_style(target, pane_border_style))
+        self.set(Self::Setter::pane_border_style(
+            self.target(),
+            pane_border_style,
+        ))
     }
 
     /// ### Manual
@@ -1560,11 +1402,8 @@ pub trait SessionOptionsCtl<'a> {
     /// prefix key
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_prefix<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::prefix(target))
+    fn get_prefix(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::prefix(self.target()))
     }
 
     /// ### Manual
@@ -1574,12 +1413,8 @@ pub trait SessionOptionsCtl<'a> {
     /// prefix key
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_prefix<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        prefix: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::prefix(target, prefix))
+    fn set_prefix(&self, prefix: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::prefix(self.target(), prefix))
     }
 
     /// ### Manual
@@ -1589,11 +1424,8 @@ pub trait SessionOptionsCtl<'a> {
     /// prefix2 key
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    fn get_prefix2<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::prefix2(target))
+    fn get_prefix2(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::prefix2(self.target()))
     }
 
     /// ### Manual
@@ -1603,12 +1435,8 @@ pub trait SessionOptionsCtl<'a> {
     /// prefix2 key
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    fn set_prefix2<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        prefix2: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::prefix2(target, prefix2))
+    fn set_prefix2(&self, prefix2: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::prefix2(self.target(), prefix2))
     }
 
     /// ### Manual
@@ -1618,11 +1446,8 @@ pub trait SessionOptionsCtl<'a> {
     /// renumber-windows [on | off]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    fn get_renumber_windows<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::renumber_windows(target))
+    fn get_renumber_windows(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::renumber_windows(self.target()))
     }
 
     /// ### Manual
@@ -1632,12 +1457,11 @@ pub trait SessionOptionsCtl<'a> {
     /// renumber-windows [on | off]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    fn set_renumber_windows<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        renumber_windows: Option<Switch>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::renumber_windows(target, renumber_windows))
+    fn set_renumber_windows(&self, renumber_windows: Option<Switch>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::renumber_windows(
+            self.target(),
+            renumber_windows,
+        ))
     }
 
     /// ### Manual
@@ -1647,11 +1471,8 @@ pub trait SessionOptionsCtl<'a> {
     /// repeat-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_repeat_time<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::repeat_time(target))
+    fn get_repeat_time(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::repeat_time(self.target()))
     }
 
     /// ### Manual
@@ -1661,12 +1482,8 @@ pub trait SessionOptionsCtl<'a> {
     /// repeat-time time
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_repeat_time<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        repeat_time: Option<usize>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::repeat_time(target, repeat_time))
+    fn set_repeat_time(&self, repeat_time: Option<usize>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::repeat_time(self.target(), repeat_time))
     }
 
     /// ### Manual
@@ -1676,11 +1493,8 @@ pub trait SessionOptionsCtl<'a> {
     /// set-remain-on-exit [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-    fn get_set_remain_on_exit<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::set_remain_on_exit(target))
+    fn get_set_remain_on_exit(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::set_remain_on_exit(self.target()))
     }
 
     /// ### Manual
@@ -1690,12 +1504,15 @@ pub trait SessionOptionsCtl<'a> {
     /// set-remain-on-exit [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-    fn set_set_remain_on_exit<S: Into<Cow<'a, str>>>(
+    fn set_set_remain_on_exit(
         &self,
-        target: Option<S>,
+
         set_remain_on_exit: Option<Switch>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::set_remain_on_exit(target, set_remain_on_exit))
+        self.set(Self::Setter::set_remain_on_exit(
+            self.target(),
+            set_remain_on_exit,
+        ))
     }
 
     /// ### Manual
@@ -1705,11 +1522,8 @@ pub trait SessionOptionsCtl<'a> {
     /// set-titles [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_set_titles<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::set_titles(target))
+    fn get_set_titles(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::set_titles(self.target()))
     }
 
     /// ### Manual
@@ -1719,12 +1533,8 @@ pub trait SessionOptionsCtl<'a> {
     /// set-titles [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_set_titles<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        set_titles: Option<Switch>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::set_titles(target, set_titles))
+    fn set_set_titles(&self, set_titles: Option<Switch>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::set_titles(self.target(), set_titles))
     }
 
     /// ### Manual
@@ -1734,11 +1544,8 @@ pub trait SessionOptionsCtl<'a> {
     /// set-titles-string string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_set_titles_string<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::set_titles_string(target))
+    fn get_set_titles_string(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::set_titles_string(self.target()))
     }
 
     /// ### Manual
@@ -1748,12 +1555,15 @@ pub trait SessionOptionsCtl<'a> {
     /// set-titles-string string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_set_titles_string<S: Into<Cow<'a, str>>>(
+    fn set_set_titles_string(
         &self,
-        target: Option<S>,
+
         set_titles_string: Option<String>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::set_titles_string(target, set_titles_string))
+        self.set(Self::Setter::set_titles_string(
+            self.target(),
+            set_titles_string,
+        ))
     }
 
     /// ### Manual
@@ -1763,11 +1573,8 @@ pub trait SessionOptionsCtl<'a> {
     /// silence-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    fn get_silence_action<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Action>, Error> {
-        self.get(Self::Getter::silence_action(target))
+    fn get_silence_action(&self) -> Result<Option<Action>, Error> {
+        self.get(Self::Getter::silence_action(self.target()))
     }
 
     /// ### Manual
@@ -1777,12 +1584,8 @@ pub trait SessionOptionsCtl<'a> {
     /// silence-action [any | none | current | other]
     /// ```
     #[cfg(feature = "tmux_2_6")]
-    fn set_silence_action<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        silence_action: Option<Action>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::silence_action(target, silence_action))
+    fn set_silence_action(&self, silence_action: Option<Action>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::silence_action(self.target(), silence_action))
     }
 
     /// ### Manual
@@ -1796,11 +1599,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status [off | on]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_status<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Status>, Error> {
-        self.get(Self::Getter::status(target))
+    fn get_status(&self) -> Result<Option<Status>, Error> {
+        self.get(Self::Getter::status(self.target()))
     }
 
     /// ### Manual
@@ -1814,12 +1614,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status [off | on]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_status<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status: Option<Status>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status(target, status))
+    fn set_status(&self, status: Option<Status>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status(self.target(), status))
     }
 
     /// ### Manual
@@ -1829,11 +1625,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_status_attr<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_attr(target))
+    fn get_status_attr(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_attr(self.target()))
     }
 
     /// ### Manual
@@ -1843,12 +1636,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_status_attr<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_attr: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_attr(target, status_attr))
+    fn set_status_attr(&self, status_attr: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_attr(self.target(), status_attr))
     }
 
     /// ### Manual
@@ -1858,11 +1647,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_status_bg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_bg(target))
+    fn get_status_bg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_bg(self.target()))
     }
 
     /// ### Manual
@@ -1872,12 +1658,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_status_bg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_bg: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_bg(target, status_bg))
+    fn set_status_bg(&self, status_bg: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_bg(self.target(), status_bg))
     }
 
     /// ### Manual
@@ -1887,11 +1669,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_status_fg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_fg(target))
+    fn get_status_fg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_fg(self.target()))
     }
 
     /// ### Manual
@@ -1901,12 +1680,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_status_fg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_fg: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_fg(target, status_fg))
+    fn set_status_fg(&self, status_fg: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_fg(self.target(), status_fg))
     }
 
     /// ### Manual
@@ -1916,11 +1691,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn get_status_format<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_format(target))
+    fn get_status_format(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_format(self.target()))
     }
 
     /// ### Manual
@@ -1930,18 +1702,13 @@ pub trait SessionOptionsCtl<'a> {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn set_status_format<S, I, T>(
-        &self,
-        target: Option<T>,
-        status_format: Option<I>,
-    ) -> Result<TmuxOutput, Error>
+    fn set_status_format<S, I>(&self, status_format: Option<I>) -> Result<TmuxOutput, Error>
     where
-        T: Into<Cow<'a, str>> + Clone,
         S: Into<Cow<'a, str>>,
         I: IntoIterator<Item = S>,
     {
         unimplemented!();
-        // self.set(Self::Setter::status_format(target, status_format))
+        // self.set(Self::Setter::status_format(self.target(), status_format))
     }
 
     /// ### Manual
@@ -1951,11 +1718,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-interval interval
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_status_interval<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::status_interval(target))
+    fn get_status_interval(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::status_interval(self.target()))
     }
 
     /// ### Manual
@@ -1965,12 +1729,11 @@ pub trait SessionOptionsCtl<'a> {
     /// status-interval interval
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_status_interval<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_interval: Option<usize>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_interval(target, status_interval))
+    fn set_status_interval(&self, status_interval: Option<usize>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_interval(
+            self.target(),
+            status_interval,
+        ))
     }
 
     /// ### Manual
@@ -1980,11 +1743,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-justify [left | centre | right]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_status_justify<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<StatusJustify>, Error> {
-        self.get(Self::Getter::status_justify(target))
+    fn get_status_justify(&self) -> Result<Option<StatusJustify>, Error> {
+        self.get(Self::Getter::status_justify(self.target()))
     }
 
     /// ### Manual
@@ -1994,12 +1754,12 @@ pub trait SessionOptionsCtl<'a> {
     /// status-justify [left | centre | right]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_status_justify<S: Into<Cow<'a, str>>>(
+    fn set_status_justify(
         &self,
-        target: Option<S>,
+
         status_justify: Option<StatusJustify>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_justify(target, status_justify))
+        self.set(Self::Setter::status_justify(self.target(), status_justify))
     }
 
     /// ### Manual
@@ -2009,11 +1769,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-keys [vi | emacs]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_status_keys<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<StatusKeys>, Error> {
-        self.get(Self::Getter::status_keys(target))
+    fn get_status_keys(&self) -> Result<Option<StatusKeys>, Error> {
+        self.get(Self::Getter::status_keys(self.target()))
     }
 
     /// ### Manual
@@ -2023,12 +1780,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-keys [vi | emacs]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_status_keys<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_keys: Option<StatusKeys>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_keys(target, status_keys))
+    fn set_status_keys(&self, status_keys: Option<StatusKeys>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_keys(self.target(), status_keys))
     }
 
     /// ### Manual
@@ -2038,11 +1791,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_status_left<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_left(target))
+    fn get_status_left(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_left(self.target()))
     }
 
     /// ### Manual
@@ -2052,12 +1802,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_status_left<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_left: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_left(target, status_left))
+    fn set_status_left(&self, status_left: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_left(self.target(), status_left))
     }
 
     /// ### Manual
@@ -2067,11 +1813,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_status_left_attr<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_left_attr(target))
+    fn get_status_left_attr(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_left_attr(self.target()))
     }
 
     /// ### Manual
@@ -2081,12 +1824,11 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_status_left_attr<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_left_attr: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_left_attr(target, status_left_attr))
+    fn set_status_left_attr(&self, status_left_attr: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_left_attr(
+            self.target(),
+            status_left_attr,
+        ))
     }
 
     /// ### Manual
@@ -2096,11 +1838,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_status_left_bg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_left_bg(target))
+    fn get_status_left_bg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_left_bg(self.target()))
     }
 
     /// ### Manual
@@ -2110,12 +1849,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_status_left_bg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_left_bg: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_left_bg(target, status_left_bg))
+    fn set_status_left_bg(&self, status_left_bg: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_left_bg(self.target(), status_left_bg))
     }
 
     /// ### Manual
@@ -2125,11 +1860,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_status_left_fg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_left_fg(target))
+    fn get_status_left_fg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_left_fg(self.target()))
     }
 
     /// ### Manual
@@ -2139,12 +1871,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_status_left_fg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_left_fg: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_left_fg(target, status_left_fg))
+    fn set_status_left_fg(&self, status_left_fg: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_left_fg(self.target(), status_left_fg))
     }
 
     /// ### Manual
@@ -2154,11 +1882,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left-length length
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_status_left_length<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::status_left_length(target))
+    fn get_status_left_length(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::status_left_length(self.target()))
     }
 
     /// ### Manual
@@ -2168,12 +1893,15 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left-length length
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_status_left_length<S: Into<Cow<'a, str>>>(
+    fn set_status_left_length(
         &self,
-        target: Option<S>,
+
         status_left_length: Option<usize>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_left_length(target, status_left_length))
+        self.set(Self::Setter::status_left_length(
+            self.target(),
+            status_left_length,
+        ))
     }
 
     /// ### Manual
@@ -2183,11 +1911,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn get_status_left_style<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_left_style(target))
+    fn get_status_left_style(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_left_style(self.target()))
     }
 
     /// ### Manual
@@ -2197,12 +1922,15 @@ pub trait SessionOptionsCtl<'a> {
     /// status-left-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn set_status_left_style<S: Into<Cow<'a, str>>>(
+    fn set_status_left_style(
         &self,
-        target: Option<S>,
+
         status_left_style: Option<String>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_left_style(target, status_left_style))
+        self.set(Self::Setter::status_left_style(
+            self.target(),
+            status_left_style,
+        ))
     }
 
     /// ### Manual
@@ -2212,11 +1940,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-position [top | bottom]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    fn get_status_position<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<StatusPosition>, Error> {
-        self.get(Self::Getter::status_position(target))
+    fn get_status_position(&self) -> Result<Option<StatusPosition>, Error> {
+        self.get(Self::Getter::status_position(self.target()))
     }
 
     /// ### Manual
@@ -2226,12 +1951,15 @@ pub trait SessionOptionsCtl<'a> {
     /// status-position [top | bottom]
     /// ```
     #[cfg(feature = "tmux_1_7")]
-    fn set_status_position<S: Into<Cow<'a, str>>>(
+    fn set_status_position(
         &self,
-        target: Option<S>,
+
         status_position: Option<StatusPosition>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_position(target, status_position))
+        self.set(Self::Setter::status_position(
+            self.target(),
+            status_position,
+        ))
     }
 
     /// ### Manual
@@ -2241,11 +1969,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-right string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_status_right<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_right(target))
+    fn get_status_right(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_right(self.target()))
     }
 
     /// ### Manual
@@ -2255,12 +1980,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-right string
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_status_right<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_right: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_right(target, status_right))
+    fn set_status_right(&self, status_right: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_right(self.target(), status_right))
     }
 
     /// ### Manual
@@ -2270,11 +1991,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-right-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_status_right_attr<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_right_attr(target))
+    fn get_status_right_attr(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_right_attr(self.target()))
     }
 
     /// ### Manual
@@ -2288,7 +2006,10 @@ pub trait SessionOptionsCtl<'a> {
         &self,
         status_right_attr: Option<String>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_right_attr(target, status_right_attr))
+        self.set(Self::Setter::status_right_attr(
+            self.target(),
+            status_right_attr,
+        ))
     }
 
     /// ### Manual
@@ -2298,11 +2019,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-right-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_default_size<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::default_size(target))
+    fn get_default_size(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::default_size(self.target()))
     }
 
     /// ### Manual
@@ -2312,12 +2030,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-right-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_default_size<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        default_size: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::default_size(target, default_size))
+    fn set_default_size(&self, default_size: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::default_size(self.target(), default_size))
     }
 
     /// ### Manual
@@ -2327,11 +2041,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-right-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_status_right_fg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_right_fg(target))
+    fn get_status_right_fg(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_right_fg(self.target()))
     }
 
     /// ### Manual
@@ -2341,12 +2052,11 @@ pub trait SessionOptionsCtl<'a> {
     /// status-right-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_status_right_fg<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_right_fg: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_right_fg(target, status_right_fg))
+    fn set_status_right_fg(&self, status_right_fg: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_right_fg(
+            self.target(),
+            status_right_fg,
+        ))
     }
 
     /// ### Manual
@@ -2356,11 +2066,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-right-length length
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_status_right_length<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::status_right_length(target))
+    fn get_status_right_length(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::status_right_length(self.target()))
     }
 
     /// ### Manual
@@ -2370,13 +2077,13 @@ pub trait SessionOptionsCtl<'a> {
     /// status-right-length length
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_status_right_length<S: Into<Cow<'a, str>>>(
+    fn set_status_right_length(
         &self,
-        target: Option<S>,
+
         status_right_length: Option<usize>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::status_right_length(
-            target,
+            self.target(),
             status_right_length,
         ))
     }
@@ -2388,11 +2095,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-right-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn get_status_right_style<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_right_style(target))
+    fn get_status_right_style(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_right_style(self.target()))
     }
 
     /// ### Manual
@@ -2402,12 +2106,15 @@ pub trait SessionOptionsCtl<'a> {
     /// status-right-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn set_status_right_style<S: Into<Cow<'a, str>>>(
+    fn set_status_right_style(
         &self,
-        target: Option<S>,
+
         status_right_style: Option<String>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_right_style(target, status_right_style))
+        self.set(Self::Setter::status_right_style(
+            self.target(),
+            status_right_style,
+        ))
     }
 
     /// ### Manual
@@ -2417,11 +2124,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn get_status_style<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_style(target))
+    fn get_status_style(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::status_style(self.target()))
     }
 
     /// ### Manual
@@ -2431,12 +2135,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-style style
     /// ```
     #[cfg(feature = "tmux_1_9")]
-    fn set_status_style<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_style: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_style(target, status_style))
+    fn set_status_style(&self, status_style: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_style(self.target(), status_style))
     }
 
     /// ### Manual
@@ -2446,11 +2146,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    fn get_status_utf8<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::status_utf8(target))
+    fn get_status_utf8(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::status_utf8(self.target()))
     }
 
     /// ### Manual
@@ -2460,12 +2157,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-utf8 [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    fn set_status_utf8<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        status_utf8: Option<Switch>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::status_utf8(target, status_utf8))
+    fn set_status_utf8(&self, status_utf8: Option<Switch>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::status_utf8(self.target(), status_utf8))
     }
 
     /// ### Manual
@@ -2475,11 +2168,8 @@ pub trait SessionOptionsCtl<'a> {
     /// terminal-overrides string
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    fn get_terminal_overrides<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::terminal_overrides(target))
+    fn get_terminal_overrides(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::terminal_overrides(self.target()))
     }
 
     /// ### Manual
@@ -2493,7 +2183,10 @@ pub trait SessionOptionsCtl<'a> {
         &self,
         terminal_overrides: Option<String>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::terminal_overrides(target, terminal_overrides))
+        self.set(Self::Setter::terminal_overrides(
+            self.target(),
+            terminal_overrides,
+        ))
     }
 
     /// ### Manual
@@ -2503,11 +2196,8 @@ pub trait SessionOptionsCtl<'a> {
     /// update-environment[] variable
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_update_environment<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::update_environment(target))
+    fn get_update_environment(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::update_environment(self.target()))
     }
 
     /// ### Manual
@@ -2517,18 +2207,16 @@ pub trait SessionOptionsCtl<'a> {
     /// update-environment[] variable
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_update_environment<T, I, S>(
+    fn set_update_environment<S, I>(
         &self,
-        target: Option<T>,
         update_environment: Option<I>,
     ) -> Result<TmuxOutput, Error>
     where
-        T: Into<Cow<'a, str>> + Clone,
         I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
     {
         unimplemented!()
-        // self.set(Self::Setter::update_environment(target, update_environment))
+        // self.set(Self::Setter::update_environment(self.target(), update_environment))
     }
 
     /// ### Manual
@@ -2538,11 +2226,8 @@ pub trait SessionOptionsCtl<'a> {
     /// user-keys
     /// ```
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
-    fn get_user_keys<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::user_keys(target))
+    fn get_user_keys(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::user_keys(self.target()))
     }
 
     /// ### Manual
@@ -2554,7 +2239,7 @@ pub trait SessionOptionsCtl<'a> {
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
     fn set_user_keys<S: Into<Cow<'a, str>> + Clone>(
         &self,
-        target: Option<S>,
+
         user_keys: Option<Vec<String>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(TmuxCommand::with_cmds(Self::Setter::user_keys(
@@ -2574,11 +2259,8 @@ pub trait SessionOptionsCtl<'a> {
     /// visual-activity [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_visual_activity<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Activity>, Error> {
-        self.get(Self::Getter::visual_activity(target))
+    fn get_visual_activity(&self) -> Result<Option<Activity>, Error> {
+        self.get(Self::Getter::visual_activity(self.target()))
     }
 
     /// ### Manual
@@ -2593,12 +2275,11 @@ pub trait SessionOptionsCtl<'a> {
     /// visual-activity [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_visual_activity<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        visual_activity: Option<Activity>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::visual_activity(target, visual_activity))
+    fn set_visual_activity(&self, visual_activity: Option<Activity>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::visual_activity(
+            self.target(),
+            visual_activity,
+        ))
     }
 
     /// ### Manual
@@ -2613,11 +2294,8 @@ pub trait SessionOptionsCtl<'a> {
     /// visual-bell [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn get_visual_bell<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Activity>, Error> {
-        self.get(Self::Getter::visual_bell(target))
+    fn get_visual_bell(&self) -> Result<Option<Activity>, Error> {
+        self.get(Self::Getter::visual_bell(self.target()))
     }
 
     /// ### Manual
@@ -2632,12 +2310,8 @@ pub trait SessionOptionsCtl<'a> {
     /// visual-bell [on | off]
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn set_visual_bell<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        visual_bell: Option<Activity>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::visual_bell(target, visual_bell))
+    fn set_visual_bell(&self, visual_bell: Option<Activity>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::visual_bell(self.target(), visual_bell))
     }
 
     /// ### Manual
@@ -2647,11 +2321,8 @@ pub trait SessionOptionsCtl<'a> {
     /// visual-content [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    fn get_visual_content<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::visual_content(target))
+    fn get_visual_content(&self) -> Result<Option<Switch>, Error> {
+        self.get(Self::Getter::visual_content(self.target()))
     }
 
     /// ### Manual
@@ -2661,12 +2332,8 @@ pub trait SessionOptionsCtl<'a> {
     /// visual-content [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    fn set_visual_content<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        visual_content: Option<Switch>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::visual_content(target, visual_content))
+    fn set_visual_content(&self, visual_content: Option<Switch>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::visual_content(self.target(), visual_content))
     }
 
     /// ### Manual
@@ -2676,11 +2343,8 @@ pub trait SessionOptionsCtl<'a> {
     /// visual-silence [on | off | both]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn get_visual_silence<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<Activity>, Error> {
-        self.get(Self::Getter::visual_silence(target))
+    fn get_visual_silence(&self) -> Result<Option<Activity>, Error> {
+        self.get(Self::Getter::visual_silence(self.target()))
     }
 
     /// ### Manual
@@ -2690,12 +2354,8 @@ pub trait SessionOptionsCtl<'a> {
     /// visual-silence [on | off | both]
     /// ```
     #[cfg(feature = "tmux_1_4")]
-    fn set_visual_silence<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        visual_silence: Option<Activity>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::visual_silence(target, visual_silence))
+    fn set_visual_silence(&self, visual_silence: Option<Activity>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::visual_silence(self.target(), visual_silence))
     }
 
     /// ### Manual
@@ -2705,11 +2365,8 @@ pub trait SessionOptionsCtl<'a> {
     /// word-separators string
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    fn get_word_separators<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::word_separators(target))
+    fn get_word_separators(&self) -> Result<Option<String>, Error> {
+        self.get(Self::Getter::word_separators(self.target()))
     }
     /// ### Manual
     ///
@@ -2718,11 +2375,10 @@ pub trait SessionOptionsCtl<'a> {
     /// word-separators string
     /// ```
     #[cfg(feature = "tmux_1_6")]
-    fn set_word_separators<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-        word_separators: Option<String>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::word_separators(target, word_separators))
+    fn set_word_separators(&self, word_separators: Option<String>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::word_separators(
+            self.target(),
+            word_separators,
+        ))
     }
 }

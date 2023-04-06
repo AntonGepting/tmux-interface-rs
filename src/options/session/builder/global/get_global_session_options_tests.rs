@@ -167,7 +167,7 @@ fn get_session_options() {
     let options = options.visual_silence(Some(target));
     #[cfg(feature = "tmux_1_6")]
     let options = options.word_separators(Some(target));
-    let options = options.user_option(Some(target), "user-option-name");
+    let options = options.user_option_ext(Some(target), "user-option-name");
 
     let options = options.options.to_string();
 

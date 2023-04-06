@@ -2,6 +2,7 @@ use crate::{
     ClockModeStyle, Error, GetWindowOption, SetWindowOptionExt, SetWindowOptions, StatusKeys,
     Switch, Tmux, TmuxCommand, TmuxOutput, WindowOptions,
 };
+use std::str::FromStr;
 
 #[cfg(feature = "tmux_2_3")]
 use crate::PaneBorderStatus;
@@ -15,191 +16,228 @@ use std::borrow::Cow;
 pub trait WindowOptionsCtl<'a> {
     type Getter: GetWindowOption;
     type Setter: SetWindowOptionExt;
+    type GetterAll: GetWindowOption;
     type SetterMultiple: SetWindowOptions<'a>;
 
     fn target(&self) -> Option<Cow<'a, str>>;
 
-    fn get_all(&self) -> Result<WindowOptions<'a>, Error>;
+    fn invoker(&self) -> fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>;
+
+    fn get_all(&self) -> Result<WindowOptions<'a>, Error> {
+        Self::get_all_ext(self.target(), self.invoker())
+    }
+
+    fn get_all_ext(
+        target: Option<Cow<'a, str>>,
+        invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    ) -> Result<WindowOptions<'a>, Error> {
+        let cmd = Self::GetterAll::all(target);
+        let output = (invoker)(cmd)?.to_string();
+        WindowOptions::from_str(&output)
+    }
+
+    fn set_all(&self, window_options: WindowOptions<'a>) -> Result<TmuxOutput, Error> {
+        Self::set_all_ext(self.target(), self.invoker(), window_options)
+    }
 
     // XXX: split in build command custom run command
-    fn set_all(&self, window_options: WindowOptions<'a>) -> Result<TmuxOutput, Error> {
+    fn set_all_ext(
+        target: Option<Cow<'a, str>>,
+        invoke: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        window_options: WindowOptions<'a>,
+    ) -> Result<TmuxOutput, Error> {
         let cmds = Self::SetterMultiple::new();
 
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.aggressive_resize(self.target(), window_options.aggressive_resize);
+        let cmds = cmds.aggressive_resize(target.clone(), window_options.aggressive_resize);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
-        let cmds = cmds.allow_rename(self.target(), window_options.allow_rename);
+        let cmds = cmds.allow_rename(target.clone(), window_options.allow_rename);
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-        let cmds = cmds.alternate_screen(self.target(), window_options.alternate_screen);
+        let cmds = cmds.alternate_screen(target.clone(), window_options.alternate_screen);
         #[cfg(feature = "tmux_1_0")] // 0.8
-        let cmds = cmds.automatic_rename(self.target(), window_options.automatic_rename);
+        let cmds = cmds.automatic_rename(target.clone(), window_options.automatic_rename);
         #[cfg(feature = "tmux_1_9")]
         let cmds =
-            cmds.automatic_rename_format(self.target(), window_options.automatic_rename_format);
+            cmds.automatic_rename_format(target.clone(), window_options.automatic_rename_format);
         #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-        let cmds = cmds.c0_change_interval(self.target(), window_options.c0_change_interval);
+        let cmds = cmds.c0_change_interval(target.clone(), window_options.c0_change_interval);
         #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-        let cmds = cmds.c0_change_trigger(self.target(), window_options.c0_change_trigger);
+        let cmds = cmds.c0_change_trigger(target.clone(), window_options.c0_change_trigger);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.clock_mode_colour(self.target(), window_options.clock_mode_colour);
+        let cmds = cmds.clock_mode_colour(target.clone(), window_options.clock_mode_colour);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.clock_mode_style(self.target(), window_options.clock_mode_style);
+        let cmds = cmds.clock_mode_style(target.clone(), window_options.clock_mode_style);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-        let cmds = cmds.force_height(self.target(), window_options.force_height);
+        let cmds = cmds.force_height(target.clone(), window_options.force_height);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-        let cmds = cmds.force_width(self.target(), window_options.force_width);
+        let cmds = cmds.force_width(target.clone(), window_options.force_width);
         #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
-        let cmds = cmds.layout_history_limit(self.target(), window_options.layout_history_limit);
+        let cmds = cmds.layout_history_limit(target.clone(), window_options.layout_history_limit);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.main_pane_height(self.target(), window_options.main_pane_height);
+        let cmds = cmds.main_pane_height(target.clone(), window_options.main_pane_height);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.main_pane_width(self.target(), window_options.main_pane_width);
+        let cmds = cmds.main_pane_width(target.clone(), window_options.main_pane_width);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.mode_attr(self.target(), window_options.mode_attr);
+        let cmds = cmds.mode_attr(target.clone(), window_options.mode_attr);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.mode_bg(self.target(), window_options.mode_bg);
+        let cmds = cmds.mode_bg(target.clone(), window_options.mode_bg);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.mode_fg(self.target(), window_options.mode_fg);
+        let cmds = cmds.mode_fg(target.clone(), window_options.mode_fg);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.mode_keys(self.target(), window_options.mode_keys);
+        let cmds = cmds.mode_keys(target.clone(), window_options.mode_keys);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-        let cmds = cmds.mode_mouse(self.target(), window_options.mode_mouse);
+        let cmds = cmds.mode_mouse(target.clone(), window_options.mode_mouse);
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.mode_style(self.target(), window_options.mode_style);
+        let cmds = cmds.mode_style(target.clone(), window_options.mode_style);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.monitor_activity(self.target(), window_options.monitor_activity);
+        let cmds = cmds.monitor_activity(target.clone(), window_options.monitor_activity);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-        let cmds = cmds.monitor_content(self.target(), window_options.monitor_content);
+        let cmds = cmds.monitor_content(target.clone(), window_options.monitor_content);
         #[cfg(feature = "tmux_2_6")]
-        let cmds = cmds.monitor_bell(self.target(), window_options.monitor_bell);
+        let cmds = cmds.monitor_bell(target.clone(), window_options.monitor_bell);
         #[cfg(feature = "tmux_1_4")]
-        let cmds = cmds.monitor_silence(self.target(), window_options.monitor_silence);
+        let cmds = cmds.monitor_silence(target.clone(), window_options.monitor_silence);
         #[cfg(feature = "tmux_1_4")]
-        let cmds = cmds.other_pane_height(self.target(), window_options.other_pane_height);
+        let cmds = cmds.other_pane_height(target.clone(), window_options.other_pane_height);
         #[cfg(feature = "tmux_1_4")]
-        let cmds = cmds.other_pane_width(self.target(), window_options.other_pane_width);
+        let cmds = cmds.other_pane_width(target.clone(), window_options.other_pane_width);
         #[cfg(feature = "tmux_2_0")]
         let cmds =
-            cmds.pane_active_border_style(self.target(), window_options.pane_active_border_style);
+            cmds.pane_active_border_style(target.clone(), window_options.pane_active_border_style);
         #[cfg(feature = "tmux_1_6")]
-        let cmds = cmds.pane_base_index(self.target(), window_options.pane_base_index);
+        let cmds = cmds.pane_base_index(target.clone(), window_options.pane_base_index);
         #[cfg(feature = "tmux_2_3")]
-        let cmds = cmds.pane_border_format(self.target(), window_options.pane_border_format);
+        let cmds = cmds.pane_border_format(target.clone(), window_options.pane_border_format);
         #[cfg(feature = "tmux_2_3")]
-        let cmds = cmds.pane_border_status(self.target(), window_options.pane_border_status);
+        let cmds = cmds.pane_border_status(target.clone(), window_options.pane_border_status);
         #[cfg(feature = "tmux_2_0")]
-        let cmds = cmds.pane_border_style(self.target(), window_options.pane_border_style);
+        let cmds = cmds.pane_border_style(target.clone(), window_options.pane_border_style);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
-        let cmds = cmds.remain_on_exit(self.target(), window_options.remain_on_exit);
+        let cmds = cmds.remain_on_exit(target.clone(), window_options.remain_on_exit);
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
-        let cmds = cmds.synchronize_panes(self.target(), window_options.synchronize_panes);
+        let cmds = cmds.synchronize_panes(target.clone(), window_options.synchronize_panes);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-        let cmds = cmds.utf8(self.target(), window_options.utf8);
+        let cmds = cmds.utf8(target.clone(), window_options.utf8);
         #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-        let cmds = cmds.window_active_style(self.target(), window_options.window_active_style);
+        let cmds = cmds.window_active_style(target.clone(), window_options.window_active_style);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
         let cmds =
-            cmds.window_status_bell_attr(self.target(), window_options.window_status_bell_attr);
+            cmds.window_status_bell_attr(target.clone(), window_options.window_status_bell_attr);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_bell_bg(self.target(), window_options.window_status_bell_bg);
+        let cmds = cmds.window_status_bell_bg(target.clone(), window_options.window_status_bell_bg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_bell_fg(self.target(), window_options.window_status_bell_fg);
+        let cmds = cmds.window_status_bell_fg(target.clone(), window_options.window_status_bell_fg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
         let cmds = cmds
             .window_status_content_attr(self.target(), window_options.window_status_content_attr);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
         let cmds =
-            cmds.window_status_content_bg(self.target(), window_options.window_status_content_bg);
+            cmds.window_status_content_bg(target.clone(), window_options.window_status_content_bg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
         let cmds =
-            cmds.window_status_content_fg(self.target(), window_options.window_status_content_fg);
+            cmds.window_status_content_fg(target.clone(), window_options.window_status_content_fg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
         let cmds = cmds
             .window_status_activity_attr(self.target(), window_options.window_status_activity_attr);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds =
-            cmds.window_status_activity_bg(self.target(), window_options.window_status_activity_bg);
+        let cmds = cmds
+            .window_status_activity_bg(target.clone(), window_options.window_status_activity_bg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds =
-            cmds.window_status_activity_fg(self.target(), window_options.window_status_activity_fg);
+        let cmds = cmds
+            .window_status_activity_fg(target.clone(), window_options.window_status_activity_fg);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_attr(self.target(), window_options.window_status_attr);
+        let cmds = cmds.window_status_attr(target.clone(), window_options.window_status_attr);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_bg(self.target(), window_options.window_status_bg);
+        let cmds = cmds.window_status_bg(target.clone(), window_options.window_status_bg);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_fg(self.target(), window_options.window_status_fg);
+        let cmds = cmds.window_status_fg(target.clone(), window_options.window_status_fg);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
         let cmds = cmds
             .window_status_current_attr(self.target(), window_options.window_status_current_attr);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
         let cmds =
-            cmds.window_status_current_bg(self.target(), window_options.window_status_current_bg);
+            cmds.window_status_current_bg(target.clone(), window_options.window_status_current_bg);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
         let cmds =
-            cmds.window_status_current_fg(self.target(), window_options.window_status_current_fg);
+            cmds.window_status_current_fg(target.clone(), window_options.window_status_current_fg);
         #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
         let cmds =
-            cmds.window_status_alert_attr(self.target(), window_options.window_status_alert_attr);
+            cmds.window_status_alert_attr(target.clone(), window_options.window_status_alert_attr);
         #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
         let cmds =
-            cmds.window_status_alert_bg(self.target(), window_options.window_status_alert_bg);
+            cmds.window_status_alert_bg(target.clone(), window_options.window_status_alert_bg);
         #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
         let cmds =
-            cmds.window_status_alert_fg(self.target(), window_options.window_status_alert_fg);
+            cmds.window_status_alert_fg(target.clone(), window_options.window_status_alert_fg);
         #[cfg(feature = "tmux_1_9")]
         let cmds = cmds.window_status_activity_style(
-            self.target(),
+            target.clone(),
             window_options.window_status_activity_style,
         );
         #[cfg(feature = "tmux_1_9")]
         let cmds =
-            cmds.window_status_bell_style(self.target(), window_options.window_status_bell_style);
+            cmds.window_status_bell_style(target.clone(), window_options.window_status_bell_style);
         #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
         let cmds = cmds
             .window_status_content_style(self.target(), window_options.window_status_content_style);
         #[cfg(feature = "tmux_1_2")]
         let cmds = cmds.window_status_current_format(
-            self.target(),
+            target.clone(),
             window_options.window_status_current_format,
         );
         #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
         let cmds =
-            cmds.window_status_last_attr(self.target(), window_options.window_status_last_attr);
+            cmds.window_status_last_attr(target.clone(), window_options.window_status_last_attr);
         #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_last_bg(self.target(), window_options.window_status_last_bg);
+        let cmds = cmds.window_status_last_bg(target.clone(), window_options.window_status_last_bg);
         #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-        let cmds = cmds.window_status_last_fg(self.target(), window_options.window_status_last_fg);
+        let cmds = cmds.window_status_last_fg(target.clone(), window_options.window_status_last_fg);
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds
-            .window_status_current_style(self.target(), window_options.window_status_current_style);
+        let cmds = cmds.window_status_current_style(
+            target.clone(),
+            window_options.window_status_current_style,
+        );
         #[cfg(feature = "tmux_1_2")]
-        let cmds = cmds.window_status_format(self.target(), window_options.window_status_format);
+        let cmds = cmds.window_status_format(target.clone(), window_options.window_status_format);
         #[cfg(feature = "tmux_1_9")]
         let cmds =
-            cmds.window_status_last_style(self.target(), window_options.window_status_last_style);
+            cmds.window_status_last_style(target.clone(), window_options.window_status_last_style);
         #[cfg(feature = "tmux_1_7")]
         let cmds =
-            cmds.window_status_separator(self.target(), window_options.window_status_separator);
+            cmds.window_status_separator(target.clone(), window_options.window_status_separator);
         #[cfg(feature = "tmux_1_9")]
-        let cmds = cmds.window_status_style(self.target(), window_options.window_status_style);
+        let cmds = cmds.window_status_style(target.clone(), window_options.window_status_style);
         #[cfg(feature = "tmux_2_9")]
-        let cmds = cmds.window_size(self.target(), window_options.window_size);
+        let cmds = cmds.window_size(target.clone(), window_options.window_size);
         #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
-        let cmds = cmds.word_separators(self.target(), window_options.word_separators);
+        let cmds = cmds.word_separators(target.clone(), window_options.word_separators);
         #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-        let cmds = cmds.window_style(self.target(), window_options.window_style);
+        let cmds = cmds.window_style(target.clone(), window_options.window_style);
         #[cfg(feature = "tmux_1_7")]
-        let cmds = cmds.wrap_search(self.target(), window_options.wrap_search);
+        let cmds = cmds.wrap_search(target.clone(), window_options.wrap_search);
         #[cfg(feature = "tmux_1_0")]
-        let cmds = cmds.xterm_keys(self.target(), window_options.xterm_keys);
+        let cmds = cmds.xterm_keys(target.clone(), window_options.xterm_keys);
         let cmd = TmuxCommand::with_cmds(cmds.build());
         let output = Tmux::new().command(cmd).output();
         output
     }
 
-    fn get<T: std::str::FromStr>(&self, cmd: TmuxCommand<'a>) -> Result<Option<T>, Error>;
+    // get and parse single line option
+    fn get<T: std::str::FromStr>(&self, cmd: TmuxCommand<'a>) -> Result<Option<T>, Error> {
+        let output = (self.invoker())(cmd)?.to_string();
+        let value = if output.is_empty() {
+            None
+        } else {
+            output.trim().parse::<T>().ok()
+        };
+        Ok(value)
+        // Ok((self.invoker)(cmd)?.to_string().trim().parse::<T>().ok())
+    }
 
-    fn set(&self, cmd: TmuxCommand<'a>) -> Result<TmuxOutput, Error>;
+    // fn set(&self, cmd: TmuxCommand<'a>) -> Result<TmuxOutput, Error>;
+    fn set(&self, cmd: TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
+        (self.invoker())(cmd)
+    }
 
     // # Manual
     //

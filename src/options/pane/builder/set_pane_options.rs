@@ -82,7 +82,7 @@ pub trait SetPaneOptionsTrait<'a> {
     /// ### Manual
     ///
     /// tmux ^3.2:
-    /// ```
+    /// ```text
     /// remain-on-exit [on | off | failed]
     /// ```
     ///

@@ -146,7 +146,7 @@ fn get_local_window_options() {
     #[cfg(feature = "tmux_1_0")]
     let options = options.xterm_keys(Some(target));
 
-    let options = options.user_option(Some(target), "user-option-name");
+    let options = options.user_option_ext(Some(target), "user-option-name");
 
     let options = options.options.to_string();
 

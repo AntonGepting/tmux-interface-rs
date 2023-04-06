@@ -1,5 +1,5 @@
 #[test]
-fn local_window_options_ctl_get_all() {
+fn get_all() {
     use crate::{LocalWindowOptionsCtl, WindowOptionsCtl};
 
     let output = LocalWindowOptionsCtl::default().get_all().unwrap();

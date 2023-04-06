@@ -435,7 +435,7 @@ fn set_local_session_option_tests() {
     {
         let origin = format!("{} {} {}", cmd, "@user-option-name", "value");
         let set_option =
-            SetLocalSessionOption::user_option(Some(target), "user-option-name", Some("value"))
+            SetLocalSessionOption::user_option_ext(Some(target), "user-option-name", Some("value"))
                 .to_string();
         assert_eq!(origin, set_option);
     }

@@ -1013,7 +1013,7 @@ fn set_global_window_option_tests() {
     {
         let origin = format!("{} {} {}", cmd, "@user-option-name", "value");
         let set_option =
-            SetGlobalWindowOption::user_option(Some(target), "user-option-name", Some("value"))
+            SetGlobalWindowOption::user_option_ext(Some(target), "user-option-name", Some("value"))
                 .to_string();
         assert_eq!(origin, set_option);
     }

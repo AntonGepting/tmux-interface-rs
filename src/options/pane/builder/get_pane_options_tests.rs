@@ -40,7 +40,7 @@ fn get_pane_options() {
     let options = options.window_style(Some(target));
     #[cfg(feature = "tmux_3_2")]
     let options = options.synchronize_panes(Some(target));
-    let options = options.user_option(Some(target), "user-option-name");
+    let options = options.user_option_ext(Some(target), "user-option-name");
     let options = options.build().to_string();
 
     assert_eq!(options, origin);

@@ -39,6 +39,7 @@ impl<'a> GetUserOptions<'a> for GetPaneOptions<'a> {
     }
 }
 
+// XXX: add all() method?
 pub trait GetPaneOptionsTrait<'a> {
     type Getter: GetPaneOptionTrait;
 
@@ -82,7 +83,7 @@ pub trait GetPaneOptionsTrait<'a> {
     /// ### Manual
     ///
     /// tmux ^3.2:
-    /// ```
+    /// ```text
     /// remain-on-exit [on | off | failed]
     /// ```
     ///

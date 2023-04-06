@@ -1,5 +1,7 @@
 use crate::{
-    GetPaneOption, GetPaneOptionTrait, RemainOnExit, SetPaneOption, SetPaneOptionTrait, Switch,
+    Error, GetPaneOption, GetPaneOptionTrait, PaneOptions, RemainOnExit, SetPaneOption,
+    SetPaneOptionTrait, SetPaneOptions, SetPaneOptionsTrait, ShowOptions, Switch, Tmux,
+    TmuxCommand, TmuxOutput,
 };
 use std::borrow::Cow;
 use std::str::FromStr;
@@ -40,11 +42,6 @@ use std::str::FromStr;
 //  Output
 // }
 
-use crate::{
-    Error, PaneOptions, SetPaneOptions, SetPaneOptionsTrait, ShowOptions, Tmux, TmuxCommand,
-    TmuxCommands, TmuxOutput,
-};
-
 // XXX: rename PaneOptionCtl?
 // trait top level options, then server session window pane
 pub struct PaneOptionsCtl<'a> {
@@ -80,31 +77,37 @@ impl<'a> PaneOptionsCtl<'a> {
         self.target.to_owned()
     }
 
+    pub fn invoker(&self) -> fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
+        self.invoker
+    }
+
     pub fn get_all(&self) -> Result<PaneOptions<'a>, Error> {
-        let cmd = ShowOptions::new().pane().build();
-        let output = (self.invoker)(cmd)?.to_string();
+        Self::get_all_ext(self.target(), self.invoker())
+    }
+
+    pub fn get_all_ext(
+        target: Option<Cow<'a, str>>,
+        invoke: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    ) -> Result<PaneOptions<'a>, Error> {
+        let cmd = ShowOptions::new().pane();
+        let cmd = match target {
+            Some(target) => cmd.target(target),
+            None => cmd,
+        };
+        let cmd = cmd.build();
+        let output = invoke(cmd)?.to_string();
         PaneOptions::from_str(&output)
     }
 
-    // pub fn get_all_ext(
-    // target: Option<Cow<'a, str>>,
-    // invoke: &dyn Fn(&mut TmuxCommand<'a>) -> String,
-    // ) -> Result<PaneOptions<'a>, Error> {
-    // let mut cmd = ShowOptions::new().pane().build();
-    // let output = invoke(&mut cmd);
-    // dbg!(&output);
-    // PaneOptions::from_str(&output)
-    // }
-
-    // pub fn set_all(&self, pane_options: PaneOptions<'a>) -> Result<String, Error> {
-    // Self::set_all_ext(self.target, &self.invoker, pane_options)
-    // }
+    pub fn set_all(&self, pane_options: PaneOptions<'a>) -> Result<TmuxOutput, Error> {
+        Self::set_all_ext(self.target(), self.invoker(), pane_options)
+    }
 
     pub fn set_all_ext(
         target: Option<Cow<'a, str>>,
-        invoke: &dyn Fn(&TmuxCommands<'a>) -> Result<String, Error>,
+        invoke: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
         pane_options: PaneOptions<'a>,
-    ) -> Result<String, Error> {
+    ) -> Result<TmuxOutput, Error> {
         let cmds = SetPaneOptions::new();
 
         #[cfg(feature = "tmux_3_0")]
@@ -124,8 +127,9 @@ impl<'a> PaneOptionsCtl<'a> {
         // `@USER_OPTION`
 
         let cmds = cmds.build();
+        let cmd = TmuxCommand::with_cmds(cmds);
 
-        invoke(&cmds)
+        invoke(cmd)
     }
 
     // get and parse single line option
@@ -259,7 +263,7 @@ impl<'a> PaneOptionsCtl<'a> {
     /// window-active-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn get_window_active_style(&self) -> Result<Option<Switch>, Error> {
+    pub fn get_window_active_style(&self) -> Result<Option<String>, Error> {
         self.get(GetPaneOption::window_active_style(self.target.clone()))
     }
 
@@ -283,7 +287,7 @@ impl<'a> PaneOptionsCtl<'a> {
     /// window-style style
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    pub fn get_window_style(&self) -> Result<Option<Switch>, Error> {
+    pub fn get_window_style(&self) -> Result<Option<String>, Error> {
         self.get(GetPaneOption::window_style(self.target.clone()))
     }
 
@@ -326,5 +330,3 @@ impl<'a> PaneOptionsCtl<'a> {
         ))
     }
 }
-
-impl<'a> PaneOptionsCtl<'a> {}
