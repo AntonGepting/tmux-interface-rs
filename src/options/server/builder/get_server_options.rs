@@ -1,4 +1,4 @@
-use crate::{GetServerOption, GetServerOptionTrait, GetUserOptions, TmuxCommand, TmuxCommands};
+use crate::{GetServerOption, GetServerOptionTr, GetUserOptions, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 
 #[derive(Debug)]
@@ -6,7 +6,7 @@ pub struct GetServerOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
-impl<'a> GetServerOptionsTrait<'a> for GetServerOptions<'a> {
+impl<'a> GetServerOptionsTr<'a> for GetServerOptions<'a> {
     type Getter = GetServerOption;
 
     fn new() -> Self {
@@ -36,8 +36,8 @@ impl<'a> GetUserOptions<'a> for GetServerOptions<'a> {
     }
 }
 
-pub trait GetServerOptionsTrait<'a> {
-    type Getter: GetServerOptionTrait;
+pub trait GetServerOptionsTr<'a> {
+    type Getter: GetServerOptionTr;
 
     fn new() -> Self;
 

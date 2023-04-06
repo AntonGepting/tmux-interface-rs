@@ -1,6 +1,6 @@
 #[test]
 fn set_server_option() {
-    use crate::{SetClipboard, SetServerOption, SetServerOptionTrait, SetUserOption, Switch};
+    use crate::{SetClipboard, SetServerOption, SetServerOptionTr, SetUserOption, Switch};
 
     let cmd = "set -s";
 

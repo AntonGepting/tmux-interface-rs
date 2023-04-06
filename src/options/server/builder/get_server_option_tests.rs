@@ -1,6 +1,6 @@
 #[test]
 fn get_single() {
-    use crate::{GetServerOption, GetServerOptionTrait, Tmux};
+    use crate::{GetServerOption, GetServerOptionTr, Tmux};
 
     #[cfg(feature = "tmux_1_5")]
     let get_option = Tmux::with_command(GetServerOption::buffer_limit()).output();
@@ -8,7 +8,7 @@ fn get_single() {
 
 #[test]
 fn get_server_option() {
-    use crate::{GetServerOption, GetServerOptionTrait, GetUserOption};
+    use crate::{GetServerOption, GetServerOptionTr, GetUserOption};
 
     let cmd = "show -s";
 

@@ -32,6 +32,6 @@ impl GetOptionExt for GetServerOptionValue {
     }
 }
 
-impl GetServerOptionTrait for GetServerOptionValue {}
+impl GetServerOptionTr for GetServerOptionValue {}
 
 impl GetUserOption for GetServerOptionValue {}

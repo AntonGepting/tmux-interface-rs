@@ -4,7 +4,7 @@ use std::borrow::Cow;
 
 pub struct SetServerOption;
 
-impl SetServerOptionTrait for SetServerOption {}
+impl SetServerOptionTr for SetServerOption {}
 
 impl SetUserOption for SetServerOption {}
 

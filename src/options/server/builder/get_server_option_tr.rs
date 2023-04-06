@@ -26,7 +26,7 @@ use crate::{GetOptionExt, TmuxCommand};
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-pub trait GetServerOptionTrait: GetOptionExt + GetUserOption {
+pub trait GetServerOptionTr: GetOptionExt + GetUserOption {
     /// ### Manual
     ///
     /// tmux ^3.1:

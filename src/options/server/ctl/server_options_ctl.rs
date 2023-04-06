@@ -37,9 +37,9 @@ use std::str::FromStr;
 // }
 
 use crate::{
-    Error, GetServerOptionTrait, GetServerOptionValue, ServerOptions, SetClipboard,
-    SetServerOption, SetServerOptionTrait, SetServerOptions, SetServerOptionsTrait, ShowOptions,
-    Switch, Tmux, TmuxCommand, TmuxOutput,
+    Error, GetServerOptionTr, GetServerOptionValue, ServerOptions, SetClipboard, SetServerOption,
+    SetServerOptionTr, SetServerOptions, SetServerOptionsTr, ShowOptions, Switch, Tmux,
+    TmuxCommand, TmuxOutput,
 };
 
 // XXX: rename ServerOptionCtl?

@@ -2,7 +2,7 @@ use crate::options::*;
 use crate::{SetOptionExt, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 
-pub trait SetServerOptionTrait: SetOptionExt {
+pub trait SetServerOptionTr: SetOptionExt {
     /// ### Manual
     ///
     /// tmux ^3.1:

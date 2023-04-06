@@ -1,5 +1,5 @@
 use crate::{
-    SetClipboard, SetServerOption, SetServerOptionTrait, SetUserOptions, Switch, TmuxCommand,
+    SetClipboard, SetServerOption, SetServerOptionTr, SetUserOptions, Switch, TmuxCommand,
     TmuxCommands,
 };
 use std::borrow::Cow;
@@ -9,7 +9,7 @@ pub struct SetServerOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
-impl<'a> SetServerOptionsTrait<'a> for SetServerOptions<'a> {
+impl<'a> SetServerOptionsTr<'a> for SetServerOptions<'a> {
     type Setter = SetServerOption;
 
     fn new() -> Self {
@@ -39,8 +39,8 @@ impl<'a> SetUserOptions<'a> for SetServerOptions<'a> {
     }
 }
 
-pub trait SetServerOptionsTrait<'a> {
-    type Setter: SetServerOptionTrait;
+pub trait SetServerOptionsTr<'a> {
+    type Setter: SetServerOptionTr;
 
     fn new() -> Self;
 
