@@ -8,15 +8,7 @@ use std::borrow::Cow;
 // option value
 //
 // default implementation for getting options, by default local options
-pub trait GetSessionOption: GetOptionExt {
-    //pub fn gets<'a>(names: ServerOptionB) -> TmuxCommands<'a> {
-    //let mut cmds = TmuxCommands::new();
-    //for name in names.0 {
-    //cmds.push(Self::get(target, name));
-    //}
-    //cmds
-    //}
-
+pub trait GetSessionOption: GetOptionExt + GetUserOption {
     fn all<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
         Self::get_all(target)
     }
@@ -937,53 +929,3 @@ pub trait GetSessionOption: GetOptionExt {
         Self::get_ext(target, WORD_SEPARATORS)
     }
 }
-
-//#[test]
-//fn parse_server_option() {
-//use crate::options::get_server_option::{GetServerOption, TmuxServerOptionOutput};
-//use crate::Tmux;
-
-//#[cfg(feature = "tmux_3_1")]
-//{
-//let origin = "C-?";
-//let output = Tmux::new()
-//.command(GetServerOption::backspace())
-//.output()
-//.unwrap();
-//let value = TmuxServerOptionOutput::from(output).backspace().unwrap();
-//assert_eq!(origin, value);
-//}
-
-//#[cfg(feature = "tmux_1_5")]
-//{
-//let origin = 50;
-//let output = Tmux::new()
-//.command(GetServerOption::buffer_limit())
-//.output()
-//.unwrap();
-//let value = TmuxServerOptionOutput::from(output).buffer_limit().unwrap();
-//assert_eq!(origin, value);
-//}
-//}
-
-// #[test]
-// fn get_session_option() {
-// use crate::Tmux;
-
-//let cmd = Tmux::new()
-//.command(GetSessionOption::get(target, BUFFER_LIMIT))
-//.output()
-//.unwrap();
-
-// let cmd = Tmux::new()
-//     .command(GetLocalSessionOption::activity_action(None))
-//     .command(GetLocalSessionOption::base_index(None))
-//     .command(GetGlobalSessionOption::activity_action(None))
-//     .command(GetGlobalSessionOption::base_index(None));
-
-// dbg!(&cmd);
-
-// let output = cmd.output().unwrap();
-
-// dbg!(&output);
-// }

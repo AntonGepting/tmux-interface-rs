@@ -10,7 +10,7 @@ use std::borrow::Cow;
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-pub trait SetWindowOptionExt: SetOptionExt {
+pub trait SetWindowOptionExt: SetOptionExt + SetUserOption {
     /// ### Manual
     ///
     /// tmux ^2.6:
@@ -1097,7 +1097,4 @@ pub trait SetWindowOptionExt: SetOptionExt {
     {
         Self::set_ext(target, XTERM_KEYS, switch.map(|s| s.to_string()))
     }
-
-    // XXX: user options?
-    //pub user_options: Option<HashMap<String, String>>
 }

@@ -1,8 +1,8 @@
 use crate::options::*;
-use crate::{SetOptionExt, TmuxCommand, TmuxCommands};
+use crate::{SetOptionExt, SetUserOption, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 
-pub trait SetServerOptionTr: SetOptionExt {
+pub trait SetServerOptionTr: SetOptionExt + SetUserOption {
     /// ### Manual
     ///
     /// tmux ^3.1:
@@ -173,7 +173,6 @@ pub trait SetServerOptionTr: SetOptionExt {
     #[cfg(feature = "tmux_3_3")]
     fn prompt_history_limit<'a>(prompt_history_limit: Option<usize>) -> TmuxCommand<'a> {
         Self::set(
-            target,
             PROMPT_HISTORY_LIMIT,
             prompt_history_limit.map(|s| s.to_string()),
         )
@@ -243,7 +242,7 @@ pub trait SetServerOptionTr: SetOptionExt {
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
     fn quiet<'a>(quiet: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set_ext(QUIET, quiet.map(|s| s.to_string()))
+        Self::set(QUIET, quiet.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -254,6 +253,6 @@ pub trait SetServerOptionTr: SetOptionExt {
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     fn detach_on_destroy<'a>(detach_on_destroy: Option<Switch>) -> TmuxCommand<'a> {
-        Self::set_ext(DETACH_ON_DESTROY, detach_on_destroy.map(|s| s.to_string()))
+        Self::set(DETACH_ON_DESTROY, detach_on_destroy.map(|s| s.to_string()))
     }
 }
