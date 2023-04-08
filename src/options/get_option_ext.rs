@@ -11,8 +11,19 @@ use std::borrow::Cow;
 //  * [`PaneOptions`] (`show-options -p <NAME>`)
 //
 // NOTE: `GetOptionExt` complementary to `SetOptionExt`, symbols `SetOption`
-// already taken by tmux command
+// already taken by tmux command builder
 pub trait GetOptionExt {
+    /// Command builder for get single option command using only option name
+    ///
+    /// # Arguments
+    ///
+    /// * `name` - option name
+    ///
+    /// # Manual
+    ///
+    /// ```text
+    /// show-options name
+    /// ```
     fn get<'a, S>(name: S) -> TmuxCommand<'a>
     where
         S: Into<Cow<'a, str>>,
@@ -20,7 +31,7 @@ pub trait GetOptionExt {
         ShowOptions::new().option(name).build()
     }
 
-    /// Command builder for get single option command using option name
+    /// Command builder for get single option command using target and option name
     ///
     /// # Arguments
     ///

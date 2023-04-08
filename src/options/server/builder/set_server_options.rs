@@ -355,34 +355,5 @@ pub trait SetServerOptionsTr<'a> {
         self
     }
 
-    // ### Manual
-    //
-    // ```text
-    // user option
-    // ```
-    //fn user_option<S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
-    //mut self,
-    //name: S,
-    //value: Option<T>,
-    //) -> Self
-    //where
-    //Self: Sized,
-    //{
-    //self.push(Self::Setter::user_option(name, value));
-    //self
-    //}
-
     fn build(self) -> TmuxCommands<'a>;
 }
-
-//#[test]
-//fn set_server_options_by_one() {
-//let set = SetServerOptions::new()
-//.buffer_limit(Some(50))
-//.message_limit(Some(100))
-//.set_clipboard(Some(SetClipboard::On))
-//.user_option("a", Some("b"));
-
-//dbg!(set);
-////let get = Get::new().buffer_limit(&mut Option<buffer_limit>)
-//}

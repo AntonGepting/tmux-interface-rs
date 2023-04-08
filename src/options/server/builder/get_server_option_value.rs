@@ -1,4 +1,4 @@
-//! [`GetServerOptionTrait`] trait is used for getting tmux server options, using tmux command
+//! [`GetServerOptionTr`] trait is used for getting tmux server options, using tmux command
 //! builder. The returned result is only the option value **not including** the name of the option.
 //!
 //! Tmux command example:
