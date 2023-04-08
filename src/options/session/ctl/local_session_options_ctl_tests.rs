@@ -1,6 +1,6 @@
 #[test]
 fn get_single() {
-    use crate::{LocalSessionOptionsCtl, SessionOptions, SessionOptionsCtl, Tmux};
+    use crate::{LocalSessionOptionsCtl, SessionOptions, SessionOptionsCtl};
 
     let session_options_ctl = LocalSessionOptionsCtl::default();
     #[cfg(feature = "tmux_2_6")]

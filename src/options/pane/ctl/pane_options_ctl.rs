@@ -126,8 +126,7 @@ impl<'a> PaneOptionsCtl<'a> {
         // let pane_options = pane_options.user_options();
         // `@USER_OPTION`
 
-        let cmds = cmds.build();
-        let cmd = TmuxCommand::with_cmds(cmds);
+        let cmd = TmuxCommand::with_cmds(cmds.build());
 
         invoke(cmd)
     }

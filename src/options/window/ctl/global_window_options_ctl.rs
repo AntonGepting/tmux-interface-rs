@@ -1,10 +1,8 @@
 use crate::{
     Error, GetGlobalWindowOption, GetGlobalWindowOptionValue, SetGlobalWindowOption,
-    SetGlobalWindowOptions, SetWindowOptions, ShowOptions, Tmux, TmuxCommand, TmuxOutput,
-    WindowOptions, WindowOptionsCtl,
+    SetGlobalWindowOptions, Tmux, TmuxCommand, TmuxOutput, WindowOptionsCtl,
 };
 use std::borrow::Cow;
-use std::str::FromStr;
 
 // XXX: rename WindowOptionCtl?
 // XXX: rename WindowOptionCtl?

@@ -1,5 +1,3 @@
-use crate::user_option;
-
 #[test]
 fn server_options_ctl() {
     use crate::{ServerOptionsCtl, Tmux};

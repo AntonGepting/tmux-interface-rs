@@ -1,6 +1,6 @@
 use crate::{
     ClockModeStyle, Error, GetWindowOption, SetWindowOptionExt, SetWindowOptions, StatusKeys,
-    Switch, Tmux, TmuxCommand, TmuxOutput, WindowOptions,
+    Switch, TmuxCommand, TmuxOutput, WindowOptions,
 };
 use std::str::FromStr;
 
@@ -217,9 +217,10 @@ pub trait WindowOptionsCtl<'a> {
         let cmds = cmds.wrap_search(target.clone(), window_options.wrap_search);
         #[cfg(feature = "tmux_1_0")]
         let cmds = cmds.xterm_keys(target.clone(), window_options.xterm_keys);
+
         let cmd = TmuxCommand::with_cmds(cmds.build());
-        let output = Tmux::new().command(cmd).output();
-        output
+
+        invoke(cmd)
     }
 
     // get and parse single line option

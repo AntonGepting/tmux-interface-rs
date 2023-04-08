@@ -158,6 +158,7 @@ impl<'a> ServerOptionsCtl<'a> {
         // `@USER_OPTION`
 
         let cmd = TmuxCommand::with_cmds(cmds.build());
+
         invoke(cmd)
     }
 

@@ -1,10 +1,8 @@
 use crate::{
     Error, GetLocalWindowOption, GetLocalWindowOptionValue, SetLocalWindowOption,
-    SetLocalWindowOptions, ShowOptions, Tmux, TmuxCommand, TmuxOutput, WindowOptions,
-    WindowOptionsCtl,
+    SetLocalWindowOptions, Tmux, TmuxCommand, TmuxOutput, WindowOptionsCtl,
 };
 use std::borrow::Cow;
-use std::str::FromStr;
 
 // XXX: rename WindowOptionCtl?
 // trait top level options, then server session window pane

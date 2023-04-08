@@ -15,7 +15,7 @@ pub struct GlobalSessionOptionsCtl<'a> {
     // ```
     // let tmux = Tmux::new();
     // ```
-    pub invoker: &'a Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    pub invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
 }
 
 impl<'a> Default for GlobalSessionOptionsCtl<'a> {

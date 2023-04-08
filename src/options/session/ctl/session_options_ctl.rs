@@ -36,7 +36,7 @@ pub trait SessionOptionsCtl<'a> {
 
     fn get_all_ext(
         target: Option<Cow<'a, str>>,
-        invoker: &'a Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Result<SessionOptions<'a>, Error> {
         let cmd = Self::GetterAll::all(target);
         let output = (invoker)(cmd)?.to_string();
@@ -57,7 +57,7 @@ pub trait SessionOptionsCtl<'a> {
     /// ```
     fn set_all_ext(
         target: Option<Cow<'a, str>>,
-        invoke: &'a Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoke: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
         session_options: SessionOptions<'a>,
     ) -> Result<TmuxOutput, Error> {
         let cmds = Self::SetterMultiple::new();

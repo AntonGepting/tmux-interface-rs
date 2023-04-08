@@ -14,7 +14,7 @@ fn get() {
 fn get_all() {
     use crate::{GlobalSessionOptionsCtl, SessionOptionsCtl, Tmux};
 
-    let session_options = GlobalSessionOptionsCtl::default().get_all().unwrap();
+    // let session_options = GlobalSessionOptionsCtl::default().get_all().unwrap();
 
     let session_options = GlobalSessionOptionsCtl::new(&|cmd| Tmux::with_command(cmd).output())
         .get_all()
