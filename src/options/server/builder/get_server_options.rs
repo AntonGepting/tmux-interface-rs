@@ -1,5 +1,4 @@
 use crate::{GetServerOption, GetServerOptionTr, GetUserOptions, TmuxCommand, TmuxCommands};
-use std::borrow::Cow;
 
 #[derive(Debug)]
 pub struct GetServerOptions<'a> {

@@ -3,7 +3,10 @@ fn get_single() {
     use crate::{GetServerOption, GetServerOptionTr, Tmux};
 
     #[cfg(feature = "tmux_1_5")]
-    let get_option = Tmux::with_command(GetServerOption::buffer_limit()).output();
+    let buffer_limit = Tmux::with_command(GetServerOption::buffer_limit())
+        .output()
+        .unwrap();
+    dbg!(buffer_limit);
 }
 
 #[test]
