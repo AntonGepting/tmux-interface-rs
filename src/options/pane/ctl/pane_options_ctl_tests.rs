@@ -52,7 +52,7 @@ fn get_all() {
 fn get_all_ext() {
     use crate::{PaneOptionsCtl, Tmux, TmuxCommand};
 
-    let pane_options_ctl = PaneOptionsCtl::new(None, |cmd: TmuxCommand| {
+    let pane_options_ctl = PaneOptionsCtl::new(None, &|cmd: TmuxCommand| {
         Tmux::new().command(cmd.to_owned()).output()
     });
 

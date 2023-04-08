@@ -15,14 +15,14 @@ pub struct LocalSessionOptionsCtl<'a> {
     // ```
     // let tmux = Tmux::new();
     // ```
-    pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    pub invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     pub target: Option<Cow<'a, str>>,
 }
 
 impl<'a> Default for LocalSessionOptionsCtl<'a> {
     fn default() -> Self {
         Self {
-            invoker: |cmd| Tmux::with_command(cmd).output(),
+            invoker: &|cmd| Tmux::with_command(cmd).output(),
             target: None,
         }
     }
@@ -31,7 +31,7 @@ impl<'a> Default for LocalSessionOptionsCtl<'a> {
 impl<'a> LocalSessionOptionsCtl<'a> {
     pub fn new<S: Into<Cow<'a, str>>>(
         target: Option<S>,
-        invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Self {
         Self {
             invoker,
@@ -52,7 +52,7 @@ impl<'a> SessionOptionsCtl<'a> for LocalSessionOptionsCtl<'a> {
         self.target.to_owned()
     }
 
-    fn invoker(&self) -> fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
+    fn invoker(&self) -> &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
         self.invoker
     }
 }

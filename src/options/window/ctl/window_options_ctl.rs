@@ -21,7 +21,7 @@ pub trait WindowOptionsCtl<'a> {
 
     fn target(&self) -> Option<Cow<'a, str>>;
 
-    fn invoker(&self) -> fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>;
+    fn invoker(&self) -> &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>;
 
     fn get_all(&self) -> Result<WindowOptions<'a>, Error> {
         Self::get_all_ext(self.target(), self.invoker())
@@ -29,7 +29,7 @@ pub trait WindowOptionsCtl<'a> {
 
     fn get_all_ext(
         target: Option<Cow<'a, str>>,
-        invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Result<WindowOptions<'a>, Error> {
         let cmd = Self::GetterAll::all(target);
         let output = (invoker)(cmd)?.to_string();
@@ -43,7 +43,7 @@ pub trait WindowOptionsCtl<'a> {
     // XXX: split in build command custom run command
     fn set_all_ext(
         target: Option<Cow<'a, str>>,
-        invoke: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoke: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
         window_options: WindowOptions<'a>,
     ) -> Result<TmuxOutput, Error> {
         let cmds = Self::SetterMultiple::new();

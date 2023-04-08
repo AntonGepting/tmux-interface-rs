@@ -1,3 +1,8 @@
+use crate::{
+    Error, GetServerOptionTr, GetServerOptionValue, GetUserOption, ServerOptions, SetClipboard,
+    SetServerOption, SetServerOptionTr, SetServerOptions, SetServerOptionsTr, SetUserOption,
+    ShowOptions, Switch, Tmux, TmuxCommand, TmuxOutput,
+};
 use std::borrow::Cow;
 use std::str::FromStr;
 //oneline
@@ -35,12 +40,6 @@ use std::str::FromStr;
 //  SetServerOption::backspace()
 //  Output
 // }
-
-use crate::{
-    Error, GetServerOptionTr, GetServerOptionValue, ServerOptions, SetClipboard, SetServerOption,
-    SetServerOptionTr, SetServerOptions, SetServerOptionsTr, ShowOptions, Switch, Tmux,
-    TmuxCommand, TmuxOutput,
-};
 
 // XXX: rename ServerOptionCtl?
 // trait top level options, then server session window pane
@@ -703,5 +702,31 @@ impl<'a> ServerOptionsCtl<'a> {
         detach_on_destroy: Option<Switch>,
     ) -> Result<TmuxOutput, Error> {
         self.set(SetServerOption::detach_on_destroy(detach_on_destroy))
+    }
+
+    // XXX: get/set multiple user options
+
+    /// # Manual
+    ///
+    /// tmux:
+    /// ```text
+    /// @user-option-name value
+    /// ```
+    pub fn get_user_option<S: Into<Cow<'a, str>>>(&self, name: S) -> Result<Option<String>, Error> {
+        self.get(GetServerOptionValue::user_option(name))
+    }
+
+    /// # Manual
+    ///
+    /// tmux:
+    /// ```text
+    /// @user-option-name value
+    /// ```
+    pub fn set_user_option<S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
+        &self,
+        name: S,
+        value: Option<T>,
+    ) -> Result<TmuxOutput, Error> {
+        self.set(SetServerOption::user_option(name, value))
     }
 }

@@ -1,3 +1,5 @@
+use crate::user_option;
+
 #[test]
 fn server_options_ctl() {
     use crate::{ServerOptionsCtl, Tmux};
@@ -57,6 +59,9 @@ fn server_option() {
     let quiet = server_option_ctl.get_quiet().unwrap();
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     let detach_on_destroy = server_option_ctl.get_detach_on_destroy().unwrap();
+    let user_option = server_options_ctl
+        .get_user_option("user-option-name")
+        .unwrap();
 
     // let buffer_limit = ServerOption::default().get_buffer_limit().unwrap();
     // let buffer_limit = ServerOption::default().get_command_alias().unwrap();

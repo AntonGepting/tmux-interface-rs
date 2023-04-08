@@ -16,7 +16,7 @@ fn get_all() {
 
     let session_options = GlobalSessionOptionsCtl::default().get_all().unwrap();
 
-    let session_options = GlobalSessionOptionsCtl::new(|cmd| Tmux::with_command(cmd).output())
+    let session_options = GlobalSessionOptionsCtl::new(&|cmd| Tmux::with_command(cmd).output())
         .get_all()
         .unwrap();
 

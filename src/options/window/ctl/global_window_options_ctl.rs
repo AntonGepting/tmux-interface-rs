@@ -17,21 +17,21 @@ pub struct GlobalWindowOptionsCtl<'a> {
     // ```
     // let tmux = Tmux::new();
     // ```
-    pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    pub invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     pub target: Option<Cow<'a, str>>,
 }
 
 impl<'a> Default for GlobalWindowOptionsCtl<'a> {
     fn default() -> Self {
         Self {
-            invoker: |cmd| Tmux::with_command(cmd).output(),
+            invoker: &|cmd| Tmux::with_command(cmd).output(),
             target: None,
         }
     }
 }
 
 impl<'a> GlobalWindowOptionsCtl<'a> {
-    pub fn new(invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
+    pub fn new(invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
         Self {
             invoker,
             target: None,
@@ -49,7 +49,7 @@ impl<'a> WindowOptionsCtl<'a> for GlobalWindowOptionsCtl<'a> {
         self.target.to_owned()
     }
 
-    fn invoker(&self) -> fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
+    fn invoker(&self) -> &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
         self.invoker
     }
 }

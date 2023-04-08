@@ -20,7 +20,7 @@ fn local_session_options_ctl_all() {
 
     // let session_options = LocalSessionOptionsCtl::default().get_all().unwrap();
     let session_options =
-        LocalSessionOptionsCtl::new(Some(""), |cmd| Tmux::with_command(cmd).output())
+        LocalSessionOptionsCtl::new(Some(""), &|cmd| Tmux::with_command(cmd).output())
             .get_all()
             .unwrap();
 

@@ -52,14 +52,14 @@ pub struct PaneOptionsCtl<'a> {
     // ```
     // let tmux = Tmux::new();
     // ```
-    pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    pub invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     pub target: Option<Cow<'a, str>>,
 }
 
 impl<'a> Default for PaneOptionsCtl<'a> {
     fn default() -> Self {
         Self {
-            invoker: |cmd| Tmux::with_command(cmd).output(),
+            invoker: &|cmd| Tmux::with_command(cmd).output(),
             target: None,
         }
     }
@@ -68,7 +68,7 @@ impl<'a> Default for PaneOptionsCtl<'a> {
 impl<'a> PaneOptionsCtl<'a> {
     pub fn new(
         target: Option<Cow<'a, str>>,
-        invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Self {
         PaneOptionsCtl { invoker, target }
     }
@@ -77,7 +77,7 @@ impl<'a> PaneOptionsCtl<'a> {
         self.target.to_owned()
     }
 
-    pub fn invoker(&self) -> fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
+    pub fn invoker(&self) -> &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
         self.invoker
     }
 
@@ -87,7 +87,7 @@ impl<'a> PaneOptionsCtl<'a> {
 
     pub fn get_all_ext(
         target: Option<Cow<'a, str>>,
-        invoke: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoke: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Result<PaneOptions<'a>, Error> {
         let cmd = ShowOptions::new().pane();
         let cmd = match target {
@@ -105,7 +105,7 @@ impl<'a> PaneOptionsCtl<'a> {
 
     pub fn set_all_ext(
         target: Option<Cow<'a, str>>,
-        invoke: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoke: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
         pane_options: PaneOptions<'a>,
     ) -> Result<TmuxOutput, Error> {
         let cmds = SetPaneOptions::new();

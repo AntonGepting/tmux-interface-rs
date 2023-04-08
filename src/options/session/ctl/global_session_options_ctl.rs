@@ -15,19 +15,19 @@ pub struct GlobalSessionOptionsCtl<'a> {
     // ```
     // let tmux = Tmux::new();
     // ```
-    pub invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+    pub invoker: &'a Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
 }
 
 impl<'a> Default for GlobalSessionOptionsCtl<'a> {
     fn default() -> Self {
         Self {
-            invoker: |cmd| Tmux::with_command(cmd).output(),
+            invoker: &|cmd| Tmux::with_command(cmd).output(),
         }
     }
 }
 
 impl<'a> GlobalSessionOptionsCtl<'a> {
-    pub fn new(invoker: fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
+    pub fn new(invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
         Self { invoker }
     }
 }
@@ -42,7 +42,7 @@ impl<'a> SessionOptionsCtl<'a> for GlobalSessionOptionsCtl<'a> {
         None
     }
 
-    fn invoker(&self) -> fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
+    fn invoker(&self) -> &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
         self.invoker
     }
 }
