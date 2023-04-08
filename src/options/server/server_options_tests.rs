@@ -1,6 +1,7 @@
-// default()
-// to_string()
-// from_str()
+// Tests:
+// * `::default()`
+// * `.to_string()`
+// * `::from_str()`
 
 #[test]
 fn default() {
