@@ -206,8 +206,8 @@ pub enum VariableOutput<'a> {
     Line(&'a mut Option<usize>),
 
     // `mouse_all_flag` - Pane mouse all flag
-    //#[cfg(feature = "tmux_3_0")]
-    //MouseAllFlag(&'a mut Option<String>),
+    // #[cfg(feature = "tmux_3_0")]
+    // MouseAllFlag(&'a mut Option<String>),
     /// `mouse_any_flag` - Pane mouse any flag
     #[cfg(feature = "tmux_1_8")]
     MouseAnyFlag(&'a mut Option<String>),
@@ -817,8 +817,8 @@ impl<'a> VariableOutput<'a> {
             Self::Line(v) => **v = s.parse::<usize>().ok(),
 
             // mouse_all_flag - Pane mouse all flag
-            #[cfg(feature = "tmux_3_0")]
-            Self::MouseAllFlag(v) => **v = Self::parse_option_string(s),
+            // #[cfg(feature = "tmux_3_0")]
+            // Self::MouseAllFlag(v) => **v = Self::parse_option_string(s),
             // mouse_any_flag - Pane mouse any flag
             #[cfg(feature = "tmux_1_8")]
             Self::MouseAnyFlag(v) => **v = Self::parse_option_string(s),

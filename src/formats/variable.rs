@@ -204,8 +204,8 @@ pub enum Variable {
     Line,
 
     // `mouse_all_flag` - Pane mouse all flag
-    //#[cfg(feature = "tmux_3_0")]
-    //MouseAllFlag,
+    // #[cfg(feature = "tmux_3_0")]
+    // MouseAllFlag,
     /// `mouse_any_flag` - Pane mouse any flag
     #[cfg(feature = "tmux_1_8")]
     MouseAnyFlag,
@@ -794,8 +794,8 @@ impl fmt::Display for Variable {
             Self::Line => "line",
 
             // mouse_all_flag - Pane mouse all flag
-            #[cfg(feature = "tmux_3_0")]
-            Self::MouseAllFlag => "mouse_all_flag",
+            // #[cfg(feature = "tmux_3_0")]
+            // Self::MouseAllFlag => "mouse_all_flag",
             // mouse_any_flag - Pane mouse any flag
             #[cfg(feature = "tmux_1_8")]
             Self::MouseAnyFlag => "mouse_any_flag",
