@@ -1,5 +1,5 @@
 use crate::options::*;
-use crate::{SetOption, SetOptionExt, TmuxCommand};
+use crate::{SetOption, SetOptionTr, TmuxCommand};
 use std::borrow::Cow;
 
 pub struct SetServerOption;
@@ -8,7 +8,7 @@ impl SetServerOptionTr for SetServerOption {}
 
 impl SetUserOption for SetServerOption {}
 
-impl SetOptionExt for SetServerOption {
+impl SetOptionTr for SetServerOption {
     fn set<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         name: T,
         value: Option<S>,

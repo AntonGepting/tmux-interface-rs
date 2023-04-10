@@ -1,4 +1,4 @@
-use crate::options::{SetOptionExt, SetSessionOptionTr, SetUserOption};
+use crate::options::{SetOptionTr, SetSessionOptionTr, SetUserOption};
 use crate::{SetOption, TmuxCommand};
 use std::borrow::Cow;
 
@@ -6,7 +6,7 @@ use std::borrow::Cow;
 
 pub struct SetGlobalSessionOption;
 
-impl SetOptionExt for SetGlobalSessionOption {
+impl SetOptionTr for SetGlobalSessionOption {
     // unset if value = None
     fn set_ext<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         target: Option<U>,

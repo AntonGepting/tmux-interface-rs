@@ -1,9 +1,9 @@
-use crate::{GetOptionExt, GetPaneOptionTr, GetUserOption, ShowOptions, TmuxCommand};
+use crate::{GetOptionTr, GetPaneOptionTr, GetUserOption, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
 pub struct GetPaneOptionValue;
 
-impl GetOptionExt for GetPaneOptionValue {
+impl GetOptionTr for GetPaneOptionValue {
     fn get_ext<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
         target: Option<T>,
         name: S,

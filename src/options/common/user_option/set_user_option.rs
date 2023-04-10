@@ -1,8 +1,8 @@
-use crate::options::{SetOptionExt, USER_OPTION_MARKER};
+use crate::options::{SetOptionTr, USER_OPTION_MARKER};
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
-pub trait SetUserOption: SetOptionExt {
+pub trait SetUserOption: SetOptionTr {
     fn user_option<'a, S, T>(name: S, value: Option<T>) -> TmuxCommand<'a>
     where
         S: Into<Cow<'a, str>>,

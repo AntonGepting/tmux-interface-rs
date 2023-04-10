@@ -8,7 +8,7 @@ impl SetPaneOptionTr for SetPaneOption {}
 
 impl SetUserOption for SetPaneOption {}
 
-impl SetOptionExt for SetPaneOption {
+impl SetOptionTr for SetPaneOption {
     // unset if value = None
     fn set_ext<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         target: Option<U>,

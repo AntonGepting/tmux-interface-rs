@@ -1,8 +1,8 @@
-use crate::SetOptionExt;
+use crate::SetOptionTr;
 
 struct SetOptionExtTest;
 
-impl SetOptionExt for SetOptionExtTest {}
+impl SetOptionTr for SetOptionExtTest {}
 
 #[test]
 fn set_option_ext_tests() {

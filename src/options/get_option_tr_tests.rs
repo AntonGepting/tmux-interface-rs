@@ -1,8 +1,8 @@
-use crate::GetOptionExt;
+use crate::GetOptionTr;
 
 struct GetOptionExtTest;
 
-impl GetOptionExt for GetOptionExtTest {}
+impl GetOptionTr for GetOptionExtTest {}
 
 #[test]
 fn get_option_ext_tests() {

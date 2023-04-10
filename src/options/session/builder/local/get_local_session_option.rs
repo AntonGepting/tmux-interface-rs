@@ -1,10 +1,10 @@
-use crate::options::{GetOptionExt, GetSessionOptionTr};
+use crate::options::{GetOptionTr, GetSessionOptionTr};
 use crate::{GetUserOption, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
 pub struct GetLocalSessionOption;
 
-impl GetOptionExt for GetLocalSessionOption {
+impl GetOptionTr for GetLocalSessionOption {
     fn get_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         target: Option<S>,
         name: T,

@@ -165,8 +165,8 @@
 //!         * [`GetUserOptions`] getter method for user options (`@user-option-name value`)
 //!         * [`SetUserOption`] setter method for user option (`@user-option-name value`)
 //!         * [`SetUserOptions`] setter method for user options (`@user-option-name value`)
-//!     * [`GetOptionExt`] common getter method for all options
-//!     * [`SetOptionExt`] common setter method for all options
+//!     * [`GetOptionTr`] common getter method for all options
+//!     * [`SetOptionTr`] common setter method for all options
 //! * [`Server`](self::server)
 //!     * [`GetServerOption`]
 //!     * [`GetServerOptionValue`]
@@ -301,9 +301,9 @@
 //!  +----------------+           +----------------+
 //!   ...                          ...
 //! Get/Set options command builder traits (custom get/set implementations for server/session/window/pane)
-//!  +--------------+             +--------------+
-//!  | GetOptionExt |             | SetOptionExt |
-//!  +--------------+             +--------------+
+//!  +-------------+              +-------------+
+//!  | GetOptionTr |              | SetOptionTr |
+//!  +-------------+              +-------------+
 //!   ...                          ...
 //!
 //! Get/Set options commands builder structures (named methods for server/session/window/pane and other)
@@ -413,13 +413,13 @@
 // mb separated crate later, and tmux_commands as underlying layer
 //
 pub mod common;
-pub mod get_option_ext;
-pub mod set_option_ext;
+pub mod get_option_tr;
+pub mod set_option_tr;
 
 pub use common::*;
 
-pub use get_option_ext::GetOptionExt;
-pub use set_option_ext::SetOptionExt;
+pub use get_option_tr::GetOptionTr;
+pub use set_option_tr::SetOptionTr;
 
 #[cfg(feature = "tmux_3_1")]
 pub mod pane;
@@ -442,7 +442,7 @@ pub use window::*;
 #[cfg(test)]
 #[path = "."]
 mod options_tests {
-    pub mod get_option_ext_tests;
+    pub mod get_option_tr_tests;
 
-    pub mod set_option_ext_tests;
+    pub mod set_option_tr_tests;
 }

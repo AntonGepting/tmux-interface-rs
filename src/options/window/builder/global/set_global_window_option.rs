@@ -1,11 +1,11 @@
 use crate::{SetOption, TmuxCommand};
-use crate::{SetOptionExt, SetUserOption, SetWindowOptionTr};
+use crate::{SetOptionTr, SetUserOption, SetWindowOptionTr};
 use std::borrow::Cow;
 
 pub struct SetGlobalWindowOption;
 
 //impl SetWindowOptionExt for SetGlobalWindowOption {
-impl SetOptionExt for SetGlobalWindowOption {
+impl SetOptionTr for SetGlobalWindowOption {
     // unset if value = None
     fn set_ext<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         target: Option<U>,

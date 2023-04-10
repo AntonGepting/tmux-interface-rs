@@ -8,7 +8,7 @@ use std::borrow::Cow;
 // option value
 //
 // default implementation for getting options, by default local options
-pub trait GetSessionOptionTr: GetOptionExt + GetUserOption {
+pub trait GetSessionOptionTr: GetOptionTr + GetUserOption {
     fn all<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
         Self::get_all(target)
     }

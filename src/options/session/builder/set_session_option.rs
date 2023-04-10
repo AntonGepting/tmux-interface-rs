@@ -1,4 +1,4 @@
-use crate::options::SetOptionExt;
+use crate::options::SetOptionTr;
 use crate::options::*;
 use crate::{Action, Activity, DetachOnDestroy, Status, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
@@ -8,7 +8,7 @@ use std::borrow::Cow;
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-pub trait SetSessionOptionTr: SetOptionExt + SetUserOption {
+pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
     /// ### Manual
     ///
     /// tmux ^2.6:

@@ -1,4 +1,4 @@
-use crate::options::{GetOptionExt, GetUserOption, GetWindowOptionTr};
+use crate::options::{GetOptionTr, GetUserOption, GetWindowOptionTr};
 use crate::{ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
@@ -8,7 +8,7 @@ impl GetWindowOptionTr for GetLocalWindowOption {}
 
 impl GetUserOption for GetLocalWindowOption {}
 
-impl GetOptionExt for GetLocalWindowOption {
+impl GetOptionTr for GetLocalWindowOption {
     fn get_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         target: Option<S>,
         name: T,

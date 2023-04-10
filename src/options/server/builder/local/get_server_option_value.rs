@@ -19,14 +19,14 @@
 //! ```
 //!
 use crate::options::*;
-use crate::{GetOptionExt, ShowOptions, TmuxCommand};
+use crate::{GetOptionTr, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
 // TODO: all options exist in get/set?
 
 pub struct GetServerOptionValue;
 
-impl GetOptionExt for GetServerOptionValue {
+impl GetOptionTr for GetServerOptionValue {
     fn get<'a, S: Into<Cow<'a, str>>>(name: S) -> TmuxCommand<'a> {
         ShowOptions::new().server().option(name).value().build()
     }

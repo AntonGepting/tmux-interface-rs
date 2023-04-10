@@ -10,9 +10,9 @@ use std::borrow::Cow;
 //  * [`WindowOptions`] (`show-options -w <NAME>`)
 //  * [`PaneOptions`] (`show-options -p <NAME>`)
 //
-// NOTE: `GetOptionExt` complementary to `SetOptionExt`, symbols `SetOption`
+// NOTE: `GetOptionTr` complementary to `SetOptionTr`, symbols `SetOption`
 // already taken by tmux command builder
-pub trait GetOptionExt {
+pub trait GetOptionTr {
     /// Command builder for get single option command using only option name
     ///
     /// # Arguments

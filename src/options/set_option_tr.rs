@@ -10,8 +10,8 @@ use std::borrow::Cow;
 //  * [`PaneOptions`] (`set-option -p <NAME>`)
 //
 // TODO: optimize set/set_ext are the same
-// NOTE: `SetOptionExt`, symbols `SetOption` already taken by tmux command
-pub trait SetOptionExt {
+// NOTE: `SetOptionTr`, symbols `SetOption` already taken by tmux command
+pub trait SetOptionTr {
     fn set<'a, T, S>(name: T, value: Option<S>) -> TmuxCommand<'a>
     where
         T: Into<Cow<'a, str>>,

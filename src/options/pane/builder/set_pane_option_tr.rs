@@ -7,7 +7,7 @@ use std::borrow::Cow;
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-pub trait SetPaneOptionTr: SetOptionExt + SetUserOption {
+pub trait SetPaneOptionTr: SetOptionTr + SetUserOption {
     /// ### Manual
     ///
     /// tmux ^3.0:

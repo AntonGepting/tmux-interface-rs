@@ -19,14 +19,14 @@
 //! ```
 //!
 use crate::options::*;
-use crate::{GetOptionExt, TmuxCommand};
+use crate::{GetOptionTr, TmuxCommand};
 
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-pub trait GetServerOptionTr: GetOptionExt + GetUserOption {
+pub trait GetServerOptionTr: GetOptionTr + GetUserOption {
     /// ### Manual
     ///
     /// tmux ^3.1:

@@ -8,7 +8,7 @@ use std::str::FromStr;
 
 // pub struct SessionOptionsCtl;
 
-// impl SetOptionExt for SessionOptionsCtl<'a>;
+// impl SetOptionTr for SessionOptionsCtl<'a>;
 
 // trait, subtrai for global local
 pub trait SessionOptionsCtl<'a> {

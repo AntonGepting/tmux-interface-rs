@@ -18,13 +18,13 @@
 //! let value = output.unwrap();
 //! ```
 //!
-use crate::options::{GetOptionExt, GetSessionOptionTr, GetUserOption};
+use crate::options::{GetOptionTr, GetSessionOptionTr, GetUserOption};
 use crate::{ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
 pub struct GetGlobalSessionOptionValue;
 
-impl GetOptionExt for GetGlobalSessionOptionValue {
+impl GetOptionTr for GetGlobalSessionOptionValue {
     fn get_ext<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
         target: Option<T>,
         name: S,

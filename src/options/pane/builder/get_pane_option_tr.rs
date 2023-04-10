@@ -1,5 +1,5 @@
 use crate::options::*;
-use crate::{GetOptionExt, GetUserOption, TmuxCommand};
+use crate::{GetOptionTr, GetUserOption, TmuxCommand};
 use std::borrow::Cow;
 
 // NOTE: method avoiding names like set_set_clipboard
@@ -7,7 +7,7 @@ use std::borrow::Cow;
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-pub trait GetPaneOptionTr: GetOptionExt + GetUserOption {
+pub trait GetPaneOptionTr: GetOptionTr + GetUserOption {
     /// ### Manual
     ///
     /// tmux ^3.0:
