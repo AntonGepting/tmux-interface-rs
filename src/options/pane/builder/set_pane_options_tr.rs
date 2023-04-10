@@ -1,46 +1,8 @@
-use crate::{
-    RemainOnExit, SetPaneOption, SetPaneOptionTrait, SetUserOptions, Switch, TmuxCommand,
-    TmuxCommands,
-};
+use crate::{RemainOnExit, SetPaneOption, SetPaneOptionTr, Switch, TmuxCommand, TmuxCommands};
+
 use std::borrow::Cow;
-
-#[derive(Debug)]
-pub struct SetPaneOptions<'a> {
-    pub options: TmuxCommands<'a>,
-}
-
-impl<'a> SetPaneOptionsTrait<'a> for SetPaneOptions<'a> {
-    type Setter = SetPaneOption;
-
-    fn new() -> Self {
-        Self {
-            options: TmuxCommands::new(),
-        }
-    }
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-
-    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
-        self.options.push_cmds(options);
-    }
-
-    fn build(self) -> TmuxCommands<'a> {
-        self.options
-    }
-}
-
-impl<'a> SetUserOptions<'a> for SetPaneOptions<'a> {
-    type Setter = SetPaneOption;
-
-    fn push(&mut self, option: TmuxCommand<'a>) {
-        self.options.push(option);
-    }
-}
-
-pub trait SetPaneOptionsTrait<'a> {
-    type Setter: SetPaneOptionTrait;
+pub trait SetPaneOptionsTr<'a> {
+    type Setter: SetPaneOptionTr;
 
     fn new() -> Self;
 

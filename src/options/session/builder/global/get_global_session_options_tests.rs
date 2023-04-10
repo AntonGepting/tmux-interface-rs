@@ -1,6 +1,6 @@
 #[test]
 fn get_session_options() {
-    use crate::{GetGlobalSessionOptions, GetSessionOptions, GetUserOptions};
+    use crate::{GetGlobalSessionOptions, GetSessionOptionsTr, GetUserOptions};
 
     let target = ":";
 

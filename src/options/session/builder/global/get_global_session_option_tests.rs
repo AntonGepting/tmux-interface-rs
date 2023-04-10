@@ -1,6 +1,6 @@
 #[test]
 fn get_global_session_option_tests() {
-    use crate::{GetGlobalSessionOption, GetSessionOption, GetUserOption};
+    use crate::{GetGlobalSessionOption, GetSessionOptionTr, GetUserOption};
 
     let cmd = "show -g";
     let target = ":";

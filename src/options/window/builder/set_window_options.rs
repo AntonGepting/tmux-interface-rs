@@ -8,11 +8,11 @@ use crate::ModeMouse;
 use crate::PaneBorderStatus;
 #[cfg(feature = "tmux_2_9")]
 use crate::WindowSize;
-use crate::{ClockModeStyle, SetWindowOptionExt, StatusKeys, Switch, TmuxCommand, TmuxCommands};
+use crate::{ClockModeStyle, SetWindowOptionTr, StatusKeys, Switch, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 
-pub trait SetWindowOptions<'a> {
-    type Setter: SetWindowOptionExt;
+pub trait SetWindowOptionsTr<'a> {
+    type Setter: SetWindowOptionTr;
 
     fn new() -> Self;
 

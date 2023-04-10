@@ -1,7 +1,7 @@
 use crate::{
-    Error, GetPaneOption, GetPaneOptionTrait, PaneOptions, RemainOnExit, SetPaneOption,
-    SetPaneOptionTrait, SetPaneOptions, SetPaneOptionsTrait, ShowOptions, Switch, Tmux,
-    TmuxCommand, TmuxOutput,
+    Error, GetPaneOption, GetPaneOptionTr, PaneOptions, RemainOnExit, SetPaneOption,
+    SetPaneOptionTr, SetPaneOptions, SetPaneOptionsTr, ShowOptions, Switch, Tmux, TmuxCommand,
+    TmuxOutput,
 };
 use std::borrow::Cow;
 use std::str::FromStr;

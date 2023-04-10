@@ -10,7 +10,7 @@ fn set_global_window_options() {
     #[cfg(feature = "tmux_2_9")]
     use crate::WindowSize;
     use crate::{
-        ClockModeStyle, SetGlobalWindowOptions, SetUserOptions, SetWindowOptions, StatusKeys,
+        ClockModeStyle, SetGlobalWindowOptions, SetUserOptions, SetWindowOptionsTr, StatusKeys,
         Switch,
     };
 

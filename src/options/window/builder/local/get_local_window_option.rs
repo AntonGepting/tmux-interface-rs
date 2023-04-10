@@ -1,10 +1,10 @@
-use crate::options::{GetOptionExt, GetUserOption, GetWindowOption};
+use crate::options::{GetOptionExt, GetUserOption, GetWindowOptionTr};
 use crate::{ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
 pub struct GetLocalWindowOption;
 
-impl GetWindowOption for GetLocalWindowOption {}
+impl GetWindowOptionTr for GetLocalWindowOption {}
 
 impl GetUserOption for GetLocalWindowOption {}
 

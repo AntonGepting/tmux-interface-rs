@@ -1,6 +1,6 @@
 #[test]
 fn get_local_window_option_tests() {
-    use crate::{GetLocalWindowOption, GetUserOption, GetWindowOption};
+    use crate::{GetLocalWindowOption, GetUserOption, GetWindowOptionTr};
 
     let cmd = "show -w";
     let target = ":";

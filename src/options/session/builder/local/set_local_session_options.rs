@@ -1,4 +1,4 @@
-use crate::options::{SetLocalSessionOption, SetSessionOptions, SetUserOptions};
+use crate::options::{SetLocalSessionOption, SetSessionOptionsTr, SetUserOptions};
 use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
@@ -6,7 +6,7 @@ pub struct SetLocalSessionOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
-impl<'a> SetSessionOptions<'a> for SetLocalSessionOptions<'a> {
+impl<'a> SetSessionOptionsTr<'a> for SetLocalSessionOptions<'a> {
     type Setter = SetLocalSessionOption;
 
     fn new() -> Self {

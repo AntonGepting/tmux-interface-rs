@@ -1,18 +1,21 @@
-use crate::options::{SetOptionExt, SetUserOption, SetWindowOptionTr};
-use crate::{SetOption, TmuxCommand};
+use crate::options::*;
+use crate::{SetOption, SetUserOption, TmuxCommand};
 use std::borrow::Cow;
 
-pub struct SetLocalWindowOption;
+pub struct SetPaneOption;
 
-//impl SetWindowOptionExt for SetLocalWindowOption {
-impl SetOptionExt for SetLocalWindowOption {
+impl SetPaneOptionTr for SetPaneOption {}
+
+impl SetUserOption for SetPaneOption {}
+
+impl SetOptionExt for SetPaneOption {
     // unset if value = None
     fn set_ext<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
         target: Option<U>,
         name: T,
         value: Option<S>,
     ) -> TmuxCommand<'a> {
-        let cmd = SetOption::new().window().option(name);
+        let cmd = SetOption::new().pane().option(name);
         let cmd = match target {
             #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             Some(target) => cmd.target(target),
@@ -31,7 +34,7 @@ impl SetOptionExt for SetLocalWindowOption {
         target: Option<S>,
         name: T,
     ) -> TmuxCommand<'a> {
-        let cmd = SetOption::new().window().option(name).unset();
+        let cmd = SetOption::new().pane().option(name).unset();
         let cmd = match target {
             #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
             Some(target) => cmd.target(target),
@@ -42,7 +45,3 @@ impl SetOptionExt for SetLocalWindowOption {
         cmd.build()
     }
 }
-
-impl SetWindowOptionTr for SetLocalWindowOption {}
-
-impl SetUserOption for SetLocalWindowOption {}

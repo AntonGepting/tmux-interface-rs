@@ -7,8 +7,7 @@ fn set_global_window_option_tests() {
     #[cfg(feature = "tmux_2_9")]
     use crate::WindowSize;
     use crate::{
-        ClockModeStyle, SetGlobalWindowOption, SetUserOption, SetWindowOptionExt, StatusKeys,
-        Switch,
+        ClockModeStyle, SetGlobalWindowOption, SetUserOption, SetWindowOptionTr, StatusKeys, Switch,
     };
 
     let cmd = "set -g -w";

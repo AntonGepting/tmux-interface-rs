@@ -49,10 +49,10 @@
 //! ```text
 //! ```
 
-use crate::{GetSessionOption, TmuxCommand, TmuxCommands};
+use crate::{GetSessionOptionTr, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 
-pub trait GetSessionOptions<'a, Getter: GetSessionOption> {
+pub trait GetSessionOptionsTr<'a, Getter: GetSessionOptionTr> {
     fn new() -> Self;
 
     fn push<T: Into<TmuxCommand<'a>>>(&mut self, cmd: T);

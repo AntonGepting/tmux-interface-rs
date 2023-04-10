@@ -7,7 +7,8 @@ fn set_local_window_options() {
     #[cfg(feature = "tmux_2_9")]
     use crate::WindowSize;
     use crate::{
-        ClockModeStyle, SetLocalWindowOptions, SetUserOptions, SetWindowOptions, StatusKeys, Switch,
+        ClockModeStyle, SetLocalWindowOptions, SetUserOptions, SetWindowOptionsTr, StatusKeys,
+        Switch,
     };
 
     let options = SetLocalWindowOptions::new();

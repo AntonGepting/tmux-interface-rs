@@ -1,5 +1,5 @@
 use crate::{SetOption, TmuxCommand};
-use crate::{SetOptionExt, SetUserOption, SetWindowOptionExt};
+use crate::{SetOptionExt, SetUserOption, SetWindowOptionTr};
 use std::borrow::Cow;
 
 pub struct SetGlobalWindowOption;
@@ -43,6 +43,6 @@ impl SetOptionExt for SetGlobalWindowOption {
     }
 }
 
-impl SetWindowOptionExt for SetGlobalWindowOption {}
+impl SetWindowOptionTr for SetGlobalWindowOption {}
 
 impl SetUserOption for SetGlobalWindowOption {}

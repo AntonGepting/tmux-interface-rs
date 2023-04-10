@@ -1,6 +1,6 @@
 #[test]
 fn set_pane_option() {
-    use crate::{RemainOnExit, SetPaneOption, SetPaneOptionTrait, Switch};
+    use crate::{RemainOnExit, SetPaneOption, SetPaneOptionTr, SetUserOption, Switch};
 
     let cmd = "set -p";
     let target = ":";
@@ -55,9 +55,12 @@ fn set_pane_option() {
 
     {
         let origin = format!("{} {} {}", cmd, "@user-option-name", "value");
-        let get_option =
-            SetPaneOption::user_option(Some(target), "user-option-name", Some("value".to_string()))
-                .to_string();
+        let get_option = SetPaneOption::user_option_ext(
+            Some(target),
+            "user-option-name",
+            Some("value".to_string()),
+        )
+        .to_string();
         assert_eq!(origin, get_option);
     }
 }

@@ -13,28 +13,17 @@
 //!     * Multiple
 //!         * [`SetServerOptions`] multiple options
 //!
-pub mod get_server_option;
+
+pub mod local;
+
 pub mod get_server_option_tr;
-pub mod get_server_option_value;
-pub mod get_server_options;
-pub mod set_server_option;
+pub mod get_server_options_tr;
 pub mod set_server_option_tr;
-pub mod set_server_options;
+pub mod set_server_options_tr;
 
-pub use get_server_option::*;
+pub use local::*;
+
 pub use get_server_option_tr::GetServerOptionTr;
-pub use get_server_option_value::*;
-pub use get_server_options::*;
-pub use set_server_option::*;
+pub use get_server_options_tr::GetServerOptionsTr;
 pub use set_server_option_tr::SetServerOptionTr;
-pub use set_server_options::*;
-
-#[cfg(test)]
-#[path = "."]
-mod server_tests {
-    pub mod get_server_option_tests;
-    pub mod get_server_options_tests;
-
-    pub mod set_server_option_tests;
-    pub mod set_server_options_tests;
-}
+pub use set_server_options_tr::SetServerOptionsTr;

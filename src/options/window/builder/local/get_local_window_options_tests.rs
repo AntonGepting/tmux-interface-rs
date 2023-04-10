@@ -1,6 +1,6 @@
 #[test]
 fn get_local_window_options() {
-    use crate::{GetLocalWindowOptions, GetUserOptions, GetWindowOptions};
+    use crate::{GetLocalWindowOptions, GetUserOptions, GetWindowOptionsTr};
 
     let options = GetLocalWindowOptions::new();
     let target = ":";

@@ -1,7 +1,7 @@
 #[test]
 fn set_local_session_options_tests() {
     use crate::{
-        Action, Activity, DetachOnDestroy, SetLocalSessionOptions, SetSessionOptions,
+        Action, Activity, DetachOnDestroy, SetLocalSessionOptions, SetSessionOptionsTr,
         SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
     };
 

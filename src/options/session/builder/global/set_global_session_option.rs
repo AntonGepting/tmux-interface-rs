@@ -1,4 +1,4 @@
-use crate::options::{SetOptionExt, SetSessionOption, SetUserOption};
+use crate::options::{SetOptionExt, SetSessionOptionTr, SetUserOption};
 use crate::{SetOption, TmuxCommand};
 use std::borrow::Cow;
 
@@ -44,6 +44,6 @@ impl SetOptionExt for SetGlobalSessionOption {
     }
 }
 
-impl SetSessionOption for SetGlobalSessionOption {}
+impl SetSessionOptionTr for SetGlobalSessionOption {}
 
 impl SetUserOption for SetGlobalSessionOption {}

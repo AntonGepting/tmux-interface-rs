@@ -1,8 +1,8 @@
 #[test]
 fn set_global_session_option_tests() {
     use crate::{
-        Action, Activity, DetachOnDestroy, SetGlobalSessionOption, SetSessionOption, SetUserOption,
-        Status, StatusJustify, StatusKeys, StatusPosition, Switch,
+        Action, Activity, DetachOnDestroy, SetGlobalSessionOption, SetSessionOptionTr,
+        SetUserOption, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
     };
 
     let cmd = "set -g";

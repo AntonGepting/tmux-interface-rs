@@ -18,7 +18,7 @@
 //! let value = output.unwrap();
 //! ```
 //!
-use crate::options::{GetOptionExt, GetSessionOption, GetUserOption};
+use crate::options::{GetOptionExt, GetSessionOptionTr, GetUserOption};
 use crate::{ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
@@ -40,6 +40,6 @@ impl GetOptionExt for GetLocalSessionOptionValue {
     }
 }
 
-impl GetSessionOption for GetLocalSessionOptionValue {}
+impl GetSessionOptionTr for GetLocalSessionOptionValue {}
 
 impl GetUserOption for GetLocalSessionOptionValue {}

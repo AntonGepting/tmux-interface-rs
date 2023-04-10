@@ -1,8 +1,8 @@
 #[test]
 fn set_local_session_option_tests() {
     use crate::{
-        Action, Activity, DetachOnDestroy, SetLocalSessionOption, SetSessionOption, SetUserOption,
-        Status, StatusJustify, StatusKeys, StatusPosition, Switch,
+        Action, Activity, DetachOnDestroy, SetLocalSessionOption, SetSessionOptionTr,
+        SetUserOption, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
     };
 
     let cmd = "set";

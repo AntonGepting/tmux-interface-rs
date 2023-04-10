@@ -1,5 +1,5 @@
 use crate::{
-    ClockModeStyle, Error, GetWindowOption, SetWindowOptionExt, SetWindowOptions, StatusKeys,
+    ClockModeStyle, Error, GetWindowOptionTr, SetWindowOptionTr, SetWindowOptionsTr, StatusKeys,
     Switch, TmuxCommand, TmuxOutput, WindowOptions,
 };
 use std::str::FromStr;
@@ -14,10 +14,10 @@ use std::borrow::Cow;
 
 // trait, subtrai for global local
 pub trait WindowOptionsCtl<'a> {
-    type Getter: GetWindowOption;
-    type Setter: SetWindowOptionExt;
-    type GetterAll: GetWindowOption;
-    type SetterMultiple: SetWindowOptions<'a>;
+    type Getter: GetWindowOptionTr;
+    type Setter: SetWindowOptionTr;
+    type GetterAll: GetWindowOptionTr;
+    type SetterMultiple: SetWindowOptionsTr<'a>;
 
     fn target(&self) -> Option<Cow<'a, str>>;
 

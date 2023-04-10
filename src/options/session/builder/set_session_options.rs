@@ -2,13 +2,13 @@
 // and getter traits were choosen for common use super::set_session_option::Self::Setter;
 //
 use crate::{
-    Action, Activity, DetachOnDestroy, SetSessionOption, Status, StatusJustify, StatusKeys,
+    Action, Activity, DetachOnDestroy, SetSessionOptionTr, Status, StatusJustify, StatusKeys,
     StatusPosition, Switch, TmuxCommand, TmuxCommands,
 };
 use std::borrow::Cow;
 
-pub trait SetSessionOptions<'a> {
-    type Setter: SetSessionOption;
+pub trait SetSessionOptionsTr<'a> {
+    type Setter: SetSessionOptionTr;
 
     fn new() -> Self;
 

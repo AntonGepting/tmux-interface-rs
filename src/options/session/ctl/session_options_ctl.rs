@@ -1,4 +1,4 @@
-use crate::options::{GetSessionOption, SessionOptions, SetSessionOption, SetSessionOptions};
+use crate::options::{GetSessionOptionTr, SessionOptions, SetSessionOptionTr, SetSessionOptionsTr};
 use crate::{
     Action, Activity, DetachOnDestroy, Error, Status, StatusJustify, StatusKeys, StatusPosition,
     Switch, TmuxCommand, TmuxOutput,
@@ -12,10 +12,10 @@ use std::str::FromStr;
 
 // trait, subtrai for global local
 pub trait SessionOptionsCtl<'a> {
-    type Getter: GetSessionOption;
-    type Setter: SetSessionOption;
-    type GetterAll: GetSessionOption;
-    type SetterMultiple: SetSessionOptions<'a>;
+    type Getter: GetSessionOptionTr;
+    type Setter: SetSessionOptionTr;
+    type GetterAll: GetSessionOptionTr;
+    type SetterMultiple: SetSessionOptionsTr<'a>;
 
     fn target(&self) -> Option<Cow<'a, str>>;
 
@@ -333,6 +333,40 @@ pub trait SessionOptionsCtl<'a> {
         // Ok((self.invoker)(cmd)?.to_string().trim().parse::<T>().ok())
     }
 
+    // FIXME: full array support
+    // Tmux binary
+    //
+    // 1. multiple binary call
+    // tmux set -s command-alias[0] value0
+    // tmux set -s command-alias[1] value1
+    // tmux set -s command-alias[2] value2
+    //
+    // 2. single binary call
+    // tmux set -s command-alias[0] value0 ; set -s command-alias[1] ; set -s command-alias[2]
+    //
+    // Control Mode
+    //
+    // 1. multiple control mode commands
+    // set -s command-alias[0] value0
+    // set -s command-alias[1] value1
+    // set -s command-alias[2] value2
+    //
+    // 2. single control mode command
+    // set -s command-alias[0] value0 ; set -s command-alias[1] ; set -s command-alias[2]
+    //
+    fn get_array(&self, get_option_cmd: TmuxCommand<'a>) -> Result<Option<Vec<String>>, Error> {
+        let output = (self.invoker())(get_option_cmd)?;
+        let v: Vec<String> = output
+            .to_string()
+            .lines()
+            .map(|s| s.trim().into())
+            .collect();
+        let result = match v.is_empty() {
+            true => None,
+            false => Some(v),
+        };
+        Ok(result)
+    }
     // fn set(&self, cmd: TmuxCommand<'a>) -> Result<TmuxOutput, Error>;
     fn set(&self, cmd: TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
         (self.invoker())(cmd)
@@ -1691,8 +1725,8 @@ pub trait SessionOptionsCtl<'a> {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn get_status_format(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::status_format(self.target()))
+    fn get_status_format(&self) -> Result<Option<Vec<String>>, Error> {
+        self.get_array(Self::Getter::status_format(self.target()))
     }
 
     /// ### Manual
@@ -1707,8 +1741,10 @@ pub trait SessionOptionsCtl<'a> {
         S: Into<Cow<'a, str>>,
         I: IntoIterator<Item = S>,
     {
-        unimplemented!();
-        // self.set(Self::Setter::status_format(self.target(), status_format))
+        self.set(TmuxCommand::with_cmds(Self::Setter::status_format(
+            self.target(),
+            status_format,
+        )))
     }
 
     /// ### Manual
@@ -2215,8 +2251,10 @@ pub trait SessionOptionsCtl<'a> {
         I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
     {
-        unimplemented!()
-        // self.set(Self::Setter::update_environment(self.target(), update_environment))
+        self.set(TmuxCommand::with_cmds(Self::Setter::update_environment(
+            self.target(),
+            update_environment,
+        )))
     }
 
     /// ### Manual

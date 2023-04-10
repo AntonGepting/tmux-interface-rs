@@ -1,4 +1,4 @@
-use crate::options::{GetGlobalSessionOption, GetSessionOptions, GetUserOptions};
+use crate::options::{GetGlobalSessionOption, GetSessionOptionsTr, GetUserOptions};
 use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
@@ -15,7 +15,7 @@ impl<'a> GetUserOptions<'a> for GetGlobalSessionOptions<'a> {
 }
 
 // XXX: both are same, optimize
-impl<'a> GetSessionOptions<'a, GetGlobalSessionOption> for GetGlobalSessionOptions<'a> {
+impl<'a> GetSessionOptionsTr<'a, GetGlobalSessionOption> for GetGlobalSessionOptions<'a> {
     fn new() -> Self
     where
         Self: Sized,

@@ -1,4 +1,4 @@
-use crate::options::{SetGlobalWindowOption, SetUserOptions, SetWindowOptions};
+use crate::options::{SetGlobalWindowOption, SetUserOptions, SetWindowOptionsTr};
 use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
@@ -6,7 +6,7 @@ pub struct SetGlobalWindowOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
-impl<'a> SetWindowOptions<'a> for SetGlobalWindowOptions<'a> {
+impl<'a> SetWindowOptionsTr<'a> for SetGlobalWindowOptions<'a> {
     type Setter = SetGlobalWindowOption;
 
     fn new() -> Self {

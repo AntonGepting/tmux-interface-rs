@@ -1,57 +1,13 @@
 use crate::options::*;
-use crate::{SetOption, SetUserOption, TmuxCommand};
+use crate::TmuxCommand;
 use std::borrow::Cow;
-
-pub struct SetPaneOption;
-
-impl SetPaneOptionTrait for SetPaneOption {}
-
-impl SetUserOption for SetPaneOption {}
-
-impl SetOptionExt for SetPaneOption {
-    // unset if value = None
-    fn set_ext<'a, U: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        target: Option<U>,
-        name: T,
-        value: Option<S>,
-    ) -> TmuxCommand<'a> {
-        let cmd = SetOption::new().pane().option(name);
-        let cmd = match target {
-            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-            Some(target) => cmd.target(target),
-            #[cfg(feature = "tmux_3_0")]
-            Some(target) => cmd.target_pane(target),
-            None => cmd,
-        };
-        let cmd = match value {
-            Some(value) => cmd.value(value),
-            None => cmd.unset(),
-        };
-        cmd.build()
-    }
-
-    fn unset_ext<'a, S: Into<Cow<'a, str>>, T: Into<Cow<'a, str>>>(
-        target: Option<S>,
-        name: T,
-    ) -> TmuxCommand<'a> {
-        let cmd = SetOption::new().pane().option(name).unset();
-        let cmd = match target {
-            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-            Some(target) => cmd.target(target),
-            #[cfg(feature = "tmux_3_0")]
-            Some(target) => cmd.target_pane(target),
-            None => cmd,
-        };
-        cmd.build()
-    }
-}
 
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-pub trait SetPaneOptionTrait: SetOptionExt {
+pub trait SetPaneOptionTr: SetOptionExt + SetUserOption {
     /// ### Manual
     ///
     /// tmux ^3.0:
@@ -148,18 +104,5 @@ pub trait SetPaneOptionTrait: SetOptionExt {
         S: Into<Cow<'a, str>>,
     {
         Self::set_ext(target, SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
-    }
-
-    /// ### Manual
-    ///
-    /// ```text
-    /// user option
-    /// ```
-    fn user_option<'a, S, T>(target: Option<S>, name: T, value: Option<String>) -> TmuxCommand<'a>
-    where
-        S: Into<Cow<'a, str>>,
-        T: Into<Cow<'a, str>> + std::fmt::Display,
-    {
-        Self::set_ext(target, format!("{}{}", USER_OPTION_MARKER, name), value)
     }
 }

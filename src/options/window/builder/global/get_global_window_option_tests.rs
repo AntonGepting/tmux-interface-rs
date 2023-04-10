@@ -1,6 +1,6 @@
 #[test]
 fn get_global_window_option_tests() {
-    use crate::{GetGlobalWindowOption, GetUserOption, GetWindowOption};
+    use crate::{GetGlobalWindowOption, GetUserOption, GetWindowOptionTr};
 
     let cmd = "show -g -w";
     let target = ":";

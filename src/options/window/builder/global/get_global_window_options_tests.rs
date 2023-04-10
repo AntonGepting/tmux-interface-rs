@@ -1,6 +1,6 @@
 #[test]
 fn get_global_window_options() {
-    use crate::{GetGlobalWindowOptions, GetUserOptions, GetWindowOptions};
+    use crate::{GetGlobalWindowOptions, GetUserOptions, GetWindowOptionsTr};
 
     let options = GetGlobalWindowOptions::new();
     let target = ":";

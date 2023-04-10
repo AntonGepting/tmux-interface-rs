@@ -1,6 +1,6 @@
 #[test]
 fn get_pane_options() {
-    use crate::{GetPaneOptions, GetPaneOptionsTrait, GetUserOptions};
+    use crate::{GetPaneOptions, GetPaneOptionsTr, GetUserOptions};
 
     let cmd = "show -p";
     let target = ":";

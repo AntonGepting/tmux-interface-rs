@@ -1,34 +1,13 @@
 use crate::options::*;
-use crate::{GetOptionExt, GetUserOption, ShowOptions, TmuxCommand};
+use crate::{GetOptionExt, GetUserOption, TmuxCommand};
 use std::borrow::Cow;
-
-pub struct GetPaneOption;
-
-// XXX: get without option  name, get_ext with name?
-impl GetOptionExt for GetPaneOption {
-    fn get_ext<'a, T: Into<Cow<'a, str>>, S: Into<Cow<'a, str>>>(
-        target: Option<S>,
-        name: T,
-    ) -> TmuxCommand<'a> {
-        let cmd = ShowOptions::new().pane().option(name);
-        let cmd = match target {
-            Some(target) => cmd.target(target),
-            None => cmd,
-        };
-        cmd.build()
-    }
-}
-
-impl GetPaneOptionTrait for GetPaneOption {}
-
-impl GetUserOption for GetPaneOption {}
 
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned
 // back) bc. not possible to differentiate between multi line array option value and single line
 // option value
 //
-pub trait GetPaneOptionTrait: GetOptionExt + GetUserOption {
+pub trait GetPaneOptionTr: GetOptionExt + GetUserOption {
     /// ### Manual
     ///
     /// tmux ^3.0:

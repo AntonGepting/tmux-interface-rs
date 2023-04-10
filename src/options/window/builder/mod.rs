@@ -10,7 +10,7 @@ pub use global::*;
 pub use local::*;
 // XXX: local == just window_opions
 
-pub use get_window_option::GetWindowOption;
+pub use get_window_option::GetWindowOptionTr;
 pub use get_window_options::*;
 pub use set_window_option::*;
 pub use set_window_options::*;

@@ -1,6 +1,6 @@
 #[test]
 fn set_server_options() {
-    use crate::{RemainOnExit, SetPaneOptions, SetPaneOptionsTrait, Switch};
+    use crate::{RemainOnExit, SetPaneOptions, SetPaneOptionsTr, Switch};
 
     let cmd = "set -p";
     let target = ":";

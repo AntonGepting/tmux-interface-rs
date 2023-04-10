@@ -1,4 +1,4 @@
-use crate::options::{SetLocalWindowOption, SetUserOptions, SetWindowOptions};
+use crate::options::{SetLocalWindowOption, SetUserOptions, SetWindowOptionsTr};
 use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
@@ -6,7 +6,7 @@ pub struct SetLocalWindowOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
-impl<'a> SetWindowOptions<'a> for SetLocalWindowOptions<'a> {
+impl<'a> SetWindowOptionsTr<'a> for SetLocalWindowOptions<'a> {
     type Setter = SetLocalWindowOption;
 
     fn new() -> Self {

@@ -1,4 +1,4 @@
-use crate::options::{GetGlobalWindowOption, GetUserOptions, GetWindowOptions};
+use crate::options::{GetGlobalWindowOption, GetUserOptions, GetWindowOptionsTr};
 use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
@@ -7,7 +7,7 @@ pub struct GetGlobalWindowOptions<'a> {
 }
 
 // XXX: both are same, optimize
-impl<'a> GetWindowOptions<'a, GetGlobalWindowOption> for GetGlobalWindowOptions<'a> {
+impl<'a> GetWindowOptionsTr<'a, GetGlobalWindowOption> for GetGlobalWindowOptions<'a> {
     fn new() -> Self
     where
         Self: Sized,

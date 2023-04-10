@@ -1,5 +1,4 @@
-use crate::options::*;
-use crate::{GetOptionExt, GetUserOption, ShowOptions, TmuxCommand};
+use crate::{GetOptionExt, GetPaneOptionTr, GetUserOption, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
 pub struct GetPaneOptionValue;
@@ -18,6 +17,6 @@ impl GetOptionExt for GetPaneOptionValue {
     }
 }
 
-impl GetPaneOptionTrait for GetPaneOptionValue {}
+impl GetPaneOptionTr for GetPaneOptionValue {}
 
 impl GetUserOption for GetPaneOptionValue {}

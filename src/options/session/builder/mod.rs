@@ -10,8 +10,8 @@ pub mod set_session_options;
 pub use global::*;
 pub use local::*;
 
-pub use get_session_option::GetSessionOption;
-pub use set_session_option::SetSessionOption;
+pub use get_session_option::GetSessionOptionTr;
+pub use set_session_option::SetSessionOptionTr;
 
-pub use get_session_options::GetSessionOptions;
-pub use set_session_options::SetSessionOptions;
+pub use get_session_options::GetSessionOptionsTr;
+pub use set_session_options::SetSessionOptionsTr;

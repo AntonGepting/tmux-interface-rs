@@ -1,7 +1,7 @@
 #[test]
 fn set_global_session_options_tests() {
     use crate::{
-        Action, Activity, DetachOnDestroy, SetGlobalSessionOptions, SetSessionOptions,
+        Action, Activity, DetachOnDestroy, SetGlobalSessionOptions, SetSessionOptionsTr,
         SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
     };
 

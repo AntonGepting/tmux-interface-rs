@@ -1,13 +1,12 @@
-use crate::options::{SetGlobalSessionOption, SetSessionOptionsTr, SetUserOptions};
-use crate::{TmuxCommand, TmuxCommands};
+use crate::{GetServerOption, GetServerOptionsTr, GetUserOptions, TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
-pub struct SetGlobalSessionOptions<'a> {
+pub struct GetServerOptions<'a> {
     pub options: TmuxCommands<'a>,
 }
 
-impl<'a> SetSessionOptionsTr<'a> for SetGlobalSessionOptions<'a> {
-    type Setter = SetGlobalSessionOption;
+impl<'a> GetServerOptionsTr<'a> for GetServerOptions<'a> {
+    type Getter = GetServerOption;
 
     fn new() -> Self {
         Self {
@@ -28,8 +27,8 @@ impl<'a> SetSessionOptionsTr<'a> for SetGlobalSessionOptions<'a> {
     }
 }
 
-impl<'a> SetUserOptions<'a> for SetGlobalSessionOptions<'a> {
-    type Setter = SetGlobalSessionOption;
+impl<'a> GetUserOptions<'a> for GetServerOptions<'a> {
+    type Getter = GetServerOption;
 
     fn push(&mut self, option: TmuxCommand<'a>) {
         self.options.push(option);

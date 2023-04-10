@@ -1,4 +1,4 @@
-use crate::options::{GetLocalSessionOption, GetSessionOptions, GetUserOptions};
+use crate::options::{GetLocalSessionOption, GetSessionOptionsTr, GetUserOptions};
 use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
@@ -15,7 +15,7 @@ impl<'a> GetUserOptions<'a> for GetLocalSessionOptions<'a> {
 }
 
 // XXX: both are same, optimize
-impl<'a> GetSessionOptions<'a, GetLocalSessionOption> for GetLocalSessionOptions<'a> {
+impl<'a> GetSessionOptionsTr<'a, GetLocalSessionOption> for GetLocalSessionOptions<'a> {
     fn new() -> Self
     where
         Self: Sized,

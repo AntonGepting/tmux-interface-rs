@@ -1,4 +1,4 @@
-use crate::options::{GetOptionExt, GetSessionOption};
+use crate::options::{GetOptionExt, GetSessionOptionTr};
 use crate::{GetUserOption, ShowOptions, TmuxCommand};
 use std::borrow::Cow;
 
@@ -29,4 +29,4 @@ impl GetOptionExt for GetLocalSessionOption {
 
 impl GetUserOption for GetLocalSessionOption {}
 
-impl GetSessionOption for GetLocalSessionOption {}
+impl GetSessionOptionTr for GetLocalSessionOption {}
