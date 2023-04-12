@@ -67,6 +67,10 @@ impl<'a> ServerOptionsCtl<'a> {
         Self { invoker }
     }
 
+    pub fn with_invoker(invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
+        Self { invoker }
+    }
+
     pub fn invoker(&self) -> &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error> {
         self.invoker
     }

@@ -66,11 +66,34 @@ impl<'a> Default for PaneOptionsCtl<'a> {
 }
 
 impl<'a> PaneOptionsCtl<'a> {
-    pub fn new(
-        target: Option<Cow<'a, str>>,
+    pub fn new<S>(
+        target: Option<S>,
         invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
-    ) -> Self {
-        PaneOptionsCtl { invoker, target }
+    ) -> Self
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        PaneOptionsCtl {
+            invoker,
+            target: target.map(|s| s.into()),
+        }
+    }
+
+    pub fn with_target<S>(target: Option<S>) -> Self
+    where
+        S: Into<Cow<'a, str>>,
+    {
+        PaneOptionsCtl {
+            target: target.map(|s| s.into()),
+            ..Default::default()
+        }
+    }
+
+    pub fn with_invoker(invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
+        Self {
+            invoker,
+            ..Default::default()
+        }
     }
 
     pub fn target(&self) -> Option<Cow<'a, str>> {

@@ -30,6 +30,10 @@ impl<'a> GlobalSessionOptionsCtl<'a> {
     pub fn new(invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
         Self { invoker }
     }
+
+    pub fn with_invoker(invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
+        Self { invoker }
+    }
 }
 
 impl<'a> SessionOptionsCtl<'a> for GlobalSessionOptionsCtl<'a> {

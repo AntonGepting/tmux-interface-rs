@@ -16,23 +16,25 @@ pub struct GlobalWindowOptionsCtl<'a> {
     // let tmux = Tmux::new();
     // ```
     pub invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
-    pub target: Option<Cow<'a, str>>,
 }
 
 impl<'a> Default for GlobalWindowOptionsCtl<'a> {
     fn default() -> Self {
         Self {
             invoker: &|cmd| Tmux::with_command(cmd).output(),
-            target: None,
         }
     }
 }
 
 impl<'a> GlobalWindowOptionsCtl<'a> {
     pub fn new(invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
+        Self { invoker }
+    }
+
+    pub fn with_invoker(invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
         Self {
             invoker,
-            target: None,
+            ..Default::default()
         }
     }
 }
@@ -44,7 +46,7 @@ impl<'a> WindowOptionsCtl<'a> for GlobalWindowOptionsCtl<'a> {
     type SetterMultiple = SetGlobalWindowOptions<'a>;
 
     fn target(&self) -> Option<Cow<'a, str>> {
-        self.target.to_owned()
+        None
     }
 
     fn invoker(&self) -> &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error> {

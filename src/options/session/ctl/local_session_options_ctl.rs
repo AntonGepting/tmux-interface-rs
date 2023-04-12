@@ -38,6 +38,20 @@ impl<'a> LocalSessionOptionsCtl<'a> {
             target: target.map(|s| s.into()),
         }
     }
+
+    pub fn with_target<S: Into<Cow<'a, str>>>(target: Option<S>) -> Self {
+        Self {
+            target: target.map(|s| s.into()),
+            ..Default::default()
+        }
+    }
+
+    pub fn with_invoker(invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
+        Self {
+            invoker,
+            ..Default::default()
+        }
+    }
 }
 
 // XXX: mb no need for Local, Global only custom implementation?
