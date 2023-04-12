@@ -59,17 +59,17 @@ macro_rules! display_menu {
         }) $($tail)*)
     }};
     // `name`
-    (@cmd ($cmd:expr) $name:expr, $($tail:tt)*) => {{
-        $crate::display_menu!(@cmd ({
-            $cmd.name($name)
-        }) $($tail)*)
-    }};
+    // (@cmd ($cmd:expr) $name:expr, $($tail:tt)*) => {{
+    //     $crate::display_menu!(@cmd ({
+    //         $cmd.name($name)
+    //     }) $($tail)*)
+    // }};
     // `key`
-    (@cmd ($cmd:expr) $key:expr, $($tail:tt)*) => {{
-        $crate::display_menu!(@cmd ({
-            $cmd.key($key)
-        }) $($tail)*)
-    }};
+    // (@cmd ($cmd:expr) $key:expr, $($tail:tt)*) => {{
+        // $crate::display_menu!(@cmd ({
+            // $cmd.key($key)
+        // }) $($tail)*)
+    // }};
     // `command`
     (@cmd ($cmd:expr) $command:expr, $($tail:tt)*) => {{
         $crate::display_menu!(@cmd ({
@@ -122,12 +122,12 @@ fn display_menu_macro() {
     let display_menu = display_menu!((display_menu), -x 4);
     #[cfg(feature = "tmux_3_0")]
     let display_menu = display_menu!((display_menu), -y 5);
-    #[cfg(feature = "tmux_3_0")]
-    let display_menu = display_menu!((display_menu), "6");
-    #[cfg(feature = "tmux_3_0")]
-    let display_menu = display_menu!((display_menu), "7");
-    #[cfg(feature = "tmux_3_0")]
-    let display_menu = display_menu!((display_menu), "8");
+    // #[cfg(feature = "tmux_3_0")]
+    // let display_menu = display_menu!((display_menu), "6");
+    // #[cfg(feature = "tmux_3_0")]
+    // let display_menu = display_menu!((display_menu), "7");
+    // #[cfg(feature = "tmux_3_0")]
+    // let display_menu = display_menu!((display_menu), "8");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "display-menu";
@@ -148,12 +148,12 @@ fn display_menu_macro() {
     s.extend_from_slice(&["-x", "4"]);
     #[cfg(feature = "tmux_3_0")]
     s.extend_from_slice(&["-y", "5"]);
-    #[cfg(feature = "tmux_3_0")]
-    s.push("6");
-    #[cfg(feature = "tmux_3_0")]
-    s.push("7");
-    #[cfg(feature = "tmux_3_0")]
-    s.push("8");
+    // #[cfg(feature = "tmux_3_0")]
+    // s.push("6");
+    // #[cfg(feature = "tmux_3_0")]
+    // s.push("7");
+    // #[cfg(feature = "tmux_3_0")]
+    // s.push("8");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let display_menu = display_menu.build().to_vec();

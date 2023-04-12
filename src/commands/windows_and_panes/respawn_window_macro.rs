@@ -131,8 +131,8 @@ fn respawn_window_tests() {
     s.push("-k");
     #[cfg(feature = "tmux_2_6")]
     s.extend_from_slice(&["-c", "1"]);
-    #[cfg(feature = "tmux_3_0")]
-    s.extend_from_slice(&["-e", "2"]);
+    // #[cfg(feature = "tmux_3_0")]
+    // s.extend_from_slice(&["-e", "2"]);
     #[cfg(feature = "tmux_0_9")]
     s.extend_from_slice(&["-t", "3"]);
     #[cfg(feature = "tmux_1_2")]

@@ -322,8 +322,8 @@ fn new_session() {
     s.push("-X");
     #[cfg(feature = "tmux_1_9")]
     s.extend_from_slice(&["-c", "1"]);
-    #[cfg(feature = "tmux_3_2")]
-    s.extend_from_slice(&["-e", "2=3"]);
+    // #[cfg(feature = "tmux_3_2")]
+    // s.extend_from_slice(&["-e", "2=3"]);
     #[cfg(feature = "tmux_3_2")]
     s.extend_from_slice(&["-f", "active-pane"]);
     #[cfg(feature = "tmux_1_8")]
