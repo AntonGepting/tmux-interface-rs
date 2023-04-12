@@ -22,7 +22,7 @@ fn target_window() {
     let target_window = TargetWindow::Index(1).to_string();
     assert_eq!(target_window, ":1");
     let target_window = TargetWindow::Id(1).to_string();
-    assert_eq!(target_window, ":@1");
+    assert_eq!(target_window, "@1");
     let target_window = TargetWindow::ExactName("exact_name").to_string();
     assert_eq!(target_window, ":=exact_name");
     let target_window = TargetWindow::StartName("start_name").to_string();

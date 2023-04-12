@@ -18,7 +18,7 @@ fn target_pane() {
     let target_pane = TargetPane::Index(1);
     assert_eq!(target_pane.to_string(), ".1");
     let target_pane = TargetPane::Id(1);
-    assert_eq!(target_pane.to_string(), ".%1");
+    assert_eq!(target_pane.to_string(), "%1");
     let target_pane = TargetPane::ExactName("exact_name");
     assert_eq!(target_pane.to_string(), ".=exact_name");
     let target_pane = TargetPane::StartName("start_name");
