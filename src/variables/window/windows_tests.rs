@@ -236,6 +236,8 @@ fn parse() {
     let window1_str = window1_vec.join("'");
     let windows_str = format!("{}\n{}", window0_str, window1_str);
     let windows = Windows::from_str(&windows_str).unwrap();
+    dbg!(&windows);
+
     #[cfg(feature = "tmux_1_7")]
     assert_eq!(windows[0].id, Some(0));
     #[cfg(feature = "tmux_1_7")]
