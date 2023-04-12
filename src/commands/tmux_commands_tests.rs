@@ -1,7 +1,7 @@
 #[test]
 fn tmux_commands() {
     use crate::commands::tmux_commands::TmuxCommands;
-    use crate::{ShowOptions, StartServer, TmuxCommand};
+    use crate::ShowOptions;
 
     //let cmd = StartServer::new().build();
 
@@ -19,7 +19,7 @@ fn tmux_commands() {
     //cmd.session_name("session2").detached();
     //cmds.push(cmd);
 
-    let mut cmd = ShowOptions::new().global().option("default-shell").build();
+    let cmd = ShowOptions::new().global().option("default-shell").build();
     dbg!(&cmd);
     cmds.push(cmd);
 

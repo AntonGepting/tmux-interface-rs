@@ -25,6 +25,17 @@
 //! (only tmux can be passed to std::process::Command)
 //! ```
 //!
+//! For convenience all tmux commands builder are splitted in sub-modules by the
+//! similar principle as in tmux manual:
+//! * [Buffers](buffers)
+//! * [Client and Sessions](clients_and_sessions)
+//! * [Global and Session Environment](global_and_session_environment)
+//! * [Hooks](hooks)
+//! * [Key Bindings](key_bindings)
+//! * [Miscellaneous](miscellaneous)
+//! * [Options](options)
+//! * [Status Line](status_line)
+//! * [Windows and Panes](windows_and_panes)
 //!
 //! # Overview
 //!
@@ -50,7 +61,9 @@
 //! ```
 //!
 //! ```
-//! let new_session = NewSession::new().detached().session_name().build();
+//! use tmux_interface::NewSession;
+//!
+//! let new_session = NewSession::new().detached().session_name("my_session").build();
 //! ```
 //!
 //! * **binary tmux command**, a command including tmux binary name and it's arguments used for
@@ -63,10 +76,14 @@
 //! ```
 //!
 //! ```
-//! let tmux = Tmux::new()
-//!         .verbose_logging()
-//!         .command(NewSession::new().detached().session_name())
-//!         .build();
+//! use tmux_interface::{Tmux, NewSession};
+//!
+//! let tmux = Tmux::with_command(
+//!              NewSession::new()
+//!                .detached()
+//!                .session_name("my_session"))
+//!              .verbose_logging()
+//!              .build();
 //! ```
 //!
 //! # Multiple tmux commands
@@ -82,7 +99,9 @@
 //! ```
 //!
 //! ```
-//! let cmds = TmuxCommands::new()
+//! use tmux_interface::TmuxCommands;
+//!
+//! let cmds = TmuxCommands::new();
 //! ```
 //!
 //! * multiple tmux binary commands
@@ -94,7 +113,9 @@
 //! ```
 //!
 //! ```
-//! let cmds = Tmux::new().verbose_logging().commands(TmuxCommands::new())
+//! use tmux_interface::{Tmux, TmuxCommands};
+//!
+//! let cmds = Tmux::new().verbose_logging().commands(TmuxCommands::new());
 //! ```
 //!
 //! # See Also:

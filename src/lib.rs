@@ -63,21 +63,28 @@
 //!
 //! 3. Use it's functions
 //!     ```
-//!     use crate::tmux_interface::{AttachSession, NewSession, TargetPane, TargetSession, TmuxCommand};
-//!
+//!     use crate::tmux_interface::{Tmux, AttachSession, NewSession, TargetPane,
+//!     TargetSession, KillSession, SendKeys, HasSession, TmuxCommand};
+//!     
 //!     let target_session = TargetSession::Raw("session_name").to_string();
 //!
 //!     let tmux = Tmux::new()
-//!     .command(NewSession().detached().session_name(target_session))
-//!     .command(HasSession().target_session(target_session))
-//!     .command(AttachSession::new().target_session(target_session))
+//!     .command(NewSession::new().detached().session_name(&target_session))
+//!     .command(HasSession::new().target_session(&target_session))
+//!     .command(AttachSession::new().target_session(&target_session))
 //!     .command(SendKeys::new().key("exit").key("C-m"))
-//!     .command(KillSession().target_session(target_session))
+//!     .command(KillSession::new().target_session(&target_session))
 //!     //.envs()
 //!     .output()
 //!     .unwrap();
 //!
 //!     ```
+//!
+//!
+//! ```text
+//! library in -> build command -> exec command -> recieve output -> parse output -> library out
+//! user app -> library in -> ... -> library out -> user app
+//! ```
 //!
 //! # Overview
 //!
@@ -137,12 +144,12 @@
 //! ```
 //! use crate::tmux_interface::{AttachSession, NewSession, KillSession, Tmux};
 //!
-//! let tmux = Tmux::new()
-//! .command(NewSession::new().detached().session_name("new_session_name1"))
-//! .command(AttachSession::new().target_session("new_session_name1"))
-//! .command(KillSession::new().target_session("new_session_name1"))
-//! .output()
-//! .unwrap();
+//! let output = Tmux::new()
+//!                .add_command(NewSession::new().detached().session_name("new_session_name1"))
+//!                .add_command(AttachSession::new().target_session("new_session_name1"))
+//!                .add_command(KillSession::new().target_session("new_session_name1"))
+//!                .output()
+//!                .unwrap();
 //! ```
 //!
 //! # Examples
@@ -162,13 +169,13 @@
 //!
 //! Change tmux command line flags, options
 //! ```
-//! use crate::tmux_interface::{TmuxCommand, NewSession, KillSession};
+//! use crate::tmux_interface::{TmuxCommand, Tmux, NewSession, KillSession};
 //!
-//! let mut tmux = Tmux::new().bin("tmux")
-//! .command(NewSession::new().detached().session_name("new_session_name3"))
-//! .command(KillSession::new().target_session("new_session_name3"))
-//! .output()
-//! .unwrap();
+//! let mut tmux = Tmux::new();
+//!                  .add_command(NewSession::new().detached().session_name("new_session_name3"))
+//!                  .add_command(KillSession::new().target_session("new_session_name3"))
+//!                  .output()
+//!                  .unwrap();
 //! ```
 //!
 //! # New session
@@ -189,26 +196,25 @@
 //! using builder pattern:
 //!
 //! ```
-//! use crate::tmux_interface::{TmuxCommand, TargetSession};
+//! use crate::tmux_interface::{TmuxCommand, Tmux, TargetSession};
 //!
-//! let mut tmux = Tmux::new();
+//! let mut tmux = TmuxCommand::new();
 //! tmux.new_session().detached().session_name("new_session_default").output();
 //! tmux.kill_session().target_session("new_session_default").output();
 //! ```
 //!
 //! using `std::default::Default` trait:
 //! ```
-//! use crate::tmux_interface::{TmuxCommand, NewSession, TargetSession};
+//! use crate::tmux_interface::{TmuxCommand, Tmux, NewSession, TargetSession};
 //!
-//! let mut tmux = Tmux::new();
-//! let new_session =
+//! let mut tmux = TmuxCommand::new();
 //! tmux.new_session().detached().session_name("new_session_default").output();
 //! tmux.kill_session().target_session("new_session_default").output();
 //! ```
 //!
 //! using direct structure modification:
 //! ```
-//! use crate::tmux_interface::{TmuxCommand, NewSession, TargetSession};
+//! use crate::tmux_interface::{TmuxCommand, Tmux, NewSession, TargetSession};
 //!
 //! let mut tmux = Tmux::new();
 //! let mut new_session = NewSession::new();
@@ -219,77 +225,184 @@
 //! ```
 //!
 //!
-//! ## Library levels
 //!
-//! Invokation process can be described by few levels.
-//! * Each level allows to do the same, but with more or less impact and advantage
+//! # Hierarchy
+//!
+//! ```
+//!  +--------------------+
+//!  | ServerOptionOutput |
+//!  +--------------------+
+//!
+//!  +-----------------+
+//!  | GetServerOption |
+//!  +-----------------+
+//!
+//! 4. Command Builder
+//!  +------+     +------------+      +---------------+        +-----+
+//!  | Tmux |     | NewSession |      | AttachSession |        | ... |
+//!  +------+     +------------+      +---------------+        +-----+
+//!
+//! 3. Tmux Command
+//!  +-------------+                                  +------------+
+//!  | TmuxCommand |                                  | TmuxOutput |
+//!  +-------------+                                  +------------+
+//!  +--------------+
+//!  | TmuxCommands |
+//!  +--------------+
+//!
+//! 2. cmd_builder library
+//!  +------------------+
+//!  | cmd_builder::Cmd |
+//!  +------------------+
+//!  +----------------------+
+//!  | cmd_builder::CmdList |
+//!  +----------------------+
+//!
+//! 1. Standard library
+//!  +-----------------------+
+//!  | std::process::Command |
+//!  +-----------------------+
+//!
+//! 0. OS
+//!  +--------+ +---------------+
+//!  | fork() | | CreateProcess |
+//!  +--------+ +---------------+
+//! ```
+//!
+//!
+//!
+//!
+//!
+//! # Levels
+//!
+//! Tmux command invocation can be described and accessed on different levels:
+//!
+//! * 0. OS (`fork()`, `CreateProcess`, ... )
+//! * 1. Standard Library ([`std::process::Command`])
+//! * 2. Cmd Builder Library ([`cmd_builder::Cmd`], [`cmd_builder::CmdList`])
+//! * 3. Tmux Interface Library - Command Builder ([`TmuxCommand`], [`TmuxCommands`])
+//! * 4. Tmux Interface Library - Tmux Command Builder ([`Tmux`], [`NewSession`], [`AttachSession`] ... )
+//!
+//! and thereby:
+//!
+//! * Each level allows to build practically the same command, but with more or less effort and advantages
 //! * Each level has some abstraction and some limitations
 //! * Each level is based on top of the previous one
 //!
-//! Levels:
+//! ## Level Explanations and Examples
 //!
-//! 0. syscall `fork(...)`, `CreateProcess(...)` - Operating System abstraction
+//! * 0. syscall `fork(...)`, `CreateProcess(...)` - Operating System level abstraction
 //!
-//! 1. [`std::process::Command`] - Rust standard library abstraction
+//! * 1. [`std::process::Command`] - Rust standard library level abstraction
 //!     * OS independence
 //!     * comfortable working low level
-//!     * manually build commands using strings and string arrays types
+//!     * manually build commands using literals
+//!     * hard coded literals
 //!
-//!     ### Example:
+//!     ### Examples
 //!     ```
-//!     let cmd = Command::new("tmux")
-//!                 .arg("new-session")
-//!                 .args(["-s", "name"])
-//!                 .output();
+//!     use std::process::Command;
+//!
+//!     let output = Command::new("tmux")
+//!                   .args(["-2", "-uv", "new-session", "-A", "-DE", "-s", "my_session"])
+//!                   .output()
+//!                   .unwrap();
+//!     ```
+//!     ```text
+//!     tmux -2 -uv new-session -A -DX -n my_session
 //!     ```
 //!
-//! 2. [`cmd_builder::Cmd`], [`cmd_builder::CmdList`] - custom Rust crate abstraction
+//! * 2. [`cmd_builder::Cmd`], [`cmd_builder::CmdList`] - custom Rust crate abstraction
 //!     * additional functionality for [`std::process::Command`]
-//!     * allows to store alternative information about commands such as:
-//!         * command name `new-session` and command alias `new`
-//!         * short flag name `-l` and long flag name `--long-flag`
+//!     * allows to store additional information about commands such as:
+//!         * command alias (`new`), beside command name (`new-session`)
+//!         * short flag name (`-l`) and long flag name (`--long-flag`)
 //!         * custom separator, hyphen, etc... (` `, `-`, `--`, `=`, ``)
+//!     * runtime mechanisms for deciding and building short or long commands
 //!
-//!     * allows runtime mechanisms for deciding and building short or long commands
-//!
-//!     ### Example:
+//!     ### Examples
 //!     ```
-//!     let cmd = Cmd::new("tmux")
-//!                 .subcommand("new-session")
-//!                 .alias("new")
-//!                 .option("-s", "name")
-//!                 .output();
+//!     use cmd_builder::Cmd;
+//!
+//!     let output = Cmd::new()
+//!                    .name("tmux")
+//!                    .push_flag_short('2')
+//!                    .push_flag_short('u')
+//!                    .push_flag_short('v')
+//!                    .push_cmd(
+//!                      Cmd::new()
+//!                        .name("new-session")
+//!                        .push_flag_short('D')
+//!                        .push_flag_short('E')
+//!                        .args(["-s", "my_session"]))
+//!                    .combine_short_flags()
+//!                    .output()
+//!                    .unwrap();
+//!     ```
+//!     ```text
+//!     tmux -2uv new-session -ADX -s my_session
 //!     ```
 //!
-//! 3. [`TmuxCommand`], [`TmuxCommands`] - just a wrapper around [`cmd_builder::Cmd`] inside `tmux_interface` crate,
+//! * 3. [`TmuxCommand`], [`TmuxCommands`] - just a wrapper around [`cmd_builder::Cmd`] inside `tmux_interface` crate,
 //! same functionality
 //!
-//!     ### Example:
+//!     ### Examples
 //!     ```
-//!     let cmd = TmuxCommand::new("tmux")
-//!                 .subcommand("new-session")
-//!                 .alias("new")
-//!                 .option("-s", "name")
-//!                 .output();
+//!     use tmux_interface::TmuxCommand;
+//!
+//!     let output = TmuxCommand::new("tmux")
+//!                    .push_flag_short('2')
+//!                    .push_flag_short('u')
+//!                    .push_flag_short('v')
+//!                    .push_cmd(TmuxCommand::new("new-session")
+//!                      .alias("new")
+//!                      .push_flag_short('A')
+//!                      .push_flag_short('D')
+//!                      .push_flag_short('E')
+//!                      .push_option("-s", "name"))
+//!                    .output()
+//!                    .unwrap();
+//!     ```
+//!     ```text
+//!     tmux -2 -u -v new-session -A -D -E -s my_session
 //!     ```
 //!
-//! 4. [`Tmux`], [`NewSession`], [`AttachSession`] ... - tmux commands builder
-//!     * near tmux as possible
+//! * 4. [`Tmux`], [`NewSession`], [`AttachSession`] ... - tmux commands builder
+//!     * structures, traits, implementations and methods as abstraction from literals
+//!     * near to tmux naming as possible
 //!     * build tmux commands
 //!     * tmux commands can include binary name and arguments or nor for control mode
-//!     * names near tmux
 //!     * order of arguments doesn't matter
+//!     * using macroses
 //!
-//!     ### Example:
+//!     ### Examples
 //!     ```
-//!     let cmd = Tmux::new()
-//!                 .command(NewSession::new()
-//!                 .session_name("name"))
-//!                 .output();
+//!     use tmux_interface::{Tmux, NewSession};
+//!
+//!     let output = Tmux::with_command(
+//!                      NewSession::new()
+//!                         .attach()
+//!                         .detached()
+//!                         .not_update_env()
+//!                         .session_name("name"))
+//!                    .colours256()
+//!                    .force_utf8()
+//!                    .verbose_logging()
+//!                    .output()
+//!                    .unwrap();
+//!     ```
+//!     or using macroses
+//!     ```text
+//!     let output = tmux!("-2", "-u", "-v", new_session!("-A", "-D", "-E", "-s my_session"))
+//!                     .output()
+//!                     .unwrap();
+//!     ```
+//!     ```text
+//!     tmux -2 -u -v new-session -A -D -E -s my_session
 //!     ```
 //!
 //!
-//! 5. [`Options`] - tmux objects control
+//! * `Options` - tmux objects control
 //!     * accessing and using internal tmux instances
 //!         * formats
 //!         * options
@@ -297,17 +410,17 @@
 //!         * ...
 //!
 //!     ### Example
-//!     ```
+//!     ```text
 //!     unimplemented!();
 //!     ```
 //!
-//! 6. `TmuxInterface` - tmux control
+//! * `TmuxInterface` - tmux control
 //!     * setting/getting methods abstraction, just an object with it's attributes
 //!     * offline/online working (default/control mode)
 //!     * mapping of whole tmux with it's all internal instances as an object in Rust
 //!
 //!     ### Example
-//!     ```
+//!     ```text
 //!     unimplemented!();
 //!     ```
 //!

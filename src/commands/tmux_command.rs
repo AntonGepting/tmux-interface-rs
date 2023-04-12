@@ -5,6 +5,7 @@ use std::borrow::Cow;
 use std::fmt;
 use std::process::Command;
 
+// XXX: cmd, command, tmux command all proper names in methods, fields
 // XXX: mb enum for command?
 // XXX: rename (.cmd to .name)?
 // XXX: environment
@@ -37,6 +38,10 @@ impl<'a> TmuxCommand<'a> {
     pub fn name<S: Into<Cow<'a, str>>>(&mut self, name: S) -> &mut Self {
         self.0.name(name);
         self
+    }
+
+    pub fn with_cmds(commands: TmuxCommands<'a>) -> Self {
+        Self(Cmd::with_cmds(commands.0))
     }
 
     pub fn to_command(self) -> Command {
