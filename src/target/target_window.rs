@@ -133,7 +133,7 @@ impl<'a> fmt::Display for TargetWindow<'a> {
         match self {
             TargetWindow::Token(token) => write!(f, ":{}", token),
             TargetWindow::Index(i) => write!(f, ":{}", i),
-            TargetWindow::Id(id) => write!(f, ":@{}", id),
+            TargetWindow::Id(id) => write!(f, "@{}", id),
             TargetWindow::ExactName(name) => write!(f, ":={}", name),
             TargetWindow::StartName(name) => write!(f, ":{}", name),
             TargetWindow::FnMatch(name) => write!(f, ":{}", name),

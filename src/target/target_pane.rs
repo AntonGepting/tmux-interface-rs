@@ -114,7 +114,7 @@ impl<'a> fmt::Display for TargetPane<'a> {
         match self {
             TargetPane::Token(token) => write!(f, ".{}", token),
             TargetPane::Index(i) => write!(f, ".{}", i),
-            TargetPane::Id(id) => write!(f, ".%{}", id),
+            TargetPane::Id(id) => write!(f, "%{}", id),
             TargetPane::ExactName(name) => write!(f, ".={}", name),
             TargetPane::StartName(name) => write!(f, ".{}", name),
             TargetPane::FnMatch(name) => write!(f, ".{}", name),
