@@ -1,4 +1,4 @@
-use crate::{Error, Formats, ListPanes, Pane, Tmux};
+use crate::{Error, Pane};
 //use std::borrow::Cow;
 use std::ops::Index;
 
@@ -30,42 +30,6 @@ impl Panes {
 
     pub fn push(&mut self, pane: Pane) {
         self.0.push(pane);
-    }
-
-    // XXX: generic
-    pub fn get<S: ToString>(target_window: S) -> Result<Self, Error> {
-        let mut format = Formats::new();
-        format.separator(':');
-        let format = format.to_string();
-
-        let output = Tmux::new()
-            .command(
-                ListPanes::new()
-                    .format(format)
-                    .target(target_window.to_string()),
-            )
-            .output()?
-            .to_string();
-
-        Panes::from_str(&output)
-    }
-
-    // XXX: generic
-    pub fn get_all<S: ToString>(target_session: S) -> Result<Self, Error> {
-        let mut format = Formats::new();
-        format.separator(':');
-        let format = format.to_string();
-
-        let output = Tmux::new()
-            .command(
-                ListPanes::new()
-                    .format(format)
-                    .target(target_session.to_string()),
-            )
-            .output()?
-            .to_string();
-
-        Panes::from_str(&output)
     }
 
     pub fn from_str<S: AsRef<str>>(panes_str: S) -> Result<Self, Error> {

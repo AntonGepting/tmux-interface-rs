@@ -1,5 +1,4 @@
-use crate::variables::window::window::WINDOW_VARS_SEPARATOR;
-use crate::{Error, Formats, ListWindows, Tmux, Window};
+use crate::{Error, Window};
 use std::ops::Index;
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -29,25 +28,6 @@ impl Windows {
 
     pub fn push(&mut self, window: Window) {
         self.0.push(window);
-    }
-
-    // XXX: generic
-    pub fn get<S: ToString>(target_session: S) -> Result<Self, Error> {
-        let mut format = Formats::new();
-        format.separator(WINDOW_VARS_SEPARATOR);
-
-        let lsw_format = format.to_string();
-
-        let output = Tmux::new()
-            .command(
-                ListWindows::new()
-                    .format(&lsw_format)
-                    .target_session(target_session.to_string()),
-            )
-            .output()?
-            .to_string();
-
-        Windows::from_str(&output)
     }
 
     pub fn from_str<S: AsRef<str>>(windows_str: S) -> Result<Self, Error> {
