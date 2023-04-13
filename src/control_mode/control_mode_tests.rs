@@ -1,3 +1,4 @@
+// parse control mode output text in `control_mode::Response` structure tests
 #[test]
 fn control_mode_line() {
     use crate::control_mode::control_mode::{ControlModeLine, Response};
@@ -239,6 +240,7 @@ fn next() {
     assert_eq!(cm_mode_line, output_block);
 }
 
+// parse if multiple outputs as `control_mode::Response` and check case if
 #[test]
 fn for_loop() {
     use crate::control_mode::control_mode::{ControlModeOutput, Response};

@@ -1,6 +1,7 @@
 use crate::Error;
 use std::io::BufRead;
 use std::io::Lines;
+use std::io::Write;
 
 /// `%begin`
 #[cfg(feature = "tmux_1_8")]
@@ -102,7 +103,7 @@ impl OutputBlock {}
 //Notification<Notification>
 //}
 
-// XXX: rename
+// XXX: rename to notification
 // XXX: String -> &'a str?
 #[derive(Debug, PartialEq)]
 pub enum Response {
@@ -183,12 +184,57 @@ pub enum Response {
     WindowRenamed(String, String),
 }
 
+// wrapper structure around Lines type, which is Iterator
+//  which implements BufRead trait <B: BufRead>
 #[derive(Debug)]
 pub struct ControlModeOutput<B: BufRead>(pub Lines<B>);
 
+use std::process::ChildStdin;
+
+// two types of response
+// 1. Output (%begin .. %output .. %end)
+// 2. Notification
+//
+// XXX: mb. BufReader as input?
+// iterator strategy because notification may consist of 3 output lines (%begin...%output...%end)
+//  3 lines will be "merged" into one resulting output notification
+//
+//  NOTE:
+//  > A notification will never occur inside an output block
+//  [tmux man](https://man7.org/linux/man-pages/man1/tmux.1.html#CONTROL_MODE)
+//
+//  XXX: is it possible, two or more output blocks can be recieved mixed?
+//  (similar like network packets -> buffering -> queueing -> merging)
 impl<B: BufRead> ControlModeOutput<B> {
+    // create new from multiple Lines
     pub fn new(s: Lines<B>) -> Self {
         ControlModeOutput(s)
+    }
+
+    //pub fn event_loop(mut cm_lines: ControlModeOutput<B>, cb: &mut dyn FnMut(Response)) {
+    //while let Some(cm_line) = cm_lines.next() {
+    //cb(cm_line);
+    //}
+    //}
+    //}
+
+    // TODO: error
+    /// Send command to stdin of a child tmux process, opened in control mode, and get response
+    /// data as `OutputBlock`
+    pub fn send(
+        stdin: &mut ChildStdin,
+        cmd: String,
+        lines: &mut ControlModeOutput<B>,
+    ) -> Result<OutputBlock, Error> {
+        writeln!(stdin, "{}", cmd)?;
+
+        match lines.next() {
+            Some(line) => match line {
+                Response::OutputBlock(data) => Ok(data),
+                _ => Err(Error::Tmux(String::from("error response"))),
+            },
+            None => Err(Error::Tmux(String::from("none"))),
+        }
     }
 
     // TODO: remove unwrap
@@ -245,6 +291,16 @@ impl<B: BufRead> ControlModeOutput<B> {
     }
 }
 
+// https://dev.to/dandyvica/yarit-yet-another-rust-iterators-tutorial-46dk
+//impl<B: BufRead> IntoIterator for &mut ControlModeOutput<B> {
+//type Item = Response;
+
+//fn next(&mut self) -> Option<Self::Item> {
+//ControlModeOutput::check_main(&mut self.0)
+//}
+//}
+
+//iterator which can return merged output block, or notification
 impl<B: BufRead> Iterator for ControlModeOutput<B> {
     type Item = Response;
 
