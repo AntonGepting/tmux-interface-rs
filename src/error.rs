@@ -21,6 +21,7 @@ pub enum Error {
     ParseClockModeStyle,
     ParsePaneBorderStatus,
     ParseRemainOnExit,
+    ParseExtendedKeys,
 
     /// Tmux error message
     Tmux(String),
@@ -36,6 +37,7 @@ pub enum Error {
 //}
 //}
 
+// FIXME: all branches, review enum
 impl std::error::Error for Error {
     fn cause(&self) -> Option<&dyn std::error::Error> {
         match *self {
