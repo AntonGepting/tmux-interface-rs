@@ -21,7 +21,7 @@
 //! ### Example
 //!
 //! ```
-//! use tmux_interface::{GetServerOption, GetServerOptionTrait, Tmux};
+//! use tmux_interface::{GetServerOption, GetServerOptionTr, Tmux};
 //!
 //! let output = Tmux::with_command(GetServerOption::buffer_limit(None)).output();
 //! ```
@@ -33,7 +33,7 @@
 //! ### Example
 //!
 //! ```
-//! use tmux_interface::{GetServerOptionValue, GetServerOptionTrait, Tmux};
+//! use tmux_interface::{GetServerOptionValue, GetServerOptionTr, Tmux};
 //!
 //! let output = Tmux::with_command(GetServerOptionValue::buffer_limit(None)).output();
 //! ```
@@ -45,7 +45,7 @@
 //! ### Example
 //!
 //! ```
-//! use tmux_interface::{GetServerOptions, GetServerOptionsTrait, Tmux};
+//! use tmux_interface::{GetServerOptions, GetServerOptionsTr, Tmux};
 //!
 //! let output = Tmux::with_commands(
 //!     GetServerOptions::new()

@@ -9,7 +9,7 @@
 //! ### Examples
 //!
 //! ```
-//! use tmux_interface::{Tmux, GetGlobalSessionOptions, GetSessionOptions};
+//! use tmux_interface::{Tmux, GetGlobalSessionOptions, GetSessionOptionsTr};
 //!
 //! let options = GetGlobalSessionOptions::new().activity_action().assume_paste_time().into_commands();
 //! let output = Tmux::with_commands(options).output().unwrap();
@@ -33,7 +33,7 @@
 //! ### Examples
 //!
 //! ```
-//! use tmux_interface::{Tmux, GetLocalSessionOptions, GetSessionOptions};
+//! use tmux_interface::{Tmux, GetLocalSessionOptions, GetSessionOptionsTr};
 //!
 //! let options = GetLocalSessionOptions::new().activity_action().assume_paste_time().into_commands();
 //! let output = Tmux::with_commands(options).output().unwrap();

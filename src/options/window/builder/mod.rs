@@ -1,19 +1,19 @@
 pub mod global;
 pub mod local;
 
-pub mod get_window_option;
-pub mod get_window_options;
-pub mod set_window_option;
-pub mod set_window_options;
+pub mod get_window_option_tr;
+pub mod get_window_options_tr;
+pub mod set_window_option_tr;
+pub mod set_window_options_tr;
 
 pub use global::*;
 pub use local::*;
 // XXX: local == just window_opions
 
-pub use get_window_option::GetWindowOptionTr;
-pub use get_window_options::*;
-pub use set_window_option::*;
-pub use set_window_options::*;
+pub use get_window_option_tr::GetWindowOptionTr;
+pub use get_window_options_tr::*;
+pub use set_window_option_tr::*;
+pub use set_window_options_tr::*;
 
 // #[test]
 // fn window_options_111() {
