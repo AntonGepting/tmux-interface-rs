@@ -1,44 +1,5 @@
 #[cfg(feature = "tmux_1_6")]
 #[test]
-fn get_sessions() {
-    use tmux_interface::SessionsCtl;
-
-    let sessions = SessionsCtl::new().get_all().unwrap();
-    dbg!(&sessions);
-
-    for session in sessions {
-        dbg!(session);
-    }
-}
-
-#[cfg(feature = "tmux_1_6")]
-#[test]
-fn get_windows() {
-    use tmux_interface::WindowsCtl;
-
-    let windows = WindowsCtl::new().get_all().unwrap();
-    dbg!(&windows);
-
-    for window in windows {
-        dbg!(window);
-    }
-}
-
-#[cfg(feature = "tmux_1_6")]
-#[test]
-fn get_panes() {
-    use tmux_interface::PanesCtl;
-
-    let panes = PanesCtl::new().get_all().unwrap();
-    dbg!(&panes);
-
-    for pane in panes {
-        dbg!(pane);
-    }
-}
-
-#[cfg(feature = "tmux_1_6")]
-#[test]
 fn get() {
     use tmux_interface::{
         GlobalSessionOptionsCtl, GlobalWindowOptionsCtl, LocalSessionOptionsCtl,
