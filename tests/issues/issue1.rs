@@ -56,26 +56,16 @@
 
 #[test]
 fn issue1() {
-    use tmux_interface::{TargetSession, TmuxCommand};
-
-    let tmux = TmuxCommand::new();
+    use tmux_interface::{AttachSession, KillSession, NewSession, SendKeys, TargetSession, Tmux};
 
     let target_session = TargetSession::Raw("test_ti").to_string();
 
-    tmux.new_session()
-        .detached()
-        .session_name(&target_session)
-        .output()
-        .unwrap();
-    // do not wait for user input, because test is running on Travis CI
-    tmux.send_keys().key("exit").key("C-m").output().unwrap();
-    tmux.attach_session()
-        .target_session(&target_session)
-        .output()
-        .unwrap();
-    //assert!(output.status.success());
-    tmux.kill_session()
-        .target_session(&target_session)
+    Tmux::new()
+        .command(NewSession::new().detached().session_name(&target_session))
+        // do not wait for user input, because test is running on Travis CI
+        .command(SendKeys::new().key("exit").key("C-m"))
+        .command(AttachSession::new().target_session(&target_session))
+        .command(KillSession::new().target_session(&target_session))
         .output()
         .unwrap();
 }
