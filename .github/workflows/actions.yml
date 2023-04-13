@@ -52,6 +52,10 @@ jobs:
           - { tmux: "3.1a", feature: "tmux_3_1a" }
           - { tmux: "3.1b", feature: "tmux_3_1b" }
           - { tmux: "3.1c", feature: "tmux_3_1c" }
+          - { tmux: "3.2", feature: "tmux_3_2" }
+          - { tmux: "3.2a", feature: "tmux_3_2a" }
+          - { tmux: "3.3", feature: "tmux_3_3" }
+          - { tmux: "3.3a", feature: "tmux_3_3a" }
           - { tmux: "master", feature: "tmux_X_X" }
 
     steps:
