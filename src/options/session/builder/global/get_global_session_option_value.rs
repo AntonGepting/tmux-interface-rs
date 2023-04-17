@@ -3,7 +3,7 @@
 //!
 //! Tmux command example:
 //! ```text
-//! show-option -s -g -v backspace
+//! show-options -s -g -v backspace
 //! # output
 //! C-?
 //! ```

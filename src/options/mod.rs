@@ -88,7 +88,7 @@
 //!     * All (`[option]` parameter omitted)
 //!     * Value only (`-v` flag)
 //!     * Single (`[option]` parameter)
-//!     * Multiple Selective (multiple `show-option`, `set-option` commands)
+//!     * Multiple Selective (multiple `show-options`, `set-option` commands)
 //!
 //! * by object type (`-s`, ` `, `-w`, `-p` flags)
 //!     * [`Server`](self::server) (`-s` flag)
