@@ -1,6 +1,8 @@
 #[test]
 fn get_single() {
-    use crate::{LocalSessionOptionsCtl, SessionOptions, SessionOptionsCtl};
+    #[cfg(feature = "tmux_2_6")]
+    use crate::SessionOptionsCtl;
+    use crate::{LocalSessionOptionsCtl, SessionOptions};
 
     let session_options_ctl = LocalSessionOptionsCtl::default();
     #[cfg(feature = "tmux_2_6")]
@@ -9,6 +11,8 @@ fn get_single() {
     // let key_table = session_options_ctl.get_key_table().unwrap();
 
     let origin = SessionOptions::default();
+
+    #[cfg(feature = "tmux_2_6")]
     assert_eq!(activity_action, origin.activity_action);
 
     // assert_eq!(key_table, origin.key_table);

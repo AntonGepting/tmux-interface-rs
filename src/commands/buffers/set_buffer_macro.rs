@@ -40,9 +40,17 @@ macro_rules! set_buffer {
         }) $($tail)*)
     }};
     // `[-b buffer-name]`
-    (@cmd ($cmd:expr) -b $buffer_name:expr, $($tail:tt)*) => {{
+    // `[-b buffer-index]`
+    (@cmd ($cmd:expr) -b $buffer:expr, $($tail:tt)*) => {{
         $crate::set_buffer!(@cmd ({
-            $cmd.buffer_name($buffer_name)
+            #[cfg(feature = "tmux_2_0")]
+            {
+                $cmd.buffer_name($buffer)
+            }
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+            {
+                $cmd.buffer_index($buffer)
+            }
         }) $($tail)*)
     }};
     // `[-t target-client]`
@@ -55,12 +63,6 @@ macro_rules! set_buffer {
     (@cmd ($cmd:expr) -n $new_buffer_name:expr, $($tail:tt)*) => {{
         $crate::set_buffer!(@cmd ({
             $cmd.new_buffer_name($new_buffer_name)
-        }) $($tail)*)
-    }};
-    // `[-b buffer-index]`
-    (@cmd ($cmd:expr) -b $buffer_index:expr, $($tail:tt)*) => {{
-        $crate::set_buffer!(@cmd ({
-            $cmd.buffer_index($buffer_index)
         }) $($tail)*)
     }};
     // `[-t target-session]`

@@ -50,7 +50,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, ALLOW_RENAME, switch.map(|s| s.to_string()))
+        Self::set_ext(target, ALLOW_RENAME, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -64,7 +64,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, ALTERNATE_SCREEN, switch.map(|s| s.to_string()))
+        Self::set_ext(target, ALTERNATE_SCREEN, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -107,7 +107,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, C0_CHANGE_INTERVAL, interval.map(|s| s.to_string()))
+        Self::set_ext(target, C0_CHANGE_INTERVAL, interval.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -117,12 +117,11 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     /// c0-change-trigger trigger
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    fn c0_change_trigger<'a, S, T>(target: Option<S>, trigger: Option<T>) -> TmuxCommand<'a>
+    fn c0_change_trigger<'a, S>(target: Option<S>, trigger: Option<usize>) -> TmuxCommand<'a>
     where
         S: Into<Cow<'a, str>>,
-        T: Into<Cow<'a, str>>,
     {
-        Self::set(target, C0_CHANGE_TRIGGER, trigger)
+        Self::set_ext(target, C0_CHANGE_TRIGGER, trigger.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -172,7 +171,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, FORCE_HEIGHT, height.map(|s| s.to_string()))
+        Self::set_ext(target, FORCE_HEIGHT, height.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -186,7 +185,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, FORCE_WIDTH, width.map(|s| s.to_string()))
+        Self::set_ext(target, FORCE_WIDTH, width.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -200,7 +199,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, LAYOUT_HISTORY_LIMIT, limit.map(|s| s.to_string()))
+        Self::set_ext(target, LAYOUT_HISTORY_LIMIT, limit.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -243,7 +242,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, MODE_ATTR, attributes)
+        Self::set_ext(target, MODE_ATTR, attributes)
     }
 
     /// ### Manual
@@ -258,7 +257,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, MODE_BG, colour)
+        Self::set_ext(target, MODE_BG, colour)
     }
 
     /// ### Manual
@@ -273,7 +272,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, MODE_FG, colour)
+        Self::set_ext(target, MODE_FG, colour)
     }
 
     /// ### Manual
@@ -306,7 +305,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, MODE_MOUSE, mode_mouse.map(|s| s.to_string()))
+        Self::set_ext(target, MODE_MOUSE, mode_mouse.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -350,7 +349,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, MONITOR_CONTENT, match_string)
+        Self::set_ext(target, MONITOR_CONTENT, match_string)
     }
 
     /// ### Manual
@@ -500,7 +499,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, REMAIN_ON_EXIT, switch.map(|s| s.to_string()))
+        Self::set_ext(target, REMAIN_ON_EXIT, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -514,7 +513,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
+        Self::set_ext(target, SYNCHRONIZE_PANES, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -528,7 +527,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     where
         S: Into<Cow<'a, str>>,
     {
-        Self::set(target, UTF8, switch.map(|s| s.to_string()))
+        Self::set_ext(target, UTF8, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -543,7 +542,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_ACTIVE_STYLE, style)
+        Self::set_ext(target, WINDOW_ACTIVE_STYLE, style)
     }
 
     /// ### Manual
@@ -561,7 +560,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_BELL_ATTR, attributes)
+        Self::set_ext(target, WINDOW_STATUS_BELL_ATTR, attributes)
     }
 
     /// ### Manual
@@ -576,7 +575,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_BELL_BG, colour)
+        Self::set_ext(target, WINDOW_STATUS_BELL_BG, colour)
     }
 
     /// ### Manual
@@ -591,7 +590,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_BELL_FG, colour)
+        Self::set_ext(target, WINDOW_STATUS_BELL_FG, colour)
     }
 
     /// ### Manual
@@ -609,7 +608,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_CONTENT_ATTR, attributes)
+        Self::set_ext(target, WINDOW_STATUS_CONTENT_ATTR, attributes)
     }
 
     /// ### Manual
@@ -624,7 +623,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_CONTENT_BG, colour)
+        Self::set_ext(target, WINDOW_STATUS_CONTENT_BG, colour)
     }
 
     /// ### Manual
@@ -639,7 +638,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_CONTENT_FG, colour)
+        Self::set_ext(target, WINDOW_STATUS_CONTENT_FG, colour)
     }
 
     /// ### Manual
@@ -657,7 +656,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_ACTIVITY_ATTR, attributes)
+        Self::set_ext(target, WINDOW_STATUS_ACTIVITY_ATTR, attributes)
     }
 
     /// ### Manual
@@ -675,7 +674,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_ACTIVITY_BG, attributes)
+        Self::set_ext(target, WINDOW_STATUS_ACTIVITY_BG, attributes)
     }
 
     /// ### Manual
@@ -693,7 +692,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_ACTIVITY_FG, attributes)
+        Self::set_ext(target, WINDOW_STATUS_ACTIVITY_FG, attributes)
     }
 
     /// ### Manual
@@ -708,7 +707,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_ATTR, attributes)
+        Self::set_ext(target, WINDOW_STATUS_ATTR, attributes)
     }
 
     /// ### Manual
@@ -723,7 +722,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_BG, colour)
+        Self::set_ext(target, WINDOW_STATUS_BG, colour)
     }
 
     /// ### Manual
@@ -738,7 +737,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_FG, colour)
+        Self::set_ext(target, WINDOW_STATUS_FG, colour)
     }
 
     /// ### Manual
@@ -756,7 +755,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_CURRENT_ATTR, attributes)
+        Self::set_ext(target, WINDOW_STATUS_CURRENT_ATTR, attributes)
     }
 
     /// ### Manual
@@ -771,7 +770,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_CURRENT_BG, colour)
+        Self::set_ext(target, WINDOW_STATUS_CURRENT_BG, colour)
     }
 
     /// ### Manual
@@ -786,7 +785,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_CURRENT_FG, colour)
+        Self::set_ext(target, WINDOW_STATUS_CURRENT_FG, colour)
     }
 
     /// ### Manual
@@ -804,7 +803,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_ALERT_ATTR, attributes)
+        Self::set_ext(target, WINDOW_STATUS_ALERT_ATTR, attributes)
     }
 
     /// ### Manual
@@ -819,7 +818,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_ALEERT_BG, colour)
+        Self::set_ext(target, WINDOW_STATUS_ALEERT_BG, colour)
     }
 
     /// ### Manual
@@ -834,7 +833,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_ALERT_FG, colour)
+        Self::set_ext(target, WINDOW_STATUS_ALERT_FG, colour)
     }
 
     /// ### Manual
@@ -882,7 +881,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_CONTENT_STYLE, style)
+        Self::set_ext(target, WINDOW_STATUS_CONTENT_STYLE, style)
     }
 
     /// ### Manual
@@ -918,7 +917,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_LAST_ATTR, attributes)
+        Self::set_ext(target, WINDOW_STATUS_LAST_ATTR, attributes)
     }
 
     /// ### Manual
@@ -933,7 +932,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_LAST_BG, colour)
+        Self::set_ext(target, WINDOW_STATUS_LAST_BG, colour)
     }
 
     /// ### Manual
@@ -948,7 +947,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STATUS_LAST_FG, colour)
+        Self::set_ext(target, WINDOW_STATUS_LAST_FG, colour)
     }
 
     /// ### Manual
@@ -1052,7 +1051,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WORD_SEPARATORS, string)
+        Self::set_ext(target, WORD_SEPARATORS, string)
     }
 
     /// ### Manual
@@ -1067,7 +1066,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
     {
-        Self::set(target, WINDOW_STYLE, style)
+        Self::set_ext(target, WINDOW_STYLE, style)
     }
 
     /// ### Manual

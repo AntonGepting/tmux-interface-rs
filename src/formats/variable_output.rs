@@ -1,5 +1,6 @@
 #[cfg(feature = "tmux_2_5")]
 use crate::SessionStack;
+#[cfg(feature = "tmux_1_6")]
 use crate::{Layout, PaneTabs, WindowFlags};
 
 // XXX: ? + - etc refactor in structure in future? split in enum and struct add fields

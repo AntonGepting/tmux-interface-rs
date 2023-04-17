@@ -113,7 +113,7 @@ fn set_server_options() {
     #[cfg(feature = "tmux_3_0")]
     let options = options.user_keys(None::<Vec<String>>);
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    let options = options.quiet(Some(""));
+    let options = options.quiet(Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     let options = options.detach_on_destroy(Some(""));
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]

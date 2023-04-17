@@ -217,10 +217,7 @@ pub trait SetServerOptionsTr<'a> {
     where
         Self: Sized,
     {
-        self.push(SetServerOption::prompt_history_limit(
-            target,
-            prompt_history_limit,
-        ));
+        self.push(Self::Setter::prompt_history_limit(prompt_history_limit));
         self
     }
 
@@ -295,7 +292,7 @@ pub trait SetServerOptionsTr<'a> {
     /// quiet [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    fn quiet<T: Into<Cow<'a, str>>>(mut self, quiet: Option<Switch>) -> Self
+    fn quiet(mut self, quiet: Option<Switch>) -> Self
     where
         Self: Sized,
     {
@@ -310,7 +307,7 @@ pub trait SetServerOptionsTr<'a> {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    fn detach_on_destroy<T: Into<Cow<'a, str>>>(mut self, detach_on_destroy: Option<Switch>) -> Self
+    fn detach_on_destroy(mut self, detach_on_destroy: Option<Switch>) -> Self
     where
         Self: Sized,
     {

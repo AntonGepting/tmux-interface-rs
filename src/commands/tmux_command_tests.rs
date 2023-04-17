@@ -38,15 +38,16 @@ fn tmux_command_to_vec() {
 
 #[test]
 fn tmux_multiple_subcommands() {
-    use crate::{ListCommands, Tmux};
+    #[cfg(feature = "tmux_2_3")]
+    use crate::ListCommands;
+    use crate::Tmux;
 
-    let tmux = Tmux::new()
-        .verbose_logging()
-        .version()
-        .command(ListCommands::new().format("listcommands1"))
-        .command(ListCommands::new().format("listcommands2"))
-        .build()
-        .to_string();
+    let tmux = Tmux::new().verbose_logging().version();
+    #[cfg(feature = "tmux_2_3")]
+    let tmux = tmux.command(ListCommands::new().format("listcommands1"));
+    #[cfg(feature = "tmux_2_3")]
+    let tmux = tmux.command(ListCommands::new().format("listcommands2"));
+    let tmux = tmux.build().to_string();
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-commands";

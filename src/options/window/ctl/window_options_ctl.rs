@@ -1,3 +1,5 @@
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+use crate::ModeMouse;
 use crate::{
     ClockModeStyle, Error, GetWindowOptionTr, SetWindowOptionTr, SetWindowOptionsTr, StatusKeys,
     Switch, TmuxCommand, TmuxOutput, WindowOptions,
@@ -178,8 +180,10 @@ pub trait WindowOptionsCtl<'a> {
         let cmds =
             cmds.window_status_bell_style(target.clone(), window_options.window_status_bell_style);
         #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-        let cmds = cmds
-            .window_status_content_style(self.target(), window_options.window_status_content_style);
+        let cmds = cmds.window_status_content_style(
+            target.clone(),
+            window_options.window_status_content_style,
+        );
         #[cfg(feature = "tmux_1_2")]
         let cmds = cmds.window_status_current_format(
             target.clone(),
@@ -715,8 +719,8 @@ pub trait WindowOptionsCtl<'a> {
     // mode-mouse [on | off | copy-mode]
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    fn set_mode_mouse(&self, mode_mouse: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mode_mouse(self.target()))
+    fn set_mode_mouse(&self, mode_mouse: Option<ModeMouse>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::mode_mouse(self.target(), mode_mouse))
     }
 
     // # Manual
@@ -788,7 +792,10 @@ pub trait WindowOptionsCtl<'a> {
         &self,
         monitor_content: Option<Cow<'a, str>>,
     ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::monitor_content(self.target()))
+        self.set(Self::Setter::monitor_content(
+            self.target(),
+            monitor_content,
+        ))
     }
 
     // # Manual

@@ -151,7 +151,7 @@ fn set_server_option() {
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
     {
         let origin = format!("{} {} {}", cmd, "quiet", "");
-        let set_option = SetServerOption::quiet(Some("")).to_string();
+        let set_option = SetServerOption::quiet(Some(Switch::Off)).to_string();
         assert_eq!(origin, set_option);
     }
 

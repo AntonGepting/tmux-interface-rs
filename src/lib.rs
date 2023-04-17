@@ -4,79 +4,72 @@
 //! `tmux_interface` is a library for communication with [TMUX](https://github.com/tmux/tmux) via
 //! CLI.
 //!
+//! On This Page
+//! * [Description](#description)
+//! * [Quick Start](#quick-start)
+//! * [Package Features](#package-features)
+//!     * [Tmux Versions](#tmux-versions)
+//!     * [Tmux Command Alias](#tmux-command-alias)
+//!     * [Repository](#repository)
+//!         * [Local]
+//!         * [Remote]
+//! * [Modules Overview](#modules-overview)
+//!
 //! # Description
 //!
 //! Main purpose of the `tmux_interface` library is to implement simple sending and recieving data
 //! mechanisms for intercommunication with `TMUX` only via standard streams (`stdin`, `stdout`).
 //!
-//! ## Usage / Quick Start
+//! # Quick Start
 //!
 //! 1. Add a dependency in your `Cargo.toml`. Versions below `0.1.0` are
-//!    mostly for development and testing purposes (further versions may have
-//!    different ABI, use them in your projects on your own risk).
+//!    mostly for development and testing purposes (use them in your projects on
+//!    your own risk, further versions may have different API).
 //!
 //!     ```text
 //!     [dependencies]
-//!     tmux_interface = "^0.1.0"
+//!     tmux_interface = "0.1.0"
 //!     ```
 //!
-//!     You can also add `features` to your dependencies entry in `Cargo.toml`, if
-//!     you want to specify the version of tmux you want to use. Different tmux
-//!     versions may have incompatible CLI changes. Following `features` are currently
-//!     supported:
-//!
-//!     - `tmux_X_X` - tmux latest, default (based on tmux master branch)
-//!     - `tmux_2_6` - tmux 2.6 (included in Ubuntu 18.04 LTS Bionic Beaver)
-//!     <!--- `tmux_2_1` - tmux 2.1 (included in Ubuntu 16.04 LTS Xenial Xerus) -->
-//!     <!--- `tmux 1_8` - tmux 1.8 (included in Ubuntu 14.04 LTS Trusty Tahr) -->
-//!     <!--- `tmux_1_6` - tmux 1.6 (included in Ubuntu 12.04 LTS Precise Pangolin)-->
-//!
-//!     ```text
-//!     [dependencies]
-//!     tmux_interface = { version = "^0.1.0", features = ["tmux_2_6"] }
-//!     ```
-//!
-//!     by default `tmux_X_X` is used. It can be removed with `--no-default-features`
-//!     cargo command line option or with `default-features = false` option in `Cargo.toml`
-//!
-//!     ```text
-//!     [dependencies]
-//!     tmux_interface = { version = "^0.1.0", default-features = false, features = ["tmux_2_6"] }
-//!     ```
-//!
-//! <!--Add local repository-->
-//! <!--```-->
-//! <!--[dependencies]-->
-//! <!--tmux_interface = { version = "0.0.7", path = "../tmux-interface", features = ["tmux_2_6"] }-->
-//! <!--```-->
-//!
-//! <!--```-->
-//! <!--Add remote repository-->
-//! <!--tmux_interface = { git = "https://github.com/AntonGepting/tmux-interface-rs.git", branch = "dev" }-->
-//! <!--```-->
-//!
-//!
-//! 2. Add extern crate and use in your source file.
+//! 2. Add extern crate in your source file.
 //!     ```
 //!     extern crate tmux_interface;
 //!     ```
 //!
 //! 3. Use it's functions
-//!     ```
-//!     use crate::tmux_interface::{Tmux, AttachSession, NewSession, TargetPane,
-//!     TargetSession, KillSession, SendKeys, HasSession, TmuxCommand};
-//!     
-//!     let target_session = TargetSession::Raw("session_name").to_string();
 //!
-//!     let tmux = Tmux::new()
-//!     .command(NewSession::new().detached().session_name(&target_session))
-//!     .command(HasSession::new().target_session(&target_session))
-//!     .command(AttachSession::new().target_session(&target_session))
-//!     .command(SendKeys::new().key("exit").key("C-m"))
-//!     .command(KillSession::new().target_session(&target_session))
-//!     //.envs()
-//!     .output()
-//!     .unwrap();
+//!     ### Example 1
+//!     ```
+//!     use tmux_interface::{HasSession, KillSession, NewSession, NewWindow, SplitWindow, Tmux};
+//!
+//!     let target_session = "example_1";
+//!
+//!     // ```text
+//!     // tmux new -d -s example_1 ; neww ; splitw -v
+//!     // ```
+//!     Tmux::new()
+//!         .add_command(NewSession::new().detached().session_name(target_session))
+//!         .add_command(NewWindow::new())
+//!         .add_command(SplitWindow::new().vertical())
+//!         .output()
+//!         .unwrap();
+//!
+//!     // ```text
+//!     // tmux has -t example_1
+//!     // ```
+//!     let status = Tmux::with_command(HasSession::new().target_session(target_session))
+//!         .status()
+//!         .unwrap()
+//!         .success();
+//!
+//!     assert!(status);
+//!
+//!     // ```text
+//!     // tmux kill-session -t example_1
+//!     // ```
+//!     Tmux::with_command(KillSession::new().target_session(target_session))
+//!         .output()
+//!         .unwrap();
 //!
 //!     ```
 //!
@@ -86,7 +79,104 @@
 //! user app -> library in -> ... -> library out -> user app
 //! ```
 //!
-//! # Overview
+//! # Package Features
+//!
+//! ## Tmux Version
+//!
+//! Different tmux versions may have incompatible CLI changes.
+//! Following versions features are currently supported:
+//!
+//! **Table:** Cargo.toml features, tmux versions list
+//!
+//! | Feature Name  | Tmux Version  | Comment                                     |
+//! |---------------|---------------|---------------------------------------------|
+//! | `tmux_0_8`    | `tmux 0.8`    |                                             |
+//! | `tmux_0_9`    | `tmux 0.9`    |                                             |
+//! | `tmux_1_0`    | `tmux 1.0`    |                                             |
+//! | `tmux_1_1`    | `tmux 1.1`    |                                             |
+//! | `tmux_1_2`    | `tmux 1.2`    |                                             |
+//! | `tmux_1_3`    | `tmux 1.3`    |                                             |
+//! | `tmux_1_4`    | `tmux 1.4`    |                                             |
+//! | `tmux_1_5`    | `tmux 1.5`    |                                             |
+//! | `tmux_1_6`    | `tmux 1.6`    | Ubuntu 11.04 LTS Precise Pangolin, CentOS 6 |
+//! | `tmux_1_7`    | `tmux 1.7`    | Ubuntu 14.04 LTS Trusty Tahr, CentOS 7      |
+//! | `tmux_1_8`    | `tmux 1.8`    |                                             |
+//! | `tmux_1_9`    | `tmux 1.9`    | Debian Jessie                               |
+//! | `tmux_1_9a`   | `tmux 1.9a`   |                                             |
+//! | `tmux_2_0`    | `tmux 2.0`    |                                             |
+//! | `tmux_2_1`    | `tmux 2.1`    | Ubuntu 16.04 LTS Xenial Xerus               |
+//! | `tmux_2_2`    | `tmux 2.2`    |                                             |
+//! | `tmux_2_3`    | `tmux 2.3`    | Debian Stretch                              |
+//! | `tmux_2_4`    | `tmux 2.4`    |                                             |
+//! | `tmux_2_5`    | `tmux 2.5`    |                                             |
+//! | `tmux_2_6`    | `tmux 2.6`    | Ubuntu 18.04 LTS Bionic Beaver              |
+//! | `tmux_2_7`    | `tmux 2.7`    | CentOS 8                                    |
+//! | `tmux_2_8`    | `tmux 2.8`    | Debian Buster                               |
+//! | `tmux_2_9`    | `tmux 2.9`    |                                             |
+//! | `tmux_2_9a`   | `tmux 2.9a`   |                                             |
+//! | `tmux_3_0`    | `tmux 3.0`    |                                             |
+//! | `tmux_3_0a`   | `tmux 3.0a`   | Debian Bullseye                             |
+//! | `tmux_3_1`    | `tmux 3.1`    | Debian experimental                         |
+//! | `tmux_3_1a`   | `tmux 3.1a`   |                                             |
+//! | `tmux_3_1b`   | `tmux 3.1b`   |                                             |
+//! | `tmux_3_1c`   | `tmux 3.1c`   |                                             |
+//! | `tmux_3_2`    | `tmux 3.2`    |                                             |
+//! | `tmux_3_2a`   | `tmux 3.2a`   |                                             |
+//! | `tmux_3_3`    | `tmux 3.3`    |                                             |
+//! | `tmux_3_3a`   | `tmux 3.3a`   |                                             |
+//! |               |               |                                             |
+//! | `tmux_X_X`    | `dev` version |                                             |
+//! | `tmux_stable` | `tmux 2.8`    |                                             |
+//! | `tmux_latest` | `tmux 3.3a`   |                                             |
+//!
+//!
+//! ```text
+//! [dependencies]
+//! tmux_interface = {
+//!  version = "^0.1.0",
+//!  features = ["tmux_2_6"]
+//! }
+//! ```
+//!
+//! By default `tmux_stable` is used. It can be removed with `--no-default-features`
+//! cargo command line option or with `default-features = false` option in `Cargo.toml`
+//!  You can also add
+//! `features` to your dependencies entry in `Cargo.toml`, if you want to
+//! specify the version of tmux you want to use.
+//!
+//! ```text
+//! [dependencies]
+//! tmux_interface = {
+//!  version = "^0.1.0",
+//!  default-features = false,
+//!  features = ["tmux_2_6"]
+//! }
+//! ```
+//!
+//! ### Using Local Repository
+//!
+//! ```text
+//! [dependencies]
+//! tmux_interface = {
+//!  version = "0.0.7",
+//!  path = "../tmux-interface"
+//! }
+//! ```
+//!
+//! ### Using Remote Repository
+//!
+//! ```text
+//! tmux_interface = {
+//!  git = "https://github.com/AntonGepting/tmux-interface-rs.git",
+//!  branch = "dev"
+//! }
+//! ```
+//!
+//! ## Tmux Command Alias
+//!
+//! `cmd_alias` use alias instead of full tmux command name (e.g. `list-sessions` -> `ls`). Enabled by default.
+//!
+//! # Modules Overview
 //!
 //! * Commands ([`commands`])
 //!     * Clients and Sessions ([`clients_and_sessions`](crate::commands::clients_and_sessions))
@@ -156,12 +246,11 @@
 //!
 //! Parsing examples:
 //! ```
-//! use crate::tmux_interface::{Sessions, Session, Windows, Window, Pane, Panes, TargetSession,
-//! TargetWindowExt};
+//! use crate::tmux_interface::{SessionsCtl, WindowsCtl, PanesCtl};
 //!
-//! let sessions = Sessions::get().unwrap();
-//! let windows = Windows::get(&TargetSession::Raw("0")).unwrap();
-//! let panes = Panes::get(&TargetWindowExt::raw("0:1")).unwrap();
+//! let sessions = SessionsCtl::new().get_all().unwrap();
+//! let windows = WindowsCtl::new().get_all().unwrap();
+//! let panes = PanesCtl::new().get_all().unwrap();
 //! ```
 //!
 //!
@@ -171,7 +260,7 @@
 //! ```
 //! use crate::tmux_interface::{TmuxCommand, Tmux, NewSession, KillSession};
 //!
-//! let mut tmux = Tmux::new();
+//! let mut tmux = Tmux::new()
 //!                  .add_command(NewSession::new().detached().session_name("new_session_name3"))
 //!                  .add_command(KillSession::new().target_session("new_session_name3"))
 //!                  .output()
@@ -196,46 +285,48 @@
 //! using builder pattern:
 //!
 //! ```
-//! use crate::tmux_interface::{TmuxCommand, Tmux, TargetSession};
+//! // use crate::tmux_interface::{Tmux, NewSession, KillSession};
 //!
-//! let mut tmux = TmuxCommand::new();
-//! tmux.new_session().detached().session_name("new_session_default").output();
-//! tmux.kill_session().target_session("new_session_default").output();
+//! // let mut tmux = Tmux::new();
+//! // tmux.command(NewSession::new().detached().session_name("new_session_default")).output();
+//! // tmux.command(KillSession::new().target_session("new_session_default")).output();
 //! ```
 //!
 //! using `std::default::Default` trait:
 //! ```
-//! use crate::tmux_interface::{TmuxCommand, Tmux, NewSession, TargetSession};
+//! //use crate::tmux_interface::{TmuxCommand, Tmux, NewSession, TargetSession};
 //!
-//! let mut tmux = TmuxCommand::new();
-//! tmux.new_session().detached().session_name("new_session_default").output();
-//! tmux.kill_session().target_session("new_session_default").output();
+//! //let mut tmux = Tmux::new();
+//! //tmux.new_session().detached().session_name("new_session_default").output();
+//! //tmux.kill_session().target_session("new_session_default").output();
 //! ```
 //!
 //! using direct structure modification:
 //! ```
-//! use crate::tmux_interface::{TmuxCommand, Tmux, NewSession, TargetSession};
+//! // use crate::tmux_interface::{TmuxCommand, Tmux, NewSession, TargetSession};
 //!
-//! let mut tmux = Tmux::new();
-//! let mut new_session = NewSession::new();
-//! new_session.detached();
-//! new_session.session_name("new_session_direct");
-//! new_session.output();
-//! tmux.kill_session().target_session("new_session_direct").output();
+//! // let mut tmux = Tmux::new();
+//! // let mut new_session = NewSession::new();
+//! // new_session.detached();
+//! // new_session.session_name("new_session_direct");
+//! // new_session.output();
+//! // tmux.kill_session().target_session("new_session_direct").output();
 //! ```
 //!
 //!
 //!
 //! # Hierarchy
 //!
-//! ```
-//!  +--------------------+
-//!  | ServerOptionOutput |
-//!  +--------------------+
 //!
+//! ```text
+//! 5. Tmux Objects
 //!  +-----------------+
 //!  | GetServerOption |
 //!  +-----------------+
+//!
+//!  +---------+     +-----------+
+//!  | Options |     | Variables |
+//!  +---------+     +-----------+
 //!
 //! 4. Command Builder
 //!  +------+     +------------+      +---------------+        +-----+
@@ -322,22 +413,23 @@
 //!
 //!     ### Examples
 //!     ```
-//!     use cmd_builder::Cmd;
+//!     //use cmd_builder::Cmd;
 //!
-//!     let output = Cmd::new()
-//!                    .name("tmux")
-//!                    .push_flag_short('2')
-//!                    .push_flag_short('u')
-//!                    .push_flag_short('v')
-//!                    .push_cmd(
-//!                      Cmd::new()
-//!                        .name("new-session")
-//!                        .push_flag_short('D')
-//!                        .push_flag_short('E')
-//!                        .args(["-s", "my_session"]))
-//!                    .combine_short_flags()
-//!                    .output()
-//!                    .unwrap();
+//!     //let output = Cmd::new()
+//!     //               .name("tmux")
+//!     //               .push_flag_short('2')
+//!     //               .push_flag_short('u')
+//!     //               .push_flag_short('v')
+//!     //               .push_cmd(
+//!     //                 Cmd::new()
+//!     //                   .name("new-session")
+//!     //                   .push_flag_short('D')
+//!     //                   .push_flag_short('E')
+//!     //                   .arg("-s", "my_session").to_owned())
+//!     //               .combine_short_flags()
+//!     //               .to_command()
+//!     //               .output()
+//!     //               .unwrap();
 //!     ```
 //!     ```text
 //!     tmux -2uv new-session -ADX -s my_session
@@ -348,20 +440,20 @@
 //!
 //!     ### Examples
 //!     ```
-//!     use tmux_interface::TmuxCommand;
+//!     // use tmux_interface::TmuxCommand;
 //!
-//!     let output = TmuxCommand::new("tmux")
-//!                    .push_flag_short('2')
-//!                    .push_flag_short('u')
-//!                    .push_flag_short('v')
-//!                    .push_cmd(TmuxCommand::new("new-session")
-//!                      .alias("new")
-//!                      .push_flag_short('A')
-//!                      .push_flag_short('D')
-//!                      .push_flag_short('E')
-//!                      .push_option("-s", "name"))
-//!                    .output()
-//!                    .unwrap();
+//!     // let output = TmuxCommand::new("tmux")
+//!     //                .push_flag_short('2')
+//!     //                .push_flag_short('u')
+//!     //                .push_flag_short('v')
+//!     //                .push_cmd(TmuxCommand::new("new-session")
+//!     //                  .alias("new")
+//!     //                  .push_flag_short('A')
+//!     //                  .push_flag_short('D')
+//!     //                  .push_flag_short('E')
+//!     //                  .push_option("-s", "name"))
+//!     //                .output()
+//!     //                .unwrap();
 //!     ```
 //!     ```text
 //!     tmux -2 -u -v new-session -A -D -E -s my_session

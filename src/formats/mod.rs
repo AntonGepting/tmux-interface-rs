@@ -16,7 +16,9 @@
 //! ```
 //!
 //! ```
-//! let mut f = Format::new();
+//! use tmux_interface::{Formats, Variable};
+//!
+//! let mut f = Formats::new();
 //! f.push(Variable::WindowActive);
 //! f.to_string();
 //! ```

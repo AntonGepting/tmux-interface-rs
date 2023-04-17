@@ -45,7 +45,9 @@ fn default() {
     let options = options.message_limit(Some(1000));
     #[cfg(feature = "tmux_3_3")]
     let options = options.prompt_history_limit(Some(100));
-    #[cfg(feature = "tmux_1_5")]
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+    let options = options.set_clipboard(Some(SetClipboard::On));
+    #[cfg(feature = "tmux_2_6")]
     let options = options.set_clipboard(Some(SetClipboard::External));
     #[cfg(feature = "tmux_3_2")]
     let options = options.terminal_features(Some(vec![
@@ -62,7 +64,7 @@ fn default() {
     #[cfg(feature = "tmux_3_0")]
     let options = options.user_keys(Some(vec![""]));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    let options = options.quiet(None);
+    let options = options.quiet(Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     let options = options.detach_on_destroy(None);
 

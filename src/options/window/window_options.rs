@@ -61,7 +61,7 @@ pub struct WindowOptions<'a> {
     /// c0-change-trigger trigger
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    pub c0_change_trigger: Option<Cow<'a, str>>,
+    pub c0_change_trigger: Option<usize>,
 
     /// tmux ^1.0:
     /// ```text
@@ -959,11 +959,8 @@ impl<'a> WindowOptions<'a> {
     }
 
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    pub fn c0_change_trigger<S: Into<Cow<'a, str>>>(
-        mut self,
-        c0_change_trigger: Option<S>,
-    ) -> Self {
-        self.c0_change_trigger = c0_change_trigger.map(|s| s.into());
+    pub fn c0_change_trigger(mut self, c0_change_trigger: Option<usize>) -> Self {
+        self.c0_change_trigger = c0_change_trigger;
         self
     }
 
@@ -1055,8 +1052,8 @@ impl<'a> WindowOptions<'a> {
     }
 
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    pub fn monitor_content(mut self, monitor_content: Option<usize>) -> Self {
-        self.monitor_content = monitor_content;
+    pub fn monitor_content<S: Into<Cow<'a, str>>>(mut self, monitor_content: Option<S>) -> Self {
+        self.monitor_content = monitor_content.map(|s| s.into());
         self
     }
 
@@ -1326,7 +1323,7 @@ impl<'a> WindowOptions<'a> {
         mut self,
         window_status_content_style: Option<S>,
     ) -> Self {
-        self.window_status_content_style = window_status_content_style;
+        self.window_status_content_style = window_status_content_style.map(|s| s.into());
         self
     }
 
@@ -1475,7 +1472,9 @@ impl<'a> FromStr for WindowOptions<'a> {
                         window_options.c0_change_interval = value.and_then(|s| s.parse().ok())
                     }
                     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-                    C0_CHANGE_TRIGGER => window_options.c0_change_trigger = cow_parse(value),
+                    C0_CHANGE_TRIGGER => {
+                        window_options.c0_change_trigger = value.and_then(|s| s.parse().ok())
+                    }
                     #[cfg(feature = "tmux_1_0")]
                     CLOCK_MODE_COLOUR => window_options.clock_mode_colour = cow_parse(value),
                     #[cfg(feature = "tmux_1_0")]
@@ -1517,9 +1516,7 @@ impl<'a> FromStr for WindowOptions<'a> {
                         window_options.monitor_activity = value.and_then(|s| s.parse().ok())
                     }
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-                    MONITOR_CONTENT => {
-                        window_options.monitor_content = value.and_then(|s| s.parse().ok())
-                    }
+                    MONITOR_CONTENT => window_options.monitor_content = cow_parse(value),
                     #[cfg(feature = "tmux_2_6")]
                     MONITOR_BELL => {
                         window_options.monitor_bell = value.and_then(|s| s.parse().ok())
@@ -1651,8 +1648,7 @@ impl<'a> FromStr for WindowOptions<'a> {
                     }
                     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
                     WINDOW_STATUS_CONTENT_STYLE => {
-                        window_options.window_status_content_style =
-                            value.and_then(|s| s.parse().ok())
+                        window_options.window_status_content_style = cow_parse(value)
                     }
                     #[cfg(feature = "tmux_1_2")]
                     WINDOW_STATUS_CURRENT_FORMAT => {

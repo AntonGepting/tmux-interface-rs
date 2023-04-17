@@ -43,7 +43,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, ALLOW_RENAME)
+        Self::get_ext(target, ALLOW_RENAME)
     }
 
     /// ### Manual
@@ -57,7 +57,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, ALTERNATE_SCREEN)
+        Self::get_ext(target, ALTERNATE_SCREEN)
     }
 
     /// ### Manual
@@ -99,7 +99,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, C0_CHANGE_INTERVAL)
+        Self::get_ext(target, C0_CHANGE_INTERVAL)
     }
 
     /// ### Manual
@@ -113,7 +113,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, C0_CHANGE_TRIGGER)
+        Self::get_ext(target, C0_CHANGE_TRIGGER)
     }
 
     /// ### Manual
@@ -155,7 +155,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, FORCE_HEIGHT)
+        Self::get_ext(target, FORCE_HEIGHT)
     }
 
     /// ### Manual
@@ -169,7 +169,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, FORCE_WIDTH)
+        Self::get_ext(target, FORCE_WIDTH)
     }
 
     /// ### Manual
@@ -183,7 +183,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, LAYOUT_HISTORY_LIMIT)
+        Self::get_ext(target, LAYOUT_HISTORY_LIMIT)
     }
 
     /// ### Manual
@@ -225,7 +225,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MODE_ATTR)
+        Self::get_ext(target, MODE_ATTR)
     }
 
     /// ### Manual
@@ -239,7 +239,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MODE_BG)
+        Self::get_ext(target, MODE_BG)
     }
 
     /// ### Manual
@@ -253,7 +253,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MODE_FG)
+        Self::get_ext(target, MODE_FG)
     }
 
     /// ### Manual
@@ -286,7 +286,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MODE_MOUSE)
+        Self::get_ext(target, MODE_MOUSE)
     }
 
     /// ### Manual
@@ -328,7 +328,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, MONITOR_CONTENT)
+        Self::get_ext(target, MONITOR_CONTENT)
     }
 
     /// ### Manual
@@ -468,7 +468,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, REMAIN_ON_EXIT)
+        Self::get_ext(target, REMAIN_ON_EXIT)
     }
 
     /// ### Manual
@@ -482,7 +482,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, SYNCHRONIZE_PANES)
+        Self::get_ext(target, SYNCHRONIZE_PANES)
     }
 
     /// ### Manual
@@ -496,7 +496,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, UTF8)
+        Self::get_ext(target, UTF8)
     }
 
     /// ### Manual
@@ -510,7 +510,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_ACTIVE_STYLE)
+        Self::get_ext(target, WINDOW_ACTIVE_STYLE)
     }
 
     /// ### Manual
@@ -524,7 +524,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_BELL_ATTR)
+        Self::get_ext(target, WINDOW_STATUS_BELL_ATTR)
     }
 
     /// ### Manual
@@ -538,7 +538,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_BELL_BG)
+        Self::get_ext(target, WINDOW_STATUS_BELL_BG)
     }
 
     /// ### Manual
@@ -552,7 +552,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_BELL_FG)
+        Self::get_ext(target, WINDOW_STATUS_BELL_FG)
     }
 
     /// ### Manual
@@ -566,7 +566,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_CONTENT_ATTR)
+        Self::get_ext(target, WINDOW_STATUS_CONTENT_ATTR)
     }
 
     /// ### Manual
@@ -580,7 +580,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_CONTENT_BG)
+        Self::get_ext(target, WINDOW_STATUS_CONTENT_BG)
     }
 
     /// ### Manual
@@ -594,7 +594,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_CONTENT_FG)
+        Self::get_ext(target, WINDOW_STATUS_CONTENT_FG)
     }
 
     /// ### Manual
@@ -608,7 +608,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_ACTIVITY_ATTR)
+        Self::get_ext(target, WINDOW_STATUS_ACTIVITY_ATTR)
     }
 
     /// ### Manual
@@ -622,7 +622,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_ACTIVITY_BG)
+        Self::get_ext(target, WINDOW_STATUS_ACTIVITY_BG)
     }
 
     /// ### Manual
@@ -636,7 +636,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_ACTIVITY_FG)
+        Self::get_ext(target, WINDOW_STATUS_ACTIVITY_FG)
     }
 
     /// ### Manual
@@ -650,7 +650,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_ATTR)
+        Self::get_ext(target, WINDOW_STATUS_ATTR)
     }
 
     /// ### Manual
@@ -664,7 +664,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_BG)
+        Self::get_ext(target, WINDOW_STATUS_BG)
     }
 
     /// ### Manual
@@ -678,7 +678,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_FG)
+        Self::get_ext(target, WINDOW_STATUS_FG)
     }
 
     /// ### Manual
@@ -692,7 +692,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_CURRENT_ATTR)
+        Self::get_ext(target, WINDOW_STATUS_CURRENT_ATTR)
     }
 
     /// ### Manual
@@ -706,7 +706,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_CURRENT_BG)
+        Self::get_ext(target, WINDOW_STATUS_CURRENT_BG)
     }
 
     /// ### Manual
@@ -720,7 +720,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_CURRENT_FG)
+        Self::get_ext(target, WINDOW_STATUS_CURRENT_FG)
     }
 
     /// ### Manual
@@ -734,7 +734,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_ALERT_ATTR)
+        Self::get_ext(target, WINDOW_STATUS_ALERT_ATTR)
     }
 
     /// ### Manual
@@ -748,7 +748,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_ALERT_BG)
+        Self::get_ext(target, WINDOW_STATUS_ALERT_BG)
     }
 
     /// ### Manual
@@ -762,7 +762,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_ALERT_FG)
+        Self::get_ext(target, WINDOW_STATUS_ALERT_FG)
     }
 
     /// ### Manual
@@ -804,7 +804,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_CONTENT_STYLE)
+        Self::get_ext(target, WINDOW_STATUS_CONTENT_STYLE)
     }
 
     /// ### Manual
@@ -832,7 +832,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_LAST_ATTR)
+        Self::get_ext(target, WINDOW_STATUS_LAST_ATTR)
     }
 
     /// ### Manual
@@ -846,7 +846,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_LAST_BG)
+        Self::get_ext(target, WINDOW_STATUS_LAST_BG)
     }
 
     /// ### Manual
@@ -860,7 +860,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STATUS_LAST_FG)
+        Self::get_ext(target, WINDOW_STATUS_LAST_FG)
     }
 
     /// ### Manual
@@ -958,7 +958,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WORD_SEPARATORS)
+        Self::get_ext(target, WORD_SEPARATORS)
     }
 
     /// ### Manual
@@ -972,7 +972,7 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
     where
         T: Into<Cow<'a, str>>,
     {
-        Self::get(target, WINDOW_STYLE)
+        Self::get_ext(target, WINDOW_STYLE)
     }
 
     /// ### Manual

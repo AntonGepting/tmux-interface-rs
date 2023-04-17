@@ -460,10 +460,10 @@ pub const MESSAGE_COMMAND_STYLE_DEFAULT: &str = "fg=yellow,bg=black";
 
 /// tmux ^1.2 v2.0:
 /// ```text
-/// message-limit ?
+/// message-limit number
 /// ```
 #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-pub const MESSAGE_LIMIT: usize = 0;
+pub const MESSAGE_LIMIT_DEFAULT: usize = 20;
 
 /// tmux ^1.9:
 /// ```text
@@ -582,7 +582,7 @@ pub const REPEAT_TIME_DEFAULT: usize = 500;
 /// set-remain-on-exit off
 /// ```
 #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-pub const SET_REMAIN_ON_EXIT: Switch = Switch::Off;
+pub const SET_REMAIN_ON_EXIT_DEFAULT: Switch = Switch::Off;
 
 /// tmux ^1.0:
 /// ```text
@@ -762,6 +762,22 @@ pub const STATUS_RIGHT_STYLE_DEFAULT: &str = "default";
 /// ```
 #[cfg(feature = "tmux_1_9")]
 pub const STATUS_STYLE_DEFAULT: &str = "fg=black,bg=green";
+
+
+/// tmux ^1.0 v2.2:
+/// ```text
+/// status-style fg=colour247,bg=#282c34
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
+pub const STATUS_UTF8_DEFAULT: Switch = Switch::Off;
+
+
+/// tmux ^1.0 v2.0:
+/// ```text
+/// terminal-overrides "*256col*:colors=256,xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q,screen*:XT" 
+/// ```
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+pub const TERMINAL_OVERRIDES_DEFAULT: &str = "*256col*:colors=256,xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q,screen*:XT";
 
 /// tmux ^1.0:
 /// ```text

@@ -31,9 +31,9 @@ fn set_local_window_options() {
         Some("#{?pane_in_mode,[tmux],#{pane_current_command}}#{?pane_dead,[dead],}".to_string()),
     );
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    let options = options.c0_change_interval(Some(target), Some(0));
+    let options = options.c0_change_interval(Some(target), Some(100));
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    let options = options.c0_change_trigger(Some(target), Some(""));
+    let options = options.c0_change_trigger(Some(target), Some(250));
     #[cfg(feature = "tmux_1_0")]
     let options = options.clock_mode_colour(Some(target), Some("colour135"));
     #[cfg(feature = "tmux_1_0")]
@@ -68,7 +68,7 @@ fn set_local_window_options() {
     #[cfg(feature = "tmux_1_0")]
     let options = options.monitor_activity(Some(target), Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    let options = options.monitor_content(Some(target));
+    let options = options.monitor_content(Some(target), Some(""));
     #[cfg(feature = "tmux_2_6")]
     let options = options.monitor_bell(Some(target), Some(Switch::On));
     #[cfg(feature = "tmux_1_4")]

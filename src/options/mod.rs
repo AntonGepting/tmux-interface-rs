@@ -140,9 +140,7 @@
 //!
 //! # 2.3. XXX
 //!
-//! ```
-//! let server_options = GetServerOption::
-//! ```
+//! XXX: examples
 //!
 //! # 2.3. Control
 //!

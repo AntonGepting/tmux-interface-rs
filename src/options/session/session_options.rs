@@ -871,8 +871,8 @@ impl<'a> SessionOptions<'a> {
     }
 
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    pub fn message_limit<S: Into<Cow<'a, str>>>(mut self, message_limit: Option<S>) -> Self {
-        self.message_limit = message_limit.map(|s| s.into());
+    pub fn message_limit(mut self, message_limit: Option<usize>) -> Self {
+        self.message_limit = message_limit;
         self
     }
 
@@ -937,14 +937,20 @@ impl<'a> SessionOptions<'a> {
     }
 
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    pub fn pane_active_border_style(mut self, pane_active_border_style: Option<Switch>) -> Self {
-        self.pane_active_border_style = pane_active_border_style;
+    pub fn pane_active_border_style<S: Into<Cow<'a, str>>>(
+        mut self,
+        pane_active_border_style: Option<S>,
+    ) -> Self {
+        self.pane_active_border_style = pane_active_border_style.map(|s| s.into());
         self
     }
 
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    pub fn pane_border_style(mut self, pane_border_style: Option<Switch>) -> Self {
-        self.pane_border_style = pane_border_style;
+    pub fn pane_border_style<S: Into<Cow<'a, str>>>(
+        mut self,
+        pane_border_style: Option<S>,
+    ) -> Self {
+        self.pane_border_style = pane_border_style.map(|s| s.into());
         self
     }
 
@@ -1193,7 +1199,7 @@ impl<'a> SessionOptions<'a> {
     }
 
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    pub fn visual_content(mut self, visual_content: Option<Activity>) -> Self {
+    pub fn visual_content(mut self, visual_content: Option<Switch>) -> Self {
         self.visual_content = visual_content;
         self
     }
@@ -1249,9 +1255,7 @@ impl<'a> FromStr for SessionOptions<'a> {
                         session_options.default_path = value.and_then(|s| s.parse().ok())
                     }
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-                    DEFAULT_TERMINAL => {
-                        session_options.default_terminal = value.and_then(|s| s.parse().ok())
-                    }
+                    DEFAULT_TERMINAL => session_options.default_terminal = cow_parse(value),
                     // #[cfg(feature = "tmux_2_9")]
                     // DEFAULT_SIZE => {
                     // session_options.default_size = value.and_then(|s| s.parse().ok())
@@ -1356,13 +1360,10 @@ impl<'a> FromStr for SessionOptions<'a> {
                     }
                     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
                     PANE_ACTIVE_BORDER_STYLE => {
-                        session_options.pane_active_border_style =
-                            value.and_then(|s| s.parse().ok())
+                        session_options.pane_active_border_style = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-                    PANE_BORDER_STYLE => {
-                        session_options.pane_border_style = value.and_then(|s| s.parse().ok())
-                    }
+                    PANE_BORDER_STYLE => session_options.pane_border_style = cow_parse(value),
                     #[cfg(feature = "tmux_1_0")]
                     PREFIX => session_options.prefix = cow_parse(value),
                     #[cfg(feature = "tmux_1_6")]
@@ -1458,9 +1459,7 @@ impl<'a> FromStr for SessionOptions<'a> {
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
                     STATUS_UTF8 => session_options.status_utf8 = value.and_then(|s| s.parse().ok()),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-                    TERMINAL_OVERRIDES => {
-                        session_options.terminal_overrides = value.and_then(|s| s.parse().ok())
-                    }
+                    TERMINAL_OVERRIDES => session_options.terminal_overrides = cow_parse(value),
                     #[cfg(feature = "tmux_1_0")]
                     UPDATE_ENVIRONMENT => array_insert(
                         &mut session_options.update_environment,

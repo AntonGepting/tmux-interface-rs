@@ -27,7 +27,7 @@ fn delete_buffer() {
     // ```
     let buffer_name = TargetPane::Raw("1").to_string();
     let delete_buffer = DeleteBuffer::new();
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(feature = "tmux_2_0")]
     let delete_buffer = delete_buffer.buffer_name(buffer_name);
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
     let delete_buffer = delete_buffer.buffer_index(buffer_name);

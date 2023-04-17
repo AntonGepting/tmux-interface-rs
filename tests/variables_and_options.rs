@@ -3,9 +3,12 @@
 fn get() {
     use tmux_interface::{
         GlobalSessionOptionsCtl, GlobalWindowOptionsCtl, LocalSessionOptionsCtl,
-        LocalWindowOptionsCtl, PaneOptionsCtl, PanesCtl, ServerOptionsCtl, SessionOptionsCtl,
-        SessionsCtl, TargetPane, TargetSession, TargetWindow, WindowOptionsCtl, WindowsCtl,
+        LocalWindowOptionsCtl, PanesCtl, ServerOptionsCtl, SessionOptionsCtl, SessionsCtl,
+        TargetPane, TargetSession, TargetWindow, WindowOptionsCtl, WindowsCtl,
     };
+
+    #[cfg(feature = "tmux_3_1")]
+    use tmux_interface::PaneOptionsCtl;
 
     println!("global: ");
     let global_server_options = ServerOptionsCtl::default().get_all().unwrap();
@@ -60,11 +63,14 @@ fn get() {
                 // dbg!(&target_pane_str);
                 println!("   pane: {}:", target_pane);
 
-                let pane_options = PaneOptionsCtl::with_target(Some(target_pane.to_string()))
-                    .get_all()
-                    .unwrap();
-                // dbg!(pane_options);
-                println!("    user options: {:?}", pane_options.user_options);
+                #[cfg(feature = "tmux_3_1")]
+                {
+                    let pane_options = PaneOptionsCtl::with_target(Some(target_pane.to_string()))
+                        .get_all()
+                        .unwrap();
+                    // dbg!(pane_options);
+                    println!("    user options: {:?}", pane_options.user_options);
+                }
             }
         }
     }

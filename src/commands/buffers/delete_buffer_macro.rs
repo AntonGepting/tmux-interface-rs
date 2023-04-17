@@ -22,14 +22,16 @@
 /// ```
 #[macro_export]
 macro_rules! delete_buffer {
-    (@cmd ($cmd:expr) -b $buffer_name:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -b $buffer:expr, $($tail:tt)*) => {{
         $crate::choose_buffer!(@cmd ({
-            $cmd.buffer_name($buffer_name)
-        }) $($tail)*)
-    }};
-    (@cmd ($cmd:expr) -b $buffer_index:expr, $($tail:tt)*) => {{
-        $crate::choose_buffer!(@cmd ({
-            $cmd.buffer_index($buffer_index)
+            #[cfg(feature = "tmux_2_0")]
+            {
+                $cmd.buffer_name($buffer)
+            }
+            #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
+            {
+                $cmd.buffer_index($buffer)
+            }
         }) $($tail)*)
     }};
     (@cmd ($cmd:expr) -t $target_session:expr, $($tail:tt)*) => {{
@@ -70,7 +72,7 @@ fn delete_buffer_macro() {
     // (alias: deleteb)
     // ```
     //
-    // tmux ^1.5:
+    // tmux ^1.5 v2.0:
     // ```text
     // delete-buffer [-b buffer-index]
     // (alias: deleteb)
@@ -84,7 +86,7 @@ fn delete_buffer_macro() {
     let buffer_name = TargetPane::Raw("1").to_string();
 
     let delete_buffer = delete_buffer!();
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(feature = "tmux_2_0")]
     let delete_buffer = delete_buffer!((delete_buffer), -b buffer_name);
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
     let delete_buffer = delete_buffer!((delete_buffer), -b buffer_name);

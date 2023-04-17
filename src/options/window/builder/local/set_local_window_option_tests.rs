@@ -107,8 +107,7 @@ fn set_local_window_option_tests() {
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
     {
         let origin = format!("{} {} {}", cmd, "c0-change-trigger", "3");
-        let set_option =
-            SetLocalWindowOption::c0_change_trigger(Some(target), Some("3")).to_string();
+        let set_option = SetLocalWindowOption::c0_change_trigger(Some(target), Some(3)).to_string();
         assert_eq!(origin, set_option);
     }
 

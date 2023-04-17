@@ -396,13 +396,10 @@ pub trait SetSessionOptionsTr<'a> {
     /// message-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn message_attr<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        attributes: Option<S>,
-    ) -> Self
+    fn message_attr<T, S>(mut self, target: Option<T>, attributes: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push(Self::Setter::message_attr(target, attributes));
@@ -433,13 +430,10 @@ pub trait SetSessionOptionsTr<'a> {
     /// message-command-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn message_command_attr<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        attributes: Option<S>,
-    ) -> Self
+    fn message_command_attr<T, S>(mut self, target: Option<T>, attributes: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.options
@@ -454,13 +448,10 @@ pub trait SetSessionOptionsTr<'a> {
     /// message-command-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn message_command_bg<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        colour: Option<S>,
-    ) -> Self
+    fn message_command_bg<T, S>(mut self, target: Option<T>, colour: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push(Self::Setter::message_command_bg(target, colour));
@@ -474,13 +465,10 @@ pub trait SetSessionOptionsTr<'a> {
     /// message-command-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn message_command_fg<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        colour: Option<S>,
-    ) -> Self
+    fn message_command_fg<T, S>(mut self, target: Option<T>, colour: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push(Self::Setter::message_command_fg(target, colour));
@@ -640,17 +628,13 @@ pub trait SetSessionOptionsTr<'a> {
     /// pane-active-border-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn pane_active_border_bg<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        colour: Option<S>,
-    ) -> Self
+    fn pane_active_border_bg<T, S>(mut self, target: Option<T>, colour: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.options
-            .push(Self::Setter::pane_active_border_bg(target, colour));
+        self.push(Self::Setter::pane_active_border_bg(target, colour));
         self
     }
 
@@ -661,17 +645,13 @@ pub trait SetSessionOptionsTr<'a> {
     /// pane-active-border-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    fn pane_active_border_fg<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        colour: Option<S>,
-    ) -> Self
+    fn pane_active_border_fg<T, S>(mut self, target: Option<T>, colour: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.options
-            .push(Self::Setter::pane_active_border_fg(target, colour));
+        self.push(Self::Setter::pane_active_border_fg(target, colour));
         self
     }
 
@@ -716,17 +696,13 @@ pub trait SetSessionOptionsTr<'a> {
     /// pane-active-border-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    fn pane_active_border_style<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        style: Option<S>,
-    ) -> Self
+    fn pane_active_border_style<S, T>(mut self, target: Option<T>, style: Option<S>) -> Self
     where
+        S: Into<Cow<'a, str>>,
         T: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.options
-            .push(Self::Setter::pane_active_border_style(target, style));
+        self.push(Self::Setter::pane_active_border_style(target, style));
         self
     }
 
@@ -737,13 +713,10 @@ pub trait SetSessionOptionsTr<'a> {
     /// pane-border-style style
     /// ```
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    fn pane_border_style<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        style: Option<S>,
-    ) -> Self
+    fn pane_border_style<S, T>(mut self, target: Option<T>, style: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push(Self::Setter::pane_border_style(target, style));
@@ -908,13 +881,10 @@ pub trait SetSessionOptionsTr<'a> {
     /// status-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_attr<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        attributes: Option<S>,
-    ) -> Self
+    fn status_attr<T, S>(mut self, target: Option<T>, attributes: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push(Self::Setter::status_attr(target, attributes));
@@ -1045,17 +1015,13 @@ pub trait SetSessionOptionsTr<'a> {
     /// status-left-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_left_attr<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        attributes: Option<S>,
-    ) -> Self
+    fn status_left_attr<T, S>(mut self, target: Option<T>, attributes: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.options
-            .push(Self::Setter::status_left_attr(target, attributes));
+        self.push(Self::Setter::status_left_attr(target, attributes));
         self
     }
 
@@ -1170,17 +1136,13 @@ pub trait SetSessionOptionsTr<'a> {
     /// status-right-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_right_attr<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        attributes: Option<S>,
-    ) -> Self
+    fn status_right_attr<T, S>(mut self, target: Option<T>, attributes: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.options
-            .push(Self::Setter::status_right_attr(target, attributes));
+        self.push(Self::Setter::status_right_attr(target, attributes));
         self
     }
 
@@ -1191,13 +1153,10 @@ pub trait SetSessionOptionsTr<'a> {
     /// status-right-bg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_right_bg<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        colour: Option<S>,
-    ) -> Self
+    fn status_right_bg<T, S>(mut self, target: Option<T>, colour: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push(Self::Setter::status_right_bg(target, colour));
@@ -1211,13 +1170,10 @@ pub trait SetSessionOptionsTr<'a> {
     /// status-right-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_right_fg<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        colour: Option<S>,
-    ) -> Self
+    fn status_right_fg<T, S>(mut self, target: Option<T>, colour: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push(Self::Setter::status_right_fg(target, colour));
@@ -1297,13 +1253,10 @@ pub trait SetSessionOptionsTr<'a> {
     /// terminal-overrides string
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    fn terminal_overrides<S: Into<Cow<'a, str>>>(
-        mut self,
-        target: Option<T>,
-        string: Option<S>,
-    ) -> Self
+    fn terminal_overrides<S, T>(mut self, target: Option<T>, string: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push(Self::Setter::terminal_overrides(target, string));

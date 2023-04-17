@@ -1,6 +1,7 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
+use std::marker::PhantomData;
 
 /// List the global buffers.
 ///
@@ -31,6 +32,8 @@ pub struct ListBuffers<'a> {
     /// `[-F format]`
     #[cfg(feature = "tmux_1_7")]
     pub format: Option<Cow<'a, str>>,
+
+    _phantom_data: PhantomData<&'a ()>,
 }
 
 impl<'a> ListBuffers<'a> {

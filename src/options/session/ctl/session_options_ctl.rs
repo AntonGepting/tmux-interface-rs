@@ -991,7 +991,7 @@ pub trait SessionOptionsCtl<'a> {
         message_command_attr: Option<String>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::message_command_attr(
-            target,
+            self.target(),
             message_command_attr,
         ))
     }
@@ -1031,7 +1031,10 @@ pub trait SessionOptionsCtl<'a> {
     /// message-command-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn get_default_size(&self, target: Option<S>) -> Result<Option, Error> {
+    fn get_default_size<S: Into<Cow<'a, str>>>(
+        &self,
+        target: Option<S>,
+    ) -> Result<Option<String>, Error> {
         self.get(Self::Getter::default_size(self.target()))
     }
 
@@ -1042,7 +1045,10 @@ pub trait SessionOptionsCtl<'a> {
     /// message-command-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn set_default_size(&self, default_size: Option) -> Result<TmuxOutput, Error> {
+    fn set_default_size<S: Into<Cow<'a, str>>>(
+        &self,
+        default_size: Option<S>,
+    ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::default_size(self.target(), default_size))
     }
 
@@ -1053,12 +1059,30 @@ pub trait SessionOptionsCtl<'a> {
     /// message-command-fg colour
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn message_command_fg(mut self) -> Self
+    fn get_message_command_fg(mut self) -> Result<Option<String>, Error>
     where
         Self: Sized,
     {
-        self.push(Getter::message_command_fg());
+        self.get(Self::Getter::message_command_fg(self.target()));
         self
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^1.6 v1.9:
+    /// ```text
+    /// message-command-fg colour
+    /// ```
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    fn set_message_command_fg<S: Into<Cow<'a, str>>>(
+        &self,
+        target: Option<S>,
+        message_command_fg: Option<String>,
+    ) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::message_command_fg(
+            self.target(),
+            message_command_fg,
+        ))
     }
 
     /// ### Manual
@@ -1119,8 +1143,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-limit number
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    fn get_mesage_limit(&self) -> Result<Option<usize>, Error> {
-        self.get(Self::Getter::mesage_limit(self.target()))
+    fn get_message_limit(&self) -> Result<Option<usize>, Error> {
+        self.get(Self::Getter::message_limit(self.target()))
     }
 
     /// ### Manual
@@ -1130,8 +1154,8 @@ pub trait SessionOptionsCtl<'a> {
     /// message-limit number
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    fn set_mesage_limit(&self, message_limit: Option<usize>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mesage_limit(self.target(), message_limit))
+    fn set_message_limit(&self, message_limit: Option<usize>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::message_limit(self.target(), message_limit))
     }
 
     /// ### Manual
@@ -1215,7 +1239,7 @@ pub trait SessionOptionsCtl<'a> {
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
     fn get_select_window(&self) -> Result<Option<Switch>, Error> {
-        self.get(Self::Getter::select_window(self.target()))
+        self.get(Self::Getter::mouse_select_window(self.target()))
     }
 
     /// ### Manual
@@ -1226,7 +1250,10 @@ pub trait SessionOptionsCtl<'a> {
     /// ```
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
     fn set_select_window(&self, select_window: Option<Switch>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::select_window(self.target(), select_window))
+        self.set(Self::Setter::mouse_select_window(
+            self.target(),
+            select_window,
+        ))
     }
 
     /// ### Manual
@@ -1296,7 +1323,7 @@ pub trait SessionOptionsCtl<'a> {
         pane_active_border_bg: Option<String>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::pane_active_border_bg(
-            target,
+            self.target(),
             pane_active_border_bg,
         ))
     }
@@ -1396,7 +1423,7 @@ pub trait SessionOptionsCtl<'a> {
         pane_active_border_style: Option<String>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::pane_active_border_style(
-            target,
+            self.target(),
             pane_active_border_style,
         ))
     }
@@ -2277,11 +2304,11 @@ pub trait SessionOptionsCtl<'a> {
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
     fn set_user_keys<S: Into<Cow<'a, str>> + Clone>(
         &self,
-
         user_keys: Option<Vec<String>>,
     ) -> Result<TmuxOutput, Error> {
         self.set(TmuxCommand::with_cmds(Self::Setter::user_keys(
-            target, user_keys,
+            self.target(),
+            user_keys,
         )))
     }
 

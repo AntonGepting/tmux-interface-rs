@@ -22,7 +22,7 @@ fn default() {
     #[cfg(feature = "tmux_1_0")]
     let options = options.bell_action(Some(Action::Any));
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
-    let options = options.bell_on_alert(Some());
+    let options = options.bell_on_alert(Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_4")))]
     let options = options.buffer_limit(Some());
     #[cfg(feature = "tmux_1_0")]
@@ -34,7 +34,7 @@ fn default() {
     #[cfg(feature = "tmux_2_9")]
     let options = options.default_size(Some((80, 24)));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    let options = options.default_terminal(Some());
+    let options = options.default_terminal(Some("screen"));
     #[cfg(feature = "tmux_1_4")]
     let options = options.destroy_unattached(Some(Switch::Off));
     #[cfg(feature = "tmux_1_4")]
@@ -56,7 +56,7 @@ fn default() {
     #[cfg(feature = "tmux_1_1")]
     let options = options.lock_command(Some("lock -np"));
     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
-    let options = options.lock_server(Some());
+    let options = options.lock_server(Some(Switch::On));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     let options = options.message_attr(Some());
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
@@ -72,19 +72,19 @@ fn default() {
     #[cfg(feature = "tmux_1_9")]
     let options = options.message_command_style(Some("fg=yellow,bg=black"));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    let options = options.message_limit(Some());
+    let options = options.message_limit(Some(20));
     #[cfg(feature = "tmux_1_9")]
     let options = options.message_style(Some("fg=black,bg=yellow"));
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    let options = options.mouse_resize_pane(Some());
+    let options = options.mouse_resize_pane(Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    let options = options.mouse_select_pane(Some());
+    let options = options.mouse_select_pane(Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
-    let options = options.mouse_select_window(Some());
+    let options = options.mouse_select_window(Some(Switch::Off));
     #[cfg(feature = "tmux_2_1")]
     let options = options.mouse(Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_2")))]
-    let options = options.mouse_utf8(Some());
+    let options = options.mouse_utf8(Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
     let options = options.pane_active_border_bg(Some());
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
@@ -94,9 +94,9 @@ fn default() {
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
     let options = options.pane_border_fg(Some());
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    let options = options.pane_active_border_style(Some());
+    let options = options.pane_active_border_style(Some("fg=green"));
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    let options = options.pane_border_style(Some());
+    let options = options.pane_border_style(Some("default"));
     #[cfg(feature = "tmux_1_0")]
     let options = options.prefix(Some("C-b"));
     #[cfg(feature = "tmux_1_6")]
@@ -106,7 +106,7 @@ fn default() {
     #[cfg(feature = "tmux_1_0")]
     let options = options.repeat_time(Some(500));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-    let options = options.set_remain_on_exit(Some());
+    let options = options.set_remain_on_exit(Some(Switch::Off));
     #[cfg(feature = "tmux_1_0")]
     let options = options.set_titles(Some(Switch::Off));
     #[cfg(feature = "tmux_1_0")]
@@ -160,9 +160,9 @@ fn default() {
     #[cfg(feature = "tmux_1_9")]
     let options = options.status_style(Some("fg=black,bg=green"));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    let options = options.status_utf8(Some());
+    let options = options.status_utf8(Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    let options = options.terminal_overrides(Some());
+    let options = options.terminal_overrides(Some("*256col*:colors=256,xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007:Cs=\\E]12;%p1%s\\007:Cr=\\E]112\\007:Ss=\\E[%p1%d q:Se=\\E[2 q,screen*:XT"));
     #[cfg(feature = "tmux_1_0")]
     let options = options.update_environment(Some(vec![
         "DISPLAY",
@@ -175,13 +175,13 @@ fn default() {
         "XAUTHORITY",
     ]));
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
-    let options = options.user_keys(Some());
+    let options = options.user_keys(None::<Vec<&str>>);
     #[cfg(feature = "tmux_1_0")]
     let options = options.visual_activity(Some(Activity::Off));
     #[cfg(feature = "tmux_1_0")]
     let options = options.visual_bell(Some(Activity::Off));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    let options = options.visual_content(Some());
+    let options = options.visual_content(Some(Switch::Off));
     #[cfg(feature = "tmux_1_4")]
     let options = options.visual_silence(Some(Activity::Off));
     #[cfg(feature = "tmux_1_6")]

@@ -85,7 +85,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         switch: Option<Switch>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, BELL_ON_ALERT, switch.map(|s| s.to_string()))
+        Self::set_ext(target, BELL_ON_ALERT, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -99,7 +99,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         limit: Option<usize>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, BUFFER_LIMIT, limit.map(|s| s.to_string()))
+        Self::set_ext(target, BUFFER_LIMIT, limit.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -141,7 +141,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         path: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, DEFAULT_PATH, path)
+        Self::set_ext(target, DEFAULT_PATH, path)
     }
 
     /// ### Manual
@@ -155,7 +155,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         terminal: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, DEFAULT_TERMINAL, terminal)
+        Self::set_ext(target, DEFAULT_TERMINAL, terminal)
     }
 
     /// ### Manual
@@ -336,7 +336,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         switch: Option<Switch>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, LOCK_SERVER, switch.map(|s| s.to_string()))
+        Self::set_ext(target, LOCK_SERVER, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -350,7 +350,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         attributes: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, MESSAGE_ATTR, attributes)
+        Self::set_ext(target, MESSAGE_ATTR, attributes)
     }
 
     /// ### Manual
@@ -364,7 +364,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, MESSAGE_BG, colour)
+        Self::set_ext(target, MESSAGE_BG, colour)
     }
 
     /// ### Manual
@@ -378,7 +378,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         attributes: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, MESSAGE_COMMAND_ATTR, attributes)
+        Self::set_ext(target, MESSAGE_COMMAND_ATTR, attributes)
     }
 
     /// ### Manual
@@ -392,7 +392,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, MESSAGE_COMMAND_BG, colour)
+        Self::set_ext(target, MESSAGE_COMMAND_BG, colour)
     }
 
     /// ### Manual
@@ -406,7 +406,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, MESSAGE_COMMAND_FG, colour)
+        Self::set_ext(target, MESSAGE_COMMAND_FG, colour)
     }
 
     /// ### Manual
@@ -420,7 +420,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, MESSAGE_FG, colour)
+        Self::set_ext(target, MESSAGE_FG, colour)
     }
 
     /// ### Manual
@@ -448,7 +448,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         number: Option<usize>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, MESSAGE_LIMIT, number.map(|s| s.to_string()))
+        Self::set_ext(target, MESSAGE_LIMIT, number.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -476,7 +476,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         switch: Option<Switch>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, MOUSE_RESIZE_PANE, switch.map(|s| s.to_string()))
+        Self::set_ext(target, MOUSE_RESIZE_PANE, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -490,7 +490,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         switch: Option<Switch>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, MOUSE_SELECT_PANE, switch.map(|s| s.to_string()))
+        Self::set_ext(target, MOUSE_SELECT_PANE, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -504,7 +504,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         switch: Option<Switch>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, MOUSE_SELECT_WINDOW, switch.map(|s| s.to_string()))
+        Self::set_ext(target, MOUSE_SELECT_WINDOW, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -532,7 +532,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         switch: Option<Switch>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, MOUSE_UTF8, switch.map(|s| s.to_string()))
+        Self::set_ext(target, MOUSE_UTF8, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -546,7 +546,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, PANE_ACTIVE_BORDER_BG, colour)
+        Self::set_ext(target, PANE_ACTIVE_BORDER_BG, colour)
     }
 
     /// ### Manual
@@ -560,7 +560,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, PANE_ACTIVE_BORDER_FG, colour)
+        Self::set_ext(target, PANE_ACTIVE_BORDER_FG, colour)
     }
 
     /// ### Manual
@@ -574,7 +574,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, PANE_BORDER_BG, colour)
+        Self::set_ext(target, PANE_BORDER_BG, colour)
     }
 
     /// ### Manual
@@ -588,7 +588,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, PANE_BORDER_FG, colour)
+        Self::set_ext(target, PANE_BORDER_FG, colour)
     }
 
     /// ### Manual
@@ -602,7 +602,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         style: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, PANE_ACTIVE_BORDER_STYLE, style)
+        Self::set_ext(target, PANE_ACTIVE_BORDER_STYLE, style)
     }
 
     /// ### Manual
@@ -616,7 +616,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         style: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, PANE_BORDER_STYLE, style)
+        Self::set_ext(target, PANE_BORDER_STYLE, style)
     }
 
     /// ### Manual
@@ -686,7 +686,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         switch: Option<Switch>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, SET_REMAIN_ON_EXIT, switch.map(|s| s.to_string()))
+        Self::set_ext(target, SET_REMAIN_ON_EXIT, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -760,7 +760,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         attributes: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, STATUS_ATTR, attributes)
+        Self::set_ext(target, STATUS_ATTR, attributes)
     }
 
     /// ### Manual
@@ -774,7 +774,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, STATUS_BG, colour)
+        Self::set_ext(target, STATUS_BG, colour)
     }
 
     /// ### Manual
@@ -788,7 +788,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, STATUS_FG, colour)
+        Self::set_ext(target, STATUS_FG, colour)
     }
 
     /// ### Manual
@@ -878,7 +878,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         attributes: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, STATUS_LEFT_ATTR, attributes)
+        Self::set_ext(target, STATUS_LEFT_ATTR, attributes)
     }
 
     /// ### Manual
@@ -892,7 +892,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, STATUS_LEFT_BG, colour.map(|s| s.to_string()))
+        Self::set_ext(target, STATUS_LEFT_BG, colour)
     }
 
     /// ### Manual
@@ -906,7 +906,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, STATUS_LEFT_FG, colour.map(|s| s.to_string()))
+        Self::set_ext(target, STATUS_LEFT_FG, colour)
     }
 
     /// ### Manual
@@ -980,7 +980,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         attributes: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, STATUS_RIGHT_ATTR, attributes)
+        Self::set_ext(target, STATUS_RIGHT_ATTR, attributes)
     }
 
     /// ### Manual
@@ -994,7 +994,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, STATUS_RIGHT_BG, colour.map(|s| s.to_string()))
+        Self::set_ext(target, STATUS_RIGHT_BG, colour)
     }
 
     /// ### Manual
@@ -1008,7 +1008,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         colour: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, STATUS_RIGHT_FG, colour.map(|s| s.to_string()))
+        Self::set_ext(target, STATUS_RIGHT_FG, colour)
     }
 
     /// ### Manual
@@ -1064,7 +1064,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         switch: Option<Switch>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, STATUS_UTF8, switch.map(|s| s.to_string()))
+        Self::set_ext(target, STATUS_UTF8, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual
@@ -1078,7 +1078,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         string: Option<S>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, TERMINAL_OVERRIDES, string)
+        Self::set_ext(target, TERMINAL_OVERRIDES, string)
     }
 
     /// ### Manual
@@ -1110,7 +1110,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
     {
-        Self::set_array(target, USER_KEYS, key)
+        Self::set_array_ext(target, USER_KEYS, key)
     }
 
     /// ### Manual
@@ -1162,7 +1162,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         target: Option<T>,
         switch: Option<Switch>,
     ) -> TmuxCommand<'a> {
-        Self::set(target, VISUAL_CONTENT, switch.map(|s| s.to_string()))
+        Self::set_ext(target, VISUAL_CONTENT, switch.map(|s| s.to_string()))
     }
 
     /// ### Manual

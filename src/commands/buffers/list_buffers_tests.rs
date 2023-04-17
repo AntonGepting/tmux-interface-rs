@@ -35,10 +35,6 @@ fn list_buffers() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "lsb";
 
-    #[cfg(any(
-        all(feature = "tmux_0_8", not(feature = "tmux_1_5")),
-        feature = "tmux_1_7"
-    ))]
     let mut s = Vec::new();
     s.push(cmd);
     #[cfg(feature = "tmux_1_7")]

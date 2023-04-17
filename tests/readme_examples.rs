@@ -1,24 +1,5 @@
 // command sequence, Tmux struct as parent, commands structs (NewSession, HasSession...) as children
 #[test]
-fn example1_0() {
-    use tmux_interface::{HasSession, KillSession, NewSession, Tmux};
-
-    let target_session = "example_1";
-
-    Tmux::new()
-        .command(NewSession::new().detached().session_name(target_session))
-        .command(HasSession::new().target_session(target_session))
-        .command(KillSession::new().target_session(target_session))
-        //.envs()
-        .output()
-        //.status()
-        .unwrap();
-
-    //assert!(status.success());
-}
-
-// command sequence, Tmux struct as parent, commands structs (NewSession, HasSession...) as children
-#[test]
 fn example1() {
     use tmux_interface::{HasSession, KillSession, NewSession, Tmux};
 

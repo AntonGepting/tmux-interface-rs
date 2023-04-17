@@ -1,6 +1,7 @@
 use super::VariableOutput;
 #[cfg(feature = "tmux_2_5")]
 use crate::SessionStack;
+#[cfg(feature = "tmux_1_6")]
 use crate::{Layout, PaneTabs, WindowFlags};
 
 #[derive(Debug)]

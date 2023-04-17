@@ -11,7 +11,10 @@
 //! ```
 //! use tmux_interface::{Tmux, GetGlobalSessionOptions, GetSessionOptionsTr};
 //!
-//! let options = GetGlobalSessionOptions::new().activity_action().assume_paste_time().into_commands();
+//! let options = GetGlobalSessionOptions::new()
+//!     .activity_action(None::<&str>)
+//!     .assume_paste_time(None::<&str>)
+//!     .into_commands();
 //! let output = Tmux::with_commands(options).output().unwrap();
 //! // parse
 //! ```
@@ -35,7 +38,10 @@
 //! ```
 //! use tmux_interface::{Tmux, GetLocalSessionOptions, GetSessionOptionsTr};
 //!
-//! let options = GetLocalSessionOptions::new().activity_action().assume_paste_time().into_commands();
+//! let options = GetLocalSessionOptions::new()
+//!     .activity_action(None::<&str>)
+//!     .assume_paste_time(None::<&str>)
+//!     .into_commands();
 //! let output = Tmux::with_commands(options).output().unwrap();
 //! // parse
 //! ```
@@ -720,7 +726,7 @@ pub trait GetSessionOptionsTr<'a, Getter: GetSessionOptionTr> {
         S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.options.push(Getter::pane_active_border_style(target));
+        self.push(Getter::pane_active_border_style(target));
         self
     }
 
@@ -895,7 +901,11 @@ pub trait GetSessionOptionsTr<'a, Getter: GetSessionOptionTr> {
     /// status-attr attributes
     /// ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn status_attr<S>(mut self, target: Option<S>) -> SelSelf {
+    fn status_attr<S>(mut self, target: Option<S>) -> Self
+    where
+        S: Into<Cow<'a, str>>,
+        Self: Sized,
+    {
         self.push(Getter::status_attr(target));
         self
     }

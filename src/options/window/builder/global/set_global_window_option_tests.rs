@@ -108,7 +108,7 @@ fn set_global_window_option_tests() {
     {
         let origin = format!("{} {} {}", cmd, "c0-change-trigger", "3");
         let set_option =
-            SetGlobalWindowOption::c0_change_trigger(Some(target), Some("3")).to_string();
+            SetGlobalWindowOption::c0_change_trigger(Some(target), Some(3)).to_string();
         assert_eq!(origin, set_option);
     }
 

@@ -124,10 +124,9 @@ pub trait SetWindowOptionsTr<'a> {
     /// c0-change-trigger trigger
     /// ```
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    fn c0_change_trigger<S, T>(mut self, target: Option<T>, c0_change_trigger: Option<S>) -> Self
+    fn c0_change_trigger<T>(mut self, target: Option<T>, c0_change_trigger: Option<usize>) -> Self
     where
         T: Into<Cow<'a, str>>,
-        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
         self.push(Self::Setter::c0_change_trigger(target, c0_change_trigger));
@@ -385,7 +384,7 @@ pub trait SetWindowOptionsTr<'a> {
         S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(Self::Setter::monitor_content(target));
+        self.push(Self::Setter::monitor_content(target, match_string));
         self
     }
 

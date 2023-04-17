@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// (alias: deleteb)
 /// ```
 ///
-/// tmux ^1.5:
+/// tmux ^1.5 v2.0:
 /// ```text
 /// delete-buffer [-b buffer-index]
 /// (alias: deleteb)
@@ -27,7 +27,7 @@ use std::borrow::Cow;
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct DeleteBuffer<'a> {
     /// `[-b buffer-name]`
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(feature = "tmux_2_0")]
     pub buffer_name: Option<Cow<'a, str>>,
 
     /// `[-b buffer-index]`
@@ -45,7 +45,7 @@ impl<'a> DeleteBuffer<'a> {
     }
 
     /// `[-b buffer-name]`
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(feature = "tmux_2_0")]
     pub fn buffer_name<S: Into<Cow<'a, str>>>(mut self, buffer_name: S) -> Self {
         self.buffer_name = Some(buffer_name.into());
         self
@@ -71,7 +71,7 @@ impl<'a> DeleteBuffer<'a> {
         cmd.name(DELETE_BUFFER);
 
         // `[-b buffer-name]`
-        #[cfg(feature = "tmux_0_8")]
+        #[cfg(feature = "tmux_2_0")]
         if let Some(buffer_name) = self.buffer_name {
             cmd.push_option(B_LOWERCASE_KEY, buffer_name);
         }

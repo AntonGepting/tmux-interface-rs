@@ -18,7 +18,7 @@ fn set_server_options() {
     v.push(format!("{} {} {}", cmd, "window-active-style", "default"));
     #[cfg(feature = "tmux_3_0")]
     v.push(format!("{} {} {}", cmd, "window-style", "default"));
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_3_2")]
     v.push(format!("{} {} {}", cmd, "synchronize-panes", "off"));
     // #[cfg(feature = "tmux_3_0")]
     // v.push(format!("{} {} {}", cmd, "@user_option_name"));

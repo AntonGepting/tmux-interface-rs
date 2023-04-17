@@ -1,5 +1,6 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
+#[cfg(feature = "tmux_2_3")]
 use std::borrow::Cow;
 use std::fmt;
 use std::marker::PhantomData;

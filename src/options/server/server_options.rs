@@ -424,7 +424,7 @@ impl<'a> ServerOptions<'a> {
     /// quiet [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    fn quiet(mut self, quiet: Option<bool>) -> Self {
+    pub fn quiet(mut self, quiet: Option<Switch>) -> Self {
         self.quiet = quiet;
         self
     }
@@ -436,7 +436,7 @@ impl<'a> ServerOptions<'a> {
     /// detach-on-destroy [on | off]
     /// ```
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    fn detach_on_destroy(mut self, detach_on_destroy: Option<bool>) -> Self {
+    pub fn detach_on_destroy(mut self, detach_on_destroy: Option<Switch>) -> Self {
         self.detach_on_destroy = detach_on_destroy;
         self
     }

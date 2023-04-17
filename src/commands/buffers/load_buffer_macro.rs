@@ -34,15 +34,17 @@ macro_rules! load_buffer {
         }) $($tail)*)
     }};
     // `[-b buffer-name]`
-    (@cmd ($cmd:expr) -b $buffer_name:expr, $($tail:tt)*) => {{
-        $crate::load_buffer!(@cmd ({
-            $cmd.buffer_name($buffer_name)
-        }) $($tail)*)
-    }};
     // `[-b buffer-index]`
-    (@cmd ($cmd:expr) -b $buffer_index:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -b $buffer:expr, $($tail:tt)*) => {{
         $crate::load_buffer!(@cmd ({
-            $cmd.buffer_index($buffer_index)
+            #[cfg(feature = "tmux_2_0")]
+            {
+                $cmd.buffer_name($buffer)
+            }
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+            {
+                $cmd.buffer_index($buffer)
+            }
         }) $($tail)*)
     }};
     // `[-t target-client]`

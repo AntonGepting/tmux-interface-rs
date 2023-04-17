@@ -84,11 +84,11 @@ fn list_buffers_macro() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "lsb";
 
+    let mut s: Vec<&str> = Vec::new();
     #[cfg(any(
         all(feature = "tmux_0_8", not(feature = "tmux_1_5")),
         feature = "tmux_1_7"
     ))]
-    let mut s = Vec::new();
     s.push(cmd);
     #[cfg(feature = "tmux_1_7")]
     s.extend_from_slice(&["-F", "1"]);

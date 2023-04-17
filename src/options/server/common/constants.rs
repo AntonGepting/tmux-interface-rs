@@ -125,7 +125,7 @@ pub const EDITOR_DEFAULT: &str = "/usr/bin/vi";
 /// ```text
 /// exit-empty on
 /// ```
-#[cfg(feature = "tmux_3_2")]
+#[cfg(feature = "tmux_2_7")]
 pub const EXIT_EMPTY_DEFAULT: Switch = Switch::On;
 
 /// ```text
@@ -165,11 +165,18 @@ pub const MESSAGE_LIMIT_DEFAULT: usize = 1000;
 #[cfg(feature = "tmux_3_3")]
 pub const PROMPT_HISTORY_LIMIT_DEFAULT: usize = 100;
 
-/// `1`
+/// tmux ^2.6:
 /// ```text
 /// set-clipboard external
 /// ```
-#[cfg(feature = "tmux_1_5")]
+///
+/// tmux ^2.1 v2.6:
+/// ```text
+/// set-clipboard on
+/// ```
+#[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+pub const SET_CLIPBOARD_DEFAULT: SetClipboard = SetClipboard::On;
+#[cfg(feature = "tmux_2_6")]
 pub const SET_CLIPBOARD_DEFAULT: SetClipboard = SetClipboard::External;
 
 /// ```text
