@@ -2,7 +2,12 @@
 fn get_server_options() {
     use crate::{GetServerOptions, GetServerOptionsTr, GetUserOptions};
 
-    let cmd = "show -s";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "show-options";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "show";
+
+    let cmd = format!("{} -s", cmd);
 
     let mut v = Vec::new();
 

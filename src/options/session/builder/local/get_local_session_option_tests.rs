@@ -2,7 +2,11 @@
 fn get_local_session_option_tests() {
     use crate::{GetLocalSessionOption, GetSessionOptionTr, GetUserOption};
 
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "show-options";
+    #[cfg(feature = "cmd_alias")]
     let cmd = "show";
+
     let target = ":";
     let cmd = format!("{} -t {}", cmd, target);
 

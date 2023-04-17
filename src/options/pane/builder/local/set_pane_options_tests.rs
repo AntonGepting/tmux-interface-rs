@@ -2,9 +2,13 @@
 fn set_server_options() {
     use crate::{RemainOnExit, SetPaneOptions, SetPaneOptionsTr, Switch};
 
-    let cmd = "set -p";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "set-option";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "set";
+
     let target = ":";
-    let cmd = format!("{} -t {}", cmd, target);
+    let cmd = format!("{} -p -t {}", cmd, target);
 
     let mut v = Vec::new();
 

@@ -2,7 +2,12 @@
 fn set_server_option() {
     use crate::{SetClipboard, SetServerOption, SetServerOptionTr, SetUserOption, Switch};
 
-    let cmd = "set -s";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "set-option";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "set";
+
+    let cmd = format!("{} -s", cmd);
 
     #[cfg(feature = "tmux_3_1")]
     {

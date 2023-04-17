@@ -2,9 +2,13 @@
 fn get_global_window_option_tests() {
     use crate::{GetGlobalWindowOption, GetUserOption, GetWindowOptionTr};
 
-    let cmd = "show -g -w";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "show-options";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "show";
+
     let target = ":";
-    let cmd = format!("{} -t {}", cmd, target);
+    let cmd = format!("{} -g -w -t {}", cmd, target);
 
     // ### Manual
     //

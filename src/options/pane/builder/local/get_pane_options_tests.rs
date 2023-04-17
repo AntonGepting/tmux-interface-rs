@@ -2,9 +2,13 @@
 fn get_pane_options() {
     use crate::{GetPaneOptions, GetPaneOptionsTr, GetUserOptions};
 
-    let cmd = "show -p";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "show-options";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "show";
+
     let target = ":";
-    let cmd = format!("{} -t {}", cmd, target);
+    let cmd = format!("{} -p -t {}", cmd, target);
 
     let mut v = Vec::new();
 

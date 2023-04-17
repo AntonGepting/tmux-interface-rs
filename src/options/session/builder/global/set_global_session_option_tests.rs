@@ -5,9 +5,13 @@ fn set_global_session_option_tests() {
         SetUserOption, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
     };
 
-    let cmd = "set -g";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "set-option";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "set";
+
     let target = ":";
-    let cmd = format!("{} -t {}", cmd, target);
+    let cmd = format!("{} -g -t {}", cmd, target);
 
     #[cfg(feature = "tmux_2_6")]
     {

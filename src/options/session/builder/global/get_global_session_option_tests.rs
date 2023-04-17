@@ -2,9 +2,13 @@
 fn get_global_session_option_tests() {
     use crate::{GetGlobalSessionOption, GetSessionOptionTr, GetUserOption};
 
-    let cmd = "show -g";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "show-options";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "show";
+
     let target = ":";
-    let cmd = format!("{} -t {}", cmd, target);
+    let cmd = format!("{} -g -t {}", cmd, target);
 
     #[cfg(feature = "tmux_2_6")]
     {

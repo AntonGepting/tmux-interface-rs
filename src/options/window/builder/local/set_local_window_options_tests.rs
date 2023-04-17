@@ -11,184 +11,15 @@ fn set_local_window_options() {
         Switch,
     };
 
-    let options = SetLocalWindowOptions::new();
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "set-option";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "set";
+
     let target = ":";
 
-    //cursor-colour none
-    //cursor-style default
-    #[cfg(feature = "tmux_1_0")]
-    let options = options.aggressive_resize(Some(target), Some(Switch::Off));
-    //allow-passthrough off
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
-    let options = options.allow_rename(Some(target), Some(Switch::Off));
-    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-    let options = options.alternate_screen(Some(target), Some(Switch::On));
-    #[cfg(feature = "tmux_1_0")] // 0.8
-    let options = options.automatic_rename(Some(target), Some(Switch::On));
-    #[cfg(feature = "tmux_1_9")]
-    let options = options.automatic_rename_format(
-        Some(target),
-        Some("#{?pane_in_mode,[tmux],#{pane_current_command}}#{?pane_dead,[dead],}".to_string()),
-    );
-    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    let options = options.c0_change_interval(Some(target), Some(100));
-    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    let options = options.c0_change_trigger(Some(target), Some(250));
-    #[cfg(feature = "tmux_1_0")]
-    let options = options.clock_mode_colour(Some(target), Some("colour135"));
-    #[cfg(feature = "tmux_1_0")]
-    let options = options.clock_mode_style(Some(target), Some(ClockModeStyle::_24));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-    let options = options.force_height(Some(target), Some(0));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
-    let options = options.force_width(Some(target), Some(0));
-    //copy-mode-match-style bg=cyan,fg=black
-    //copy-mode-current-match-style bg=magenta,fg=black
-    //copy-mode-mark-style bg=red,fg=black
-    //fill-character ''
-
-    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
-    let options = options.layout_history_limit(Some(target), Some(0));
-    #[cfg(feature = "tmux_1_0")]
-    let options = options.main_pane_height(Some(target), Some(24));
-    #[cfg(feature = "tmux_1_0")]
-    let options = options.main_pane_width(Some(target), Some(80));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.mode_attr(Some(target));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.mode_bg(Some(target));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.mode_fg(Some(target));
-    #[cfg(feature = "tmux_1_0")]
-    let options = options.mode_keys(Some(target), Some(StatusKeys::Vi));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    let options = options.mode_mouse(Some(target), Some(ModeMouse::Off));
-    #[cfg(feature = "tmux_1_9")]
-    let options = options.mode_style(Some(target), Some("fg=colour196,bg=colour238,bold"));
-    #[cfg(feature = "tmux_1_0")]
-    let options = options.monitor_activity(Some(target), Some(Switch::Off));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    let options = options.monitor_content(Some(target), Some(""));
-    #[cfg(feature = "tmux_2_6")]
-    let options = options.monitor_bell(Some(target), Some(Switch::On));
-    #[cfg(feature = "tmux_1_4")]
-    let options = options.monitor_silence(Some(target), Some(0));
-
-    #[cfg(feature = "tmux_1_4")]
-    let options = options.other_pane_height(Some(target), Some(0));
-    #[cfg(feature = "tmux_1_4")]
-    let options = options.other_pane_width(Some(target), Some(0));
-    #[cfg(feature = "tmux_2_0")]
-    let options = options.pane_active_border_style(Some(target), Some("fg=colour114,bg=colour235"));
-    #[cfg(feature = "tmux_1_6")]
-    let options = options.pane_base_index(Some(target), Some(0));
-    #[cfg(feature = "tmux_2_3")]
-    let options = options.pane_border_format(
-        Some(target),
-        Some("#{?pane_active,#[reverse],}#{pane_index}#[default] \"#{pane_title}\""),
-    );
-    #[cfg(feature = "tmux_2_3")]
-    let options = options.pane_border_status(Some(target), Some(PaneBorderStatus::Off));
-    //pane-border-indicators colour
-    //pane-border-lines single
-    //pane-colours
-    #[cfg(feature = "tmux_2_0")]
-    let options = options.pane_border_style(Some(target), Some("fg=colour238,bg=colour235"));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
-    let options = options.remain_on_exit(Some(target), Some(Switch::Off));
-    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
-    let options = options.synchronize_panes(Some(target), Some(Switch::On));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    let options = options.utf8(Some(target), Some(Switch::Off));
-    //popup-style default
-    //popup-border-style default
-    //popup-border-lines single
-    //remain-on-exit-format "Pane is dead (#{?#{!=:#{pane_dead_status},},status #{pane_dead_status},}#{?#{!=:#{pane_dead_signal},},signal #{pane_dead_signal},}, #{t:pane_dead_time})"
-    //scroll-on-clear on
-    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-    let options = options.window_active_style(Some(target), Some("fg=colour253,bg=colour235"));
-    //window-status-activity-style reverse
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    let options = options.window_status_bell_attr(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    let options = options.window_status_bell_bg(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    let options = options.window_status_bell_fg(Some(target), Some(""));
-    //window-status-bell-style fg=colour253,bg=colour1,bold
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    let options = options.window_status_content_attr(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    let options = options.window_status_content_bg(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    let options = options.window_status_content_fg(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    let options = options.window_status_activity_attr(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    let options = options.window_status_activity_bg(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    let options = options.window_status_activity_fg(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.window_status_attr(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.window_status_bg(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.window_status_fg(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.window_status_current_attr(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.window_status_current_bg(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.window_status_current_fg(Some(target), Some(""));
-    //window-status-current-format " #I: #W #F "
-    //window-status-current-style fg=colour22,bg=colour114,none
-    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    let options = options.window_status_alert_attr(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    let options = options.window_status_alert_bg(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    let options = options.window_status_alert_fg(Some(target), Some(""));
-    #[cfg(feature = "tmux_1_9")]
-    let options = options.window_status_activity_style(Some(target), Some("reverse"));
-    #[cfg(feature = "tmux_1_9")]
-    let options = options.window_status_bell_style(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    let options = options.window_status_content_style(Some(target), Some(""));
-    #[cfg(feature = "tmux_1_2")]
-    let options = options.window_status_current_format(Some(target), Some(" #I: #W #F "));
-    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    let options = options.window_status_last_attr(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    let options = options.window_status_last_bg(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    let options = options.window_status_last_fg(Some(target), Some(""));
-    #[cfg(feature = "tmux_1_9")]
-    let options = options.window_status_current_style(Some(target), Some(""));
-    #[cfg(feature = "tmux_1_2")]
-    let options = options.window_status_format(Some(target), Some(" #I: #W #F "));
-    #[cfg(feature = "tmux_1_9")]
-    let options = options.window_status_last_style(Some(target), Some("default"));
-    #[cfg(feature = "tmux_1_7")]
-    let options = options.window_status_separator(Some(target), Some(" "));
-    #[cfg(feature = "tmux_1_9")]
-    let options = options.window_status_style(Some(target), Some("fg=colour247,bg=#282c34,none"));
-    #[cfg(feature = "tmux_2_9")]
-    let options = options.window_size(Some(target), Some(WindowSize::Largest));
-    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
-    let options = options.word_separators(Some(target), Some(""));
-    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-    let options = options.window_style(Some(target), Some("fg=colour247,bg=colour238"));
-    #[cfg(feature = "tmux_1_7")]
-    let options = options.wrap_search(Some(target), Some(Switch::On));
-    #[cfg(feature = "tmux_1_0")]
-    let options = options.xterm_keys(Some(target), Some(Switch::On));
-
-    let options = options.user_option_ext(Some(target), "user-option-name", Some("value"));
-
-    let options = options.options.to_string();
-
-    let cmd = "set -w";
     let separator = " ; ";
-    let cmd = format!("{} -t {}", cmd, target);
+    let cmd = format!("{} -w -t {}", cmd, target);
 
     let mut origin = Vec::new();
     //cursor-colour none
@@ -396,5 +227,177 @@ fn set_local_window_options() {
 
     let origin = origin.join(separator);
 
+    let options = SetLocalWindowOptions::new();
+    //cursor-colour none
+    //cursor-style default
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.aggressive_resize(Some(target), Some(Switch::Off));
+    //allow-passthrough off
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
+    let options = options.allow_rename(Some(target), Some(Switch::Off));
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
+    let options = options.alternate_screen(Some(target), Some(Switch::On));
+    #[cfg(feature = "tmux_1_0")] // 0.8
+    let options = options.automatic_rename(Some(target), Some(Switch::On));
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.automatic_rename_format(
+        Some(target),
+        Some("#{?pane_in_mode,[tmux],#{pane_current_command}}#{?pane_dead,[dead],}".to_string()),
+    );
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+    let options = options.c0_change_interval(Some(target), Some(100));
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+    let options = options.c0_change_trigger(Some(target), Some(250));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.clock_mode_colour(Some(target), Some("colour135"));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.clock_mode_style(Some(target), Some(ClockModeStyle::_24));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
+    let options = options.force_height(Some(target), Some(0));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
+    let options = options.force_width(Some(target), Some(0));
+    //copy-mode-match-style bg=cyan,fg=black
+    //copy-mode-current-match-style bg=magenta,fg=black
+    //copy-mode-mark-style bg=red,fg=black
+    //fill-character ''
+
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
+    let options = options.layout_history_limit(Some(target), Some(0));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.main_pane_height(Some(target), Some(24));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.main_pane_width(Some(target), Some(80));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.mode_attr(Some(target));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.mode_bg(Some(target));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.mode_fg(Some(target));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.mode_keys(Some(target), Some(StatusKeys::Vi));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+    let options = options.mode_mouse(Some(target), Some(ModeMouse::Off));
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.mode_style(Some(target), Some("fg=colour196,bg=colour238,bold"));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.monitor_activity(Some(target), Some(Switch::Off));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+    let options = options.monitor_content(Some(target), Some(""));
+    #[cfg(feature = "tmux_2_6")]
+    let options = options.monitor_bell(Some(target), Some(Switch::On));
+    #[cfg(feature = "tmux_1_4")]
+    let options = options.monitor_silence(Some(target), Some(0));
+
+    #[cfg(feature = "tmux_1_4")]
+    let options = options.other_pane_height(Some(target), Some(0));
+    #[cfg(feature = "tmux_1_4")]
+    let options = options.other_pane_width(Some(target), Some(0));
+    #[cfg(feature = "tmux_2_0")]
+    let options = options.pane_active_border_style(Some(target), Some("fg=colour114,bg=colour235"));
+    #[cfg(feature = "tmux_1_6")]
+    let options = options.pane_base_index(Some(target), Some(0));
+    #[cfg(feature = "tmux_2_3")]
+    let options = options.pane_border_format(
+        Some(target),
+        Some("#{?pane_active,#[reverse],}#{pane_index}#[default] \"#{pane_title}\""),
+    );
+    #[cfg(feature = "tmux_2_3")]
+    let options = options.pane_border_status(Some(target), Some(PaneBorderStatus::Off));
+    //pane-border-indicators colour
+    //pane-border-lines single
+    //pane-colours
+    #[cfg(feature = "tmux_2_0")]
+    let options = options.pane_border_style(Some(target), Some("fg=colour238,bg=colour235"));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
+    let options = options.remain_on_exit(Some(target), Some(Switch::Off));
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
+    let options = options.synchronize_panes(Some(target), Some(Switch::On));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
+    let options = options.utf8(Some(target), Some(Switch::Off));
+    //popup-style default
+    //popup-border-style default
+    //popup-border-lines single
+    //remain-on-exit-format "Pane is dead (#{?#{!=:#{pane_dead_status},},status #{pane_dead_status},}#{?#{!=:#{pane_dead_signal},},signal #{pane_dead_signal},}, #{t:pane_dead_time})"
+    //scroll-on-clear on
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
+    let options = options.window_active_style(Some(target), Some("fg=colour253,bg=colour235"));
+    //window-status-activity-style reverse
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.window_status_bell_attr(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.window_status_bell_bg(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.window_status_bell_fg(Some(target), Some(""));
+    //window-status-bell-style fg=colour253,bg=colour1,bold
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.window_status_content_attr(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.window_status_content_bg(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.window_status_content_fg(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.window_status_activity_attr(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.window_status_activity_bg(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    let options = options.window_status_activity_fg(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.window_status_attr(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.window_status_bg(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.window_status_fg(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.window_status_current_attr(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.window_status_current_bg(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    let options = options.window_status_current_fg(Some(target), Some(""));
+    //window-status-current-format " #I: #W #F "
+    //window-status-current-style fg=colour22,bg=colour114,none
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+    let options = options.window_status_alert_attr(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+    let options = options.window_status_alert_bg(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+    let options = options.window_status_alert_fg(Some(target), Some(""));
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.window_status_activity_style(Some(target), Some("reverse"));
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.window_status_bell_style(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+    let options = options.window_status_content_style(Some(target), Some(""));
+    #[cfg(feature = "tmux_1_2")]
+    let options = options.window_status_current_format(Some(target), Some(" #I: #W #F "));
+    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+    let options = options.window_status_last_attr(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+    let options = options.window_status_last_bg(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+    let options = options.window_status_last_fg(Some(target), Some(""));
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.window_status_current_style(Some(target), Some(""));
+    #[cfg(feature = "tmux_1_2")]
+    let options = options.window_status_format(Some(target), Some(" #I: #W #F "));
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.window_status_last_style(Some(target), Some("default"));
+    #[cfg(feature = "tmux_1_7")]
+    let options = options.window_status_separator(Some(target), Some(" "));
+    #[cfg(feature = "tmux_1_9")]
+    let options = options.window_status_style(Some(target), Some("fg=colour247,bg=#282c34,none"));
+    #[cfg(feature = "tmux_2_9")]
+    let options = options.window_size(Some(target), Some(WindowSize::Largest));
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
+    let options = options.word_separators(Some(target), Some(""));
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
+    let options = options.window_style(Some(target), Some("fg=colour247,bg=colour238"));
+    #[cfg(feature = "tmux_1_7")]
+    let options = options.wrap_search(Some(target), Some(Switch::On));
+    #[cfg(feature = "tmux_1_0")]
+    let options = options.xterm_keys(Some(target), Some(Switch::On));
+
+    let options = options.user_option_ext(Some(target), "user-option-name", Some("value"));
+
+    let options = options.options.to_string();
     assert_eq!(options, origin);
 }

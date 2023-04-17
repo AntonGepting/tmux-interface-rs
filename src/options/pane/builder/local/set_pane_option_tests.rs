@@ -2,9 +2,13 @@
 fn set_pane_option() {
     use crate::{RemainOnExit, SetPaneOption, SetPaneOptionTr, SetUserOption, Switch};
 
-    let cmd = "set -p";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "set-option";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "set";
+
     let target = ":";
-    let cmd = format!("{} -t {}", cmd, target);
+    let cmd = format!("{} -p -t {}", cmd, target);
 
     #[cfg(feature = "tmux_3_0")]
     {

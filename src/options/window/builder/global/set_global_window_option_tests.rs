@@ -10,9 +10,13 @@ fn set_global_window_option_tests() {
         ClockModeStyle, SetGlobalWindowOption, SetUserOption, SetWindowOptionTr, StatusKeys, Switch,
     };
 
-    let cmd = "set -g -w";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "set-option";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "set";
+
     let target = ":";
-    let cmd = format!("{} -t {}", cmd, target);
+    let cmd = format!("{} -g -w -t {}", cmd, target);
 
     // ### Manual
     //

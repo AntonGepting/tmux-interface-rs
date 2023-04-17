@@ -5,7 +5,11 @@ fn set_local_session_option_tests() {
         SetUserOption, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
     };
 
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "set-option";
+    #[cfg(feature = "cmd_alias")]
     let cmd = "set";
+
     let target = ":";
     let cmd = format!("{} -t {}", cmd, target);
 

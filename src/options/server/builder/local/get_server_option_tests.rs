@@ -13,7 +13,12 @@ fn get_single() {
 fn get_server_option() {
     use crate::{GetServerOption, GetServerOptionTr, GetUserOption};
 
-    let cmd = "show -s";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "show-options";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "show";
+
+    let cmd = format!("{} -s", cmd);
 
     #[cfg(feature = "tmux_3_1")]
     {

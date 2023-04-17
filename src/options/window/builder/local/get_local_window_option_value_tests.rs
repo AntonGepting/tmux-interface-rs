@@ -2,9 +2,13 @@
 fn get_local_window_option_value_tests() {
     use crate::{GetLocalWindowOptionValue, GetUserOption, GetWindowOptionTr};
 
-    let cmd = "show -v -w";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "show-options";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "show";
+
     let target = ":";
-    let cmd = format!("{} -t {}", cmd, target);
+    let cmd = format!("{} -v -w -t {}", cmd, target);
 
     // ### Manual
     //

@@ -5,9 +5,13 @@ fn set_global_session_options_tests() {
         SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
     };
 
-    let cmd = "set -g";
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd = "set-option";
+    #[cfg(feature = "cmd_alias")]
+    let cmd = "set";
+
     let target = ":";
-    let cmd = format!("{} -t {}", cmd, target);
+    let cmd = format!("{} -g -t {}", cmd, target);
 
     let mut v = Vec::new();
 
