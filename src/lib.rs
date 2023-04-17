@@ -469,7 +469,7 @@
 //!
 //!     ### Examples
 //!     ```
-//!     use tmux_interface::{Tmux, NewSession};
+//!     use tmux_interface::{Tmux, KillSession, NewSession};
 //!
 //!     let output = Tmux::with_command(
 //!                      NewSession::new()
