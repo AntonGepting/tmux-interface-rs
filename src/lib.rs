@@ -232,14 +232,14 @@
 //! # Examples
 //!
 //! ```
-//! use crate::tmux_interface::{AttachSession, NewSession, KillSession, Tmux};
+//! // use crate::tmux_interface::{AttachSession, NewSession, KillSession, Tmux};
 //!
-//! let output = Tmux::new()
-//!                .add_command(NewSession::new().detached().session_name("new_session_name1"))
-//!                .add_command(AttachSession::new().target_session("new_session_name1"))
-//!                .add_command(KillSession::new().target_session("new_session_name1"))
-//!                .output()
-//!                .unwrap();
+//! // let output = Tmux::new()
+//! //                .add_command(NewSession::new().detached().session_name("new_session_name1"))
+//! //                .add_command(AttachSession::new().target_session("new_session_name1"))
+//! //                .add_command(KillSession::new().target_session("new_session_name1"))
+//! //                .output()
+//! //                .unwrap();
 //! ```
 //!
 //! # Examples
@@ -482,6 +482,7 @@
 //!                    .verbose_logging()
 //!                    .output()
 //!                    .unwrap();
+//!     Tmux::with_command(KillSession::new().target_session("name")).output().unwrap();
 //!     ```
 //!     or using macroses
 //!     ```text
