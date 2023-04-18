@@ -669,7 +669,7 @@ impl<'a> SessionOptions<'a> {
         #[cfg(feature = "tmux_1_0")]
         let options = options.update_environment(Some(UPDATE_ENVIRONMENT_DEFAULT));
         #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
-        let options = options.user_keys(Some(USER_KEYS_DEFAULT));
+        let options = options.user_keys(None::<Vec<&str>>);
         #[cfg(feature = "tmux_1_0")]
         let options = options.visual_activity(Some(VISUAL_ACTIVITY_DEFAULT));
         #[cfg(feature = "tmux_1_0")]

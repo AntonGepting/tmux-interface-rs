@@ -89,7 +89,7 @@ fn default() {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
     let window_options = window_options.utf8(Some(Switch::Off));
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-    let window_options = window_options.window_active_style(Some("fg=colour253,bg=colour235"));
+    let window_options = window_options.window_active_style(Some("default"));
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     let window_options = window_options.window_status_bell_attr(Some());
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
@@ -314,7 +314,7 @@ fn to_string() {
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
     v.push("word-separators _");
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-    v.push("window-style _");
+    v.push("window-style default");
     #[cfg(feature = "tmux_1_7")]
     v.push("wrap-search on");
     #[cfg(feature = "tmux_1_0")]
@@ -401,7 +401,7 @@ fn from_str() {
     // #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
     // v.push("utf8 "); // default?
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
-    v.push("window-active-style fg=colour253,bg=colour235");
+    v.push("window-active-style default");
     // #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     // v.push("window-status-bell-attr "); // default?
     // #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
