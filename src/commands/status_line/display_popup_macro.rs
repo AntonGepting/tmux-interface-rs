@@ -225,8 +225,8 @@ fn display_popup() {
     s.extend_from_slice(&["-c", "1"]);
     #[cfg(feature = "tmux_3_2")]
     s.extend_from_slice(&["-d", "2"]);
-    #[cfg(feature = "tmux_3_3")]
-    s.extend_from_slice(&["-e", "3=4"]);
+    // #[cfg(feature = "tmux_3_3")]
+    // s.extend_from_slice(&["-e", "3=4"]);
     #[cfg(feature = "tmux_3_2")]
     s.extend_from_slice(&["-h", "5"]);
     #[cfg(feature = "tmux_3_3")]

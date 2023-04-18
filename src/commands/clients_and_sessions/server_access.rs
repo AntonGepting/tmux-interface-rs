@@ -19,15 +19,15 @@ pub struct ServerAccess<'a> {
     /// `[-d]` - revoke access
     #[cfg(feature = "tmux_3_3")]
     pub delete: bool,
+    /// `[-l]` - list current access permissions
+    #[cfg(feature = "tmux_3_3")]
+    pub list: bool,
     /// `[-r]` - read-only permission for user
     #[cfg(feature = "tmux_3_3")]
     pub read: bool,
     /// `[-w]` - write permission for user
     #[cfg(feature = "tmux_3_3")]
     pub write: bool,
-    /// `[-l]` - list current access permissions
-    #[cfg(feature = "tmux_3_3")]
-    pub list: bool,
     /// `[user]` - user
     #[cfg(feature = "tmux_3_3")]
     pub user: Option<Cow<'a, str>>,
@@ -52,6 +52,13 @@ impl<'a> ServerAccess<'a> {
         self
     }
 
+    /// [-l] - list current access permissions
+    #[cfg(feature = "tmux_3_3")]
+    pub fn list(mut self) -> Self {
+        self.list = true;
+        self
+    }
+
     /// [-r] - read-only permission for user
     #[cfg(feature = "tmux_3_3")]
     pub fn read(mut self) -> Self {
@@ -63,13 +70,6 @@ impl<'a> ServerAccess<'a> {
     #[cfg(feature = "tmux_3_3")]
     pub fn write(mut self) -> Self {
         self.write = true;
-        self
-    }
-
-    /// [-l] - list current access permissions
-    #[cfg(feature = "tmux_3_3")]
-    pub fn list(mut self) -> Self {
-        self.list = true;
         self
     }
 
@@ -97,6 +97,12 @@ impl<'a> ServerAccess<'a> {
             cmd.push_flag(D_LOWERCASE_KEY);
         }
 
+        // [-l] - list current access permissions
+        #[cfg(feature = "tmux_3_3")]
+        if self.list {
+            cmd.push_flag(L_LOWERCASE_KEY);
+        }
+
         // [-r] - read-only permission for user
         #[cfg(feature = "tmux_3_3")]
         if self.read {
@@ -107,12 +113,6 @@ impl<'a> ServerAccess<'a> {
         #[cfg(feature = "tmux_3_3")]
         if self.write {
             cmd.push_flag(W_LOWERCASE_KEY);
-        }
-
-        // [-l] - list current access permissions
-        #[cfg(feature = "tmux_3_3")]
-        if self.list {
-            cmd.push_flag(L_LOWERCASE_KEY);
         }
 
         // [user] - user

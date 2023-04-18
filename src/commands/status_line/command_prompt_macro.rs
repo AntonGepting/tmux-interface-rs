@@ -199,7 +199,7 @@ fn command_prompt_macro() {
     #[cfg(all(feature = "tmux_3_2", not(feature = "tmux_3_3")))]
     let command_prompt = command_prompt!((command_prompt), -T);
     #[cfg(feature = "tmux_3_3")]
-    let command_prompt = command_prompt!((command_prompt), -t PromptType::Command.to_string());
+    let command_prompt = command_prompt!((command_prompt), -T PromptType::Command);
     #[cfg(feature = "tmux_3_2")]
     let command_prompt = command_prompt!((command_prompt), -W);
     #[cfg(feature = "tmux_1_5")]

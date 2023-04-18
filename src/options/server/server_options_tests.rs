@@ -181,7 +181,7 @@ fn from_str() {
     #[cfg(feature = "tmux_2_0")]
     let origin = origin.message_limit(Some(100));
     #[cfg(feature = "tmux_3_3")]
-    let origin = origin.prompt_history_limit(Some(0));
+    let origin = origin.prompt_history_limit(Some(100));
     #[cfg(feature = "tmux_1_5")]
     let origin = origin.set_clipboard(Some(SetClipboard::Off));
     #[cfg(feature = "tmux_3_2")]

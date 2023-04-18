@@ -48,7 +48,7 @@ fn show_prompt_history_macro() {
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-prompt-history";
     #[cfg(feature = "cmd_alias")]
-    let cmd = "showhist";
+    let cmd = "showphist";
 
     let mut s = Vec::new();
     s.push(cmd);
