@@ -181,7 +181,7 @@ fn default() {
         "XAUTHORITY",
     ]));
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
-    let options = options.user_keys(vec![""]);
+    let options = options.user_keys(None::<[&str; 0]>);
     #[cfg(feature = "tmux_1_0")]
     let options = options.visual_activity(Some(Activity::Off));
     #[cfg(feature = "tmux_1_0")]

@@ -12,7 +12,7 @@
 //! use tmux_interface::{Tmux, GetGlobalSessionOptions, GetSessionOptionsTr};
 //!
 //! let options = GetGlobalSessionOptions::new()
-//!     .activity_action(None::<&str>)
+//!     .base_index(None::<&str>)
 //!     .assume_paste_time(None::<&str>)
 //!     .into_commands();
 //! let output = Tmux::with_commands(options).output().unwrap();
@@ -39,7 +39,7 @@
 //! use tmux_interface::{Tmux, GetLocalSessionOptions, GetSessionOptionsTr};
 //!
 //! let options = GetLocalSessionOptions::new()
-//!     .activity_action(None::<&str>)
+//!     .base_index(None::<&str>)
 //!     .assume_paste_time(None::<&str>)
 //!     .into_commands();
 //! let output = Tmux::with_commands(options).output().unwrap();

@@ -166,7 +166,7 @@ pub const OTHER_PANE_WIDTH: &str = "other-pane-width";
 /// ```text
 /// pane-active-border-style
 /// ```
-#[cfg(feature = "tmux_2_0")]
+#[cfg(feature = "tmux_1_9")]
 pub const PANE_ACTIVE_BORDER_STYLE: &str = "pane-active-border-style";
 
 /// ```text

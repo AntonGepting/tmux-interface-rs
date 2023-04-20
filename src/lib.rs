@@ -475,7 +475,7 @@
 //!                      NewSession::new()
 //!                         .attach()
 //!                         .detached()
-//!                         .not_update_env()
+//!                         .window_name("my_window_name")
 //!                         .session_name("name"))
 //!                    .colours256()
 //!                    .force_utf8()

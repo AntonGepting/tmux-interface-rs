@@ -1550,7 +1550,7 @@ impl<'a> FromStr for WindowOptions<'a> {
                     OTHER_PANE_WIDTH => {
                         window_options.other_pane_width = value.and_then(|s| s.parse().ok())
                     }
-                    #[cfg(feature = "tmux_2_0")]
+                    #[cfg(feature = "tmux_1_9")]
                     PANE_ACTIVE_BORDER_STYLE => {
                         window_options.pane_active_border_style = cow_parse(value)
                     }

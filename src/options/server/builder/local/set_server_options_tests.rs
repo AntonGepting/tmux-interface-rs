@@ -69,7 +69,7 @@ fn set_server_options() {
     #[cfg(feature = "tmux_3_0")]
     v.push(format!("{} {} {}", cmd, "user-keys", ""));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
-    v.push(format!("{} {} {}", cmd, "quiet", ""));
+    v.push(format!("{} {} {}", cmd, "quiet", "off"));
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
     v.push(format!("{} {} {}", cmd, "detach-on-destroy", ""));
 

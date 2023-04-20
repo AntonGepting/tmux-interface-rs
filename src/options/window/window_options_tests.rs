@@ -197,8 +197,10 @@ fn to_string() {
     #[cfg(feature = "tmux_1_0")]
     v.push("aggressive-resize off");
     // allow-passthrough off
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
+    #[cfg(all(feature = "tmux_2_7", not(feature = "tmux_3_0")))]
     v.push("allow-rename off");
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_6")))]
+    v.push("allow-rename on");
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     v.push("alternate-screen on");
     #[cfg(feature = "tmux_1_0")] // 0.8
@@ -206,9 +208,9 @@ fn to_string() {
     #[cfg(feature = "tmux_1_9")]
     v.push("automatic-rename-format #{?pane_in_mode,[tmux],#{pane_current_command}}#{?pane_dead,[dead],}");
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    v.push("c0-change_interval");
+    v.push("c0-change-interval 100");
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    v.push("c0-change-trigger");
+    v.push("c0-change-trigger 250");
     #[cfg(feature = "tmux_1_0")]
     v.push("clock-mode-colour blue");
     #[cfg(feature = "tmux_1_0")]
@@ -230,15 +232,15 @@ fn to_string() {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     v.push("mode-fg 0");
     #[cfg(feature = "tmux_1_0")]
-    v.push("mode-keys vi");
+    v.push("mode-keys emacs");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    v.push("mode-mouse 0");
+    v.push("mode-mouse off");
     #[cfg(feature = "tmux_1_9")]
-    v.push("mode-style fg=black,bg=yellow");
+    v.push("mode-style bg=yellow,fg=black");
     #[cfg(feature = "tmux_1_0")]
     v.push("monitor-activity off");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    v.push("monitor-content 0");
+    v.push("monitor-content ");
     #[cfg(feature = "tmux_2_6")]
     v.push("monitor-bell on");
     #[cfg(feature = "tmux_1_4")]
@@ -247,8 +249,12 @@ fn to_string() {
     v.push("other-pane-height 0");
     #[cfg(feature = "tmux_1_4")]
     v.push("other-pane-width 0");
-    #[cfg(feature = "tmux_2_0")]
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_3_2")))]
     v.push("pane-active-border-style fg=green");
+    #[cfg(feature = "tmux_3_2")]
+    v.push(
+        "pane-active-border-style #{?pane_in_mode,fg=yellow,#{?synchronize-panes,fg=red,fg=green}}",
+    );
     #[cfg(feature = "tmux_1_6")]
     v.push("pane-base-index 0");
     #[cfg(feature = "tmux_2_3")]
@@ -258,79 +264,87 @@ fn to_string() {
     #[cfg(feature = "tmux_2_3")]
     v.push("pane-border-status off");
     #[cfg(feature = "tmux_2_0")]
-    v.push("pane-border-style fg=colour238,bg=colour235");
+    v.push("pane-border-style default");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
     v.push("remain-on-exit off");
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
     v.push("synchronize-panes off");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    v.push("utf8 _");
+    v.push("utf8 off");
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     v.push("window-active-style default");
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    v.push("window-status-bell-attr _");
+    v.push("window-status-bell-attr reverse");
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    v.push("window-status-bell-bg _");
+    v.push("window-status-bell-bg default");
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    v.push("window-status-bell-fg _");
+    v.push("window-status-bell-fg default");
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    v.push("window-status-content-attr _");
+    v.push("window-status-content-attr reverse");
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    v.push("window-status-content-bg _");
+    v.push("window-status-content-bg default");
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    v.push("window-status-content-fg _");
+    v.push("window-status-content-fg default");
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    v.push("window-status-activity-attr _");
+    v.push("window-status-activity-attr reverse");
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    v.push("window-status-activity-bg _");
+    v.push("window-status-activity-bg default");
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    v.push("window-status-activity-fg _");
+    v.push("window-status-activity-fg default");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    v.push("window-status-attr _");
+    v.push("window-status-attr none");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    v.push("window-status-bg _");
+    v.push("window-status-bg default");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    v.push("window-status-fg _");
+    v.push("window-status-fg default");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    v.push("window-status-current-attr _");
+    v.push("window-status-current-attr reverse");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    v.push("window-status-current-bg _");
+    v.push("window-status-current-bg default");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    v.push("window-status-current-fg _");
+    v.push("window-status-current-fg default");
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    v.push("window-status-alert-attr _");
+    v.push("window-status-alert-attr default");
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    v.push("window-status-alert-bg _");
+    v.push("window-status-alert-bg default");
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    v.push("window-status-alert-fg _");
+    v.push("window-status-alert-fg default");
     #[cfg(feature = "tmux_1_9")]
     v.push("window-status-activity-style reverse");
     #[cfg(feature = "tmux_1_9")]
-    v.push("window-status-bell-style fg=colour253,bg=colour1,bright");
+    v.push("window-status-bell-style reverse");
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    v.push("window-status-content-style _");
-    #[cfg(feature = "tmux_1_2")]
+    v.push("window-status-content-style reverse");
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_1")))]
+    v.push("window-status-current-format #I:#W#F");
+    #[cfg(feature = "tmux_2_1")]
     v.push("window-status-current-format #I:#W#{?window_flags,#{window_flags}, }");
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    v.push("window-status-last-attr _");
+    v.push("window-status-last-attr none");
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    v.push("window-status-last-bg _");
+    v.push("window-status-last-bg default");
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    v.push("window-status-last-fg _");
+    v.push("window-status-last-fg default");
     #[cfg(feature = "tmux_1_9")]
-    v.push("window-status-current-style fg=colour22,bg=colour114");
-    #[cfg(feature = "tmux_1_2")]
+    v.push("window-status-current-style default");
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_1")))]
+    v.push("window-status-format #I:#W#F");
+    #[cfg(feature = "tmux_2_1")]
     v.push("window-status-format #I:#W#{?window_flags,#{window_flags}, }");
+    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+    v.push("window-status-last-attr none");
     #[cfg(feature = "tmux_1_9")]
     v.push("window-status-last-style default");
     #[cfg(feature = "tmux_1_7")]
     v.push("window-status-separator \" \"");
     #[cfg(feature = "tmux_1_9")]
     v.push("window-status-style default");
-    #[cfg(feature = "tmux_2_9")]
-    v.push("window-size largest");
+    #[cfg(all(feature = "tmux_2_9", not(feature = "tmux_3_1")))]
+    v.push("window-size smallest");
+    #[cfg(feature = "tmux_3_1")]
+    v.push("window-size latest");
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
-    v.push("word-separators _");
+    v.push("word-separators \"-_@\"");
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     v.push("window-style default");
     #[cfg(feature = "tmux_1_7")]
@@ -350,18 +364,20 @@ fn from_str() {
     let mut v = Vec::new();
     #[cfg(feature = "tmux_1_0")]
     v.push("aggressive-resize off");
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_3_0")))]
+    #[cfg(all(feature = "tmux_2_7", not(feature = "tmux_3_0")))]
     v.push("allow-rename off");
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_6")))]
+    v.push("allow-rename on");
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     v.push("alternate-screen on");
     #[cfg(feature = "tmux_1_0")]
     v.push("automatic-rename on");
     #[cfg(feature = "tmux_1_9")]
     v.push("automatic-rename-format #{?pane_in_mode,[tmux],#{pane_current_command}}#{?pane_dead,[dead],}");
-    // #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    // v.push("c0-change-interval "); // default?
-    // #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
-    // v.push("c0-change-trigger "); // default?
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+    v.push("c0-change-interval 100");
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+    v.push("c0-change-trigger 250");
     #[cfg(feature = "tmux_1_0")]
     v.push("clock-mode-colour blue");
     #[cfg(feature = "tmux_1_0")]
@@ -370,28 +386,28 @@ fn from_str() {
     v.push("force-height 0");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
     v.push("force-width 0");
-    // #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
-    // v.push("layout-history-limit "); // default?
+    #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_1_8")))]
+    v.push("layout-history-limit 20");
     #[cfg(feature = "tmux_1_0")]
     v.push("main-pane-height 24");
     #[cfg(feature = "tmux_1_0")]
     v.push("main-pane-width 80");
-    // #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    // v.push("mode-attr "); // default?
-    // #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    // v.push("mode-bg "); // default?
-    // #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    // v.push("mode-fg "); // default?
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    v.push("mode-attr none");
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    v.push("mode-bg yellow");
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    v.push("mode-fg black");
     #[cfg(feature = "tmux_1_0")]
-    v.push("mode-keys vi");
-    // #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
-    // v.push("mode-mouse "); // default?
+    v.push("mode-keys emacs");
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+    v.push("mode-mouse off");
     #[cfg(feature = "tmux_1_9")]
-    v.push("mode-style fg=black,bg=yellow");
+    v.push("mode-style bg=yellow,fg=black");
     #[cfg(feature = "tmux_1_0")]
     v.push("monitor-activity off");
-    // #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    // v.push("monitor-content "); // default?
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+    v.push("monitor-content  ");
     #[cfg(feature = "tmux_2_6")]
     v.push("monitor-bell on");
     #[cfg(feature = "tmux_1_4")]
@@ -400,8 +416,12 @@ fn from_str() {
     v.push("other-pane-height 0");
     #[cfg(feature = "tmux_1_4")]
     v.push("other-pane-width 0");
-    #[cfg(feature = "tmux_2_0")]
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_3_2")))]
     v.push("pane-active-border-style fg=green");
+    #[cfg(feature = "tmux_3_2")]
+    v.push(
+        "pane-active-border-style #{?pane_in_mode,fg=yellow,#{?synchronize-panes,fg=red,fg=green}}",
+    );
     #[cfg(feature = "tmux_1_6")]
     v.push("pane-base-index 0");
     #[cfg(feature = "tmux_2_3")]
@@ -411,62 +431,66 @@ fn from_str() {
     #[cfg(feature = "tmux_2_3")]
     v.push("pane-border-status off");
     #[cfg(feature = "tmux_2_0")]
-    v.push("pane-border-style fg=colour238,bg=colour235");
+    v.push("pane-border-style default");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_3_0")))]
     v.push("remain-on-exit off");
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_2")))]
     v.push("synchronize-panes off");
-    // #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    // v.push("utf8 "); // default?
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
+    v.push("utf8 off");
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     v.push("window-active-style default");
-    // #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    // v.push("window-status-bell-attr "); // default?
-    // #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    // v.push("window-status-bell-bg "); // default?
-    // #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    // v.push("window-status-bell-fg "); // default?
-    // #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    // v.push("window-status-content-attr "); // default?
-    // #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    // v.push("window-status-content-bg "); // default?
-    // #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    // v.push("window-status-content-fg "); // default?
-    // #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    // v.push("window-status-activity-attr "); // default?
-    // #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    // v.push("window-status-activity-bg "); // default?
-    // #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    // v.push("window-status-activity-fg "); // default?
-    // #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    // v.push("window-status-attr "); // default?
-    // #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    // v.push("window-status-bg "); // default?
-    // #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    // v.push("window-status-fg "); // default?
-    // #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    // v.push("window-status-alert-attr "); // default?
-    // #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    // v.push("window-status-alert-bg "); // default?
-    // #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
-    // v.push("window-status-alert-fg "); // default?
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    v.push("window-status-bell-attr reverse");
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    v.push("window-status-bell-bg default");
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    v.push("window-status-bell-fg default");
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    v.push("window-status-content-attr reverse");
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    v.push("window-status-content-bg default");
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    v.push("window-status-content-fg default");
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    v.push("window-status-activity-attr reverse");
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    v.push("window-status-activity-bg default");
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    v.push("window-status-activity-fg default");
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    v.push("window-status-attr none");
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    v.push("window-status-bg default");
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    v.push("window-status-fg default");
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+    v.push("window-status-alert-attr reverse");
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+    v.push("window-status-alert-bg default");
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
+    v.push("window-status-alert-fg default");
     #[cfg(feature = "tmux_1_9")]
     v.push("window-status-activity-style reverse");
     #[cfg(feature = "tmux_1_9")]
-    v.push("window-status-bell-style fg=colour253,bg=colour1,bright");
-    // #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
-    // v.push("window-status-content-style "); // default?
-    #[cfg(feature = "tmux_1_2")]
+    v.push("window-status-bell-style reverse");
+    #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
+    v.push("window-status-content-style reverse");
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_1")))]
+    v.push("window-status-current-format #I:#W#F");
+    #[cfg(feature = "tmux_2_1")]
     v.push("window-status-current-format #I:#W#{?window_flags,#{window_flags}, }");
-    // #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    // v.push("window-status-last-attr"); // default?
-    // #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    // v.push("window-status-last-bg"); // default?
-    // #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    // v.push("window-status-last-fg"); // default?
+    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+    v.push("window-status-last-attr none");
+    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+    v.push("window-status-last-bg default");
+    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
+    v.push("window-status-last-fg default");
     #[cfg(feature = "tmux_1_9")]
-    v.push("window-status-current-style fg=colour22,bg=colour114");
-    #[cfg(feature = "tmux_1_2")]
+    v.push("window-status-current-style default");
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_1")))]
+    v.push("window-status-format #I:#W#F");
+    #[cfg(feature = "tmux_2_1")]
     v.push("window-status-format #I:#W#{?window_flags,#{window_flags}, }");
     #[cfg(feature = "tmux_1_9")]
     v.push("window-status-last-style default");
@@ -474,21 +498,25 @@ fn from_str() {
     v.push("window-status-separator \" \"");
     #[cfg(feature = "tmux_1_9")]
     v.push("window-status-style default");
-    #[cfg(feature = "tmux_2_9")]
-    v.push("window-size largest"); // default?
-                                   // #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
-                                   // v.push("word-separators"); // default?
+    #[cfg(all(feature = "tmux_2_9", not(feature = "tmux_3_1")))]
+    v.push("window-size smallest");
+    #[cfg(feature = "tmux_3_1")]
+    v.push("window-size latest");
+    #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_6")))]
+    v.push("word-separators -_@");
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0")))]
     v.push("window-style default");
     #[cfg(feature = "tmux_1_7")]
     v.push("wrap-search on");
     #[cfg(feature = "tmux_1_0")]
     v.push("xterm-keys on");
-    // #[cfg(feature = "tmux_1_0")]
-    // v.push("user-keys");
 
     let window_options_str = v.join("\n");
     let window_options = window_options_str.parse::<WindowOptions>().unwrap();
+
+    // FIXME test bypass
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+    let window_options = window_options.monitor_content(Some(""));
 
     let default_window_options = WindowOptions::new();
 

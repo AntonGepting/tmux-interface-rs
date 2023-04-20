@@ -160,12 +160,6 @@ impl<'a> SetBuffer<'a> {
             cmd.push_option(N_LOWERCASE_KEY, new_buffer_name);
         }
 
-        // `data`
-        #[cfg(feature = "tmux_0_8")]
-        if let Some(data) = self.data {
-            cmd.push_param(data);
-        }
-
         // `[-b buffer-index]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
         if let Some(buffer_index) = self.buffer_index {
@@ -176,6 +170,12 @@ impl<'a> SetBuffer<'a> {
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
         if let Some(target_session) = self.target_session {
             cmd.push_option(T_LOWERCASE_KEY, target_session);
+        }
+
+        // `data`
+        #[cfg(feature = "tmux_0_8")]
+        if let Some(data) = self.data {
+            cmd.push_param(data);
         }
 
         cmd

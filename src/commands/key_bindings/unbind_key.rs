@@ -69,8 +69,11 @@ pub struct UnbindKey<'a> {
     pub mode_key: Option<Cow<'a, str>>,
 
     /// `[-t key-table]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    pub key_table: Option<Cow<'a, str>>,
+
     /// `[-T key-table]`
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_2_1")]
     pub key_table: Option<Cow<'a, str>>,
 
     /// `key`
@@ -119,8 +122,14 @@ impl<'a> UnbindKey<'a> {
     }
 
     /// `[-t key-table]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    pub fn key_table<S: Into<Cow<'a, str>>>(mut self, key_table: S) -> Self {
+        self.key_table = Some(key_table.into());
+        self
+    }
+
     /// `[-T key-table]`
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_2_1")]
     pub fn key_table<S: Into<Cow<'a, str>>>(mut self, key_table: S) -> Self {
         self.key_table = Some(key_table.into());
         self
@@ -169,12 +178,14 @@ impl<'a> UnbindKey<'a> {
         }
 
         // `[-t key-table]`
-        // `[-T key-table]`
-        #[cfg(feature = "tmux_1_0")]
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
         if let Some(key_table) = self.key_table {
-            #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
             cmd.push_option(T_LOWERCASE_KEY, key_table);
-            #[cfg(feature = "tmux_2_4")]
+        }
+
+        // `[-T key-table]`
+        #[cfg(feature = "tmux_2_1")]
+        if let Some(key_table) = self.key_table {
             cmd.push_option(T_UPPERCASE_KEY, key_table);
         }
 

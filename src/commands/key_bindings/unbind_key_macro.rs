@@ -69,12 +69,19 @@ macro_rules! unbind_key {
         }) $($tail)*)
     }};
     // `[-t mode-key]`
-    (@cmd ($cmd:expr) -t $mode_key:expr, $($tail:tt)*) => {{
+    // `[-t key-table]`
+    (@cmd ($cmd:expr) -t $table:expr, $($tail:tt)*) => {{
         $crate::unbind_key!(@cmd ({
-            $cmd.mode_key($mode_key)
+            #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
+            {
+                $cmd.mode_key($table)
+            }
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+            {
+                $cmd.key_table($table)
+            }
         }) $($tail)*)
     }};
-    // `[-t key-table]`
     // `[-T key-table]`
     (@cmd ($cmd:expr) -T $key_table:expr, $($tail:tt)*) => {{
         $crate::unbind_key!(@cmd ({
@@ -162,9 +169,9 @@ fn unbind_key_macro() {
     let unbind_key = unbind_key!((unbind_key), -q);
     #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
     let unbind_key = unbind_key!((unbind_key), -t "1");
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-    //let unbind_key = unbind_key!((unbind_key), -t "2");
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    let unbind_key = unbind_key!((unbind_key), -t "2");
+    #[cfg(feature = "tmux_2_1")]
     let unbind_key = unbind_key!((unbind_key), -T "2");
     #[cfg(feature = "tmux_0_8")]
     let unbind_key = unbind_key!((unbind_key), "3");
@@ -186,9 +193,9 @@ fn unbind_key_macro() {
     s.push("-q");
     #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
     s.extend_from_slice(&["-t", "1"]);
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
-    //s.extend_from_slice(&["-t", "2"]);
-    #[cfg(feature = "tmux_2_4")]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    s.extend_from_slice(&["-t", "2"]);
+    #[cfg(feature = "tmux_2_1")]
     s.extend_from_slice(&["-T", "2"]);
     #[cfg(feature = "tmux_0_8")]
     s.push("3");

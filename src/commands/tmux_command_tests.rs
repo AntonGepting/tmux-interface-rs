@@ -54,19 +54,13 @@ fn tmux_multiple_subcommands() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "lscm";
 
-    let s = vec![
-        "tmux",
-        "-v",
-        "-V",
-        cmd,
-        "-F",
-        "listcommands1",
-        ";",
-        cmd,
-        "-F",
-        "listcommands2",
-    ]
-    .join(" ");
+    let mut v: Vec<&str> = Vec::new();
+    v.extend_from_slice(&["tmux", "-v", "-V"]);
+    #[cfg(feature = "tmux_2_3")]
+    v.extend_from_slice(&[cmd, "-F", "listcommands1", ";"]);
+    #[cfg(feature = "tmux_2_3")]
+    v.extend_from_slice(&[cmd, "-F", "listcommands2"]);
+    let s = v.join(" ");
 
     assert_eq!(tmux, s);
 }

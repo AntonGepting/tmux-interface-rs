@@ -51,12 +51,19 @@ macro_rules! list_keys {
         }) $($tail)*)
     }};
     // `[-t mode-table]`
-    (@cmd ($cmd:expr) -t $mode_table:expr, $($tail:tt)*) => {{
+    // `[-t key-table]`
+    (@cmd ($cmd:expr) -t $table:expr, $($tail:tt)*) => {{
         $crate::list_keys!(@cmd ({
-            $cmd.mode_table($mode_table)
+            #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_4")))]
+            {
+                $cmd.mode_table($table)
+            }
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
+            {
+                $cmd.key_table($table)
+            }
         }) $($tail)*)
     }};
-    // `[-t key-table]`
     // `[-T key-table]`
     (@cmd ($cmd:expr) -T $key_table:expr, $($tail:tt)*) => {{
         $crate::list_keys!(@cmd ({
@@ -120,10 +127,10 @@ fn list_keys_macro() {
     let list_keys = list_keys!((list_keys), -P "1");
     #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_4")))]
     let list_keys = list_keys!((list_keys), -t "2");
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(feature = "tmux_2_1")]
     let list_keys = list_keys!((list_keys), -T "3");
-    //#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-    //let list_keys = list_keys!((list_keys), -t "3");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
+    let list_keys = list_keys!((list_keys), -t "3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-keys";
@@ -144,8 +151,8 @@ fn list_keys_macro() {
     s.extend_from_slice(&["-t", "2"]);
     #[cfg(feature = "tmux_2_1")]
     s.extend_from_slice(&["-T", "3"]);
-    //#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
-    //s.extend_from_slice(&["-t", "3"]);
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
+    s.extend_from_slice(&["-t", "3"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let list_keys = list_keys.build().to_vec();

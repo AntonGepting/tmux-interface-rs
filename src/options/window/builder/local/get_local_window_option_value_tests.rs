@@ -258,7 +258,7 @@ fn get_local_window_option_value_tests() {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
     {
-        let origin = format!("{} {}", cmd, "mode_mouse");
+        let origin = format!("{} {}", cmd, "mode-mouse");
         let set_option = GetLocalWindowOptionValue::mode_mouse(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }

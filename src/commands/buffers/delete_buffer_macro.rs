@@ -101,7 +101,7 @@ fn delete_buffer_macro() {
     let mut s = Vec::new();
     s.push(cmd);
 
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(feature = "tmux_2_0")]
     s.extend_from_slice(&["-b", "1"]);
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
     s.extend_from_slice(&["-b", "1"]);

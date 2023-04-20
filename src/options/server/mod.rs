@@ -50,7 +50,7 @@
 //! let output = Tmux::with_commands(
 //!     GetServerOptions::new()
 //!         .buffer_limit()
-//!         .history_file()
+//!         .escape_time()
 //!         .build())
 //!     .output();
 //! ```
