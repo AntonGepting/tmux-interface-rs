@@ -200,12 +200,26 @@ pub struct WindowOptions<'a> {
     #[cfg(feature = "tmux_1_4")]
     pub other_pane_width: Option<usize>,
 
-    /// tmux ^2.0:
+    /// tmux ^1.9:
     /// ```text
     /// pane-active-border-style style
     /// ```
-    #[cfg(feature = "tmux_2_0")]
+    #[cfg(feature = "tmux_1_9")]
     pub pane_active_border_style: Option<Cow<'a, str>>,
+
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-active-border-bg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    pub pane_active_border_bg: Option<Cow<'a, str>>,
+
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-active-border-fg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    pub pane_active_border_fg: Option<Cow<'a, str>>,
 
     /// tmux ^1.6:
     /// ```text
@@ -811,7 +825,7 @@ impl<'a> WindowOptions<'a> {
         let options = options.other_pane_height(Some(OTHER_PANE_HEIGHT_DEFAULT));
         #[cfg(feature = "tmux_1_4")]
         let options = options.other_pane_width(Some(OTHER_PANE_WIDTH_DEFAULT));
-        #[cfg(feature = "tmux_2_0")]
+        #[cfg(feature = "tmux_1_9")]
         let options = options.pane_active_border_style(Some(PANE_ACTIVE_BORDER_STYLE_DEFAULT));
         #[cfg(feature = "tmux_1_6")]
         let options = options.pane_base_index(Some(PANE_BASE_INDEX_DEFAULT));
@@ -997,13 +1011,13 @@ impl<'a> WindowOptions<'a> {
         self
     }
 
-    #[cfg(feature = "tmux_1_9")]
+    #[cfg(feature = "tmux_1_0")]
     pub fn main_pane_height(mut self, main_pane_height: Option<usize>) -> Self {
         self.main_pane_height = main_pane_height;
         self
     }
 
-    #[cfg(feature = "tmux_1_2")]
+    #[cfg(feature = "tmux_1_0")]
     pub fn main_pane_width(mut self, main_pane_width: Option<usize>) -> Self {
         self.main_pane_width = main_pane_width;
         self
@@ -1011,19 +1025,19 @@ impl<'a> WindowOptions<'a> {
 
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub fn mode_attr<S: Into<Cow<'a, str>>>(mut self, mode_attr: Option<S>) -> Self {
-        self.mode_attr = mode_attr;
+        self.mode_attr = mode_attr.map(|s| s.into());
         self
     }
 
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub fn mode_bg<S: Into<Cow<'a, str>>>(mut self, mode_bg: Option<S>) -> Self {
-        self.mode_bg = mode_bg;
+        self.mode_bg = mode_bg.map(|s| s.into());
         self
     }
 
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     pub fn mode_fg<S: Into<Cow<'a, str>>>(mut self, mode_fg: Option<S>) -> Self {
-        self.mode_fg = mode_fg;
+        self.mode_fg = mode_fg.map(|s| s.into());
         self
     }
 
@@ -1081,7 +1095,7 @@ impl<'a> WindowOptions<'a> {
         self
     }
 
-    #[cfg(feature = "tmux_2_0")]
+    #[cfg(feature = "tmux_1_9")]
     pub fn pane_active_border_style<S: Into<Cow<'a, str>>>(
         mut self,
         pane_active_border_style: Option<S>,
@@ -1148,7 +1162,10 @@ impl<'a> WindowOptions<'a> {
     }
 
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub fn window_status_bell_attr(mut self, window_status_bell_attr: Option<Switch>) -> Self {
+    pub fn window_status_bell_attr<S: Into<Cow<'a, str>>>(
+        mut self,
+        window_status_bell_attr: Option<S>,
+    ) -> Self {
         self.window_status_bell_attr = window_status_bell_attr.map(|s| s.into());
         self
     }
@@ -1203,7 +1220,7 @@ impl<'a> WindowOptions<'a> {
         mut self,
         window_status_activity_attr: Option<S>,
     ) -> Self {
-        self.window_status_activity_attr = window_status_activity_attr;
+        self.window_status_activity_attr = window_status_activity_attr.map(|s| s.into());
         self
     }
 
@@ -1273,7 +1290,7 @@ impl<'a> WindowOptions<'a> {
         self
     }
 
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     pub fn window_status_alert_attr<S: Into<Cow<'a, str>>>(
         mut self,
         window_status_alert_attr: Option<S>,
@@ -1282,7 +1299,7 @@ impl<'a> WindowOptions<'a> {
         self
     }
 
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     pub fn window_status_alert_bg<S: Into<Cow<'a, str>>>(
         mut self,
         window_status_alert_bg: Option<S>,
@@ -1291,7 +1308,7 @@ impl<'a> WindowOptions<'a> {
         self
     }
 
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
+    #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     pub fn window_status_alert_fg<S: Into<Cow<'a, str>>>(
         mut self,
         window_status_alert_fg: Option<S>,
@@ -1341,7 +1358,7 @@ impl<'a> WindowOptions<'a> {
         mut self,
         window_status_last_attr: Option<S>,
     ) -> Self {
-        self.window_status_last_attr = window_status_last_attr;
+        self.window_status_last_attr = window_status_last_attr.map(|s| s.into());
         self
     }
 
@@ -1350,7 +1367,7 @@ impl<'a> WindowOptions<'a> {
         mut self,
         window_status_last_bg: Option<S>,
     ) -> Self {
-        self.window_status_last_bg = window_status_last_bg;
+        self.window_status_last_bg = window_status_last_bg.map(|s| s.into());
         self
     }
 
@@ -1359,7 +1376,7 @@ impl<'a> WindowOptions<'a> {
         mut self,
         window_status_last_fg: Option<S>,
     ) -> Self {
-        self.window_status_last_fg = window_status_last_fg;
+        self.window_status_last_fg = window_status_last_fg.map(|s| s.into());
         self
     }
 
@@ -1500,11 +1517,11 @@ impl<'a> FromStr for WindowOptions<'a> {
                         window_options.main_pane_width = value.and_then(|s| s.parse().ok())
                     }
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    MODE_ATTR => window_options.mode_attr = value.and_then(|s| s.parse().ok()),
+                    MODE_ATTR => window_options.mode_attr = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    MODE_BG => window_options.mode_bg = value.and_then(|s| s.parse().ok()),
+                    MODE_BG => window_options.mode_bg = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    MODE_FG => window_options.mode_fg = value.and_then(|s| s.parse().ok()),
+                    MODE_FG => window_options.mode_fg = cow_parse(value),
                     #[cfg(feature = "tmux_1_0")]
                     MODE_KEYS => window_options.mode_keys = value.and_then(|s| s.parse().ok()),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
@@ -1537,6 +1554,14 @@ impl<'a> FromStr for WindowOptions<'a> {
                     PANE_ACTIVE_BORDER_STYLE => {
                         window_options.pane_active_border_style = cow_parse(value)
                     }
+                    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+                    PANE_ACTIVE_BORDER_STYLE => {
+                        window_options.pane_active_border_bg = cow_parse(value)
+                    }
+                    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+                    PANE_ACTIVE_BORDER_STYLE => {
+                        window_options.pane_active_border_fg = cow_parse(value)
+                    }
                     #[cfg(feature = "tmux_1_6")]
                     PANE_BASE_INDEX => {
                         window_options.pane_base_index = value.and_then(|s| s.parse().ok())
@@ -1563,80 +1588,69 @@ impl<'a> FromStr for WindowOptions<'a> {
                     WINDOW_ACTIVE_STYLE => window_options.window_active_style = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_BELL_ATTR => {
-                        window_options.window_status_bell_attr = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_bell_attr = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_BELL_BG => {
-                        window_options.window_status_bell_bg = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_bell_bg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_BELL_FG => {
-                        window_options.window_status_bell_fg = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_bell_fg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_CONTENT_ATTR => {
-                        window_options.window_status_content_attr =
-                            value.and_then(|s| s.parse().ok())
+                        window_options.window_status_content_attr = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_CONTENT_BG => {
-                        window_options.window_status_content_bg = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_content_bg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_CONTENT_FG => {
-                        window_options.window_status_content_fg = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_content_fg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_ACTIVITY_ATTR => {
-                        window_options.window_status_activity_attr =
-                            value.and_then(|s| s.parse().ok())
+                        window_options.window_status_activity_attr = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_ACTIVITY_BG => {
-                        window_options.window_status_activity_bg =
-                            value.and_then(|s| s.parse().ok())
+                        window_options.window_status_activity_bg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_ACTIVITY_FG => {
-                        window_options.window_status_activity_fg =
-                            value.and_then(|s| s.parse().ok())
+                        window_options.window_status_activity_fg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    WINDOW_STATUS_ATTR => {
-                        window_options.window_status_attr = value.and_then(|s| s.parse().ok())
-                    }
+                    WINDOW_STATUS_ATTR => window_options.window_status_attr = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    WINDOW_STATUS_BG => {
-                        window_options.window_status_bg = value.and_then(|s| s.parse().ok())
-                    }
+                    WINDOW_STATUS_BG => window_options.window_status_bg = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    WINDOW_STATUS_FG => {
-                        window_options.window_status_fg = value.and_then(|s| s.parse().ok())
-                    }
+                    WINDOW_STATUS_FG => window_options.window_status_fg = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_CURRENT_ATTR => {
-                        window_options.window_status_current_attr =
-                            value.and_then(|s| s.parse().ok())
+                        window_options.window_status_current_attr = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_CURRENT_BG => {
-                        window_options.window_status_current_bg = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_current_bg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_CURRENT_FG => {
-                        window_options.window_status_current_fg = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_current_fg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
                     WINDOW_STATUS_ALERT_ATTR => {
-                        window_options.window_status_alert_attr = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_alert_attr = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
                     WINDOW_STATUS_ALERT_BG => {
-                        window_options.window_status_alert_bg = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_alert_bg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
                     WINDOW_STATUS_ALERT_FG => {
-                        window_options.window_status_alert_fg = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_alert_fg = cow_parse(value)
                     }
                     #[cfg(feature = "tmux_1_9")]
                     WINDOW_STATUS_ACTIVITY_STYLE => {
@@ -1656,15 +1670,15 @@ impl<'a> FromStr for WindowOptions<'a> {
                     }
                     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_LAST_ATTR => {
-                        window_options.window_status_last_attr = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_last_attr = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_LAST_BG => {
-                        window_options.window_status_last_bg = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_last_bg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
                     WINDOW_STATUS_LAST_FG => {
-                        window_options.window_status_last_fg = value.and_then(|s| s.parse().ok())
+                        window_options.window_status_last_fg = cow_parse(value)
                     }
                     #[cfg(feature = "tmux_1_9")]
                     WINDOW_STATUS_CURRENT_STYLE => {

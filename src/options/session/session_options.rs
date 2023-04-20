@@ -913,26 +913,32 @@ impl<'a> SessionOptions<'a> {
     }
 
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_active_border_bg(mut self, pane_active_border_bg: Option<Switch>) -> Self {
-        self.pane_active_border_bg = pane_active_border_bg;
+    pub fn pane_active_border_bg<S: Into<Cow<'a, str>>>(
+        mut self,
+        pane_active_border_bg: Option<S>,
+    ) -> Self {
+        self.pane_active_border_bg = pane_active_border_bg.map(|s| s.into());
         self
     }
 
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_active_border_fg(mut self, pane_active_border_fg: Option<Switch>) -> Self {
-        self.pane_active_border_fg = pane_active_border_fg;
+    pub fn pane_active_border_fg<S: Into<Cow<'a, str>>>(
+        mut self,
+        pane_active_border_fg: Option<S>,
+    ) -> Self {
+        self.pane_active_border_fg = pane_active_border_fg.map(|s| s.into());
         self
     }
 
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_border_bg(mut self, pane_border_bg: Option<Switch>) -> Self {
-        self.pane_border_bg = pane_border_bg;
+    pub fn pane_border_bg<S: Into<Cow<'a, str>>>(mut self, pane_border_bg: Option<S>) -> Self {
+        self.pane_border_bg = pane_border_bg.map(|s| s.into());
         self
     }
 
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    pub fn pane_border_fg(mut self, pane_border_fg: Option<Switch>) -> Self {
-        self.pane_border_fg = pane_border_fg;
+    pub fn pane_border_fg<S: Into<Cow<'a, str>>>(mut self, pane_border_fg: Option<S>) -> Self {
+        self.pane_border_fg = pane_border_fg.map(|s| s.into());
         self
     }
 
@@ -1251,9 +1257,7 @@ impl<'a> FromStr for SessionOptions<'a> {
                     #[cfg(feature = "tmux_1_0")]
                     DEFAULT_SHELL => session_options.default_shell = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    DEFAULT_PATH => {
-                        session_options.default_path = value.and_then(|s| s.parse().ok())
-                    }
+                    DEFAULT_PATH => session_options.default_path = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
                     DEFAULT_TERMINAL => session_options.default_terminal = cow_parse(value),
                     // #[cfg(feature = "tmux_2_9")]
@@ -1297,25 +1301,17 @@ impl<'a> FromStr for SessionOptions<'a> {
                     #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_2_1")))]
                     LOCK_SERVER => session_options.lock_server = value.and_then(|s| s.parse().ok()),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    MESSAGE_ATTR => {
-                        session_options.message_attr = value.and_then(|s| s.parse().ok())
-                    }
+                    MESSAGE_ATTR => session_options.message_attr = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    MESSAGE_BG => session_options.message_bg = value.and_then(|s| s.parse().ok()),
+                    MESSAGE_BG => session_options.message_bg = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-                    MESSAGE_COMMAND_ATTR => {
-                        session_options.message_command_attr = value.and_then(|s| s.parse().ok())
-                    }
+                    MESSAGE_COMMAND_ATTR => session_options.message_command_attr = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-                    MESSAGE_COMMAND_BG => {
-                        session_options.message_command_bg = value.and_then(|s| s.parse().ok())
-                    }
+                    MESSAGE_COMMAND_BG => session_options.message_command_bg = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-                    MESSAGE_COMMAND_FG => {
-                        session_options.message_command_fg = value.and_then(|s| s.parse().ok())
-                    }
+                    MESSAGE_COMMAND_FG => session_options.message_command_fg = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    MESSAGE_FG => session_options.message_fg = value.and_then(|s| s.parse().ok()),
+                    MESSAGE_FG => session_options.message_fg = cow_parse(value),
                     #[cfg(feature = "tmux_1_9")]
                     MESSAGE_COMMAND_STYLE => {
                         session_options.message_command_style = cow_parse(value)
@@ -1344,20 +1340,16 @@ impl<'a> FromStr for SessionOptions<'a> {
                     MOUSE_UTF8 => session_options.mouse_utf8 = value.and_then(|s| s.parse().ok()),
                     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
                     PANE_ACTIVE_BORDER_BG => {
-                        session_options.pane_active_border_bg = value.and_then(|s| s.parse().ok())
+                        session_options.pane_active_border_bg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
                     PANE_ACTIVE_BORDER_FG => {
-                        session_options.pane_active_border_fg = value.and_then(|s| s.parse().ok())
+                        session_options.pane_active_border_fg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-                    PANE_BORDER_BG => {
-                        session_options.pane_border_bg = value.and_then(|s| s.parse().ok())
-                    }
+                    PANE_BORDER_BG => session_options.pane_border_bg = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-                    PANE_BORDER_FG => {
-                        session_options.pane_active_border_fg = value.and_then(|s| s.parse().ok())
-                    }
+                    PANE_BORDER_FG => session_options.pane_active_border_fg = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
                     PANE_ACTIVE_BORDER_STYLE => {
                         session_options.pane_active_border_style = cow_parse(value)
@@ -1389,11 +1381,11 @@ impl<'a> FromStr for SessionOptions<'a> {
                     #[cfg(feature = "tmux_1_0")]
                     STATUS => session_options.status = value.and_then(|s| s.parse().ok()),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    STATUS_ATTR => session_options.status_attr = value.and_then(|s| s.parse().ok()),
+                    STATUS_ATTR => session_options.status_attr = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    STATUS_BG => session_options.status_bg = value.and_then(|s| s.parse().ok()),
+                    STATUS_BG => session_options.status_bg = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    STATUS_FG => session_options.status_fg = value.and_then(|s| s.parse().ok()),
+                    STATUS_FG => session_options.status_fg = cow_parse(value),
                     #[cfg(feature = "tmux_2_9")]
                     STATUS_FORMAT => array_insert(
                         &mut session_options.status_format,
@@ -1413,17 +1405,11 @@ impl<'a> FromStr for SessionOptions<'a> {
                     #[cfg(feature = "tmux_1_0")]
                     STATUS_LEFT => session_options.status_left = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    STATUS_LEFT_ATTR => {
-                        session_options.status_left_attr = value.and_then(|s| s.parse().ok())
-                    }
+                    STATUS_LEFT_ATTR => session_options.status_left_attr = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    STATUS_LEFT_BG => {
-                        session_options.status_left_bg = value.and_then(|s| s.parse().ok())
-                    }
+                    STATUS_LEFT_BG => session_options.status_left_bg = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    STATUS_LEFT_FG => {
-                        session_options.status_left_fg = value.and_then(|s| s.parse().ok())
-                    }
+                    STATUS_LEFT_FG => session_options.status_left_fg = cow_parse(value),
                     #[cfg(feature = "tmux_1_0")]
                     STATUS_LEFT_LENGTH => {
                         session_options.status_left_length = value.and_then(|s| s.parse().ok())
@@ -1437,17 +1423,11 @@ impl<'a> FromStr for SessionOptions<'a> {
                     #[cfg(feature = "tmux_1_0")]
                     STATUS_RIGHT => session_options.status_right = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    STATUS_RIGHT_ATTR => {
-                        session_options.status_right_attr = value.and_then(|s| s.parse().ok())
-                    }
+                    STATUS_RIGHT_ATTR => session_options.status_right_attr = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    STATUS_RIGHT_BG => {
-                        session_options.status_right_bg = value.and_then(|s| s.parse().ok())
-                    }
+                    STATUS_RIGHT_BG => session_options.status_right_bg = cow_parse(value),
                     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-                    STATUS_RIGHT_FG => {
-                        session_options.status_right_fg = value.and_then(|s| s.parse().ok())
-                    }
+                    STATUS_RIGHT_FG => session_options.status_right_fg = cow_parse(value),
                     #[cfg(feature = "tmux_1_0")]
                     STATUS_RIGHT_LENGTH => {
                         session_options.status_right_length = value.and_then(|s| s.parse().ok())

@@ -732,12 +732,13 @@ pub trait SetWindowOptionsTr<'a> {
     /// window-status-activity-bg attributes
     /// ```
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn window_status_activity_bg(mut self) -> Self
+    fn window_status_activity_bg<S, T>(mut self, target: Option<T>, attributes: Option<S>) -> Self
     where
         T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(Self::Setter::window_status_activity_bg(target));
+        self.push(Self::Setter::window_status_activity_bg(target, attributes));
         self
     }
 

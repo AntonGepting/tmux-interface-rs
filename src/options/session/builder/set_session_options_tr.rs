@@ -436,8 +436,7 @@ pub trait SetSessionOptionsTr<'a> {
         S: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.options
-            .push(Self::Self::Setter::message_command_attr(target, attributes));
+        self.push(Self::Setter::message_command_attr(target, attributes));
         self
     }
 

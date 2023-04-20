@@ -140,7 +140,7 @@ fn set_global_window_option_tests() {
     {
         let origin = format!("{} {} {}", cmd, "clock-mode-style", "12");
         let set_option =
-            SetGlobalWindowOption::clock_mode_style(Some(target), Some(ClockModeStyle::_12))
+            SetGlobalWindowOption::clock_mode_style(Some(target), Some(ClockModeStyle::H12))
                 .to_string();
         assert_eq!(origin, set_option);
     }
@@ -220,7 +220,7 @@ fn set_global_window_option_tests() {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
         let origin = format!("{} {} {}", cmd, "mode-attr", "6");
-        let set_option = SetGlobalWindowOption::mode_attr(Some(target), Some(6)).to_string();
+        let set_option = SetGlobalWindowOption::mode_attr(Some(target), Some("6")).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -233,7 +233,7 @@ fn set_global_window_option_tests() {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
         let origin = format!("{} {} {}", cmd, "mode-bg", "colour");
-        let set_option = SetGlobalWindowOption::mode_bg(Some(target), Some(colour)).to_string();
+        let set_option = SetGlobalWindowOption::mode_bg(Some(target), Some("colour")).to_string();
         assert_eq!(origin, set_option);
     }
 
@@ -246,7 +246,7 @@ fn set_global_window_option_tests() {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     {
         let origin = format!("{} {} {}", cmd, "mode-fg", "colour");
-        let set_option = SetGlobalWindowOption::mode_fg(Some(target), Some(colour)).to_string();
+        let set_option = SetGlobalWindowOption::mode_fg(Some(target), Some("colour")).to_string();
         assert_eq!(origin, set_option);
     }
 

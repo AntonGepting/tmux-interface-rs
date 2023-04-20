@@ -11,10 +11,17 @@ fn default() {
 
     let options = ServerOptions::default();
     #[cfg(feature = "tmux_3_1")]
-    let options = options.backspace(Some(""));
+    let options = options.backspace(Some("C-?"));
     #[cfg(feature = "tmux_1_5")]
     let options = options.buffer_limit(Some(50));
-    #[cfg(feature = "tmux_2_4")]
+    #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_2_6")))]
+    let options = options.command_alias(Some(vec![
+        "split-pane=split-window",
+        "splitp=split-window",
+        "\"server-info=show-messages -JT\"",
+        "\"info=show-messages -JT\"",
+    ]));
+    #[cfg(feature = "tmux_2_6")]
     let options = options.command_alias(Some(vec![
         "split-pane=split-window",
         "splitp=split-window",
@@ -41,7 +48,9 @@ fn default() {
     let options = options.focus_events(Some(Switch::Off));
     #[cfg(feature = "tmux_2_1")]
     let options = options.history_file(Some(""));
-    #[cfg(feature = "tmux_2_0")]
+    #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_3_2")))]
+    let options = options.message_limit(Some(100));
+    #[cfg(feature = "tmux_3_2")]
     let options = options.message_limit(Some(1000));
     #[cfg(feature = "tmux_3_3")]
     let options = options.prompt_history_limit(Some(100));
@@ -66,7 +75,7 @@ fn default() {
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
     let options = options.quiet(Some(Switch::Off));
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_4")))]
-    let options = options.detach_on_destroy(None);
+    let options = options.detach_on_destroy(Somw(Switch::On));
 
     assert_eq!(server_options, options);
 }

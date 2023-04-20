@@ -44,9 +44,9 @@ pub const TOP: &str = "top";
 pub const BOTTOM: &str = "bottom";
 
 #[cfg(feature = "tmux_1_0")]
-pub const _12: &str = "12";
+pub const H12: &str = "12";
 #[cfg(feature = "tmux_1_0")]
-pub const _24: &str = "24";
+pub const H24: &str = "24";
 
 #[cfg(feature = "tmux_2_9")]
 pub const LARGEST: &str = "largest";

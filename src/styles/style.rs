@@ -1,6 +1,7 @@
 use super::{Align, Colour, List, Range};
 use std::fmt;
 
+// XXX: split into colours and attributes
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Style {
     /// Set the foreground colour

@@ -602,7 +602,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn window_status_content_attr<'a, S, T>(
         target: Option<S>,
-        attributes: Option<S>,
+        attributes: Option<T>,
     ) -> TmuxCommand<'a>
     where
         S: Into<Cow<'a, str>>,
@@ -650,7 +650,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn window_status_activity_attr<'a, S, T>(
         target: Option<S>,
-        attributes: Option<S>,
+        attributes: Option<T>,
     ) -> TmuxCommand<'a>
     where
         S: Into<Cow<'a, str>>,
@@ -668,7 +668,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn window_status_activity_bg<'a, S, T>(
         target: Option<S>,
-        attributes: Option<S>,
+        attributes: Option<T>,
     ) -> TmuxCommand<'a>
     where
         S: Into<Cow<'a, str>>,
@@ -686,7 +686,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     fn window_status_activity_fg<'a, S, T>(
         target: Option<S>,
-        attributes: Option<S>,
+        attributes: Option<T>,
     ) -> TmuxCommand<'a>
     where
         S: Into<Cow<'a, str>>,
@@ -749,7 +749,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn window_status_current_attr<'a, S, T>(
         target: Option<S>,
-        attributes: Option<S>,
+        attributes: Option<T>,
     ) -> TmuxCommand<'a>
     where
         S: Into<Cow<'a, str>>,
@@ -911,7 +911,7 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
     fn window_status_last_attr<'a, S, T>(
         target: Option<S>,
-        attributes: Option<S>,
+        attributes: Option<T>,
     ) -> TmuxCommand<'a>
     where
         S: Into<Cow<'a, str>>,

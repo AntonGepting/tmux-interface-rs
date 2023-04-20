@@ -131,7 +131,7 @@ pub trait WindowOptionsCtl<'a> {
         let cmds = cmds.window_status_bell_fg(target.clone(), window_options.window_status_bell_fg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
         let cmds = cmds
-            .window_status_content_attr(self.target(), window_options.window_status_content_attr);
+            .window_status_content_attr(target.clone(), window_options.window_status_content_attr);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
         let cmds =
             cmds.window_status_content_bg(target.clone(), window_options.window_status_content_bg);
@@ -139,8 +139,10 @@ pub trait WindowOptionsCtl<'a> {
         let cmds =
             cmds.window_status_content_fg(target.clone(), window_options.window_status_content_fg);
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds
-            .window_status_activity_attr(self.target(), window_options.window_status_activity_attr);
+        let cmds = cmds.window_status_activity_attr(
+            target.clone(),
+            window_options.window_status_activity_attr,
+        );
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
         let cmds = cmds
             .window_status_activity_bg(target.clone(), window_options.window_status_activity_bg);
@@ -155,7 +157,7 @@ pub trait WindowOptionsCtl<'a> {
         let cmds = cmds.window_status_fg(target.clone(), window_options.window_status_fg);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
         let cmds = cmds
-            .window_status_current_attr(self.target(), window_options.window_status_current_attr);
+            .window_status_current_attr(target.clone(), window_options.window_status_current_attr);
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
         let cmds =
             cmds.window_status_current_bg(target.clone(), window_options.window_status_current_bg);
@@ -666,7 +668,7 @@ pub trait WindowOptionsCtl<'a> {
     // ```
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     fn set_mode_fg(&self, mode_fg: Option<Cow<'a, str>>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::mode_fg(self.target()))
+        self.set(Self::Setter::mode_fg(self.target(), mode_fg))
     }
 
     // # Manual

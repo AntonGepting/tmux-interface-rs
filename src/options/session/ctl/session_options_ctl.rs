@@ -1063,8 +1063,7 @@ pub trait SessionOptionsCtl<'a> {
     where
         Self: Sized,
     {
-        self.get(Self::Getter::message_command_fg(self.target()));
-        self
+        self.get(Self::Getter::message_command_fg(self.target()))
     }
 
     /// ### Manual
@@ -1351,7 +1350,7 @@ pub trait SessionOptionsCtl<'a> {
         pane_active_border_fg: Option<String>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::pane_active_border_fg(
-            target,
+            self.target(),
             pane_active_border_fg,
         ))
     }

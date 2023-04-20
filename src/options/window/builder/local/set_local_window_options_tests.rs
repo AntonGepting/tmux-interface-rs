@@ -251,7 +251,7 @@ fn set_local_window_options() {
     #[cfg(feature = "tmux_1_0")]
     let options = options.clock_mode_colour(Some(target), Some("colour135"));
     #[cfg(feature = "tmux_1_0")]
-    let options = options.clock_mode_style(Some(target), Some(ClockModeStyle::_24));
+    let options = options.clock_mode_style(Some(target), Some(ClockModeStyle::H24));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
     let options = options.force_height(Some(target), Some(0));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_9")))]
@@ -268,11 +268,11 @@ fn set_local_window_options() {
     #[cfg(feature = "tmux_1_0")]
     let options = options.main_pane_width(Some(target), Some(80));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.mode_attr(Some(target));
+    let options = options.mode_attr(Some(target), Some(""));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.mode_bg(Some(target));
+    let options = options.mode_bg(Some(target), Some(""));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.mode_fg(Some(target));
+    let options = options.mode_fg(Some(target), Some(""));
     #[cfg(feature = "tmux_1_0")]
     let options = options.mode_keys(Some(target), Some(StatusKeys::Vi));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
