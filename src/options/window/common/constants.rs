@@ -448,7 +448,7 @@ pub const AGGRESSIVE_RESIZE_DEFAULT: Switch = Switch::Off;
 /// ```
 #[cfg(all(feature = "tmux_2_7", not(feature = "tmux_3_0")))]
 pub const ALLOW_RENAME_DEFAULT: Switch = Switch::Off;
-#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_6")))]
+#[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_7")))]
 pub const ALLOW_RENAME_DEFAULT: Switch = Switch::On;
 
 /// tmux ^1.2 v3.0:

@@ -20,7 +20,7 @@ fn default() {
     let window_options = window_options.aggressive_resize(Some(Switch::Off));
     #[cfg(all(feature = "tmux_2_7", not(feature = "tmux_3_0")))]
     let window_options = window_options.allow_rename(Some(Switch::Off));
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_6")))]
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_7")))]
     let window_options = window_options.allow_rename(Some(Switch::On));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     let window_options = window_options.alternate_screen(Some(Switch::On));
@@ -199,7 +199,7 @@ fn to_string() {
     // allow-passthrough off
     #[cfg(all(feature = "tmux_2_7", not(feature = "tmux_3_0")))]
     v.push("allow-rename off");
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_6")))]
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_7")))]
     v.push("allow-rename on");
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     v.push("alternate-screen on");
@@ -366,7 +366,7 @@ fn from_str() {
     v.push("aggressive-resize off");
     #[cfg(all(feature = "tmux_2_7", not(feature = "tmux_3_0")))]
     v.push("allow-rename off");
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_6")))]
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_7")))]
     v.push("allow-rename on");
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
     v.push("alternate-screen on");
