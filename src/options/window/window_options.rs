@@ -591,7 +591,7 @@ impl<'a> fmt::Display for WindowOptions<'a> {
         option_to_string(&mut v, OTHER_PANE_HEIGHT, &self.other_pane_height);
         #[cfg(feature = "tmux_1_4")]
         option_to_string(&mut v, OTHER_PANE_WIDTH, &self.other_pane_width);
-        #[cfg(feature = "tmux_2_0")]
+        #[cfg(feature = "tmux_1_9")]
         option_to_string(
             &mut v,
             PANE_ACTIVE_BORDER_STYLE,

@@ -57,7 +57,9 @@ fn unbind_key() {
     let unbind_key = unbind_key.quiet();
     #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
     let unbind_key = unbind_key.mode_key("1");
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    let unbind_key = unbind_key.key_table("2");
+    #[cfg(feature = "tmux_2_1")]
     let unbind_key = unbind_key.key_table("2");
     #[cfg(feature = "tmux_0_8")]
     let unbind_key = unbind_key.key("3");
@@ -79,9 +81,9 @@ fn unbind_key() {
     s.push("-q");
     #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
     s.extend_from_slice(&["-t", "1"]);
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_4")))]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
     s.extend_from_slice(&["-t", "2"]);
-    #[cfg(feature = "tmux_2_4")]
+    #[cfg(feature = "tmux_2_1")]
     s.extend_from_slice(&["-T", "2"]);
     #[cfg(feature = "tmux_0_8")]
     s.push("3");
