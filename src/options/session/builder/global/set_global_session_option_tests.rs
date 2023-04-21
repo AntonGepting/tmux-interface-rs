@@ -382,9 +382,9 @@ fn set_global_session_option_tests() {
     }
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
     {
-        let origin = format!("{} {} {}", cmd, "status-utf8", "s");
+        let origin = format!("{} {} {}", cmd, "status-utf8", "on");
         let set_option =
-            SetGlobalSessionOption::terminal_overrides(Some(target), Some("s")).to_string();
+            SetGlobalSessionOption::status_utf8(Some(target), Some(Switch::On)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
