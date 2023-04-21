@@ -732,6 +732,12 @@ impl<'a> SessionOptions<'a> {
         self
     }
 
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    pub fn default_path<S: Into<Cow<'a, str>>>(mut self, default_path: Option<S>) -> Self {
+        self.default_path = default_path.map(|s| s.into());
+        self
+    }
+
     #[cfg(feature = "tmux_2_9")]
     pub fn default_size(mut self, default_size: Option<(usize, usize)>) -> Self {
         self.default_size = default_size;
@@ -1135,7 +1141,7 @@ impl<'a> SessionOptions<'a> {
         self
     }
 
-    #[cfg(feature = "tmux_1_9")]
+    #[cfg(feature = "tmux_1_0")]
     pub fn status_right_length(mut self, status_right_length: Option<usize>) -> Self {
         self.status_right_length = status_right_length.map(|s| s.into());
         self

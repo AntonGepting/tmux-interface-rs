@@ -68,7 +68,7 @@ fn default() {
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     let options = options.message_command_fg(Some("yellow"));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.message_fg(Some(""));
+    let options = options.message_fg(Some("black"));
     #[cfg(feature = "tmux_1_9")]
     let options = options.message_command_style(Some("bg=black,fg=yellow"));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
@@ -92,7 +92,7 @@ fn default() {
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
     let options = options.pane_border_bg(Some("default"));
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_1_9")))]
-    let options = options.pane_border_fg(Some("fg=green"));
+    let options = options.pane_border_fg(Some("default"));
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]
     let options = options.pane_active_border_style(Some("fg=green"));
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_0")))]

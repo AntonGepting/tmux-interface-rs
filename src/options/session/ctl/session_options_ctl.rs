@@ -144,7 +144,7 @@ pub trait SessionOptionsCtl<'a> {
         let cmds = cmds.message_command_bg(target.clone(), session_options.message_command_bg);
 
         #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-        let cmds = cmds.message_command_bg(target.clone(), session_options.message_command_bg);
+        let cmds = cmds.message_command_fg(target.clone(), session_options.message_command_fg);
 
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
         let cmds = cmds.message_fg(target.clone(), session_options.message_fg);
@@ -621,7 +621,7 @@ pub trait SessionOptionsCtl<'a> {
     #[cfg(feature = "tmux_2_9")]
     fn get_default_size(&self) -> Result<Option<(usize, usize)>, Error> {
         unimplemented!()
-        // self.get(Self::Getter::default_size(self.target()))
+        //self.get(Self::Getter::default_size(self.target()))
     }
 
     /// ### Manual
@@ -1022,34 +1022,6 @@ pub trait SessionOptionsCtl<'a> {
             self.target(),
             message_command_bg,
         ))
-    }
-
-    /// ### Manual
-    ///
-    /// tmux ^1.6 v1.9:
-    /// ```text
-    /// message-command-fg colour
-    /// ```
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn get_default_size<S: Into<Cow<'a, str>>>(
-        &self,
-        target: Option<S>,
-    ) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::default_size(self.target()))
-    }
-
-    /// ### Manual
-    ///
-    /// tmux ^1.6 v1.9:
-    /// ```text
-    /// message-command-fg colour
-    /// ```
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    fn set_default_size<S: Into<Cow<'a, str>>>(
-        &self,
-        default_size: Option<S>,
-    ) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::default_size(self.target(), default_size))
     }
 
     /// ### Manual
@@ -2072,28 +2044,6 @@ pub trait SessionOptionsCtl<'a> {
             self.target(),
             status_right_attr,
         ))
-    }
-
-    /// ### Manual
-    ///
-    /// tmux ^1.0 v1.9:
-    /// ```text
-    /// status-right-bg colour
-    /// ```
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn get_default_size(&self) -> Result<Option<String>, Error> {
-        self.get(Self::Getter::default_size(self.target()))
-    }
-
-    /// ### Manual
-    ///
-    /// tmux ^1.0 v1.9:
-    /// ```text
-    /// status-right-bg colour
-    /// ```
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    fn set_default_size(&self, default_size: Option<String>) -> Result<TmuxOutput, Error> {
-        self.set(Self::Setter::default_size(self.target(), default_size))
     }
 
     /// ### Manual

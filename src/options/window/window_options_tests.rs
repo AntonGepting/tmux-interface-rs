@@ -226,11 +226,11 @@ fn to_string() {
     #[cfg(feature = "tmux_1_0")]
     v.push("main-pane-width 80");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    v.push("mode-attr 0");
+    v.push("mode-attr none");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    v.push("mode-bg 0");
+    v.push("mode-bg yellow");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    v.push("mode-fg 0");
+    v.push("mode-fg black");
     #[cfg(feature = "tmux_1_0")]
     v.push("mode-keys emacs");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
@@ -257,6 +257,10 @@ fn to_string() {
     );
     #[cfg(feature = "tmux_1_6")]
     v.push("pane-base-index 0");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    v.push("pane-border-bg default");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    v.push("pane-border-fg default");
     #[cfg(feature = "tmux_2_3")]
     v.push(
         "pane-border-format #{?pane_active,#[reverse],}#{pane_index}#[default] \"#{pane_title}\"",
@@ -298,7 +302,7 @@ fn to_string() {
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     v.push("window-status-fg default");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    v.push("window-status-current-attr reverse");
+    v.push("window-status-current-attr none");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     v.push("window-status-current-bg default");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
@@ -331,8 +335,6 @@ fn to_string() {
     v.push("window-status-format #I:#W#F");
     #[cfg(feature = "tmux_2_1")]
     v.push("window-status-format #I:#W#{?window_flags,#{window_flags}, }");
-    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_1_9")))]
-    v.push("window-status-last-attr none");
     #[cfg(feature = "tmux_1_9")]
     v.push("window-status-last-style default");
     #[cfg(feature = "tmux_1_7")]
@@ -418,12 +420,20 @@ fn from_str() {
     v.push("other-pane-width 0");
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_3_2")))]
     v.push("pane-active-border-style fg=green");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    v.push("pane-active-border-bg default");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    v.push("pane-active-border-fg green");
     #[cfg(feature = "tmux_3_2")]
     v.push(
         "pane-active-border-style #{?pane_in_mode,fg=yellow,#{?synchronize-panes,fg=red,fg=green}}",
     );
     #[cfg(feature = "tmux_1_6")]
     v.push("pane-base-index 0");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    v.push("pane-border-bg default");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    v.push("pane-border-fg default");
     #[cfg(feature = "tmux_2_3")]
     v.push(
         "pane-border-format #{?pane_active,#[reverse],}#{pane_index}#[default] \"#{pane_title}\"",
@@ -464,6 +474,12 @@ fn from_str() {
     v.push("window-status-bg default");
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     v.push("window-status-fg default");
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    v.push("window-status-current-attr none");
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    v.push("window-status-current-bg default");
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
+    v.push("window-status-current-fg default");
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]
     v.push("window-status-alert-attr reverse");
     #[cfg(all(feature = "tmux_1_3", not(feature = "tmux_1_6")))]

@@ -425,6 +425,36 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
 
     /// ### Manual
     ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-active-border-bg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_active_border_bg<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set_ext(target, PANE_ACTIVE_BORDER_BG, style)
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-active-border-fg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_active_border_fg<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set_ext(target, PANE_ACTIVE_BORDER_FG, style)
+    }
+
+    /// ### Manual
+    ///
     /// tmux ^1.6:
     /// ```text
     /// pane-base-index index
@@ -435,6 +465,36 @@ pub trait SetWindowOptionTr: SetOptionTr + SetUserOption {
         S: Into<Cow<'a, str>>,
     {
         Self::set_ext(target, PANE_BASE_INDEX, index.map(|s| s.to_string()))
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-border-bg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_border_bg<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set_ext(target, PANE_BORDER_BG, style)
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-border-fg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_border_fg<'a, S, T>(target: Option<S>, style: Option<T>) -> TmuxCommand<'a>
+    where
+        S: Into<Cow<'a, str>>,
+        T: Into<Cow<'a, str>>,
+    {
+        Self::set_ext(target, PANE_BORDER_FG, style)
     }
 
     /// ### Manual

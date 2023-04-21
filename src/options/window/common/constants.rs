@@ -170,10 +170,34 @@ pub const OTHER_PANE_WIDTH: &str = "other-pane-width";
 pub const PANE_ACTIVE_BORDER_STYLE: &str = "pane-active-border-style";
 
 /// ```text
+/// pane-active-border-bg
+/// ```
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+pub const PANE_ACTIVE_BORDER_BG: &str = "pane-active-border-bg";
+
+/// ```text
+/// pane-active-border-fg
+/// ```
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+pub const PANE_ACTIVE_BORDER_FG: &str = "pane-active-border-fg";
+
+/// ```text
 /// pane-base-index
 /// ```
 #[cfg(feature = "tmux_1_6")]
 pub const PANE_BASE_INDEX: &str = "pane-base-index";
+
+/// ```text
+/// pane-border-bg
+/// ```
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+pub const PANE_BORDER_BG: &str = "pane-border-bg";
+
+/// ```text
+/// pane-border-fg
+/// ```
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+pub const PANE_BORDER_FG: &str = "pane-border-fg";
 
 /// ```text
 /// pane-border-format
@@ -665,7 +689,7 @@ pub const PANE_ACTIVE_BORDER_BG_DEFAULT: &str = "default";
 /// ```
 // 2
 #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
-pub const PANE_ACTIVE_BOREDER_FG_DEFAULT: &str = "green";
+pub const PANE_ACTIVE_BORDER_FG_DEFAULT: &str = "green";
 
 /// tmux ^1.6:
 /// ```text

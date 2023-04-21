@@ -403,6 +403,34 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
 
     /// ### Manual
     ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-active-border-bg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_active_border_bg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get_ext(target, PANE_ACTIVE_BORDER_BG)
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-active-border-fg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_active_border_fg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get_ext(target, PANE_ACTIVE_BORDER_FG)
+    }
+
+    /// ### Manual
+    ///
     /// tmux ^1.6:
     /// ```text
     /// pane-base-index index
@@ -413,6 +441,34 @@ pub trait GetWindowOptionTr: GetOptionTr + GetUserOption {
         T: Into<Cow<'a, str>>,
     {
         Self::get_ext(target, PANE_BASE_INDEX)
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-border-bg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_border_bg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get_ext(target, PANE_BORDER_BG)
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-border-fg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_border_fg<'a, T>(target: Option<T>) -> TmuxCommand<'a>
+    where
+        T: Into<Cow<'a, str>>,
+    {
+        Self::get_ext(target, PANE_BORDER_FG)
     }
 
     /// ### Manual

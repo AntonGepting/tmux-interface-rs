@@ -471,6 +471,40 @@ pub trait SetWindowOptionsTr<'a> {
 
     /// ### Manual
     ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-active-border-bg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_active_border_bg<S, T>(mut self, target: Option<T>, style: Option<S>) -> Self
+    where
+        T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
+        Self: Sized,
+    {
+        self.push(Self::Setter::pane_active_border_bg(target, style));
+        self
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-active-border-bg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_active_border_fg<S, T>(mut self, target: Option<T>, style: Option<S>) -> Self
+    where
+        T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
+        Self: Sized,
+    {
+        self.push(Self::Setter::pane_active_border_fg(target, style));
+        self
+    }
+
+    /// ### Manual
+    ///
     /// tmux ^1.6:
     /// ```text
     /// pane-base-index index
@@ -482,6 +516,40 @@ pub trait SetWindowOptionsTr<'a> {
         Self: Sized,
     {
         self.push(Self::Setter::pane_base_index(target, index));
+        self
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-border-bg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_border_bg<S, T>(mut self, target: Option<T>, style: Option<S>) -> Self
+    where
+        T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
+        Self: Sized,
+    {
+        self.push(Self::Setter::pane_border_bg(target, style));
+        self
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-border-bg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    fn pane_border_fg<S, T>(mut self, target: Option<T>, style: Option<S>) -> Self
+    where
+        T: Into<Cow<'a, str>>,
+        S: Into<Cow<'a, str>>,
+        Self: Sized,
+    {
+        self.push(Self::Setter::pane_border_fg(target, style));
         self
     }
 

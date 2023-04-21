@@ -328,8 +328,16 @@ fn set_global_window_options() {
     let options = options.other_pane_width(Some(target), Some(0));
     #[cfg(feature = "tmux_2_0")]
     let options = options.pane_active_border_style(Some(target), Some("fg=green"));
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    let options = options.pane_active_border_bg(Some(target), Some("default"));
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    let options = options.pane_active_border_fg(Some(target), Some("green"));
     #[cfg(feature = "tmux_1_6")]
     let options = options.pane_base_index(Some(target), Some(0));
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    let options = options.pane_border_bg(Some(target), Some("default"));
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    let options = options.pane_border_fg(Some(target), Some("default"));
     #[cfg(feature = "tmux_2_3")]
     let options = options.pane_border_format(
         Some(target),
@@ -364,7 +372,7 @@ fn set_global_window_options() {
     let options = options.window_status_bell_fg(Some(target), Some("default"));
     //window-status-bell-style fg=colour253,bg=colour1,bold
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    let options = options.window_status_content_attr(Some(target), Some("default"));
+    let options = options.window_status_content_attr(Some(target), Some("reverse"));
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     let options = options.window_status_content_bg(Some(target), Some("default"));
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
@@ -376,7 +384,7 @@ fn set_global_window_options() {
     #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
     let options = options.window_status_activity_fg(Some(target), Some("default"));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
-    let options = options.window_status_attr(Some(target), Some("default"));
+    let options = options.window_status_attr(Some(target), Some("none"));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]
     let options = options.window_status_bg(Some(target), Some("default"));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_1_9")))]

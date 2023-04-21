@@ -228,6 +228,20 @@ pub struct WindowOptions<'a> {
     #[cfg(feature = "tmux_1_6")]
     pub pane_base_index: Option<usize>,
 
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-border-bg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    pub pane_border_bg: Option<Cow<'a, str>>,
+
+    /// tmux ^0.8 v1.9:
+    /// ```text
+    /// pane-border-fg style
+    /// ```
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    pub pane_border_fg: Option<Cow<'a, str>>,
+
     /// tmux ^2.3:
     /// ```text
     /// pane-border-format format
@@ -599,6 +613,10 @@ impl<'a> fmt::Display for WindowOptions<'a> {
         );
         #[cfg(feature = "tmux_1_6")]
         option_to_string(&mut v, PANE_BASE_INDEX, &self.pane_base_index);
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+        option_to_string(&mut v, PANE_BORDER_BG, &self.pane_border_bg);
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+        option_to_string(&mut v, PANE_BORDER_FG, &self.pane_border_fg);
         #[cfg(feature = "tmux_2_3")]
         option_to_string(&mut v, PANE_BORDER_FORMAT, &self.pane_border_format);
         #[cfg(feature = "tmux_2_3")]
@@ -827,8 +845,16 @@ impl<'a> WindowOptions<'a> {
         let options = options.other_pane_width(Some(OTHER_PANE_WIDTH_DEFAULT));
         #[cfg(feature = "tmux_1_9")]
         let options = options.pane_active_border_style(Some(PANE_ACTIVE_BORDER_STYLE_DEFAULT));
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+        let options = options.pane_active_border_bg(Some(PANE_ACTIVE_BORDER_BG_DEFAULT));
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+        let options = options.pane_active_border_fg(Some(PANE_ACTIVE_BORDER_FG_DEFAULT));
         #[cfg(feature = "tmux_1_6")]
         let options = options.pane_base_index(Some(PANE_BASE_INDEX_DEFAULT));
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+        let options = options.pane_border_bg(Some(PANE_BORDER_BG_DEFAULT));
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+        let options = options.pane_border_fg(Some(PANE_BORDER_FG_DEFAULT));
         #[cfg(feature = "tmux_2_3")]
         let options = options.pane_border_format(Some(PANE_BORDER_FORMAT_DEFAULT));
         #[cfg(feature = "tmux_2_3")]
@@ -1104,9 +1130,39 @@ impl<'a> WindowOptions<'a> {
         self
     }
 
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    pub fn pane_active_border_bg<S: Into<Cow<'a, str>>>(
+        mut self,
+        pane_active_border_bg: Option<S>,
+    ) -> Self {
+        self.pane_active_border_bg = pane_active_border_bg.map(|s| s.into());
+        self
+    }
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    pub fn pane_active_border_fg<S: Into<Cow<'a, str>>>(
+        mut self,
+        pane_active_border_fg: Option<S>,
+    ) -> Self {
+        self.pane_active_border_fg = pane_active_border_fg.map(|s| s.into());
+        self
+    }
+
     #[cfg(feature = "tmux_1_6")]
     pub fn pane_base_index(mut self, pane_base_index: Option<usize>) -> Self {
         self.pane_base_index = pane_base_index;
+        self
+    }
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    pub fn pane_border_bg<S: Into<Cow<'a, str>>>(mut self, pane_border_bg: Option<S>) -> Self {
+        self.pane_border_bg = pane_border_bg.map(|s| s.into());
+        self
+    }
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+    pub fn pane_border_fg<S: Into<Cow<'a, str>>>(mut self, pane_border_fg: Option<S>) -> Self {
+        self.pane_border_fg = pane_border_fg.map(|s| s.into());
         self
     }
 
@@ -1555,17 +1611,21 @@ impl<'a> FromStr for WindowOptions<'a> {
                         window_options.pane_active_border_style = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
-                    PANE_ACTIVE_BORDER_STYLE => {
+                    PANE_ACTIVE_BORDER_BG => {
                         window_options.pane_active_border_bg = cow_parse(value)
                     }
                     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
-                    PANE_ACTIVE_BORDER_STYLE => {
+                    PANE_ACTIVE_BORDER_FG => {
                         window_options.pane_active_border_fg = cow_parse(value)
                     }
                     #[cfg(feature = "tmux_1_6")]
                     PANE_BASE_INDEX => {
                         window_options.pane_base_index = value.and_then(|s| s.parse().ok())
                     }
+                    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+                    PANE_BORDER_BG => window_options.pane_border_bg = cow_parse(value),
+                    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
+                    PANE_BORDER_FG => window_options.pane_border_fg = cow_parse(value),
                     #[cfg(feature = "tmux_2_3")]
                     PANE_BORDER_FORMAT => window_options.pane_border_format = cow_parse(value),
                     #[cfg(feature = "tmux_2_3")]

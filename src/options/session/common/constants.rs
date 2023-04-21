@@ -79,7 +79,7 @@ pub const MESSAGE_ATTR: &str = "message-attr";
 pub const MESSAGE_BG: &str = "message-bg";
 //message-command-attr attributes
 #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-pub const MESSAGE_COMMAND_ATTR: &str = "message-command-style";
+pub const MESSAGE_COMMAND_ATTR: &str = "message-command-attr";
 //message-command-bg colour
 #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
 pub const MESSAGE_COMMAND_BG: &str = "message-command-bg";
