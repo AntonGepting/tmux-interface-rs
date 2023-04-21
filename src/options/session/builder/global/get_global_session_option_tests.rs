@@ -329,14 +329,16 @@ fn get_global_session_option_tests() {
         let set_option = GetGlobalSessionOption::status_style(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    //let options = options.status_utf8();
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    //let options = options.terminal_overrides();
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
     {
-        let origin = format!("{} {}", cmd, "assume-paste-time");
-        let set_option = GetGlobalSessionOption::assume_paste_time(Some(target)).to_string();
+        let origin = format!("{} {}", cmd, "status-utf8");
+        let set_option = GetGlobalSessionOption::status_utf8(Some(target)).to_string();
+        assert_eq!(origin, set_option);
+    }
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+    {
+        let origin = format!("{} {}", cmd, "terminal-overrides");
+        let set_option = GetGlobalSessionOption::terminal_overrides(Some(target)).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]

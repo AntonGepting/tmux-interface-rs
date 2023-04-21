@@ -380,15 +380,18 @@ fn set_global_session_option_tests() {
             SetGlobalSessionOption::status_style(Some(target), Some("fg=colour247")).to_string();
         assert_eq!(origin, set_option);
     }
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
-    //let options = options.status_utf8(Some(target), Some(Switch::On));
-    //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
-    //let options = options.terminal_overrides(Some(target), Some("53"));
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_2")))]
     {
-        let origin = format!("{} {} {}", cmd, "assume-paste-time", "1");
+        let origin = format!("{} {} {}", cmd, "status-utf8", "s");
         let set_option =
-            SetGlobalSessionOption::assume_paste_time(Some(target), Some(1)).to_string();
+            SetGlobalSessionOption::terminal_overrides(Some(target), Some("s")).to_string();
+        assert_eq!(origin, set_option);
+    }
+    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_0")))]
+    {
+        let origin = format!("{} {} {}", cmd, "terminal-overrides", "1");
+        let set_option =
+            SetGlobalSessionOption::terminal_overrides(Some(target), Some("1")).to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_0")]

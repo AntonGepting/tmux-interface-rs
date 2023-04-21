@@ -14,12 +14,14 @@
 //!         * [`SetServerOptions`] multiple options
 //!
 pub mod get_server_option;
+#[cfg(feature = "tmux_1_8")]
 pub mod get_server_option_value;
 pub mod get_server_options;
 pub mod set_server_option;
 pub mod set_server_options;
 
 pub use get_server_option::*;
+#[cfg(feature = "tmux_1_8")]
 pub use get_server_option_value::*;
 pub use get_server_options::*;
 pub use set_server_option::*;

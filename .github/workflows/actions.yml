@@ -30,8 +30,9 @@ jobs:
           #- { tmux: "1.3", feature: "tmux_1_3" }
           #- { tmux: "1.4", feature: "tmux_1_4" }
           #- { tmux: "1.5", feature: "tmux_1_5" }
-          - { tmux: "1.6", feature: "tmux_1_6" }
-          - { tmux: "1.7", feature: "tmux_1_7" }
+          #- { tmux: "1.6", feature: "tmux_1_6" }
+          #- { tmux: "1.7", feature: "tmux_1_7" }
+          # short form `show-options -v` first implemented
           - { tmux: "1.8", feature: "tmux_1_8" }
           - { tmux: "1.9", feature: "tmux_1_9" }
           - { tmux: "1.9a", feature: "tmux_1_9a" }
