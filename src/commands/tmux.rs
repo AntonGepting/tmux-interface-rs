@@ -1,5 +1,5 @@
 use crate::commands::constants::*;
-use crate::{Error, TmuxCommand, TmuxCommands, TmuxOutput};
+use crate::{Error, TmuxCommand, TmuxCommandList, TmuxOutput};
 use std::borrow::Cow;
 use std::process::{Child, Command, ExitStatus, Stdio};
 
@@ -129,7 +129,7 @@ pub struct Tmux<'a> {
     pub features: Option<Cow<'a, str>>,
 
     /// `[command]`
-    pub command: Option<TmuxCommands<'a>>,
+    pub command: Option<TmuxCommandList<'a>>,
 }
 
 impl<'a> Tmux<'a> {
@@ -266,7 +266,7 @@ impl<'a> Tmux<'a> {
     /// `[command]`
     pub fn command<T: Into<TmuxCommand<'a>>>(mut self, command: T) -> Self {
         self.command
-            .get_or_insert(TmuxCommands::new())
+            .get_or_insert(TmuxCommandList::new())
             .push(command.into());
         self
     }
@@ -406,19 +406,19 @@ impl<'a> Tmux<'a> {
         Tmux::new().command(command.into())
     }
 
-    pub fn with_commands(commands: TmuxCommands<'a>) -> Self {
+    pub fn with_commands(commands: TmuxCommandList<'a>) -> Self {
         Tmux::new().commands(commands)
     }
 
     // XXX: ?
     pub fn add_command<T: Into<TmuxCommand<'a>>>(mut self, command: T) -> Self {
         self.command
-            .get_or_insert(TmuxCommands::new())
+            .get_or_insert(TmuxCommandList::new())
             .push(command.into());
         self
     }
 
-    pub fn commands(mut self, commands: TmuxCommands<'a>) -> Self {
+    pub fn commands(mut self, commands: TmuxCommandList<'a>) -> Self {
         self.command = Some(commands);
         self
     }

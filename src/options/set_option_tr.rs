@@ -1,4 +1,4 @@
-use crate::{SetOption, TmuxCommand, TmuxCommands};
+use crate::{SetOption, TmuxCommand, TmuxCommandList};
 use std::borrow::Cow;
 
 /// Common trait for setting options, using [`SetOption`] command.
@@ -102,14 +102,14 @@ pub trait SetOptionTr {
         target: Option<U>,
         name: S,
         value: Option<I>,
-    ) -> TmuxCommands<'a>
+    ) -> TmuxCommandList<'a>
     where
         S: Into<Cow<'a, str>> + std::fmt::Display,
         I: IntoIterator<Item = T>,
         T: Into<Cow<'a, str>>,
         U: Into<Cow<'a, str>> + Clone,
     {
-        let mut cmds = TmuxCommands::new();
+        let mut cmds = TmuxCommandList::new();
         if let Some(value) = value {
             for (i, item) in value.into_iter().enumerate() {
                 cmds.push(Self::set_ext(
@@ -124,13 +124,13 @@ pub trait SetOptionTr {
         cmds
     }
 
-    fn set_array<'a, S, I, T>(name: S, value: Option<I>) -> TmuxCommands<'a>
+    fn set_array<'a, S, I, T>(name: S, value: Option<I>) -> TmuxCommandList<'a>
     where
         S: Into<Cow<'a, str>> + std::fmt::Display,
         I: IntoIterator<Item = T>,
         T: Into<Cow<'a, str>>,
     {
-        let mut cmds = TmuxCommands::new();
+        let mut cmds = TmuxCommandList::new();
         if let Some(value) = value {
             for (i, item) in value.into_iter().enumerate() {
                 cmds.push(Self::set(format!("{}[{}]", name, i), Some(item)));

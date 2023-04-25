@@ -1,6 +1,6 @@
 // command sequence, Tmux struct as parent, commands structs (NewSession, NewWindow...) as children
 #[test]
-fn example1() {
+fn example_1() {
     use tmux_interface::{HasSession, KillSession, NewSession, NewWindow, SplitWindow, Tmux};
 
     let target_session = "example_1";

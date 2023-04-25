@@ -1,9 +1,9 @@
 use crate::options::{SetGlobalWindowOption, SetUserOptions, SetWindowOptionsTr};
-use crate::{TmuxCommand, TmuxCommands};
+use crate::{TmuxCommand, TmuxCommandList};
 
 #[derive(Debug)]
 pub struct SetGlobalWindowOptions<'a> {
-    pub options: TmuxCommands<'a>,
+    pub options: TmuxCommandList<'a>,
 }
 
 impl<'a> SetWindowOptionsTr<'a> for SetGlobalWindowOptions<'a> {
@@ -11,7 +11,7 @@ impl<'a> SetWindowOptionsTr<'a> for SetGlobalWindowOptions<'a> {
 
     fn new() -> Self {
         Self {
-            options: TmuxCommands::new(),
+            options: TmuxCommandList::new(),
         }
     }
 
@@ -19,11 +19,11 @@ impl<'a> SetWindowOptionsTr<'a> for SetGlobalWindowOptions<'a> {
         self.options.push(option);
     }
 
-    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
+    fn push_cmds(&mut self, options: TmuxCommandList<'a>) {
         self.options.push_cmds(options);
     }
 
-    fn build(self) -> TmuxCommands<'a> {
+    fn build(self) -> TmuxCommandList<'a> {
         self.options
     }
 }

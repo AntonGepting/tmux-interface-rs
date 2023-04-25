@@ -8,7 +8,7 @@ use crate::ModeMouse;
 use crate::PaneBorderStatus;
 #[cfg(feature = "tmux_2_9")]
 use crate::WindowSize;
-use crate::{ClockModeStyle, SetWindowOptionTr, StatusKeys, Switch, TmuxCommand, TmuxCommands};
+use crate::{ClockModeStyle, SetWindowOptionTr, StatusKeys, Switch, TmuxCommand, TmuxCommandList};
 use std::borrow::Cow;
 
 pub trait SetWindowOptionsTr<'a> {
@@ -18,7 +18,7 @@ pub trait SetWindowOptionsTr<'a> {
 
     fn push(&mut self, option: TmuxCommand<'a>);
 
-    fn push_cmds(&mut self, options: TmuxCommands<'a>);
+    fn push_cmds(&mut self, options: TmuxCommandList<'a>);
 
     /// ### Manual
     ///
@@ -1266,5 +1266,5 @@ pub trait SetWindowOptionsTr<'a> {
         self
     }
 
-    fn build(self) -> TmuxCommands<'a>;
+    fn build(self) -> TmuxCommandList<'a>;
 }

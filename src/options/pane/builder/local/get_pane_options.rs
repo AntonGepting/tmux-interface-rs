@@ -1,8 +1,8 @@
-use crate::{GetPaneOption, GetPaneOptionsTr, GetUserOptions, TmuxCommand, TmuxCommands};
+use crate::{GetPaneOption, GetPaneOptionsTr, GetUserOptions, TmuxCommand, TmuxCommandList};
 
 #[derive(Debug)]
 pub struct GetPaneOptions<'a> {
-    pub options: TmuxCommands<'a>,
+    pub options: TmuxCommandList<'a>,
 }
 
 impl<'a> GetPaneOptionsTr<'a> for GetPaneOptions<'a> {
@@ -13,7 +13,7 @@ impl<'a> GetPaneOptionsTr<'a> for GetPaneOptions<'a> {
         Self: Sized,
     {
         Self {
-            options: TmuxCommands::new(),
+            options: TmuxCommandList::new(),
         }
     }
 
@@ -21,11 +21,11 @@ impl<'a> GetPaneOptionsTr<'a> for GetPaneOptions<'a> {
         self.options.push(option);
     }
 
-    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
+    fn push_cmds(&mut self, options: TmuxCommandList<'a>) {
         self.options.push_cmds(options);
     }
 
-    fn build(self) -> TmuxCommands<'a> {
+    fn build(self) -> TmuxCommandList<'a> {
         self.options
     }
 }

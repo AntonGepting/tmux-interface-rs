@@ -4,31 +4,32 @@
 //! `tmux_interface` is a library for communication with [TMUX](https://github.com/tmux/tmux) via
 //! CLI.
 //!
-//! On This Page
-//! * [Description](#description)
-//! * [Quick Start](#quick-start)
-//! * [Package Features](#package-features)
-//!     * [Tmux Versions](#tmux-versions)
-//!     * [Tmux Command Alias](#tmux-command-alias)
-//!     * [Repository](#repository)
-//!         * [Local]
-//!         * [Remote]
-//! * [Modules Overview](#modules-overview)
+//! # On This Page
+//! * 1. [Description](#1-description)
+//! * 2. [Quick Start](#2-quick-start)
+//! * 3. [Package Compilation Features](#3-package-compilation-features)
+//!     * 3.1. [Tmux Version](#31-tmux-version)
+//!     * 3.2. [Tmux Command Alias](#32-tmux-command-alias)
+//!     * 3.3. [Repository](#3-3-repository)
+//!         * 3.3.1 [Using Crates Repository](#331-using-crates-repository)
+//!         * 3.3.2 [Using Local Repository](#332-using-local-repository)
+//!         * 3.3.3 [Using Remote Repository](#333-using-remote-repository)
+//! * 4. [Modules Overview](#4-modules-overview)
 //!
-//! # Description
+//! # 1. Description
 //!
-//! Main purpose of the `tmux_interface` library is to implement simple sending and recieving data
-//! mechanisms for intercommunication with `TMUX` only via standard streams (`stdin`, `stdout`).
+//! Main purpose of the `tmux_interface` library is to implement simple sending and receiving data
+//! mechanisms for intercommunication with `TMUX` only via standard streams (`stdin`, `stdout`, `stderr`).
 //!
-//! # Quick Start
+//! # 2. Quick Start
 //!
-//! 1. Add a dependency in your `Cargo.toml`. Versions below `0.1.0` are
+//! 1. Add a dependency in your `Cargo.toml`. Versions below `1.0.0` are
 //!    mostly for development and testing purposes (use them in your projects on
 //!    your own risk, further versions may have different API).
 //!
 //!     ```text
 //!     [dependencies]
-//!     tmux_interface = "0.1.0"
+//!     tmux_interface = "1.0.0"
 //!     ```
 //!
 //! 2. Add extern crate in your source file.
@@ -44,9 +45,7 @@
 //!
 //!     let target_session = "example_1";
 //!
-//!     // ```text
 //!     // tmux new -d -s example_1 ; neww ; splitw -v
-//!     // ```
 //!     Tmux::new()
 //!         .add_command(NewSession::new().detached().session_name(target_session))
 //!         .add_command(NewWindow::new())
@@ -54,9 +53,7 @@
 //!         .output()
 //!         .unwrap();
 //!
-//!     // ```text
 //!     // tmux has -t example_1
-//!     // ```
 //!     let status = Tmux::with_command(HasSession::new().target_session(target_session))
 //!         .status()
 //!         .unwrap()
@@ -64,70 +61,68 @@
 //!
 //!     assert!(status);
 //!
-//!     // ```text
 //!     // tmux kill-session -t example_1
-//!     // ```
 //!     Tmux::with_command(KillSession::new().target_session(target_session))
 //!         .output()
 //!         .unwrap();
 //!
 //!     ```
 //!
-//!
+//! Call chain, data flow
 //! ```text
-//! library in -> build command -> exec command -> recieve output -> parse output -> library out
+//! library in -> build command -> exec command -> receive output -> parse output -> library out
 //! user app -> library in -> ... -> library out -> user app
 //! ```
 //!
-//! # Package Features
+//! # 3. Package Compilation Features
 //!
-//! ## Tmux Version
+//! ## 3.1 Tmux Version
 //!
 //! Different tmux versions may have incompatible CLI changes.
 //! Following versions features are currently supported:
 //!
 //! **Table:** Cargo.toml features, tmux versions list
 //!
-//! | Feature Name  | Tmux Version  | Comment                                     |
-//! |---------------|---------------|---------------------------------------------|
-//! | `tmux_0_8`    | `tmux 0.8`    |                                             |
-//! | `tmux_0_9`    | `tmux 0.9`    |                                             |
-//! | `tmux_1_0`    | `tmux 1.0`    |                                             |
-//! | `tmux_1_1`    | `tmux 1.1`    |                                             |
-//! | `tmux_1_2`    | `tmux 1.2`    |                                             |
-//! | `tmux_1_3`    | `tmux 1.3`    |                                             |
-//! | `tmux_1_4`    | `tmux 1.4`    |                                             |
-//! | `tmux_1_5`    | `tmux 1.5`    |                                             |
-//! | `tmux_1_6`    | `tmux 1.6`    | Ubuntu 11.04 LTS Precise Pangolin, CentOS 6 |
-//! | `tmux_1_7`    | `tmux 1.7`    | Ubuntu 14.04 LTS Trusty Tahr, CentOS 7      |
-//! | `tmux_1_8`    | `tmux 1.8`    |                                             |
-//! | `tmux_1_9`    | `tmux 1.9`    | Debian Jessie                               |
-//! | `tmux_1_9a`   | `tmux 1.9a`   |                                             |
-//! | `tmux_2_0`    | `tmux 2.0`    |                                             |
-//! | `tmux_2_1`    | `tmux 2.1`    | Ubuntu 16.04 LTS Xenial Xerus               |
-//! | `tmux_2_2`    | `tmux 2.2`    |                                             |
-//! | `tmux_2_3`    | `tmux 2.3`    | Debian Stretch                              |
-//! | `tmux_2_4`    | `tmux 2.4`    |                                             |
-//! | `tmux_2_5`    | `tmux 2.5`    |                                             |
-//! | `tmux_2_6`    | `tmux 2.6`    | Ubuntu 18.04 LTS Bionic Beaver              |
-//! | `tmux_2_7`    | `tmux 2.7`    | CentOS 8                                    |
-//! | `tmux_2_8`    | `tmux 2.8`    | Debian Buster                               |
-//! | `tmux_2_9`    | `tmux 2.9`    |                                             |
-//! | `tmux_2_9a`   | `tmux 2.9a`   |                                             |
-//! | `tmux_3_0`    | `tmux 3.0`    |                                             |
-//! | `tmux_3_0a`   | `tmux 3.0a`   | Debian Bullseye                             |
-//! | `tmux_3_1`    | `tmux 3.1`    | Debian experimental                         |
-//! | `tmux_3_1a`   | `tmux 3.1a`   |                                             |
-//! | `tmux_3_1b`   | `tmux 3.1b`   |                                             |
-//! | `tmux_3_1c`   | `tmux 3.1c`   |                                             |
-//! | `tmux_3_2`    | `tmux 3.2`    |                                             |
-//! | `tmux_3_2a`   | `tmux 3.2a`   |                                             |
-//! | `tmux_3_3`    | `tmux 3.3`    |                                             |
-//! | `tmux_3_3a`   | `tmux 3.3a`   |                                             |
-//! |               |               |                                             |
-//! | `tmux_X_X`    | `dev` version |                                             |
-//! | `tmux_stable` | `tmux 2.8`    |                                             |
-//! | `tmux_latest` | `tmux 3.3a`   |                                             |
+//! | Feature Name  | Tmux Version  | CI Tests | Comment                                     |
+//! |---------------|---------------|----------|---------------------------------------------|
+//! | `tmux_0_8`    | `tmux 0.8`    |          |                                             |
+//! | `tmux_0_9`    | `tmux 0.9`    |          |                                             |
+//! | `tmux_1_0`    | `tmux 1.0`    |          |                                             |
+//! | `tmux_1_1`    | `tmux 1.1`    |          |                                             |
+//! | `tmux_1_2`    | `tmux 1.2`    |          |                                             |
+//! | `tmux_1_3`    | `tmux 1.3`    |          |                                             |
+//! | `tmux_1_4`    | `tmux 1.4`    |          |                                             |
+//! | `tmux_1_5`    | `tmux 1.5`    |          |                                             |
+//! | `tmux_1_6`    | `tmux 1.6`    |          | Ubuntu 11.04 LTS Precise Pangolin, CentOS 6 |
+//! | `tmux_1_7`    | `tmux 1.7`    |          | Ubuntu 14.04 LTS Trusty Tahr, CentOS 7      |
+//! | `tmux_1_8`    | `tmux 1.8`    |        x |                                             |
+//! | `tmux_1_9`    | `tmux 1.9`    |        x | Debian Jessie                               |
+//! | `tmux_1_9a`   | `tmux 1.9a`   |        x |                                             |
+//! | `tmux_2_0`    | `tmux 2.0`    |        x |                                             |
+//! | `tmux_2_1`    | `tmux 2.1`    |        x | Ubuntu 16.04 LTS Xenial Xerus               |
+//! | `tmux_2_2`    | `tmux 2.2`    |        x |                                             |
+//! | `tmux_2_3`    | `tmux 2.3`    |        x | Debian Stretch                              |
+//! | `tmux_2_4`    | `tmux 2.4`    |        x |                                             |
+//! | `tmux_2_5`    | `tmux 2.5`    |        x |                                             |
+//! | `tmux_2_6`    | `tmux 2.6`    |        x | Ubuntu 18.04 LTS Bionic Beaver              |
+//! | `tmux_2_7`    | `tmux 2.7`    |        x | CentOS 8                                    |
+//! | `tmux_2_8`    | `tmux 2.8`    |        x | Debian Buster                               |
+//! | `tmux_2_9`    | `tmux 2.9`    |        x |                                             |
+//! | `tmux_2_9a`   | `tmux 2.9a`   |        x |                                             |
+//! | `tmux_3_0`    | `tmux 3.0`    |        x |                                             |
+//! | `tmux_3_0a`   | `tmux 3.0a`   |        x | Debian Bullseye                             |
+//! | `tmux_3_1`    | `tmux 3.1`    |        x | Debian experimental                         |
+//! | `tmux_3_1a`   | `tmux 3.1a`   |        x |                                             |
+//! | `tmux_3_1b`   | `tmux 3.1b`   |        x |                                             |
+//! | `tmux_3_1c`   | `tmux 3.1c`   |        x |                                             |
+//! | `tmux_3_2`    | `tmux 3.2`    |        x |                                             |
+//! | `tmux_3_2a`   | `tmux 3.2a`   |        x |                                             |
+//! | `tmux_3_3`    | `tmux 3.3`    |        x |                                             |
+//! | `tmux_3_3a`   | `tmux 3.3a`   |        x |                                             |
+//! | `tmux_X_X`    |               |        x | tmux: `main` branch; library: `dev` branch  |
+//! |               |               |          |                                             |
+//! | `tmux_stable` | `tmux 3.3`    |          |                                             |
+//! | `tmux_latest` | `tmux 3.3a`   |          |                                             |
 //!
 //!
 //! ```text
@@ -153,7 +148,22 @@
 //! }
 //! ```
 //!
-//! ### Using Local Repository
+//! ## 3.2. Tmux Command Alias
+//!
+//! `cmd_alias` use alias instead of full tmux command name (e.g. `list-sessions` -> `ls`). Enabled by default.
+//!
+//! ## 3.3. Repository
+//!
+//! ### 3.3.1. Using Crates Repository
+//!
+//! ```text
+//! [dependencies]
+//! tmux_interface = {
+//!  version = "0.0.7",
+//! }
+//! ```
+//!
+//! ### 3.3.2. Using Local Repository
 //!
 //! ```text
 //! [dependencies]
@@ -163,7 +173,7 @@
 //! }
 //! ```
 //!
-//! ### Using Remote Repository
+//! ### 3.3.3. Using Remote Repository
 //!
 //! ```text
 //! tmux_interface = {
@@ -172,11 +182,7 @@
 //! }
 //! ```
 //!
-//! ## Tmux Command Alias
-//!
-//! `cmd_alias` use alias instead of full tmux command name (e.g. `list-sessions` -> `ls`). Enabled by default.
-//!
-//! # Modules Overview
+//! # 4. Modules Overview
 //!
 //! * Commands ([`commands`])
 //!     * Clients and Sessions ([`clients_and_sessions`](crate::commands::clients_and_sessions))
@@ -189,6 +195,39 @@
 //!     * Buffers ([`buffers`](crate::commands::buffers))
 //!     * Miscellaneous ([`miscellaneous`](crate::commands::miscellaneous))
 //!     * Common ([`common`](crate::commands::common))
+//!     * ...
+//!
+//!
+//! * Modes
+//!     * Default Mode
+//!     * Control Mode ([`control_mode`])
+//!         * (unimplemented, draft)
+//!     * Copy Mode
+//!         * (unimplemented, draft)
+//!     * Command Mode
+//!         * (unimplemented)
+//!     * Clock Mode
+//!         * (unimplemented)
+//!
+//! * Formats ([`formats`])
+//!     * [`Formats`][crate::formats::Formats]
+//!     * [`FormatsOutput`][crate::formats::FormatsOutput]
+//!     * [`Variable`][crate::formats::Variable]
+//!     * [`VariableOutput`][crate::formats::VariableOutput]
+//!     * ...
+//!
+//! * Options ([`options`])
+//!
+//! * Styles ([`styles`])
+//!     * [`StyleList`][crate::styles::StyleList]
+//!     * [`Style`][crate::styles::Style]
+//!     * ...
+//!
+//! * Target ([`target`])
+//!     * [`TargetSession`]
+//!     * [`TargetWindow`]
+//!     * [`TargetPane`]
+//!     * ...
 //!
 //! * Variables ([`variables`])
 //!     * [`Sessions`](crate::Sessions)
@@ -199,29 +238,18 @@
 //!     * [`Pane`](crate::Pane)
 //!     * ...
 //!
-//! * Formats ([`formats`])
-//!     * [`Formats`][crate::formats::Formats]
-//!     * [`FormatsOutput`][crate::formats::FormatsOutput]
-//!     * [`Variable`][crate::formats::Variable]
-//!     * [`VariableOutput`][crate::formats::VariableOutput]
+//! * Error ([`Error`])
+//!
+//! * ...
 //!
 //!
-//! * Styles ([`styles`])
-//!     * [`StyleList`][crate::styles::StyleList]
-//!     * [`Style`][crate::styles::Style]
-//!
-//! * Target ([`target`])
-//!     * [`TargetSession`]
-//!     * [`TargetWindow`]
-//!     * [`TargetPane`]
-//!
-//! Main structure is [`TmuxCommand`](crate::TmuxCommand) wich has all these wrapper functions implementations.
+//! Main structure is [`TmuxCommand`](crate::TmuxCommand) which has all these wrapper functions implementations.
 //! This goal can be reached by splitting it into two separate tasks:
 //!
 //! 1. Providing wrapper functions for tmux subcommands (which is sending data). Wrapper functions are
 //! structured like in tmux manual in few next categories:
 //!
-//! 2. Parsing functions for tmux output as rust structures (which is recieving data). Parsing function are
+//! 2. Parsing functions for tmux output as rust structures (which is receiving data). Parsing function are
 //! structured by objects they operate with:
 //!
 //! # Conventions
@@ -232,14 +260,17 @@
 //! # Examples
 //!
 //! ```
-//! // use crate::tmux_interface::{AttachSession, NewSession, KillSession, Tmux};
+//! use crate::tmux_interface::{AttachSession, NewSession, KillSession, Tmux};
 //!
-//! // let output = Tmux::new()
-//! //                .add_command(NewSession::new().detached().session_name("new_session_name1"))
-//! //                .add_command(AttachSession::new().target_session("new_session_name1"))
-//! //                .add_command(KillSession::new().target_session("new_session_name1"))
-//! //                .output()
-//! //                .unwrap();
+//! let session_name = "example_2";
+//!
+//! // tmux new -d -n example_2 ; attach -t example_2 ; kill-session -t example_2
+//! let output = Tmux::new()
+//!                 .add_command(NewSession::new().detached().session_name(session_name))
+//!                 .add_command(AttachSession::new().target_session(session_name))
+//!                 .add_command(KillSession::new().target_session(session_name))
+//!                 .output()
+//!                 .unwrap();
 //! ```
 //!
 //! # Examples
@@ -319,37 +350,33 @@
 //!
 //!
 //! ```text
-//! 5. Tmux Objects
-//!  +-----------------+
-//!  | GetServerOption |
-//!  +-----------------+
 //!
+//! 5. Tmux Objects Controller
 //!  +---------+     +-----------+
 //!  | Options |     | Variables |
 //!  +---------+     +-----------+
+//!  ...
 //!
-//! 4. Command Builder
+//! 4. Tmux Objects Getter/Setter
+//!  +-----------------+
+//!  | GetServerOption |
+//!  +-----------------+
+//!  ...
+//!
+//! 3. Command Builder
 //!  +------+     +------------+      +---------------+        +-----+
 //!  | Tmux |     | NewSession |      | AttachSession |        | ... |
 //!  +------+     +------------+      +---------------+        +-----+
 //!
-//! 3. Tmux Command
+//! 2. Tmux Command
 //!  +-------------+                                  +------------+
 //!  | TmuxCommand |                                  | TmuxOutput |
 //!  +-------------+                                  +------------+
-//!  +--------------+
-//!  | TmuxCommands |
-//!  +--------------+
+//!  +-----------------+
+//!  | TmuxCommandList |
+//!  +-----------------+
 //!
-//! 2. cmd_builder library
-//!  +------------------+
-//!  | cmd_builder::Cmd |
-//!  +------------------+
-//!  +----------------------+
-//!  | cmd_builder::CmdList |
-//!  +----------------------+
-//!
-//! 1. Standard library
+//! 1. Standard Library
 //!  +-----------------------+
 //!  | std::process::Command |
 //!  +-----------------------+
@@ -362,17 +389,14 @@
 //!
 //!
 //!
-//!
-//!
 //! # Levels
 //!
 //! Tmux command invocation can be described and accessed on different levels:
 //!
 //! * 0. OS (`fork()`, `CreateProcess`, ... )
 //! * 1. Standard Library ([`std::process::Command`])
-//! * 2. Cmd Builder Library ([`cmd_builder::Cmd`], [`cmd_builder::CmdList`])
-//! * 3. Tmux Interface Library - Command Builder ([`TmuxCommand`], [`TmuxCommands`])
-//! * 4. Tmux Interface Library - Tmux Command Builder ([`Tmux`], [`NewSession`], [`AttachSession`] ... )
+//! * 2. Tmux Interface Library - Command Builder ([`TmuxCommand`], [`TmuxCommandList`])
+//! * 3. Tmux Interface Library - Tmux Command Builder ([`Tmux`], [`NewSession`], [`AttachSession`] ... )
 //!
 //! and thereby:
 //!
@@ -435,7 +459,7 @@
 //!     tmux -2uv new-session -ADX -s my_session
 //!     ```
 //!
-//! * 3. [`TmuxCommand`], [`TmuxCommands`] - just a wrapper around [`cmd_builder::Cmd`] inside `tmux_interface` crate,
+//! * 3. [`TmuxCommand`], [`TmuxCommandList`] - just a wrapper around [`cmd_builder::Cmd`] inside `tmux_interface` crate,
 //! same functionality
 //!
 //!     ### Examples
@@ -465,7 +489,7 @@
 //!     * build tmux commands
 //!     * tmux commands can include binary name and arguments or nor for control mode
 //!     * order of arguments doesn't matter
-//!     * using macroses
+//!     * using macros
 //!
 //!     ### Examples
 //!     ```
@@ -484,7 +508,7 @@
 //!                    .unwrap();
 //!     Tmux::with_command(KillSession::new().target_session("name")).output().unwrap();
 //!     ```
-//!     or using macroses
+//!     or using macros
 //!     ```text
 //!     let output = tmux!("-2", "-u", "-v", new_session!("-A", "-D", "-E", "-s my_session"))
 //!                     .output()
@@ -518,9 +542,6 @@
 //!     ```
 //!
 //!
-
-extern crate cmd_builder;
-
 pub mod commands;
 pub mod control_mode;
 pub mod error;

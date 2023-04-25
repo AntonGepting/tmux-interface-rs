@@ -1,34 +1,98 @@
-// purposes:
-// ```
+// issue 7: Running multiple commands in one invocation
+
+// control mode:
+// ```text
 // start-server; show-options -g
 // ```
-//use tmux_interface::commands::tmux_bin_commands::TmuxBinCommands;
+//
+// default mode:
+// ```text
+// tmux start-server; show-options -g
+// ```
 
-// manual calling and parsing
+// prepare command for execution in control mode
+// next step could be .output() in control mode
 #[test]
-fn issue7_manual() {
-    //let mut cmds = TmuxBinCommands::default();
-    //let start_server = StartServer::new();
-    //let mut show_options = ShowOptions::new();
-    //show_options.value().option("default-terminal");
-    //cmds.push(start_server.build());
-    //cmds.push(show_options.build());
-    //dbg!(&cmds);
-    //let output = cmds.output();
-    //dbg!(&output);
-    //let default_terminal = output.parse()
+fn issue7_control_mode() {
+    use std::borrow::Cow;
+    use tmux_interface::{ShowOptions, StartServer, TmuxCommandList};
+
+    let show_options = ShowOptions::new();
+    #[cfg(feature = "tmux_1_8")]
+    let show_options = show_options.value();
+    #[cfg(feature = "tmux_1_7")]
+    let show_options = show_options.option("default-terminal");
+    let show_options = show_options.build();
+
+    let cmds = TmuxCommandList::new();
+    let cmds = cmds.add_command(StartServer::new().build());
+    let cmds = cmds.add_command(show_options);
+
+    // dbg!(&cmds.to_string());
+
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd1 = "start-server";
+    #[cfg(feature = "cmd_alias")]
+    let cmd1 = "start";
+
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd2 = "show-options";
+    #[cfg(feature = "cmd_alias")]
+    let cmd2 = "show";
+
+    let mut s = Vec::new();
+    s.push(cmd1);
+    s.push(";");
+    s.push(cmd2);
+    #[cfg(feature = "tmux_1_8")]
+    s.push("-v");
+    #[cfg(feature = "tmux_1_7")]
+    s.push("default-terminal");
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(s, cmds.to_vec())
 }
 
+// prepare and execute command in default mode
 #[test]
-fn issue7_com() {
-    //let mut cmds = TmuxBinCommands::default();
-    //let start_server = StartServer::new();
-    //let mut show_options = ShowOptions::new();
-    //show_options.value().option("default-terminal");
-    //cmds.push(start_server.build());
-    //cmds.push(show_options.build());
-    //dbg!(&cmds);
-    //let output = cmds.output();
-    //dbg!(&output);
-    //let default_terminal = output.parse()
+fn issue7_default_mode() {
+    use std::borrow::Cow;
+    use tmux_interface::{ShowOptions, StartServer, Tmux};
+
+    let show_options = ShowOptions::new();
+    #[cfg(feature = "tmux_1_8")]
+    let show_options = show_options.value();
+    #[cfg(feature = "tmux_1_7")]
+    let show_options = show_options.option("default-terminal");
+    let show_options = show_options.build();
+
+    let cmds = Tmux::new();
+    let cmds = cmds.add_command(StartServer::new().build());
+    let cmds = cmds.add_command(show_options);
+    let cmds = cmds.build();
+
+    // dbg!(&cmds.to_string());
+
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd1 = "start-server";
+    #[cfg(feature = "cmd_alias")]
+    let cmd1 = "start";
+
+    #[cfg(not(feature = "cmd_alias"))]
+    let cmd2 = "show-options";
+    #[cfg(feature = "cmd_alias")]
+    let cmd2 = "show";
+
+    let mut s = Vec::new();
+    s.push("tmux");
+    s.push(cmd1);
+    s.push(";");
+    s.push(cmd2);
+    #[cfg(feature = "tmux_1_8")]
+    s.push("-v");
+    #[cfg(feature = "tmux_1_7")]
+    s.push("default-terminal");
+    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+
+    assert_eq!(s, cmds.to_vec())
 }

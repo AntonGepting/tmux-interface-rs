@@ -1,5 +1,5 @@
 use crate::options::*;
-use crate::{SetOptionTr, SetUserOption, TmuxCommand, TmuxCommands};
+use crate::{SetOptionTr, SetUserOption, TmuxCommand, TmuxCommandList};
 use std::borrow::Cow;
 
 pub trait SetServerOptionTr: SetOptionTr + SetUserOption {
@@ -32,7 +32,7 @@ pub trait SetServerOptionTr: SetOptionTr + SetUserOption {
     /// command-alias[] name=value
     /// ```
     #[cfg(feature = "tmux_2_4")]
-    fn command_alias<'a, I, S>(command_alias: Option<I>) -> TmuxCommands<'a>
+    fn command_alias<'a, I, S>(command_alias: Option<I>) -> TmuxCommandList<'a>
     where
         I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
@@ -196,7 +196,7 @@ pub trait SetServerOptionTr: SetOptionTr + SetUserOption {
     /// terminal-features[] string
     /// ```
     #[cfg(feature = "tmux_3_2")]
-    fn terminal_features<'a, I, S>(terminal_features: Option<I>) -> TmuxCommands<'a>
+    fn terminal_features<'a, I, S>(terminal_features: Option<I>) -> TmuxCommandList<'a>
     where
         I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
@@ -211,7 +211,7 @@ pub trait SetServerOptionTr: SetOptionTr + SetUserOption {
     /// terminal-overrides[] string
     /// ```
     #[cfg(feature = "tmux_2_0")]
-    fn terminal_overrides<'a, I, S>(terminal_overrides: Option<I>) -> TmuxCommands<'a>
+    fn terminal_overrides<'a, I, S>(terminal_overrides: Option<I>) -> TmuxCommandList<'a>
     where
         I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
@@ -226,7 +226,7 @@ pub trait SetServerOptionTr: SetOptionTr + SetUserOption {
     /// user-keys[] key
     /// ```
     #[cfg(feature = "tmux_3_0")]
-    fn user_keys<'a, I, S>(user_keys: Option<I>) -> TmuxCommands<'a>
+    fn user_keys<'a, I, S>(user_keys: Option<I>) -> TmuxCommandList<'a>
     where
         I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,

@@ -55,7 +55,7 @@
 //! ```text
 //! ```
 
-use crate::{GetSessionOptionTr, TmuxCommand, TmuxCommands};
+use crate::{GetSessionOptionTr, TmuxCommand, TmuxCommandList};
 use std::borrow::Cow;
 
 pub trait GetSessionOptionsTr<'a, Getter: GetSessionOptionTr> {
@@ -63,7 +63,7 @@ pub trait GetSessionOptionsTr<'a, Getter: GetSessionOptionTr> {
 
     fn push<T: Into<TmuxCommand<'a>>>(&mut self, cmd: T);
 
-    fn into_commands(self) -> TmuxCommands<'a>;
+    fn into_commands(self) -> TmuxCommandList<'a>;
 
     /// ### Manual
     ///

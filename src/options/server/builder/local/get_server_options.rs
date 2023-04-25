@@ -1,8 +1,8 @@
-use crate::{GetServerOption, GetServerOptionsTr, GetUserOptions, TmuxCommand, TmuxCommands};
+use crate::{GetServerOption, GetServerOptionsTr, GetUserOptions, TmuxCommand, TmuxCommandList};
 
 #[derive(Debug)]
 pub struct GetServerOptions<'a> {
-    pub options: TmuxCommands<'a>,
+    pub options: TmuxCommandList<'a>,
 }
 
 impl<'a> GetServerOptionsTr<'a> for GetServerOptions<'a> {
@@ -10,7 +10,7 @@ impl<'a> GetServerOptionsTr<'a> for GetServerOptions<'a> {
 
     fn new() -> Self {
         Self {
-            options: TmuxCommands::new(),
+            options: TmuxCommandList::new(),
         }
     }
 
@@ -18,11 +18,11 @@ impl<'a> GetServerOptionsTr<'a> for GetServerOptions<'a> {
         self.options.push(option);
     }
 
-    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
+    fn push_cmds(&mut self, options: TmuxCommandList<'a>) {
         self.options.push_cmds(options);
     }
 
-    fn build(self) -> TmuxCommands<'a> {
+    fn build(self) -> TmuxCommandList<'a> {
         self.options
     }
 }

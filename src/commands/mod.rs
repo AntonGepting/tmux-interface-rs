@@ -1,6 +1,45 @@
 //! The [`commands`][`crate::commands`] module contains functions for building and executing
 //! tmux commands
 //!
+//! # On This Page
+//! * 1. [Description](#1-description)
+//! * 2. [Quick Start](#2-quick-start)
+//! * 3. [Modules Overview](#4-modules-overview)
+//!
+//! * Command Builder
+//!     * Direct Fields Initialization
+//!     * Direct Instantiating
+//!     * Using Builder Methods
+//!     * Using Macros
+//!     
+//! Direct Initialization of Structure Fields
+//! ```
+//! use tmux_interface::Tmux;
+//!
+//! let mut tmux = Tmux::new();
+//! tmux.verbose_logging = true;
+//!
+//! ```
+//!
+//! ```
+//! use tmux_interface::Tmux;
+//!
+//! let tmux = Tmux {
+//!     verbose_logging: true,
+//!     ..Default::default()
+//! };
+//! ```
+//!
+//! Using Builder Methods
+//!
+//!
+//! * Command Builder
+//!     * One-liner
+//!         * Autonomous
+//!         * Binary
+//!     * Multi-liner
+//!         * Autonomous
+//!         * Binary
 //!
 //! # Tmux Commands
 //!
@@ -47,6 +86,14 @@
 //!     * autonomous
 //!     * binary
 //!
+//!
+//! autonomous/binary - tmux commands can be called from outside of tmux (building one command
+//! sequence with tmux binary name) or from inside of tmux
+//!
+//!
+//! multiple/single - tmux commands can be called as a single one or can be chained (similar as in shell)
+//!
+//!
 //! # Single autonomous tmux command
 //!
 //! Single tmux commands can be separated in two types:
@@ -88,9 +135,9 @@
 //!
 //! # Multiple tmux commands
 //!
-//! And multiple tmux commands can be combinated:
+//! And multiple tmux commands can be combined:
 //!
-//! * muliple tmux commands
+//! * multiple tmux commands
 //!
 //! ## Example
 //!
@@ -99,9 +146,9 @@
 //! ```
 //!
 //! ```
-//! use tmux_interface::TmuxCommands;
+//! use tmux_interface::TmuxCommandList;
 //!
-//! let cmds = TmuxCommands::new();
+//! let cmds = TmuxCommandList::new();
 //! ```
 //!
 //! * multiple tmux binary commands
@@ -113,9 +160,9 @@
 //! ```
 //!
 //! ```
-//! use tmux_interface::{Tmux, TmuxCommands};
+//! use tmux_interface::{Tmux, TmuxCommandList};
 //!
-//! let cmds = Tmux::new().verbose_logging().commands(TmuxCommands::new());
+//! let cmds = Tmux::new().verbose_logging().commands(TmuxCommandList::new());
 //! ```
 //!
 //! # See Also:
@@ -129,14 +176,14 @@ pub mod tmux;
 pub mod tmux_macro;
 
 pub mod tmux_command;
-pub mod tmux_commands;
+pub mod tmux_command_list;
 pub mod tmux_output;
 
 #[cfg(test)]
 #[path = "."]
 mod commands_tests {
+    mod tmux_command_list_tests;
     mod tmux_command_tests;
-    mod tmux_commands_tests;
     mod tmux_tests;
 }
 
@@ -173,7 +220,7 @@ pub use windows_and_panes::*;
 
 pub use tmux::Tmux;
 pub use tmux_command::TmuxCommand;
-pub use tmux_commands::TmuxCommands;
+pub use tmux_command_list::TmuxCommandList;
 pub use tmux_output::TmuxOutput;
 
 // XXX: ?
