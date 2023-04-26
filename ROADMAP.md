@@ -485,6 +485,52 @@ Simlified Architecture Decision Record for strategy and decision making.
       [ ] String - modification (by default?)
       [x] Cow - both
 
+  - Hold enums instead of commands/flags/etc or strings internally?
+      [x] Strings kind (performance pass to std::process::Command, no need to decode)
+      [ ] Enums kind (performance analysis, modification, need to decode in strings
+      before work with std::process::Command)
+
+  - Binary and control mode commands commons?
+      [ ] Separate structs (holding data only needed)
+        `TmuxBin`,`TmuxBinCommand`, `TmuxBinCommands` - holding bin name
+        `TmuxCommand`, `TmuxCommands` - holding only name, env and args
+        (complexity+)
+        ```
+        TmuxBin {
+            env
+            bin
+            args
+        }
+        ```
+        ```
+        TmuxCommand {
+            cmd
+            args
+        }
+        ```
+        ```
+        TmuxBinCommand {
+            tmux: TmuxBin
+            cmd: TmuxCommand
+        }
+        ```
+      [ ] One struct `TmuxCommand` (holding universal data)
+        TmuxCommand, TmuxCommands - holding env, bin, bin args, cmd, cmd args
+        (rel.easy, not elegant, control mode needs binary name once but may be stored
+        multiple times in vec)
+        ```
+        TmuxCommand {
+            env
+            bin
+            bin_args
+            cmd
+            cmd_args
+        }
+        ```
+  - Consuming non consuming builder
+      - [x] -> &mut Self (better for chaining s. rust doc)
+      - [ ] -> Self ()
+
   - trait command methods exec
       [x] no, fields inaccesible directly, only methods set get, implemetation  imol for needed,
       same thing.

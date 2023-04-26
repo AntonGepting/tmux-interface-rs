@@ -18,6 +18,11 @@
 - `fix`
 - `style`
 
+## Recommendations & Conventions
+
+* `where` clause for 2 or more generics ?
+* `assert_eq!(expected, actual)` ?
+
 ## Project Structure
 
 

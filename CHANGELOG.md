@@ -3,6 +3,97 @@
 
 <!--## tmux_interface vX.X.X-->
 
+## tmux_interface v0.3.0
+Massive incompatible changes from latest release.
+Command building and combining mechanisms changed.
+Still can be used very carefully on your own risk.
+Still missing almost all library documentation
+(principles of usage can be partially derived from unit tests or integration tests).
+
+- Refactor: options support (`options` module)
+Command building mechanisms instead of bitflags
+* Getter/Setter structures for building getter/setter option commands
+* Single/Multiple/All getter/setter for options
+* Local/Global options support
+* Controller structures for working with all options structures
+  Submodules:
+    * `ServerOptions`
+    * `SessionOptions`
+      * `GlobalSessionOptions`
+      * `LocalSessionOptions`
+    * `WindowOptions`
+      * `GlobalWindowOptions`
+      * `LocalWindowOptions`
+    * `PaneOptions`
+    * `UserOptions`
+    Control (getter/setter):
+    * `ServerOptionsCtl`
+    * `SessionOptionsCtl`
+      * `GlobalSessionOptionsCtl`
+      * `LocalSessionOptionsCtl`
+    * `WindowOptionsCtl`
+      * `GlobalWindowOptionsCtl`
+      * `LocalWindowOptionsCtl`
+    * `PaneOptionsCtl`
+
+- Feature: add macro feature for commands builder using lazy short flags instead of looking for full methods names (e.g. `new_session!(-s "session_name")`, `kill_session!(-t "session_name)` ... ).
+
+- Refactor/Feature: variables (`variables` module), change from bitflags to format enums
+  Submodules:
+  * `Sessions`
+  * `Windows`
+  * `Panes`
+  Controller (getter):
+  * `SessionsCtl`
+  * `WindowsCtl`
+  * `PanesCtl`
+
+- Feature: `TmuxCommand`, `cmd_builder`
+
+- Feature: add styles partial support (`styles` module)
+(not fully functional yet, preparing for review, contradictions, compatibility with other modules and future development, etc)
+  * `Align`
+  * `Colour`
+  * `Range`
+  * `StyleList`
+  * `Style`
+
+- Feature: add formats partial support (`formats` module). Used mainly for variables module. Allows to build custom format strings for requesting custom tmux variables lists and parsing later in structures.
+  * `Variable` - single Variable as enum with fields for tmux variables (as string e.g. `{#window_active}`)
+  * `Formats` - list with variables and separator (as string e.g. `{#window_active}'{#window_index}'{#...}`)
+  * `VariableOutput` - single pointer to variable or structure field where output should be stored ()
+  * `FormatsOutput` - list with pointers to variables or structure fields where output should be stored ()
+
+- Feature: add tmux control mode support draft (`control_mode` module)
+(not fully functional yet, preparing for review, contradictions, compatibility with other modules and future development, etc)
+
+- Feature: add tmux 3.3 partial support (cargo features: `tmux_3_3`, `tmux_3_3a`)
+- Feature: add tmux 3.2 partial support (cargo features: `tmux_3_2`, `tmux_3_2a`)
+- Feature: add tmux 3.1 partial support (cargo features: `tmux_3_1`, `tmux_3_1a`, `tmux_3_1b`, `tmux_3_1c`)
+
+- Feature(#11): **breaking changes**, switch back to builder pattern for tmux
+  commands.
+
+- **breaking changes**, switch from borrowing to owning builder pattern
+
+- commands are now made more compatible with default and control modes of tmux,
+  binary executable part of command moved to separate struct
+
+- order of given arguments for commands doesn't matter, `.build()` function uses
+  default order of arguments from tmux manual
+
+- fix(#8): fix `ShowOptions` arguments order
+
+- fix(#10): fix typing mistake in structure name, `SelectLayout` struct of
+  `.select_layout()` command
+
+- fix(#9): fix typing mistake in function name, `.background()` method of
+  `.run_shell()` and `if_shell` commands
+
+- refactor: restructuring of modules, submodules, directories, files
+
+- fix: adapt/rework/rewrite integration and unit tests
+
 ## tmux_interface v0.2.1
 - fix #8 set globality before option name in `SessionOption::get_global()`
 
