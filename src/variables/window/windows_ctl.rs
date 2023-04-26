@@ -144,9 +144,3 @@ impl<'a> WindowsCtl<'a> {
         Windows::from_str(&output)
     }
 }
-
-#[test]
-fn get() {
-    let windows = WindowsCtl::default().get_all().unwrap();
-    dbg!(windows);
-}

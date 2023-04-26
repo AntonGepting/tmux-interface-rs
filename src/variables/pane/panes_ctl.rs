@@ -132,9 +132,3 @@ impl<'a> PanesCtl<'a> {
         Panes::from_str(&output)
     }
 }
-
-#[test]
-fn get() {
-    let panes = PanesCtl::default().get_all().unwrap();
-    dbg!(panes);
-}

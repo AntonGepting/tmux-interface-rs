@@ -97,9 +97,3 @@ impl<'a> SessionsCtl<'a> {
         Sessions::from_str(&output)
     }
 }
-
-#[test]
-fn get() {
-    let sessions = SessionsCtl::default().get_all().unwrap();
-    dbg!(sessions);
-}
