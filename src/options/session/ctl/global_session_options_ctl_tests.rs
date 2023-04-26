@@ -1,16 +1,21 @@
 #[test]
-fn get() {
-    use crate::GlobalSessionOptionsCtl;
+fn get_single() {
     #[cfg(feature = "tmux_2_6")]
     use crate::SessionOptionsCtl;
+    use crate::{GlobalSessionOptionsCtl, SessionOptions};
 
     let session_options_ctl = GlobalSessionOptionsCtl::default();
+    #[cfg(feature = "tmux_2_6")]
+    let activity_action = session_options_ctl.get_activity_action().unwrap();
+
+    // let key_table = session_options_ctl.get_key_table().unwrap();
+
+    let origin = SessionOptions::default();
 
     #[cfg(feature = "tmux_2_6")]
-    {
-        let value = session_options_ctl.get_activity_action().unwrap();
-        assert_eq!(value, Some(crate::Action::Other));
-    }
+    assert_eq!(activity_action, origin.activity_action);
+
+    // assert_eq!(key_table, origin.key_table);
 }
 
 #[test]
