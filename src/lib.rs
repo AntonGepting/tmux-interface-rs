@@ -404,7 +404,7 @@
 //!
 //!     ### Examples
 //!
-//!     ```
+//!     ```text
 //!     use std::process::Command;
 //!
 //!     // tmux -2 -uv new-session -ADEd -s example_5_1_1
@@ -434,7 +434,7 @@
 //!     * runtime mechanisms for deciding and building short or long commands
 //!
 //!     ### Examples
-//!     ```
+//!     ```text
 //!     use tmux_interface::TmuxCommand;
 //!
 //!     // new-session -ADEd -s example_5_1_2
@@ -489,7 +489,7 @@
 //!     * using macros
 //!
 //!     ### Examples
-//!     ```
+//!     ```text
 //!     use tmux_interface::{KillSession, NewSession, Tmux};
 //!
 //!     let session_name = "example_5_1_3";
@@ -524,7 +524,7 @@
 //!     **Listing 5.1.3:** build tmux commands using `tmux_interface::{Tmux, NewSession, KillSession} structures`
 //!
 //!
-//!     ```
+//!     ```text
 //!     use tmux_interface::{kill_session, new_session, tmux};
 //!
 //!     let session_name = "example_5_1_4";
