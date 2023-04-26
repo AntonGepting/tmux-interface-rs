@@ -18,4 +18,6 @@ mod variables_window_tests {
     mod window_tests;
     //pub mod window_flag_tests;
     mod windows_tests;
+
+    mod windows_ctl_tests;
 }

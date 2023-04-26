@@ -18,4 +18,6 @@ mod variables_session_tests {
     mod session_stack_tests;
     mod session_tests;
     mod sessions_tests;
+
+    mod sessions_ctl_tests;
 }

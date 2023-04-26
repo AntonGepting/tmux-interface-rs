@@ -7,9 +7,10 @@ fn get() {
     let session_options_ctl = GlobalSessionOptionsCtl::default();
 
     #[cfg(feature = "tmux_2_6")]
-    let value = session_options_ctl.get_activity_action().unwrap();
-
-    // assert_eq!(value, Some(crate::Action::Other));
+    {
+        let value = session_options_ctl.get_activity_action().unwrap();
+        assert_eq!(value, Some(crate::Action::Other));
+    }
 }
 
 #[test]

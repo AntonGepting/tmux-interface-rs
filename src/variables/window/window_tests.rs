@@ -127,7 +127,6 @@ fn parse1() {
         "0",
     ];
     let window_str = window_vec.join("'");
-    //println!("{}", window_str);
 
     let window = Window::from_str(&window_str).unwrap();
     #[cfg(feature = "tmux_1_7")]

@@ -28,7 +28,6 @@ pub trait SessionOptionsCtl<'a> {
     ///
     /// let session_options = LocalSessionOptionsCtl::default().get_all().unwrap();
     ///
-    /// println!("{}", session_options);
     /// ```
     fn get_all(&self) -> Result<SessionOptions<'a>, Error> {
         Self::get_all_ext(self.target(), self.invoker())
