@@ -10,7 +10,7 @@ fn get_single() {
 
     // let key_table = session_options_ctl.get_key_table().unwrap();
 
-    let origin = SessionOptions::default();
+    let origin = SessionOptions::new();
 
     #[cfg(feature = "tmux_2_6")]
     assert_eq!(activity_action, origin.activity_action);
