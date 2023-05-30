@@ -39,11 +39,7 @@ pub fn option_array_to_string<S: fmt::Display>(
     }
 }
 
-pub fn array_insert<'a>(
-    v: &mut Option<Vec<Cow<'a, str>>>,
-    i: Option<usize>,
-    value: Option<String>,
-) {
+pub fn array_insert(v: &mut Option<Vec<Cow<'_, str>>>, i: Option<usize>, value: Option<String>) {
     if let Some(i) = i {
         match value {
             Some(data) => v.get_or_insert(Vec::new()).insert(i, data.into()),
@@ -53,7 +49,7 @@ pub fn array_insert<'a>(
 }
 
 pub fn cow_parse<'a>(value: Option<&str>) -> Option<Cow<'a, str>> {
-    value.and_then(|s| Some(Cow::Owned(s.into())))
+    value.map(|s| Cow::Owned(s.into()))
 }
 
 // split string in 3 parts, name, index (if option is an array) and value
@@ -61,10 +57,10 @@ pub fn cow_parse<'a>(value: Option<&str>) -> Option<Cow<'a, str>> {
 pub fn get_parts(s: &str) -> Option<(&str, Option<usize>, Option<&str>)> {
     let v: Vec<&str> = s.trim().splitn(2, SEPARATOR).collect();
     let value = v.get(1).copied();
-    match v.get(0) {
+    match v.first() {
         Some(name) => {
             let v: Vec<&str> = name.split(|c| c == '[' || c == ']').collect();
-            match v.get(0) {
+            match v.first() {
                 Some(name) => {
                     let index = v.get(1).and_then(|i| i.parse().ok());
                     Some((name, index, value))

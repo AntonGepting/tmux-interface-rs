@@ -202,8 +202,8 @@ impl<'a> RefreshClient<'a> {
     ) -> Self {
         self.subscribe = Some(Subscribe {
             name: name.into(),
-            what: what,
-            format: format,
+            what,
+            format,
         });
         self
     }

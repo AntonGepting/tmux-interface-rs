@@ -10,13 +10,13 @@ pub enum Status {
     On,
     Off,
     #[cfg(feature = "tmux_2_9")]
-    _2,
+    TwoRows,
     #[cfg(feature = "tmux_2_9")]
-    _3,
+    ThreeRows,
     #[cfg(feature = "tmux_2_9")]
-    _4,
+    FourRows,
     #[cfg(feature = "tmux_2_9")]
-    _5,
+    FiveRows,
 }
 
 #[cfg(feature = "tmux_0_8")]
@@ -28,13 +28,13 @@ impl FromStr for Status {
             ON => Ok(Self::On),
             OFF => Ok(Self::Off),
             #[cfg(feature = "tmux_2_9")]
-            _2 => Ok(Self::_2),
+            NUMBER_2 => Ok(Self::TwoRows),
             #[cfg(feature = "tmux_2_9")]
-            _3 => Ok(Self::_3),
+            NUMBER_3 => Ok(Self::ThreeRows),
             #[cfg(feature = "tmux_2_9")]
-            _4 => Ok(Self::_4),
+            NUMBER_4 => Ok(Self::FourRows),
             #[cfg(feature = "tmux_2_9")]
-            _5 => Ok(Self::_5),
+            NUMBER_5 => Ok(Self::FiveRows),
             _ => Err(Error::ParseStatus),
         }
     }
@@ -47,13 +47,13 @@ impl fmt::Display for Status {
             Self::On => write!(f, "{}", ON),
             Self::Off => write!(f, "{}", OFF),
             #[cfg(feature = "tmux_2_9")]
-            Self::_2 => write!(f, "{}", _2),
+            Self::TwoRows => write!(f, "{}", NUMBER_2),
             #[cfg(feature = "tmux_2_9")]
-            Self::_3 => write!(f, "{}", _3),
+            Self::ThreeRows => write!(f, "{}", NUMBER_3),
             #[cfg(feature = "tmux_2_9")]
-            Self::_4 => write!(f, "{}", _4),
+            Self::FourRows => write!(f, "{}", NUMBER_4),
             #[cfg(feature = "tmux_2_9")]
-            Self::_5 => write!(f, "{}", _5),
+            Self::FiveRows => write!(f, "{}", NUMBER_5),
         }
     }
 }

@@ -1,9 +1,9 @@
 use crate::options::{GetLocalWindowOption, GetUserOptions, GetWindowOptionsTr};
-use crate::{TmuxCommand, TmuxCommandList};
+use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
 pub struct GetLocalWindowOptions<'a> {
-    pub options: TmuxCommandList<'a>,
+    pub options: TmuxCommands<'a>,
 }
 
 // XXX: both are same, optimize
@@ -13,7 +13,7 @@ impl<'a> GetWindowOptionsTr<'a, GetLocalWindowOption> for GetLocalWindowOptions<
         Self: Sized,
     {
         Self {
-            options: TmuxCommandList::new(),
+            options: TmuxCommands::new(),
         }
     }
 
@@ -21,7 +21,7 @@ impl<'a> GetWindowOptionsTr<'a, GetLocalWindowOption> for GetLocalWindowOptions<
         self.options.push(cmd.into())
     }
 
-    fn into_commands(self) -> TmuxCommandList<'a> {
+    fn into_commands(self) -> TmuxCommands<'a> {
         self.options
     }
 }

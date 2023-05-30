@@ -1,5 +1,6 @@
 use crate::{Error, Window};
 use std::ops::Index;
+use std::str::FromStr;
 
 #[derive(Default, Clone, PartialEq, Debug)]
 pub struct Windows(pub Vec<Window>);
@@ -21,6 +22,18 @@ impl Index<usize> for Windows {
     }
 }
 
+impl FromStr for Windows {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Error> {
+        let mut windows = Windows::new();
+        for line in s.lines() {
+            windows.push(Window::from_str(line)?);
+        }
+        Ok(windows)
+    }
+}
+
 impl Windows {
     pub fn new() -> Self {
         Self(Vec::new())
@@ -28,13 +41,5 @@ impl Windows {
 
     pub fn push(&mut self, window: Window) {
         self.0.push(window);
-    }
-
-    pub fn from_str<S: AsRef<str>>(windows_str: S) -> Result<Self, Error> {
-        let mut windows = Windows::new();
-        for line in windows_str.as_ref().lines() {
-            windows.push(Window::from_str(line)?);
-        }
-        Ok(windows)
     }
 }

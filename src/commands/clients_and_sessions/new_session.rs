@@ -195,7 +195,7 @@ impl<'a> NewSession<'a> {
     /// `[-f flags]` - sets a comma-separated list of client flags
     #[cfg(feature = "tmux_3_2")]
     pub fn flags(mut self, flags: ClientFlags) -> Self {
-        self.flags = Some(flags.into());
+        self.flags = Some(flags);
         self
     }
 
@@ -230,14 +230,14 @@ impl<'a> NewSession<'a> {
     /// `[-x width]` - specify a different width
     #[cfg(feature = "tmux_1_6")]
     pub fn width(mut self, width: usize) -> Self {
-        self.width = Some(width.into());
+        self.width = Some(width);
         self
     }
 
     /// `[-y height]` - specify a different height
     #[cfg(feature = "tmux_1_6")]
     pub fn height(mut self, height: usize) -> Self {
-        self.height = Some(height.into());
+        self.height = Some(height);
         self
     }
 

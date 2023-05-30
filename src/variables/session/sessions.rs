@@ -1,5 +1,6 @@
 use crate::{Error, Session};
 use std::ops::Index;
+use std::str::FromStr;
 
 #[derive(Default, Clone, PartialEq, Debug)]
 pub struct Sessions(pub Vec<Session>);
@@ -21,6 +22,18 @@ impl Index<usize> for Sessions {
     }
 }
 
+impl FromStr for Sessions {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Error> {
+        let mut sessions = Sessions::new();
+        for line in s.lines() {
+            sessions.push(Session::from_str(line)?);
+        }
+        Ok(sessions)
+    }
+}
+
 impl Sessions {
     pub fn new() -> Self {
         Self(Vec::new())
@@ -33,14 +46,6 @@ impl Sessions {
     //let sessions_str = String::from_utf8_lossy(&output.0.stdout.as_slice());
     //Sessions::from_str(&sessions_str, bitflags)
     //}
-
-    pub fn from_str<S: AsRef<str>>(sessions_str: S) -> Result<Self, Error> {
-        let mut sessions = Sessions::new();
-        for line in sessions_str.as_ref().lines() {
-            sessions.push(Session::from_str(line)?);
-        }
-        Ok(sessions)
-    }
 }
 
 //#[cfg(feature = "tmux_2_1")]

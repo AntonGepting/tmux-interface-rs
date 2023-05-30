@@ -1,6 +1,7 @@
 use crate::variables::window::window::WINDOW_VARS_SEPARATOR;
 use crate::{Error, Formats, ListWindows, Tmux, TmuxCommand, TmuxOutput, Windows};
 use std::borrow::Cow;
+use std::str::FromStr;
 
 // trait top level options, then server session window pane
 pub struct WindowsCtl<'a> {

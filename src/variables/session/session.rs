@@ -2,6 +2,7 @@ use crate::Error;
 use crate::FormatsOutput;
 #[cfg(feature = "tmux_2_5")]
 use crate::SessionStack;
+use std::str::FromStr;
 
 // XXX: number of all flags, needed for array init
 // NOTE: variables were first intoduced in tmux 1.6
@@ -86,12 +87,10 @@ pub struct Session {
     pub windows: Option<usize>,
 }
 
-impl Session {
-    pub fn new() -> Self {
-        Default::default()
-    }
+impl FromStr for Session {
+    type Err = Error;
 
-    pub fn from_str<S: AsRef<str>>(s: S) -> Result<Self, Error> {
+    fn from_str(s: &str) -> Result<Self, Error> {
         let mut session = Session::new();
         let mut format = FormatsOutput::new();
         format.separator(':');
@@ -145,8 +144,14 @@ impl Session {
         #[cfg(feature = "tmux_1_6")]
         format.session_windows(&mut session.windows);
 
-        FormatsOutput::from_string_ext(s.as_ref(), &mut format);
+        FormatsOutput::from_string_ext(s, &mut format);
         Ok(session)
+    }
+}
+
+impl Session {
+    pub fn new() -> Self {
+        Default::default()
     }
 
     // XXX: wrapper with format generating and result parsing using callback

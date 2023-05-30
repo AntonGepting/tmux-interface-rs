@@ -1,6 +1,6 @@
 use crate::options::SetOptionTr;
 use crate::options::*;
-use crate::{Action, Activity, DetachOnDestroy, Status, TmuxCommand, TmuxCommandList};
+use crate::{Action, Activity, DetachOnDestroy, Status, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 
 // NOTE: method avoiding names like set_set_clipboard
@@ -798,7 +798,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
     /// status-format[] format
     /// ```
     #[cfg(feature = "tmux_2_9")]
-    fn status_format<'a, T, I, S>(target: Option<T>, format: Option<I>) -> TmuxCommandList<'a>
+    fn status_format<'a, T, I, S>(target: Option<T>, format: Option<I>) -> TmuxCommands<'a>
     where
         T: Into<Cow<'a, str>> + Clone,
         I: IntoIterator<Item = S>,
@@ -1088,10 +1088,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
     /// update-environment[] variable
     /// ```
     #[cfg(feature = "tmux_1_0")]
-    fn update_environment<'a, T, I, S>(
-        target: Option<T>,
-        variable: Option<I>,
-    ) -> TmuxCommandList<'a>
+    fn update_environment<'a, T, I, S>(target: Option<T>, variable: Option<I>) -> TmuxCommands<'a>
     where
         T: Into<Cow<'a, str>> + Clone,
         I: IntoIterator<Item = S>,
@@ -1107,7 +1104,7 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
     /// user-keys[] key
     /// ```
     #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
-    fn user_keys<'a, T, I, S>(target: Option<T>, key: Option<I>) -> TmuxCommandList<'a>
+    fn user_keys<'a, T, I, S>(target: Option<T>, key: Option<I>) -> TmuxCommands<'a>
     where
         T: Into<Cow<'a, str>> + Clone,
         I: IntoIterator<Item = S>,

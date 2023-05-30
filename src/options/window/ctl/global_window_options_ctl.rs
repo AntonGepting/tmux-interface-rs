@@ -32,10 +32,7 @@ impl<'a> GlobalWindowOptionsCtl<'a> {
     }
 
     pub fn with_invoker(invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>) -> Self {
-        Self {
-            invoker,
-            ..Default::default()
-        }
+        Self { invoker }
     }
 }
 

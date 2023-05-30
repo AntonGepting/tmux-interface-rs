@@ -62,8 +62,8 @@ pub enum Style {
 impl fmt::Display for Style {
     fn fmt<'a>(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s: String = match self {
-            Self::Fg(colour) => format!("fg={}", colour.to_string()),
-            Self::Bg(colour) => format!("bg={}", colour.to_string()),
+            Self::Fg(colour) => format!("fg={}", colour),
+            Self::Bg(colour) => format!("bg={}", colour),
             // right name: None
             Self::NoStyle => "none".to_string(),
             Self::Acs => "acs".to_string(),
@@ -96,14 +96,14 @@ impl fmt::Display for Style {
             Self::NoDottedUnderscore => "nodotted-underscore".to_string(),
             Self::DashedUnderscore => "dashed-underscore".to_string(),
             Self::NoDashedUnderscore => "nodashed-underscore".to_string(),
-            Self::Align(align) => format!("align={}", align.to_string()),
+            Self::Align(align) => format!("align={}", align),
             Self::NoAlign => "noalign".to_string(),
-            Self::Fill(colour) => format!("fill={}", colour.to_string()),
-            Self::List(list) => format!("list={}", list.to_string()),
+            Self::Fill(colour) => format!("fill={}", colour),
+            Self::List(list) => format!("list={}", list),
             Self::NoList => "nolist".to_string(),
             Self::PushDefault => "push-default".to_string(),
             Self::PopDefault => "pop-default".to_string(),
-            Self::Range(range) => format!("range={}", range.to_string()),
+            Self::Range(range) => format!("range={}", range),
             Self::NoRange => "norange".to_string(),
         };
         write!(f, "{}", s)

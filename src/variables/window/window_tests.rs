@@ -12,6 +12,7 @@ fn show_generated_struct() {
 #[test]
 fn parse1() {
     use crate::Window;
+    use std::str::FromStr;
 
     let window_vec = vec![
         // window_active
@@ -137,6 +138,7 @@ fn parse1() {
 #[test]
 fn parse2() {
     use crate::Window;
+    use std::str::FromStr;
 
     let window_vec = vec![
         // window_active
@@ -263,6 +265,7 @@ fn parse2() {
 #[test]
 fn parse3() {
     use crate::Window;
+    use std::str::FromStr;
 
     let window_vec = vec![
         // window_active
@@ -389,6 +392,7 @@ fn parse3() {
 #[test]
 fn parse4() {
     use crate::Window;
+    use std::str::FromStr;
 
     let window_vec = vec![
         // window_active
@@ -513,6 +517,7 @@ fn parse4() {
 #[test]
 fn parse5() {
     use crate::Window;
+    use std::str::FromStr;
 
     let window_vec = vec![
         // window_active
@@ -637,6 +642,7 @@ fn parse5() {
 #[test]
 fn parse6() {
     use crate::Window;
+    use std::str::FromStr;
 
     let window_vec = vec![
         // window_active

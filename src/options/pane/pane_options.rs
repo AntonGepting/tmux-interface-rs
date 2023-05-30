@@ -118,7 +118,7 @@ impl<'a> PaneOptions<'a> {
     /// ```
     #[cfg(feature = "tmux_3_0")]
     pub fn allow_rename(mut self, allow_rename: Option<Switch>) -> Self {
-        self.allow_rename = allow_rename.map(|s| s.into());
+        self.allow_rename = allow_rename;
         self
     }
 
@@ -128,7 +128,7 @@ impl<'a> PaneOptions<'a> {
     /// ```
     #[cfg(feature = "tmux_3_0")]
     pub fn alternate_screen(mut self, alternate_screen: Option<Switch>) -> Self {
-        self.alternate_screen = alternate_screen.map(|s| s.into());
+        self.alternate_screen = alternate_screen;
         self
     }
 
@@ -143,7 +143,7 @@ impl<'a> PaneOptions<'a> {
     /// ```
     #[cfg(feature = "tmux_3_0")]
     pub fn remain_on_exit(mut self, remain_on_exit: Option<RemainOnExit>) -> Self {
-        self.remain_on_exit = remain_on_exit.map(|s| s.into());
+        self.remain_on_exit = remain_on_exit;
         self
     }
 
@@ -176,7 +176,7 @@ impl<'a> PaneOptions<'a> {
     /// ```
     #[cfg(feature = "tmux_3_2")]
     pub fn synchronize_panes(mut self, synchronize_panes: Option<Switch>) -> Self {
-        self.synchronize_panes = synchronize_panes.map(|s| s.into());
+        self.synchronize_panes = synchronize_panes;
         self
     }
 }

@@ -13,6 +13,7 @@ fn parse() {
     use crate::Session;
     #[cfg(feature = "tmux_2_5")]
     use crate::SessionStack;
+    use std::str::FromStr;
 
     let session_vec = vec![
         // session_activity

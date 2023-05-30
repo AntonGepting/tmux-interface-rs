@@ -57,11 +57,11 @@ fn example2() {
 // separate commands
 #[test]
 fn example2_commands() {
-    use tmux_interface::{HasSession, KillSession, NewSession, TmuxCommandList};
+    use tmux_interface::{HasSession, KillSession, NewSession, TmuxCommands};
 
     let target_session = "example2";
 
-    let mut cmds = TmuxCommandList::new();
+    let mut cmds = TmuxCommands::new();
     cmds.push(NewSession::new().detached().session_name(target_session));
     cmds.push(HasSession::new().target_session(target_session));
     cmds.push(KillSession::new().target_session(target_session));

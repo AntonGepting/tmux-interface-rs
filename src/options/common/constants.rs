@@ -23,13 +23,13 @@ pub const BOTH: &str = "both";
 pub const NO_DETACHED: &str = "no-detached";
 
 #[cfg(feature = "tmux_2_9")]
-pub const _2: &str = "2";
+pub const NUMBER_2: &str = "2";
 #[cfg(feature = "tmux_2_9")]
-pub const _3: &str = "3";
+pub const NUMBER_3: &str = "3";
 #[cfg(feature = "tmux_2_9")]
-pub const _4: &str = "4";
+pub const NUMBER_4: &str = "4";
 #[cfg(feature = "tmux_2_9")]
-pub const _5: &str = "5";
+pub const NUMBER_5: &str = "5";
 
 #[cfg(feature = "tmux_1_0")]
 pub const LEFT: &str = "left";

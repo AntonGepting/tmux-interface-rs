@@ -218,8 +218,7 @@ impl<'a> ServerOptions<'a> {
         I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
     {
-        self.command_alias =
-            command_alias.and_then(|v| Some(v.into_iter().map(|s| s.into()).collect()));
+        self.command_alias = command_alias.map(|v| v.into_iter().map(|s| s.into()).collect());
         self
     }
 
@@ -380,7 +379,7 @@ impl<'a> ServerOptions<'a> {
         S: Into<Cow<'a, str>>,
     {
         self.terminal_features =
-            terminal_features.and_then(|v| Some(v.into_iter().map(|s| s.into()).collect()));
+            terminal_features.map(|v| v.into_iter().map(|s| s.into()).collect());
         self
     }
 
@@ -397,7 +396,7 @@ impl<'a> ServerOptions<'a> {
         S: Into<Cow<'a, str>>,
     {
         self.terminal_overrides =
-            terminal_overrides.and_then(|v| Some(v.into_iter().map(|s| s.into()).collect()));
+            terminal_overrides.map(|v| v.into_iter().map(|s| s.into()).collect());
         self
     }
 
@@ -413,7 +412,7 @@ impl<'a> ServerOptions<'a> {
         I: IntoIterator<Item = S>,
         S: Into<Cow<'a, str>>,
     {
-        self.user_keys = user_keys.and_then(|v| Some(v.into_iter().map(|s| s.into()).collect()));
+        self.user_keys = user_keys.map(|v| v.into_iter().map(|s| s.into()).collect());
         self
     }
 

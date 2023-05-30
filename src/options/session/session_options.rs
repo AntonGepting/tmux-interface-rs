@@ -1143,7 +1143,7 @@ impl<'a> SessionOptions<'a> {
 
     #[cfg(feature = "tmux_1_0")]
     pub fn status_right_length(mut self, status_right_length: Option<usize>) -> Self {
-        self.status_right_length = status_right_length.map(|s| s.into());
+        self.status_right_length = status_right_length;
         self
     }
 

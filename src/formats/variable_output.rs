@@ -601,7 +601,7 @@ impl<'a> VariableOutput<'a> {
     }
 
     fn parse_option_string(s: &str) -> Option<String> {
-        if s.len() > 0 {
+        if !s.is_empty() {
             Some(s.to_string())
         } else {
             None

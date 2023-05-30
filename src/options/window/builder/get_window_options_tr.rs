@@ -1,4 +1,4 @@
-use crate::{GetWindowOptionTr, TmuxCommand, TmuxCommandList};
+use crate::{GetWindowOptionTr, TmuxCommand, TmuxCommands};
 use std::borrow::Cow;
 
 pub trait GetWindowOptionsTr<'a, Getter: GetWindowOptionTr> {
@@ -6,7 +6,7 @@ pub trait GetWindowOptionsTr<'a, Getter: GetWindowOptionTr> {
 
     fn push<T: Into<TmuxCommand<'a>>>(&mut self, cmd: T);
 
-    fn into_commands(self) -> TmuxCommandList<'a>;
+    fn into_commands(self) -> TmuxCommands<'a>;
 
     /// ### Manual
     ///

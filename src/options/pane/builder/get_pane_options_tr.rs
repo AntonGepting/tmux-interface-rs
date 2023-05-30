@@ -1,4 +1,4 @@
-use crate::{GetPaneOption, GetPaneOptionTr, TmuxCommand, TmuxCommandList};
+use crate::{GetPaneOption, GetPaneOptionTr, TmuxCommand, TmuxCommands};
 
 use std::borrow::Cow;
 // XXX: add all() method?
@@ -9,7 +9,7 @@ pub trait GetPaneOptionsTr<'a> {
 
     fn push(&mut self, option: TmuxCommand<'a>);
 
-    fn push_cmds(&mut self, options: TmuxCommandList<'a>);
+    fn push_cmds(&mut self, options: TmuxCommands<'a>);
 
     /// ### Manual
     ///
@@ -111,5 +111,5 @@ pub trait GetPaneOptionsTr<'a> {
         self
     }
 
-    fn build(self) -> TmuxCommandList<'a>;
+    fn build(self) -> TmuxCommands<'a>;
 }

@@ -1,4 +1,4 @@
-use crate::{GetServerOptionTr, TmuxCommand, TmuxCommandList};
+use crate::{GetServerOptionTr, TmuxCommand, TmuxCommands};
 
 pub trait GetServerOptionsTr<'a> {
     type Getter: GetServerOptionTr;
@@ -7,7 +7,7 @@ pub trait GetServerOptionsTr<'a> {
 
     fn push(&mut self, option: TmuxCommand<'a>);
 
-    fn push_cmds(&mut self, options: TmuxCommandList<'a>);
+    fn push_cmds(&mut self, options: TmuxCommands<'a>);
 
     /// ### Manual
     ///
@@ -309,5 +309,5 @@ pub trait GetServerOptionsTr<'a> {
         self
     }
 
-    fn build(self) -> TmuxCommandList<'a>;
+    fn build(self) -> TmuxCommands<'a>;
 }

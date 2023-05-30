@@ -1,6 +1,7 @@
 use crate::variables::pane::pane::PANE_VARS_SEPARATOR;
 use crate::{Error, Formats, ListPanes, Panes, Tmux, TmuxCommand, TmuxOutput};
 use std::borrow::Cow;
+use std::str::FromStr;
 
 // trait top level options, then server session window pane
 pub struct PanesCtl<'a> {

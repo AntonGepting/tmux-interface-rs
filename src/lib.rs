@@ -193,7 +193,7 @@
 //!     * Miscellaneous ([`miscellaneous`](crate::commands::miscellaneous))
 //!     * ...
 //!     * Common ([`common`](crate::commands::common))
-//!     * TmuxCommand ([`TmuxCommand`]), TmuxCommandList ([`TmuxCommandList`])
+//!     * TmuxCommand ([`TmuxCommand`]), TmuxCommands ([`TmuxCommands`])
 //!     * Tmux ([`Tmux`])
 //!     * ...
 //!
@@ -268,7 +268,7 @@
 //!  | TmuxCommand |                  | TmuxOutput |
 //!  +-------------+                  +------------+
 //!  +-----------------+
-//!  | TmuxCommandList |
+//!  | TmuxCommands |
 //!  +-----------------+
 //!
 //! 1. Standard Library
@@ -324,7 +324,7 @@
 //!     ```
 //!     **Listing 5.1.1:** build tmux commands using `std::process::Command`
 //!
-//! * 2. [`TmuxCommand`], [`TmuxCommandList`] - custom command abstraction
+//! * 2. [`TmuxCommand`], [`TmuxCommands`] - custom command abstraction
 //!     * additional functionality for [`std::process::Command`]
 //!     * allows to store additional information about commands such as:
 //!         * command alias (`new`), beside command name (`new-session`)

@@ -20,6 +20,7 @@ fn bool() {
 #[test]
 fn parse() {
     use crate::Pane;
+    use std::str::FromStr;
 
     //let pane_str = "1'1'1'1'1'63'bash'/home/user'0''1'64'%0'0'0'0'0'0'0''1945'0'176'''0'8,16,24,32,40,48,56,64,72,80,88,96,104,112,120,128,136,144,152,160,168,176'asus'0'/dev/pts/2'177";
 
@@ -153,6 +154,7 @@ fn bitflag_operations() {
 #[test]
 fn parse2() {
     use crate::Pane;
+    use std::str::FromStr;
 
     let origin = Pane {
         #[cfg(feature = "tmux_1_6")]

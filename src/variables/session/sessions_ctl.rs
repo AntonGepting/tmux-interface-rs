@@ -1,4 +1,5 @@
 use crate::{Error, Formats, ListSessions, Sessions, Tmux, TmuxCommand, TmuxOutput};
+use std::str::FromStr;
 
 // trait top level options, then server session window pane
 pub struct SessionsCtl<'a> {

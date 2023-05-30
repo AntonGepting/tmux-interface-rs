@@ -3,7 +3,7 @@
 //
 use crate::{
     Action, Activity, DetachOnDestroy, SetSessionOptionTr, Status, StatusJustify, StatusKeys,
-    StatusPosition, Switch, TmuxCommand, TmuxCommandList,
+    StatusPosition, Switch, TmuxCommand, TmuxCommands,
 };
 use std::borrow::Cow;
 
@@ -14,7 +14,7 @@ pub trait SetSessionOptionsTr<'a> {
 
     fn push(&mut self, option: TmuxCommand<'a>);
 
-    fn push_cmds(&mut self, options: TmuxCommandList<'a>);
+    fn push_cmds(&mut self, options: TmuxCommands<'a>);
 
     /// ### Manual
     ///
@@ -1392,5 +1392,5 @@ pub trait SetSessionOptionsTr<'a> {
         self
     }
 
-    fn build(self) -> TmuxCommandList<'a>;
+    fn build(self) -> TmuxCommands<'a>;
 }

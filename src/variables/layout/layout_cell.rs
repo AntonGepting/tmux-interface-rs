@@ -2,17 +2,12 @@ use crate::Error;
 use std::str::Chars;
 use std::str::FromStr;
 
-#[derive(PartialEq, Debug, Clone)]
+#[derive(PartialEq, Default, Debug, Clone)]
 pub enum LayoutType {
     LeftRight,
     TopBottom,
+    #[default]
     WindowPane,
-}
-
-impl Default for LayoutType {
-    fn default() -> LayoutType {
-        LayoutType::WindowPane
-    }
 }
 
 impl FromStr for LayoutCell {

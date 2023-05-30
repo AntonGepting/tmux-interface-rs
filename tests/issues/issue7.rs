@@ -15,7 +15,7 @@
 #[test]
 fn issue7_control_mode() {
     use std::borrow::Cow;
-    use tmux_interface::{ShowOptions, StartServer, TmuxCommandList};
+    use tmux_interface::{ShowOptions, StartServer, TmuxCommands};
 
     let show_options = ShowOptions::new();
     #[cfg(feature = "tmux_1_8")]
@@ -24,7 +24,7 @@ fn issue7_control_mode() {
     let show_options = show_options.option("default-terminal");
     let show_options = show_options.build();
 
-    let cmds = TmuxCommandList::new();
+    let cmds = TmuxCommands::new();
     let cmds = cmds.add_command(StartServer::new().build());
     let cmds = cmds.add_command(show_options);
 

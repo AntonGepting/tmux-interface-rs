@@ -5,7 +5,7 @@ use std::str::FromStr;
 
 const SEPARATOR: &str = ":";
 
-const _256: &str = "256";
+const NUMBER_256: &str = "256";
 const CLIPBOARD: &str = "clipboard";
 const CCOLOUR: &str = "ccolour";
 const CSTYLE: &str = "cstyle";
@@ -26,7 +26,7 @@ pub struct TerminalFeatures<'a> {
     /// terminal type pattern (matched using fnmatch(3))
     pub terminal_type: Cow<'a, str>,
     /// Supports 256 colours with the SGR escape sequences.
-    pub _256: bool,
+    pub colours256: bool,
     /// Allows setting the system clipboard.
     pub clipboard: bool,
     /// Allows setting the cursor colour.
@@ -60,8 +60,8 @@ pub struct TerminalFeatures<'a> {
 impl<'a> fmt::Display for TerminalFeatures<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut v = Vec::new();
-        if self._256 {
-            v.push(_256);
+        if self.colours256 {
+            v.push(NUMBER_256);
         }
         if self.clipboard {
             v.push(CLIPBOARD);
@@ -125,7 +125,7 @@ impl<'a> TerminalFeatures<'a> {
     }
 
     pub fn _256(&mut self, flag: bool) -> &mut Self {
-        self._256 = flag;
+        self.colours256 = flag;
         self
     }
 
@@ -218,7 +218,7 @@ impl<'a> FromStr for TerminalFeatures<'a> {
 
         for feature in v {
             match feature {
-                _256 => tf._256 = true,
+                NUMBER_256 => tf.colours256 = true,
                 CLIPBOARD => tf.clipboard = true,
                 CCOLOUR => tf.ccolour = true,
                 CSTYLE => tf.cstyle = true,

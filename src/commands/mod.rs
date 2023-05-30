@@ -51,8 +51,8 @@
 //! ```
 //!
 //! * [`tmux`] - tmux binary command and it's arguments
-//! * [`tmux_command`] - wrapper for [`crate::cmd_builder::Cmd`] type
-//! * [`tmux_commands`] - wrapper for [`crate::cmd_builder::CmdList`] type
+//! * [`tmux_command`] - wrapper for [`std::process::Command`] type
+//! * [`tmux_commands`] - wrapper for vector of [`std::process::Command`] type
 //! * [`NewSession`] - tmux autonomous command
 //!
 //!
@@ -146,9 +146,9 @@
 //! ```
 //!
 //! ```
-//! use tmux_interface::TmuxCommandList;
+//! use tmux_interface::TmuxCommands;
 //!
-//! let cmds = TmuxCommandList::new();
+//! let cmds = TmuxCommands::new();
 //! ```
 //!
 //! * multiple tmux binary commands
@@ -160,9 +160,9 @@
 //! ```
 //!
 //! ```
-//! use tmux_interface::{Tmux, TmuxCommandList};
+//! use tmux_interface::{Tmux, TmuxCommands};
 //!
-//! let cmds = Tmux::new().verbose_logging().commands(TmuxCommandList::new());
+//! let cmds = Tmux::new().verbose_logging().commands(TmuxCommands::new());
 //! ```
 //!
 //! # See Also:
@@ -176,14 +176,14 @@ pub mod tmux;
 pub mod tmux_macro;
 
 pub mod tmux_command;
-pub mod tmux_command_list;
+pub mod tmux_commands;
 pub mod tmux_output;
 
 #[cfg(test)]
 #[path = "."]
 mod commands_tests {
-    mod tmux_command_list_tests;
     mod tmux_command_tests;
+    mod tmux_commands_tests;
     mod tmux_tests;
 }
 
@@ -220,7 +220,7 @@ pub use windows_and_panes::*;
 
 pub use tmux::Tmux;
 pub use tmux_command::TmuxCommand;
-pub use tmux_command_list::TmuxCommandList;
+pub use tmux_commands::TmuxCommands;
 pub use tmux_output::TmuxOutput;
 
 // XXX: ?

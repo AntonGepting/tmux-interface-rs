@@ -24,7 +24,7 @@ pub struct ClientFlags {
 impl ClientFlags {
     fn bool_to_flag<S: AsRef<str>>(value: bool, flag_name: S) -> String {
         if value {
-            format!("{}", flag_name.as_ref())
+            flag_name.as_ref().to_string()
         } else {
             format!("!{}", flag_name.as_ref())
         }

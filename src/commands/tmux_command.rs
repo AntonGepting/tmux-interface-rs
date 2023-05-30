@@ -1,4 +1,4 @@
-use crate::{Tmux, TmuxCommandList};
+use crate::{Tmux, TmuxCommands};
 use std::borrow::Cow;
 use std::fmt;
 use std::process::Command;
@@ -35,7 +35,7 @@ pub struct TmuxCommand<'a> {
     pub args: Option<Vec<Cow<'a, str>>>,
 
     /// subcommands list
-    pub subcommands: Option<TmuxCommandList<'a>>,
+    pub subcommands: Option<TmuxCommands<'a>>,
 
     // XXX: Cow<'a, str> or &'a str?
     /// separator between command and it's flags, args, subcommand (" ")
@@ -123,7 +123,7 @@ impl<'a> TmuxCommand<'a> {
         }
     }
 
-    pub fn with_cmds(cmd_list: TmuxCommandList<'a>) -> Self {
+    pub fn with_cmds(cmd_list: TmuxCommands<'a>) -> Self {
         Self {
             subcommands: Some(cmd_list),
             ..Default::default()
@@ -190,13 +190,13 @@ impl<'a> TmuxCommand<'a> {
     // XXX: rename subcmd?
     pub fn push_cmd(&mut self, cmd: TmuxCommand<'a>) -> &mut Self {
         self.subcommands
-            .get_or_insert(TmuxCommandList::new())
+            .get_or_insert(TmuxCommands::new())
             .push(cmd);
         self
     }
 
     // XXX: rename subcmd?
-    pub fn push_cmds(&mut self, cmd_list: TmuxCommandList<'a>) -> &mut Self {
+    pub fn push_cmds(&mut self, cmd_list: TmuxCommands<'a>) -> &mut Self {
         self.subcommands = Some(cmd_list);
         self
     }
@@ -290,14 +290,12 @@ impl<'a> TmuxCommand<'a> {
         // XXX: ugly
         if self.use_alias {
             if let Some(alias) = &self.alias {
-                v.push(alias.to_owned());
+                v.push(alias.clone());
             } else if let Some(name) = &self.name {
-                v.push(name.to_owned());
+                v.push(name.clone());
             }
-        } else {
-            if let Some(name) = &self.name {
-                v.push(name.to_owned());
-            }
+        } else if let Some(name) = &self.name {
+            v.push(name.clone());
         }
 
         if let Some(flags_short) = &self.flags_short {

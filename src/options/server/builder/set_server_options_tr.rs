@@ -1,4 +1,4 @@
-use crate::{SetClipboard, SetServerOptionTr, Switch, TmuxCommand, TmuxCommandList};
+use crate::{SetClipboard, SetServerOptionTr, Switch, TmuxCommand, TmuxCommands};
 
 use std::borrow::Cow;
 
@@ -9,7 +9,7 @@ pub trait SetServerOptionsTr<'a> {
 
     fn push(&mut self, option: TmuxCommand<'a>);
 
-    fn push_cmds(&mut self, options: TmuxCommandList<'a>);
+    fn push_cmds(&mut self, options: TmuxCommands<'a>);
 
     /// ### Manual
     ///
@@ -315,5 +315,5 @@ pub trait SetServerOptionsTr<'a> {
         self
     }
 
-    fn build(self) -> TmuxCommandList<'a>;
+    fn build(self) -> TmuxCommands<'a>;
 }

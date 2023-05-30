@@ -1,4 +1,4 @@
-use crate::{RemainOnExit, SetPaneOption, SetPaneOptionTr, Switch, TmuxCommand, TmuxCommandList};
+use crate::{RemainOnExit, SetPaneOption, SetPaneOptionTr, Switch, TmuxCommand, TmuxCommands};
 
 use std::borrow::Cow;
 pub trait SetPaneOptionsTr<'a> {
@@ -8,7 +8,7 @@ pub trait SetPaneOptionsTr<'a> {
 
     fn push(&mut self, option: TmuxCommand<'a>);
 
-    fn push_cmds(&mut self, options: TmuxCommandList<'a>);
+    fn push_cmds(&mut self, options: TmuxCommands<'a>);
 
     /// ### Manual
     ///
@@ -112,5 +112,5 @@ pub trait SetPaneOptionsTr<'a> {
         self
     }
 
-    fn build(self) -> TmuxCommandList<'a>;
+    fn build(self) -> TmuxCommands<'a>;
 }

@@ -1,9 +1,9 @@
 use crate::options::{SetGlobalSessionOption, SetSessionOptionsTr, SetUserOptions};
-use crate::{TmuxCommand, TmuxCommandList};
+use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
 pub struct SetGlobalSessionOptions<'a> {
-    pub options: TmuxCommandList<'a>,
+    pub options: TmuxCommands<'a>,
 }
 
 impl<'a> SetSessionOptionsTr<'a> for SetGlobalSessionOptions<'a> {
@@ -11,7 +11,7 @@ impl<'a> SetSessionOptionsTr<'a> for SetGlobalSessionOptions<'a> {
 
     fn new() -> Self {
         Self {
-            options: TmuxCommandList::new(),
+            options: TmuxCommands::new(),
         }
     }
 
@@ -19,11 +19,11 @@ impl<'a> SetSessionOptionsTr<'a> for SetGlobalSessionOptions<'a> {
         self.options.push(option);
     }
 
-    fn push_cmds(&mut self, options: TmuxCommandList<'a>) {
+    fn push_cmds(&mut self, options: TmuxCommands<'a>) {
         self.options.push_cmds(options);
     }
 
-    fn build(self) -> TmuxCommandList<'a> {
+    fn build(self) -> TmuxCommands<'a> {
         self.options
     }
 }

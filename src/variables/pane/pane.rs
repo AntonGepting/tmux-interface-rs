@@ -2,6 +2,7 @@ use crate::Error;
 use crate::FormatsOutput;
 #[cfg(feature = "tmux_1_8")]
 use crate::PaneTabs;
+use std::str::FromStr;
 
 pub const PANE_VARS_SEPARATOR: char = '\'';
 
@@ -121,12 +122,10 @@ pub struct Pane {
     pub width: Option<usize>,
 }
 
-impl Pane {
-    pub fn new() -> Self {
-        Default::default()
-    }
+impl FromStr for Pane {
+    type Err = Error;
 
-    pub fn from_str<S: AsRef<str>>(s: S) -> Result<Self, Error> {
+    fn from_str(s: &str) -> Result<Self, Error> {
         let mut pane = Pane::new();
         let mut format = FormatsOutput::new();
         format.separator(PANE_VARS_SEPARATOR);
@@ -198,7 +197,13 @@ impl Pane {
         #[cfg(feature = "tmux_1_6")]
         format.pane_width(&mut pane.width);
 
-        FormatsOutput::from_string_ext(s.as_ref(), &mut format);
+        FormatsOutput::from_string_ext(s, &mut format);
         Ok(pane)
+    }
+}
+
+impl Pane {
+    pub fn new() -> Self {
+        Default::default()
     }
 }

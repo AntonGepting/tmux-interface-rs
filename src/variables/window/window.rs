@@ -1,4 +1,5 @@
 use crate::{Error, FormatsOutput, Layout, WindowFlags};
+use std::str::FromStr;
 
 // NOTE: variables were first intoduced in tmux 1.6
 
@@ -121,13 +122,11 @@ pub struct Window {
     pub zoomed_flag: Option<bool>,
 }
 
-impl Window {
-    pub fn new() -> Self {
-        Default::default()
-    }
+impl FromStr for Window {
+    type Err = Error;
 
     // XXX: mb deserialize like serde something?
-    pub fn from_str<S: AsRef<str>>(s: S) -> Result<Self, Error> {
+    fn from_str(s: &str) -> Result<Self, Error> {
         let mut window = Window::new();
         let mut format = FormatsOutput::new();
 
@@ -209,7 +208,13 @@ impl Window {
         #[cfg(feature = "tmux_2_0")]
         format.window_zoomed_flag(&mut window.zoomed_flag);
 
-        FormatsOutput::from_string_ext(s.as_ref(), &mut format);
+        FormatsOutput::from_string_ext(s, &mut format);
         Ok(window)
+    }
+}
+
+impl Window {
+    pub fn new() -> Self {
+        Default::default()
     }
 }

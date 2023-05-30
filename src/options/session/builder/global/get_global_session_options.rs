@@ -1,9 +1,9 @@
 use crate::options::{GetGlobalSessionOption, GetSessionOptionsTr, GetUserOptions};
-use crate::{TmuxCommand, TmuxCommandList};
+use crate::{TmuxCommand, TmuxCommands};
 
 #[derive(Debug)]
 pub struct GetGlobalSessionOptions<'a> {
-    pub options: TmuxCommandList<'a>,
+    pub options: TmuxCommands<'a>,
 }
 
 impl<'a> GetUserOptions<'a> for GetGlobalSessionOptions<'a> {
@@ -21,7 +21,7 @@ impl<'a> GetSessionOptionsTr<'a, GetGlobalSessionOption> for GetGlobalSessionOpt
         Self: Sized,
     {
         Self {
-            options: TmuxCommandList::new(),
+            options: TmuxCommands::new(),
         }
     }
 
@@ -29,7 +29,7 @@ impl<'a> GetSessionOptionsTr<'a, GetGlobalSessionOption> for GetGlobalSessionOpt
         self.options.push(cmd.into())
     }
 
-    fn into_commands(self) -> TmuxCommandList<'a> {
+    fn into_commands(self) -> TmuxCommands<'a> {
         self.options
     }
 }
