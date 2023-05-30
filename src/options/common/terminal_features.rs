@@ -233,7 +233,7 @@ impl<'a> FromStr for TerminalFeatures<'a> {
                 SYNC => tf.sync = true,
                 TITLE => tf.title = true,
                 USSTYLE => tf.usstyle = true,
-                _ => return Err(Error::ParseStatusKeys),
+                _ => return Err(Error::ParseTerminalFeatures),
             }
         }
 

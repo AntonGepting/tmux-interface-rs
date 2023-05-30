@@ -22,7 +22,7 @@ impl FromStr for DetachOnDestroy {
             OFF => Ok(Self::Off),
             #[cfg(feature = "tmux_3_2")]
             NO_DETACHED => Ok(Self::NoDetached),
-            _ => Err(Error::ParseAction),
+            _ => Err(Error::ParseDetachOnDestroy),
         }
     }
 }

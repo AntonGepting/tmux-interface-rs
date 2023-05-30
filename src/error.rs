@@ -22,6 +22,9 @@ pub enum Error {
     ParsePaneBorderStatus,
     ParseRemainOnExit,
     ParseExtendedKeys,
+    ParseTerminalFeatures,
+    ParseModeMouse,
+    ParseDetachOnDestroy,
 
     /// Tmux error message
     Tmux(String),

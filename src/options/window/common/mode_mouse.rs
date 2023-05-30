@@ -24,7 +24,7 @@ impl FromStr for ModeMouse {
             ON => Ok(Self::On),
             OFF => Ok(Self::Off),
             COPY_MODE => Ok(Self::CopyMode),
-            _ => Err(Error::ParseWindowSize),
+            _ => Err(Error::ParseModeMouse),
         }
     }
 }
