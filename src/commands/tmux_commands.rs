@@ -20,14 +20,14 @@ pub const TMUX_COMMAND_SEPARATOR: &str = " ";
 ///
 
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
-pub struct TmuxCommandList<'a> {
+pub struct TmuxCommands<'a> {
     pub commands: Vec<TmuxCommand<'a>>,
 
     // XXX: Cow<'a, str> or &'a str?
     pub separator: Option<Cow<'a, str>>,
 }
 
-impl<'a> fmt::Display for TmuxCommandList<'a> {
+impl<'a> fmt::Display for TmuxCommands<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         //let separator = self.separator.as_ref().unwrap_or(&Cow::Borrowed(" "));
         //let output = self.to_vec().join(separator.as_ref());
@@ -37,7 +37,7 @@ impl<'a> fmt::Display for TmuxCommandList<'a> {
 }
 
 // None = "", Some = ";", Some = "\n"
-impl<'a> Default for TmuxCommandList<'a> {
+impl<'a> Default for TmuxCommands<'a> {
     fn default() -> Self {
         Self {
             commands: Vec::new(),
@@ -46,9 +46,9 @@ impl<'a> Default for TmuxCommandList<'a> {
     }
 }
 
-impl<'a> TmuxCommandList<'a> {
+impl<'a> TmuxCommands<'a> {
     // XXX: optimize
-    pub fn push_cmds(&mut self, cmds: TmuxCommandList<'a>) {
+    pub fn push_cmds(&mut self, cmds: TmuxCommands<'a>) {
         for cmd in cmds.commands {
             self.push(cmd);
         }
@@ -60,7 +60,7 @@ impl<'a> TmuxCommandList<'a> {
     }
 }
 
-impl<'a> TmuxCommandList<'a> {
+impl<'a> TmuxCommands<'a> {
     pub fn new() -> Self {
         Self::default()
     }

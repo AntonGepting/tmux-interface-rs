@@ -1,11 +1,11 @@
 #[test]
 fn tmux_commands() {
-    use crate::commands::TmuxCommandList;
+    use crate::commands::TmuxCommands;
     use crate::ShowOptions;
 
     //let cmd = StartServer::new().build();
 
-    let mut cmds = TmuxCommandList::new();
+    let mut cmds = TmuxCommands::new();
 
     //let mut cmd = StartServer::new();
     //cmd.args = Some(vec![Cow::Borrowed("-v")]);
@@ -42,12 +42,11 @@ fn tmux_commands() {
 //
 #[test]
 fn tmux_commands_push1() {
-    use crate::commands::tmux_command_list::TmuxCommandList;
-    use crate::{HasSession, KillSession, NewSession, TmuxCommand};
+    use crate::{HasSession, KillSession, NewSession, TmuxCommand, TmuxCommands};
 
     let tmux_command = TmuxCommand::new();
 
-    let mut cmds = TmuxCommandList::new();
+    let mut cmds = TmuxCommands::new();
     cmds.push(NewSession::new().detached().session_name("session").build());
     cmds.push(HasSession::new().target_session("session").build());
     cmds.push(KillSession::new().target_session("session").build());
