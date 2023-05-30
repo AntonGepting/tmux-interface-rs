@@ -26,7 +26,7 @@ documentation can be found on the
         ```
 
     - Using **user specified tmux version** (set custom tmux version
-      feature, used for conditional compilaton):
+      feature, used for conditional compilation):
 
         There is an optional dependency parameter `features` in
         `Cargo.toml`, to specify the compatible version of tmux. Because
@@ -176,6 +176,7 @@ under following conditions:
 ## Contributors
 
 * Kian-Meng Ang ([kianmeng](https://github.com/kianmeng))
+* Martin Terneborg ([MTBorg](https://github.com/MTBorg))
 * Yanus Poluektovich ([ypoluektovich](https://github.com/ypoluektovich))
 
 
