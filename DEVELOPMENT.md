@@ -22,6 +22,8 @@
 
 * `where` clause for 2 or more generics ?
 * `assert_eq!(expected, actual)` ?
+* Library Functions: - Function names and their grouping are inherited from tmux manual
+
 
 ## Project Structure
 

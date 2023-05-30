@@ -4,13 +4,13 @@
 <!--## tmux_interface vX.X.X-->
 
 ## tmux_interface v0.3.0
-Massive incompatible changes from latest release.
+Massive changes incompatible with latest release.
 Command building and combining mechanisms changed.
 Still can be used very carefully on your own risk.
 Still missing almost all library documentation
 (principles of usage can be partially derived from unit tests or integration tests).
 
-- Refactor: options support (`options` module)
+- Refactor: **breaking changes** options support (`options` module)
 Command building mechanisms instead of bitflags
 * Getter/Setter structures for building getter/setter option commands
 * Single/Multiple/All getter/setter for options
@@ -26,7 +26,8 @@ Command building mechanisms instead of bitflags
       * `LocalWindowOptions`
     * `PaneOptions`
     * `UserOptions`
-    Control (getter/setter):
+
+  Control (getter/setter):
     * `ServerOptionsCtl`
     * `SessionOptionsCtl`
       * `GlobalSessionOptionsCtl`

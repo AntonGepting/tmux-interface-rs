@@ -17,6 +17,7 @@
 //! * 4. [Modules Overview](#4-modules-overview)
 //! * 5. [Modules and Levels Hierarchy](#5-modules-and-levels-hierarchy)
 //!
+//!
 //! # 1. Description
 //!
 //! Main purpose of the `tmux_interface` library is to implement simple sending and receiving data
@@ -240,108 +241,6 @@
 //! * Error ([`Error`])
 //!
 //! * ...
-//!
-//!
-//! Main structure is [`TmuxCommand`](crate::TmuxCommand) which has all these wrapper functions implementations.
-//! This goal can be reached by splitting it into two separate tasks:
-//!
-//! 1. Providing wrapper functions for tmux subcommands (which is sending data). Wrapper functions are
-//! structured like in tmux manual in few next categories:
-//!
-//! 2. Parsing functions for tmux output as rust structures (which is receiving data). Parsing function are
-//! structured by objects they operate with:
-//!
-//! # Conventions
-//!
-//! Library Functions:
-//!     - Function names and their grouping are inherited from tmux manual
-//!
-//! # Examples
-//!
-//! ```
-//! use crate::tmux_interface::{AttachSession, NewSession, KillSession, Tmux};
-//!
-//! let session_name = "example_2";
-//!
-//! // tmux new -d -n example_2 ; attach -t example_2 ; kill-session -t example_2
-//! let output = Tmux::new()
-//!                 .add_command(NewSession::new().detached().session_name(session_name))
-//!                 .add_command(KillSession::new().target_session(session_name))
-//!                 .output()
-//!                 .unwrap();
-//! ```
-//!
-//! # Examples
-//!
-//! Parsing examples:
-//! ```
-//! use crate::tmux_interface::{SessionsCtl, WindowsCtl, PanesCtl};
-//!
-//! let sessions = SessionsCtl::new().get_all().unwrap();
-//! let windows = WindowsCtl::new().get_all().unwrap();
-//! let panes = PanesCtl::new().get_all().unwrap();
-//! ```
-//!
-//!
-//! # Examples
-//!
-//! Change tmux command line flags, options
-//! ```
-//! use crate::tmux_interface::{TmuxCommand, Tmux, NewSession, KillSession};
-//!
-//! let mut tmux = Tmux::new()
-//!                  .add_command(NewSession::new().detached().session_name("new_session_name3"))
-//!                  .add_command(KillSession::new().target_session("new_session_name3"))
-//!                  .output()
-//!                  .unwrap();
-//! ```
-//!
-//! # New session
-//!
-//! ## Examples
-//! Create a new tmux session without any additional parameters (alternative to: `tmux new-session`)
-//!
-//! ```text
-//! use crate::tmux_interface::TmuxCommand;
-//!
-//! let mut tmux = TmuxCommand::new();
-//! tmux.new_session().output().unwrap();
-//! ```
-//!
-//! ## Examples
-//!
-//! Create a new tmux session with some additional parameters (alternative to: `tmux new -d -s new_session`)
-//! using builder pattern:
-//!
-//! ```
-//! // use crate::tmux_interface::{Tmux, NewSession, KillSession};
-//!
-//! // let mut tmux = Tmux::new();
-//! // tmux.command(NewSession::new().detached().session_name("new_session_default")).output();
-//! // tmux.command(KillSession::new().target_session("new_session_default")).output();
-//! ```
-//!
-//! using `std::default::Default` trait:
-//! ```
-//! //use crate::tmux_interface::{TmuxCommand, Tmux, NewSession, TargetSession};
-//!
-//! //let mut tmux = Tmux::new();
-//! //tmux.new_session().detached().session_name("new_session_default").output();
-//! //tmux.kill_session().target_session("new_session_default").output();
-//! ```
-//!
-//! using direct structure modification:
-//! ```
-//! // use crate::tmux_interface::{TmuxCommand, Tmux, NewSession, TargetSession};
-//!
-//! // let mut tmux = Tmux::new();
-//! // let mut new_session = NewSession::new();
-//! // new_session.detached();
-//! // new_session.session_name("new_session_direct");
-//! // new_session.output();
-//! // tmux.kill_session().target_session("new_session_direct").output();
-//! ```
-//!
 //!
 //!
 //! # 5. Modules and Levels Hierarchy
