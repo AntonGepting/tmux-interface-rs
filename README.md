@@ -16,106 +16,51 @@ documentation can be found on the
 
 ## Usage
 
-1. Add the new crate dependency in your `Cargo.toml`.
 
+1. Add a dependency in your `Cargo.toml`. Versions below `1.0.0` are
+    mostly for development and testing purposes (use them in your projects on
+    your own risk, further versions may have different API).
 
-    - Using **defaults** (by default: `default = ["tmux_2_8", "cmd_alias"]` will be set)
-        ```
-        [dependencies]
-        tmux_interface = "^0.1.0"
-        ```
+     ```text
+     [dependencies]
+     tmux_interface = "1.0.0"
+     ```
 
-    - Using **user specified tmux version** (set custom tmux version
-      feature, used for conditional compilation):
+2. Add extern crate in your source file.
+     ```
+     extern crate tmux_interface;
+     ```
 
-        There is an optional dependency parameter `features` in
-        `Cargo.toml`, to specify the compatible version of tmux. Because
-        different tmux versions may have incompatible CLI changes. Following
-        tmux versions are currently supported as library `features`:
+3. Use it's functions
 
-        `tmux_0_8`, `tmux_0_9`, `tmux_1_0`, `tmux_1_1`, `tmux_1_2`, `tmux_1_3`,
-        `tmux_1_4`, `tmux_1_5`, `tmux_1_6`, `tmux_1_7`, `tmux_1_8`, `tmux_1_9`,
-        `tmux_1_9a`, `tmux_2_0`, `tmux_2_1`, `tmux_2_2`, `tmux_2_3`, `tmux_2_4`,
-        `tmux_2_5`, `tmux_2_6`, `tmux_2_7`, `tmux_2_8`, `tmux_2_9`, `tmux_2_9a`,
-        `tmux_3_0`, `tmux_3_0a`, `tmux_3_1`, `tmux_3_1a`, `tmux_3_1b`,
-        `tmux_3_1c`, `tmux_X_X`
+     ### Example 1
+     ```
+     use tmux_interface::{HasSession, KillSession, NewSession, NewWindow, SplitWindow, Tmux};
 
-        ```
-        [dependencies]
-        tmux_interface = {
-            version = "^0.1.0",
-            features = ["tmux_2_6"]
-            default-features = false,
-        }
-        ```
+     let target_session = "example_1";
 
-        by default `tmux_2_8` is used. It can be removed with
-        `--no-default-features` cargo command line option or with `default-features
-        = false` option in `Cargo.toml` in case of using different tmux version.
+     // tmux new -d -s example_1 ; neww ; splitw -v
+     Tmux::new()
+         .add_command(NewSession::new().detached().session_name(target_session))
+         .add_command(NewWindow::new())
+         .add_command(SplitWindow::new().vertical())
+         .output()
+         .unwrap();
 
-    - Using library from local repository:
-        ```
-        [dependencies]
-        tmux_interface = {
-            version = "^0.1.0",
-            path = "../tmux-interface",
-            features = ["tmux_X_X"]
-        }
-        ```
+     // tmux has -t example_1
+     let status = Tmux::with_command(HasSession::new().target_session(target_session))
+         .status()
+         .unwrap()
+         .success();
 
-    - Using library from remote repository (for example using developing
-      branch):
-        ```
-        [dependencies]
-        tmux_interface = {
-            git = "https://github.com/AntonGepting/tmux-interface-rs.git", branch = "dev",
-            features = ["tmux_X_X"]
-        }
-        ```
+     assert!(status);
 
-2. Use library functions in your source file.
+     // tmux kill-session -t example_1
+     Tmux::with_command(KillSession::new().target_session(target_session))
+         .output()
+         .unwrap();
 
-
-    - use methods of the parent structure (`TmuxCommand`):
-        ```
-        use tmux_interface::TmuxCommand;
-
-        let tmux = TmuxCommand::new();
-
-        tmux.new_session()
-            .detached()
-            .session_name("example_1")
-            .output()
-            .unwrap();
-        tmux.has_session()
-            .target_session("example_1")
-            .output()
-            .unwrap();
-        tmux.kill_session()
-            .target_session("example_1")
-            .output()
-            .unwrap();
-        ```
-
-    - use direct methods of the child structures (`NewSession`, `HasSession`,
-      `KillSession`, ...):
-        ```
-        use tmux_interface::{HasSession, KillSession, NewSession};
-
-        NewSession::new()
-            .detached()
-            .session_name("example_2")
-            .output()
-            .unwrap();
-        HasSession::new()
-            .target_session("example_2")
-            .output()
-            .unwrap();
-        KillSession::new()
-            .target_session("example_2")
-            .output()
-            .unwrap();
-        ```
+     ```
 
 ## Testing
 
@@ -141,6 +86,10 @@ under following conditions:
 
 - Tmux (covered tmux versions crate features):
     - [ ] master - `tmux_X_X`
+    - [x] 3.3a - `tmux_3_3a`
+    - [x] 3.3 - `tmux_3_3`
+    - [x] 3.2a - `tmux_3_2a`
+    - [x] 3.2 - `tmux_3_2`
     - [x] 3.1c - `tmux_3_1c`
     - [x] 3.1b - `tmux_3_1b`
     - [x] 3.1a - `tmux_3_1a`
@@ -161,8 +110,8 @@ under following conditions:
     - [x] 1.9a - `tmux_1_9a`
     - [x] 1.9 - `tmux_1_9`
     - [x] 1.8 - `tmux_1_8`
-    - [x] 1.7 - `tmux_1_7`
-    - [x] 1.6 - `tmux_1_6`
+    - [ ] 1.7 - `tmux_1_7`
+    - [ ] 1.6 - `tmux_1_6`
     - [ ] 1.5 - `tmux_1_5`
     - [ ] 1.4 - `tmux_1_4` - tmux compilation error
     - [ ] 1.3 - `tmux_1_3` - tmux compilation error
