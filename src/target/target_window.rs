@@ -11,7 +11,7 @@ pub struct TargetWindowExt<'a> {
     /// `TargetSession` (tmux analog: `target-session`)
     pub session: Option<&'a TargetSession<'a>>,
     /// `TargetWindow`  (tmux analog: `target-window`)
-    pub window: Option<TargetWindow<'a>>, // bc. cant return value referencing local / temp value
+    pub window: Option<TargetWindow<'a>>, // bc. can't return value referencing local / temp value
 }
 
 impl<'a> TargetWindowExt<'a> {
@@ -155,7 +155,7 @@ pub enum TargetWindowToken {
     Next(Option<usize>),
     /// `{previous}` (alias: `-`) - The previous window by number
     Previous(Option<usize>),
-    //// {mouse} = most recent mouse event occured
+    //// {mouse} = most recent mouse event occurred
     //Mouse,
 }
 

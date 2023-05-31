@@ -1,4 +1,4 @@
-// XXX: 1.9 pocessed
+// XXX: 1.9 processed
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct Client {
     /// client_activity - Integer time client last had activity

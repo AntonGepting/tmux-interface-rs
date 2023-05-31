@@ -3,7 +3,7 @@
 Some goals for further versions and current development are listed below.
 Please send an [e-mail](mailto:anton.gepting@gmail.com) or open an
 [issue](https://github.com/AntonGepting/tmux-interface-rs/issues/new)
-if any feature is missing or if you have a request, an improvment, an idea etc.
+if any feature is missing or if you have a request, an improvement, an idea etc.
 
 
 **tmux interface v1.0.0**
@@ -304,7 +304,7 @@ Parsing objects and supported tmux variables:
 
 # Tiny ADR
 
-Simlified Architecture Decision Record for strategy and decision making.
+Simplified Architecture Decision Record for strategy and decision making.
 
 - tmux versions support (decision, not current state)
     - [ ] all
@@ -435,7 +435,7 @@ Simlified Architecture Decision Record for strategy and decision making.
 
 
 - Traits
-    - [ ] trait cant access parent struct fields, without extra implemetation
+    - [ ] trait can't access parent struct fields, without extra implementation
       of get set method, `.output()` if we are working with same type problems
       multiple traits methods mixing allowed (NewSession, DetachClient,
       chaining methods)
@@ -443,7 +443,7 @@ Simlified Architecture Decision Record for strategy and decision making.
 - Structs
     - [ ] main `Tmux{bin, arg}`, wrapper `TmuxCommand {Tmux, cmd, arg}`, `NewSession(TmuxCommand)`
             chain: `new() -> arg() -> exec()` for parent is broken,
-            can't access childs args, as parent, `Tmux::output() { Command::new,
+            can't access children args, as parent, `Tmux::output() { Command::new,
             Command.arg(arg???)`}
     - [x] main `TmuxCommand{bin, bin_arg, cmd, cmd_arg}`, wrapper `NewSession(TmuxCommand)` `Tmux(TmuxCOmmand)`
 
@@ -453,7 +453,7 @@ Simlified Architecture Decision Record for strategy and decision making.
 
 - macro for fn generation
     - [ ] yes, source size, unification calls
-    - [x] no, doc problem, needs capturing inside macro invokation, no profit
+    - [x] no, doc problem, needs capturing inside macro invocation, no profit
       for method gen `target_name(name);`
 
  2. String for hooks and mutability
@@ -467,7 +467,7 @@ Simlified Architecture Decision Record for strategy and decision making.
  - architecture:
       [ ] trait, supertrait
           multiple synonymous child traits, specifying needed:
-          `<TmuxCommand as NewSession>::new()` trait annotaion need
+          `<TmuxCommand as NewSession>::new()` trait annotation need
           no bc.converting from to implementation?
           no bc. all methods available for main type
       [ ] struct wrapper
@@ -532,7 +532,7 @@ Simlified Architecture Decision Record for strategy and decision making.
       - [ ] -> Self ()
 
   - trait command methods exec
-      [x] no, fields inaccesible directly, only methods set get, implemetation  imol for needed,
+      [x] no, fields inaccessible directly, only methods set get, implementation  imol for needed,
       same thing.
       [ ] yes
 

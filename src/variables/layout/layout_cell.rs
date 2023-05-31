@@ -25,7 +25,7 @@ impl FromStr for LayoutCell {
 
 // NOTE: tmux source: layout_custom.c
 // XXX: checksum can be improved using hex crate
-// XXX: implemet trait parse FromStr?
+// XXX: implement trait parse FromStr?
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct LayoutCell {
     pub x: usize,

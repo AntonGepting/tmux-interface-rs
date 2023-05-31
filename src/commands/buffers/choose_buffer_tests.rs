@@ -3,7 +3,7 @@ fn choose_buffer() {
     use crate::{ChooseBuffer, TargetPane};
     use std::borrow::Cow;
 
-    // Stucture for putting a pane into buffer mode
+    // Structure for putting a pane into buffer mode
     //
     // # Manual
     //
