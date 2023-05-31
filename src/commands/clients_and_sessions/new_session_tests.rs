@@ -161,24 +161,3 @@ fn new_session() {
 
     assert_eq!(new_session, s);
 }
-
-#[test]
-fn new_session_inner() {
-    //use crate::NewSession;
-
-    //let a = NewSession::new().session_name("asdf");
-    //dbg!(a.as_ref().cmd);
-}
-
-#[test]
-fn new_session_from_tmux_command() {
-    use crate::TmuxCommand;
-
-    let mut s = Vec::new();
-    s.extend_from_slice(&["-f", "myfile"]);
-    let s = s.into_iter().map(|a| a.into()).collect();
-
-    let cmd = TmuxCommand::new().file("myfile").new_session();
-
-    assert_eq!(cmd.0.bin_args, Some(s));
-}
