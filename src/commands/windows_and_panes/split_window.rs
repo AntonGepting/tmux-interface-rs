@@ -119,21 +119,21 @@ pub struct SplitWindow<'a> {
     #[cfg(feature = "tmux_0_8")]
     pub size: Option<&'a PaneSize>,
 
+    /// `[-F format]` - format
+    #[cfg(feature = "tmux_1_7")]
+    pub format: Option<Cow<'a, str>>,
+
     /// `[-t target-pane]` -
     #[cfg(feature = "tmux_1_2")]
     pub target_pane: Option<Cow<'a, str>>,
-
-    /// `[shell-command]` - shell-command
-    #[cfg(feature = "tmux_1_2")]
-    pub shell_command: Option<Cow<'a, str>>,
 
     /// `[-t target-window]` -
     #[cfg(feature = "tmux_0_8")]
     pub target_window: Option<Cow<'a, str>>,
 
-    /// `[-F format]` - format
-    #[cfg(feature = "tmux_1_7")]
-    pub format: Option<Cow<'a, str>>,
+    /// `[shell-command]` - shell-command
+    #[cfg(feature = "tmux_1_2")]
+    pub shell_command: Option<Cow<'a, str>>,
 }
 
 impl<'a> SplitWindow<'a> {
@@ -226,10 +226,10 @@ impl<'a> SplitWindow<'a> {
         self
     }
 
-    /// `[shell-command]` - shell-command
-    #[cfg(feature = "tmux_1_2")]
-    pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
-        self.shell_command = Some(shell_command.into());
+    /// `[-F format]` - format
+    #[cfg(feature = "tmux_1_7")]
+    pub fn format<S: Into<Cow<'a, str>>>(mut self, format: S) -> Self {
+        self.format = Some(format.into());
         self
     }
 
@@ -240,10 +240,10 @@ impl<'a> SplitWindow<'a> {
         self
     }
 
-    /// `[-F format]` - format
-    #[cfg(feature = "tmux_1_7")]
-    pub fn format<S: Into<Cow<'a, str>>>(mut self, format: S) -> Self {
-        self.format = Some(format.into());
+    /// `[shell-command]` - shell-command
+    #[cfg(feature = "tmux_1_2")]
+    pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
+        self.shell_command = Some(shell_command.into());
         self
     }
 
@@ -326,16 +326,16 @@ impl<'a> SplitWindow<'a> {
             };
         }
 
+        // `[-F format]` - format
+        #[cfg(feature = "tmux_1_7")]
+        if let Some(format) = self.format {
+            cmd.push_option(F_UPPERCASE_KEY, format);
+        }
+
         // `[-t target-pane]` -
         #[cfg(feature = "tmux_1_2")]
         if let Some(target_pane) = self.target_pane {
             cmd.push_option(T_LOWERCASE_KEY, target_pane);
-        }
-
-        // `[shell-command]` - shell-command
-        #[cfg(feature = "tmux_1_2")]
-        if let Some(shell_command) = self.shell_command {
-            cmd.push_param(shell_command);
         }
 
         // `[-t target-window]` -
@@ -344,10 +344,10 @@ impl<'a> SplitWindow<'a> {
             cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
-        // `[-F format]` - format
-        #[cfg(feature = "tmux_1_7")]
-        if let Some(format) = self.format {
-            cmd.push_option(F_UPPERCASE_KEY, format);
+        // `[shell-command]` - shell-command
+        #[cfg(feature = "tmux_1_2")]
+        if let Some(shell_command) = self.shell_command {
+            cmd.push_param(shell_command);
         }
 
         cmd

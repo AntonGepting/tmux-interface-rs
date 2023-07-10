@@ -65,7 +65,7 @@ fn split_window() {
     // split-window [-d] [-l size | -p percentage] [-t target-window] [command]
     // (alias: splitw)
     // ```
-    let target_pane = TargetPane::Raw("4").to_string();
+    let target_pane = TargetPane::Raw("5").to_string();
 
     let split_window = SplitWindow::new();
     #[cfg(feature = "tmux_2_4")]
@@ -88,12 +88,12 @@ fn split_window() {
     let split_window = split_window.environment("2");
     #[cfg(feature = "tmux_0_8")]
     let split_window = split_window.size(&PaneSize::Size(3));
+    #[cfg(feature = "tmux_1_7")]
+    let split_window = split_window.format("4");
     #[cfg(feature = "tmux_1_2")]
     let split_window = split_window.target_pane(&target_pane);
     #[cfg(feature = "tmux_1_2")]
-    let split_window = split_window.shell_command("5");
-    #[cfg(feature = "tmux_1_7")]
-    let split_window = split_window.format("6");
+    let split_window = split_window.shell_command("6");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "split-window";
@@ -122,12 +122,12 @@ fn split_window() {
     s.extend_from_slice(&["-e", "2"]);
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-l", "3"]);
-    #[cfg(feature = "tmux_1_2")]
-    s.extend_from_slice(&["-t", "4"]);
-    #[cfg(feature = "tmux_1_2")]
-    s.push("5");
     #[cfg(feature = "tmux_1_7")]
-    s.extend_from_slice(&["-F", "6"]);
+    s.extend_from_slice(&["-F", "4"]);
+    #[cfg(feature = "tmux_1_2")]
+    s.extend_from_slice(&["-t", "5"]);
+    #[cfg(feature = "tmux_1_2")]
+    s.push("6");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let split_window = split_window.build().to_vec();
