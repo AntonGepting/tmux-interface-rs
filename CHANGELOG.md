@@ -1,7 +1,11 @@
 # Changelog
 
-
 <!--## tmux_interface vX.X.X-->
+
+## tmux_interface v0.3.1
+* feature: add `StdIO` enum and `.stdin()` `.stdout()` `.stderr()` methods of
+  `Tmux`, allowing user controlled i/o redirection (e.g. silencing `.stderr()`)
+* fix(#15): fix `.shell_command()` method of `SplitWindow`
 
 ## tmux_interface v0.3.0
 Massive changes incompatible with latest release.
