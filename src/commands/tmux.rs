@@ -3,6 +3,32 @@ use crate::{Error, TmuxCommand, TmuxCommands, TmuxOutput};
 use std::borrow::Cow;
 use std::process::{Child, Command, ExitStatus, Stdio};
 
+/// enum for setting stdin, stdout, stderr, used in [`Tmux`] struct,
+/// wrapper for [`Stdio`][`std::process::Stdio`]
+// NOTE: std::process::Stdio has no Clone, Copy, there is no option to hold them
+// in some wrapper struct, instead they will be initialized in-place before
+// returning std::process::Command back from builder / converter
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub enum StdIO {
+    /// inherit from invoker process
+    #[default]
+    Inherit,
+    /// analogous to `/dev/null`
+    Null,
+    /// pipe, used later as child process handle will be returned
+    Piped,
+}
+
+impl From<StdIO> for Stdio {
+    fn from(item: StdIO) -> Self {
+        match item {
+            StdIO::Inherit => Stdio::inherit(),
+            StdIO::Piped => Stdio::piped(),
+            StdIO::Null => Stdio::null(),
+        }
+    }
+}
+
 // XXX: set_cmds_separator
 // NOTE: [-N] missing in man
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#DESCRIPTION)
@@ -130,6 +156,15 @@ pub struct Tmux<'a> {
 
     /// `[command]`
     pub command: Option<TmuxCommands<'a>>,
+
+    /// (1)
+    pub stdin: Option<StdIO>,
+
+    /// (2)
+    pub stdout: Option<StdIO>,
+
+    /// (3)
+    pub stderr: Option<StdIO>,
 }
 
 impl<'a> Tmux<'a> {
@@ -424,33 +459,59 @@ impl<'a> Tmux<'a> {
     }
 }
 
-// from std::process::Command
 impl<'a> Tmux<'a> {
-    /// run tmux command
+    /// execute tmux process, wait for output, return output
+    ///
+    /// by default:
+    ///  * stdin  is inherited (differs from [`std::process::Command`], where it
+    ///    is not inherited by default) prevents from immediately closing tmux
+    ///    after attempt to read from stdin
+    ///  * stdout is inherited
+    ///  * stderr is inherited
     pub fn output(self) -> Result<TmuxOutput, Error> {
         let mut command = Command::from(self);
-        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
-        command.stdin(Stdio::inherit());
         let output = command.output()?;
         Ok(TmuxOutput(output))
     }
 
-    // XXX: really necessary?
+    /// spawn tmux process, return process handle as child
+    /// by default:
+    ///  * stdin  is inherited
+    ///  * stdout is inherited
+    ///  * stderr is inherited
     pub fn spawn(self) -> Result<Child, Error> {
         let mut command = Command::from(self);
-        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
-        command.stdin(Stdio::inherit());
         let child = command.spawn()?;
         Ok(child)
     }
 
-    // XXX: really necessary?
+    /// spawn tmux process, return status result of the command execution
+    /// by default:
+    ///  * stdin  is inherited
+    ///  * stdout is inherited
+    ///  * stderr is inherited
     pub fn status(self) -> Result<ExitStatus, Error> {
         let mut command = Command::from(self);
-        // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
-        command.stdin(Stdio::inherit());
         let status = command.status()?;
         Ok(status)
+    }
+
+    /// set stdin
+    pub fn stdin(mut self, stdin: Option<StdIO>) -> Self {
+        self.stdin = stdin;
+        self
+    }
+
+    /// set stdout
+    pub fn stdout(mut self, stdout: Option<StdIO>) -> Self {
+        self.stdout = stdout;
+        self
+    }
+
+    /// set stderr
+    pub fn stderr(mut self, stderr: Option<StdIO>) -> Self {
+        self.stderr = stderr;
+        self
     }
 }
 
@@ -474,9 +535,27 @@ impl<'a> Tmux<'a> {
 //}
 //}
 
+// convert from Tmux into Command (take Tmux -> build TmuxCommand -> into Command)
 impl<'a> From<Tmux<'a>> for Command {
     fn from(item: Tmux<'a>) -> Self {
-        item.build().into()
+        let mut command: Command = item.clone().build().into();
+
+        if let Some(stdio) = item.stdin {
+            command.stdin::<Stdio>(stdio.into());
+        } else {
+            // NOTE: inherit stdin to prevent tmux fail with error `terminal failed: not a terminal`
+            command.stdin(Stdio::inherit());
+        }
+
+        if let Some(stdio) = item.stdout {
+            command.stdout::<Stdio>(stdio.into());
+        }
+
+        if let Some(stdio) = item.stderr {
+            command.stderr::<Stdio>(stdio.into());
+        }
+
+        command
     }
 }
 

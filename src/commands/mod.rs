@@ -218,7 +218,7 @@ pub use status_line::*;
 // windows and panes
 pub use windows_and_panes::*;
 
-pub use tmux::Tmux;
+pub use tmux::{StdIO, Tmux};
 pub use tmux_command::TmuxCommand;
 pub use tmux_commands::TmuxCommands;
 pub use tmux_output::TmuxOutput;
