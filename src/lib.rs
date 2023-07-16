@@ -268,13 +268,24 @@
 //!  | TmuxCommand |                  | TmuxOutput |
 //!  +-------------+                  +------------+
 //!  +-----------------+
-//!  | TmuxCommands |
+//!  | TmuxCommands    |
 //!  +-----------------+
 //!
 //! 1. Standard Library
-//!  +-----------------------+
-//!  | std::process::Command |
-//!  +-----------------------+
+//!  +---------------------------------------+
+//!  |        std::process::Command          |
+//!  +---------------------------------------+
+//!  +-----------+ +-----------+ +-----------+
+//!  | .output() | | .spawn()  | | .status() |
+//!  +-----------+ +-----------+ +-----------+
+//!
+//!  Platform specific (Windows, UNIX, ...)
+//!  +---------------------------------------+
+//!  |             sys::process              |
+//!  +---------------------------------------+
+//!  +-----------+ +-------------------------+
+//!  | .output() | |        .spawn()         |
+//!  +-----------+ +-------------------------+
 //!
 //! 0. OS
 //!  +--------+                      +-----------------+       +-----+
@@ -287,7 +298,7 @@
 //!
 //! * Each level allows to build practically the same command, but with more or less effort and advantages
 //! * Each level has some abstraction and some limitations
-//! * Each level is based on top of the previous one
+//! * Each level is based on top of the previous one (uses APIs of the previous one)
 //!
 //! ## 5.1. Level Explanations and Examples
 //!
