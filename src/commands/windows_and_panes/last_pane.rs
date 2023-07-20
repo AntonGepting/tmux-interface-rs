@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type LastP<'a> = LastPane<'a>;
+
 /// Select the last (previously selected) pane
 ///
 /// # Manual

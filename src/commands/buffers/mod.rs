@@ -52,23 +52,23 @@ pub mod show_buffer_macro;
 #[cfg(feature = "tmux_1_3")]
 pub use choose_buffer::ChooseBuffer;
 #[cfg(feature = "tmux_0_9")]
-pub use clear_history::ClearHistory;
+pub use clear_history::{ClearHist, ClearHistory};
 //#[cfg(feature = "tmux_1_0")]
 //pub use copy_buffer::CopyBuffer;
 #[cfg(feature = "tmux_0_8")]
-pub use delete_buffer::DeleteBuffer;
+pub use delete_buffer::{DeleteB, DeleteBuffer};
 #[cfg(feature = "tmux_0_8")]
-pub use list_buffers::ListBuffers;
+pub use list_buffers::{ListBuffers, LsB};
 #[cfg(feature = "tmux_0_8")]
-pub use load_buffer::LoadBuffer;
+pub use load_buffer::{LoadB, LoadBuffer};
 #[cfg(feature = "tmux_0_8")]
-pub use paste_buffer::PasteBuffer;
+pub use paste_buffer::{PasteB, PasteBuffer};
 #[cfg(feature = "tmux_0_8")]
-pub use save_buffer::SaveBuffer;
+pub use save_buffer::{SaveB, SaveBuffer};
 #[cfg(feature = "tmux_0_8")]
-pub use set_buffer::SetBuffer;
+pub use set_buffer::{SetB, SetBuffer};
 #[cfg(feature = "tmux_0_8")]
-pub use show_buffer::ShowBuffer;
+pub use show_buffer::{ShowB, ShowBuffer};
 
 //#[cfg(feature = "tmux_1_3")]
 //use self::ChooseBuffer;

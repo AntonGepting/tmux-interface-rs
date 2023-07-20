@@ -3,6 +3,8 @@ use crate::TmuxCommand;
 use std::borrow::Cow;
 use std::marker::PhantomData;
 
+pub type LsC<'a> = ListClients<'a>;
+
 /// List all clients attached to the server
 ///
 /// # Manual

@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type ResizeW<'a> = ResizeWindow<'a>;
+
 /// Resize a window, up, down, left or right
 ///
 /// # Manual

@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type ShowEnv<'a> = ShowEnvironment<'a>;
+
 /// # Manual
 ///
 /// tmux ^3.2:

@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type PipeP<'a> = PipePane<'a>;
+
 /// Pipe output sent by the program in target-pane to a shell command or vice versa
 ///
 /// # Manual

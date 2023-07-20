@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type RenameW<'a> = RenameWindow<'a>;
+
 /// Rename the current window, or the window at target-window if specified, to new-name
 ///
 /// # Manual

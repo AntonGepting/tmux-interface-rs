@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Menu<'a> = DisplayMenu<'a>;
+
 /// Structure for displaying a menu on target-client
 ///
 /// # Manual

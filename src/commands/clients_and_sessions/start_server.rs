@@ -1,6 +1,8 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 
+pub type Start = StartServer;
+
 /// Start the tmux server, if not already running, without creating any sessions
 ///
 /// # Manual

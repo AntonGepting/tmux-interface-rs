@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type RespawnW<'a> = RespawnWindow<'a>;
+
 /// Reactivate a window in which the command has exited
 ///
 /// # Manual

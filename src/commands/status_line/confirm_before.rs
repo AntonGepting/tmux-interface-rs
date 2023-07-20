@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Confirm<'a> = ConfirmBefore<'a>;
+
 /// # Manual
 ///
 /// tmux ^1.5:

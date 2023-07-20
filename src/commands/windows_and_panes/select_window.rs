@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type SelectW<'a> = SelectWindow<'a>;
+
 /// Select the window at target-window.
 ///
 /// # Manual

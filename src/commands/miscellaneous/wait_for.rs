@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Wait<'a> = WaitFor<'a>;
+
 // TODO: enum for arg
 // FIXME: not multiple, only one choice
 /// # Manual

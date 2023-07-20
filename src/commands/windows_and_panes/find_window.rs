@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type FindW<'a> = FindWindow<'a>;
+
 /// Search for the fnmatch(3) pattern `match-string` in window names,
 /// titles, and visible content (but not history)
 ///

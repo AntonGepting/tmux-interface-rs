@@ -195,9 +195,9 @@ pub mod unlink_window_macro;
 //pub mod up_pane;
 
 #[cfg(feature = "tmux_0_8")]
-pub use break_pane::BreakPane;
+pub use break_pane::{BreakP, BreakPane};
 #[cfg(feature = "tmux_1_2")]
-pub use capture_pane::CapturePane;
+pub use capture_pane::{CaptureP, CapturePane};
 #[cfg(feature = "tmux_1_0")]
 pub use choose_client::ChooseClient;
 //#[cfg(feature = "tmux_1_0")]
@@ -209,69 +209,69 @@ pub use choose_tree::ChooseTree;
 #[cfg(feature = "tmux_0_8")]
 pub use copy_mode::CopyMode;
 #[cfg(feature = "tmux_1_0")]
-pub use display_panes::DisplayPanes;
+pub use display_panes::{DisplayP, DisplayPanes};
 //#[cfg(feature = "tmux_1_0")]
 //pub use down_pane::DownPane;
 #[cfg(feature = "tmux_0_8")]
-pub use find_window::FindWindow;
+pub use find_window::{FindW, FindWindow};
 #[cfg(feature = "tmux_1_2")]
-pub use join_pane::JoinPane;
+pub use join_pane::{JoinP, JoinPane};
 #[cfg(feature = "tmux_0_8")]
-pub use kill_pane::KillPane;
+pub use kill_pane::{KillP, KillPane};
 #[cfg(feature = "tmux_0_8")]
-pub use kill_window::KillWindow;
+pub use kill_window::{KillW, KillWindow};
 #[cfg(feature = "tmux_1_4")]
-pub use last_pane::LastPane;
+pub use last_pane::{LastP, LastPane};
 #[cfg(feature = "tmux_0_8")]
-pub use last_window::LastWindow;
+pub use last_window::{Last, LastWindow};
 #[cfg(feature = "tmux_0_8")]
-pub use link_window::LinkWindow;
+pub use link_window::{LinkW, LinkWindow};
 #[cfg(feature = "tmux_0_8")]
-pub use list_panes::ListPanes;
+pub use list_panes::{ListPanes, LsP};
 #[cfg(feature = "tmux_0_8")]
-pub use list_windows::ListWindows;
+pub use list_windows::{ListWindows, LsW};
 #[cfg(feature = "tmux_1_7")]
-pub use move_pane::MovePane;
+pub use move_pane::{MoveP, MovePane};
 #[cfg(feature = "tmux_0_8")]
-pub use move_window::MoveWindow;
+pub use move_window::{MoveW, MoveWindow};
 #[cfg(feature = "tmux_0_8")]
-pub use new_window::NewWindow;
+pub use new_window::{NewW, NewWindow};
 #[cfg(feature = "tmux_0_8")]
-pub use next_layout::NextLayout;
+pub use next_layout::{NextL, NextLayout};
 #[cfg(feature = "tmux_0_8")]
-pub use next_window::NextWindow;
+pub use next_window::{Next, NextWindow};
 #[cfg(feature = "tmux_1_1")]
-pub use pipe_pane::PipePane;
+pub use pipe_pane::{PipeP, PipePane};
 #[cfg(feature = "tmux_1_3")]
-pub use previous_layout::PreviousLayout;
+pub use previous_layout::{PrevL, PreviousLayout};
 #[cfg(feature = "tmux_0_8")]
-pub use previous_window::PreviousWindow;
+pub use previous_window::{Prev, PreviousWindow};
 #[cfg(feature = "tmux_0_8")]
-pub use rename_window::RenameWindow;
+pub use rename_window::{RenameW, RenameWindow};
 #[cfg(feature = "tmux_0_9")]
-pub use resize_pane::ResizePane;
+pub use resize_pane::{ResizeP, ResizePane};
 #[cfg(feature = "tmux_2_9")]
-pub use resize_window::ResizeWindow;
+pub use resize_window::{ResizeW, ResizeWindow};
 #[cfg(feature = "tmux_1_5")]
-pub use respawn_pane::RespawnPane;
+pub use respawn_pane::{RespawnP, RespawnPane};
 #[cfg(feature = "tmux_0_8")]
-pub use respawn_window::RespawnWindow;
+pub use respawn_window::{RespawnW, RespawnWindow};
 #[cfg(feature = "tmux_0_8")]
-pub use rotate_window::RotateWindow;
+pub use rotate_window::{RotateW, RotateWindow};
 #[cfg(feature = "tmux_0_9")]
-pub use select_layout::SelectLayout;
+pub use select_layout::{SelectL, SelectLayout};
 #[cfg(feature = "tmux_0_8")]
-pub use select_pane::SelectPane;
+pub use select_pane::{SelectP, SelectPane};
 #[cfg(feature = "tmux_0_8")]
-pub use select_window::SelectWindow;
+pub use select_window::{SelectW, SelectWindow};
 #[cfg(feature = "tmux_0_8")]
-pub use split_window::SplitWindow;
+pub use split_window::{SplitW, SplitWindow};
 #[cfg(feature = "tmux_0_8")]
-pub use swap_pane::SwapPane;
+pub use swap_pane::{SwapP, SwapPane};
 #[cfg(feature = "tmux_0_8")]
-pub use swap_window::SwapWindow;
+pub use swap_window::{SwapW, SwapWindow};
 #[cfg(feature = "tmux_0_8")]
-pub use unlink_window::UnlinkWindow;
+pub use unlink_window::{UnlinkW, UnlinkWindow};
 //#[cfg(feature = "tmux_1_0")]
 //pub use up_pane::UpPane;
 

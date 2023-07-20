@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Has<'a> = HasSession<'a>;
+
 // XXX: better result return?
 /// Report if the specified session exist
 ///

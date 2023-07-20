@@ -3,6 +3,8 @@ use crate::PaneSize;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type MoveP<'a> = MovePane<'a>;
+
 /// Like join-pane, but `src-pane` and `dst-pane` may belong to the same window
 ///
 /// # Manual

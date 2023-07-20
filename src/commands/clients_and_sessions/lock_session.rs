@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type LockS<'a> = LockSession<'a>;
+
 /// Lock all clients attached to `target-session`
 /// # Manual
 ///

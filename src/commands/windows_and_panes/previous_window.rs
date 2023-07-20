@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Prev<'a> = PreviousWindow<'a>;
+
 /// Move to the previous window in the session
 ///
 /// # Manual

@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type PasteB<'a> = PasteBuffer<'a>;
+
 /// Structure for inserting the contents of a paste buffer into the specified pane
 ///
 /// # Manual

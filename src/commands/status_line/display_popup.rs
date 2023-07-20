@@ -5,6 +5,8 @@ use crate::commands::Size;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Popup<'a> = DisplayPopup<'a>;
+
 /// Structure for displaying a menu on target-client
 ///
 /// # Manual

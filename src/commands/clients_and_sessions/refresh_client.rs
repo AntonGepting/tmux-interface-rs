@@ -6,6 +6,8 @@ use crate::TmuxCommand;
 use crate::{AllowActions, State, Subscribe};
 use std::borrow::Cow;
 
+pub type Refresh<'a> = RefreshClient<'a>;
+
 /// Structure for refreshing the current client
 ///
 /// # Manual

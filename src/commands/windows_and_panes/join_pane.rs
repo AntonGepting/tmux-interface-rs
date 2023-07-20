@@ -3,6 +3,8 @@ use crate::PaneSize;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type JoinP<'a> = JoinPane<'a>;
+
 /// Like split-window, but instead of splitting `dst-pane` and creating a new pane, split it
 /// and move `src-pane` into the space
 ///

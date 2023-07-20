@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Last<'a> = LastWindow<'a>;
+
 /// Select the last (previously selected) window
 ///
 /// # Manual

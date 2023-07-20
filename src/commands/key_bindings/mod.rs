@@ -29,15 +29,15 @@ pub mod unbind_key;
 pub mod unbind_key_macro;
 
 #[cfg(feature = "tmux_0_8")]
-pub use bind_key::BindKey;
+pub use bind_key::{Bind, BindKey};
 #[cfg(feature = "tmux_0_8")]
-pub use list_keys::ListKeys;
+pub use list_keys::{ListKeys, LsK};
 #[cfg(feature = "tmux_0_8")]
-pub use send_keys::SendKeys;
+pub use send_keys::{Send, SendKeys};
 #[cfg(feature = "tmux_0_8")]
 pub use send_prefix::SendPrefix;
 #[cfg(feature = "tmux_0_8")]
-pub use unbind_key::UnbindKey;
+pub use unbind_key::{Unbind, UnbindKey};
 
 #[cfg(test)]
 #[path = "."]

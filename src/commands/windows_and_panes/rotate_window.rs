@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type RotateW<'a> = RotateWindow<'a>;
+
 /// Rotate the positions of the panes within a window
 ///
 /// # Manual

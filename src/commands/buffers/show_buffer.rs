@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type ShowB<'a> = ShowBuffer<'a>;
+
 /// Display the contents of the specified buffer.
 ///
 /// # Manual

@@ -3,6 +3,8 @@ use crate::PaneSize;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type SplitW<'a> = SplitWindow<'a>;
+
 /// Create a new pane by splitting target-pane
 ///
 /// # Manual

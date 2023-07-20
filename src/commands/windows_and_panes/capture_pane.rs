@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type CaptureP<'a> = CapturePane<'a>;
+
 /// # Manual
 ///
 /// tmux ^3.1:

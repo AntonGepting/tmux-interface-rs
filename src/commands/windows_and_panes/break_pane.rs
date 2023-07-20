@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type BreakP<'a> = BreakPane<'a>;
+
 /// Break `src-pane` off from its containing window to make it the only pane in `dst-window`
 ///
 /// # Manual

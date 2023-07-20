@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Set<'a> = SetOption<'a>;
+
 /// Structure for setting a pane/window/session/server option
 ///
 /// # Manual

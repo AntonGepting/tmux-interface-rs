@@ -4,6 +4,8 @@ use crate::ClientFlags;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Attach<'a> = AttachSession<'a>;
+
 /// Structure for attaching client to already existing session
 ///
 /// # Manual

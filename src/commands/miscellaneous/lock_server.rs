@@ -1,6 +1,8 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 
+pub type Lock = LockServer;
+
 /// # Manual
 ///
 /// tmux ^0.8:

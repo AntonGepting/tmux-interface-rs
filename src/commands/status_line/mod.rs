@@ -40,21 +40,21 @@ pub mod show_prompt_history;
 pub mod show_prompt_history_macro;
 
 #[cfg(feature = "tmux_3_3")]
-pub use clear_prompt_history::ClearPromptHistory;
+pub use clear_prompt_history::{ClearPHist, ClearPromptHistory};
 #[cfg(feature = "tmux_0_8")]
 pub use command_prompt::CommandPrompt;
 #[cfg(feature = "tmux_0_9")]
-pub use confirm_before::ConfirmBefore;
+pub use confirm_before::{Confirm, ConfirmBefore};
 #[cfg(feature = "tmux_3_0")]
-pub use display_menu::DisplayMenu;
+pub use display_menu::{DisplayMenu, Menu};
 #[cfg(feature = "tmux_1_0")]
-pub use display_message::DisplayMessage;
+pub use display_message::{Display, DisplayMessage};
 //#[cfg(feature = "tmux_1_0")]
 //pub use select_prompt::SelectPrompt;
 #[cfg(feature = "tmux_3_2")]
-pub use display_popup::DisplayPopup;
+pub use display_popup::{DisplayPopup, Popup};
 #[cfg(feature = "tmux_3_3")]
-pub use show_prompt_history::ShowPromptHistory;
+pub use show_prompt_history::{ShowPHist, ShowPromptHistory};
 
 #[cfg(test)]
 #[path = "."]

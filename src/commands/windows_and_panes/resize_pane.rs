@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type ResizeP<'a> = ResizePane<'a>;
+
 /// Resize a pane, up, down, left or right
 ///
 /// # Manual

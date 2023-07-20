@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type DeleteB<'a> = DeleteBuffer<'a>;
+
 /// Delete the buffer named buffer-name, or the most recently added automatically named buffer
 /// if not specified.
 ///

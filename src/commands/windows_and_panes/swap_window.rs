@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type SwapW<'a> = SwapWindow<'a>;
+
 /// This is similar to link-window, except the source and destination windows are swapped
 ///
 /// # Manual

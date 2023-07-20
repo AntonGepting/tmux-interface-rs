@@ -3,6 +3,8 @@ use crate::TmuxCommand;
 use std::borrow::Cow;
 use std::marker::PhantomData;
 
+pub type SelectP<'a> = SelectPane<'a>;
+
 /// Make pane `target-pane` the active pane in window `target-window`
 ///
 /// # Manual

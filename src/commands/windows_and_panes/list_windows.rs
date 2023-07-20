@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type LsW<'a> = ListWindows<'a>;
+
 // XXX: better return type
 /// List windows on the server
 ///

@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type SelectL<'a> = SelectLayout<'a>;
+
 /// Choose a specific layout for a window
 ///
 /// # Manual

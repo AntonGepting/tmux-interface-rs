@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type ClearHist<'a> = ClearHistory<'a>;
+
 /// Remove and free the history for the specified pane.
 ///
 /// # Manual

@@ -25,13 +25,13 @@ pub mod show_window_options;
 pub mod show_window_options_macro;
 
 #[cfg(feature = "tmux_0_8")]
-pub use set_option::SetOption;
+pub use set_option::{Set, SetOption};
 #[cfg(feature = "tmux_0_8")]
-pub use set_window_option::SetWindowOption;
+pub use set_window_option::{SetW, SetWindowOption};
 #[cfg(feature = "tmux_0_8")]
-pub use show_options::ShowOptions;
+pub use show_options::{Show, ShowOptions};
 #[cfg(feature = "tmux_0_8")]
-pub use show_window_options::ShowWindowOptions;
+pub use show_window_options::{ShowW, ShowWindowOptions};
 
 #[cfg(test)]
 #[path = "."]

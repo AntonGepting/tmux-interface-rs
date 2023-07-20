@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Bind<'a> = BindKey<'a>;
+
 // FIXME: -c flag support
 /// Structure binding key `key` to command
 ///

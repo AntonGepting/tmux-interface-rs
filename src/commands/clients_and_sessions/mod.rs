@@ -95,43 +95,43 @@ pub mod switch_client;
 pub mod switch_client_macro;
 
 #[cfg(feature = "tmux_0_8")]
-pub use attach_session::AttachSession;
+pub use attach_session::{Attach, AttachSession};
 #[cfg(feature = "tmux_0_8")]
-pub use detach_client::DetachClient;
+pub use detach_client::{Detach, DetachClient};
 #[cfg(feature = "tmux_0_8")]
-pub use has_session::HasSession;
+pub use has_session::{Has, HasSession};
 #[cfg(feature = "tmux_0_8")]
 pub use kill_server::KillServer;
 #[cfg(feature = "tmux_0_8")]
 pub use kill_session::KillSession;
 #[cfg(feature = "tmux_0_8")]
-pub use list_clients::ListClients;
+pub use list_clients::{ListClients, LsC};
 #[cfg(feature = "tmux_0_8")]
-pub use list_commands::ListCommands;
+pub use list_commands::{ListCommands, LsCm};
 #[cfg(feature = "tmux_0_8")]
-pub use list_sessions::ListSessions;
+pub use list_sessions::{ListSessions, Ls};
 #[cfg(feature = "tmux_1_1")]
-pub use lock_client::LockClient;
+pub use lock_client::{LockC, LockClient};
 #[cfg(feature = "tmux_1_1")]
-pub use lock_session::LockSession;
+pub use lock_session::{LockS, LockSession};
 #[cfg(feature = "tmux_0_8")]
-pub use new_session::NewSession;
+pub use new_session::{New, NewSession};
 #[cfg(feature = "tmux_0_8")]
-pub use refresh_client::RefreshClient;
+pub use refresh_client::{Refresh, RefreshClient};
 #[cfg(feature = "tmux_0_8")]
-pub use rename_session::RenameSession;
+pub use rename_session::{Rename, RenameSession};
 #[cfg(feature = "tmux_3_3")]
 pub use server_access::ServerAccess;
 #[cfg(feature = "tmux_1_2")]
-pub use show_messages::ShowMessages;
+pub use show_messages::{ShowMessages, ShowMsgs};
 #[cfg(feature = "tmux_0_8")]
-pub use source_file::SourceFile;
+pub use source_file::{Source, SourceFile};
 #[cfg(feature = "tmux_0_8")]
-pub use start_server::StartServer;
+pub use start_server::{Start, StartServer};
 #[cfg(feature = "tmux_0_8")]
-pub use suspend_client::SuspendClient;
+pub use suspend_client::{SuspendC, SuspendClient};
 #[cfg(feature = "tmux_0_8")]
-pub use switch_client::SwitchClient;
+pub use switch_client::{SwitchC, SwitchClient};
 
 #[cfg(test)]
 #[path = "."]

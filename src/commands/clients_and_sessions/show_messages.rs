@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type ShowMsgs<'a> = ShowMessages<'a>;
+
 /// Show client messages or server information
 ///
 /// # Manual

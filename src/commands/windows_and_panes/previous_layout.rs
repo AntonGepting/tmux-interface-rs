@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type PrevL<'a> = PreviousLayout<'a>;
+
 /// Move to the previous layout in the session
 ///
 /// # Manual

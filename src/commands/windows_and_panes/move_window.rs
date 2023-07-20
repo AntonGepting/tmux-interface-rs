@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type MoveW<'a> = MoveWindow<'a>;
+
 /// This is similar to link-window, except the window at `src-window` is moved to `dst-window`
 ///
 /// # Manual

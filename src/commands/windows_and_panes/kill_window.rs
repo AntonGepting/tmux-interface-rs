@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type KillW<'a> = KillWindow<'a>;
+
 /// Kill the current window or the window at target-window, removing it from any sessions
 /// to which it is linked
 ///

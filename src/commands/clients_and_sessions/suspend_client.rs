@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type SuspendC<'a> = SuspendClient<'a>;
+
 /// Suspend a client by sending SIGTSTP (tty stop)
 ///
 /// # Manual

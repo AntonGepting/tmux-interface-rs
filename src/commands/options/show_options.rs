@@ -2,7 +2,7 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
-//use crate::commands::tmux_commands::TmuxCommands;
+pub type Show<'a> = ShowOptions<'a>;
 
 /// Structure for showing options
 ///

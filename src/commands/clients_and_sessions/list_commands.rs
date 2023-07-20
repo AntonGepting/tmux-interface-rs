@@ -5,6 +5,8 @@ use std::borrow::Cow;
 use std::fmt;
 use std::marker::PhantomData;
 
+pub type LsCm<'a> = ListCommands<'a>;
+
 /// List the syntax of all commands supported by tmux
 ///
 /// # Manual

@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type SetB<'a> = SetBuffer<'a>;
+
 /// Set the contents of the specified buffer to data.
 ///
 /// # Manual

@@ -14,9 +14,9 @@ pub mod show_environment;
 pub mod show_environment_macro;
 
 #[cfg(feature = "tmux_1_0")]
-pub use set_environment::SetEnvironment;
+pub use set_environment::{SetEnv, SetEnvironment};
 #[cfg(feature = "tmux_1_0")]
-pub use show_environment::ShowEnvironment;
+pub use show_environment::{ShowEnv, ShowEnvironment};
 
 #[cfg(test)]
 #[path = "."]

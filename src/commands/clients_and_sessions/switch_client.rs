@@ -3,6 +3,8 @@ use crate::TmuxCommand;
 use std::borrow::Cow;
 use std::marker::PhantomData;
 
+pub type SwitchC<'a> = SwitchClient<'a>;
+
 /// Structure to switch the current session for client `target-client` to `target-session`
 ///
 /// # Manual

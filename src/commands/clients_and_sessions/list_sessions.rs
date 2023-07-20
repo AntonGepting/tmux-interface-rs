@@ -3,6 +3,8 @@ use crate::TmuxCommand;
 use std::borrow::Cow;
 use std::marker::PhantomData;
 
+pub type Ls<'a> = ListSessions<'a>;
+
 // XXX: better result return?
 /// List all sessions managed by the server
 /// # Manual

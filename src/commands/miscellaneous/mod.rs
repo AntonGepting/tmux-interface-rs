@@ -36,17 +36,17 @@ pub mod wait_for_macro;
 #[cfg(feature = "tmux_0_8")]
 pub use clock_mode::ClockMode;
 #[cfg(feature = "tmux_0_8")]
-pub use if_shell::IfShell;
+pub use if_shell::{If, IfShell};
 #[cfg(feature = "tmux_0_8")]
-pub use lock_server::LockServer;
+pub use lock_server::{Lock, LockServer};
 //#[cfg(feature = "tmux_1_0")]
 //pub use server_info::ServerInfo;
 //#[cfg(feature = "tmux_1_0")]
 //pub use set_password::SetPassword;
 #[cfg(feature = "tmux_1_1")]
-pub use run_shell::RunShell;
+pub use run_shell::{Run, RunShell};
 #[cfg(feature = "tmux_1_8")]
-pub use wait_for::WaitFor;
+pub use wait_for::{Wait, WaitFor};
 
 #[cfg(test)]
 #[path = "."]

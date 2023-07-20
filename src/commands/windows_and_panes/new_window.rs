@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type NewW<'a> = NewWindow<'a>;
+
 /// Structure for creating new window, using `tmux new-window` command
 ///
 /// # Manual

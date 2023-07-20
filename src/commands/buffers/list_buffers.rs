@@ -3,6 +3,8 @@ use crate::TmuxCommand;
 use std::borrow::Cow;
 use std::marker::PhantomData;
 
+pub type LsB<'a> = ListBuffers<'a>;
+
 /// List the global buffers.
 ///
 /// # Manual

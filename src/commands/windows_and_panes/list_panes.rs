@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type LsP<'a> = ListPanes<'a>;
+
 // XXX: better return type
 /// List panes on the server
 ///

@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Send<'a> = SendKeys<'a>;
+
 /// Structure
 ///
 /// # Manual

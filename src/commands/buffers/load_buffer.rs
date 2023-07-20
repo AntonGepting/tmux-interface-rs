@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type LoadB<'a> = LoadBuffer<'a>;
+
 /// Load the contents of the specified paste buffer from path.
 ///
 /// # Manual

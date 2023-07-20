@@ -3,6 +3,8 @@ use crate::TmuxCommand;
 use std::borrow::Cow;
 use std::marker::PhantomData;
 
+pub type SwapP<'a> = SwapPane<'a>;
+
 /// Swap two panes
 ///
 /// # Manual

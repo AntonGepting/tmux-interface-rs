@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Detach<'a> = DetachClient<'a>;
+
 /// Structure for detaching the current client
 ///
 /// # Manual

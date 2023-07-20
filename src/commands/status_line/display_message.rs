@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Display<'a> = DisplayMessage<'a>;
+
 /// Structure for displaying a message
 ///
 /// # Manual

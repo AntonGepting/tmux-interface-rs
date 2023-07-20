@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type SaveB<'a> = SaveBuffer<'a>;
+
 /// Save the contents of the specified paste buffer to path.
 ///
 /// # Manual

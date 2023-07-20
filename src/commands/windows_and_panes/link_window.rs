@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type LinkW<'a> = LinkWindow<'a>;
+
 /// Link the window at src-window to the specified dst-window
 ///
 /// # Manual

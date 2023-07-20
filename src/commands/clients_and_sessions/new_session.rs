@@ -4,6 +4,8 @@ use crate::ClientFlags;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type New<'a> = NewSession<'a>;
+
 /// Structure for creating a new session
 ///
 /// # Manual

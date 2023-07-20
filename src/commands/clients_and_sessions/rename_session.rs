@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type Rename<'a> = RenameSession<'a>;
+
 /// Rename the session to `new-name`
 ///
 /// # Manual

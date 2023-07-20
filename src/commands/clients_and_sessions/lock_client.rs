@@ -2,6 +2,8 @@ use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
+pub type LockC<'a> = LockClient<'a>;
+
 /// Lock `target-client`
 ///
 /// # Manual
