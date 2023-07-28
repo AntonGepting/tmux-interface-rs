@@ -1,84 +1,15 @@
+use crate::control_mode::constants::*;
 use crate::Error;
+use crate::TmuxCommand;
 use std::io::BufRead;
 use std::io::Lines;
 use std::io::Write;
 
-/// `%begin`
-#[cfg(feature = "tmux_1_8")]
-pub const OUTPUT_BLOCK_BEGIN: &str = "%begin";
-/// `%end`
-#[cfg(feature = "tmux_1_8")]
-pub const OUTPUT_BLOCK_END: &str = "%end";
-/// `%error`
-#[cfg(feature = "tmux_1_8")]
-pub const OUTPUT_BLOCK_ERROR: &str = "%error";
-
-/// In control mode, tmux outputs notifications.  A notification will
-/// never occur inside an output block. (tmux man)
-///
-/// `%client-detached client`
-#[cfg(feature = "tmux_3_2")]
-pub const NOTIFICATION_CLIENT_DETACHED: &str = "%client-detached";
-/// `%client-session-changed client session-id name`
-#[cfg(feature = "tmux_2_4")]
-pub const NOTIFICATION_CLIENT_SESSION_CHANGED: &str = "%client-session-changed";
-/// `%continue pane-id`
-#[cfg(feature = "tmux_X_X")]
-pub const NOTIFICATION_CONTINUE: &str = "%continue";
-/// `%exit [reason]`
-#[cfg(feature = "tmux_1_8")]
-pub const NOTIFICATION_EXIT: &str = "%exit";
-/// `%extended-output pane-id age ... : value`
-#[cfg(feature = "tmux_X_X")]
-pub const NOTIFICATION_EXTENDED_OUTPUT: &str = "%extended-output";
-/// tmux ^2.2 `%layout-change window-id window-layout window-visible-layout`
-/// tmux ^1.8 `%layout-change window-id window-layout`
-#[cfg(feature = "tmux_1_8")]
-pub const NOTIFICATION_LAYOUT_CHANGE: &str = "%layout-change";
-/// `%output pane-id value`
-#[cfg(feature = "tmux_1_8")]
-pub const NOTIFICATION_OUTPUT: &str = "%output";
-/// `%pane-mode-changed pane-id`
-#[cfg(feature = "tmux_2_5")]
-pub const NOTIFICATION_PANE_MODE_CHANGED: &str = "%pane-mode-changed";
-/// `%pause pane-id`
-#[cfg(feature = "tmux_X_X")]
-pub const NOTIFICATION_PAUSE: &str = "%pause";
-/// `%session-changed session-id name`
-#[cfg(feature = "tmux_1_8")]
-pub const NOTIFICATION_SESSION_CHANGED: &str = "%session-changed";
-/// `%session-renamed name`
-#[cfg(feature = "tmux_1_8")]
-pub const NOTIFICATION_SESSION_RENAMED: &str = "%session-renamed";
-/// `%session-window-changed session-id window-id`
-#[cfg(feature = "tmux_2_5")]
-pub const NOTIFICATION_SESSION_WINDOW_CHANGED: &str = "%session-window-changed";
-/// `%sessions-changed`
-#[cfg(feature = "tmux_1_8")]
-pub const NOTIFICATION_SESSIONS_CHANGED: &str = "%sessions-changed";
-/// `%subscription-changed name session-id window-id window-index`
-#[cfg(feature = "tmux_X_X")]
-pub const NOTIFICATION_SUBSCRIPTION_CHANGED: &str = "%subscription-changed";
-/// `%unlinked-window-add window-id`
-#[cfg(feature = "tmux_1_8")]
-pub const NOTIFICATION_UNLINKED_WINDOW_ADD: &str = "%unlinked-window-add";
-/// `%window-add window-id`
-#[cfg(feature = "tmux_1_8")]
-pub const NOTIFICATION_WINDOW_ADD: &str = "%window-add";
-/// `%window-close window-id`
-#[cfg(feature = "tmux_1_8")]
-pub const NOTIFICATION_WINDOW_CLOSE: &str = "%window-close";
-/// `%window-pane-changed window-id pane-id`
-#[cfg(feature = "tmux_2_5")]
-pub const NOTIFICATION_WINDOW_PANE_CHANGED: &str = "%window-pane-changed";
-/// `%window-renamed window-id name`
-#[cfg(feature = "tmux_1_8")]
-pub const NOTIFICATION_WINDOW_RENAMED: &str = "%window-renamed";
-
-/// separator in notifications, and output block (`%begin<' '>1234<' '>0`)
-pub const CONTROL_MODE_SEPARATOR: char = ' ';
-/// additional separator used in extended-output notification
-pub const CONTROL_MODE_EXTENDED_OUTPUT_SEPARATOR: &str = " : ";
+// 1. send
+// 2. receive
+//   2.1. ControlModeLine - line by line reading
+//   2.2. Response - build multiline block if needed
+//   2.3. match response {}
 
 //pub struct ControlMode {}
 //impl ControlMode {}
@@ -109,13 +40,25 @@ impl OutputBlock {}
 pub enum Response {
     /// %begin seconds-from-epoch command-number flags
     #[cfg(feature = "tmux_1_8")]
-    OutputBlockBegin(usize, usize, usize),
+    OutputBlockBegin {
+        time: usize,
+        num: usize,
+        flags: usize,
+    },
     /// %end seconds-from-epoch command-number flags
     #[cfg(feature = "tmux_1_8")]
-    OutputBlockEnd(usize, usize, usize),
+    OutputBlockEnd {
+        time: usize,
+        num: usize,
+        flags: usize,
+    },
     /// %error seconds-from-epoch command-number flags
     #[cfg(feature = "tmux_1_8")]
-    OutputBlockError(usize, usize, usize),
+    OutputBlockError {
+        time: usize,
+        num: usize,
+        flags: usize,
+    },
     /// `...data...`
     #[cfg(feature = "tmux_1_8")]
     OutputBlockData(String),
@@ -127,7 +70,11 @@ pub enum Response {
     ClientDetached(String),
     /// `%client-session-changed client session-id name`
     #[cfg(feature = "tmux_2_4")]
-    ClientSessionChanged(String, String, String),
+    ClientSessionChanged {
+        client: String,
+        session_id: String,
+        name: String,
+    },
     /// `%continue pane-id`
     #[cfg(feature = "tmux_X_X")]
     Continue(String),
@@ -136,16 +83,28 @@ pub enum Response {
     Exit(Option<String>),
     /// `%extended-output pane-id age ... : value`
     #[cfg(feature = "tmux_X_X")]
-    ExtendedOutput(String, String, Vec<String>, String),
+    ExtendedOutput {
+        pane_id: String,
+        age: String,
+        other: Vec<String>,
+        value: String,
+    },
     /// tmux ^2.2 `%layout-change window-id window-layout window-visible-layout`
     /// tmux ^1.8 `%layout-change window-id window-layout`
     #[cfg(feature = "tmux_2_2")]
-    LayoutChange(String, String, String),
+    LayoutChange {
+        window_id: String,
+        window_layout: String,
+        window_visible_layout: String,
+    },
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2")))]
-    LayoutChange(String, String),
+    LayoutChange {
+        window_id: String,
+        window_layout: String,
+    },
     /// `%output pane-id value`
     #[cfg(feature = "tmux_1_8")]
-    Output(String, String),
+    Output { pane_id: String, value: String },
     /// `%pane-mode-changed pane-id`
     #[cfg(feature = "tmux_2_5")]
     PaneModeChanged(String),
@@ -154,19 +113,27 @@ pub enum Response {
     Pause(String),
     /// `%session-changed session-id name`
     #[cfg(feature = "tmux_1_8")]
-    SessionChanged(String, String),
+    SessionChanged { session_id: String, name: String },
     /// `%session-renamed name`
     #[cfg(feature = "tmux_1_8")]
     SessionRenamed(String),
     /// `%session-window-changed session-id window-id`
     #[cfg(feature = "tmux_2_5")]
-    SessionWindowChanged(String, String),
+    SessionWindowChanged {
+        session_id: String,
+        window_id: String,
+    },
     /// `%sessions-changed`
     #[cfg(feature = "tmux_1_8")]
     SessionsChanged,
     /// `%subscription-changed name session-id window-id window-index`
     #[cfg(feature = "tmux_X_X")]
-    SubscriptionChanged(String, String, String, String),
+    SubscriptionChanged {
+        name: String,
+        session_id: String,
+        window_id: String,
+        window_index: String,
+    },
     /// `%unlinked-window-add window-id`
     #[cfg(feature = "tmux_1_8")]
     UnlinkedWindowAdd(String),
@@ -178,10 +145,10 @@ pub enum Response {
     WindowClose(String),
     /// `%window-pane-changed window-id pane-id`
     #[cfg(feature = "tmux_2_5")]
-    WindowPaneChanged(String, String),
+    WindowPaneChanged { window_id: String, pane_id: String },
     /// `%window-renamed window-id name`
     #[cfg(feature = "tmux_1_8")]
-    WindowRenamed(String, String),
+    WindowRenamed { window_id: String, name: String },
 }
 
 // wrapper structure around Lines type, which is Iterator
@@ -221,13 +188,19 @@ impl<B: BufRead> ControlModeOutput<B> {
     // TODO: error
     /// Send command to stdin of a child tmux process, opened in control mode, and get response
     /// data as `OutputBlock`
-    pub fn send(
+    ///
+    /// Tmux Man
+    /// > Each command will produce one block of output on standard output
+    ///
+    pub fn send<'a, T: Into<TmuxCommand<'a>>>(
         stdin: &mut ChildStdin,
-        cmd: String,
+        cmd: T,
         lines: &mut ControlModeOutput<B>,
     ) -> Result<OutputBlock, Error> {
-        writeln!(stdin, "{}", cmd)?;
+        // send command
+        writeln!(stdin, "{}", cmd.into())?;
 
+        // receive response
         match lines.next() {
             Some(line) => match line {
                 Response::OutputBlock(data) => Ok(data),
@@ -254,26 +227,26 @@ impl<B: BufRead> ControlModeOutput<B> {
                 match output {
                     // if output block detected combine it from parts (`%begin ... data ... %end/%error`)
                     // continue loop waiting for data and end/error
-                    Response::OutputBlockBegin(t, n, f) => {
-                        _time = t;
-                        _num = n;
-                        _flags = f;
+                    Response::OutputBlockBegin { time, num, flags } => {
+                        _time = time;
+                        _num = num;
+                        _flags = flags;
                     }
                     // end of output block (ended with success), break loop, got whole block
-                    Response::OutputBlockEnd(t, n, f) => {
+                    Response::OutputBlockEnd { time, num, flags } => {
                         // XXX: check t, n
-                        output_block.time = t;
-                        output_block.num = n;
-                        output_block.flags = f;
+                        output_block.time = time;
+                        output_block.num = num;
+                        output_block.flags = flags;
                         output_block.success = true;
                         return Some(Response::OutputBlock(output_block));
                     }
                     // end of output block (ended with an error), break loop, got whole block
-                    Response::OutputBlockError(t, n, f) => {
+                    Response::OutputBlockError { time, num, flags } => {
                         // XXX: check t, n
-                        output_block.time = t;
-                        output_block.num = n;
-                        output_block.flags = f;
+                        output_block.time = time;
+                        output_block.num = num;
+                        output_block.flags = flags;
                         output_block.success = false;
                         return Some(Response::OutputBlock(output_block));
                     }
@@ -331,7 +304,11 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let time = v.get(1).unwrap().parse::<usize>()?;
                 let num = v.get(2).unwrap().parse::<usize>()?;
                 let flags = v.get(3).unwrap().parse::<usize>()?;
-                Ok(Response::OutputBlockBegin(time, num, flags))
+                Ok(Response::OutputBlockBegin {
+                    time: time,
+                    num: num,
+                    flags: flags,
+                })
             }
 
             // end of output block (successed)
@@ -342,7 +319,7 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let time = v.get(1).unwrap().parse::<usize>()?;
                 let num = v.get(2).unwrap().parse::<usize>()?;
                 let flags = v.get(3).unwrap().parse::<usize>()?;
-                Ok(Response::OutputBlockEnd(time, num, flags))
+                Ok(Response::OutputBlockEnd { time, num, flags })
             }
 
             // end of output block (error)
@@ -353,7 +330,7 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let time = v.get(1).unwrap().parse::<usize>()?;
                 let num = v.get(2).unwrap().parse::<usize>()?;
                 let flags = v.get(3).unwrap().parse::<usize>()?;
-                Ok(Response::OutputBlockError(time, num, flags))
+                Ok(Response::OutputBlockError { time, num, flags })
             }
 
             // `%client-detached client`
@@ -371,11 +348,11 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let client = v.get(1).unwrap();
                 let session_id = v.get(2).unwrap();
                 let name = v.get(3).unwrap();
-                Ok(Response::ClientSessionChanged(
-                    client.to_string(),
-                    session_id.to_string(),
-                    name.to_string(),
-                ))
+                Ok(Response::ClientSessionChanged {
+                    client: client.to_string(),
+                    session_id: session_id.to_string(),
+                    name: name.to_string(),
+                })
             }
 
             // `%continue pane-id`
@@ -437,17 +414,17 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let window_visible_layout = v.get(3).unwrap();
 
                 #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2")))]
-                return Ok(Response::LayoutChange(
-                    window_id.to_string(),
-                    window_layout.to_string(),
-                ));
+                return Ok(Response::LayoutChange {
+                    window_id: window_id.to_string(),
+                    window_layout: window_layout.to_string(),
+                });
 
                 #[cfg(feature = "tmux_2_2")]
-                return Ok(Response::LayoutChange(
-                    window_id.to_string(),
-                    window_layout.to_string(),
-                    window_visible_layout.to_string(),
-                ));
+                return Ok(Response::LayoutChange {
+                    window_id: window_id.to_string(),
+                    window_layout: window_layout.to_string(),
+                    window_visible_layout: window_visible_layout.to_string(),
+                });
             }
 
             // `%output pane-id value`
@@ -456,7 +433,10 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
                 let pane_id = v.get(1).unwrap();
                 let value = v.get(2).unwrap();
-                Ok(Response::Output(pane_id.to_string(), value.to_string()))
+                Ok(Response::Output {
+                    pane_id: pane_id.to_string(),
+                    value: value.to_string(),
+                })
             }
 
             // `%pane-mode-changed pane-id`
@@ -481,10 +461,10 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
                 let session_id = v.get(1).unwrap();
                 let name = v.get(2).unwrap();
-                Ok(Response::SessionChanged(
-                    session_id.to_string(),
-                    name.to_string(),
-                ))
+                Ok(Response::SessionChanged {
+                    session_id: session_id.to_string(),
+                    name: name.to_string(),
+                })
             }
 
             // `%session-renamed name`
@@ -501,10 +481,10 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
                 let session_id = v.get(1).unwrap();
                 let window_id = v.get(2).unwrap();
-                Ok(Response::SessionWindowChanged(
-                    session_id.to_string(),
-                    window_id.to_string(),
-                ))
+                Ok(Response::SessionWindowChanged {
+                    session_id: session_id.to_string(),
+                    window_id: window_id.to_string(),
+                })
             }
 
             // `%sessions-changed`
@@ -557,10 +537,10 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
                 let window_id = v.get(1).unwrap();
                 let pane_id = v.get(2).unwrap();
-                Ok(Response::WindowPaneChanged(
-                    window_id.to_string(),
-                    pane_id.to_string(),
-                ))
+                Ok(Response::WindowPaneChanged {
+                    window_id: window_id.to_string(),
+                    pane_id: pane_id.to_string(),
+                })
             }
 
             // `%window-renamed window-id name`
@@ -571,10 +551,10 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
                 let window_id = v.get(1).unwrap();
                 let name = v.get(2).unwrap();
-                Ok(Response::WindowRenamed(
-                    window_id.to_string(),
-                    name.to_string(),
-                ))
+                Ok(Response::WindowRenamed {
+                    window_id: window_id.to_string(),
+                    name: name.to_string(),
+                })
             }
 
             // `...` - data inside `%begin ... %end`
