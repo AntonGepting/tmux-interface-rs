@@ -57,6 +57,12 @@ pub const NOTIFICATION_SUBSCRIPTION_CHANGED: &str = "%subscription-changed";
 /// `%unlinked-window-add window-id`
 #[cfg(feature = "tmux_1_8")]
 pub const NOTIFICATION_UNLINKED_WINDOW_ADD: &str = "%unlinked-window-add";
+/// `%unlinked-window-close window-id`
+#[cfg(feature = "tmux_3_3")]
+pub const NOTIFICATION_UNLINKED_WINDOW_CLOSE: &str = "%unlinked-window-close";
+/// `%unlinked-window-renamed window-id`
+#[cfg(feature = "tmux_3_3")]
+pub const NOTIFICATION_UNLINKED_WINDOW_RENAMED: &str = "%unlinked-window-renamed";
 /// `%window-add window-id`
 #[cfg(feature = "tmux_1_8")]
 pub const NOTIFICATION_WINDOW_ADD: &str = "%window-add";

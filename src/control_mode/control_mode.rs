@@ -89,18 +89,17 @@ pub enum Response {
         other: Vec<String>,
         value: String,
     },
+    /// tmux ^3.3 `%layout-change window-id window-layout window-visible-layout window-flags`
     /// tmux ^2.2 `%layout-change window-id window-layout window-visible-layout`
     /// tmux ^1.8 `%layout-change window-id window-layout`
-    #[cfg(feature = "tmux_2_2")]
+    #[cfg(feature = "tmux_1_8")]
     LayoutChange {
         window_id: String,
         window_layout: String,
+        #[cfg(feature = "tmux_2_2")]
         window_visible_layout: String,
-    },
-    #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2")))]
-    LayoutChange {
-        window_id: String,
-        window_layout: String,
+        #[cfg(feature = "tmux_3_3")]
+        window_flags: String,
     },
     /// `%output pane-id value`
     #[cfg(feature = "tmux_1_8")]
@@ -137,6 +136,12 @@ pub enum Response {
     /// `%unlinked-window-add window-id`
     #[cfg(feature = "tmux_1_8")]
     UnlinkedWindowAdd(String),
+    /// `%unlinked-window-close window-id`
+    #[cfg(feature = "tmux_3_3")]
+    UnlinkedWindowClose(String),
+    /// `%unlinked-window-renamed window-id`
+    #[cfg(feature = "tmux_3_3")]
+    UnlinkedWindowRenamed(String),
     /// `%window-add window-id`
     #[cfg(feature = "tmux_1_8")]
     WindowAdd(String),
@@ -401,10 +406,14 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 ))
             }
 
+            // `%layout-change window-id window-layout window-visible-layout window-flags`
             // `%layout-change window-id window-layout window-visible-layout`
+            // `%layout-change window-id window-layout`
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_LAYOUT_CHANGE) => {
-                #[cfg(feature = "tmux_2_2")]
+                #[cfg(feature = "tmux_3_3")]
+                let v: Vec<_> = s.splitn(5, CONTROL_MODE_SEPARATOR).collect();
+                #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_3_3")))]
                 let v: Vec<_> = s.splitn(4, CONTROL_MODE_SEPARATOR).collect();
                 #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2")))]
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
@@ -412,18 +421,17 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let window_layout = v.get(2).unwrap();
                 #[cfg(feature = "tmux_2_2")]
                 let window_visible_layout = v.get(3).unwrap();
+                #[cfg(feature = "tmux_3_3")]
+                let window_flags = v.get(4).unwrap();
 
-                #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2")))]
+                #[cfg(feature = "tmux_1_8")]
                 return Ok(Response::LayoutChange {
                     window_id: window_id.to_string(),
                     window_layout: window_layout.to_string(),
-                });
-
-                #[cfg(feature = "tmux_2_2")]
-                return Ok(Response::LayoutChange {
-                    window_id: window_id.to_string(),
-                    window_layout: window_layout.to_string(),
+                    #[cfg(feature = "tmux_2_2")]
                     window_visible_layout: window_visible_layout.to_string(),
+                    #[cfg(feature = "tmux_3_3")]
+                    window_flags: window_flags.to_string(),
                 });
             }
 
@@ -513,6 +521,22 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
                 let window_id = v.get(1).unwrap();
                 Ok(Response::UnlinkedWindowAdd(window_id.to_string()))
+            }
+
+            // `%unlinked-window-close window-id`
+            #[cfg(feature = "tmux_3_3")]
+            s if s.starts_with(NOTIFICATION_UNLINKED_WINDOW_CLOSE) => {
+                let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
+                let window_id = v.get(1).unwrap();
+                Ok(Response::UnlinkedWindowClose(window_id.to_string()))
+            }
+
+            // `%unlinked-window-renamed window-id`
+            #[cfg(feature = "tmux_3_3")]
+            s if s.starts_with(NOTIFICATION_UNLINKED_WINDOW_RENAMED) => {
+                let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
+                let window_id = v.get(1).unwrap();
+                Ok(Response::UnlinkedWindowRenamed(window_id.to_string()))
             }
 
             // `%window-add window-id`
