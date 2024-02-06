@@ -15,9 +15,8 @@
 #[test]
 fn control_mode() {
     use std::io::{BufRead, BufReader};
-    use std::process::Stdio;
     use tmux_interface::control_mode::control_mode::{ControlModeOutput, Response};
-    use tmux_interface::{AttachSession, NewWindow, Tmux};
+    use tmux_interface::{AttachSession, NewWindow, StdIO, Tmux};
 
     //let tmux = Command::new("tmux")
     //.args(&["-C", "attach", "-t", "3"])
@@ -27,17 +26,14 @@ fn control_mode() {
     //.spawn()
     //.unwrap();
 
-    let tmux = Tmux::new()
+    let tmux = Tmux::with_command(AttachSession::new().target_session("0"))
         .control_mode()
-        .command(AttachSession::new().target_session("0"))
-        .into_command()
-        .stdout(Stdio::piped())
-        .stdin(Stdio::piped())
+        .stdout(Some(StdIO::Piped))
+        .stdin(Some(StdIO::Piped))
         .spawn()
         .unwrap();
 
     let stdout = tmux.stdout.unwrap();
-
     let mut stdin = tmux.stdin.unwrap();
 
     let reader = BufReader::new(stdout);
@@ -59,8 +55,11 @@ fn control_mode() {
 
         match &cm_line {
             #[cfg(feature = "tmux_2_5")]
-            Response::SessionWindowChanged(_, _) => {
-                let cmd = NewWindow::new().detached().build().to_string();
+            Response::SessionWindowChanged {
+                session_id,
+                window_id,
+            } => {
+                let cmd = NewWindow::new().detached();
                 ControlModeOutput::send(&mut stdin, cmd, &mut cm_lines).unwrap();
             }
             _ => {}
