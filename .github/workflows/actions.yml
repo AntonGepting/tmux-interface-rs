@@ -60,11 +60,11 @@ jobs:
           - { tmux: "master", feature: "tmux_X_X" }
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup tmux build cache for tmux ${{ matrix.versions.tmux }}
         id: tmux-build-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/tmux-builds/tmux-${{ matrix.versions.tmux }}
           key: tmux-${{ matrix.versions.tmux }}
