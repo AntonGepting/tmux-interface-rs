@@ -164,7 +164,7 @@ fn control_mode_line() {
         let output = "%session-changed $1 2".control_mode_line().unwrap();
         assert_eq!(
             Response::SessionChanged {
-                session_id: "1".to_string(),
+                session_id: "$1".to_string(),
                 name: "2".to_string()
             },
             output
@@ -266,7 +266,7 @@ fn next() {
     use crate::control_mode::control_mode::{ControlModeOutput, OutputBlock, Response};
     use std::io::{BufRead, BufReader};
 
-    let s = "%begin 1618081916 17688 1\n0: 3 windows (created Sat Apr 10 13:01:08 2021) (attached)\n%end 1618081916 17688 1\n%session-changed 0 $0 0";
+    let s = "%begin 1618081916 17688 1\n0: 3 windows (created Sat Apr 10 13:01:08 2021) (attached)\n%end 1618081916 17688 1\n%session-changed $0 0";
     let s = BufReader::new(s.as_bytes());
     let lines = s.lines();
 
@@ -295,7 +295,7 @@ fn for_loop() {
     use crate::control_mode::control_mode::{ControlModeOutput, Response};
     use std::io::{BufRead, BufReader};
 
-    let s = "%begin 1618081916 17688 0\n%end 1618081916 17688 0\n%session-changed 0 $0 0";
+    let s = "%begin 1618081916 17688 0\n%end 1618081916 17688 0\n%session-changed $0 0";
     let s = BufReader::new(s.as_bytes());
     let lines = s.lines();
 
