@@ -11,6 +11,7 @@ pub fn control_proc(
     dbg!(&response);
 
     match &response {
+        #[cfg(feature = "tmux_2_5")]
         Response::SessionWindowChanged {
             session_id,
             window_id,
@@ -63,11 +64,13 @@ pub fn tmux_control_proc(
     dbg!("response: ", &response);
 
     match &response {
+        #[cfg(feature = "tmux_1_8")]
         Response::WindowClose(_) => {
             let cmd = NewWindow::new().detached();
             let r = ControlModeOutput::send(stdin, cmd, lines);
             dbg!("result: ", r);
         }
+        #[cfg(feature = "tmux_3_3")]
         Response::UnlinkedWindowClose(_) => {
             let cmd = NewWindow::new().detached();
             let r = ControlModeOutput::send(stdin, cmd, lines);
