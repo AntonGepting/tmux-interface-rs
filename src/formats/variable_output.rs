@@ -74,7 +74,7 @@ pub enum VariableOutput<'a> {
     ClientName(&'a mut Option<String>),
     /// `client_pid` - PID of client process
     #[cfg(feature = "tmux_2_1")]
-    ClientPid(&'a mut Option<bool>),
+    ClientPid(&'a mut Option<usize>),
     /// `client_prefix` - 1 if prefix key has been pressed
     #[cfg(feature = "tmux_1_8")]
     ClientPrefix(&'a mut Option<bool>),
@@ -685,7 +685,7 @@ impl<'a> VariableOutput<'a> {
             Self::ClientName(v) => **v = Self::parse_option_string(s),
             // client_pid - PID of client process
             #[cfg(feature = "tmux_2_1")]
-            Self::ClientPid(v) => **v = Self::parse_option_bool(s),
+            Self::ClientPid(v) => **v = s.parse::<usize>().ok(),
             // client_prefix - 1 if prefix key has been pressed
             #[cfg(feature = "tmux_1_8")]
             Self::ClientPrefix(v) => **v = Self::parse_option_bool(s),

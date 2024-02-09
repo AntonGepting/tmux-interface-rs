@@ -193,7 +193,7 @@ impl<'a> FormatsOutput<'a> {
 
     /// `client_pid` - PID of client process
     #[cfg(feature = "tmux_2_1")]
-    pub fn client_pid(&mut self, v: &'a mut Option<bool>) -> &mut Self {
+    pub fn client_pid(&mut self, v: &'a mut Option<usize>) -> &mut Self {
         self.push(VariableOutput::ClientPid(v));
         self
     }
