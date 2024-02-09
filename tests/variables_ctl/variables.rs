@@ -1,6 +1,6 @@
 #[cfg(feature = "tmux_1_6")]
 #[test]
-fn get() {
+fn variables_ctl_tests() {
     use tmux_interface::{PanesCtl, SessionsCtl, WindowsCtl};
 
     let sessions = SessionsCtl::new().get_all().unwrap();

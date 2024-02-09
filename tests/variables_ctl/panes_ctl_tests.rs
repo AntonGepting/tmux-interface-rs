@@ -3,7 +3,7 @@
 fn get_panes() {
     use tmux_interface::{KillSession, NewSession, PanesCtl, SplitWindow, Tmux};
 
-    const TARGET_SESSION: &str = "test_get_panes";
+    const TARGET_SESSION: &str = "get_panes_test";
 
     Tmux::with_command(NewSession::new().detached().session_name(TARGET_SESSION))
         .output()

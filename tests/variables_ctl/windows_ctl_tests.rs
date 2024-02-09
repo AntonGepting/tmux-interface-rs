@@ -3,7 +3,7 @@
 fn get_windows() {
     use tmux_interface::{KillSession, NewSession, NewWindow, Tmux, WindowsCtl};
 
-    const TARGET_SESSION: &str = "test_get_windows";
+    const TARGET_SESSION: &str = "get_windows_test";
 
     Tmux::with_command(NewSession::new().detached().session_name(TARGET_SESSION))
         .output()

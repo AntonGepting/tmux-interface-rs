@@ -1,94 +1,3 @@
-// XXX: 1.9 processed
-#[derive(Default, PartialEq, Clone, Debug)]
-pub struct Client {
-    /// client_activity - Integer time client last had activity
-    #[cfg(feature = "tmux_1_6")]
-    pub activity: Option<u128>,
-    /// client_cell_height - Height of each client cell in pixels
-    #[cfg(feature = "tmux_3_1")]
-    pub cell_height: Option<usize>,
-    /// client_cell_width - Width of each client cell in pixels
-    #[cfg(feature = "tmux_3_1")]
-    pub cell_width: Option<usize>,
-    /// client_activity_string - String time client last had activity
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
-    pub activity_string: Option<String>,
-    /// client_created - Integer time client created
-    #[cfg(feature = "tmux_1_6")]
-    pub created: Option<u128>,
-    /// client_created_string - String time client created
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_2")))]
-    pub created_string: Option<String>,
-    /// client_control_mode - 1 if client is in control mode
-    #[cfg(feature = "tmux_2_1")]
-    pub control_mode: Option<bool>,
-    /// client_discarded - Bytes discarded when client behind
-    #[cfg(feature = "tmux_2_1")]
-    pub discarded: Option<String>,
-    /// client_cwd - Working directory of client
-    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_1_9")))]
-    pub cwd: Option<String>,
-    /// client_height - Height of client
-    #[cfg(feature = "tmux_1_6")]
-    pub height: Option<usize>,
-    /// client_key_table - Current key table
-    #[cfg(feature = "tmux_2_2")]
-    pub key_table: Option<String>,
-    /// client_last_session - Name of the client's last session
-    #[cfg(feature = "tmux_1_8")]
-    pub last_session: Option<String>,
-    /// client_name - Name of client
-    #[cfg(feature = "tmux_2_4")]
-    pub name: Option<String>,
-    /// client_pid - PID of client process
-    #[cfg(feature = "tmux_2_1")]
-    pub pid: Option<bool>
-    /// client_prefix - 1 if prefix key has been pressed
-    #[cfg(feature = "tmux_1_8")]
-    pub prefix: Option<bool>
-    /// client_readonly - 1 if client is readonly
-    #[cfg(feature = "tmux_1_6")]
-    pub readonly: Option<bool>,
-    /// client_session - Name of the client's session
-    #[cfg(feature = "tmux_1_8")]
-    pub session: Option<String>,
-    /// client_termname - Terminal name of client
-    #[cfg(feature = "tmux_1_6")]
-    pub termname: Option<String>,
-    /// client_termtype - Terminal type of client
-    #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_1")))]
-    pub termtype: Option<String>,
-    /// client_tty - Pseudo terminal of client
-    #[cfg(feature = "tmux_1_6")]
-    pub tty: Option<String>,
-    /// client_utf8 - 1 if client supports UTF-8
-    #[cfg(feature = "tmux_1_6")]
-    pub utf8: Option<bool>,
-    /// client_width - Width of client
-    #[cfg(feature = "tmux_1_6")]
-    pub width: Option<usize>,
-    /// client_written - Bytes written to client
-    #[cfg(feature = "tmux_2_4")]
-    pub written: Option<usize>,
-}
-
-#[derive(Default, PartialEq, Clone, Debug)]
-pub struct Buffer {
-    /// buffer_created - Time buffer created
-    #[cfg(feature = "tmux_2_6")]
-    pub created: Option<u128>,
-    /// buffer_name - Name of buffer
-    #[cfg(feature = "tmux_2_3")]
-    pub name: Option<String>,
-    /// buffer_sample - First 50 characters from the specified buffer
-    #[cfg(feature = "tmux_1_7")]
-    pub sample: Option<String>,
-    /// buffer_size - Size of the specified buffer in bytes
-    #[cfg(feature = "tmux_1_7")]
-    pub size: Option<usize>,
-}
-
-
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct Server {
     /// pid - Server PID
@@ -211,7 +120,6 @@ pub struct Misc {
     #[cfg(feature = "tmux_2_2")]
     pub scroll_position: Option<usize>,
 
-
     /// wrap_flag - Pane wrap flag
     #[cfg(feature = "tmux_1_8")]
     pub wrap_flag: Option<bool>,
@@ -254,12 +162,14 @@ pub struct Cursor {
     pub copy_cursor_y: Option<String>,
 }
 
-
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct Mouse {
-    /// mouse_all_flag - Pane mouse all flag
+    /// TODO: ? mouse_all_flag - Pane mouse all flag
     #[cfg(feature = "tmux_3_0")]
     pub all_flag: Option<String>,
+    /// TODO: ? mouse_all_flag - Pane mouse all flag
+    //#[cfg(feature = "tmux_2_4")]
+    //pub all_flag: Option<String>,
     /// mouse_any_flag - Pane mouse any flag
     #[cfg(feature = "tmux_1_8")]
     pub any_flag: Option<String>,
@@ -278,9 +188,6 @@ pub struct Mouse {
     /// mouse_utf8_flag - Pane mouse UTF-8 flag
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2"), feature = "tmux_3_0"))]
     pub utf8_flag: Option<String>,
-    /// mouse_all_flag - Pane mouse all flag
-    #[cfg(feature = "tmux_2_4")]
-    pub all_flag: Option<String>,
     /// mouse_word - Word under mouse, if any
     #[cfg(feature = "tmux_3_0")]
     pub word: Option<String>,
@@ -291,7 +198,6 @@ pub struct Mouse {
     #[cfg(feature = "tmux_3_0")]
     pub y: Option<usize>,
 }
-
 
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct Selection {
