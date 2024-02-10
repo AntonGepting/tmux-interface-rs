@@ -292,9 +292,21 @@ pub trait ControlModeLine {
     fn control_mode_line(&self) -> Result<Response, Error>;
 }
 
+fn parse_option_string(s: &str) -> Option<String> {
+    if !s.is_empty() {
+        Some(s.to_string())
+    } else {
+        None
+    }
+}
+
+// fn option2usize(s: Option<&&str>) -> Result<usize, Error> {
+// s.ok_or(Error::Hook)?.parse::<usize>().ok()
+// }
+
 //
 impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
-    // TODO: remove unwrap()
+    // TODO: remove.ok_or(Error::CMParseNum)?
     /// function takes one line and matches it against output block keywords, notifications, or is
     /// it just data line without any keyword
     // TODO: Result/Option parsing errors?
@@ -306,14 +318,10 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(OUTPUT_BLOCK_BEGIN) => {
                 let v: Vec<_> = s.splitn(4, CONTROL_MODE_SEPARATOR).collect();
-                let time = v.get(1).unwrap().parse::<usize>()?;
-                let num = v.get(2).unwrap().parse::<usize>()?;
-                let flags = v.get(3).unwrap().parse::<usize>()?;
-                Ok(Response::OutputBlockBegin {
-                    time: time,
-                    num: num,
-                    flags: flags,
-                })
+                let time = v.get(1).ok_or(Error::CMParseNum)?.parse::<usize>()?;
+                let num = v.get(2).ok_or(Error::CMParseNum)?.parse::<usize>()?;
+                let flags = v.get(3).ok_or(Error::CMParseNum)?.parse::<usize>()?;
+                Ok(Response::OutputBlockBegin { time, num, flags })
             }
 
             // end of output block (successed)
@@ -321,9 +329,9 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(OUTPUT_BLOCK_END) => {
                 let v: Vec<_> = s.splitn(4, CONTROL_MODE_SEPARATOR).collect();
-                let time = v.get(1).unwrap().parse::<usize>()?;
-                let num = v.get(2).unwrap().parse::<usize>()?;
-                let flags = v.get(3).unwrap().parse::<usize>()?;
+                let time = v.get(1).ok_or(Error::CMParseNum)?.parse::<usize>()?;
+                let num = v.get(2).ok_or(Error::CMParseNum)?.parse::<usize>()?;
+                let flags = v.get(3).ok_or(Error::CMParseNum)?.parse::<usize>()?;
                 Ok(Response::OutputBlockEnd { time, num, flags })
             }
 
@@ -332,9 +340,9 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(OUTPUT_BLOCK_ERROR) => {
                 let v: Vec<_> = s.splitn(4, CONTROL_MODE_SEPARATOR).collect();
-                let time = v.get(1).unwrap().parse::<usize>()?;
-                let num = v.get(2).unwrap().parse::<usize>()?;
-                let flags = v.get(3).unwrap().parse::<usize>()?;
+                let time = v.get(1).ok_or(Error::CMParseNum)?.parse::<usize>()?;
+                let num = v.get(2).ok_or(Error::CMParseNum)?.parse::<usize>()?;
+                let flags = v.get(3).ok_or(Error::CMParseNum)?.parse::<usize>()?;
                 Ok(Response::OutputBlockError { time, num, flags })
             }
 
@@ -342,7 +350,7 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_3_2")]
             s if s.starts_with(NOTIFICATION_CLIENT_DETACHED) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
-                let client = v.get(1).unwrap();
+                let client = v.get(1).ok_or(Error::CMParseStr)?;
                 Ok(Response::ClientDetached(client.to_string()))
             }
 
@@ -350,13 +358,13 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_2_4")]
             s if s.starts_with(NOTIFICATION_CLIENT_SESSION_CHANGED) => {
                 let v: Vec<_> = s.splitn(4, CONTROL_MODE_SEPARATOR).collect();
-                let client = v.get(1).unwrap();
-                let session_id = v.get(2).unwrap();
-                let name = v.get(3).unwrap();
+                let client = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                let session_id = v.get(2).ok_or(Error::CMParseStr)?.to_string();
+                let name = v.get(3).ok_or(Error::CMParseStr)?.to_string();
                 Ok(Response::ClientSessionChanged {
-                    client: client.to_string(),
-                    session_id: session_id.to_string(),
-                    name: name.to_string(),
+                    client,
+                    session_id,
+                    name,
                 })
             }
 
@@ -364,8 +372,8 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_X_X")]
             s if s.starts_with(NOTIFICATION_CONTINUE) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
-                let pane_id = v.get(1).unwrap();
-                Ok(Response::Continue(pane_id.to_string()))
+                let pane_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::Continue(pane_id))
             }
 
             // `%exit [reason]`
@@ -373,8 +381,8 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             s if s.starts_with(NOTIFICATION_EXIT) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
                 // NOTE: optional
-                let reason = v.get(1);
-                Ok(Response::Exit(reason.map(|s| s.to_string())))
+                let reason = v.get(1).map(|s| s.to_string());
+                Ok(Response::Exit(reason))
             }
 
             // TODO: check varargs?
@@ -385,29 +393,23 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let v: Vec<_> = s
                     .splitn(2, CONTROL_MODE_EXTENDED_OUTPUT_SEPARATOR)
                     .collect();
-                let s = v.get(0).unwrap();
-                let value = v.get(1).unwrap();
+                let s = v.get(0).ok_or(Error::CMParseStr)?;
+                let value = v.get(1).ok_or(Error::CMParseStr)?.to_string();
 
                 // split first part using ' '
                 let v: Vec<_> = s
                     .split(CONTROL_MODE_SEPARATOR)
                     .map(|w| w.to_string())
                     .collect();
-                let pane_id = v.get(1).unwrap();
-                let age = v.get(2).unwrap();
+                let pane_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                let age = v.get(2).ok_or(Error::CMParseStr)?.to_string();
 
                 // XXX: if v[3] not exists?
                 let reserved = v[3..].to_vec();
-                Ok(Response::ExtendedOutput(
-                    pane_id.to_string(),
-                    age.to_string(),
-                    reserved,
-                    value.to_string(),
-                ))
+                Ok(Response::ExtendedOutput(pane_id, age, reserved, value))
             }
 
             // `%layout-change window-id window-layout window-visible-layout window-flags`
-            // `%layout-change window-id window-layout window-visible-layout`
             // `%layout-change window-id window-layout`
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_LAYOUT_CHANGE) => {
@@ -415,21 +417,21 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let v: Vec<_> = s.splitn(4, CONTROL_MODE_SEPARATOR).collect();
                 #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2")))]
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
-                let window_id = v.get(1).unwrap();
-                let window_layout = v.get(2).unwrap();
+                let window_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                let window_layout = v.get(2).ok_or(Error::CMParseStr)?.to_string();
                 #[cfg(feature = "tmux_2_2")]
-                let window_visible_layout = v.get(3).unwrap();
+                let window_visible_layout = v.get(3).ok_or(Error::CMParseStr)?.to_string();
                 #[cfg(feature = "tmux_2_2")]
-                let window_flags = v.get(4).unwrap();
+                let window_flags = v.get(4).ok_or(Error::CMParseStr)?.to_string();
 
                 #[cfg(feature = "tmux_1_8")]
                 return Ok(Response::LayoutChange {
-                    window_id: window_id.to_string(),
-                    window_layout: window_layout.to_string(),
+                    window_id,
+                    window_layout,
                     #[cfg(feature = "tmux_2_2")]
-                    window_visible_layout: window_visible_layout.to_string(),
+                    window_visible_layout,
                     #[cfg(feature = "tmux_2_2")]
-                    window_flags: window_flags.to_string(),
+                    window_flags,
                 });
             }
 
@@ -437,39 +439,36 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_OUTPUT) => {
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
-                let pane_id = v.get(1).unwrap();
-                let value = v.get(2).unwrap();
-                Ok(Response::Output {
-                    pane_id: pane_id.to_string(),
-                    value: value.to_string(),
-                })
+                let pane_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                let value = v.get(2).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::Output { pane_id, value })
             }
 
             // `%pane-mode-changed pane-id`
             #[cfg(feature = "tmux_2_5")]
             s if s.starts_with(NOTIFICATION_PANE_MODE_CHANGED) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
-                let pane_id = v.get(1).unwrap();
-                Ok(Response::PaneModeChanged(pane_id.to_string()))
+                let pane_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::PaneModeChanged(pane_id))
             }
 
             // `%pause pane-id`
             #[cfg(feature = "tmux_X_X")]
             s if s.starts_with(NOTIFICATION_PAUSE) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
-                let pane_id = v.get(1).unwrap();
-                Ok(Response::Pause(pane_id.to_string()))
+                let pane_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::Pause(pane_id))
             }
 
             // `%session-changed session-id name`
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_SESSION_CHANGED) => {
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
-                let session_id = v.get(1).unwrap();
-                let name = v.get(2).unwrap();
+                let session_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                let name = v.get(2).ok_or(Error::CMParseStr)?.to_string();
                 Ok(Response::SessionChanged {
-                    session_id: session_id.to_string(),
-                    name: name.to_string(),
+                    session_id,
+                    name: name,
                 })
             }
 
@@ -477,19 +476,19 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_SESSION_RENAMED) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
-                let name = v.get(1).unwrap();
-                Ok(Response::SessionRenamed(name.to_string()))
+                let name = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::SessionRenamed(name))
             }
 
             // `%session-window-changed session-id window-id`
             #[cfg(feature = "tmux_2_5")]
             s if s.starts_with(NOTIFICATION_SESSION_WINDOW_CHANGED) => {
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
-                let session_id = v.get(1).unwrap();
-                let window_id = v.get(2).unwrap();
+                let session_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                let window_id = v.get(2).ok_or(Error::CMParseStr)?.to_string();
                 Ok(Response::SessionWindowChanged {
-                    session_id: session_id.to_string(),
-                    window_id: window_id.to_string(),
+                    session_id,
+                    window_id,
                 })
             }
 
@@ -501,15 +500,15 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_X_X")]
             s if s.starts_with(NOTIFICATION_SUBSCRIPTION_CHANGED) => {
                 let v: Vec<_> = s.splitn(5, CONTROL_MODE_SEPARATOR).collect();
-                let name = v.get(1).unwrap();
-                let session_id = v.get(2).unwrap();
-                let window_id = v.get(3).unwrap();
-                let window_index = v.get(4).unwrap();
+                let name = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                let session_id = v.get(2).ok_or(Error::CMParseStr)?.to_string();
+                let window_id = v.get(3).ok_or(Error::CMParseStr)?.to_string();
+                let window_index = v.get(4).ok_or(Error::CMParseStr)?.to_string();
                 Ok(Response::SubscriptionChanged(
-                    name.to_string(),
-                    session_id.to_string(),
-                    window_id.to_string(),
-                    window_index.to_string(),
+                    name,
+                    session_id,
+                    window_id,
+                    window_index,
                 ))
             }
 
@@ -517,52 +516,49 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_UNLINKED_WINDOW_ADD) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
-                let window_id = v.get(1).unwrap();
-                Ok(Response::UnlinkedWindowAdd(window_id.to_string()))
+                let window_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::UnlinkedWindowAdd(window_id))
             }
 
             // `%unlinked-window-close window-id`
             #[cfg(feature = "tmux_3_3")]
             s if s.starts_with(NOTIFICATION_UNLINKED_WINDOW_CLOSE) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
-                let window_id = v.get(1).unwrap();
-                Ok(Response::UnlinkedWindowClose(window_id.to_string()))
+                let window_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::UnlinkedWindowClose(window_id))
             }
 
             // `%unlinked-window-renamed window-id`
             #[cfg(feature = "tmux_3_3")]
             s if s.starts_with(NOTIFICATION_UNLINKED_WINDOW_RENAMED) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
-                let window_id = v.get(1).unwrap();
-                Ok(Response::UnlinkedWindowRenamed(window_id.to_string()))
+                let window_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::UnlinkedWindowRenamed(window_id))
             }
 
             // `%window-add window-id`
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_WINDOW_ADD) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
-                let window_id = v.get(1).unwrap();
-                Ok(Response::WindowAdd(window_id.to_string()))
+                let window_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::WindowAdd(window_id))
             }
 
             // `%window-close window-id`
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_WINDOW_CLOSE) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
-                let window_id = v.get(1).unwrap();
-                Ok(Response::WindowClose(window_id.to_string()))
+                let window_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::WindowClose(window_id))
             }
 
             // `%window-pane-changed window-id pane-id`
             #[cfg(feature = "tmux_2_5")]
             s if s.starts_with(NOTIFICATION_WINDOW_PANE_CHANGED) => {
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
-                let window_id = v.get(1).unwrap();
-                let pane_id = v.get(2).unwrap();
-                Ok(Response::WindowPaneChanged {
-                    window_id: window_id.to_string(),
-                    pane_id: pane_id.to_string(),
-                })
+                let window_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                let pane_id = v.get(2).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::WindowPaneChanged { window_id, pane_id })
             }
 
             // `%window-renamed window-id name`
@@ -571,12 +567,9 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_WINDOW_RENAMED) => {
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
-                let window_id = v.get(1).unwrap();
-                let name = v.get(2).unwrap();
-                Ok(Response::WindowRenamed {
-                    window_id: window_id.to_string(),
-                    name: name.to_string(),
-                })
+                let window_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                let name = v.get(2).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::WindowRenamed { window_id, name })
             }
 
             // `...` - data inside `%begin ... %end`
