@@ -86,7 +86,7 @@ pub enum Response {
     ExtendedOutput {
         pane_id: String,
         age: String,
-        other: Vec<String>,
+        reserved: Vec<String>,
         value: String,
     },
     /// tmux ^3.3 `%layout-change window-id window-layout window-visible-layout window-flags`
@@ -406,7 +406,12 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
 
                 // XXX: if v[3] not exists?
                 let reserved = v[3..].to_vec();
-                Ok(Response::ExtendedOutput(pane_id, age, reserved, value))
+                Ok(Response::ExtendedOutput {
+                    pane_id,
+                    age,
+                    reserved,
+                    value,
+                })
             }
 
             // `%layout-change window-id window-layout window-visible-layout window-flags`
@@ -504,12 +509,12 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let session_id = v.get(2).ok_or(Error::CMParseStr)?.to_string();
                 let window_id = v.get(3).ok_or(Error::CMParseStr)?.to_string();
                 let window_index = v.get(4).ok_or(Error::CMParseStr)?.to_string();
-                Ok(Response::SubscriptionChanged(
+                Ok(Response::SubscriptionChanged {
                     name,
                     session_id,
                     window_id,
                     window_index,
-                ))
+                })
             }
 
             // `%unlinked-window-add window-id`

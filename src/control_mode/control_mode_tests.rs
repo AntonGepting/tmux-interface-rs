@@ -98,7 +98,7 @@ fn control_mode_line() {
             Response::ExtendedOutput {
                 pane_id: "1".to_string(),
                 age: "2".to_string(),
-                other: vec!["3".to_string()],
+                reserved: vec!["3".to_string()],
                 value: "4".to_string()
             },
             output
@@ -200,12 +200,12 @@ fn control_mode_line() {
     {
         let output = "%subscription-changed 1 2 3 4".control_mode_line().unwrap();
         assert_eq!(
-            Response::SubscriptionChanged(
-                "1".to_string(),
-                "2".to_string(),
-                "3".to_string(),
-                "4".to_string()
-            ),
+            Response::SubscriptionChanged {
+                name: "1".to_string(),
+                session_id: "2".to_string(),
+                window_id: "3".to_string(),
+                window_index: "4".to_string()
+            },
             output
         );
     }
