@@ -98,7 +98,7 @@ pub enum Response {
         window_layout: String,
         #[cfg(feature = "tmux_2_2")]
         window_visible_layout: String,
-        #[cfg(feature = "tmux_3_3")]
+        #[cfg(feature = "tmux_2_2")]
         window_flags: String,
     },
     /// `%output pane-id value`
@@ -411,9 +411,7 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             // `%layout-change window-id window-layout`
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_LAYOUT_CHANGE) => {
-                #[cfg(feature = "tmux_3_3")]
-                let v: Vec<_> = s.splitn(5, CONTROL_MODE_SEPARATOR).collect();
-                #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_3_3")))]
+                #[cfg(feature = "tmux_2_2")]
                 let v: Vec<_> = s.splitn(4, CONTROL_MODE_SEPARATOR).collect();
                 #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2")))]
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
@@ -421,7 +419,7 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 let window_layout = v.get(2).unwrap();
                 #[cfg(feature = "tmux_2_2")]
                 let window_visible_layout = v.get(3).unwrap();
-                #[cfg(feature = "tmux_3_3")]
+                #[cfg(feature = "tmux_2_2")]
                 let window_flags = v.get(4).unwrap();
 
                 #[cfg(feature = "tmux_1_8")]
@@ -430,7 +428,7 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                     window_layout: window_layout.to_string(),
                     #[cfg(feature = "tmux_2_2")]
                     window_visible_layout: window_visible_layout.to_string(),
-                    #[cfg(feature = "tmux_3_3")]
+                    #[cfg(feature = "tmux_2_2")]
                     window_flags: window_flags.to_string(),
                 });
             }

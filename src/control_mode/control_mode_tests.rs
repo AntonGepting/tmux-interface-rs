@@ -105,16 +105,13 @@ fn control_mode_line() {
         );
     }
 
-    // tmux ^3.3 `%layout-change window-id window-layout window-visible-layout window-flags`
-    // tmux ^2.2 `%layout-change window-id window-layout window-visible-layout`
+    // tmux ^2.2 `%layout-change window-id window-layout window-visible-layout window-flags`
     // tmux ^1.8 `%layout-change window-id window-layout`
     #[cfg(feature = "tmux_1_8")]
     {
-        #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_8")))]
+        #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2")))]
         let output = "%layout-change 1 2".control_mode_line().unwrap();
-        #[cfg(all(feature = "tmux_2_8", not(feature = "tmux_3_3")))]
-        let output = "%layout-change 1 2 3".control_mode_line().unwrap();
-        #[cfg(feature = "tmux_3_3")]
+        #[cfg(feature = "tmux_2_2")]
         let output = "%layout-change 1 2 3 4".control_mode_line().unwrap();
         assert_eq!(
             Response::LayoutChange {
@@ -122,7 +119,7 @@ fn control_mode_line() {
                 window_layout: "2".to_string(),
                 #[cfg(feature = "tmux_2_2")]
                 window_visible_layout: "3".to_string(),
-                #[cfg(feature = "tmux_3_3")]
+                #[cfg(feature = "tmux_2_2")]
                 window_flags: "4".to_string()
             },
             output
