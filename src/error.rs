@@ -33,6 +33,8 @@ pub enum Error {
 
     ParseInt(std::num::ParseIntError),
     Parse(std::string::ParseError),
+    CMParseNum,
+    CMParseStr,
 }
 
 //impl Error {
