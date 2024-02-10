@@ -414,7 +414,7 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             #[cfg(feature = "tmux_1_8")]
             s if s.starts_with(NOTIFICATION_LAYOUT_CHANGE) => {
                 #[cfg(feature = "tmux_2_2")]
-                let v: Vec<_> = s.splitn(4, CONTROL_MODE_SEPARATOR).collect();
+                let v: Vec<_> = s.splitn(5, CONTROL_MODE_SEPARATOR).collect();
                 #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2")))]
                 let v: Vec<_> = s.splitn(3, CONTROL_MODE_SEPARATOR).collect();
                 let window_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
