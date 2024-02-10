@@ -29,6 +29,8 @@ fn buffers_parse() {
     let buffers_str = format!("{}\n{}", buffer0_str, buffer1_str);
     let buffers = Buffers::from_str(&buffers_str).unwrap();
 
+    #[cfg(feature = "tmux_2_3")]
     assert_eq!(buffers[0].name, Some("foo1".to_string()));
+    #[cfg(feature = "tmux_2_3")]
     assert_eq!(buffers[1].name, Some("foo2".to_string()));
 }

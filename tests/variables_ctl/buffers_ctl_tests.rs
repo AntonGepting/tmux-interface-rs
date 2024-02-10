@@ -10,19 +10,24 @@ fn get_buffers() {
         .output()
         .unwrap();
 
+    #[cfg(feature = "tmux_2_3")]
     Tmux::with_command(SetBuffer::new().buffer_name(BUFFER_NAME).data(BUFFER_NAME))
         .output()
         .unwrap();
 
-    let buffers = BuffersCtl::new().get_all().unwrap();
-    let mut found = false;
-    for buffer in buffers {
-        if buffer.name == Some(BUFFER_NAME.to_string()) {
-            found = true;
+    #[cfg(feature = "tmux_2_3")]
+    {
+        let buffers = BuffersCtl::new().get_all().unwrap();
+        let mut found = false;
+        for buffer in buffers {
+            if buffer.name == Some(BUFFER_NAME.to_string()) {
+                found = true;
+            }
         }
+        assert!(found);
     }
-    assert!(found);
 
+    #[cfg(feature = "tmux_2_3")]
     Tmux::with_command(DeleteBuffer::new().buffer_name(BUFFER_NAME))
         .output()
         .unwrap();

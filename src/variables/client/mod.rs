@@ -2,8 +2,11 @@ pub mod client;
 pub mod clients;
 pub mod clients_ctl;
 
+#[cfg(feature = "tmux_1_6")]
 pub use client::Client;
+#[cfg(feature = "tmux_1_6")]
 pub use clients::Clients;
+#[cfg(feature = "tmux_1_6")]
 pub use clients_ctl::ClientsCtl;
 
 #[cfg(test)]
