@@ -52,6 +52,7 @@ echo "========================================================================="
 
 # array with all formats
 formats=( \
+"active_window_index" \
 "alternate_on" \
 "alternate_saved_x" \
 "alternate_saved_y" \
@@ -65,6 +66,7 @@ formats=( \
 "client_control_mode" \
 "client_created" \
 "client_discarded" \
+"client_flags" \
 "client_height" \
 "client_key_table" \
 "client_last_session" \
@@ -73,8 +75,12 @@ formats=( \
 "client_prefix" \
 "client_readonly" \
 "client_session" \
+"client_termfeatures" \
 "client_termname" \
+"client_termtype" \
 "client_tty" \
+"client_uid" \
+"client_user" \
 "client_utf8" \
 "client_width" \
 "client_written" \
@@ -82,10 +88,12 @@ formats=( \
 "command_list_alias" \
 "command_list_name" \
 "command_list_usage" \
+"config_files" \
 "copy_cursor_line" \
 "copy_cursor_word" \
 "copy_cursor_x" \
 "copy_cursor_y" \
+"current_file" \
 "cursor_character" \
 "cursor_flag" \
 "cursor_x" \
@@ -94,6 +102,7 @@ formats=( \
 "history_limit" \
 "history_size" \
 "hook" \
+"hook_client" \
 "hook_pane" \
 "hook_session" \
 "hook_session_name" \
@@ -104,34 +113,44 @@ formats=( \
 "insert_flag" \
 "keypad_cursor_flag" \
 "keypad_flag" \
+"last_window_index" \
 "line" \
 "mouse_all_flag" \
 "mouse_any_flag" \
 "mouse_button_flag" \
+"mouse_hyperlink" \
 "mouse_line" \
 "mouse_sgr_flag" \
 "mouse_standard_flag" \
+"mouse_status_line" \
+"mouse_status_range" \
 "mouse_utf8_flag" \
 "mouse_word" \
 "mouse_x" \
 "mouse_y" \
+"next_session_id" \
 "origin_flag" \
 "pane_active" \
 "pane_at_bottom" \
 "pane_at_left" \
 "pane_at_right" \
 "pane_at_top" \
+"pane_bg" \
 "pane_bottom" \
 "pane_current_command" \
 "pane_current_path" \
 "pane_dead" \
+"pane_dead_signal" \
 "pane_dead_status" \
+"pane_dead_time" \
+"pane_fg" \
 "pane_format" \
 "pane_height" \
 "pane_id" \
 "pane_in_mode" \
 "pane_index" \
 "pane_input_off" \
+"pane_last" \
 "pane_left" \
 "pane_marked" \
 "pane_marked_set" \
@@ -142,22 +161,28 @@ formats=( \
 "pane_right" \
 "pane_search_string" \
 "pane_start_command" \
+"pane_start_path" \
 "pane_synchronized" \
 "pane_tabs" \
 "pane_title" \
 "pane_top" \
 "pane_tty" \
+"pane_unseen_changes" \
 "pane_width" \
 "pid" \
 "rectangle_toggle" \
 "scroll_position" \
 "scroll_region_lower" \
 "scroll_region_upper" \
+"search_match" \
+"search_present" \
+"selection_active" \
 "selection_end_x" \
 "selection_end_y" \
 "selection_present" \
 "selection_start_x" \
 "selection_start_y" \
+"server_sessions" \
 "session_activity" \
 "session_alerts" \
 "session_attached" \
@@ -174,11 +199,15 @@ formats=( \
 "session_id" \
 "session_last_attached" \
 "session_many_attached" \
+"session_marked" \
 "session_name" \
+"session_path" \
 "session_stack" \
 "session_windows" \
 "socket_path" \
 "start_time" \
+"uid" \
+"user" \
 "version" \
 "window_active" \
 "window_active_clients" \
@@ -207,6 +236,7 @@ formats=( \
 "window_offset_x" \
 "window_offset_y" \
 "window_panes" \
+"window_raw_flags" \
 "window_silence_flag" \
 "window_stack_index" \
 "window_start_flag" \
@@ -219,7 +249,7 @@ formats=( \
 
 # all formats as string
 for a in ${formats[@]}; do
-    all_formats+="#{$a}:"
+    all_formats+="$a:#{$a};"
 done
 
 # test tmux commands with all formats string
@@ -227,20 +257,20 @@ done
 # https://leanpub.com/the-tao-of-tmux/read#appendix-formats
 echo "tmux list-clients -F \"\$all_formats\""
 echo "========================================================================="
-tmux lsc -F $all_formats
+tmux lsc -F \"$all_formats\"
 echo "========================================================================="
 
 echo "tmux list-sessions -F \"\$all_formats\""
 echo "========================================================================="
-tmux ls -F $all_formats
+tmux ls -F \"$all_formats\"
 echo "========================================================================="
 
 echo "tmux list-windows -F \"\$all_formats\""
 echo "========================================================================="
-tmux lsw -F $all_formats
+tmux lsw -F \"$all_formats\"
 echo "========================================================================="
 
 echo "tmux list-panes -F \"\$all_formats\""
 echo "========================================================================="
-tmux lsp -F $all_formats
+tmux lsp -F \"$all_formats\"
 echo "========================================================================="
