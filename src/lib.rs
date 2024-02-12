@@ -487,6 +487,7 @@
 
 pub mod commands;
 pub mod control_mode;
+pub mod copy_mode;
 pub mod error;
 pub mod formats;
 pub mod options;

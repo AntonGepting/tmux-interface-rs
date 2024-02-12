@@ -26,37 +26,41 @@ fn to_string() {
         "clear-selection"
     );
     assert_eq!(
-        CopyModeCommand::CopyEndOfLine("[<prefix>]".to_string()).to_string(),
+        CopyModeCommand::CopyEndOfLine(Some("[<prefix>]".to_string())).to_string(),
         "copy-end-of-line [<prefix>]"
     );
     assert_eq!(
-        CopyModeCommand::CopyLine("[<prefix>]".to_string()).to_string(),
+        CopyModeCommand::CopyLine(Some("[<prefix>]".to_string())).to_string(),
         "copy-line [<prefix>]"
     );
     assert_eq!(
-        CopyModeCommand::CopyPipe("[<command>]".to_string(), "[<prefix>]".to_string()).to_string(),
+        CopyModeCommand::CopyPipe("[<command>]".to_string(), Some("[<prefix>]".to_string()))
+            .to_string(),
         "copy-pipe [<command>] [<prefix>]"
     );
     assert_eq!(
-        CopyModeCommand::CopyPipeNoClear("[<command>]".to_string(), "[<prefix>]".to_string())
+        CopyModeCommand::CopyPipeNoClear("[<command>]".to_string(), Some("[<prefix>]".to_string()))
             .to_string(),
         "copy-pipe-no-clear [<command>] [<prefix>]"
     );
     assert_eq!(
-        CopyModeCommand::CopyPipeAndCancel("[<command>]".to_string(), "[<prefix>]".to_string())
-            .to_string(),
+        CopyModeCommand::CopyPipeAndCancel(
+            "[<command>]".to_string(),
+            Some("[<prefix>]".to_string())
+        )
+        .to_string(),
         "copy-pipe-and-cancel [<command>] [<prefix>]"
     );
     assert_eq!(
-        CopyModeCommand::CopySelection("[<prefix>]".to_string()).to_string(),
+        CopyModeCommand::CopySelection(Some("[<prefix>]".to_string())).to_string(),
         "copy-selection [<prefix>]"
     );
     assert_eq!(
-        CopyModeCommand::CopySelectionNoClear("[<prefix>]".to_string()).to_string(),
+        CopyModeCommand::CopySelectionNoClear(Some("[<prefix>]".to_string())).to_string(),
         "copy-selection-no-clear [<prefix>]"
     );
     assert_eq!(
-        CopyModeCommand::CopySelectionAndCancel("[<prefix>]".to_string()).to_string(),
+        CopyModeCommand::CopySelectionAndCancel(Some("[<prefix>]".to_string())).to_string(),
         "copy-selection-and-cancel [<prefix>]"
     );
     assert_eq!(CopyModeCommand::CursorDown.to_string(), "cursor-down");
@@ -117,16 +121,17 @@ fn to_string() {
     );
     assert_eq!(CopyModeCommand::PageUp.to_string(), "page-up");
     assert_eq!(
-        CopyModeCommand::Pipe("[<command>]".to_string(), "[<prefix>]".to_string()).to_string(),
+        CopyModeCommand::Pipe("[<command>]".to_string(), Some("[<prefix>]".to_string()))
+            .to_string(),
         "pipe [<command>] [<prefix>]"
     );
     assert_eq!(
-        CopyModeCommand::PipeNoClear("[<command>]".to_string(), "[<prefix>]".to_string())
+        CopyModeCommand::PipeNoClear("[<command>]".to_string(), Some("[<prefix>]".to_string()))
             .to_string(),
         "pipe-no-clear [<command>] [<prefix>]"
     );
     assert_eq!(
-        CopyModeCommand::PipeAndCancel("[<command>]".to_string(), "[<prefix>]".to_string())
+        CopyModeCommand::PipeAndCancel("[<command>]".to_string(), Some("[<prefix>]".to_string()))
             .to_string(),
         "pipe-and-cancel [<command>] [<prefix>]"
     );
