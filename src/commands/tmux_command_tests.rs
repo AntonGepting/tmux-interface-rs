@@ -72,6 +72,7 @@ fn tmux_command() {
     let output = Tmux::with_command(NewSession::new().session_name("asdf").detached())
         .output()
         .unwrap();
+    println!("{:?}", output);
     assert!(output.status().success());
 
     let output = Tmux::with_command(KillSession::new().target_session("asdf"))
