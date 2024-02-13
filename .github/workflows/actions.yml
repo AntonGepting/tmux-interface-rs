@@ -82,8 +82,6 @@ jobs:
           ./configure --prefix=$HOME/tmux-builds/tmux-${{ matrix.versions.tmux }} && make && make install
           export PATH=$HOME/tmux-builds/tmux-${{ matrix.versions.tmux }}/bin:$PATH
           cd ~
-          mkdir /tmp/${{ matrix.versions.feature }}
-          export TMUX_TMPDIR=/tmp/${{ matrix.versions.feature }}
           tmux -V
 
       - name: Build with feature ${{ matrix.versions.feature }}
