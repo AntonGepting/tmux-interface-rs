@@ -6,6 +6,12 @@ fn list_sessions() {
     // List all sessions managed by the server
     // # Manual
     //
+    // tmux ^3.4:
+    // ```text
+    // list-sessions [-F format] [-f filter]
+    // (alias: ls)
+    // ```
+    //
     // tmux ^1.6:
     // ```text
     // list-sessions [-F format]
@@ -20,6 +26,8 @@ fn list_sessions() {
     let list_sessions = ListSessions::new();
     #[cfg(feature = "tmux_1_6")]
     let list_sessions = list_sessions.format("1");
+    #[cfg(feature = "tmux_3_4")]
+    let list_sessions = list_sessions.filter("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-sessions";
@@ -30,6 +38,8 @@ fn list_sessions() {
     s.push(cmd);
     #[cfg(feature = "tmux_1_6")]
     s.extend_from_slice(&["-F", "1"]);
+    #[cfg(feature = "tmux_3_4")]
+    s.extend_from_slice(&["-f", "2"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let list_sessions = list_sessions.build().to_vec();

@@ -1,6 +1,12 @@
 /// List all sessions managed by the server
 /// # Manual
 ///
+/// tmux ^3.4:
+/// ```text
+/// list-sessions [-F format] [-f filter]
+/// (alias: ls)
+/// ```
+///
 /// tmux ^1.6:
 /// ```text
 /// list-sessions [-F format]
@@ -17,6 +23,11 @@ macro_rules! list_sessions {
     (@cmd ($cmd:expr) -F $format:expr, $($tail:tt)*) => {{
         $crate::list_sessions!(@cmd ({
             $cmd.format($format)
+        }) $($tail)*)
+    }};
+    (@cmd ($cmd:expr) -f $filter:expr, $($tail:tt)*) => {{
+        $crate::list_sessions!(@cmd ({
+            $cmd.filter($filter)
         }) $($tail)*)
     }};
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
@@ -58,6 +69,8 @@ fn list_sessions_macro() {
     let list_sessions = list_sessions!();
     #[cfg(feature = "tmux_1_6")]
     let list_sessions = list_sessions!((list_sessions), -F "1");
+    #[cfg(feature = "tmux_3_4")]
+    let list_sessions = list_sessions!((list_sessions), -f "2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-sessions";
@@ -68,6 +81,8 @@ fn list_sessions_macro() {
     s.push(cmd);
     #[cfg(feature = "tmux_1_6")]
     s.extend_from_slice(&["-F", "1"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-f", "2"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let list_sessions = list_sessions.build().to_vec();

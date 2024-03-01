@@ -9,6 +9,12 @@ pub type Ls<'a> = ListSessions<'a>;
 /// List all sessions managed by the server
 /// # Manual
 ///
+/// tmux ^3.4:
+/// ```text
+/// list-sessions [-F format] [-f filter]
+/// (alias: ls)
+/// ```
+///
 /// tmux ^1.6:
 /// ```text
 /// list-sessions [-F format]
@@ -26,6 +32,10 @@ pub struct ListSessions<'a> {
     #[cfg(feature = "tmux_1_6")]
     pub format: Option<Cow<'a, str>>,
 
+    /// `[-f filter]`
+    #[cfg(feature = "tmux_3_4")]
+    pub filter: Option<Cow<'a, str>>,
+
     _phantom_data: PhantomData<&'a ()>,
 }
 
@@ -41,6 +51,13 @@ impl<'a> ListSessions<'a> {
         self
     }
 
+    /// `[-f filter]`
+    #[cfg(feature = "tmux_3_4")]
+    pub fn filter<S: Into<Cow<'a, str>>>(mut self, filter: S) -> Self {
+        self.filter = Some(filter.into());
+        self
+    }
+
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -50,6 +67,12 @@ impl<'a> ListSessions<'a> {
         #[cfg(feature = "tmux_1_6")]
         if let Some(format) = self.format {
             cmd.push_option(F_UPPERCASE_KEY, format);
+        }
+
+        // `[-f filter]`
+        #[cfg(feature = "tmux_3_4")]
+        if let Some(filter) = self.filter {
+            cmd.push_option(F_LOWERCASE_KEY, filter);
         }
 
         cmd
