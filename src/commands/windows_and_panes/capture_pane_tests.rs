@@ -5,6 +5,12 @@ fn capture_pane() {
 
     // # Manual
     //
+    // tmux ^3.4:
+    // ```text
+    // capture-pane [-aAepPqCJNT] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
+    // (alias: capturep)
+    // ```
+    //
     // tmux ^3.1:
     // ```text
     // capture-pane [-aepPqCJN] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
@@ -55,6 +61,8 @@ fn capture_pane() {
     let capture_pane = capture_pane.join();
     #[cfg(feature = "tmux_3_1")]
     let capture_pane = capture_pane.trailing_spaces();
+    #[cfg(feature = "tmux_3_4")]
+    let capture_pane = capture_pane.ignore_trailing_positions();
     #[cfg(feature = "tmux_1_8")]
     let capture_pane = capture_pane.buffer_name("1");
     #[cfg(feature = "tmux_1_5")]
@@ -87,6 +95,8 @@ fn capture_pane() {
     s.push("-J");
     #[cfg(feature = "tmux_3_1")]
     s.push("-N");
+    #[cfg(feature = "tmux_3_4")]
+    s.push("-T");
     #[cfg(feature = "tmux_1_8")]
     s.extend_from_slice(&["-b", "1"]);
     #[cfg(feature = "tmux_1_5")]

@@ -6,6 +6,12 @@ pub type CaptureP<'a> = CapturePane<'a>;
 
 /// # Manual
 ///
+/// tmux ^3.4:
+/// ```text
+/// capture-pane [-aAepPqCJNT] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
+/// (alias: capturep)
+/// ```
+///
 /// tmux ^3.1:
 /// ```text
 /// capture-pane [-aepPqCJN] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
@@ -69,6 +75,10 @@ pub struct CapturePane<'a> {
     /// `[-N]` - preserves trailing spaces at each line's end
     #[cfg(feature = "tmux_3_1")]
     pub trailing_spaces: bool,
+
+    /// `[-T]` - ignores trailing positions that do not contain a character
+    #[cfg(feature = "tmux_3_4")]
+    pub ignore_trailing_positions: bool,
 
     /// `[-b buffer-name]` - buffer-name
     #[cfg(feature = "tmux_1_8")]
@@ -148,6 +158,13 @@ impl<'a> CapturePane<'a> {
     #[cfg(feature = "tmux_3_1")]
     pub fn trailing_spaces(mut self) -> Self {
         self.trailing_spaces = true;
+        self
+    }
+
+    /// `[-T]` - ignores trailing positions that do not contain a character
+    #[cfg(feature = "tmux_3_4")]
+    pub fn ignore_trailing_positions(mut self) -> Self {
+        self.ignore_trailing_positions = true;
         self
     }
 
@@ -233,6 +250,12 @@ impl<'a> CapturePane<'a> {
         #[cfg(feature = "tmux_3_1")]
         if self.trailing_spaces {
             cmd.push_flag(N_UPPERCASE_KEY);
+        }
+
+        // `[-T]` - ignores trailing positions that do not contain a character
+        #[cfg(feature = "tmux_3_4")]
+        if self.ignore_trailing_positions {
+            cmd.push_flag(T_UPPERCASE_KEY);
         }
 
         // `[-b buffer-name]` - buffer-name

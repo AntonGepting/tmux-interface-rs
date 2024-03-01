@@ -1,5 +1,11 @@
 /// # Manual
 ///
+/// tmux ^3.4:
+/// ```text
+/// capture-pane [-aAepPqCJNT] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
+/// (alias: capturep)
+/// ```
+///
 /// tmux ^3.1:
 /// ```text
 /// capture-pane [-aepPqCJN] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
@@ -80,6 +86,12 @@ macro_rules! capture_pane {
             $cmd.trailing_spaces()
         }) $($tail)*)
     }};
+    // `[-T]` - ignores trailing positions that do not contain a character
+    (@cmd ($cmd:expr) -T, $($tail:tt)*) => {{
+        $crate::capture_pane!(@cmd ({
+            $cmd.ignore_trailing_positions()
+        }) $($tail)*)
+    }};
     // `[-b buffer-name]` - buffer-name
     (@cmd ($cmd:expr) -b $buffer_name:expr, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
@@ -129,6 +141,12 @@ fn capture_pane_macro() {
     use std::borrow::Cow;
 
     // # Manual
+    //
+    // tmux ^3.4:
+    // ```text
+    // capture-pane [-aAepPqCJNT] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
+    // (alias: capturep)
+    // ```
     //
     // tmux ^3.1:
     // ```text
@@ -180,6 +198,8 @@ fn capture_pane_macro() {
     let capture_pane = capture_pane!((capture_pane), -J);
     #[cfg(feature = "tmux_3_1")]
     let capture_pane = capture_pane!((capture_pane), -N);
+    #[cfg(feature = "tmux_3_4")]
+    let capture_pane = capture_pane!((capture_pane), -T);
     #[cfg(feature = "tmux_1_8")]
     let capture_pane = capture_pane!((capture_pane), -b "1");
     #[cfg(feature = "tmux_1_5")]
@@ -212,6 +232,8 @@ fn capture_pane_macro() {
     s.push("-J");
     #[cfg(feature = "tmux_3_1")]
     s.push("-N");
+    #[cfg(feature = "tmux_3_4")]
+    s.push("-T");
     #[cfg(feature = "tmux_1_8")]
     s.extend_from_slice(&["-b", "1"]);
     #[cfg(feature = "tmux_1_5")]
