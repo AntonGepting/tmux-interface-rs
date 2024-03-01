@@ -81,7 +81,7 @@ fn list_sessions_macro() {
     s.push(cmd);
     #[cfg(feature = "tmux_1_6")]
     s.extend_from_slice(&["-F", "1"]);
-    #[cfg(feature = "tmux_3_2")]
+    #[cfg(feature = "tmux_3_4")]
     s.extend_from_slice(&["-f", "2"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
