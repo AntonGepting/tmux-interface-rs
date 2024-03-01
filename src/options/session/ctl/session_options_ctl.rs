@@ -1,7 +1,9 @@
 use crate::options::{GetSessionOptionTr, SessionOptions, SetSessionOptionTr, SetSessionOptionsTr};
+#[cfg(feature = "tmux_3_4")]
+use crate::MessageLine;
 use crate::{
-    Action, Activity, DestroyUnattached, DetachOnDestroy, Error, MessageLine, Status,
-    StatusJustify, StatusKeys, StatusPosition, Switch, TmuxCommand, TmuxOutput,
+    Action, Activity, DestroyUnattached, DetachOnDestroy, Error, Status, StatusJustify, StatusKeys,
+    StatusPosition, Switch, TmuxCommand, TmuxOutput,
 };
 use std::borrow::Cow;
 use std::str::FromStr;

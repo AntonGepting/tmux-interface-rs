@@ -1,8 +1,10 @@
 // NOTE: DRY, global and local session options structures have same methods therefore common setter
 // and getter traits were choosen for common use super::set_session_option::Self::Setter;
 //
+#[cfg(feature = "tmux_3_4")]
+use crate::MessageLine;
 use crate::{
-    Action, Activity, DestroyUnattached, DetachOnDestroy, MessageLine, SetSessionOptionTr, Status,
+    Action, Activity, DestroyUnattached, DetachOnDestroy, SetSessionOptionTr, Status,
     StatusJustify, StatusKeys, StatusPosition, Switch, TmuxCommand, TmuxCommands,
 };
 use std::borrow::Cow;

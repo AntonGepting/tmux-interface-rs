@@ -1,8 +1,9 @@
 use crate::options::SetOptionTr;
 use crate::options::*;
+#[cfg(feature = "tmux_3_4")]
+use crate::MessageLine;
 use crate::{
-    Action, Activity, DestroyUnattached, DetachOnDestroy, MessageLine, Status, TmuxCommand,
-    TmuxCommands,
+    Action, Activity, DestroyUnattached, DetachOnDestroy, Status, TmuxCommand, TmuxCommands,
 };
 use std::borrow::Cow;
 
