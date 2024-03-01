@@ -104,6 +104,9 @@ fn parse() {
         // pane_tty
         #[cfg(feature = "tmux_1_6")]
         "/dev/pts/2",
+        // pane_unseen_changes
+        #[cfg(feature = "tmux_3_4")]
+        "0",
         // pane_width
         #[cfg(feature = "tmux_1_6")]
         "177",
@@ -207,6 +210,9 @@ fn parse() {
         // pane_tty
         #[cfg(feature = "tmux_1_6")]
         "/dev/pts/3",
+        // pane_unseen_changes
+        #[cfg(feature = "tmux_3_4")]
+        "0",
         // pane_width
         #[cfg(feature = "tmux_1_6")]
         "177",

@@ -117,6 +117,9 @@ pub struct Pane {
     /// pane_tty - Pseudo terminal of pane
     #[cfg(feature = "tmux_1_6")]
     pub tty: Option<String>,
+    /// pane_unseen_changes - 1 if there were changes in pane while in mode
+    #[cfg(feature = "tmux_3_4")]
+    pub unseen_changes: Option<bool>,
     /// pane_width - Width of pane
     #[cfg(feature = "tmux_1_6")]
     pub width: Option<usize>,
@@ -194,6 +197,8 @@ impl FromStr for Pane {
         format.pane_top(&mut pane.top);
         #[cfg(feature = "tmux_1_6")]
         format.pane_tty(&mut pane.tty);
+        #[cfg(feature = "tmux_3_4")]
+        format.pane_unseen_changes(&mut pane.unseen_changes);
         #[cfg(feature = "tmux_1_6")]
         format.pane_width(&mut pane.width);
 

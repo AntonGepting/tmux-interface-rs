@@ -116,6 +116,8 @@ impl<'a> PanesCtl<'a> {
         format.pane_top();
         #[cfg(feature = "tmux_1_6")]
         format.pane_tty();
+        #[cfg(feature = "tmux_3_4")]
+        format.pane_unseen_changes();
         #[cfg(feature = "tmux_1_6")]
         format.pane_width();
 
