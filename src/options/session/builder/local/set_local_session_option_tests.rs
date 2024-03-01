@@ -1,8 +1,9 @@
 #[test]
 fn set_local_session_option_tests() {
     use crate::{
-        Action, Activity, DetachOnDestroy, SetLocalSessionOption, SetSessionOptionTr,
-        SetUserOption, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
+        Action, Activity, DestroyUnattached, DetachOnDestroy, SetLocalSessionOption,
+        SetSessionOptionTr, SetUserOption, Status, StatusJustify, StatusKeys, StatusPosition,
+        Switch,
     };
 
     #[cfg(not(feature = "cmd_alias"))]
@@ -68,11 +69,12 @@ fn set_local_session_option_tests() {
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
     //let options = options.default_terminal(Some(target), Some("8"));
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_5")]
     {
         let origin = format!("{} {} {}", cmd, "destroy-unattached", "off");
         let set_option =
-            SetLocalSessionOption::destroy_unattached(Some(target), Some(Switch::Off)).to_string();
+            SetLocalSessionOption::destroy_unattached(Some(target), Some(DestroyUnattached::Off))
+                .to_string();
         assert_eq!(origin, set_option);
     }
     #[cfg(feature = "tmux_1_4")]

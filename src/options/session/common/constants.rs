@@ -1,5 +1,5 @@
 use crate::{
-    Action, Activity, DetachOnDestroy, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
+    Action, Activity, DestroyUnattached, DetachOnDestroy, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
 };
 
 //activity-action [any | none | current | other]
@@ -36,8 +36,9 @@ pub const DEFAULT_TERMINAL: &str = "default-terminal";
 //default-size XxY
 #[cfg(feature = "tmux_2_9")]
 pub const DEFAULT_SIZE: &str = "default-size";
-//destroy-unattached [on | off]
-#[cfg(feature = "tmux_1_4")]
+// tmux ^3.4: destroy-unattached [on | off | keep-last | keep-group]
+// tmux ^1.5: destroy-unattached [on | off]
+#[cfg(feature = "tmux_1_5")]
 pub const DESTROY_UNATTACHED: &str = "destroy-unattached";
 //detach-on-destroy [on | off]
 // tmux ^3.2 detach-on-destroy [on | off | no-detached]
@@ -92,6 +93,9 @@ pub const MESSAGE_FG: &str = "message-fg";
 //message-command-style style
 #[cfg(feature = "tmux_1_9")]
 pub const MESSAGE_COMMAND_STYLE: &str = "message-command-style";
+//message-line [0 | 1 | 2 | 3 | 4]
+#[cfg(feature = "tmux_3_4")]
+pub const MESSAGE_LINE: &str = "message-line";
 //message-limit number
 #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
 pub const MESSAGE_LIMIT: &str = "message-limit";
@@ -332,12 +336,17 @@ pub const DEFAULT_SIZE_DEFAULT: (usize, usize) = (80, 24);
 #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
 pub const DEFAULT_TERMINAL_DEFAULT: &str = "screen";
 
-/// tmux ^1.4:
+/// tmux ^3.4:
+/// ```text
+/// destroy-unattached [on | off | keep-last | keep-group]
+/// ```
+/// 
+/// tmux ^1.5:
 /// ```text
 /// destroy-unattached off
 /// ```
-#[cfg(feature = "tmux_1_4")]
-pub const DESTROY_UNATTACHED_DEFAULT: Switch = Switch::Off;
+#[cfg(feature = "tmux_1_5")]
+pub const DESTROY_UNATTACHED_DEFAULT: DestroyUnattached = DestroyUnattached::Off;
 
 /// tmux ^1.4:
 /// ```text
@@ -461,6 +470,13 @@ pub const MESSAGE_FG_DEFAULT: &str = "black";
 /// ```
 #[cfg(feature = "tmux_1_9")]
 pub const MESSAGE_COMMAND_STYLE_DEFAULT: &str = "bg=black,fg=yellow";
+
+/// tmux ^3.4:
+/// ```text
+/// message-line 0
+/// ```
+#[cfg(feature = "tmux_3_4")]
+pub const MESSAGE_LINE_DEFAULT: &str = "0";
 
 /// tmux ^1.2 v2.0:
 /// ```text

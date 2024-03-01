@@ -1,6 +1,9 @@
 use crate::options::SetOptionTr;
 use crate::options::*;
-use crate::{Action, Activity, DetachOnDestroy, Status, TmuxCommand, TmuxCommands};
+use crate::{
+    Action, Activity, DestroyUnattached, DetachOnDestroy, MessageLine, Status, TmuxCommand,
+    TmuxCommands,
+};
 use std::borrow::Cow;
 
 // NOTE: method avoiding names like set_set_clipboard
@@ -178,16 +181,25 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
 
     /// ### Manual
     ///
-    /// tmux ^1.4:
+    /// tmux ^3.4:
+    /// ```text
+    /// destroy-unattached [on | off | keep-last | keep-group]
+    /// ```
+    ///
+    /// tmux ^1.5:
     /// ```text
     /// destroy-unattached [on | off]
     /// ```
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_5")]
     fn destroy_unattached<'a, T: Into<Cow<'a, str>>>(
         target: Option<T>,
-        switch: Option<Switch>,
+        destroy_unattached: Option<DestroyUnattached>,
     ) -> TmuxCommand<'a> {
-        Self::set_ext(target, DESTROY_UNATTACHED, switch.map(|s| s.to_string()))
+        Self::set_ext(
+            target,
+            DESTROY_UNATTACHED,
+            destroy_unattached.map(|s| s.to_string()),
+        )
     }
 
     /// ### Manual
@@ -435,6 +447,20 @@ pub trait SetSessionOptionTr: SetOptionTr + SetUserOption {
         style: Option<S>,
     ) -> TmuxCommand<'a> {
         Self::set_ext(target, MESSAGE_COMMAND_STYLE, style)
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^3.4:
+    /// ```text
+    /// message-line [0 | 1 | 2 | 3 | 4]
+    /// ```
+    #[cfg(feature = "tmux_3_4")]
+    fn message_line<'a, T: Into<Cow<'a, str>>>(
+        target: Option<T>,
+        message_line: Option<MessageLine>,
+    ) -> TmuxCommand<'a> {
+        Self::set_ext(target, MESSAGE_LINE, message_line.map(|s| s.to_string()))
     }
 
     /// ### Manual

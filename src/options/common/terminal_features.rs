@@ -11,11 +11,15 @@ const CCOLOUR: &str = "ccolour";
 const CSTYLE: &str = "cstyle";
 const EXTKEYS: &str = "extkeys";
 const FOCUS: &str = "focus";
+const HYPERLINKS: &str = "hyperlinks";
+const IGNOREFKEYS: &str = "ignorefkeys";
 const MARGINS: &str = "margins";
 const MOUSE: &str = "mouse";
+const OSC7: &str = "osc7";
 const OVERLINE: &str = "overline";
 const RECTFILL: &str = "rectfill";
 const RGB: &str = "RGB";
+const SIXEL: &str = "sixel";
 const STRIKETHROUGH: &str = "strikethrough";
 const SYNC: &str = "sync";
 const TITLE: &str = "title";
@@ -37,16 +41,24 @@ pub struct TerminalFeatures<'a> {
     pub extkeys: bool,
     /// Supports focus reporting.
     pub focus: bool,
+    /// Supports OSC 8 hyperlinks.
+    pub hyperlinks: bool,
+    /// Ignore function keys from terminfo(5) and use the tmux internal set only.
+    pub ignorefkeys: bool,
     /// Supports DECSLRM margins.
     pub margins: bool,
     /// Supports xterm(1) mouse sequences.
     pub mouse: bool,
+    /// Supports the OSC 7 working directory extension.
+    pub osc7: bool,
     /// Supports the overline SGR attribute.
     pub overline: bool,
     /// Supports the DECFRA rectangle fill escape sequence.
     pub rectfill: bool,
     /// Supports RGB colour with the SGR escape sequences.
     pub rgb: bool,
+    /// Supports SIXEL graphics.
+    pub sixel: bool,
     /// Supports the strikethrough SGR escape sequence.
     pub strikethrough: bool,
     /// Supports synchronized updates.
@@ -81,11 +93,20 @@ impl<'a> fmt::Display for TerminalFeatures<'a> {
         if self.focus {
             v.push(FOCUS);
         }
+        if self.hyperlinks {
+            v.push(HYPERLINKS);
+        }
+        if self.ignorefkeys {
+            v.push(IGNOREFKEYS);
+        }
         if self.margins {
             v.push(MARGINS);
         }
         if self.mouse {
             v.push(MOUSE);
+        }
+        if self.osc7 {
+            v.push(OSC7);
         }
         if self.overline {
             v.push(OVERLINE);
@@ -95,6 +116,9 @@ impl<'a> fmt::Display for TerminalFeatures<'a> {
         }
         if self.rgb {
             v.push(RGB);
+        }
+        if self.sixel {
+            v.push(SIXEL);
         }
         if self.strikethrough {
             v.push(STRIKETHROUGH);
@@ -154,6 +178,16 @@ impl<'a> TerminalFeatures<'a> {
         self
     }
 
+    pub fn hyperlinks(&mut self, flag: bool) -> &mut Self {
+        self.hyperlinks = flag;
+        self
+    }
+
+    pub fn ignorefkeys(&mut self, flag: bool) -> &mut Self {
+        self.ignorefkeys = flag;
+        self
+    }
+
     pub fn margins(&mut self, flag: bool) -> &mut Self {
         self.margins = flag;
         self
@@ -161,6 +195,11 @@ impl<'a> TerminalFeatures<'a> {
 
     pub fn mouse(&mut self, flag: bool) -> &mut Self {
         self.mouse = flag;
+        self
+    }
+
+    pub fn osc7(&mut self, flag: bool) -> &mut Self {
+        self.osc7 = flag;
         self
     }
 
@@ -176,6 +215,11 @@ impl<'a> TerminalFeatures<'a> {
 
     pub fn rgb(&mut self, flag: bool) -> &mut Self {
         self.rgb = flag;
+        self
+    }
+
+    pub fn sixel(&mut self, flag: bool) -> &mut Self {
+        self.sixel = flag;
         self
     }
 
@@ -224,11 +268,15 @@ impl<'a> FromStr for TerminalFeatures<'a> {
                 CSTYLE => tf.cstyle = true,
                 EXTKEYS => tf.extkeys = true,
                 FOCUS => tf.focus = true,
+                HYPERLINKS => tf.hyperlinks = true,
+                IGNOREFKEYS => tf.ignorefkeys = true,
                 MARGINS => tf.margins = true,
                 MOUSE => tf.mouse = true,
+                OSC7 => tf.osc7 = true,
                 OVERLINE => tf.overline = true,
                 RECTFILL => tf.rectfill = true,
                 RGB => tf.rgb = true,
+                SIXEL => tf.sixel = true,
                 STRIKETHROUGH => tf.strikethrough = true,
                 SYNC => tf.sync = true,
                 TITLE => tf.title = true,

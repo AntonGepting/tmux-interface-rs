@@ -8,6 +8,9 @@ pub const FAILED: &str = "failed";
 
 pub const ALWAYS: &str = "always";
 
+pub const KEEP_LAST: &str = "keep-last";
+pub const KEEP_GROUP: &str = "keep-group";
+
 #[cfg(feature = "tmux_2_6")]
 pub const EXTERNAL: &str = "external";
 
@@ -22,6 +25,10 @@ pub const BOTH: &str = "both";
 #[cfg(feature = "tmux_3_2")]
 pub const NO_DETACHED: &str = "no-detached";
 
+#[cfg(feature = "tmux_3_4")]
+pub const NUMBER_0: &str = "0";
+#[cfg(feature = "tmux_3_4")]
+pub const NUMBER_1: &str = "1";
 #[cfg(feature = "tmux_2_9")]
 pub const NUMBER_2: &str = "2";
 #[cfg(feature = "tmux_2_9")]

@@ -1,7 +1,7 @@
 use crate::options::{GetSessionOptionTr, SessionOptions, SetSessionOptionTr, SetSessionOptionsTr};
 use crate::{
-    Action, Activity, DetachOnDestroy, Error, Status, StatusJustify, StatusKeys, StatusPosition,
-    Switch, TmuxCommand, TmuxOutput,
+    Action, Activity, DestroyUnattached, DetachOnDestroy, Error, MessageLine, Status,
+    StatusJustify, StatusKeys, StatusPosition, Switch, TmuxCommand, TmuxOutput,
 };
 use std::borrow::Cow;
 use std::str::FromStr;
@@ -94,7 +94,7 @@ pub trait SessionOptionsCtl<'a> {
         #[cfg(feature = "tmux_2_9")]
         let cmds = cmds.default_size(target.clone(), session_options.default_size);
 
-        #[cfg(feature = "tmux_1_4")]
+        #[cfg(feature = "tmux_1_5")]
         let cmds = cmds.destroy_unattached(target.clone(), session_options.destroy_unattached);
 
         #[cfg(feature = "tmux_1_4")]
@@ -636,25 +636,35 @@ pub trait SessionOptionsCtl<'a> {
 
     /// ### Manual
     ///
-    /// tmux ^1.4:
+    /// tmux ^3.4:
+    /// ```text
+    /// destroy-unattached [on | off | keep-last | keep-group]
+    /// ```
+    ///
+    /// tmux ^1.5:
     /// ```text
     /// destroy-unattached [on | off]
     /// ```
-    #[cfg(feature = "tmux_1_4")]
-    fn get_destroy_unattached(&self) -> Result<Option<Switch>, Error> {
+    #[cfg(feature = "tmux_1_5")]
+    fn get_destroy_unattached(&self) -> Result<Option<DestroyUnattached>, Error> {
         self.get(Self::Getter::destroy_unattached(self.target()))
     }
+
     /// ### Manual
     ///
-    /// tmux ^1.4:
+    /// tmux ^3.4:
+    /// ```text
+    /// destroy-unattached [on | off | keep-last | keep-group]
+    /// ```
+    ///
+    /// tmux ^1.5:
     /// ```text
     /// destroy-unattached [on | off]
     /// ```
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_5")]
     fn set_destroy_unattached(
         &self,
-
-        destroy_unattached: Option<Switch>,
+        destroy_unattached: Option<DestroyUnattached>,
     ) -> Result<TmuxOutput, Error> {
         self.set(Self::Setter::destroy_unattached(
             self.target(),
@@ -1104,6 +1114,28 @@ pub trait SessionOptionsCtl<'a> {
             self.target(),
             message_command_style,
         ))
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^3.4:
+    /// ```text
+    /// message-line [0 | 1 | 2 | 3 | 4]
+    /// ```
+    #[cfg(feature = "tmux_3_4")]
+    fn get_message_line(&self) -> Result<Option<MessageLine>, Error> {
+        self.get(Self::Getter::message_line(self.target()))
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^3.4:
+    /// ```text
+    /// message-line [0 | 1 | 2 | 3 | 4]
+    /// ```
+    #[cfg(feature = "tmux_3_4")]
+    fn set_message_line(&self, message_line: Option<MessageLine>) -> Result<TmuxOutput, Error> {
+        self.set(Self::Setter::message_line(self.target(), message_line))
     }
 
     /// ### Manual

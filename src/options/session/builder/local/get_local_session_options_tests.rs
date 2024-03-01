@@ -34,7 +34,7 @@ fn get_local_session_options() {
     origin.push(format!("{} {}", cmd, "default-terminal"));
     #[cfg(feature = "tmux_2_9")]
     origin.push(format!("{} {}", cmd, "default-size"));
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_5")]
     origin.push(format!("{} {}", cmd, "destroy-unattached"));
     #[cfg(feature = "tmux_1_4")]
     origin.push(format!("{} {}", cmd, "detach-on-destroy"));
@@ -201,7 +201,7 @@ fn get_local_session_options() {
     let options = options.default_terminal(Some(target));
     #[cfg(feature = "tmux_2_9")]
     let options = options.default_size(Some(target));
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_5")]
     let options = options.destroy_unattached(Some(target));
     #[cfg(feature = "tmux_1_4")]
     let options = options.detach_on_destroy(Some(target));

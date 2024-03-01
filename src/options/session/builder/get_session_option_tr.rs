@@ -141,11 +141,16 @@ pub trait GetSessionOptionTr: GetOptionTr + GetUserOption {
 
     /// ### Manual
     ///
-    /// tmux ^1.4:
+    /// tmux ^3.4:
+    /// ```text
+    /// destroy-unattached [on | off | keep-last | keep-group]
+    /// ```
+    ///
+    /// tmux ^1.5:
     /// ```text
     /// destroy-unattached [on | off]
     /// ```
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_5")]
     fn destroy_unattached<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
         Self::get_ext(target, DESTROY_UNATTACHED)
     }
@@ -342,6 +347,17 @@ pub trait GetSessionOptionTr: GetOptionTr + GetUserOption {
     #[cfg(feature = "tmux_1_9")]
     fn message_command_style<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
         Self::get_ext(target, MESSAGE_COMMAND_STYLE)
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^3.4:
+    /// ```text
+    /// message-line [0 | 1 | 2 | 3 | 4]
+    /// ```
+    #[cfg(feature = "tmux_3_4")]
+    fn message_line<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
+        Self::get_ext(target, MESSAGE_LINE)
     }
 
     /// ### Manual

@@ -2,7 +2,10 @@ use super::*;
 use crate::options::common::{array_insert, cow_parse, get_parts, option_to_string};
 use crate::options::StatusKeys;
 use crate::Switch;
-use crate::{Action, Activity, DetachOnDestroy, Error, Status, StatusJustify, StatusPosition};
+use crate::{
+    Action, Activity, DestroyUnattached, DetachOnDestroy, Error, Status, StatusJustify,
+    StatusPosition,
+};
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::fmt;
@@ -47,9 +50,10 @@ pub struct SessionOptions<'a> {
     //default-size XxY
     #[cfg(feature = "tmux_2_9")]
     pub default_size: Option<(usize, usize)>,
-    //destroy-unattached [on | off]
-    #[cfg(feature = "tmux_1_4")]
-    pub destroy_unattached: Option<Switch>,
+    // tmux ^1.5 destroy-unattached [on | off]
+    // tmux ^3.4 destroy-unattached [on | off | keep-last | keep-group]
+    #[cfg(feature = "tmux_1_5")]
+    pub destroy_unattached: Option<DestroyUnattached>,
     //detach-on-destroy [on | off]
     // tmux ^3.2 detach-on-destroy [on | off | no-detached]
     #[cfg(feature = "tmux_1_4")]
@@ -102,6 +106,9 @@ pub struct SessionOptions<'a> {
     //message-command-style style
     #[cfg(feature = "tmux_1_9")]
     pub message_command_style: Option<Cow<'a, str>>,
+    //message-line [0 | 1 | 2 | 3 | 4]
+    #[cfg(feature = "tmux_3_4")]
+    pub message_line: Option<MessageLine>,
     //message-limit number
     #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_2_0")))]
     pub message_limit: Option<usize>,
@@ -357,7 +364,7 @@ impl<'a> fmt::Display for SessionOptions<'a> {
         option_to_string(&mut v, DEFAULT_TERMINAL, &self.default_terminal);
         // #[cfg(feature = "tmux_2_9")]
         // option_to_string(&mut v, DEFAULT_SIZE, &self.default_size);
-        #[cfg(feature = "tmux_1_4")]
+        #[cfg(feature = "tmux_1_5")]
         option_to_string(&mut v, DESTROY_UNATTACHED, &self.destroy_unattached);
         #[cfg(feature = "tmux_1_4")]
         option_to_string(&mut v, DETACH_ON_DESTROY, &self.detach_on_destroy);
@@ -539,7 +546,7 @@ impl<'a> SessionOptions<'a> {
         let options = options.default_size(Some(DEFAULT_SIZE_DEFAULT));
         #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
         let options = options.default_terminal(Some(DEFAULT_TERMINAL_DEFAULT));
-        #[cfg(feature = "tmux_1_4")]
+        #[cfg(feature = "tmux_1_5")]
         let options = options.destroy_unattached(Some(DESTROY_UNATTACHED_DEFAULT));
         #[cfg(feature = "tmux_1_4")]
         let options = options.detach_on_destroy(Some(DETACH_ON_DESTROY_DEFAULT));
@@ -750,8 +757,8 @@ impl<'a> SessionOptions<'a> {
         self
     }
 
-    #[cfg(feature = "tmux_1_4")]
-    pub fn destroy_unattached(mut self, destroy_unattached: Option<Switch>) -> Self {
+    #[cfg(feature = "tmux_1_5")]
+    pub fn destroy_unattached(mut self, destroy_unattached: Option<DestroyUnattached>) -> Self {
         self.destroy_unattached = destroy_unattached;
         self
     }
@@ -1270,7 +1277,7 @@ impl<'a> FromStr for SessionOptions<'a> {
                     // DEFAULT_SIZE => {
                     // session_options.default_size = value.and_then(|s| s.parse().ok())
                     // }
-                    #[cfg(feature = "tmux_1_4")]
+                    #[cfg(feature = "tmux_1_5")]
                     DESTROY_UNATTACHED => {
                         session_options.destroy_unattached = value.and_then(|s| s.parse().ok())
                     }

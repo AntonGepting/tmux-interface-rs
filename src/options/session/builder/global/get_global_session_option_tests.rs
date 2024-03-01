@@ -60,7 +60,7 @@ fn get_global_session_option_tests() {
     }
     //#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
     //let options = options.default_terminal();
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_5")]
     {
         let origin = format!("{} {}", cmd, "destroy-unattached");
         let set_option = GetGlobalSessionOption::destroy_unattached(Some(target)).to_string();

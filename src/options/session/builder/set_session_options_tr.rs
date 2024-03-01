@@ -2,8 +2,8 @@
 // and getter traits were choosen for common use super::set_session_option::Self::Setter;
 //
 use crate::{
-    Action, Activity, DetachOnDestroy, SetSessionOptionTr, Status, StatusJustify, StatusKeys,
-    StatusPosition, Switch, TmuxCommand, TmuxCommands,
+    Action, Activity, DestroyUnattached, DetachOnDestroy, MessageLine, SetSessionOptionTr, Status,
+    StatusJustify, StatusKeys, StatusPosition, Switch, TmuxCommand, TmuxCommands,
 };
 use std::borrow::Cow;
 
@@ -202,17 +202,26 @@ pub trait SetSessionOptionsTr<'a> {
 
     /// ### Manual
     ///
-    /// tmux ^1.4:
+    /// tmux ^3.4:
+    /// ```text
+    /// destroy-unattached [on | off | keep-last | keep-group]
+    /// ```
+    ///
+    /// tmux ^1.5:
     /// ```text
     /// destroy-unattached [on | off]
     /// ```
-    #[cfg(feature = "tmux_1_4")]
-    fn destroy_unattached<T>(mut self, target: Option<T>, switch: Option<Switch>) -> Self
+    #[cfg(feature = "tmux_1_5")]
+    fn destroy_unattached<T>(
+        mut self,
+        target: Option<T>,
+        destroy_unattached: Option<DestroyUnattached>,
+    ) -> Self
     where
         T: Into<Cow<'a, str>>,
         Self: Sized,
     {
-        self.push(Self::Setter::destroy_unattached(target, switch));
+        self.push(Self::Setter::destroy_unattached(target, destroy_unattached));
         self
     }
 
@@ -505,6 +514,22 @@ pub trait SetSessionOptionsTr<'a> {
         Self: Sized,
     {
         self.push(Self::Setter::message_command_style(target, style));
+        self
+    }
+
+    /// ### Manual
+    ///
+    /// tmux ^3.4:
+    /// ```text
+    /// message-line [0 | 1 | 2 | 3 | 4]
+    /// ```
+    #[cfg(feature = "tmux_3_4")]
+    fn message_line<T, S>(mut self, target: Option<T>, message_line: Option<MessageLine>) -> Self
+    where
+        T: Into<Cow<'a, str>>,
+        Self: Sized,
+    {
+        self.push(Self::Setter::message_line(target, message_line));
         self
     }
 

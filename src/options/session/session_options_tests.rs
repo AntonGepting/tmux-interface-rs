@@ -6,8 +6,8 @@
 #[test]
 fn default() {
     use crate::{
-        Action, Activity, DetachOnDestroy, SessionOptions, Status, StatusJustify, StatusKeys,
-        StatusPosition, Switch,
+        Action, Activity, DestroyUnattached, DetachOnDestroy, SessionOptions, Status,
+        StatusJustify, StatusKeys, StatusPosition, Switch,
     };
 
     let session_options = SessionOptions::new();
@@ -35,8 +35,8 @@ fn default() {
     let options = options.default_size(Some((80, 24)));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
     let options = options.default_terminal(Some("screen"));
-    #[cfg(feature = "tmux_1_4")]
-    let options = options.destroy_unattached(Some(Switch::Off));
+    #[cfg(feature = "tmux_1_5")]
+    let options = options.destroy_unattached(Some(DestroyUnattached::Off));
     #[cfg(feature = "tmux_1_4")]
     let options = options.detach_on_destroy(Some(DetachOnDestroy::On));
     #[cfg(feature = "tmux_1_2")]

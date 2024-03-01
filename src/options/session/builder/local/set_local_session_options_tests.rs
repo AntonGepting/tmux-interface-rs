@@ -1,8 +1,9 @@
 #[test]
 fn set_local_session_options_tests() {
     use crate::{
-        Action, Activity, DetachOnDestroy, SetLocalSessionOptions, SetSessionOptionsTr,
-        SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition, Switch,
+        Action, Activity, DestroyUnattached, DetachOnDestroy, SetLocalSessionOptions,
+        SetSessionOptionsTr, SetUserOptions, Status, StatusJustify, StatusKeys, StatusPosition,
+        Switch,
     };
 
     #[cfg(not(feature = "cmd_alias"))]
@@ -37,7 +38,7 @@ fn set_local_session_options_tests() {
     v.push(format!("{} {} {}", cmd, "default-size", "80x24"));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
     v.push(format!("{} {} {}", cmd, "default-terminal", "screen"));
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_5")]
     v.push(format!("{} {} {}", cmd, "destroy-unattached", "off"));
     #[cfg(feature = "tmux_1_4")]
     v.push(format!("{} {} {}", cmd, "detach-on-destroy", "on"));
@@ -253,8 +254,8 @@ fn set_local_session_options_tests() {
     let options = options.default_size(Some(target), Some((80, 24)));
     #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
     let options = options.default_terminal(Some(target), Some("screen"));
-    #[cfg(feature = "tmux_1_4")]
-    let options = options.destroy_unattached(Some(target), Some(Switch::Off));
+    #[cfg(feature = "tmux_1_5")]
+    let options = options.destroy_unattached(Some(target), Some(DestroyUnattached::Off));
     #[cfg(feature = "tmux_1_4")]
     let options = options.detach_on_destroy(Some(target), Some(DetachOnDestroy::On));
     #[cfg(feature = "tmux_1_2")]
