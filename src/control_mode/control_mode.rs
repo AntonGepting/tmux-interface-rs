@@ -75,14 +75,17 @@ pub enum Response {
         session_id: String,
         name: String,
     },
+    /// `%config-error error`
+    #[cfg(feature = "tmux_3_4")]
+    ConfigError(String),
     /// `%continue pane-id`
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_2")]
     Continue(String),
     /// `%exit [reason]`
     #[cfg(feature = "tmux_1_8")]
     Exit(Option<String>),
     /// `%extended-output pane-id age ... : value`
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_2")]
     ExtendedOutput {
         pane_id: String,
         age: String,
@@ -107,8 +110,14 @@ pub enum Response {
     /// `%pane-mode-changed pane-id`
     #[cfg(feature = "tmux_2_5")]
     PaneModeChanged(String),
+    /// `%pane-buffer-changed name`
+    #[cfg(feature = "tmux_3_4")]
+    PasteBufferChanged(String),
+    /// `%pane-buffer-deleted name``
+    #[cfg(feature = "tmux_3_4")]
+    PasteBufferDeleted(String),
     /// `%pause pane-id`
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_2")]
     Pause(String),
     /// `%session-changed session-id name`
     #[cfg(feature = "tmux_1_8")]
@@ -126,7 +135,7 @@ pub enum Response {
     #[cfg(feature = "tmux_1_8")]
     SessionsChanged,
     /// `%subscription-changed name session-id window-id window-index`
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_2")]
     SubscriptionChanged {
         name: String,
         session_id: String,
@@ -368,8 +377,16 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 })
             }
 
+            // `%config-error error`
+            #[cfg(feature = "tmux_3_4")]
+            s if s.starts_with(NOTIFICATION_CONFIG_ERROR) => {
+                let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
+                let error = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::ConfigError(error))
+            }
+
             // `%continue pane-id`
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_2")]
             s if s.starts_with(NOTIFICATION_CONTINUE) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
                 let pane_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
@@ -387,7 +404,7 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
 
             // TODO: check varargs?
             // `%extended-output pane-id age ... : value`
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_2")]
             s if s.starts_with(NOTIFICATION_EXTENDED_OUTPUT) => {
                 // split using " : " in two parts
                 let v: Vec<_> = s
@@ -457,8 +474,24 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
                 Ok(Response::PaneModeChanged(pane_id))
             }
 
+            // `%paste-buffer-changed name`
+            #[cfg(feature = "tmux_3_4")]
+            s if s.starts_with(NOTIFICATION_PASTE_BUFFER_CHANGED) => {
+                let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
+                let name = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::PasteBufferChanged(name))
+            }
+
+            // `%paste-buffer-deleted name`
+            #[cfg(feature = "tmux_3_4")]
+            s if s.starts_with(NOTIFICATION_PASTE_BUFFER_DELETED) => {
+                let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
+                let name = v.get(1).ok_or(Error::CMParseStr)?.to_string();
+                Ok(Response::PasteBufferDeleted(name))
+            }
+
             // `%pause pane-id`
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_2")]
             s if s.starts_with(NOTIFICATION_PAUSE) => {
                 let v: Vec<_> = s.splitn(2, CONTROL_MODE_SEPARATOR).collect();
                 let pane_id = v.get(1).ok_or(Error::CMParseStr)?.to_string();
@@ -502,7 +535,7 @@ impl<S: AsRef<str> + std::fmt::Display> ControlModeLine for S {
             s if s.starts_with(NOTIFICATION_SESSIONS_CHANGED) => Ok(Response::SessionsChanged),
 
             // `%subscription-changed name session-id window-id window-index`
-            #[cfg(feature = "tmux_X_X")]
+            #[cfg(feature = "tmux_3_2")]
             s if s.starts_with(NOTIFICATION_SUBSCRIPTION_CHANGED) => {
                 let v: Vec<_> = s.splitn(5, CONTROL_MODE_SEPARATOR).collect();
                 let name = v.get(1).ok_or(Error::CMParseStr)?.to_string();

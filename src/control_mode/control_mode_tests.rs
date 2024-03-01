@@ -73,8 +73,15 @@ fn control_mode_line() {
         );
     }
 
+    // %config-error error
+    #[cfg(feature = "tmux_3_4")]
+    {
+        let output = "%config-error 1".control_mode_line().unwrap();
+        assert_eq!(Response::ConfigError("1".to_string()), output);
+    }
+
     // %continue pane-id
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_2")]
     {
         let output = "%continue 1".control_mode_line().unwrap();
         assert_eq!(Response::Continue("1".to_string()), output);
@@ -91,7 +98,7 @@ fn control_mode_line() {
     }
 
     // `%extended-output pane-id age ... : value`
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_2")]
     {
         let output = "%extended-output 1 2 3 : 4".control_mode_line().unwrap();
         assert_eq!(
@@ -149,7 +156,7 @@ fn control_mode_line() {
     }
 
     // %pause pane-id
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_2")]
     {
         let output = "%pause 1".control_mode_line().unwrap();
         assert_eq!(Response::Pause("1".to_string()), output);
@@ -196,7 +203,7 @@ fn control_mode_line() {
     }
 
     // %subscription-changed name session-id window-id window-index
-    #[cfg(feature = "tmux_X_X")]
+    #[cfg(feature = "tmux_3_2")]
     {
         let output = "%subscription-changed 1 2 3 4".control_mode_line().unwrap();
         assert_eq!(
