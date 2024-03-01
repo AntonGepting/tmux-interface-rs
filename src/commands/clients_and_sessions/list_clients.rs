@@ -9,12 +9,18 @@ pub type LsC<'a> = ListClients<'a>;
 ///
 /// # Manual
 ///
+/// tmux ^3.4:
+/// ```text
+/// list-clients [-F format] [-f filter] [-t target-session]
+/// (alias: lsc)
+/// ```
+///
 /// tmux ^1.6:
 /// ```text
 /// list-clients [-F format] [-t target-session]
 /// (alias: lsc)
-///
 /// ```
+///
 /// tmux ^1.5:
 /// ```text
 /// list-clients [-t target-session]
@@ -31,6 +37,10 @@ pub struct ListClients<'a> {
     /// `[-F format]`
     #[cfg(feature = "tmux_1_6")]
     pub format: Option<Cow<'a, str>>,
+
+    /// `[-f filter]`
+    #[cfg(feature = "tmux_3_4")]
+    pub filter: Option<Cow<'a, str>>,
 
     /// `[-t target-session]`
     #[cfg(feature = "tmux_1_5")]
@@ -51,6 +61,13 @@ impl<'a> ListClients<'a> {
         self
     }
 
+    /// `[-f filter]`
+    #[cfg(feature = "tmux_3_4")]
+    pub fn filter<S: Into<Cow<'a, str>>>(mut self, filter: S) -> Self {
+        self.filter = Some(filter.into());
+        self
+    }
+
     /// `[-t target-session]`
     #[cfg(feature = "tmux_1_5")]
     pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
@@ -67,6 +84,12 @@ impl<'a> ListClients<'a> {
         #[cfg(feature = "tmux_1_6")]
         if let Some(format) = self.format {
             cmd.push_option(F_UPPERCASE_KEY, format);
+        }
+
+        // `[-f filter]`
+        #[cfg(feature = "tmux_3_4")]
+        if let Some(filter) = self.filter {
+            cmd.push_option(F_LOWERCASE_KEY, filter);
         }
 
         // `[-t target-session]`

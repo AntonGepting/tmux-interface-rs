@@ -2,10 +2,17 @@
 ///
 /// # Manual
 ///
+/// tmux ^3.4:
+/// ```text
+/// list-clients [-F format] [-f filter] [-t target-session]
+/// (alias: lsc)
+/// ```
+///
 /// tmux ^1.6:
 /// ```text
 /// list-clients [-F format] [-t target-session]
 /// (alias: lsc)
+/// ```
 ///
 /// ```
 /// tmux ^1.5:
@@ -24,6 +31,11 @@ macro_rules! list_clients {
     (@cmd ($cmd:expr) -F $format:expr, $($tail:tt)*) => {{
         $crate::list_clients!(@cmd ({
             $cmd.format($format)
+        }) $($tail)*)
+    }};
+    (@cmd ($cmd:expr) -f $filter:expr, $($tail:tt)*) => {{
+        $crate::list_clients!(@cmd ({
+            $cmd.filter($filter)
         }) $($tail)*)
     }};
     // `[-s target-session]` - specify the session, all clients currently attached
@@ -59,10 +71,17 @@ fn list_clients_macro() {
     //
     // # Manual
     //
+    // tmux ^3.4:
+    // ```text
+    // list-clients [-F format] [-f filter] [-t target-session]
+    // (alias: lsc)
+    // ```
+    //
     // tmux ^1.6:
     // ```text
     // list-clients [-F format] [-t target-session]
     // (alias: lsc)
+    // ```
     //
     // ```
     // tmux ^1.5:
@@ -76,11 +95,13 @@ fn list_clients_macro() {
     // list-clients
     // (alias: lsc)
     // ```
-    let target_session = TargetSession::Raw("2").to_string();
+    let target_session = TargetSession::Raw("3").to_string();
 
     let list_clients = list_clients!();
     #[cfg(feature = "tmux_1_6")]
     let list_clients = list_clients!((list_clients), -F "1");
+    #[cfg(feature = "tmux_3_4")]
+    let list_clients = list_clients!((list_clients), -f "2");
     #[cfg(feature = "tmux_1_5")]
     let list_clients = list_clients!((list_clients), -t & target_session);
 
@@ -91,8 +112,12 @@ fn list_clients_macro() {
 
     let mut s = Vec::new();
     s.push(cmd);
+    #[cfg(feature = "tmux_1_6")]
     s.extend_from_slice(&["-F", "1"]);
-    s.extend_from_slice(&["-t", "2"]);
+    #[cfg(feature = "tmux_3_4")]
+    s.extend_from_slice(&["-f", "2"]);
+    #[cfg(feature = "tmux_1_5")]
+    s.extend_from_slice(&["-t", "3"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let list_clients = list_clients.build().to_vec();
