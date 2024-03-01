@@ -8,6 +8,12 @@ pub type Display<'a> = DisplayMessage<'a>;
 ///
 /// # Manual
 ///
+/// tmux ^3.4:
+/// ```text
+/// display-message [-aIlNpv] [-c target-client] [-d delay] [-t target-pane] [message]
+///  (alias: display)
+/// ```
+///
 /// tmux ^3.2:
 /// ```text
 /// display-message [-aINpv] [-c target-client] [-d delay] [-t target-pane] [message]
@@ -52,6 +58,10 @@ pub struct DisplayMessage<'a> {
     /// `[-I]` - forward any input read from stdin to the empty pane given by target-pane
     #[cfg(feature = "tmux_3_0")]
     pub forward_stdin: bool,
+
+    /// `[-l]` - message is printed unchanged
+    #[cfg(feature = "tmux_3_4")]
+    pub disable_format: bool,
 
     /// `[-N]` - ignores key presses and closes only after the delay expires
     #[cfg(feature = "tmux_3_2")]
@@ -98,6 +108,13 @@ impl<'a> DisplayMessage<'a> {
     #[cfg(feature = "tmux_3_0")]
     pub fn forward_stdin(mut self) -> Self {
         self.forward_stdin = true;
+        self
+    }
+
+    /// `[-l]` - message is printed unchanged
+    #[cfg(feature = "tmux_3_4")]
+    pub fn disable_format(mut self) -> Self {
+        self.disable_format = true;
         self
     }
 
@@ -165,6 +182,12 @@ impl<'a> DisplayMessage<'a> {
         #[cfg(feature = "tmux_3_0")]
         if self.forward_stdin {
             cmd.push_flag(I_UPPERCASE_KEY);
+        }
+
+        // `[-l]` - message is printed unchanged
+        #[cfg(feature = "tmux_3_4")]
+        if self.forward_stdin {
+            cmd.push_flag(L_LOWERCASE_KEY);
         }
 
         // `[-N]` - ignores key presses and closes only after the delay expires

@@ -7,6 +7,12 @@ fn display_message() {
     //
     // # Manual
     //
+    // tmux ^3.4:
+    // ```text
+    // display-message [-aIlNpv] [-c target-client] [-d delay] [-t target-pane] [message]
+    //  (alias: display)
+    // ```
+    //
     // tmux ^3.2:
     // ```text
     // display-message [-aINpv] [-c target-client] [-d delay] [-t target-pane] [message]
@@ -49,6 +55,8 @@ fn display_message() {
     let display_message = display_message.list_format_vars();
     #[cfg(feature = "tmux_3_0")]
     let display_message = display_message.forward_stdin();
+    #[cfg(feature = "tmux_3_4")]
+    let display_message = display_message.disable_format();
     #[cfg(feature = "tmux_3_2")]
     let display_message = display_message.ignore_keys();
     #[cfg(feature = "tmux_2_9a")]
@@ -74,6 +82,8 @@ fn display_message() {
     s.push("-a");
     #[cfg(feature = "tmux_3_0")]
     s.push("-I");
+    #[cfg(feature = "tmux_3_4")]
+    s.push("-l");
     #[cfg(feature = "tmux_3_2")]
     s.push("-N");
     #[cfg(feature = "tmux_2_9a")]

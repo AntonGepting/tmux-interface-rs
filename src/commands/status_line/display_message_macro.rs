@@ -2,6 +2,12 @@
 ///
 /// # Manual
 ///
+/// tmux ^3.4:
+/// ```text
+/// display-message [-aIlNpv] [-c target-client] [-d delay] [-t target-pane] [message]
+///  (alias: display)
+/// ```
+///
 /// tmux ^3.2:
 /// ```text
 /// display-message [-aINpv] [-c target-client] [-d delay] [-t target-pane] [message]
@@ -49,6 +55,12 @@ macro_rules! display_message {
     (@cmd ($cmd:expr) -I, $($tail:tt)*) => {{
         $crate::display_message!(@cmd ({
             $cmd.forward_stdin()
+        }) $($tail)*)
+    }};
+    // `[-l]` - message is printed unchanged
+    (@cmd ($cmd:expr) -l, $($tail:tt)*) => {{
+        $crate::display_message!(@cmd ({
+            $cmd.disable_format()
         }) $($tail)*)
     }};
     // `[-N]` - ignores key presses and closes only after the delay expires
@@ -119,6 +131,12 @@ fn display_message_macro() {
     //
     // # Manual
     //
+    // tmux ^3.4:
+    // ```text
+    // display-message [-aIlNpv] [-c target-client] [-d delay] [-t target-pane] [message]
+    //  (alias: display)
+    // ```
+    //
     // tmux ^3.2:
     // ```text
     // display-message [-aINpv] [-c target-client] [-d delay] [-t target-pane] [message]
@@ -161,6 +179,8 @@ fn display_message_macro() {
     let display_message = display_message!((display_message), -a);
     #[cfg(feature = "tmux_3_0")]
     let display_message = display_message!((display_message), -I);
+    #[cfg(feature = "tmux_3_4")]
+    let display_message = display_message!((display_message), -l);
     #[cfg(feature = "tmux_3_2")]
     let display_message = display_message!((display_message), -N);
     #[cfg(feature = "tmux_2_9a")]
@@ -186,6 +206,8 @@ fn display_message_macro() {
     s.push("-a");
     #[cfg(feature = "tmux_3_0")]
     s.push("-I");
+    #[cfg(feature = "tmux_3_4")]
+    s.push("-l");
     #[cfg(feature = "tmux_3_2")]
     s.push("-N");
     #[cfg(feature = "tmux_2_9a")]
