@@ -6,6 +6,12 @@ pub type Confirm<'a> = ConfirmBefore<'a>;
 
 /// # Manual
 ///
+/// tmux ^3.4:
+/// ```text
+/// confirm-before [-by] [-c confirm-key] [-p prompt] [-t target-client] command
+/// (alias: confirm)
+/// ```
+///
 /// tmux ^1.5:
 /// ```text
 /// confirm-before [-p prompt] [-t target-client] command
@@ -19,6 +25,18 @@ pub type Confirm<'a> = ConfirmBefore<'a>;
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ConfirmBefore<'a> {
+    /// `[-b]`
+    #[cfg(feature = "tmux_3_4")]
+    pub background: bool,
+
+    /// `[-y]`
+    #[cfg(feature = "tmux_3_4")]
+    pub change_default: bool,
+
+    /// `[-c confirm-key]`
+    #[cfg(feature = "tmux_3_4")]
+    pub confirm_key: Option<Cow<'a, str>>,
+
     /// `[-p prompt]`
     #[cfg(feature = "tmux_1_5")]
     pub prompt: Option<Cow<'a, str>>,
@@ -35,6 +53,27 @@ pub struct ConfirmBefore<'a> {
 impl<'a> ConfirmBefore<'a> {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    /// `[-b]`
+    #[cfg(feature = "tmux_3_4")]
+    pub fn background(mut self) -> Self {
+        self.background = true;
+        self
+    }
+
+    /// `[-y]`
+    #[cfg(feature = "tmux_3_4")]
+    pub fn change_default(mut self) -> Self {
+        self.change_default = true;
+        self
+    }
+
+    /// `[-c confirm-key]`
+    #[cfg(feature = "tmux_3_4")]
+    pub fn confirm_key<S: Into<Cow<'a, str>>>(mut self, confirm_key: S) -> Self {
+        self.confirm_key = Some(confirm_key.into());
+        self
     }
 
     /// `[-p prompt]`
@@ -62,6 +101,24 @@ impl<'a> ConfirmBefore<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(CONFIRM_BEFORE);
+
+        // `[-b]`
+        #[cfg(feature = "tmux_3_4")]
+        if self.background {
+            cmd.push_flag(B_LOWERCASE_KEY);
+        }
+
+        // `[-y]`
+        #[cfg(feature = "tmux_3_4")]
+        if self.change_default {
+            cmd.push_flag(Y_LOWERCASE_KEY);
+        }
+
+        // `[-c confirm-key]`
+        #[cfg(feature = "tmux_3_4")]
+        if let Some(confirm_key) = self.confirm_key {
+            cmd.push_option(C_LOWERCASE_KEY, confirm_key);
+        }
 
         // `[-p prompt]`
         #[cfg(feature = "tmux_1_5")]
