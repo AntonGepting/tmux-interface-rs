@@ -116,6 +116,7 @@
 //! | `tmux_3_2a`   | `tmux 3.2a`   |        x |                                             |
 //! | `tmux_3_3`    | `tmux 3.3`    |        x |                                             |
 //! | `tmux_3_3a`   | `tmux 3.3a`   |        x |                                             |
+//! | `tmux_3_4`    | `tmux 3.4`    |        x |                                             |
 //! | `tmux_X_X`    |               |        x | tmux: `main` branch; library: `dev` branch  |
 //! |               |               |          |                                             |
 //! | `tmux_stable` | `tmux 3.3`    |          |                                             |
