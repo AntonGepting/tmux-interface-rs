@@ -4,6 +4,7 @@ pub mod action;
 pub mod activity;
 pub mod destroy_unattached;
 pub mod detach_on_destroy;
+#[cfg(feature = "tmux_3_4")]
 pub mod message_line;
 pub mod status;
 pub mod status_justify;
@@ -15,6 +16,7 @@ pub use action::Action;
 pub use activity::Activity;
 pub use destroy_unattached::DestroyUnattached;
 pub use detach_on_destroy::DetachOnDestroy;
+#[cfg(feature = "tmux_3_4")]
 pub use message_line::MessageLine;
 pub use status::Status;
 pub use status_justify::StatusJustify;
