@@ -7,6 +7,12 @@ fn source_file() {
     //
     // # Manual
     //
+    // tmux ^3.4:
+    // ```text
+    // source-file [-Fnqv] [-t target-pane] path ...
+    // (alias: source)
+    // ```
+    //
     // tmux ^3.2:
     // ```text
     // source-file [-Fnqv] path ...
@@ -39,8 +45,10 @@ fn source_file() {
     let source_file = source_file.quiet();
     #[cfg(feature = "tmux_3_0")]
     let source_file = source_file.verbose();
+    #[cfg(feature = "tmux_3_4")]
+    let source_file = source_file.target_pane("1");
     #[cfg(feature = "tmux_0_8")]
-    let source_file = source_file.path("1");
+    let source_file = source_file.path("2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "source-file";
@@ -57,8 +65,10 @@ fn source_file() {
     s.push("-q");
     #[cfg(feature = "tmux_3_0")]
     s.push("-v");
+    #[cfg(feature = "tmux_3_4")]
+    s.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_0_8")]
-    s.push("1");
+    s.push("2");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let source_file = source_file.build().to_vec();

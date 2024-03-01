@@ -8,6 +8,12 @@ pub type Source<'a> = SourceFile<'a>;
 ///
 /// # Manual
 ///
+/// tmux ^3.4:
+/// ```text
+/// source-file [-Fnqv] [-t target-pane] path ...
+/// (alias: source)
+/// ```
+///
 /// tmux ^3.2:
 /// ```text
 /// source-file [-Fnqv] path ...
@@ -49,6 +55,10 @@ pub struct SourceFile<'a> {
     #[cfg(feature = "tmux_3_0")]
     pub verbose: bool,
 
+    /// `[-t target-pane]`
+    #[cfg(feature = "tmux_3_4")]
+    pub target_pane: Option<Cow<'a, str>>,
+
     /// `path`
     #[cfg(feature = "tmux_0_8")]
     pub path: Option<Cow<'a, str>>,
@@ -87,6 +97,13 @@ impl<'a> SourceFile<'a> {
         self
     }
 
+    /// `[-t target-pane]`
+    #[cfg(feature = "tmux_3_4")]
+    pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
+        self.target_pane = Some(target_pane.into());
+        self
+    }
+
     /// `path`
     #[cfg(feature = "tmux_0_8")]
     pub fn path<S: Into<Cow<'a, str>>>(mut self, path: S) -> Self {
@@ -121,6 +138,12 @@ impl<'a> SourceFile<'a> {
         #[cfg(feature = "tmux_3_0")]
         if self.verbose {
             cmd.push_flag(V_LOWERCASE_KEY);
+        }
+
+        // `[-t target-pane]`
+        #[cfg(feature = "tmux_3_4")]
+        if let Some(target_pane) = self.target_pane {
+            cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `path`
