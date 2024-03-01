@@ -11,8 +11,6 @@ pub use ctl::*;
 
 pub use pane_options::*;
 
-pub use pane_options::*;
-
 #[cfg(test)]
 #[path = "."]
 mod pane_tests {

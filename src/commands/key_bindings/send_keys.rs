@@ -214,7 +214,7 @@ impl<'a> SendKeys<'a> {
             cmd.push_flag(H_UPPERCASE_KEY);
         }
 
-        /// `[-K]` - keys are sent to target-client, so they are looked up in the client's key table
+        // `[-K]` - keys are sent to target-client, so they are looked up in the client's key table
         #[cfg(feature = "tmux_3_4")]
         if self.hex {
             cmd.push_flag(K_UPPERCASE_KEY);
