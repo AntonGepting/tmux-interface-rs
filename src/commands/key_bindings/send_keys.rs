@@ -6,7 +6,14 @@ pub type Send<'a> = SendKeys<'a>;
 
 /// Structure
 ///
+///
 /// # Manual
+///
+/// tmux ^3.4:
+/// ```text
+/// send-keys [-FHKlMRX] [-c target-client] [-N repeat-count] [-t target-pane] key ...
+/// (alias: send)
+/// ```
 ///
 /// tmux ^3.1:
 /// ```text
@@ -59,6 +66,10 @@ pub struct SendKeys<'a> {
     #[cfg(feature = "tmux_3_0")]
     pub hex: bool,
 
+    /// `[-K]` - keys are sent to target-client, so they are looked up in the client's key table
+    #[cfg(feature = "tmux_3_4")]
+    pub client: bool,
+
     /// `[-l]` - disable key name lookup and processes the keys as literal UTF-8 characters
     #[cfg(feature = "tmux_1_7")]
     pub disable_lookup: bool,
@@ -74,6 +85,10 @@ pub struct SendKeys<'a> {
     /// `[-X]` - send a command into copy mode
     #[cfg(feature = "tmux_2_4")]
     pub reset: bool,
+
+    /// `[-c target-client]` - specify the target client
+    #[cfg(feature = "tmux_3_4")]
+    pub target_client: Option<Cow<'a, str>>,
 
     /// `[-N repeat-count]` - specify a repeat count
     #[cfg(feature = "tmux_2_4")]
@@ -112,6 +127,13 @@ impl<'a> SendKeys<'a> {
         self
     }
 
+    /// `[-K]` - keys are sent to target-client, so they are looked up in the client's key table
+    #[cfg(feature = "tmux_3_4")]
+    pub fn client(mut self) -> Self {
+        self.client = true;
+        self
+    }
+
     /// `[-l]` - disable key name lookup and processes the keys as literal UTF-8 characters
     #[cfg(feature = "tmux_1_7")]
     pub fn disable_lookup(mut self) -> Self {
@@ -144,6 +166,13 @@ impl<'a> SendKeys<'a> {
     #[cfg(feature = "tmux_2_4")]
     pub fn repeat_count(mut self, repeat_count: usize) -> Self {
         self.repeat_count = Some(repeat_count);
+        self
+    }
+
+    /// `[-c target-client]` - specify the target client
+    #[cfg(feature = "tmux_3_4")]
+    pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
+        self.target_client = Some(target_client.into());
         self
     }
 
@@ -185,6 +214,12 @@ impl<'a> SendKeys<'a> {
             cmd.push_flag(H_UPPERCASE_KEY);
         }
 
+        /// `[-K]` - keys are sent to target-client, so they are looked up in the client's key table
+        #[cfg(feature = "tmux_3_4")]
+        if self.hex {
+            cmd.push_flag(K_UPPERCASE_KEY);
+        }
+
         // `[-l]` - disable key name lookup and processes the keys as literal UTF-8 characters
         #[cfg(feature = "tmux_1_7")]
         if self.disable_lookup {
@@ -213,6 +248,12 @@ impl<'a> SendKeys<'a> {
         #[cfg(feature = "tmux_2_4")]
         if let Some(repeat_count) = self.repeat_count {
             cmd.push_option(N_UPPERCASE_KEY, repeat_count.to_string());
+        }
+
+        // `[-c target-client]` - specify the target client
+        #[cfg(feature = "tmux_3_4")]
+        if let Some(target_client) = self.target_client {
+            cmd.push_option(C_LOWERCASE_KEY, target_client);
         }
 
         // `[-t target-pane]` - specify the target pane

@@ -2,6 +2,12 @@
 ///
 /// # Manual
 ///
+/// tmux ^3.4:
+/// ```text
+/// send-keys [-FHKlMRX] [-c target-client] [-N repeat-count] [-t target-pane] key ...
+/// (alias: send)
+/// ```
+///
 /// tmux ^3.1:
 /// ```text
 /// send-keys [-FHlMRX] [-N repeat-count] [-t target-pane] key ...
@@ -57,6 +63,12 @@ macro_rules! send_keys {
             $cmd.hex()
         }) $($tail)*)
     }};
+    // `[-K]` - keys are sent to target-client, so they are looked up in the client's key table
+    (@cmd ($cmd:expr) -K, $($tail:tt)*) => {{
+        $crate::send_keys!(@cmd ({
+            $cmd.client()
+        }) $($tail)*)
+    }};
     // `[-l]` - disable key name lookup and processes the keys as literal UTF-8 characters
     (@cmd ($cmd:expr) -l, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
@@ -79,6 +91,12 @@ macro_rules! send_keys {
     (@cmd ($cmd:expr) -X, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
             $cmd.reset()
+        }) $($tail)*)
+    }};
+    // `[-c target-client]` - specify the target pane
+    (@cmd ($cmd:expr) -c $target_client:expr, $($tail:tt)*) => {{
+        $crate::send_keys!(@cmd ({
+            $cmd.target_client($target_client)
         }) $($tail)*)
     }};
     // `[-N repeat-count]` - specify a repeat count
@@ -131,6 +149,12 @@ fn send_keys_macro() {
     //
     // # Manual
     //
+    // tmux ^3.4:
+    // ```text
+    // send-keys [-FHKlMRX] [-c target-client] [-N repeat-count] [-t target-pane] key ...
+    // (alias: send)
+    // ```
+    //
     // tmux ^3.1:
     // ```text
     // send-keys [-FHlMRX] [-N repeat-count] [-t target-pane] key ...
@@ -179,6 +203,8 @@ fn send_keys_macro() {
     let send_keys = send_keys!((send_keys), -F);
     #[cfg(feature = "tmux_3_0")]
     let send_keys = send_keys!((send_keys), -H);
+    #[cfg(feature = "tmux_3_4")]
+    let send_keys = send_keys!((send_keys), -K);
     #[cfg(feature = "tmux_1_7")]
     let send_keys = send_keys!((send_keys), -l);
     #[cfg(feature = "tmux_2_1")]
@@ -189,6 +215,8 @@ fn send_keys_macro() {
     let send_keys = send_keys!((send_keys), -X);
     #[cfg(feature = "tmux_2_4")]
     let send_keys = send_keys!((send_keys), -N 1);
+    #[cfg(feature = "tmux_3_4")]
+    let send_keys = send_keys!((send_keys), -c & target_pane);
     #[cfg(feature = "tmux_1_6")]
     let send_keys = send_keys!((send_keys), -t & target_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
@@ -207,6 +235,8 @@ fn send_keys_macro() {
     s.push("-F");
     #[cfg(feature = "tmux_3_0")]
     s.push("-H");
+    #[cfg(feature = "tmux_3_4")]
+    s.push("-K");
     #[cfg(feature = "tmux_1_7")]
     s.push("-l");
     #[cfg(feature = "tmux_2_1")]
@@ -217,6 +247,8 @@ fn send_keys_macro() {
     s.push("-X");
     #[cfg(feature = "tmux_2_4")]
     s.extend_from_slice(&["-N", "1"]);
+    #[cfg(feature = "tmux_3_4")]
+    s.extend_from_slice(&["-c", "2"]);
     #[cfg(feature = "tmux_1_6")]
     s.extend_from_slice(&["-t", "2"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]

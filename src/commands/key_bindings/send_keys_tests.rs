@@ -7,6 +7,12 @@ fn send_keys() {
     //
     // # Manual
     //
+    // tmux ^3.4:
+    // ```text
+    // send-keys [-FHKlMRX] [-c target-client] [-N repeat-count] [-t target-pane] key ...
+    // (alias: send)
+    // ```
+    //
     // tmux ^3.1:
     // ```text
     // send-keys [-FHlMRX] [-N repeat-count] [-t target-pane] key ...
@@ -55,6 +61,8 @@ fn send_keys() {
     let send_keys = send_keys.expand_formats();
     #[cfg(feature = "tmux_3_0")]
     let send_keys = send_keys.hex();
+    #[cfg(feature = "tmux_3_4")]
+    let send_keys = send_keys.client();
     #[cfg(feature = "tmux_1_7")]
     let send_keys = send_keys.disable_lookup();
     #[cfg(feature = "tmux_2_1")]
@@ -65,6 +73,8 @@ fn send_keys() {
     let send_keys = send_keys.reset();
     #[cfg(feature = "tmux_2_4")]
     let send_keys = send_keys.repeat_count(1);
+    #[cfg(feature = "tmux_3_4")]
+    let send_keys = send_keys.target_client(&target_pane);
     #[cfg(feature = "tmux_1_6")]
     let send_keys = send_keys.target_pane(&target_pane);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
@@ -83,6 +93,8 @@ fn send_keys() {
     s.push("-F");
     #[cfg(feature = "tmux_3_0")]
     s.push("-H");
+    #[cfg(feature = "tmux_3_4")]
+    s.push("-K");
     #[cfg(feature = "tmux_1_7")]
     s.push("-l");
     #[cfg(feature = "tmux_2_1")]
@@ -93,6 +105,8 @@ fn send_keys() {
     s.push("-X");
     #[cfg(feature = "tmux_2_4")]
     s.extend_from_slice(&["-N", "1"]);
+    #[cfg(feature = "tmux_3_4")]
+    s.extend_from_slice(&["-c", "2"]);
     #[cfg(feature = "tmux_1_6")]
     s.extend_from_slice(&["-t", "2"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
