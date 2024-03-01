@@ -8,6 +8,8 @@ pub enum Style {
     Fg(Colour),
     /// Set the background colour
     Bg(Colour),
+    #[cfg(feature = "tmux_3_4")]
+    Us(Colour),
     /// Set no attributes (turn off any active attributes)
     // right name: None
     NoStyle,
@@ -64,6 +66,8 @@ impl fmt::Display for Style {
         let s: String = match self {
             Self::Fg(colour) => format!("fg={}", colour),
             Self::Bg(colour) => format!("bg={}", colour),
+            #[cfg(feature = "tmux_3_4")]
+            Self::Us(colour) => format!("us={}", colour),
             // right name: None
             Self::NoStyle => "none".to_string(),
             Self::Acs => "acs".to_string(),
