@@ -1,5 +1,3 @@
-use crate::confirm_before;
-
 #[test]
 fn confirm_before() {
     use crate::ConfirmBefore;
@@ -30,7 +28,7 @@ fn confirm_before() {
     #[cfg(feature = "tmux_3_4")]
     let confirm_before = confirm_before.change_default();
     #[cfg(feature = "tmux_3_4")]
-    let confirm_before = confirm_before.prompt("1");
+    let confirm_before = confirm_before.confirm_key("1");
     #[cfg(feature = "tmux_1_5")]
     let confirm_before = confirm_before.prompt("2");
     #[cfg(feature = "tmux_0_9")]
@@ -56,7 +54,7 @@ fn confirm_before() {
     #[cfg(feature = "tmux_0_9")]
     s.extend_from_slice(&["-t", "3"]);
     #[cfg(feature = "tmux_0_9")]
-    s.push("3");
+    s.push("4");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let confirm_before = confirm_before.build().to_vec();
