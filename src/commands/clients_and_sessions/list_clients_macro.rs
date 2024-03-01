@@ -14,7 +14,6 @@
 /// (alias: lsc)
 /// ```
 ///
-/// ```
 /// tmux ^1.5:
 /// ```text
 /// list-clients [-t target-session]
@@ -83,7 +82,6 @@ fn list_clients_macro() {
     // (alias: lsc)
     // ```
     //
-    // ```
     // tmux ^1.5:
     // ```text
     // list-clients [-t target-session]
