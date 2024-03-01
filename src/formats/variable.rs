@@ -221,6 +221,12 @@ pub enum Variable {
     /// `mouse_standard_flag` - Pane mouse standard flag
     #[cfg(feature = "tmux_1_8")]
     MouseStandardFlag,
+    /// `mouse_status_line` - Status line on which mouse event took place
+    #[cfg(feature = "tmux_3_4")]
+    MouseStatusLine,
+    /// `mouse_status_range` - Range type or argument of mouse event on status line
+    #[cfg(feature = "tmux_3_4")]
+    MouseStatusRange,
     /// `mouse_utf8_flag` - Pane mouse UTF-8 flag
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2"), feature = "tmux_3_0"))]
     MouseUtf8Flag,
@@ -337,6 +343,9 @@ pub enum Variable {
     /// `pane_tty` - Pseudo terminal of pane
     #[cfg(feature = "tmux_1_6")]
     PaneTty,
+    /// `pane_unseen_changes` - 1 if there were changes in pane while in mode
+    #[cfg(feature = "tmux_3_4")]
+    PaneUnseenChanges,
     /// `pane_width` - Width of pane
     #[cfg(feature = "tmux_1_6")]
     PaneWidth,
@@ -811,6 +820,12 @@ impl fmt::Display for Variable {
             // mouse_standard_flag - Pane mouse standard flag
             #[cfg(feature = "tmux_1_8")]
             Self::MouseStandardFlag => "mouse_standard_flag",
+            // mouse_status_line - Status line on which mouse event took place
+            #[cfg(feature = "tmux_3_4")]
+            Self::MouseStatusLine => "mouse_status_line",
+            // mouse_status_range - Range type or argument of mouse event on status line
+            #[cfg(feature = "tmux_3_4")]
+            Self::MouseStatusRange => "mouse_status_range",
             // mouse_utf8_flag - Pane mouse UTF-8 flag
             #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2"), feature = "tmux_3_0"))]
             Self::MouseUtf8Flag => "mouse_utf8_flag",
@@ -927,6 +942,9 @@ impl fmt::Display for Variable {
             // pane_tty - Pseudo terminal of pane
             #[cfg(feature = "tmux_1_6")]
             Self::PaneTty => "pane_tty",
+            // pane_unseen_changes - 1 if there were changes in pane while in mode
+            #[cfg(feature = "tmux_3_4")]
+            Self::PaneUnseenChanges => "pane_unseen_changes",
             // pane_width - Width of pane
             #[cfg(feature = "tmux_1_6")]
             Self::PaneWidth => "pane_width",

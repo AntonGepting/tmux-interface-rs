@@ -526,6 +526,20 @@ impl Formats {
         self
     }
 
+    /// `mouse_status_line` - Status line on which mouse event took place
+    #[cfg(feature = "tmux_3_4")]
+    pub fn mouse_status_line(&mut self) -> &mut Self {
+        self.push(Variable::MouseStatusLine);
+        self
+    }
+
+    /// `mouse_status_range` - Range type or argument of mouse event on status line
+    #[cfg(feature = "tmux_3_4")]
+    pub fn mouse_status_range(&mut self) -> &mut Self {
+        self.push(Variable::MouseStatusRange);
+        self
+    }
+
     /// `mouse_utf8_flag` - Pane mouse UTF-8 flag
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2"), feature = "tmux_3_0"))]
     pub fn mouse_utf8_flag(&mut self) -> &mut Self {
@@ -791,6 +805,13 @@ impl Formats {
     #[cfg(feature = "tmux_1_6")]
     pub fn pane_tty(&mut self) -> &mut Self {
         self.push(Variable::PaneTty);
+        self
+    }
+
+    /// `pane_unseen_changes` - 1 if there were changes in pane while in mode
+    #[cfg(feature = "tmux_3_4")]
+    pub fn pane_unseen_changes(&mut self) -> &mut Self {
+        self.push(Variable::PaneUnseenChanges);
         self
     }
 

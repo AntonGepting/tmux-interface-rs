@@ -224,6 +224,12 @@ pub enum VariableOutput<'a> {
     /// `mouse_standard_flag` - Pane mouse standard flag
     #[cfg(feature = "tmux_1_8")]
     MouseStandardFlag(&'a mut Option<String>),
+    /// `mouse_status_line` - Status line on which mouse event took place
+    #[cfg(feature = "tmux_3_4")]
+    MouseStatusLine(&'a mut Option<String>),
+    /// `mouse_status_range` - Range type or argument of mouse event on status line
+    #[cfg(feature = "tmux_3_4")]
+    MouseStatusRange(&'a mut Option<String>),
     /// `mouse_utf8_flag` - Pane mouse UTF-8 flag
     #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2"), feature = "tmux_3_0"))]
     MouseUtf8Flag(&'a mut Option<String>),
@@ -340,6 +346,9 @@ pub enum VariableOutput<'a> {
     /// `pane_tty` - Pseudo terminal of pane
     #[cfg(feature = "tmux_1_6")]
     PaneTty(&'a mut Option<String>),
+    /// `pane_unseen_changes` - 1 if there were changes in pane while in mode
+    #[cfg(feature = "tmux_3_4")]
+    PaneUnseenChanges(&'a mut Option<bool>),
     /// `pane_width` - Width of pane
     #[cfg(feature = "tmux_1_6")]
     PaneWidth(&'a mut Option<usize>),
@@ -835,6 +844,12 @@ impl<'a> VariableOutput<'a> {
             // mouse_standard_flag - Pane mouse standard flag
             #[cfg(feature = "tmux_1_8")]
             Self::MouseStandardFlag(v) => **v = Self::parse_option_string(s),
+            // mouse_status_line - Status line on which mouse event took place
+            #[cfg(feature = "tmux_3_4")]
+            Self::MouseStatusLine(v) => **v = Self::parse_option_string(s),
+            // mouse_status_range - Range type or argument of mouse event on status line
+            #[cfg(feature = "tmux_3_4")]
+            Self::MouseStatusRange(v) => **v = Self::parse_option_string(s),
             // mouse_utf8_flag - Pane mouse UTF-8 flag
             #[cfg(all(feature = "tmux_1_8", not(feature = "tmux_2_2"), feature = "tmux_3_0"))]
             Self::MouseUtf8Flag(v) => **v = Self::parse_option_string(s),
@@ -951,6 +966,9 @@ impl<'a> VariableOutput<'a> {
             // pane_tty - Pseudo terminal of pane
             #[cfg(feature = "tmux_1_6")]
             Self::PaneTty(v) => **v = Self::parse_option_string(s),
+            // `pane_unseen_changes` - 1 if there were changes in pane while in mode
+            #[cfg(feature = "tmux_3_4")]
+            Self::PaneUnseenChanges(v) => **v = Self::parse_option_bool(s),
             // pane_width - Width of pane
             #[cfg(feature = "tmux_1_6")]
             Self::PaneWidth(v) => **v = s.parse::<usize>().ok(),
