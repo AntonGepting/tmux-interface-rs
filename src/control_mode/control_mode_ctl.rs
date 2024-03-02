@@ -8,7 +8,7 @@ pub fn control_proc(
     lines: &mut ControlModeOutput<BufReader<ChildStdout>>,
     response: Response,
 ) -> bool {
-    dbg!(&response);
+    //dbg!(&response);
 
     match &response {
         #[cfg(feature = "tmux_2_5")]
@@ -61,20 +61,20 @@ pub fn tmux_control_proc(
     lines: &mut ControlModeOutput<BufReader<ChildStdout>>,
     response: Response,
 ) -> bool {
-    dbg!("response: ", &response);
+    //dbg!("response: ", &response);
 
     match &response {
         #[cfg(feature = "tmux_1_8")]
         Response::WindowClose(_) => {
             let cmd = NewWindow::new().detached();
             let r = ControlModeOutput::send(stdin, cmd, lines);
-            dbg!("result: ", r);
+            //dbg!("result: ", r);
         }
         #[cfg(feature = "tmux_3_3")]
         Response::UnlinkedWindowClose(_) => {
             let cmd = NewWindow::new().detached();
             let r = ControlModeOutput::send(stdin, cmd, lines);
-            dbg!("result: ", r);
+            //dbg!("result: ", r);
         }
         _ => {}
     }
