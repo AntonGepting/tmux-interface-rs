@@ -80,47 +80,47 @@
 //!
 //! **Table 3.1:** `Cargo.toml` features list with corresponding tmux versions
 //!
-//! | Feature Name  | Tmux Version  | CI Tests | Comment                                     |
-//! |---------------|---------------|----------|---------------------------------------------|
-//! | `tmux_0_8`    | `tmux 0.8`    |          |                                             |
-//! | `tmux_0_9`    | `tmux 0.9`    |          |                                             |
-//! | `tmux_1_0`    | `tmux 1.0`    |          |                                             |
-//! | `tmux_1_1`    | `tmux 1.1`    |          |                                             |
-//! | `tmux_1_2`    | `tmux 1.2`    |          |                                             |
-//! | `tmux_1_3`    | `tmux 1.3`    |          |                                             |
-//! | `tmux_1_4`    | `tmux 1.4`    |          |                                             |
-//! | `tmux_1_5`    | `tmux 1.5`    |          |                                             |
-//! | `tmux_1_6`    | `tmux 1.6`    |          | Ubuntu 11.04 LTS Precise Pangolin, CentOS 6 |
-//! | `tmux_1_7`    | `tmux 1.7`    |          | Ubuntu 14.04 LTS Trusty Tahr, CentOS 7      |
-//! | `tmux_1_8`    | `tmux 1.8`    |        x |                                             |
-//! | `tmux_1_9`    | `tmux 1.9`    |        x | Debian Jessie                               |
-//! | `tmux_1_9a`   | `tmux 1.9a`   |        x |                                             |
-//! | `tmux_2_0`    | `tmux 2.0`    |        x |                                             |
-//! | `tmux_2_1`    | `tmux 2.1`    |        x | Ubuntu 16.04 LTS Xenial Xerus               |
-//! | `tmux_2_2`    | `tmux 2.2`    |        x |                                             |
-//! | `tmux_2_3`    | `tmux 2.3`    |        x | Debian Stretch                              |
-//! | `tmux_2_4`    | `tmux 2.4`    |        x |                                             |
-//! | `tmux_2_5`    | `tmux 2.5`    |        x |                                             |
-//! | `tmux_2_6`    | `tmux 2.6`    |        x | Ubuntu 18.04 LTS Bionic Beaver              |
-//! | `tmux_2_7`    | `tmux 2.7`    |        x | CentOS 8                                    |
-//! | `tmux_2_8`    | `tmux 2.8`    |        x | Debian Buster                               |
-//! | `tmux_2_9`    | `tmux 2.9`    |        x |                                             |
-//! | `tmux_2_9a`   | `tmux 2.9a`   |        x |                                             |
-//! | `tmux_3_0`    | `tmux 3.0`    |        x |                                             |
-//! | `tmux_3_0a`   | `tmux 3.0a`   |        x | Debian Bullseye                             |
-//! | `tmux_3_1`    | `tmux 3.1`    |        x | Debian experimental                         |
-//! | `tmux_3_1a`   | `tmux 3.1a`   |        x |                                             |
-//! | `tmux_3_1b`   | `tmux 3.1b`   |        x |                                             |
-//! | `tmux_3_1c`   | `tmux 3.1c`   |        x |                                             |
-//! | `tmux_3_2`    | `tmux 3.2`    |        x |                                             |
-//! | `tmux_3_2a`   | `tmux 3.2a`   |        x |                                             |
-//! | `tmux_3_3`    | `tmux 3.3`    |        x |                                             |
-//! | `tmux_3_3a`   | `tmux 3.3a`   |        x |                                             |
-//! | `tmux_3_4`    | `tmux 3.4`    |        x |                                             |
-//! | `tmux_X_X`    |               |        x | tmux: `main` branch; library: `dev` branch  |
-//! |               |               |          |                                             |
-//! | `tmux_stable` | `tmux 3.3`    |          |                                             |
-//! | `tmux_latest` | `tmux 3.3a`   |          |                                             |
+//! | Feature Name  | Tmux Version  | CI Tests | Comment                                              |
+//! |---------------|---------------|----------|------------------------------------------------------|
+//! | `tmux_0_8`    | `tmux 0.8`    |          |                                                      |
+//! | `tmux_0_9`    | `tmux 0.9`    |          |                                                      |
+//! | `tmux_1_0`    | `tmux 1.0`    |          |                                                      |
+//! | `tmux_1_1`    | `tmux 1.1`    |          |                                                      |
+//! | `tmux_1_2`    | `tmux 1.2`    |          |                                                      |
+//! | `tmux_1_3`    | `tmux 1.3`    |          |                                                      |
+//! | `tmux_1_4`    | `tmux 1.4`    |          |                                                      |
+//! | `tmux_1_5`    | `tmux 1.5`    |          |                                                      |
+//! | `tmux_1_6`    | `tmux 1.6`    |          | Ubuntu 11.04 LTS Precise Pangolin, CentOS 6          |
+//! | `tmux_1_7`    | `tmux 1.7`    |          | Ubuntu 14.04 LTS Trusty Tahr, CentOS 7               |
+//! | `tmux_1_8`    | `tmux 1.8`    |        x |                                                      |
+//! | `tmux_1_9`    | `tmux 1.9`    |        x | Debian Jessie                                        |
+//! | `tmux_1_9a`   | `tmux 1.9a`   |        x |                                                      |
+//! | `tmux_2_0`    | `tmux 2.0`    |        x |                                                      |
+//! | `tmux_2_1`    | `tmux 2.1`    |        x | Ubuntu 16.04 LTS Xenial Xerus                        |
+//! | `tmux_2_2`    | `tmux 2.2`    |        x |                                                      |
+//! | `tmux_2_3`    | `tmux 2.3`    |        x | Debian Stretch                                       |
+//! | `tmux_2_4`    | `tmux 2.4`    |        x |                                                      |
+//! | `tmux_2_5`    | `tmux 2.5`    |        x |                                                      |
+//! | `tmux_2_6`    | `tmux 2.6`    |        x | Ubuntu 18.04 LTS Bionic Beaver                       |
+//! | `tmux_2_7`    | `tmux 2.7`    |        x | CentOS 8                                             |
+//! | `tmux_2_8`    | `tmux 2.8`    |        x | Debian Buster                                        |
+//! | `tmux_2_9`    | `tmux 2.9`    |        x |                                                      |
+//! | `tmux_2_9a`   | `tmux 2.9a`   |        x |                                                      |
+//! | `tmux_3_0`    | `tmux 3.0`    |        x |                                                      |
+//! | `tmux_3_0a`   | `tmux 3.0a`   |        x | Ubuntu 20.04 LTS Focal Fossa                         |
+//! | `tmux_3_1`    | `tmux 3.1`    |        x |                                                      |
+//! | `tmux_3_1a`   | `tmux 3.1a`   |        x |                                                      |
+//! | `tmux_3_1b`   | `tmux 3.1b`   |        x |                                                      |
+//! | `tmux_3_1c`   | `tmux 3.1c`   |        x | Debian Bullseye                                      |
+//! | `tmux_3_2`    | `tmux 3.2`    |        x |                                                      |
+//! | `tmux_3_2a`   | `tmux 3.2a`   |        x | Ubuntu 22.04 LTS Jammy Jellyfish, CentOS 9           |
+//! | `tmux_3_3`    | `tmux 3.3`    |        x |                                                      |
+//! | `tmux_3_3a`   | `tmux 3.3a`   |        x | Debian Bookworm, Ubuntu 23.04 LTS Lunar Lobster      |
+//! | `tmux_3_4`    | `tmux 3.4`    |        x | Debian experimental,  Ubuntu 24.04 LTS Noble Numbat  |
+//! | `tmux_X_X`    |               |        x | tmux: `main` branch; library: `dev` branch           |
+//! |               |               |          |                                                      |
+//! | `tmux_stable` | `tmux 3.3`    |          |                                                      |
+//! | `tmux_latest` | `tmux 3.3a`   |          |                                                      |
 //!
 //!
 //! ```text

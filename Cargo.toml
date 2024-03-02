@@ -1,6 +1,6 @@
 [package]
 name = "tmux_interface"
-version = "0.3.1"
+version = "0.3.2"
 authors = ["Anton Gepting <anton.gepting@gmail.com>"]
 edition = "2018"
 license = "MIT"
@@ -12,6 +12,11 @@ repository = "https://github.com/AntonGepting/tmux-interface-rs"
 include = ["/src/**/*", "/Cargo.toml", "/README.md", "/LICENSE.md"]
 
 [features]
+# INFO: Source for distributions releases and tmux versions
+#  [Packages for Linux and Unix](https://pkgs.org/download/tmux)
+#
+# define a list of nested tmux version variables for conditional compilation
+#
 # earlier versions currently are not supported
 # tmux 0.8 included in first package can be found in Debian repository
 tmux_0_8 = []
@@ -49,17 +54,23 @@ tmux_2_8 = ["tmux_2_7"]
 tmux_2_9 = ["tmux_2_8"]
 tmux_2_9a = ["tmux_2_9"]
 tmux_3_0 = ["tmux_2_9a"]
-# tmux 3.0a included in Debian Bullseye
+# tmux 3.0a included in Ubuntu 20.04 LTS Focal Fossa
 tmux_3_0a = ["tmux_3_0"]
-# tmux 3.1 included in Debian experimental
 tmux_3_1 = ["tmux_3_0a"]
 tmux_3_1a = ["tmux_3_1"]
 tmux_3_1b = ["tmux_3_1a"]
+# tmux 3.1c included in Debian Bullseye
 tmux_3_1c = ["tmux_3_1b"]
 tmux_3_2 = ["tmux_3_1c"]
+# tmux 3.2a included in CentOS 9
+# tmux 3.2a included in Ubuntu 22.04 LTS Jammy Jellyfish
 tmux_3_2a = ["tmux_3_2"]
 tmux_3_3 = ["tmux_3_2a"]
+# tmux 3.3a included in Ubuntu 23.04 LTS Lunar Lobster 
+# tmux 3.3a included in Debian Bookworm
 tmux_3_3a = ["tmux_3_3"]
+# tmux 3.4 included in Ubuntu 24.04 LTS Noble Numbat
+# tmux 3.4 included in Debian experimental
 tmux_3_4 = ["tmux_3_3a"]
 
 # tmux current version which is currently in development
@@ -73,8 +84,8 @@ tmux_stable = ["tmux_3_4"]
 # use alias instead of full tmux command name (e.g. `list-sessions` -> `ls`)
 cmd_alias = []
 
-# enable following default features for the library:
-#  * use tmux_stable version
+# enable following default features for the library by default:
+#  * use latest tmux stable version
 #  * use command alias, instead of full command name
 default = ["tmux_stable", "cmd_alias"]
 
