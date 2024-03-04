@@ -1,6 +1,10 @@
 # Changelog
 
 <!--## tmux_interface vX.X.X-->
+## tmux_interface v0.3.2
+* feature: add tmux 3.4 support
+* add type aliases for command structures, synonymous to tmux commands aliases (e.g. `NewSession` -> `New`)
+* few small bugfixes
 
 ## tmux_interface v0.3.1
 * feature: add `StdIO` enum and `.stdin()` `.stdout()` `.stderr()` methods of
