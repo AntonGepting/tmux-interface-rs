@@ -80,7 +80,7 @@ fn send_keys() {
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
     let send_keys = send_keys.target_window(&target_pane);
     #[cfg(feature = "tmux_0_8")]
-    let send_keys = send_keys.key("3");
+    let send_keys = send_keys.key("3").key("4");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "send-keys";
@@ -112,6 +112,7 @@ fn send_keys() {
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
     s.extend_from_slice(&["-t", "2"]);
     s.push("3");
+    s.push("4");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
 
     let send_keys = send_keys.build().to_vec();
