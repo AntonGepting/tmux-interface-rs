@@ -104,7 +104,7 @@ pub struct SendKeys<'a> {
 
     /// `key`
     #[cfg(feature = "tmux_0_8")]
-    pub key: Option<Cow<'a, str>>,
+    pub keys: Vec<Cow<'a, str>>,
 }
 
 // FIXME: repeat-count
@@ -193,7 +193,7 @@ impl<'a> SendKeys<'a> {
     /// `key`
     #[cfg(feature = "tmux_0_8")]
     pub fn key<S: Into<Cow<'a, str>>>(mut self, key: S) -> Self {
-        self.key = Some(key.into());
+        self.keys.push(key.into());
         self
     }
 
@@ -270,7 +270,7 @@ impl<'a> SendKeys<'a> {
 
         // `key`
         #[cfg(feature = "tmux_0_8")]
-        if let Some(key) = self.key {
+        for key in self.keys {
             cmd.push_param(key);
         }
 
