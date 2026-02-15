@@ -37,7 +37,7 @@ impl<'a> SessionsCtl<'a> {
     }
 
     pub fn get_all_ext(
-        invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: impl FnOnce(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Result<Sessions, Error> {
         let mut format = Formats::new();
         format.separator(':');

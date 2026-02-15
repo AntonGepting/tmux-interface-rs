@@ -94,7 +94,7 @@ impl<'a> ServerOptionsCtl<'a> {
     }
 
     pub fn set_all_ext(
-        invoke: &dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: impl FnOnce(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
         server_options: ServerOptions<'a>,
     ) -> Result<TmuxOutput, Error> {
         let cmds = SetServerOptions::new();
@@ -163,7 +163,7 @@ impl<'a> ServerOptionsCtl<'a> {
 
         let cmd = TmuxCommand::with_cmds(cmds.build());
 
-        invoke(cmd)
+        invoker(cmd)
     }
 
     // get and parse single line option

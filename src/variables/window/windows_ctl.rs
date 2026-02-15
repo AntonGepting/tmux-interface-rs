@@ -40,7 +40,7 @@ impl<'a> WindowsCtl<'a> {
 
     pub fn get_ext<S: Into<Cow<'a, str>>>(
         target_session: Option<S>,
-        invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: impl FnOnce(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Result<Windows, Error> {
         Self::get_all_ext(target_session, invoker)
     }
@@ -51,7 +51,7 @@ impl<'a> WindowsCtl<'a> {
 
     pub fn get_all_ext<S: Into<Cow<'a, str>>>(
         target_session: Option<S>,
-        invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: impl FnOnce(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Result<Windows, Error> {
         let mut format = Formats::new();
         format.separator(WINDOW_VARS_SEPARATOR);
