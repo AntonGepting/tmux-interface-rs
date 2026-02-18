@@ -76,16 +76,14 @@ impl<'a> ServerOptionsCtl<'a> {
     }
 
     pub fn get_all(&self) -> Result<ServerOptions<'a>, Error> {
-        let cmd = ShowOptions::new().server().build();
-        let output = (self.invoker)(cmd)?.to_string();
-        ServerOptions::from_str(&output)
+        Self::get_all_ext(self.invoker)
     }
 
     pub fn get_all_ext(
-        invoke: &dyn Fn(&mut TmuxCommand<'a>) -> String,
+        invoker: impl FnOnce(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Result<ServerOptions<'a>, Error> {
-        let mut cmd = ShowOptions::new().server().build();
-        let output = invoke(&mut cmd);
+        let cmd = ShowOptions::new().server().build();
+        let output = invoker(cmd)?.to_string();
         ServerOptions::from_str(&output)
     }
 
