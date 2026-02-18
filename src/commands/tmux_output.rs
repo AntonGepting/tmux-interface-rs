@@ -10,8 +10,8 @@ pub struct TmuxOutput(pub Output);
 impl fmt::Display for TmuxOutput {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s = &self.0.stdout.as_slice();
-        let output = String::from_utf8_lossy(s).to_string();
-        write!(f, "{}", output)
+        let output = String::from_utf8_lossy(s);
+        f.write_str(&output)
     }
 }
 
