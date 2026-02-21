@@ -110,7 +110,7 @@ impl<'a> PaneOptionsCtl<'a> {
 
     pub fn get_all_ext(
         target: Option<Cow<'a, str>>,
-        invoke: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: impl FnOnce(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Result<PaneOptions<'a>, Error> {
         let cmd = ShowOptions::new().pane();
         let cmd = match target {
@@ -118,7 +118,7 @@ impl<'a> PaneOptionsCtl<'a> {
             None => cmd,
         };
         let cmd = cmd.build();
-        let output = invoke(cmd)?.to_string();
+        let output = invoker(cmd)?.to_string();
         PaneOptions::from_str(&output)
     }
 
@@ -128,7 +128,7 @@ impl<'a> PaneOptionsCtl<'a> {
 
     pub fn set_all_ext(
         target: Option<Cow<'a, str>>,
-        invoke: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: impl FnOnce(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
         pane_options: PaneOptions<'a>,
     ) -> Result<TmuxOutput, Error> {
         let cmds = SetPaneOptions::new();
@@ -151,7 +151,7 @@ impl<'a> PaneOptionsCtl<'a> {
 
         let cmd = TmuxCommand::with_cmds(cmds.build());
 
-        invoke(cmd)
+        invoker(cmd)
     }
 
     // get and parse single line option

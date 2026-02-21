@@ -44,7 +44,7 @@ impl<'a> PanesCtl<'a> {
 
     pub fn get_all_ext<S>(
         target: Option<S>,
-        invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: impl FnOnce(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Result<Panes, Error>
     where
         S: Into<Cow<'a, str>>,

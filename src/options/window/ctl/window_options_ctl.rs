@@ -31,7 +31,7 @@ pub trait WindowOptionsCtl<'a> {
 
     fn get_all_ext(
         target: Option<Cow<'a, str>>,
-        invoker: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: impl FnOnce(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
     ) -> Result<WindowOptions<'a>, Error> {
         let cmd = Self::GetterAll::all(target);
         let output = (invoker)(cmd)?.to_string();
@@ -45,7 +45,7 @@ pub trait WindowOptionsCtl<'a> {
     // XXX: split in build command custom run command
     fn set_all_ext(
         target: Option<Cow<'a, str>>,
-        invoke: &'a dyn Fn(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
+        invoker: impl FnOnce(TmuxCommand<'a>) -> Result<TmuxOutput, Error>,
         window_options: WindowOptions<'a>,
     ) -> Result<TmuxOutput, Error> {
         let cmds = Self::SetterMultiple::new();
@@ -226,7 +226,7 @@ pub trait WindowOptionsCtl<'a> {
 
         let cmd = TmuxCommand::with_cmds(cmds.build());
 
-        invoke(cmd)
+        invoker(cmd)
     }
 
     // get and parse single line option
