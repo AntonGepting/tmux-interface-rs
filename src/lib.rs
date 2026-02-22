@@ -16,7 +16,13 @@
 //!         * 3.3.3 [Using Remote Repository](#333-using-remote-repository)
 //! * 4. [Modules Overview](#4-modules-overview)
 //! * 5. [Modules and Levels Hierarchy](#5-modules-and-levels-hierarchy)
-//!
+//!     * 5.1. [Level Explanations and Examples](#51-level-explanations-and-examples)
+//!         * 5.1.0 [Level 0: Operating System]()
+//!         * 5.1.1 [Level 1: Standard Library - Process]()
+//!         * 5.1.2 [Level 2: TmuxInterface Library - TmuxCommand]()
+//!         * 5.1.3 [Level 3: TmuxInterface Library - Tmux Command Structures]()
+//!         * 5.1.4 [Level 4: TmuxInterface Library - Options, Variables]()
+//!         * 5.1.5 [Level 5: TmuxInterface Library - Control Mode]()
 //!
 //! # 1. Description
 //!
@@ -183,15 +189,15 @@
 //! # 4. Modules Overview
 //!
 //! * Commands ([`commands`])
-//!     * Clients and Sessions ([`clients_and_sessions`](crate::commands::clients_and_sessions))
-//!     * Windows and Panes ([`windows_and_panes`](crate::commands::windows_and_panes))
-//!     * Key Bindings ([`key_bindings`](crate::commands::key_bindings))
+//!     * Clients and Sessions ([`clients_and_sessions`])
+//!     * Windows and Panes ([`windows_and_panes`])
+//!     * Key Bindings ([`key_bindings`])
 //!     * Options ([`options`](crate::commands::options))
-//!     * Hooks ([`hooks`](crate::commands::hooks))
-//!     * Global and Session Environment ([`global_and_session_environment`](crate::commands::global_and_session_environment))
-//!     * Status Line ([`status_line`](crate::commands::status_line))
-//!     * Buffers ([`buffers`](crate::commands::buffers))
-//!     * Miscellaneous ([`miscellaneous`](crate::commands::miscellaneous))
+//!     * Hooks ([`hooks`])
+//!     * Global and Session Environment ([`global_and_session_environment`])
+//!     * Status Line ([`status_line`])
+//!     * Buffers ([`buffers`])
+//!     * Miscellaneous ([`miscellaneous`])
 //!     * ...
 //!     * Common ([`common`](crate::commands::common))
 //!     * TmuxCommand ([`TmuxCommand`]), TmuxCommands ([`TmuxCommands`])
@@ -211,17 +217,17 @@
 //!         * (unimplemented)
 //!
 //! * Formats ([`formats`])
-//!     * [`Formats`][crate::formats::Formats]
-//!     * [`FormatsOutput`][crate::formats::FormatsOutput]
-//!     * [`Variable`][crate::formats::Variable]
-//!     * [`VariableOutput`][crate::formats::VariableOutput]
+//!     * [`Formats`]
+//!     * [`FormatsOutput`]
+//!     * [`Variable`]
+//!     * [`VariableOutput`]
 //!     * ...
 //!
 //! * Options ([`options`])
 //!
 //! * Styles ([`styles`])
-//!     * [`StyleList`][crate::styles::StyleList]
-//!     * [`Style`][crate::styles::Style]
+//!     * [`StyleList`]
+//!     * [`Style`]
 //!     * ...
 //!
 //! * Target ([`target`])
@@ -231,12 +237,12 @@
 //!     * ...
 //!
 //! * Variables ([`variables`])
-//!     * [`Sessions`](crate::Sessions)
-//!     * [`Session`](crate::Session)
-//!     * [`Windows`](crate::Windows)
-//!     * [`Window`](crate::Window)
-//!     * [`Panes`](crate::Panes)
-//!     * [`Pane`](crate::Pane)
+//!     * [`Sessions`]
+//!     * [`Session`]
+//!     * [`Windows`]
+//!     * [`Window`]
+//!     * [`Panes`]
+//!     * [`Pane`]
 //!     * ...
 //!
 //! * Error ([`Error`])

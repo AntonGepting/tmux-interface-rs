@@ -24,7 +24,7 @@ pub const G_LOWERCASE_KEY: &str = "-g";
 pub const H_LOWERCASE_KEY: &str = "-h";
 /// `-i`
 pub const I_LOWERCASE_KEY: &str = "-i";
-// `-j]`
+// `-j`
 //pub const J_LOWERCASE_KEY: &str = "-j";
 /// `-k`
 pub const K_LOWERCASE_KEY: &str = "-k";
