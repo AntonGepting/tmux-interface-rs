@@ -199,7 +199,7 @@
 //!     * Buffers ([`buffers`])
 //!     * Miscellaneous ([`miscellaneous`])
 //!     * ...
-//!     * Common ([`common`](crate::commands::common))
+//!     * Common ([`common`])
 //!     * TmuxCommand ([`TmuxCommand`]), TmuxCommands ([`TmuxCommands`])
 //!     * Tmux ([`Tmux`])
 //!     * ...

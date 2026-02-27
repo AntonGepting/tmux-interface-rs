@@ -172,7 +172,7 @@
 //!     * [`Ctl`](self::server::ctl)
 //! * [`Session`](self::session)
 //!     * [`Builder`](self::session::builder)
-//!         * [`global`](self::session::builder::global)
+//!         * [`global`]
 //!             * [`GetGlobalSessionOption`]
 //!             * [`GetGlobalSessionOptionValue`]
 //!             * [`SetGlobalSessionOption`]
