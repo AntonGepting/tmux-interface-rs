@@ -25,7 +25,6 @@
 /// ```
 #[macro_export]
 macro_rules! delete_buffer {
-
     // `[-b buffer-index]`
     (@cmd ($cmd:expr) -b $buffer_index:expr, $($tail:tt)*) => {{
         $crate::delete_buffer!(@cmd ({

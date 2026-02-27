@@ -31,15 +31,15 @@ fn delete_buffer() {
     let target_pane = TargetPane::Raw("5").to_string();
 
     let delete_buffer = DeleteBuffer::new();
-    /// `[-b buffer-index]`
+    // `[-b buffer-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
     let delete_buffer = delete_buffer.buffer_index("1");
 
-    /// `[-b buffer-name]`
+    // `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
     let delete_buffer = delete_buffer.buffer_name("2");
 
-    /// `[-t target-session]`
+    // `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let delete_buffer = delete_buffer.target_session("3");
 

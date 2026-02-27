@@ -30,15 +30,15 @@ fn show_buffer() {
     let target_pane = TargetPane::Raw("5").to_string();
 
     let show_buffer = ShowBuffer::new();
-    /// `[-b buffer-index]`
+    // `[-b buffer-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
     let show_buffer = show_buffer.buffer_index("1");
 
-    /// `[-b buffer-name]`
+    // `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
     let show_buffer = show_buffer.buffer_name("2");
 
-    /// `[-t target-session]`
+    // `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let show_buffer = show_buffer.target_session("3");
 

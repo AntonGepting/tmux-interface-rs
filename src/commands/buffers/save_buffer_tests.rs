@@ -30,23 +30,23 @@ fn save_buffer() {
     let target_pane = TargetPane::Raw("5").to_string();
 
     let save_buffer = SaveBuffer::new();
-    /// `[-a]`
+    // `[-a]`
     #[cfg(feature = "tmux_0_8")]
     let save_buffer = save_buffer.append();
 
-    /// `[-b buffer-index]`
+    // `[-b buffer-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
     let save_buffer = save_buffer.buffer_index("1");
 
-    /// `[-b buffer-name]`
+    // `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
     let save_buffer = save_buffer.buffer_name("2");
 
-    /// `[-t target-session]`
+    // `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let save_buffer = save_buffer.target_session("3");
 
-    /// `[path]`
+    // `[path]`
     #[cfg(feature = "tmux_0_8")]
     let save_buffer = save_buffer.path("4");
 

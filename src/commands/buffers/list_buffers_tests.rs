@@ -36,15 +36,15 @@ fn list_buffers() {
     let target_pane = TargetPane::Raw("5").to_string();
 
     let list_buffers = ListBuffers::new();
-    /// `[-F format]`
+    // `[-F format]`
     #[cfg(feature = "tmux_1_7")]
     let list_buffers = list_buffers.format("1");
 
-    /// `[-f filter]`
+    // `[-f filter]`
     #[cfg(feature = "tmux_3_2")]
     let list_buffers = list_buffers.filter("2");
 
-    /// `[-t target_session]`
+    // `[-t target_session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let list_buffers = list_buffers.target_session("3");
 

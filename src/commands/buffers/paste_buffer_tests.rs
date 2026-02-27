@@ -30,35 +30,35 @@ fn paste_buffer() {
     let target_pane = TargetPane::Raw("5").to_string();
 
     let paste_buffer = PasteBuffer::new();
-    /// `[-d]`
+    // `[-d]`
     #[cfg(feature = "tmux_0_8")]
     let paste_buffer = paste_buffer.delete();
 
-    /// `[-p]`
+    // `[-p]`
     #[cfg(feature = "tmux_1_7")]
     let paste_buffer = paste_buffer.bracket_codes();
 
-    /// `[-r]`
+    // `[-r]`
     #[cfg(feature = "tmux_1_5")]
     let paste_buffer = paste_buffer.no_replacement();
 
-    /// `[-b buffer-index]`
+    // `[-b buffer-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
     let paste_buffer = paste_buffer.buffer_index("1");
 
-    /// `[-b buffer-name]`
+    // `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
     let paste_buffer = paste_buffer.buffer_name("2");
 
-    /// `[-s separator]`
+    // `[-s separator]`
     #[cfg(feature = "tmux_1_5")]
     let paste_buffer = paste_buffer.separator("3");
 
-    /// `[-t target-window]`
+    // `[-t target-window]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let paste_buffer = paste_buffer.target_window("4");
 
-    /// `[-t target-pane]`
+    // `[-t target-pane]`
     #[cfg(feature = "tmux_1_5")]
     let paste_buffer = paste_buffer.target_pane("5");
 

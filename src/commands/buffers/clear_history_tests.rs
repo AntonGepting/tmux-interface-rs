@@ -24,11 +24,11 @@ fn clear_history() {
     let target_pane = TargetPane::Raw("5").to_string();
 
     let clear_history = ClearHistory::new();
-    /// `[-H]`
+    // `[-H]`
     #[cfg(feature = "tmux_3_4")]
     let clear_history = clear_history.no_hyperlinks();
 
-    /// `[-t target-pane]`
+    // `[-t target-pane]`
     #[cfg(feature = "tmux_1_5")]
     let clear_history = clear_history.target_pane("1");
 

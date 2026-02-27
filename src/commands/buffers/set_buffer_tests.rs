@@ -36,35 +36,35 @@ fn set_buffer() {
     let target_pane = TargetPane::Raw("5").to_string();
 
     let set_buffer = SetBuffer::new();
-    /// `[-a]`
+    // `[-a]`
     #[cfg(feature = "tmux_2_0")]
     let set_buffer = set_buffer.append();
 
-    /// `[-w]`
+    // `[-w]`
     #[cfg(feature = "tmux_3_2")]
     let set_buffer = set_buffer.send_to_clipboard();
 
-    /// `[-b buffer-index]`
+    // `[-b buffer-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
     let set_buffer = set_buffer.buffer_index("1");
 
-    /// `[-b buffer-name]`
+    // `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
     let set_buffer = set_buffer.buffer_name("2");
 
-    /// `[-t target-client]`
+    // `[-t target-client]`
     #[cfg(feature = "tmux_3_2")]
     let set_buffer = set_buffer.target_client("3");
 
-    /// `[-t target-session]`
+    // `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let set_buffer = set_buffer.target_session("4");
 
-    /// `[-n new-buffer-name]`
+    // `[-n new-buffer-name]`
     #[cfg(feature = "tmux_2_0")]
     let set_buffer = set_buffer.new_buffer_name("5");
 
-    /// `[data]`
+    // `[data]`
     #[cfg(feature = "tmux_0_8")]
     let set_buffer = set_buffer.data("6");
 

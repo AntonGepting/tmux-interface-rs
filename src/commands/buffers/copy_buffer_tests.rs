@@ -9,19 +9,19 @@ fn copy_buffer() {
     let target_pane = TargetPane::Raw("5").to_string();
 
     let copy_buffer = CopyBuffer::new();
-    /// `[-a src-index]`
+    // `[-a src-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let copy_buffer = copy_buffer.src_index("1");
 
-    /// `[-b dst-index]`
+    // `[-b dst-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let copy_buffer = copy_buffer.dst_index("2");
 
-    /// `[-s src-session]`
+    // `[-s src-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let copy_buffer = copy_buffer.src_session("3");
 
-    /// `[-t dst-session]`
+    // `[-t dst-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let copy_buffer = copy_buffer.dst_session("4");
 
