@@ -295,7 +295,7 @@ pub trait SessionOptionsCtl<'a> {
         #[cfg(feature = "tmux_1_0")]
         let cmds = cmds.update_environment(target.clone(), session_options.update_environment);
 
-        #[cfg(all(feature = "tmux_26", not(feature = "tmux_3_0")))]
+        #[cfg(all(feature = "tmux_2_6", not(feature = "tmux_3_0")))]
         let cmds = cmds.user_keys(target.clone(), session_options.user_keys);
 
         #[cfg(feature = "tmux_1_0")]
