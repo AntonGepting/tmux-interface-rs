@@ -1,20 +1,23 @@
+// auto-generated file
+//
+
 /// Save the contents of the specified paste buffer to path.
 ///
 /// # Manual
 ///
-/// tmux ^2.0:
+/// tmux >=2.0:
 /// ```text
 /// save-buffer [-a] [-b buffer-name] path
 /// (alias: saveb)
 /// ```
 ///
-/// tmux ^1.5:
+/// tmux >=1.5:
 /// ```text
 /// save-buffer [-a] [-b buffer-index] path
 /// (alias: saveb)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// save-buffer [-a] [-b buffer-index] [-t target-session] path
 /// (alias: saveb)
@@ -27,31 +30,35 @@ macro_rules! save_buffer {
             $cmd.append()
         }) $($tail)*)
     }};
-    // `[-b buffer-name]`
-    (@cmd ($cmd:expr) -b $buffer:expr, $($tail:tt)*) => {{
+
+    // `[-b buffer-index]`
+    (@cmd ($cmd:expr) -b $buffer_index:expr, $($tail:tt)*) => {{
         $crate::save_buffer!(@cmd ({
-            #[cfg(feature = "tmux_2_0")]
-            {
-                $cmd.buffer_name($buffer)
-            }
-            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
-            {
-                $cmd.buffer_index($buffer)
-            }
+            $cmd.buffer_index($buffer_index)
         }) $($tail)*)
     }};
+
+    // `[-b buffer-name]`
+    (@cmd ($cmd:expr) -b $buffer_name:expr, $($tail:tt)*) => {{
+        $crate::save_buffer!(@cmd ({
+            $cmd.buffer_name($buffer_name)
+        }) $($tail)*)
+    }};
+
     // `[-t target-session]`
     (@cmd ($cmd:expr) -t $target_session:expr, $($tail:tt)*) => {{
         $crate::save_buffer!(@cmd ({
             $cmd.target_session($target_session)
         }) $($tail)*)
     }};
+
     // `[path]`
     (@cmd ($cmd:expr) $path:expr, $($tail:tt)*) => {{
         $crate::save_buffer!(@cmd ({
             $cmd.path($path)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -77,29 +84,30 @@ fn save_buffer_macro() {
     //
     // # Manual
     //
-    // tmux ^2.0:
+    // tmux >=2.0:
     // ```text
     // save-buffer [-a] [-b buffer-name] path
     // (alias: saveb)
     // ```
     //
-    // tmux ^1.5:
+    // tmux >=1.5:
     // ```text
     // save-buffer [-a] [-b buffer-index] path
     // (alias: saveb)
     // ```
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // save-buffer [-a] [-b buffer-index] [-t target-session] path
     // (alias: saveb)
     // ```
+
     let save_buffer = save_buffer!();
     #[cfg(feature = "tmux_0_8")]
     let save_buffer = save_buffer!((save_buffer), -a);
-    #[cfg(feature = "tmux_2_0")]
-    let save_buffer = save_buffer!((save_buffer), -b "1");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    let save_buffer = save_buffer!((save_buffer), -b "1");
+    #[cfg(feature = "tmux_2_0")]
     let save_buffer = save_buffer!((save_buffer), -b "2");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let save_buffer = save_buffer!((save_buffer), -t "3");
@@ -115,16 +123,15 @@ fn save_buffer_macro() {
     s.push(cmd);
     #[cfg(feature = "tmux_0_8")]
     s.push("-a");
-    #[cfg(feature = "tmux_2_0")]
-    s.extend_from_slice(&["-b", "1"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    s.extend_from_slice(&["-b", "1"]);
+    #[cfg(feature = "tmux_2_0")]
     s.extend_from_slice(&["-b", "2"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     s.extend_from_slice(&["-t", "3"]);
     #[cfg(feature = "tmux_0_8")]
     s.push("4");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let save_buffer = save_buffer.build().to_vec();
 
     assert_eq!(save_buffer, s);

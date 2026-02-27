@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -6,34 +9,34 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
-/// tmux ^3.2:
+/// tmux >=3.2:
 /// ```text
 /// choose-buffer [-NZr] [-F format] [-f filter] [-K key-format] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
-/// tmux ^3.1:
+/// tmux >=3.1:
 /// ```text
 /// choose-buffer [-NZr] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
-/// tmux ^2.7:
+/// tmux >=2.7:
 /// ```text
 /// choose-buffer [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
-/// tmux ^2.6:
+/// tmux >=2.6:
 /// ```text
 /// choose-buffer [-N] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
 /// ```
 ///
-/// tmux ^1.7:
+/// tmux >=1.7:
 /// ```text
-/// choose-buffer [-F format] [-t target-pane] [template]
+/// choose-buffer [-F format] [-t target-window] [template]
 /// ```
 ///
-/// tmux ^1.3:
+/// tmux >=1.5:
 /// ```text
-/// choose-buffer [-t target-pane] [template]
+/// choose-buffer [-t target-window] [template]
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ChooseBuffer<'a> {
@@ -49,7 +52,7 @@ pub struct ChooseBuffer<'a> {
     #[cfg(feature = "tmux_3_1")]
     pub reverse_sort_order: bool,
 
-    /// `[-F]` - specify the format for each item in the list
+    /// `[-F format]` - specify the format for each item in the list
     #[cfg(feature = "tmux_1_7")]
     pub format: Option<Cow<'a, str>>,
 
@@ -57,7 +60,7 @@ pub struct ChooseBuffer<'a> {
     #[cfg(feature = "tmux_2_6")]
     pub filter: Option<Cow<'a, str>>,
 
-    /// `[-K key-format]` -
+    /// `[-K key-format]` - format for each shortcut key
     #[cfg(feature = "tmux_3_2")]
     pub key_format: Option<Cow<'a, str>>,
 
@@ -65,12 +68,16 @@ pub struct ChooseBuffer<'a> {
     #[cfg(feature = "tmux_2_6")]
     pub sort_order: Option<Cow<'a, str>>,
 
+    /// `[-t target-window]`
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+    pub target_window: Option<Cow<'a, str>>,
+
     /// `[-t target-pane]` - specify the target pane
-    #[cfg(feature = "tmux_1_3")]
+    #[cfg(feature = "tmux_2_6")]
     pub target_pane: Option<Cow<'a, str>>,
 
     /// `[template]` - specify the template
-    #[cfg(feature = "tmux_1_3")]
+    #[cfg(feature = "tmux_1_5")]
     pub template: Option<Cow<'a, str>>,
 }
 
@@ -128,20 +135,28 @@ impl<'a> ChooseBuffer<'a> {
         self
     }
 
+    /// `[-t target-window]`
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
+        self.target_window = Some(target_window.into());
+        self
+    }
+
     /// `[-t target-pane]` - specify the target pane
-    #[cfg(feature = "tmux_1_3")]
+    #[cfg(feature = "tmux_2_6")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
     /// `[template]` - specify the template
-    #[cfg(feature = "tmux_1_3")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn template<S: Into<Cow<'a, str>>>(mut self, template: S) -> Self {
         self.template = Some(template.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -189,14 +204,20 @@ impl<'a> ChooseBuffer<'a> {
             cmd.push_option(O_UPPERCASE_KEY, sort_order);
         }
 
+        // `[-t target-window]`
+        #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
+        }
+
         // `[-t target-pane]` - specify the target pane
-        #[cfg(feature = "tmux_1_3")]
+        #[cfg(feature = "tmux_2_6")]
         if let Some(target_pane) = self.target_pane {
             cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
         // `[template]` - specify the template
-        #[cfg(feature = "tmux_1_3")]
+        #[cfg(feature = "tmux_1_5")]
         if let Some(template) = self.template {
             cmd.push_param(template);
         }

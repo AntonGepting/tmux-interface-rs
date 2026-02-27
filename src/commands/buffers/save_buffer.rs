@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,19 +11,19 @@ pub type SaveB<'a> = SaveBuffer<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^2.0:
+/// tmux >=2.0:
 /// ```text
 /// save-buffer [-a] [-b buffer-name] path
 /// (alias: saveb)
 /// ```
 ///
-/// tmux ^1.5:
+/// tmux >=1.5:
 /// ```text
 /// save-buffer [-a] [-b buffer-index] path
 /// (alias: saveb)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// save-buffer [-a] [-b buffer-index] [-t target-session] path
 /// (alias: saveb)
@@ -31,13 +34,13 @@ pub struct SaveBuffer<'a> {
     #[cfg(feature = "tmux_0_8")]
     pub append: bool,
 
-    /// `[-b buffer-name]`
-    #[cfg(feature = "tmux_2_0")]
-    pub buffer_name: Option<Cow<'a, str>>,
-
     /// `[-b buffer-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
     pub buffer_index: Option<Cow<'a, str>>,
+
+    /// `[-b buffer-name]`
+    #[cfg(feature = "tmux_2_0")]
+    pub buffer_name: Option<Cow<'a, str>>,
 
     /// `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
@@ -60,17 +63,17 @@ impl<'a> SaveBuffer<'a> {
         self
     }
 
-    /// `[-b buffer-name]`
-    #[cfg(feature = "tmux_2_0")]
-    pub fn buffer_name<S: Into<Cow<'a, str>>>(mut self, buffer_name: S) -> Self {
-        self.buffer_name = Some(buffer_name.into());
-        self
-    }
-
     /// `[-b buffer-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
     pub fn buffer_index<S: Into<Cow<'a, str>>>(mut self, buffer_index: S) -> Self {
         self.buffer_index = Some(buffer_index.into());
+        self
+    }
+
+    /// `[-b buffer-name]`
+    #[cfg(feature = "tmux_2_0")]
+    pub fn buffer_name<S: Into<Cow<'a, str>>>(mut self, buffer_name: S) -> Self {
+        self.buffer_name = Some(buffer_name.into());
         self
     }
 
@@ -88,6 +91,7 @@ impl<'a> SaveBuffer<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -99,16 +103,16 @@ impl<'a> SaveBuffer<'a> {
             cmd.push_flag(A_LOWERCASE_KEY);
         }
 
-        // `[-b buffer-name]`
-        #[cfg(feature = "tmux_2_0")]
-        if let Some(buffer_name) = self.buffer_name {
-            cmd.push_option(B_LOWERCASE_KEY, buffer_name);
-        }
-
         // `[-b buffer-index]`
         #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
         if let Some(buffer_index) = self.buffer_index {
             cmd.push_option(B_LOWERCASE_KEY, buffer_index);
+        }
+
+        // `[-b buffer-name]`
+        #[cfg(feature = "tmux_2_0")]
+        if let Some(buffer_name) = self.buffer_name {
+            cmd.push_option(B_LOWERCASE_KEY, buffer_name);
         }
 
         // `[-t target-session]`

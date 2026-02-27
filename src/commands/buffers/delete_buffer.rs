@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -9,32 +12,32 @@ pub type DeleteB<'a> = DeleteBuffer<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^2.0:
+/// tmux >=2.0:
 /// ```text
 /// delete-buffer [-b buffer-name]
 /// (alias: deleteb)
 /// ```
 ///
-/// tmux ^1.5 v2.0:
+/// tmux >=1.5 && <2.0:
 /// ```text
 /// delete-buffer [-b buffer-index]
 /// (alias: deleteb)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// delete-buffer [-b buffer-index] [-t target-session]
 /// (alias: deleteb)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct DeleteBuffer<'a> {
+    /// `[-b buffer-index]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    pub buffer_index: Option<Cow<'a, str>>,
+
     /// `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
     pub buffer_name: Option<Cow<'a, str>>,
-
-    /// `[-b buffer-index]`
-    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
-    pub buffer_index: Option<Cow<'a, str>>,
 
     /// `[-t target-session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
@@ -46,17 +49,17 @@ impl<'a> DeleteBuffer<'a> {
         Default::default()
     }
 
+    /// `[-b buffer-index]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    pub fn buffer_index<S: Into<Cow<'a, str>>>(mut self, buffer_index: S) -> Self {
+        self.buffer_index = Some(buffer_index.into());
+        self
+    }
+
     /// `[-b buffer-name]`
     #[cfg(feature = "tmux_2_0")]
     pub fn buffer_name<S: Into<Cow<'a, str>>>(mut self, buffer_name: S) -> Self {
         self.buffer_name = Some(buffer_name.into());
-        self
-    }
-
-    /// `[-b buffer-index]`
-    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
-    pub fn buffer_index<S: Into<Cow<'a, str>>>(mut self, buffer_index: S) -> Self {
-        self.buffer_index = Some(buffer_index.into());
         self
     }
 
@@ -67,21 +70,22 @@ impl<'a> DeleteBuffer<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(DELETE_BUFFER);
 
+        // `[-b buffer-index]`
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+        if let Some(buffer_index) = self.buffer_index {
+            cmd.push_option(B_LOWERCASE_KEY, buffer_index);
+        }
+
         // `[-b buffer-name]`
         #[cfg(feature = "tmux_2_0")]
         if let Some(buffer_name) = self.buffer_name {
             cmd.push_option(B_LOWERCASE_KEY, buffer_name);
-        }
-
-        // `[-b buffer-index]`
-        #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
-        if let Some(buffer_index) = self.buffer_index {
-            cmd.push_option(B_LOWERCASE_KEY, buffer_index);
         }
 
         // `[-t target-session]`

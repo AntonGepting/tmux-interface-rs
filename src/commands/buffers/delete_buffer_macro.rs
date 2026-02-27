@@ -1,44 +1,52 @@
+// auto-generated file
+//
+
 /// Delete the buffer named buffer-name, or the most recently added automatically named buffer
 /// if not specified.
 ///
 /// # Manual
 ///
-/// tmux ^2.0:
+/// tmux >=2.0:
 /// ```text
 /// delete-buffer [-b buffer-name]
 /// (alias: deleteb)
 /// ```
 ///
-/// tmux ^1.5:
+/// tmux >=1.5 && <2.0:
 /// ```text
 /// delete-buffer [-b buffer-index]
 /// (alias: deleteb)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// delete-buffer [-b buffer-index] [-t target-session]
 /// (alias: deleteb)
 /// ```
 #[macro_export]
 macro_rules! delete_buffer {
-    (@cmd ($cmd:expr) -b $buffer:expr, $($tail:tt)*) => {{
-        $crate::choose_buffer!(@cmd ({
-            #[cfg(feature = "tmux_2_0")]
-            {
-                $cmd.buffer_name($buffer)
-            }
-            #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
-            {
-                $cmd.buffer_index($buffer)
-            }
+
+    // `[-b buffer-index]`
+    (@cmd ($cmd:expr) -b $buffer_index:expr, $($tail:tt)*) => {{
+        $crate::delete_buffer!(@cmd ({
+            $cmd.buffer_index($buffer_index)
         }) $($tail)*)
     }};
+
+    // `[-b buffer-name]`
+    (@cmd ($cmd:expr) -b $buffer_name:expr, $($tail:tt)*) => {{
+        $crate::delete_buffer!(@cmd ({
+            $cmd.buffer_name($buffer_name)
+        }) $($tail)*)
+    }};
+
+    // `[-t target-session]`
     (@cmd ($cmd:expr) -t $target_session:expr, $($tail:tt)*) => {{
-        $crate::choose_buffer!(@cmd ({
+        $crate::delete_buffer!(@cmd ({
             $cmd.target_session($target_session)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -58,7 +66,6 @@ macro_rules! delete_buffer {
 
 #[test]
 fn delete_buffer_macro() {
-    use crate::TargetPane;
     use std::borrow::Cow;
 
     // Delete the buffer named buffer-name, or the most recently added automatically named buffer
@@ -66,32 +73,31 @@ fn delete_buffer_macro() {
     //
     // # Manual
     //
-    // tmux ^2.0:
+    // tmux >=2.0:
     // ```text
     // delete-buffer [-b buffer-name]
     // (alias: deleteb)
     // ```
     //
-    // tmux ^1.5 v2.0:
+    // tmux >=1.5 && <2.0:
     // ```text
     // delete-buffer [-b buffer-index]
     // (alias: deleteb)
     // ```
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // delete-buffer [-b buffer-index] [-t target-session]
     // (alias: deleteb)
     // ```
-    let buffer_name = TargetPane::Raw("1").to_string();
 
     let delete_buffer = delete_buffer!();
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    let delete_buffer = delete_buffer!((delete_buffer), -b "1");
     #[cfg(feature = "tmux_2_0")]
-    let delete_buffer = delete_buffer!((delete_buffer), -b buffer_name);
-    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
-    let delete_buffer = delete_buffer!((delete_buffer), -b buffer_name);
+    let delete_buffer = delete_buffer!((delete_buffer), -b "2");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-    let delete_buffer = delete_buffer!((delete_buffer), -t buffer_name);
+    let delete_buffer = delete_buffer!((delete_buffer), -t "3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "delete-buffer";
@@ -100,15 +106,13 @@ fn delete_buffer_macro() {
 
     let mut s = Vec::new();
     s.push(cmd);
-
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+    s.extend_from_slice(&["-b", "1"]);
     #[cfg(feature = "tmux_2_0")]
-    s.extend_from_slice(&["-b", "1"]);
-    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
-    s.extend_from_slice(&["-b", "1"]);
+    s.extend_from_slice(&["-b", "2"]);
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-    s.extend_from_slice(&["-t", "1"]);
+    s.extend_from_slice(&["-t", "3"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let delete_buffer = delete_buffer.build().to_vec();
 
     assert_eq!(delete_buffer, s);
