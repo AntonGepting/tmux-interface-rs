@@ -33,8 +33,6 @@ fn list_buffers() {
     use crate::{ListBuffers, TargetPane};
     use std::borrow::Cow;
 
-    let target_pane = TargetPane::Raw("5").to_string();
-
     let list_buffers = ListBuffers::new();
     // `[-F format]`
     #[cfg(feature = "tmux_1_7")]

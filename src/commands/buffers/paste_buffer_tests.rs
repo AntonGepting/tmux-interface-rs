@@ -27,8 +27,6 @@ fn paste_buffer() {
     use crate::{PasteBuffer, TargetPane};
     use std::borrow::Cow;
 
-    let target_pane = TargetPane::Raw("5").to_string();
-
     let paste_buffer = PasteBuffer::new();
     // `[-d]`
     #[cfg(feature = "tmux_0_8")]

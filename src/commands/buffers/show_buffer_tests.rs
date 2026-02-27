@@ -27,8 +27,6 @@ fn show_buffer() {
     use crate::{ShowBuffer, TargetPane};
     use std::borrow::Cow;
 
-    let target_pane = TargetPane::Raw("5").to_string();
-
     let show_buffer = ShowBuffer::new();
     // `[-b buffer-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]

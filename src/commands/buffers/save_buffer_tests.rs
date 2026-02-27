@@ -27,8 +27,6 @@ fn save_buffer() {
     use crate::{SaveBuffer, TargetPane};
     use std::borrow::Cow;
 
-    let target_pane = TargetPane::Raw("5").to_string();
-
     let save_buffer = SaveBuffer::new();
     // `[-a]`
     #[cfg(feature = "tmux_0_8")]

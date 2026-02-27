@@ -28,8 +28,6 @@ fn delete_buffer() {
     use crate::{DeleteBuffer, TargetPane};
     use std::borrow::Cow;
 
-    let target_pane = TargetPane::Raw("5").to_string();
-
     let delete_buffer = DeleteBuffer::new();
     // `[-b buffer-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]

@@ -6,8 +6,6 @@ fn copy_buffer() {
     use crate::{CopyBuffer, TargetPane};
     use std::borrow::Cow;
 
-    let target_pane = TargetPane::Raw("5").to_string();
-
     let copy_buffer = CopyBuffer::new();
     // `[-a src-index]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]

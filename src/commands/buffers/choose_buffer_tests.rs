@@ -39,8 +39,6 @@ fn choose_buffer() {
     use crate::{ChooseBuffer, TargetPane};
     use std::borrow::Cow;
 
-    let target_pane = TargetPane::Raw("5").to_string();
-
     let choose_buffer = ChooseBuffer::new();
     // `[-N]` - start without the preview
     #[cfg(feature = "tmux_2_6")]

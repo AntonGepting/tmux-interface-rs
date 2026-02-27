@@ -21,8 +21,6 @@ fn clear_history() {
     use crate::{ClearHistory, TargetPane};
     use std::borrow::Cow;
 
-    let target_pane = TargetPane::Raw("5").to_string();
-
     let clear_history = ClearHistory::new();
     // `[-H]`
     #[cfg(feature = "tmux_3_4")]

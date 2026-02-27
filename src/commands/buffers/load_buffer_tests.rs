@@ -33,8 +33,6 @@ fn load_buffer() {
     use crate::{LoadBuffer, TargetPane};
     use std::borrow::Cow;
 
-    let target_pane = TargetPane::Raw("5").to_string();
-
     let load_buffer = LoadBuffer::new();
     // `[-w]`
     #[cfg(feature = "tmux_3_2")]

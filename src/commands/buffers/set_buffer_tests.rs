@@ -33,8 +33,6 @@ fn set_buffer() {
     use crate::{SetBuffer, TargetPane};
     use std::borrow::Cow;
 
-    let target_pane = TargetPane::Raw("5").to_string();
-
     let set_buffer = SetBuffer::new();
     // `[-a]`
     #[cfg(feature = "tmux_2_0")]
