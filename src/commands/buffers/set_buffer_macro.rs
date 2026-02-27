@@ -44,31 +44,31 @@ macro_rules! set_buffer {
         }) $($tail)*)
     }};
 
-    // `[-b buffer-index]`
-    (@cmd ($cmd:expr) -b $buffer_index:expr, $($tail:tt)*) => {{
+    // `[-b buffer]`
+    (@cmd ($cmd:expr) -b $buffer:expr, $($tail:tt)*) => {{
         $crate::set_buffer!(@cmd ({
-            $cmd.buffer_index($buffer_index)
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+            {
+                $cmd.buffer_index($buffer)
+            }
+            #[cfg(feature = "tmux_2_0")]
+            {
+                $cmd.buffer_name($buffer)
+            }
         }) $($tail)*)
     }};
 
-    // `[-b buffer-name]`
-    (@cmd ($cmd:expr) -b $buffer_name:expr, $($tail:tt)*) => {{
+    // `[-t target]`
+    (@cmd ($cmd:expr) -t $target:expr, $($tail:tt)*) => {{
         $crate::set_buffer!(@cmd ({
-            $cmd.buffer_name($buffer_name)
-        }) $($tail)*)
-    }};
-
-    // `[-t target-client]`
-    (@cmd ($cmd:expr) -t $target_client:expr, $($tail:tt)*) => {{
-        $crate::set_buffer!(@cmd ({
-            $cmd.target_client($target_client)
-        }) $($tail)*)
-    }};
-
-    // `[-t target-session]`
-    (@cmd ($cmd:expr) -t $target_session:expr, $($tail:tt)*) => {{
-        $crate::set_buffer!(@cmd ({
-            $cmd.target_session($target_session)
+            #[cfg(feature = "tmux_3_2")]
+            {
+                $cmd.target_client($target)
+            }
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+            {
+                $cmd.target_session($target)
+            }
         }) $($tail)*)
     }};
 

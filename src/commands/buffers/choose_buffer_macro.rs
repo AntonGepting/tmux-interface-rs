@@ -85,17 +85,17 @@ macro_rules! choose_buffer {
         }) $($tail)*)
     }};
 
-    // `[-t target-window]`
-    (@cmd ($cmd:expr) -t $target_window:expr, $($tail:tt)*) => {{
+    // `[-t target]`
+    (@cmd ($cmd:expr) -t $target:expr, $($tail:tt)*) => {{
         $crate::choose_buffer!(@cmd ({
-            $cmd.target_window($target_window)
-        }) $($tail)*)
-    }};
-
-    // `[-t target-pane]` - specify the target pane
-    (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
-        $crate::choose_buffer!(@cmd ({
-            $cmd.target_pane($target_pane)
+            #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+            {
+                $cmd.target_window($target)
+            }
+            #[cfg(feature = "tmux_2_6")]
+            {
+                $cmd.target_pane($target)
+            }
         }) $($tail)*)
     }};
 

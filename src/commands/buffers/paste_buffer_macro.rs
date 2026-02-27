@@ -45,17 +45,17 @@ macro_rules! paste_buffer {
         }) $($tail)*)
     }};
 
-    // `[-b buffer-index]`
-    (@cmd ($cmd:expr) -b $buffer_index:expr, $($tail:tt)*) => {{
+    // `[-b buffer]`
+    (@cmd ($cmd:expr) -b $buffer:expr, $($tail:tt)*) => {{
         $crate::paste_buffer!(@cmd ({
-            $cmd.buffer_index($buffer_index)
-        }) $($tail)*)
-    }};
-
-    // `[-b buffer-name]`
-    (@cmd ($cmd:expr) -b $buffer_name:expr, $($tail:tt)*) => {{
-        $crate::paste_buffer!(@cmd ({
-            $cmd.buffer_name($buffer_name)
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_0")))]
+            {
+                $cmd.buffer_index($buffer)
+            }
+            #[cfg(feature = "tmux_2_0")]
+            {
+                $cmd.buffer_name($buffer)
+            }
         }) $($tail)*)
     }};
 
@@ -66,17 +66,17 @@ macro_rules! paste_buffer {
         }) $($tail)*)
     }};
 
-    // `[-t target-window]`
-    (@cmd ($cmd:expr) -t $target_window:expr, $($tail:tt)*) => {{
+    // `[-t target]`
+    (@cmd ($cmd:expr) -t $target:expr, $($tail:tt)*) => {{
         $crate::paste_buffer!(@cmd ({
-            $cmd.target_window($target_window)
-        }) $($tail)*)
-    }};
-
-    // `[-t target-pane]`
-    (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
-        $crate::paste_buffer!(@cmd ({
-            $cmd.target_pane($target_pane)
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+            {
+                $cmd.target_window($target)
+            }
+            #[cfg(feature = "tmux_1_5")]
+            {
+                $cmd.target_pane($target)
+            }
         }) $($tail)*)
     }};
 
