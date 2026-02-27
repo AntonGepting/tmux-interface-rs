@@ -1,9 +1,10 @@
-use crate::options::SetOptionTr;
-use crate::options::*;
+use crate::options::session::common::constants::*;
+use crate::options::{SetOptionTr, SetUserOption};
 #[cfg(feature = "tmux_3_4")]
 use crate::MessageLine;
 use crate::{
-    Action, Activity, DestroyUnattached, DetachOnDestroy, Status, TmuxCommand, TmuxCommands,
+    Action, Activity, DestroyUnattached, DetachOnDestroy, Status, StatusJustify, StatusKeys,
+    StatusPosition, Switch, TmuxCommand, TmuxCommands,
 };
 use std::borrow::Cow;
 

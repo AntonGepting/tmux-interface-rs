@@ -1,5 +1,5 @@
-use crate::options::*;
-use crate::TmuxCommand;
+use crate::options::window::common::constants::*;
+use crate::{GetOptionTr, GetUserOption, TmuxCommand};
 use std::borrow::Cow;
 
 // NOTE: ADR: compile time or run time parametrisation for global local option set/get

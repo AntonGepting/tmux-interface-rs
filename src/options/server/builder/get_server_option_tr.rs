@@ -18,8 +18,8 @@
 //! let value = output.unwrap();
 //! ```
 //!
-use crate::options::*;
-use crate::{GetOptionTr, TmuxCommand};
+use crate::options::server::common::constants::*;
+use crate::{GetOptionTr, GetUserOption, TmuxCommand};
 
 // NOTE: method avoiding names like set_set_clipboard
 // NOTE: multiple commands should be avoided in case short form is used (only the value will be returned

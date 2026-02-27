@@ -1,5 +1,5 @@
-use crate::options::*;
-use crate::TmuxCommand;
+use crate::options::pane::common::constants::*;
+use crate::{RemainOnExit, SetOptionTr, SetUserOption, Switch, TmuxCommand};
 use std::borrow::Cow;
 
 // NOTE: method avoiding names like set_set_clipboard

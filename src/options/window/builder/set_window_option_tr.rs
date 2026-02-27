@@ -1,7 +1,11 @@
-use crate::options::*;
+use crate::options::session::common::constants::*;
+use crate::options::window::common::constants::*;
 #[cfg(feature = "tmux_2_9")]
 use crate::WindowSize;
-use crate::{StatusKeys, TmuxCommand};
+use crate::{
+    Activity, ClockModeStyle, PaneBorderStatus, SetOptionTr, SetUserOption, StatusKeys, Switch,
+    TmuxCommand,
+};
 use std::borrow::Cow;
 
 // TODO: all options exist in get/set?

@@ -1,4 +1,4 @@
-use crate::options::*;
+use crate::options::pane::common::constants::*;
 use crate::{GetOptionTr, GetUserOption, TmuxCommand};
 use std::borrow::Cow;
 
