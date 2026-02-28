@@ -1,10 +1,12 @@
-use crate::options::session::common::constants::*;
 use crate::options::window::common::constants::*;
+#[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_1")))]
+use crate::ModeMouse;
+#[cfg(feature = "tmux_2_3")]
+use crate::PaneBorderStatus;
 #[cfg(feature = "tmux_2_9")]
 use crate::WindowSize;
 use crate::{
-    Activity, ClockModeStyle, PaneBorderStatus, SetOptionTr, SetUserOption, StatusKeys, Switch,
-    TmuxCommand,
+    Activity, ClockModeStyle, SetOptionTr, SetUserOption, StatusKeys, Switch, TmuxCommand,
 };
 use std::borrow::Cow;
 

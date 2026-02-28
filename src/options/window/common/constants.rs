@@ -6,6 +6,13 @@ use crate::PaneBorderStatus;
 use crate::WindowSize;
 use crate::{ClockModeStyle, StatusKeys, Switch};
 
+/// tmux ^2_6:
+/// ```text
+/// activity-action
+/// ```
+#[cfg(feature = "tmux_2_6")]
+pub const ACTIVITY_ACTION: &str = "activity-action";
+
 /// tmux ^1.0:
 /// ```text
 /// aggressive-resize
