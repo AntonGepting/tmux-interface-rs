@@ -66,19 +66,23 @@ tmux_3_2 = ["tmux_3_1c"]
 # tmux 3.2a included in Ubuntu 22.04 LTS Jammy Jellyfish
 tmux_3_2a = ["tmux_3_2"]
 tmux_3_3 = ["tmux_3_2a"]
-# tmux 3.3a included in Ubuntu 23.04 LTS Lunar Lobster 
 # tmux 3.3a included in Debian Bookworm
 tmux_3_3a = ["tmux_3_3"]
 # tmux 3.4 included in Ubuntu 24.04 LTS Noble Numbat
-# tmux 3.4 included in Debian experimental
 tmux_3_4 = ["tmux_3_3a"]
+tmux_3_5 = ["tmux_3_4"]
+# tmux 3.5a included in Debian Trixie
+# tmux 3.5a included in Ubuntu 25.04 Plucky Puffin
+tmux_3_5a = ["tmux_3_5"]
+tmux_3_6 = ["tmux_3_5a"]
+tmux_3_6a = ["tmux_3_6"]
 
 # tmux current version which is currently in development
-tmux_X_X = ["tmux_3_4"]
+tmux_X_X = ["tmux_3_6a"]
 # tmux latest synonymous version
-tmux_latest = ["tmux_3_4"]
+tmux_latest = ["tmux_3_6a"]
 # tmux stable synonymous version
-tmux_stable = ["tmux_3_4"]
+tmux_stable = ["tmux_3_6a"]
 
 
 # use alias instead of full tmux command name (e.g. `list-sessions` -> `ls`)

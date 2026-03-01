@@ -86,6 +86,10 @@ under following conditions:
 
 - Tmux (covered tmux versions crate features):
     - [ ] master - `tmux_X_X`
+    - [ ] 3.6a - `tmux_3_6a`
+    - [ ] 3.6 - `tmux_3_6`
+    - [ ] 3.5a - `tmux_3_5a`
+    - [ ] 3.5 - `tmux_3_5`
     - [x] 3.4 - `tmux_3_4`
     - [x] 3.3a - `tmux_3_3a`
     - [x] 3.3 - `tmux_3_3`
