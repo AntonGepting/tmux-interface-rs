@@ -11,87 +11,94 @@
 ///
 /// # Manual
 ///
-/// tmux ^3.2:
+/// tmux >=3.2:
 /// ```text
 /// attach-session [-dErx] [-c working-directory] [-f flags] [-t target-session]
 /// (alias: attach)
 /// ```
 ///
-/// tmux ^3.0:
+/// tmux >=3.0a:
 /// ```text
 /// attach-session [-dErx] [-c working-directory] [-t target-session]
 /// (alias: attach)
 /// ```
 ///
-/// tmux ^2.1:
+/// tmux >=2.1:
 /// ```text
 /// attach-session [-dEr] [-c working-directory] [-t target-session]
 /// (alias: attach)
 /// ```
 ///
-/// tmux ^1.9:
+/// tmux >=1.9:
 /// ```text
 /// attach-session [-dr] [-c working-directory] [-t target-session]
 /// (alias: attach)
 /// ```
 ///
-/// tmux ^1.2:
+/// tmux >=1.5:
 /// ```text
 /// attach-session [-dr] [-t target-session]
 /// (alias: attach)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// attach-session [-d] [-t target-session]
 /// (alias: attach)
 /// ```
 #[macro_export]
 macro_rules! attach_session {
-    // `[-d]` - any other clients attached to the session are detached
+    // `[-d]`
     (@cmd ($cmd:expr) -d, $($tail:tt)*) => {{
         $crate::attach_session!(@cmd ({
             $cmd.detach_other()
         }) $($tail)*)
     }};
-    // `[-E]` - `update-environment` option will not be applied
+
+    // `[-E]`
     (@cmd ($cmd:expr) -E, $($tail:tt)*) => {{
         $crate::attach_session!(@cmd ({
             $cmd.not_update_env()
         }) $($tail)*)
     }};
-    // `[-r]` - signifies the client is read-only
+
+    // `[-r]`
     (@cmd ($cmd:expr) -r, $($tail:tt)*) => {{
         $crate::attach_session!(@cmd ({
             $cmd.read_only()
         }) $($tail)*)
     }};
-    // `[-x]` - send SIGHUP to the parent process, detaching the client
+
+    // `[-x]`
     (@cmd ($cmd:expr) -x, $($tail:tt)*) => {{
         $crate::attach_session!(@cmd ({
             $cmd.parent_sighup()
         }) $($tail)*)
     }};
-    // `[-c working-directory]` - specify starting directory
+
+    // `[-c working-directory]`
     (@cmd ($cmd:expr) -c $working_directory:expr, $($tail:tt)*) => {{
         $crate::attach_session!(@cmd ({
             $cmd.working_directory($working_directory)
         }) $($tail)*)
     }};
-    // `[-f flags]` - sets a comma-separated list of client flags
+
+    // `[-f flags]`
     (@cmd ($cmd:expr) -f $flags:expr, $($tail:tt)*) => {{
         $crate::attach_session!(@cmd ({
             $cmd.flags($flags)
         }) $($tail)*)
     }};
-    // `[-t target-session]` - specify target session name
+
+    // `[-t target-session]`
     (@cmd ($cmd:expr) -t $target_session:expr, $($tail:tt)*) => {{
         $crate::attach_session!(@cmd ({
             $cmd.target_session($target_session)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
-        //::std::compile_error!("unknown flag, option or parameter");
+        //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
     (@cmd ($cmd:expr)) => {{
         $cmd
@@ -109,61 +116,58 @@ macro_rules! attach_session {
 
 #[test]
 fn attach_session_macro() {
-    use crate::attach_session;
     #[cfg(feature = "tmux_3_2")]
     use crate::ClientFlags;
-    use crate::TargetSession;
     use std::borrow::Cow;
 
     // Structure for attaching client to already existing session
     //
     // # Manual
     //
-    // tmux ^3.2:
+    // tmux >=3.2:
     // ```text
     // attach-session [-dErx] [-c working-directory] [-f flags] [-t target-session]
     // (alias: attach)
     // ```
     //
-    // tmux ^3.0:
+    // tmux >=3.0a:
     // ```text
     // attach-session [-dErx] [-c working-directory] [-t target-session]
     // (alias: attach)
     // ```
     //
-    // tmux ^2.1:
+    // tmux >=2.1:
     // ```text
     // attach-session [-dEr] [-c working-directory] [-t target-session]
     // (alias: attach)
     // ```
     //
-    // tmux ^1.9:
+    // tmux >=1.9:
     // ```text
     // attach-session [-dr] [-c working-directory] [-t target-session]
     // (alias: attach)
     // ```
     //
-    // tmux ^1.2:
+    // tmux >=1.5:
     // ```text
     // attach-session [-dr] [-t target-session]
     // (alias: attach)
     // ```
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // attach-session [-d] [-t target-session]
     // (alias: attach)
     // ```
-    let target_session = TargetSession::Raw("2").to_string();
 
     let attach_session = attach_session!();
     #[cfg(feature = "tmux_0_8")]
     let attach_session = attach_session!((attach_session), -d);
     #[cfg(feature = "tmux_2_1")]
     let attach_session = attach_session!((attach_session), -E);
-    #[cfg(feature = "tmux_1_2")]
+    #[cfg(feature = "tmux_1_5")]
     let attach_session = attach_session!((attach_session), -r);
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_3_0a")]
     let attach_session = attach_session!((attach_session), -x);
     #[cfg(feature = "tmux_1_9")]
     let attach_session = attach_session!((attach_session), -c "1");
@@ -175,9 +179,7 @@ fn attach_session_macro() {
     #[cfg(feature = "tmux_3_2")]
     let attach_session = attach_session!((attach_session), -f flags);
     #[cfg(feature = "tmux_0_8")]
-    let attach_session = attach_session!((attach_session), -t & target_session);
-    #[cfg(feature = "tmux_0_8")]
-    let attach_session = attach_session!((attach_session), -t target_session.to_string());
+    let attach_session = attach_session!((attach_session), -t "3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "attach-session";
@@ -190,18 +192,17 @@ fn attach_session_macro() {
     s.push("-d");
     #[cfg(feature = "tmux_2_1")]
     s.push("-E");
-    #[cfg(feature = "tmux_1_2")]
+    #[cfg(feature = "tmux_1_5")]
     s.push("-r");
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_3_0a")]
     s.push("-x");
     #[cfg(feature = "tmux_1_9")]
     s.extend_from_slice(&["-c", "1"]);
     #[cfg(feature = "tmux_3_2")]
     s.extend_from_slice(&["-f", "active-pane"]);
     #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-t", "2"]);
+    s.extend_from_slice(&["-t", "3"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let attach_session = attach_session.build().to_vec();
 
     assert_eq!(attach_session, s);
