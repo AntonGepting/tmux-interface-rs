@@ -1,3 +1,5 @@
+// auto-generated file
+
 // NOTE: conditionals in macro problem, solution partial macro with condition and main macro
 // ```
 // #[doc(hidden)]
@@ -7,6 +9,7 @@
 // no need for conditionals, error in generated code controls
 // error[E0599]: no method named `parent_sighup` found for struct `attach_session::AttachSession` in the current scope
 //
+
 /// Generate command using flags from TMUX manual
 ///
 /// # Manual
