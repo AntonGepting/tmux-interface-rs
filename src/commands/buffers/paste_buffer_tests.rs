@@ -24,7 +24,7 @@
 // ```
 #[test]
 fn paste_buffer() {
-    use crate::{PasteBuffer, TargetPane};
+    use crate::PasteBuffer;
     use std::borrow::Cow;
 
     let paste_buffer = PasteBuffer::new();

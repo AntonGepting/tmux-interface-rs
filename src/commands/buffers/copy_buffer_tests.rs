@@ -3,7 +3,7 @@
 
 #[test]
 fn copy_buffer() {
-    use crate::{CopyBuffer, TargetPane};
+    use crate::CopyBuffer;
     use std::borrow::Cow;
 
     let copy_buffer = CopyBuffer::new();

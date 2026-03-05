@@ -30,7 +30,7 @@
 // ```
 #[test]
 fn set_buffer() {
-    use crate::{SetBuffer, TargetPane};
+    use crate::SetBuffer;
     use std::borrow::Cow;
 
     let set_buffer = SetBuffer::new();

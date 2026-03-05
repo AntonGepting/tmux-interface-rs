@@ -36,7 +36,7 @@
 // ```
 #[test]
 fn choose_buffer() {
-    use crate::{ChooseBuffer, TargetPane};
+    use crate::ChooseBuffer;
     use std::borrow::Cow;
 
     let choose_buffer = ChooseBuffer::new();

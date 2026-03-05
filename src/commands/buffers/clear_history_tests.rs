@@ -18,7 +18,7 @@
 // ```
 #[test]
 fn clear_history() {
-    use crate::{ClearHistory, TargetPane};
+    use crate::ClearHistory;
     use std::borrow::Cow;
 
     let clear_history = ClearHistory::new();

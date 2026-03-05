@@ -24,7 +24,7 @@
 // ```
 #[test]
 fn save_buffer() {
-    use crate::{SaveBuffer, TargetPane};
+    use crate::SaveBuffer;
     use std::borrow::Cow;
 
     let save_buffer = SaveBuffer::new();

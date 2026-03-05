@@ -30,7 +30,7 @@
 // ```
 #[test]
 fn list_buffers() {
-    use crate::{ListBuffers, TargetPane};
+    use crate::ListBuffers;
     use std::borrow::Cow;
 
     let list_buffers = ListBuffers::new();

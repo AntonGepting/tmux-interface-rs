@@ -25,7 +25,7 @@
 // ```
 #[test]
 fn delete_buffer() {
-    use crate::{DeleteBuffer, TargetPane};
+    use crate::DeleteBuffer;
     use std::borrow::Cow;
 
     let delete_buffer = DeleteBuffer::new();

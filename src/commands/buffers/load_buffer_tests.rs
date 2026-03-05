@@ -30,7 +30,7 @@
 // ```
 #[test]
 fn load_buffer() {
-    use crate::{LoadBuffer, TargetPane};
+    use crate::LoadBuffer;
     use std::borrow::Cow;
 
     let load_buffer = LoadBuffer::new();

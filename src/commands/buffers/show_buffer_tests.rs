@@ -24,7 +24,7 @@
 // ```
 #[test]
 fn show_buffer() {
-    use crate::{ShowBuffer, TargetPane};
+    use crate::ShowBuffer;
     use std::borrow::Cow;
 
     let show_buffer = ShowBuffer::new();
