@@ -1,3 +1,54 @@
+// auto-generated file
+//
+
+#[cfg(feature = "tmux_3_2")]
+use crate::{AllowActions, Subscribe};
+
+// Refresh current client
+//
+// # Manual
+//
+// tmux >=3.3:
+// ```text
+// refresh-client [-cDLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags]
+// [-l [target-pane]] [-t target-client] [adjustment] (alias: refresh)
+// ```
+//
+// tmux >=3.2:
+// ```text
+// refresh-client [-cDlLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags] [-t target-client] [adjustment]
+// (alias: refresh)
+// ```
+//
+// tmux >=3.0a:
+// ```text
+// refresh-client [-cDlLRSU] [-C XxY] [-F flags] [-t target-client] [adjustment]
+// (alias: refresh)
+// ```
+//
+// tmux >=2.9:
+// ```text
+// refresh-client [-cDlLRSU] [-C width,height] [-F flags] [-t target-client] [adjustment]
+// (alias: refresh)
+// ```
+//
+// tmux >=2.4:
+// ```text
+// refresh-client [-C width,height] [-S] [-t target-client]
+// (alias: refresh)
+// ```
+//
+// tmux >=1.6:
+// ```text
+// refresh-client [-S] [-t target-client]
+// (alias: refresh)
+// ```
+//
+// tmux >=0.8:
+// ```text
+// refresh-client [-t target-client]
+// (alias: refresh)
+// ```
 #[test]
 fn refresh_client() {
     #[cfg(feature = "tmux_2_9a")]
@@ -7,129 +58,130 @@ fn refresh_client() {
     use crate::State;
     use std::borrow::Cow;
 
-    // Structure for refreshing the current client
-    //
-    // # Manual
-    //
-    // tmux 3.3:
-    // ```text
-    // refresh-client [-cDLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags]
-    // [-l [target-pane]] [-t target-client] [adjustment] (alias: refresh)
-    // ```
-    //
-    // tmux 3.2:
-    // ```text
-    // refresh-client [-cDlLRSU] [-A pane:state] [-B name:what:format] [-C XxY] [-f flags] [-t target-client] [adjustment]
-    // (alias: refresh)
-    // ```
-    //
-    // tmux 3.0:
-    // ```text
-    // refresh-client [-cDlLRSU] [-C XxY] [-F flags] [-t target-client] [adjustment]
-    // (alias: refresh)
-    // ```
-    //
-    // tmux 2.9a:
-    // ```text
-    // refresh-client [-cDlLRSU] [-C width,height] [-F flags] [-t target-client] [adjustment]
-    // (alias: refresh)
-    // ```
-    //
-    // tmux 2.4:
-    // ```text
-    // refresh-client [-C width,height] [-S] [-t target-client]
-    // (alias: refresh)
-    // ```
-    //
-    // tmux 1.6:
-    // ```text
-    // refresh-client [-S] [-t target-client]
-    // (alias: refresh)
-    // ```
-    //
-    // tmux 0.8:
-    // ```text
-    // refresh-client [-t target-client]
-    // (alias: refresh)
-    // ```
     let refresh_client = RefreshClient::new();
-    #[cfg(feature = "tmux_2_9a")]
+    // `[-c]`
+    #[cfg(feature = "tmux_2_9")]
     let refresh_client = refresh_client.tracking_cursor();
-    #[cfg(feature = "tmux_2_9a")]
+
+    // `[-D]`
+    #[cfg(feature = "tmux_2_9")]
     let refresh_client = refresh_client.down();
-    #[cfg(feature = "tmux_2_9a")]
+
+    // `[-l]`
+    #[cfg(all(feature = "tmux_2_9", not(feature = "tmux_3_3")))]
     let refresh_client = refresh_client.request_clipboard();
-    #[cfg(all(feature = "tmux_3_3", not(feature = "tmux_3_2a")))]
-    let refresh_client = refresh_client.request_clipboard("1");
-    #[cfg(feature = "tmux_2_9a")]
+
+    // `[-L]`
+    #[cfg(feature = "tmux_2_9")]
     let refresh_client = refresh_client.left();
-    #[cfg(feature = "tmux_2_9a")]
+
+    // `[-R]`
+    #[cfg(feature = "tmux_2_9")]
     let refresh_client = refresh_client.right();
-    #[cfg(feature = "tmux_1_6")]
+
+    // `[-S]`
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_4")))]
     let refresh_client = refresh_client.status_line();
-    #[cfg(feature = "tmux_2_9a")]
+
+    // `[-U]`
+    #[cfg(feature = "tmux_2_9")]
     let refresh_client = refresh_client.up();
+
+    // `[-A allow-actions]`
     #[cfg(feature = "tmux_3_2")]
-    let refresh_client = refresh_client.allow_actions("0", State::On);
+    let refresh_client = refresh_client.allow_actions(AllowActions {
+        pane: "1".into(),
+        state: State::On,
+    });
+
+    // `[-B subscribe]`
     #[cfg(feature = "tmux_3_2")]
-    let refresh_client = refresh_client.subscribe("0", None, None);
+    let refresh_client = refresh_client.subscribe(Subscribe {
+        name: "2".into(),
+        what: Some(22),
+        format: Some(23),
+    });
+
+    // `[-C size]`
+    // `[-C size]`
+    // `[-C size]`
     #[cfg(feature = "tmux_2_4")]
-    let refresh_client = refresh_client.size((1, 2));
-    #[cfg(feature = "tmux_2_9a")]
+    let refresh_client = refresh_client.size((3, 4));
+
+    // `[-F flags]`
+    #[cfg(feature = "tmux_3_0a")]
     let flags = ClientFlags {
         active_pane: Some(true),
         ..Default::default()
     };
-    #[cfg(feature = "tmux_2_9a")]
+    // `[-f flags]`
+    #[cfg(feature = "tmux_3_0a")]
     let refresh_client = refresh_client.flags(flags);
+
+    #[cfg(feature = "tmux_3_3")]
+    let refresh_client = refresh_client.request_clipboard(Some("7"));
+    // `[-l target-pane]`
+    #[cfg(feature = "tmux_3_3")]
+    let refresh_client = refresh_client.target_pane("8");
+
+    // `[-r osc10-11-responses]`
+    #[cfg(feature = "tmux_3_5")]
+    let refresh_client = refresh_client.osc10_11_responses("9");
+
+    // `[-t target-client]`
     #[cfg(feature = "tmux_0_8")]
-    let refresh_client = refresh_client.target_client("4");
-    #[cfg(feature = "tmux_2_9a")]
-    let refresh_client = refresh_client.adjustment(5);
+    let refresh_client = refresh_client.target_client("10");
+
+    // `[adjustment]`
+    #[cfg(feature = "tmux_2_9")]
+    let refresh_client = refresh_client.adjustment(11);
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "refresh-client";
     #[cfg(feature = "cmd_alias")]
     let cmd = "refresh";
 
-    let mut s = Vec::new();
-    s.push(cmd);
-    #[cfg(feature = "tmux_2_9a")]
-    s.push("-c");
-    #[cfg(feature = "tmux_2_9a")]
-    s.push("-D");
-    #[cfg(feature = "tmux_2_9a")]
-    s.push("-l");
-    #[cfg(all(feature = "tmux_3_3", not(feature = "tmux_3_2a")))]
-    s.extend_from_slice(["-l", "1"]);
-    #[cfg(feature = "tmux_2_9a")]
-    s.push("-L");
-    #[cfg(feature = "tmux_2_9a")]
-    s.push("-R");
-    #[cfg(feature = "tmux_1_6")]
-    s.push("-S");
-    #[cfg(feature = "tmux_2_9a")]
-    s.push("-U");
-    // TODO: %0 test
+    let mut v = Vec::new();
+    v.push(cmd);
+    #[cfg(feature = "tmux_2_9")]
+    v.push("-c");
+    #[cfg(feature = "tmux_2_9")]
+    v.push("-D");
+    #[cfg(all(feature = "tmux_2_9", not(feature = "tmux_3_3")))]
+    v.push("-l");
+    #[cfg(feature = "tmux_2_9")]
+    v.push("-L");
+    #[cfg(feature = "tmux_2_9")]
+    v.push("-R");
+    #[cfg(all(feature = "tmux_1_6", not(feature = "tmux_2_4")))]
+    v.push("-S");
+    #[cfg(feature = "tmux_2_9")]
+    v.push("-U");
     #[cfg(feature = "tmux_3_2")]
-    s.extend_from_slice(&["-A", "0:on"]);
+    v.extend_from_slice(&["-A", "1:on"]);
     #[cfg(feature = "tmux_3_2")]
-    s.extend_from_slice(&["-B", "%0"]);
-    #[cfg(feature = "tmux_3_0")]
-    s.extend_from_slice(&["-C", "1x2"]);
-    #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_0")))]
-    s.extend_from_slice(&["-C", "1,2"]);
-    #[cfg(all(feature = "tmux_2_9a", not(feature = "tmux_3_2")))]
-    s.extend_from_slice(&["-F", "active-pane"]);
+    v.extend_from_slice(&["-B", "%2"]);
+    #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_0a")))]
+    v.extend_from_slice(&["-C", "3,4"]);
+    #[cfg(all(feature = "tmux_3_0a", not(feature = "tmux_3_3")))]
+    v.extend_from_slice(&["-C", "3x4"]);
+    #[cfg(feature = "tmux_3_3")]
+    v.extend_from_slice(&["-C", "3x4"]);
+    #[cfg(all(feature = "tmux_3_0a", not(feature = "tmux_3_2")))]
+    v.extend_from_slice(&["-F", "active-pane"]);
     #[cfg(feature = "tmux_3_2")]
-    s.extend_from_slice(&["-f", "active-pane"]);
+    v.extend_from_slice(&["-f", "active-pane"]);
+    #[cfg(feature = "tmux_3_3")]
+    v.extend_from_slice(&["-l", "8"]);
+    #[cfg(feature = "tmux_3_5")]
+    v.extend_from_slice(&["-r", "9"]);
     #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-t", "4"]);
-    #[cfg(feature = "tmux_2_9a")]
-    s.push("5");
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    v.extend_from_slice(&["-t", "10"]);
+    #[cfg(feature = "tmux_2_9")]
+    v.push("11");
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let refresh_client = refresh_client.build().to_vec();
 
-    assert_eq!(refresh_client, s);
+    assert_eq!(refresh_client, v);
 }

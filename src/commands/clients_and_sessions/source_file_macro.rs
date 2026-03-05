@@ -1,68 +1,89 @@
+// auto-generated file
+//
+
 /// Execute commands from path
 ///
 /// # Manual
 ///
-/// tmux ^3.4:
+/// tmux >=3.4:
 /// ```text
 /// source-file [-Fnqv] [-t target-pane] path ...
 /// (alias: source)
 /// ```
 ///
-/// tmux ^3.2:
+/// tmux >=3.2:
 /// ```text
 /// source-file [-Fnqv] path ...
 /// (alias: source)
 /// ```
 ///
-/// tmux ^3.0:
+/// tmux >=3.0a:
 /// ```text
 /// source-file [-nqv] path
 /// (alias: source)
 /// ```
 ///
-/// tmux ^2.3:
+/// tmux >=3.0:
 /// ```text
-/// source-file path
+/// source-file [-nq] path
+/// (alias: source)
+/// ```
+///
+/// tmux >=2.3:
+/// ```text
+/// source-file [-q] path
 /// (alias: source)
 ///
 /// ```
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// source-file path
 /// (alias: source)
 /// ```
 #[macro_export]
 macro_rules! source_file {
+    // `[-F]`
     (@cmd ($cmd:expr) -F, $($tail:tt)*) => {{
         $crate::source_file!(@cmd ({
             $cmd.expand()
         }) $($tail)*)
     }};
+
+    // `[-n]`
     (@cmd ($cmd:expr) -n, $($tail:tt)*) => {{
         $crate::source_file!(@cmd ({
-            $cmd.not_execute()
+            $cmd.not_exclude()
         }) $($tail)*)
     }};
+
+    // `[-q]`
     (@cmd ($cmd:expr) -q, $($tail:tt)*) => {{
         $crate::source_file!(@cmd ({
             $cmd.quiet()
         }) $($tail)*)
     }};
+
+    // `[-v]`
     (@cmd ($cmd:expr) -v, $($tail:tt)*) => {{
         $crate::source_file!(@cmd ({
             $cmd.verbose()
         }) $($tail)*)
     }};
+
+    // `[-t target-pane]`
     (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
         $crate::source_file!(@cmd ({
             $cmd.target_pane($target_pane)
         }) $($tail)*)
     }};
+
+    // `[path]`
     (@cmd ($cmd:expr) $path:expr, $($tail:tt)*) => {{
         $crate::source_file!(@cmd ({
             $cmd.path($path)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -88,43 +109,50 @@ fn source_file_macro() {
     //
     // # Manual
     //
-    // tmux ^3.4:
+    // tmux >=3.4:
     // ```text
     // source-file [-Fnqv] [-t target-pane] path ...
     // (alias: source)
     // ```
     //
-    // tmux ^3.2:
+    // tmux >=3.2:
     // ```text
     // source-file [-Fnqv] path ...
     // (alias: source)
     // ```
     //
-    // tmux ^3.0:
+    // tmux >=3.0a:
     // ```text
     // source-file [-nqv] path
     // (alias: source)
     // ```
     //
-    // tmux ^2.3:
+    // tmux >=3.0:
     // ```text
-    // source-file path
+    // source-file [-nq] path
+    // (alias: source)
+    // ```
+    //
+    // tmux >=2.3:
+    // ```text
+    // source-file [-q] path
     // (alias: source)
     //
     // ```
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // source-file path
     // (alias: source)
     // ```
+
     let source_file = source_file!();
     #[cfg(feature = "tmux_3_2")]
     let source_file = source_file!((source_file), -F);
     #[cfg(feature = "tmux_3_0")]
     let source_file = source_file!((source_file), -n);
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_2_3")]
     let source_file = source_file!((source_file), -q);
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_3_0a")]
     let source_file = source_file!((source_file), -v);
     #[cfg(feature = "tmux_3_4")]
     let source_file = source_file!((source_file), -t "1");
@@ -142,16 +170,15 @@ fn source_file_macro() {
     s.push("-F");
     #[cfg(feature = "tmux_3_0")]
     s.push("-n");
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_2_3")]
     s.push("-q");
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_3_0a")]
     s.push("-v");
     #[cfg(feature = "tmux_3_4")]
     s.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_0_8")]
     s.push("2");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let source_file = source_file.build().to_vec();
 
     assert_eq!(source_file, s);

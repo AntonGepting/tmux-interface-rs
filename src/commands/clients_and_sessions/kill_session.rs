@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -6,28 +9,28 @@ use std::borrow::Cow;
 ///
 /// # Manual
 ///
-/// tmux ^2.2:
+/// tmux >=2.2:
 /// ```text
 /// kill-session [-aC] [-t target-session]
 /// ```
 ///
-/// tmux ^1.7:
+/// tmux >=1.9:
 /// ```text
 /// kill-session [-a] [-t target-session]
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// kill-session [-t target-session]
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct KillSession<'a> {
     /// `[-a]`
-    #[cfg(feature = "tmux_2_2")]
+    #[cfg(feature = "tmux_1_9")]
     pub all: bool,
 
     /// `[-C]`
-    #[cfg(feature = "tmux_1_7")]
+    #[cfg(feature = "tmux_2_2")]
     pub clear_alerts: bool,
 
     /// `[-t target-session]`
@@ -41,14 +44,14 @@ impl<'a> KillSession<'a> {
     }
 
     /// `[-a]`
-    #[cfg(feature = "tmux_2_2")]
+    #[cfg(feature = "tmux_1_9")]
     pub fn all(mut self) -> Self {
         self.all = true;
         self
     }
 
     /// `[-C]`
-    #[cfg(feature = "tmux_1_7")]
+    #[cfg(feature = "tmux_2_2")]
     pub fn clear_alerts(mut self) -> Self {
         self.clear_alerts = true;
         self
@@ -61,19 +64,20 @@ impl<'a> KillSession<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(KILL_SESSION);
 
         // `[-a]`
-        #[cfg(feature = "tmux_2_2")]
+        #[cfg(feature = "tmux_1_9")]
         if self.all {
             cmd.push_flag(A_LOWERCASE_KEY);
         }
 
         // `[-C]`
-        #[cfg(feature = "tmux_1_7")]
+        #[cfg(feature = "tmux_2_2")]
         if self.clear_alerts {
             cmd.push_flag(C_UPPERCASE_KEY);
         }

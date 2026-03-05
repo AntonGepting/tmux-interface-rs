@@ -1,55 +1,58 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
 pub type Detach<'a> = DetachClient<'a>;
 
-/// Structure for detaching the current client
+/// Detach the current client
 ///
 /// # Manual
 ///
-/// tmux ^2.4:
+/// tmux >=2.4:
 /// ```text
 /// detach-client [-aP] [-E shell-command] [-s target-session] [-t target-client]
 /// (alias: detach)
 /// ```
 ///
-/// tmux ^2.2:
+/// tmux >=1.7:
 /// ```text
 /// detach-client [-aP] [-s target-session] [-t target-client]
 /// (alias: detach)
 /// ```
 ///
-/// tmux ^1.5:
+/// tmux >=1.5:
 /// ```text
 /// detach-client [-P] [-s target-session] [-t target-client]
 /// (alias: detach)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// detach-client [-t target-client]
 /// (alias: detach)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct DetachClient<'a> {
-    /// `[-a]` - kill all but the client client given with `-t`
-    #[cfg(feature = "tmux_2_2")]
+    /// `[-a]`
+    #[cfg(feature = "tmux_1_7")]
     pub all: bool,
 
-    /// `[-P]` - send SIGHUP to the parent process of the client, typically causing it to exit
+    /// `[-P]`
     #[cfg(feature = "tmux_1_5")]
     pub parent_sighup: bool,
 
-    /// `[-E shell-command]` - run shell-command to replace the client
+    /// `[-E shell-command]`
     #[cfg(feature = "tmux_2_4")]
     pub shell_command: Option<Cow<'a, str>>,
 
-    /// `[-s target-session]` - specify the session, all clients currently attached
+    /// `[-s target-session]`
     #[cfg(feature = "tmux_1_5")]
     pub target_session: Option<Cow<'a, str>>,
 
-    /// `[-t target-client]` - specify the client
+    /// `[-t target-client]`
     #[cfg(feature = "tmux_0_8")]
     pub target_client: Option<Cow<'a, str>>,
 }
@@ -59,71 +62,72 @@ impl<'a> DetachClient<'a> {
         Default::default()
     }
 
-    /// `[-a]` - kill all but the client client given with `-t`
-    #[cfg(feature = "tmux_2_2")]
+    /// `[-a]`
+    #[cfg(feature = "tmux_1_7")]
     pub fn all(mut self) -> Self {
         self.all = true;
         self
     }
 
-    /// `[-P]` - send SIGHUP to the parent process of the client, typically causing it to exit
+    /// `[-P]`
     #[cfg(feature = "tmux_1_5")]
     pub fn parent_sighup(mut self) -> Self {
         self.parent_sighup = true;
         self
     }
 
-    /// `[-E shell-command]` - run shell-command to replace the client
+    /// `[-E shell-command]`
     #[cfg(feature = "tmux_2_4")]
     pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
         self.shell_command = Some(shell_command.into());
         self
     }
 
-    /// `[-s target-session]` - specify the session, all clients currently attached
+    /// `[-s target-session]`
     #[cfg(feature = "tmux_1_5")]
     pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
-    /// `[-t target-client]` - specify the client
+    /// `[-t target-client]`
     #[cfg(feature = "tmux_0_8")]
     pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(DETACH_CLIENT);
 
-        // `[-a]` - kill all but the client client given with `-t`
-        #[cfg(feature = "tmux_2_2")]
+        // `[-a]`
+        #[cfg(feature = "tmux_1_7")]
         if self.all {
             cmd.push_flag(A_LOWERCASE_KEY);
         }
 
-        // `[-P]` - send SIGHUP to the parent process of the client, typically causing it to exit
+        // `[-P]`
         #[cfg(feature = "tmux_1_5")]
         if self.parent_sighup {
             cmd.push_flag(P_UPPERCASE_KEY);
         }
 
-        // `[-E shell-command]` - run shell-command to replace the client
+        // `[-E shell-command]`
         #[cfg(feature = "tmux_2_4")]
         if let Some(shell_command) = self.shell_command {
             cmd.push_option(E_UPPERCASE_KEY, shell_command);
         }
 
-        // `[-s target-session]` - specify the session, all clients currently attached
+        // `[-s target-session]`
         #[cfg(feature = "tmux_1_5")]
         if let Some(target_session) = self.target_session {
             cmd.push_option(S_LOWERCASE_KEY, target_session);
         }
 
-        // `[-t target-client]` - specify the client
+        // `[-t target-client]`
         #[cfg(feature = "tmux_0_8")]
         if let Some(target_client) = self.target_client {
             cmd.push_option(T_LOWERCASE_KEY, target_client);

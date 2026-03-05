@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,19 +11,19 @@ pub type ShowMsgs<'a> = ShowMessages<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^2.2:
+/// tmux >=2.2:
 /// ```text
 /// show-messages [-JT] [-t target-client]
 /// (alias: showmsgs)
 /// ```
 ///
-/// tmux ^1.9:
+/// tmux >=1.9:
 /// ```text
 /// show-messages [-IJT] [-t target-client]
 /// (alias: showmsgs)
 /// ```
 ///
-/// tmux ^1.2:
+/// tmux >=1.5:
 /// ```text
 /// show-messages [-t target-client]
 /// (alias: showmsgs)
@@ -30,14 +33,17 @@ pub struct ShowMessages<'a> {
     /// `[-I]`
     #[cfg(all(feature = "tmux_1_9", not(feature = "tmux_2_2")))]
     pub server: bool,
+
     /// `[-J]`
     #[cfg(feature = "tmux_1_9")]
     pub jobs: bool,
+
     /// `[-T]`
     #[cfg(feature = "tmux_1_9")]
     pub terminals: bool,
+
     /// `[-t target-client]`
-    #[cfg(feature = "tmux_1_2")]
+    #[cfg(feature = "tmux_1_5")]
     pub target_client: Option<Cow<'a, str>>,
 }
 
@@ -68,12 +74,13 @@ impl<'a> ShowMessages<'a> {
     }
 
     /// `[-t target-client]`
-    #[cfg(feature = "tmux_1_2")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -98,7 +105,7 @@ impl<'a> ShowMessages<'a> {
         }
 
         // `[-t target-client]`
-        #[cfg(feature = "tmux_1_2")]
+        #[cfg(feature = "tmux_1_5")]
         if let Some(target_client) = self.target_client {
             cmd.push_option(T_LOWERCASE_KEY, target_client);
         }

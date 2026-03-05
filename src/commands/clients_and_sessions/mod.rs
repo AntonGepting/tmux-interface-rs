@@ -1,7 +1,10 @@
-use crate::TmuxCommand;
+// auto-generated file
+//
 
+use crate::TmuxCommand;
 /// All functions from man tmux "Clients and Sessions" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#CLIENTS_AND_SESSIONS))
+
 #[cfg(feature = "tmux_0_8")]
 pub mod attach_session;
 #[cfg(feature = "tmux_0_8")]
@@ -27,9 +30,9 @@ pub mod kill_session;
 #[cfg(feature = "tmux_0_8")]
 pub mod kill_session_macro;
 
-#[cfg(feature = "tmux_0_8")]
+#[cfg(feature = "tmux_1_5")]
 pub mod list_clients;
-#[cfg(feature = "tmux_0_8")]
+#[cfg(feature = "tmux_1_5")]
 pub mod list_clients_macro;
 
 #[cfg(feature = "tmux_0_8")]
@@ -42,11 +45,15 @@ pub mod list_sessions;
 #[cfg(feature = "tmux_0_8")]
 pub mod list_sessions_macro;
 
-#[cfg(feature = "tmux_1_1")]
+#[cfg(feature = "tmux_1_5")]
 pub mod lock_client;
+#[cfg(feature = "tmux_1_5")]
+pub mod lock_client_macro;
 
-#[cfg(feature = "tmux_1_1")]
+#[cfg(feature = "tmux_1_5")]
 pub mod lock_session;
+#[cfg(feature = "tmux_1_5")]
+pub mod lock_session_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod new_session;
@@ -55,9 +62,8 @@ pub mod new_session_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod refresh_client;
-// FIXME
-//#[cfg(feature = "tmux_0_8")]
-//pub mod refresh_client_macro;
+#[cfg(feature = "tmux_0_8")]
+pub mod refresh_client_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod rename_session;
@@ -69,9 +75,9 @@ pub mod server_access;
 #[cfg(feature = "tmux_3_3")]
 pub mod server_access_macro;
 
-#[cfg(feature = "tmux_1_2")]
+#[cfg(feature = "tmux_1_5")]
 pub mod show_messages;
-#[cfg(feature = "tmux_1_2")]
+#[cfg(feature = "tmux_1_5")]
 pub mod show_messages_macro;
 
 #[cfg(feature = "tmux_0_8")]
@@ -96,82 +102,121 @@ pub mod switch_client_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub use attach_session::{Attach, AttachSession};
+
 #[cfg(feature = "tmux_0_8")]
 pub use detach_client::{Detach, DetachClient};
+
 #[cfg(feature = "tmux_0_8")]
 pub use has_session::{Has, HasSession};
+
 #[cfg(feature = "tmux_0_8")]
 pub use kill_server::KillServer;
+
 #[cfg(feature = "tmux_0_8")]
 pub use kill_session::KillSession;
-#[cfg(feature = "tmux_0_8")]
+
+#[cfg(feature = "tmux_1_5")]
 pub use list_clients::{ListClients, LsC};
+
 #[cfg(feature = "tmux_0_8")]
 pub use list_commands::{ListCommands, LsCm};
+
 #[cfg(feature = "tmux_0_8")]
 pub use list_sessions::{ListSessions, Ls};
-#[cfg(feature = "tmux_1_1")]
+
+#[cfg(feature = "tmux_1_5")]
 pub use lock_client::{LockC, LockClient};
-#[cfg(feature = "tmux_1_1")]
+
+#[cfg(feature = "tmux_1_5")]
 pub use lock_session::{LockS, LockSession};
+
 #[cfg(feature = "tmux_0_8")]
 pub use new_session::{New, NewSession};
+
 #[cfg(feature = "tmux_0_8")]
 pub use refresh_client::{Refresh, RefreshClient};
+
 #[cfg(feature = "tmux_0_8")]
 pub use rename_session::{Rename, RenameSession};
+
 #[cfg(feature = "tmux_3_3")]
 pub use server_access::ServerAccess;
-#[cfg(feature = "tmux_1_2")]
+
+#[cfg(feature = "tmux_1_5")]
 pub use show_messages::{ShowMessages, ShowMsgs};
+
 #[cfg(feature = "tmux_0_8")]
 pub use source_file::{Source, SourceFile};
+
 #[cfg(feature = "tmux_0_8")]
 pub use start_server::{Start, StartServer};
+
 #[cfg(feature = "tmux_0_8")]
 pub use suspend_client::{SuspendC, SuspendClient};
+
 #[cfg(feature = "tmux_0_8")]
 pub use switch_client::{SwitchC, SwitchClient};
 
 #[cfg(test)]
 #[path = "."]
 mod clients_and_sessions_tests {
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod attach_session_tests;
+    mod attach_session_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod detach_client_tests;
+    mod detach_client_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod has_session_tests;
+    mod has_session_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod kill_server_tests;
+    mod kill_server_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod kill_session_tests;
+    mod kill_session_tests;
+
+    #[cfg(feature = "tmux_1_5")]
+    mod list_clients_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod list_clients_tests;
+    mod list_commands_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod list_commands_tests;
+    mod list_sessions_tests;
+
+    #[cfg(feature = "tmux_1_5")]
+    mod lock_client_tests;
+
+    #[cfg(feature = "tmux_1_5")]
+    mod lock_session_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod list_sessions_tests;
-    #[cfg(feature = "tmux_1_1")]
-    pub mod lock_client_tests;
-    #[cfg(feature = "tmux_1_1")]
-    pub mod lock_session_tests;
+    mod new_session_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod new_session_tests;
+    mod refresh_client_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod refresh_client_tests;
+    mod rename_session_tests;
+
+    #[cfg(feature = "tmux_3_3")]
+    mod server_access_tests;
+
+    #[cfg(feature = "tmux_1_5")]
+    mod show_messages_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod rename_session_tests;
-    #[cfg(feature = "tmux_1_2")]
-    pub mod show_messages_tests;
+    mod source_file_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod source_file_tests;
+    mod start_server_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod start_server_tests;
+    mod suspend_client_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod suspend_client_tests;
-    #[cfg(feature = "tmux_0_8")]
-    pub mod switch_client_tests;
+    mod switch_client_tests;
 }
 
 /// All functions from man tmux "Clients and Sessions" listed below
@@ -202,7 +247,7 @@ impl<'a> TmuxCommand<'a> {
         KillSession::new()
     }
 
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn list_clients() -> ListClients<'a> {
         ListClients::new()
     }
@@ -217,12 +262,12 @@ impl<'a> TmuxCommand<'a> {
         ListSessions::new()
     }
 
-    #[cfg(feature = "tmux_1_1")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn lock_client() -> LockClient<'a> {
         LockClient::new()
     }
 
-    #[cfg(feature = "tmux_1_1")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn lock_session() -> LockSession<'a> {
         LockSession::new()
     }
@@ -242,7 +287,12 @@ impl<'a> TmuxCommand<'a> {
         RenameSession::new()
     }
 
-    #[cfg(feature = "tmux_1_2")]
+    #[cfg(feature = "tmux_3_3")]
+    pub fn server_access() -> ServerAccess<'a> {
+        ServerAccess::new()
+    }
+
+    #[cfg(feature = "tmux_1_5")]
     pub fn show_messages() -> ShowMessages<'a> {
         ShowMessages::new()
     }
@@ -268,79 +318,91 @@ impl<'a> TmuxCommand<'a> {
     }
 }
 
-// XXX: generic
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<AttachSession<'a>> for TmuxCommand<'a> {
     fn from(item: AttachSession<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<DetachClient<'a>> for TmuxCommand<'a> {
     fn from(item: DetachClient<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<HasSession<'a>> for TmuxCommand<'a> {
     fn from(item: HasSession<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<KillServer> for TmuxCommand<'a> {
     fn from(item: KillServer) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<KillSession<'a>> for TmuxCommand<'a> {
     fn from(item: KillSession<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_5")]
 impl<'a> From<ListClients<'a>> for TmuxCommand<'a> {
     fn from(item: ListClients<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<ListCommands<'a>> for TmuxCommand<'a> {
     fn from(item: ListCommands<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<ListSessions<'a>> for TmuxCommand<'a> {
     fn from(item: ListSessions<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_5")]
 impl<'a> From<LockClient<'a>> for TmuxCommand<'a> {
     fn from(item: LockClient<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_1_5")]
 impl<'a> From<LockSession<'a>> for TmuxCommand<'a> {
     fn from(item: LockSession<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<NewSession<'a>> for TmuxCommand<'a> {
     fn from(item: NewSession<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<RefreshClient<'a>> for TmuxCommand<'a> {
     fn from(item: RefreshClient<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<RenameSession<'a>> for TmuxCommand<'a> {
     fn from(item: RenameSession<'a>) -> Self {
         item.build()
@@ -354,30 +416,35 @@ impl<'a> From<ServerAccess<'a>> for TmuxCommand<'a> {
     }
 }
 
+#[cfg(feature = "tmux_1_5")]
 impl<'a> From<ShowMessages<'a>> for TmuxCommand<'a> {
     fn from(item: ShowMessages<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<SourceFile<'a>> for TmuxCommand<'a> {
     fn from(item: SourceFile<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<StartServer> for TmuxCommand<'a> {
     fn from(item: StartServer) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<SuspendClient<'a>> for TmuxCommand<'a> {
     fn from(item: SuspendClient<'a>) -> Self {
         item.build()
     }
 }
 
+#[cfg(feature = "tmux_0_8")]
 impl<'a> From<SwitchClient<'a>> for TmuxCommand<'a> {
     fn from(item: SwitchClient<'a>) -> Self {
         item.build()

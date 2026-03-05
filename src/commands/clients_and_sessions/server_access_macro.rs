@@ -1,43 +1,58 @@
-/// Structure for creating a new session
+// auto-generated file
+//
+
+///  Change the access or read/write permission of user
 ///
 /// # Manual
 ///
-/// tmux 3.3:
+/// tmux >=3.3:
 /// ```text
 /// server-access [-adlrw] [user]
 /// ```
 #[macro_export]
 macro_rules! server_access {
+    // `[-a]`
     (@cmd ($cmd:expr) -a, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
             $cmd.add()
         }) $($tail)*)
     }};
+
+    // `[-d]`
     (@cmd ($cmd:expr) -d, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
             $cmd.delete()
         }) $($tail)*)
     }};
+
+    // `[-l]`
     (@cmd ($cmd:expr) -l, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
             $cmd.list()
         }) $($tail)*)
     }};
+
+    // `[-r]`
     (@cmd ($cmd:expr) -r, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
             $cmd.read()
         }) $($tail)*)
     }};
+
+    // `[-w]`
     (@cmd ($cmd:expr) -w, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
             $cmd.write()
         }) $($tail)*)
     }};
+
+    // `[user]`
     (@cmd ($cmd:expr) $user:expr, $($tail:tt)*) => {{
         $crate::server_access!(@cmd ({
             $cmd.user($user)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -59,15 +74,15 @@ macro_rules! server_access {
 fn server_access_macro() {
     use std::borrow::Cow;
 
-    // Execute commands from path
+    //  Change the access or read/write permission of user
     //
     // # Manual
     //
-    // tmux ^3.3:
+    // tmux >=3.3:
     // ```text
     // server-access [-adlrw] [user]
-    // (alias: source)
     // ```
+
     let server_access = server_access!();
     #[cfg(feature = "tmux_3_3")]
     let server_access = server_access!((server_access), -a);
@@ -80,7 +95,7 @@ fn server_access_macro() {
     #[cfg(feature = "tmux_3_3")]
     let server_access = server_access!((server_access), -w);
     #[cfg(feature = "tmux_3_3")]
-    let server_access = server_access!((server_access), "1");
+    let server_access = server_access!((server_access), "");
 
     let cmd = "server-access";
 
@@ -97,9 +112,8 @@ fn server_access_macro() {
     #[cfg(feature = "tmux_3_3")]
     s.push("-w");
     #[cfg(feature = "tmux_3_3")]
-    s.push("1");
+    s.push("");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let server_access = server_access.build().to_vec();
 
     assert_eq!(server_access, s);

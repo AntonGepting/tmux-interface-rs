@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 
@@ -5,7 +8,7 @@ use crate::TmuxCommand;
 ///
 /// # Manual
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// kill-server
 /// ```
@@ -17,6 +20,7 @@ impl KillServer {
         Default::default()
     }
 
+    /// build command with arguments in right order
     pub fn build<'a>(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 

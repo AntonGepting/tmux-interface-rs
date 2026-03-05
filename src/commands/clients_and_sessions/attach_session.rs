@@ -9,7 +9,7 @@ use std::borrow::Cow;
 
 pub type Attach<'a> = AttachSession<'a>;
 
-/// Structure for attaching client to already existing session
+/// Attach client to already existing session
 ///
 /// # Manual
 ///

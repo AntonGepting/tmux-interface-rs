@@ -1,7 +1,7 @@
 // auto-generated file
 //
 
-// Structure for attaching client to already existing session
+// Attach client to already existing session
 //
 // # Manual
 //
@@ -69,6 +69,7 @@ fn attach_session() {
     let attach_session = attach_session.working_directory("1");
 
     // `[-f flags]`
+    // `[-f flags]`
     #[cfg(feature = "tmux_3_2")]
     let flags = ClientFlags {
         active_pane: Some(true),
@@ -76,6 +77,8 @@ fn attach_session() {
     };
     #[cfg(feature = "tmux_3_2")]
     let attach_session = attach_session.flags(flags);
+
+    // `[-t target-session]`
     #[cfg(feature = "tmux_0_8")]
     let attach_session = attach_session.target_session("3");
 

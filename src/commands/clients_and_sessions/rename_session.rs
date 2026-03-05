@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,7 +11,7 @@ pub type Rename<'a> = RenameSession<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// rename-session [-t target-session] new-name
 /// (alias: rename)
@@ -43,6 +46,7 @@ impl<'a> RenameSession<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 

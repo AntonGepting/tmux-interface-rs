@@ -1,50 +1,63 @@
+// auto-generated file
+//
+
+//  Change the access or read/write permission of user
+//
+// # Manual
+//
+// tmux >=3.3:
+// ```text
+// server-access [-adlrw] [user]
+// ```
 #[test]
 fn server_access() {
     use crate::ServerAccess;
     use std::borrow::Cow;
 
-    // Execute commands from path
-    //
-    // # Manual
-    //
-    // tmux ^3.3:
-    // ```text
-    // server-access [-adlrw] [user]
-    // (alias: source)
-    // ```
     let server_access = ServerAccess::new();
+    // `[-a]`
     #[cfg(feature = "tmux_3_3")]
     let server_access = server_access.add();
+
+    // `[-d]`
     #[cfg(feature = "tmux_3_3")]
-    let server_access = server_access.remove();
+    let server_access = server_access.delete();
+
+    // `[-l]`
     #[cfg(feature = "tmux_3_3")]
     let server_access = server_access.list();
+
+    // `[-r]`
     #[cfg(feature = "tmux_3_3")]
     let server_access = server_access.read();
+
+    // `[-w]`
     #[cfg(feature = "tmux_3_3")]
     let server_access = server_access.write();
+
+    // `[user]`
     #[cfg(feature = "tmux_3_3")]
-    let source_file = source_file.user("1");
+    let server_access = server_access.user("");
 
     let cmd = "server-access";
 
-    let mut s = Vec::new();
-    s.push(cmd);
+    let mut v = Vec::new();
+    v.push(cmd);
     #[cfg(feature = "tmux_3_3")]
-    s.push("-a");
+    v.push("-a");
     #[cfg(feature = "tmux_3_3")]
-    s.push("-d");
+    v.push("-d");
     #[cfg(feature = "tmux_3_3")]
-    s.push("-l");
+    v.push("-l");
     #[cfg(feature = "tmux_3_3")]
-    s.push("-r");
+    v.push("-r");
     #[cfg(feature = "tmux_3_3")]
-    s.push("-w");
+    v.push("-w");
     #[cfg(feature = "tmux_3_3")]
-    s.push("1");
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    v.push("");
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let server_access = server_access.build().to_vec();
 
-    assert_eq!(server_access, s);
+    assert_eq!(server_access, v);
 }

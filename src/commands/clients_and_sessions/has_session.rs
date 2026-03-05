@@ -1,15 +1,17 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
 pub type Has<'a> = HasSession<'a>;
-
 // XXX: better result return?
 /// Report if the specified session exist
 ///
 /// # Manual
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// has-session [-t target-session]
 /// (alias: has)
@@ -17,6 +19,7 @@ pub type Has<'a> = HasSession<'a>;
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct HasSession<'a> {
     /// `[-t target-session]`
+    #[cfg(feature = "tmux_0_8")]
     pub target_session: Option<Cow<'a, str>>,
 }
 
@@ -26,17 +29,20 @@ impl<'a> HasSession<'a> {
     }
 
     /// `[-t target-session]`
+    #[cfg(feature = "tmux_0_8")]
     pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(HAS_SESSION);
 
         // `[-t target-session]`
+        #[cfg(feature = "tmux_0_8")]
         if let Some(target_session) = self.target_session {
             cmd.push_option(T_LOWERCASE_KEY, target_session);
         }

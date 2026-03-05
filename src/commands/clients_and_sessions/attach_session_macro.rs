@@ -1,4 +1,5 @@
 // auto-generated file
+//
 
 // NOTE: conditionals in macro problem, solution partial macro with condition and main macro
 // ```
@@ -10,7 +11,7 @@
 // error[E0599]: no method named `parent_sighup` found for struct `attach_session::AttachSession` in the current scope
 //
 
-/// Generate command using flags from TMUX manual
+/// Attach client to already existing session
 ///
 /// # Manual
 ///
@@ -123,7 +124,7 @@ fn attach_session_macro() {
     use crate::ClientFlags;
     use std::borrow::Cow;
 
-    // Structure for attaching client to already existing session
+    // Attach client to already existing session
     //
     // # Manual
     //

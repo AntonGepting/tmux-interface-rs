@@ -1,9 +1,9 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
-#[cfg(feature = "tmux_2_3")]
 use std::borrow::Cow;
-use std::fmt;
-use std::marker::PhantomData;
 
 pub type LsCm<'a> = ListCommands<'a>;
 
@@ -11,19 +11,19 @@ pub type LsCm<'a> = ListCommands<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^3.2:
+/// tmux >=3.1a:
 /// ```text
 /// list-commands [-F format] [command]
 /// (alias: lscm)
 /// ```
 ///
-/// tmux ^2.3:
+/// tmux >=2.3:
 /// ```text
 /// list-commands [-F format]
 /// (alias: lscm)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// list-commands
 /// (alias: lscm)
@@ -35,16 +35,8 @@ pub struct ListCommands<'a> {
     pub format: Option<Cow<'a, str>>,
 
     /// `[command]`
-    #[cfg(feature = "tmux_3_2")]
+    #[cfg(feature = "tmux_3_1a")]
     pub command: Option<Cow<'a, str>>,
-
-    _phantom_data: PhantomData<&'a ()>,
-}
-
-impl<'a> fmt::Display for ListCommands<'a> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.clone().build().fmt(f)
-    }
 }
 
 impl<'a> ListCommands<'a> {
@@ -60,12 +52,13 @@ impl<'a> ListCommands<'a> {
     }
 
     /// `[command]`
-    #[cfg(feature = "tmux_3_2")]
+    #[cfg(feature = "tmux_3_1a")]
     pub fn command<S: Into<Cow<'a, str>>>(mut self, command: S) -> Self {
         self.command = Some(command.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -78,7 +71,7 @@ impl<'a> ListCommands<'a> {
         }
 
         // `[command]`
-        #[cfg(feature = "tmux_3_2")]
+        #[cfg(feature = "tmux_3_1a")]
         if let Some(command) = self.command {
             cmd.push_param(command);
         }

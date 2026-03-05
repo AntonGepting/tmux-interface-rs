@@ -1,7 +1,9 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
-use std::marker::PhantomData;
 
 pub type LsC<'a> = ListClients<'a>;
 
@@ -9,27 +11,21 @@ pub type LsC<'a> = ListClients<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^3.4:
+/// tmux >=3.4:
 /// ```text
 /// list-clients [-F format] [-f filter] [-t target-session]
 /// (alias: lsc)
 /// ```
 ///
-/// tmux ^1.6:
+/// tmux >=1.6:
 /// ```text
 /// list-clients [-F format] [-t target-session]
 /// (alias: lsc)
 /// ```
 ///
-/// tmux ^1.5:
+/// tmux >=1.5:
 /// ```text
 /// list-clients [-t target-session]
-/// (alias: lsc)
-/// ```
-///
-/// tmux ^0.8:
-/// ```text
-/// list-clients
 /// (alias: lsc)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
@@ -45,8 +41,6 @@ pub struct ListClients<'a> {
     /// `[-t target-session]`
     #[cfg(feature = "tmux_1_5")]
     pub target_session: Option<Cow<'a, str>>,
-
-    _phantom_data: PhantomData<&'a ()>,
 }
 
 impl<'a> ListClients<'a> {
@@ -75,6 +69,7 @@ impl<'a> ListClients<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 

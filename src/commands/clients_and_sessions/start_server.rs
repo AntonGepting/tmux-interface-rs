@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 
@@ -7,7 +10,7 @@ pub type Start = StartServer;
 ///
 /// # Manual
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// start-server
 /// (alias: start)
@@ -20,6 +23,7 @@ impl StartServer {
         Default::default()
     }
 
+    /// build command with arguments in right order
     pub fn build<'a>(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 

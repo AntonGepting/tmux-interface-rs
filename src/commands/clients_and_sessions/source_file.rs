@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,58 +11,64 @@ pub type Source<'a> = SourceFile<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^3.4:
+/// tmux >=3.4:
 /// ```text
 /// source-file [-Fnqv] [-t target-pane] path ...
 /// (alias: source)
 /// ```
 ///
-/// tmux ^3.2:
+/// tmux >=3.2:
 /// ```text
 /// source-file [-Fnqv] path ...
 /// (alias: source)
 /// ```
 ///
-/// tmux ^3.0:
+/// tmux >=3.0a:
 /// ```text
 /// source-file [-nqv] path
 /// (alias: source)
 /// ```
 ///
-/// tmux ^2.3:
+/// tmux >=3.0:
 /// ```text
-/// source-file path
+/// source-file [-nq] path
+/// (alias: source)
+/// ```
+///
+/// tmux >=2.3:
+/// ```text
+/// source-file [-q] path
 /// (alias: source)
 ///
 /// ```
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// source-file path
 /// (alias: source)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SourceFile<'a> {
-    /// `[-F]` - value is expanded as a format
+    /// `[-F]`
     #[cfg(feature = "tmux_3_2")]
     pub expand: bool,
 
     /// `[-n]`
     #[cfg(feature = "tmux_3_0")]
-    pub not_execute: bool,
+    pub not_exclude: bool,
 
     /// `[-q]`
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_2_3")]
     pub quiet: bool,
 
     /// `[-v]`
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_3_0a")]
     pub verbose: bool,
 
     /// `[-t target-pane]`
     #[cfg(feature = "tmux_3_4")]
     pub target_pane: Option<Cow<'a, str>>,
 
-    /// `path`
+    /// `[path]`
     #[cfg(feature = "tmux_0_8")]
     pub path: Option<Cow<'a, str>>,
 }
@@ -69,7 +78,7 @@ impl<'a> SourceFile<'a> {
         Default::default()
     }
 
-    /// `[-F]` - value is expanded as a format
+    /// `[-F]`
     #[cfg(feature = "tmux_3_2")]
     pub fn expand(mut self) -> Self {
         self.expand = true;
@@ -78,20 +87,20 @@ impl<'a> SourceFile<'a> {
 
     /// `[-n]`
     #[cfg(feature = "tmux_3_0")]
-    pub fn not_execute(mut self) -> Self {
-        self.not_execute = true;
+    pub fn not_exclude(mut self) -> Self {
+        self.not_exclude = true;
         self
     }
 
     /// `[-q]`
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_2_3")]
     pub fn quiet(mut self) -> Self {
         self.quiet = true;
         self
     }
 
     /// `[-v]`
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_3_0a")]
     pub fn verbose(mut self) -> Self {
         self.verbose = true;
         self
@@ -104,19 +113,20 @@ impl<'a> SourceFile<'a> {
         self
     }
 
-    /// `path`
+    /// `[path]`
     #[cfg(feature = "tmux_0_8")]
     pub fn path<S: Into<Cow<'a, str>>>(mut self, path: S) -> Self {
         self.path = Some(path.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(SOURCE_FILE);
 
-        // `[-F]` - value is expanded as a format
+        // `[-F]`
         #[cfg(feature = "tmux_3_2")]
         if self.expand {
             cmd.push_flag(F_UPPERCASE_KEY);
@@ -124,18 +134,18 @@ impl<'a> SourceFile<'a> {
 
         // `[-n]`
         #[cfg(feature = "tmux_3_0")]
-        if self.not_execute {
+        if self.not_exclude {
             cmd.push_flag(N_LOWERCASE_KEY);
         }
 
         // `[-q]`
-        #[cfg(feature = "tmux_3_0")]
+        #[cfg(feature = "tmux_2_3")]
         if self.quiet {
             cmd.push_flag(Q_LOWERCASE_KEY);
         }
 
         // `[-v]`
-        #[cfg(feature = "tmux_3_0")]
+        #[cfg(feature = "tmux_3_0a")]
         if self.verbose {
             cmd.push_flag(V_LOWERCASE_KEY);
         }
@@ -146,7 +156,7 @@ impl<'a> SourceFile<'a> {
             cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
-        // `path`
+        // `[path]`
         #[cfg(feature = "tmux_0_8")]
         if let Some(path) = self.path {
             cmd.push_param(path);

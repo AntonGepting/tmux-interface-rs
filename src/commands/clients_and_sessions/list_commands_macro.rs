@@ -1,39 +1,45 @@
+// auto-generated file
+//
+
 /// List the syntax of all commands supported by tmux
 ///
 /// # Manual
 ///
-/// tmux ^3.2:
+/// tmux >=3.1a:
 /// ```text
 /// list-commands [-F format] [command]
 /// (alias: lscm)
 /// ```
 ///
-/// tmux ^2.3:
+/// tmux >=2.3:
 /// ```text
 /// list-commands [-F format]
 /// (alias: lscm)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// list-commands
 /// (alias: lscm)
 /// ```
 #[macro_export]
 macro_rules! list_commands {
+    // `[-F format]`
     (@cmd ($cmd:expr) -F $format:expr, $($tail:tt)*) => {{
         $crate::list_commands!(@cmd ({
             $cmd.format($format)
         }) $($tail)*)
     }};
-    // `[-s target-session]` - specify the session, all clients currently attached
+
+    // `[command]`
     (@cmd ($cmd:expr) $command:expr, $($tail:tt)*) => {{
         $crate::list_commands!(@cmd ({
             $cmd.command($command)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
-        //::std::compile_error!("unknown flag, option or parameter");
+        //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
     (@cmd ($cmd:expr)) => {{
         $cmd
@@ -47,7 +53,6 @@ macro_rules! list_commands {
     ($($tail:tt)*) => {{
         $crate::list_commands!(@cmd ({ $crate::ListCommands::new() }) $($tail)*,)
     }};
-
 }
 
 #[test]
@@ -58,27 +63,28 @@ fn list_commands_macro() {
     //
     // # Manual
     //
-    // tmux ^3.2:
+    // tmux >=3.1a:
     // ```text
     // list-commands [-F format] [command]
     // (alias: lscm)
     // ```
     //
-    // tmux ^2.3:
+    // tmux >=2.3:
     // ```text
     // list-commands [-F format]
     // (alias: lscm)
     // ```
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // list-commands
     // (alias: lscm)
     // ```
+
     let list_commands = list_commands!();
     #[cfg(feature = "tmux_2_3")]
     let list_commands = list_commands!((list_commands), -F "1");
-    #[cfg(feature = "tmux_3_2")]
+    #[cfg(feature = "tmux_3_1a")]
     let list_commands = list_commands!((list_commands), "2");
 
     #[cfg(not(feature = "cmd_alias"))]
@@ -90,11 +96,9 @@ fn list_commands_macro() {
     s.push(cmd);
     #[cfg(feature = "tmux_2_3")]
     s.extend_from_slice(&["-F", "1"]);
-    #[cfg(feature = "tmux_3_2")]
+    #[cfg(feature = "tmux_3_1a")]
     s.push("2");
-    //#[cfg(feature = "tmux_2_3")]
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let list_commands = list_commands.build().to_vec();
 
     assert_eq!(list_commands, s);

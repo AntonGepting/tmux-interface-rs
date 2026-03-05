@@ -1,23 +1,27 @@
 // XXX: better result return?
+// auto-generated file
+//
+
 /// Report if the specified session exist
 ///
 /// # Manual
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// has-session [-t target-session]
 /// (alias: has)
 /// ```
 #[macro_export]
 macro_rules! has_session {
-    // `[-t target-session]` - specify the session, all clients currently attached
+    // `[-t target-session]`
     (@cmd ($cmd:expr) -t $target_session:expr, $($tail:tt)*) => {{
         $crate::has_session!(@cmd ({
             $cmd.target_session($target_session)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
-        //::std::compile_error!("unknown flag, option or parameter");
+        //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
     (@cmd ($cmd:expr)) => {{
         $cmd
@@ -41,11 +45,12 @@ fn has_session_macro() {
     //
     // # Manual
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // has-session [-t target-session]
     // (alias: has)
     // ```
+
     let has_session = has_session!();
     #[cfg(feature = "tmux_0_8")]
     let has_session = has_session!((has_session), -t "1");
@@ -60,7 +65,6 @@ fn has_session_macro() {
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "1"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let has_session = has_session.build().to_vec();
 
     assert_eq!(has_session, s);

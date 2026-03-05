@@ -1,62 +1,61 @@
+// auto-generated file
+//
+
+// List all clients attached to the server
+//
+// # Manual
+//
+// tmux >=3.4:
+// ```text
+// list-clients [-F format] [-f filter] [-t target-session]
+// (alias: lsc)
+// ```
+//
+// tmux >=1.6:
+// ```text
+// list-clients [-F format] [-t target-session]
+// (alias: lsc)
+// ```
+//
+// tmux >=1.5:
+// ```text
+// list-clients [-t target-session]
+// (alias: lsc)
+// ```
 #[test]
 fn list_clients() {
-    use crate::{ListClients, TargetSession};
+    use crate::ListClients;
     use std::borrow::Cow;
 
-    // List all clients attached to the server
-    //
-    // # Manual
-    //
-    // tmux ^3.4:
-    // ```text
-    // list-clients [-F format] [-f filter] [-t target-session]
-    // (alias: lsc)
-    // ```
-    //
-    // tmux ^1.6:
-    // ```text
-    // list-clients [-F format] [-t target-session]
-    // (alias: lsc)
-    // ```
-    //
-    // ```
-    // tmux ^1.5:
-    // ```text
-    // list-clients [-t target-session]
-    // (alias: lsc)
-    // ```
-    //
-    // tmux ^0.8:
-    // ```text
-    // list-clients
-    // (alias: lsc)
-    // ```
-    let target_session = TargetSession::Raw("3").to_string();
-
     let list_clients = ListClients::new();
+    // `[-F format]`
     #[cfg(feature = "tmux_1_6")]
     let list_clients = list_clients.format("1");
+
+    // `[-f filter]`
     #[cfg(feature = "tmux_3_4")]
     let list_clients = list_clients.filter("2");
+
+    // `[-t target-session]`
     #[cfg(feature = "tmux_1_5")]
-    let list_clients = list_clients.target_session(&target_session);
+    let list_clients = list_clients.target_session("3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-clients";
     #[cfg(feature = "cmd_alias")]
     let cmd = "lsc";
 
-    let mut s = Vec::new();
-    s.push(cmd);
+    let mut v = Vec::new();
+    v.push(cmd);
     #[cfg(feature = "tmux_1_6")]
-    s.extend_from_slice(&["-F", "1"]);
+    v.extend_from_slice(&["-F", "1"]);
     #[cfg(feature = "tmux_3_4")]
-    s.extend_from_slice(&["-f", "2"]);
+    v.extend_from_slice(&["-f", "2"]);
     #[cfg(feature = "tmux_1_5")]
-    s.extend_from_slice(&["-t", "3"]);
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    v.extend_from_slice(&["-t", "3"]);
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let list_clients = list_clients.build().to_vec();
 
-    assert_eq!(list_clients, s);
+    assert_eq!(list_clients, v);
 }

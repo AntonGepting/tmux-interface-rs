@@ -1,15 +1,18 @@
+// auto-generated file
+//
+
 /// Kill the tmux server and clients and destroy all sessions
 ///
 /// # Manual
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// kill-server
 /// ```
 #[macro_export]
 macro_rules! kill_server {
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
-        //::std::compile_error!("unknown flag, option or parameter");
+        //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
     (@cmd ($cmd:expr)) => {{
         $cmd
@@ -21,7 +24,7 @@ macro_rules! kill_server {
         $crate::kill_server!(@cmd ($cmd) $($tail)*,)
     }};
     ($($tail:tt)*) => {{
-        $crate::has_session!(@cmd ({ $crate::KillServer::new() }) $($tail)*,)
+        $crate::kill_server!(@cmd ({ $crate::KillServer::new() }) $($tail)*,)
     }};
 }
 
@@ -33,10 +36,11 @@ fn kill_server_macro() {
     //
     // # Manual
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // kill-server
     // ```
+
     let kill_server = kill_server!();
 
     let cmd = "kill-server";
@@ -44,7 +48,6 @@ fn kill_server_macro() {
     let mut s = Vec::new();
     s.push(cmd);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let kill_server = kill_server.build().to_vec();
 
     assert_eq!(kill_server, s);
