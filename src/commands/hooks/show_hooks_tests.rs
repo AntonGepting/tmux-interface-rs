@@ -1,33 +1,62 @@
+// auto-generated file
+//
+
+// Shows hooks
+//
+// # Manual
+//
+// tmux >=3.2:
+// ```text
+// show-hooks [-gpw] [-t target-session]
+// ```
+//
+// tmux >=2.2:
+// ```text
+// show-hooks [-g] [-t target-session]
+// ```
 #[test]
 fn show_hooks() {
-    use crate::{ShowHooks, TargetSession};
+    use crate::ShowHooks;
     use std::borrow::Cow;
 
-    // # Manual
-    //
-    // tmux ^2.2:
-    // ```text
-    // show-hooks [-g] [-t target-session]
-    // ```
-    let target_session = TargetSession::Raw("1").to_string();
-
     let show_hooks = ShowHooks::new();
+    // `[-g]`
     #[cfg(feature = "tmux_2_2")]
     let show_hooks = show_hooks.global();
+
+    // `[-p]`
+    #[cfg(feature = "tmux_3_2")]
+    let show_hooks = show_hooks.pane();
+
+    // `[-w]`
+    #[cfg(feature = "tmux_3_2")]
+    let show_hooks = show_hooks.window();
+
+    // `[-t target-session]`
     #[cfg(feature = "tmux_2_2")]
-    let show_hooks = show_hooks.target_session(&target_session);
+    let show_hooks = show_hooks.target_session("1");
+
+    // `[-t target-pane]`
+    #[cfg(feature = "tmux_3_2")]
+    let show_hooks = show_hooks.target_pane("2");
 
     let cmd = "show-hooks";
 
-    let mut s = Vec::new();
-    s.push(cmd);
+    let mut v = Vec::new();
+    v.push(cmd);
     #[cfg(feature = "tmux_2_2")]
-    s.push("-g");
+    v.push("-g");
+    #[cfg(feature = "tmux_3_2")]
+    v.push("-p");
+    #[cfg(feature = "tmux_3_2")]
+    v.push("-w");
     #[cfg(feature = "tmux_2_2")]
-    s.extend_from_slice(&["-t", "1"]);
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    v.extend_from_slice(&["-t", "1"]);
+    #[cfg(feature = "tmux_3_2")]
+    v.extend_from_slice(&["-t", "2"]);
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let show_hooks = show_hooks.build().to_vec();
 
-    assert_eq!(show_hooks, s);
+    assert_eq!(show_hooks, v);
 }

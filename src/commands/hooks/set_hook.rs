@@ -1,27 +1,35 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
-/// Structure for setting or unsetting hook `hook-name` to command.
+/// Set or unset hook `hook-name` to command.
 ///
 /// # Manual
 ///
-/// tmux ^3.0:
+/// tmux >=3.2:
+/// ```text
+/// set-hook [-agpRuw] [-t target-session] hook-name command
+/// ```
+///
+/// tmux >=3.0:
 /// ```text
 /// set-hook [-agRu] [-t target-session] hook-name command
 /// ```
 ///
-/// tmux ^2.8:
+/// tmux >=2.8:
 /// ```text
 /// set-hook [-gRu] [-t target-session] hook-name command
 /// ```
 ///
-/// tmux ^2.4:
+/// tmux >=2.4:
 /// ```text
 /// set-hook [-gu] [-t target-session] hook-name command
 /// ```
 ///
-/// tmux ^2.2:
+/// tmux >=2.2:
 /// ```text
 /// set-hook [-g] [-t target-session] hook-name command
 /// ```
@@ -35,6 +43,10 @@ pub struct SetHook<'a> {
     #[cfg(feature = "tmux_2_2")]
     pub global: bool,
 
+    /// `[-p]`
+    #[cfg(feature = "tmux_3_2")]
+    pub pane: bool,
+
     /// `[-R]`
     #[cfg(feature = "tmux_2_8")]
     pub run: bool,
@@ -43,15 +55,19 @@ pub struct SetHook<'a> {
     #[cfg(feature = "tmux_2_4")]
     pub unset: bool,
 
+    /// `[-w]`
+    #[cfg(feature = "tmux_3_2")]
+    pub window: bool,
+
     /// `[-t target-session]`
     #[cfg(feature = "tmux_2_2")]
     pub target_session: Option<Cow<'a, str>>,
 
-    /// `hook-name`
+    /// `[hook-name]`
     #[cfg(feature = "tmux_2_2")]
     pub hook_name: Option<Cow<'a, str>>,
 
-    /// `command`
+    /// `[command]`
     #[cfg(feature = "tmux_2_2")]
     pub command: Option<Cow<'a, str>>,
 }
@@ -75,6 +91,13 @@ impl<'a> SetHook<'a> {
         self
     }
 
+    /// `[-p]`
+    #[cfg(feature = "tmux_3_2")]
+    pub fn pane(mut self) -> Self {
+        self.pane = true;
+        self
+    }
+
     /// `[-R]`
     #[cfg(feature = "tmux_2_8")]
     pub fn run(mut self) -> Self {
@@ -89,6 +112,13 @@ impl<'a> SetHook<'a> {
         self
     }
 
+    /// `[-w]`
+    #[cfg(feature = "tmux_3_2")]
+    pub fn window(mut self) -> Self {
+        self.window = true;
+        self
+    }
+
     /// `[-t target-session]`
     #[cfg(feature = "tmux_2_2")]
     pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
@@ -96,21 +126,21 @@ impl<'a> SetHook<'a> {
         self
     }
 
-    /// `hook-name`
+    /// `[hook-name]`
     #[cfg(feature = "tmux_2_2")]
     pub fn hook_name<S: Into<Cow<'a, str>>>(mut self, hook_name: S) -> Self {
         self.hook_name = Some(hook_name.into());
         self
     }
 
-    // XXX: command?
-    /// `command`
+    /// `[command]`
     #[cfg(feature = "tmux_2_2")]
     pub fn command<S: Into<Cow<'a, str>>>(mut self, command: S) -> Self {
         self.command = Some(command.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -128,6 +158,12 @@ impl<'a> SetHook<'a> {
             cmd.push_flag(G_LOWERCASE_KEY);
         }
 
+        // `[-p]`
+        #[cfg(feature = "tmux_3_2")]
+        if self.pane {
+            cmd.push_flag(P_LOWERCASE_KEY);
+        }
+
         // `[-R]`
         #[cfg(feature = "tmux_2_8")]
         if self.run {
@@ -140,19 +176,25 @@ impl<'a> SetHook<'a> {
             cmd.push_flag(U_LOWERCASE_KEY);
         }
 
+        // `[-w]`
+        #[cfg(feature = "tmux_3_2")]
+        if self.window {
+            cmd.push_flag(W_LOWERCASE_KEY);
+        }
+
         // `[-t target-session]`
         #[cfg(feature = "tmux_2_2")]
         if let Some(target_session) = self.target_session {
             cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
 
-        // `hook-name`
+        // `[hook-name]`
         #[cfg(feature = "tmux_2_2")]
         if let Some(hook_name) = self.hook_name {
             cmd.push_param(hook_name);
         }
 
-        // `command`
+        // `[command]`
         #[cfg(feature = "tmux_2_2")]
         if let Some(command) = self.command {
             cmd.push_param(command);

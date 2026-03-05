@@ -1,6 +1,16 @@
+// auto-generated file
+//
+
+/// Shows hooks
+///
 /// # Manual
 ///
-/// tmux ^2.2:
+/// tmux >=3.2:
+/// ```text
+/// show-hooks [-gpw] [-t target-session]
+/// ```
+///
+/// tmux >=2.2:
 /// ```text
 /// show-hooks [-g] [-t target-session]
 /// ```
@@ -12,14 +22,37 @@ macro_rules! show_hooks {
             $cmd.global()
         }) $($tail)*)
     }};
-    // `[-s target-session]` - specify the session, all clients currently attached
+
+    // `[-p]`
+    (@cmd ($cmd:expr) -p, $($tail:tt)*) => {{
+        $crate::show_hooks!(@cmd ({
+            $cmd.pane()
+        }) $($tail)*)
+    }};
+
+    // `[-w]`
+    (@cmd ($cmd:expr) -w, $($tail:tt)*) => {{
+        $crate::show_hooks!(@cmd ({
+            $cmd.window()
+        }) $($tail)*)
+    }};
+
+    // `[-t target-session]`
     (@cmd ($cmd:expr) -t $target_session:expr, $($tail:tt)*) => {{
         $crate::show_hooks!(@cmd ({
             $cmd.target_session($target_session)
         }) $($tail)*)
     }};
+
+    // `[-t target-pane]`
+    (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
+        $crate::show_hooks!(@cmd ({
+            $cmd.target_pane($target_pane)
+        }) $($tail)*)
+    }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
-        //::std::compile_error!("unknown flag, option or parameter");
+        //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
     (@cmd ($cmd:expr)) => {{
         $cmd
@@ -37,22 +70,33 @@ macro_rules! show_hooks {
 
 #[test]
 fn show_hooks_macro() {
-    use crate::TargetSession;
     use std::borrow::Cow;
 
+    // Shows hooks
+    //
     // # Manual
     //
-    // tmux ^2.2:
+    // tmux >=3.2:
+    // ```text
+    // show-hooks [-gpw] [-t target-session]
+    // ```
+    //
+    // tmux >=2.2:
     // ```text
     // show-hooks [-g] [-t target-session]
     // ```
-    let target_session = TargetSession::Raw("1").to_string();
 
     let show_hooks = show_hooks!();
     #[cfg(feature = "tmux_2_2")]
     let show_hooks = show_hooks!((show_hooks), -g);
+    #[cfg(feature = "tmux_3_2")]
+    let show_hooks = show_hooks!((show_hooks), -p);
+    #[cfg(feature = "tmux_3_2")]
+    let show_hooks = show_hooks!((show_hooks), -w);
     #[cfg(feature = "tmux_2_2")]
-    let show_hooks = show_hooks!((show_hooks), -t & target_session);
+    let show_hooks = show_hooks!((show_hooks), -t "1");
+    #[cfg(feature = "tmux_3_2")]
+    let show_hooks = show_hooks!((show_hooks), -t "2");
 
     let cmd = "show-hooks";
 
@@ -60,10 +104,15 @@ fn show_hooks_macro() {
     s.push(cmd);
     #[cfg(feature = "tmux_2_2")]
     s.push("-g");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-p");
+    #[cfg(feature = "tmux_3_2")]
+    s.push("-w");
     #[cfg(feature = "tmux_2_2")]
     s.extend_from_slice(&["-t", "1"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-t", "2"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let show_hooks = show_hooks.build().to_vec();
 
     assert_eq!(show_hooks, s);
