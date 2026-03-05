@@ -1,12 +1,16 @@
-use crate::TmuxCommand;
+// auto-generated file
+//
 
 /// All functions from man tmux "Key Bindings" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#KEY_BINDINGS))
+///
+use crate::TmuxCommand;
+
 #[cfg(feature = "tmux_0_8")]
 pub mod bind_key;
 // FIXME
-//#[cfg(feature = "tmux_0_8")]
-//pub mod bind_key_macro;
+#[cfg(feature = "tmux_0_8")]
+pub mod bind_key_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod list_keys;
@@ -30,28 +34,37 @@ pub mod unbind_key_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub use bind_key::{Bind, BindKey};
+
 #[cfg(feature = "tmux_0_8")]
 pub use list_keys::{ListKeys, LsK};
+
 #[cfg(feature = "tmux_0_8")]
 pub use send_keys::{Send, SendKeys};
+
 #[cfg(feature = "tmux_0_8")]
 pub use send_prefix::SendPrefix;
+
 #[cfg(feature = "tmux_0_8")]
 pub use unbind_key::{Unbind, UnbindKey};
 
 #[cfg(test)]
 #[path = "."]
 mod key_bindings_tests {
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod bind_key_tests;
+    mod bind_key_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod list_keys_tests;
+    mod list_keys_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod send_keys_tests;
+    mod send_keys_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod send_prefix_tests;
+    mod send_prefix_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod unbind_key_tests;
+    mod unbind_key_tests;
 }
 
 /// All functions from man tmux "Key Bindings" listed below

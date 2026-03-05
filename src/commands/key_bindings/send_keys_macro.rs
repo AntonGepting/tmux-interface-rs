@@ -1,128 +1,143 @@
-/// Structure
+// auto-generated file
+//
+
+/// Send a key or keys to a window
 ///
 /// # Manual
 ///
-/// tmux ^3.4:
+/// tmux >=3.4:
 /// ```text
 /// send-keys [-FHKlMRX] [-c target-client] [-N repeat-count] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
-/// tmux ^3.1:
+/// tmux >=3.1:
 /// ```text
 /// send-keys [-FHlMRX] [-N repeat-count] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
-/// tmux ^3.0:
+/// tmux >=3.0a:
 /// ```text
 /// send-keys [-HlMRX] [-N repeat-count] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
-/// tmux ^2.4:
+/// tmux >=2.4:
 /// ```text
 /// send-keys [-lMRX] [-N repeat-count] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
-/// tmux ^2.1:
+/// tmux >=2.1:
 /// ```text
 /// send-keys [-lMR] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
-/// tmux ^1.7:
+/// tmux >=1.7:
 /// ```text
 /// send-keys [-lR] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
-/// tmux ^1.6:
+/// tmux >=1.6:
 /// ```text
 /// send-keys [-R] [-t target-pane] key ...
 /// (alias: send)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// send-keys [-t target-window] key ...
 /// (alias: send)
 /// ```
 #[macro_export]
 macro_rules! send_keys {
-    // `[-F]` - expand formats in arguments where appropriate
+    // `[-F]`
     (@cmd ($cmd:expr) -F, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
             $cmd.expand_formats()
         }) $($tail)*)
     }};
-    // `[-H]` - expect each key to be a hexadecimal number for an ASCII character
+
+    // `[-H]`
     (@cmd ($cmd:expr) -H, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
             $cmd.hex()
         }) $($tail)*)
     }};
-    // `[-K]` - keys are sent to target-client, so they are looked up in the client's key table
+
+    // `[-K]`
     (@cmd ($cmd:expr) -K, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
             $cmd.client()
         }) $($tail)*)
     }};
-    // `[-l]` - disable key name lookup and processes the keys as literal UTF-8 characters
+
+    // `[-l]`
     (@cmd ($cmd:expr) -l, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
             $cmd.disable_lookup()
         }) $($tail)*)
     }};
-    // `[-M]` - pass through a mouse event
+
+    // `[-M]`
     (@cmd ($cmd:expr) -M, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
             $cmd.mouse_event()
         }) $($tail)*)
     }};
-    // `[-R]` - cause the terminal state to be reset
+
+    // `[-R]`
     (@cmd ($cmd:expr) -R, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
             $cmd.copy_mode()
         }) $($tail)*)
     }};
-    // `[-X]` - send a command into copy mode
+
+    // `[-X]`
     (@cmd ($cmd:expr) -X, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
             $cmd.reset()
         }) $($tail)*)
     }};
-    // `[-c target-client]` - specify the target pane
-    (@cmd ($cmd:expr) -c $target_client:expr, $($tail:tt)*) => {{
-        $crate::send_keys!(@cmd ({
-            $cmd.target_client($target_client)
-        }) $($tail)*)
-    }};
-    // `[-N repeat-count]` - specify a repeat count
+
+    // `[-N repeat-count]`
     (@cmd ($cmd:expr) -N $repeat_count:expr, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
             $cmd.repeat_count($repeat_count)
         }) $($tail)*)
     }};
-    // `[-t target-pane]` - specify the target pane
-    (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
+
+    // `[-c target-client]`
+    (@cmd ($cmd:expr) -c $target_client:expr, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
-            $cmd.target_pane($target_pane)
+            $cmd.target_client($target_client)
         }) $($tail)*)
     }};
-    // `[-t target-window]` - specify the target window
-    (@cmd ($cmd:expr) -t $target_window:expr, $($tail:tt)*) => {{
+
+    // `[-t target]`
+    (@cmd ($cmd:expr) -t $target:expr, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
-            $cmd.target_window($target_window)
+            #[cfg(feature = "tmux_2_4")]
+            {
+                $cmd.target_pane($target)
+            }
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_4")))]
+            {
+                $cmd.target_window($target)
+            }
         }) $($tail)*)
     }};
-    // `key`
+
+    // `[key]`
     (@cmd ($cmd:expr) $key:expr, $($tail:tt)*) => {{
         $crate::send_keys!(@cmd ({
             $cmd.key($key)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -142,66 +157,64 @@ macro_rules! send_keys {
 
 #[test]
 fn send_keys_macro() {
-    use crate::TargetPaneExt;
     use std::borrow::Cow;
 
-    // Structure
+    // Send a key or keys to a window
     //
     // # Manual
     //
-    // tmux ^3.4:
+    // tmux >=3.4:
     // ```text
     // send-keys [-FHKlMRX] [-c target-client] [-N repeat-count] [-t target-pane] key ...
     // (alias: send)
     // ```
     //
-    // tmux ^3.1:
+    // tmux >=3.1:
     // ```text
     // send-keys [-FHlMRX] [-N repeat-count] [-t target-pane] key ...
     // (alias: send)
     // ```
     //
-    // tmux ^3.0:
+    // tmux >=3.0a:
     // ```text
     // send-keys [-HlMRX] [-N repeat-count] [-t target-pane] key ...
     // (alias: send)
     // ```
     //
-    // tmux ^2.4:
+    // tmux >=2.4:
     // ```text
     // send-keys [-lMRX] [-N repeat-count] [-t target-pane] key ...
     // (alias: send)
     // ```
     //
-    // tmux ^2.1:
+    // tmux >=2.1:
     // ```text
     // send-keys [-lMR] [-t target-pane] key ...
     // (alias: send)
     // ```
     //
-    // tmux ^1.7:
+    // tmux >=1.7:
     // ```text
     // send-keys [-lR] [-t target-pane] key ...
     // (alias: send)
     // ```
     //
-    // tmux ^1.6:
+    // tmux >=1.6:
     // ```text
     // send-keys [-R] [-t target-pane] key ...
     // (alias: send)
     // ```
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // send-keys [-t target-window] key ...
     // (alias: send)
     // ```
-    let target_pane = TargetPaneExt::raw("2").to_string();
 
     let send_keys = send_keys!();
     #[cfg(feature = "tmux_3_1")]
     let send_keys = send_keys!((send_keys), -F);
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_3_0a")]
     let send_keys = send_keys!((send_keys), -H);
     #[cfg(feature = "tmux_3_4")]
     let send_keys = send_keys!((send_keys), -K);
@@ -209,20 +222,22 @@ fn send_keys_macro() {
     let send_keys = send_keys!((send_keys), -l);
     #[cfg(feature = "tmux_2_1")]
     let send_keys = send_keys!((send_keys), -M);
-    #[cfg(feature = "tmux_1_6")]
+    #[cfg(feature = "tmux_1_7")]
     let send_keys = send_keys!((send_keys), -R);
     #[cfg(feature = "tmux_2_4")]
     let send_keys = send_keys!((send_keys), -X);
     #[cfg(feature = "tmux_2_4")]
     let send_keys = send_keys!((send_keys), -N 1);
     #[cfg(feature = "tmux_3_4")]
-    let send_keys = send_keys!((send_keys), -c & target_pane);
-    #[cfg(feature = "tmux_1_6")]
-    let send_keys = send_keys!((send_keys), -t & target_pane);
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
-    let send_keys = send_keys!((send_keys), -t & target_pane);
+    let send_keys = send_keys!((send_keys), -c "2");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_4")))]
+    let send_keys = send_keys!((send_keys), -t "3");
+    #[cfg(feature = "tmux_2_4")]
+    let send_keys = send_keys!((send_keys), -t "4");
     #[cfg(feature = "tmux_0_8")]
-    let send_keys = send_keys!((send_keys), "3");
+    let send_keys = send_keys!((send_keys), "5");
+    #[cfg(feature = "tmux_0_8")]
+    let send_keys = send_keys!((send_keys), "6");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "send-keys";
@@ -233,7 +248,7 @@ fn send_keys_macro() {
     s.push(cmd);
     #[cfg(feature = "tmux_3_1")]
     s.push("-F");
-    #[cfg(feature = "tmux_3_0")]
+    #[cfg(feature = "tmux_3_0a")]
     s.push("-H");
     #[cfg(feature = "tmux_3_4")]
     s.push("-K");
@@ -241,7 +256,7 @@ fn send_keys_macro() {
     s.push("-l");
     #[cfg(feature = "tmux_2_1")]
     s.push("-M");
-    #[cfg(feature = "tmux_1_6")]
+    #[cfg(feature = "tmux_1_7")]
     s.push("-R");
     #[cfg(feature = "tmux_2_4")]
     s.push("-X");
@@ -249,13 +264,15 @@ fn send_keys_macro() {
     s.extend_from_slice(&["-N", "1"]);
     #[cfg(feature = "tmux_3_4")]
     s.extend_from_slice(&["-c", "2"]);
-    #[cfg(feature = "tmux_1_6")]
-    s.extend_from_slice(&["-t", "2"]);
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_6")))]
-    s.extend_from_slice(&["-t", "2"]);
-    s.push("3");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_4")))]
+    s.extend_from_slice(&["-t", "3"]);
+    #[cfg(feature = "tmux_2_4")]
+    s.extend_from_slice(&["-t", "4"]);
+    #[cfg(feature = "tmux_0_8")]
+    s.push("5");
+    #[cfg(feature = "tmux_0_8")]
+    s.push("6");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let send_keys = send_keys.build().to_vec();
 
     assert_eq!(send_keys, s);

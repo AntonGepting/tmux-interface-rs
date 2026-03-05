@@ -1,94 +1,130 @@
-/// Structure binding key `key` to command
+// auto-generated file
+//
+
+/// Bind key `key` to command
 ///
 /// # Manual
 ///
-/// tmux 3.1:
+/// tmux >=3.1:
 /// ```text
 /// bind-key [-nr] [-N note] [-T key-table] key command [arguments]
 /// (alias: bind)
 /// ```
 ///
-/// tmux ^2.4:
+/// tmux >=2.4:
 /// ```text
 /// bind-key [-nr] [-T key-table] key command [arguments]
 /// (alias: bind)
 /// ```
 ///
-/// tmux ^2.3:
+/// tmux >=2.3:
 /// ```text
 /// bind-key [-cnr] [-R repeat-count] [-t mode-table] [-T key-table] key command [arguments]
 /// (alias: bind)
 /// ```
 ///
-/// tmux ^2.1:
+/// tmux >=2.1:
 /// ```text
 /// bind-key [-cnr] [-t mode-table] [-T key-table] key command [arguments]
 /// (alias: bind)
 /// ```
 ///
-/// tmux ^2.0:
+/// tmux >=2.0:
 /// ```text
 /// bind-key [-cnr] [-t mode-table] key command [arguments]
 /// (alias: bind)
 /// ```
 ///
-/// tmux ^1.0:
+/// tmux >=1.5:
 /// ```text
 /// bind-key [-cnr] [-t key-table] key command [arguments]
 /// (alias: bind)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// bind-key [-r] key command [arguments]
 /// (alias: bind)
 /// ```
-// FIXME three parameters
-// FIXME: -c flag support
 #[macro_export]
 macro_rules! bind_key {
-    // `[-n]` - an alias for -T root
+    // `[-c]`
+    (@cmd ($cmd:expr) -c, $($tail:tt)*) => {{
+        $crate::bind_key!(@cmd ({
+            $cmd.command_mode()
+        }) $($tail)*)
+    }};
+
+    // `[-n]`
     (@cmd ($cmd:expr) -n, $($tail:tt)*) => {{
         $crate::bind_key!(@cmd ({
             $cmd.root()
         }) $($tail)*)
     }};
-    // `[-r]` - this key may repeat
+
+    // `[-r]`
     (@cmd ($cmd:expr) -r, $($tail:tt)*) => {{
         $crate::bind_key!(@cmd ({
             $cmd.repeat()
         }) $($tail)*)
     }};
-    // `[-N note]` - attaches note to the key
+
+    // `[-N note]`
     (@cmd ($cmd:expr) -N $note:expr, $($tail:tt)*) => {{
         $crate::bind_key!(@cmd ({
             $cmd.note($note)
         }) $($tail)*)
     }};
-    // `[-T key-table]` - key-table
+
+    // `[-R repeat-count]`
+    (@cmd ($cmd:expr) -R $repeat_count:expr, $($tail:tt)*) => {{
+        $crate::bind_key!(@cmd ({
+            $cmd.repeat_count($repeat_count)
+        }) $($tail)*)
+    }};
+
+    // `[-t key-table]`
+    (@cmd ($cmd:expr) -t $key_table:expr, $($tail:tt)*) => {{
+        $crate::bind_key!(@cmd ({
+            $cmd.key_table($key_table)
+        }) $($tail)*)
+    }};
+
+    // `[-t mode-table]`
+    (@cmd ($cmd:expr) -t $mode_table:expr, $($tail:tt)*) => {{
+        $crate::bind_key!(@cmd ({
+            $cmd.mode_table($mode_table)
+        }) $($tail)*)
+    }};
+
+    // `[-T key-table]`
     (@cmd ($cmd:expr) -T $key_table:expr, $($tail:tt)*) => {{
         $crate::bind_key!(@cmd ({
             $cmd.key_table($key_table)
         }) $($tail)*)
     }};
-    // `[arguments]` - arguments
-    (@cmd ($cmd:expr) $arguments:expr, $($tail:tt)*) => {{
-        $crate::bind_key!(@cmd ({
-            $cmd.arguments($arguments)
-        }) $($tail)*)
-    }};
-    // `key`
+
+    // `[key]`
     (@cmd ($cmd:expr) $key:expr, $($tail:tt)*) => {{
         $crate::bind_key!(@cmd ({
             $cmd.key($key)
         }) $($tail)*)
     }};
-    // `command`
+
+    // `[command]`
     (@cmd ($cmd:expr) $command:expr, $($tail:tt)*) => {{
         $crate::bind_key!(@cmd ({
             $cmd.command($command)
         }) $($tail)*)
     }};
+
+    // `[arguments]`
+    (@cmd ($cmd:expr) $arguments:expr, $($tail:tt)*) => {{
+        $crate::bind_key!(@cmd ({
+            $cmd.arguments($arguments)
+        }) $($tail)*)
+    }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -110,67 +146,75 @@ macro_rules! bind_key {
 fn bind_key_macro() {
     use std::borrow::Cow;
 
-    // Structure binding key `key` to command
+    // Bind key `key` to command
     //
     // # Manual
     //
-    // tmux 3.1:
+    // tmux >=3.1:
     // ```text
     // bind-key [-nr] [-N note] [-T key-table] key command [arguments]
     // (alias: bind)
     // ```
     //
-    // tmux ^2.4:
+    // tmux >=2.4:
     // ```text
     // bind-key [-nr] [-T key-table] key command [arguments]
     // (alias: bind)
     // ```
     //
-    // tmux ^2.3:
+    // tmux >=2.3:
     // ```text
     // bind-key [-cnr] [-R repeat-count] [-t mode-table] [-T key-table] key command [arguments]
     // (alias: bind)
     // ```
     //
-    // tmux ^2.1:
+    // tmux >=2.1:
     // ```text
     // bind-key [-cnr] [-t mode-table] [-T key-table] key command [arguments]
     // (alias: bind)
     // ```
     //
-    // tmux ^2.0:
+    // tmux >=2.0:
     // ```text
     // bind-key [-cnr] [-t mode-table] key command [arguments]
     // (alias: bind)
     // ```
     //
-    // tmux ^1.0:
+    // tmux >=1.5:
     // ```text
     // bind-key [-cnr] [-t key-table] key command [arguments]
     // (alias: bind)
     // ```
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // bind-key [-r] key command [arguments]
     // (alias: bind)
     // ```
 
     let bind_key = bind_key!();
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_4")))]
+    let bind_key = bind_key!((bind_key), -c);
+    #[cfg(feature = "tmux_1_5")]
     let bind_key = bind_key!((bind_key), -n);
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(feature = "tmux_1_5")]
     let bind_key = bind_key!((bind_key), -r);
     #[cfg(feature = "tmux_3_1")]
     let bind_key = bind_key!((bind_key), -N "1");
+    #[cfg(all(feature = "tmux_2_3", not(feature = "tmux_2_4")))]
+    let bind_key = bind_key!((bind_key), -R "2");
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
+    let bind_key = bind_key!((bind_key), -t "3");
+    #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
+    let bind_key = bind_key!((bind_key), -t "4");
     #[cfg(feature = "tmux_2_1")]
-    let bind_key = bind_key!((bind_key), -T "2");
+    let bind_key = bind_key!((bind_key), -T "5");
     #[cfg(feature = "tmux_0_8")]
-    let bind_key = bind_key!((bind_key), "3");
+    let bind_key = bind_key!((bind_key), "6");
     #[cfg(feature = "tmux_0_8")]
-    let bind_key = bind_key!((bind_key), "4");
+    let bind_key = bind_key!((bind_key), "7");
     #[cfg(feature = "tmux_0_8")]
-    let bind_key = bind_key!((bind_key), "5");
+    let bind_key = bind_key!((bind_key), "8");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "bind-key";
@@ -179,22 +223,29 @@ fn bind_key_macro() {
 
     let mut s = Vec::new();
     s.push(cmd);
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_4")))]
+    s.push("-c");
+    #[cfg(feature = "tmux_1_5")]
     s.push("-n");
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(feature = "tmux_1_5")]
     s.push("-r");
     #[cfg(feature = "tmux_3_1")]
     s.extend_from_slice(&["-N", "1"]);
+    #[cfg(all(feature = "tmux_2_3", not(feature = "tmux_2_4")))]
+    s.extend_from_slice(&["-R", "2"]);
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
+    s.extend_from_slice(&["-t", "3"]);
+    #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
+    s.extend_from_slice(&["-t", "4"]);
     #[cfg(feature = "tmux_2_1")]
-    s.extend_from_slice(&["-T", "2"]);
+    s.extend_from_slice(&["-T", "5"]);
     #[cfg(feature = "tmux_0_8")]
-    s.push("3");
+    s.push("6");
     #[cfg(feature = "tmux_0_8")]
-    s.push("4");
+    s.push("7");
     #[cfg(feature = "tmux_0_8")]
-    s.push("5");
+    s.push("8");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let bind_key = bind_key.build().to_vec();
 
     assert_eq!(bind_key, s);
