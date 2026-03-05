@@ -1,12 +1,15 @@
-use crate::TmuxCommand;
+// auto-generated file
+//
 
 /// All functions from man tmux "Hooks" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#HOOKS))
+///
+use crate::TmuxCommand;
+
 #[cfg(feature = "tmux_2_2")]
 pub mod set_hook;
-// FIXME
-//#[cfg(feature = "tmux_2_2")]
-//pub mod set_hook_macro;
+#[cfg(feature = "tmux_2_2")]
+pub mod set_hook_macro;
 
 #[cfg(feature = "tmux_2_2")]
 pub mod show_hooks;
@@ -15,16 +18,19 @@ pub mod show_hooks_macro;
 
 #[cfg(feature = "tmux_2_2")]
 pub use set_hook::SetHook;
+
 #[cfg(feature = "tmux_2_2")]
 pub use show_hooks::ShowHooks;
 
 #[cfg(test)]
 #[path = "."]
 mod hooks_tests {
+
     #[cfg(feature = "tmux_2_2")]
-    pub mod set_hook_tests;
+    mod set_hook_tests;
+
     #[cfg(feature = "tmux_2_2")]
-    pub mod show_hooks_tests;
+    mod show_hooks_tests;
 }
 
 /// All functions from man tmux "Hooks" listed below
