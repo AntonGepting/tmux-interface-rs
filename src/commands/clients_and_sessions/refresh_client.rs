@@ -193,7 +193,7 @@ impl<'a> RefreshClient<'a> {
 
     /// `[-B subscribe]`
     #[cfg(feature = "tmux_3_2")]
-    pub fn subscribe<S: Into<Cow<'a, str>>>(mut self, subscribe: Subscribe<'a>) -> Self {
+    pub fn subscribe(mut self, subscribe: Subscribe<'a>) -> Self {
         self.subscribe = Some(subscribe);
         self
     }
