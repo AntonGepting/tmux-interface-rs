@@ -160,7 +160,7 @@ fn refresh_client() {
     #[cfg(feature = "tmux_3_2")]
     v.extend_from_slice(&["-A", "1:on"]);
     #[cfg(feature = "tmux_3_2")]
-    v.extend_from_slice(&["-B", "%2"]);
+    v.extend_from_slice(&["-B", "%2:22:23"]);
     #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_0a")))]
     v.extend_from_slice(&["-C", "3,4"]);
     #[cfg(all(feature = "tmux_3_0a", not(feature = "tmux_3_3")))]
@@ -172,7 +172,7 @@ fn refresh_client() {
     #[cfg(feature = "tmux_3_2")]
     v.extend_from_slice(&["-f", "active-pane"]);
     #[cfg(feature = "tmux_3_3")]
-    v.extend_from_slice(&["-l", "8"]);
+    v.extend_from_slice(&["-l", "7"]);
     #[cfg(feature = "tmux_3_5")]
     v.extend_from_slice(&["-r", "9"]);
     #[cfg(feature = "tmux_0_8")]

@@ -149,7 +149,7 @@ macro_rules! refresh_client {
     // `[-l target-pane]`
     (@cmd ($cmd:expr) -l $target_pane:expr, $($tail:tt)*) => {{
         $crate::refresh_client!(@cmd ({
-            $cmd.target_pane($target_pane)
+            $cmd.request_clipboard($target_pane)
         }) $($tail)*)
     }};
 
@@ -268,8 +268,8 @@ fn refresh_client_macro() {
     #[cfg(feature = "tmux_3_2")]
     let refresh_client = refresh_client!((refresh_client), -B Subscribe {
         name: "2".into(),
-        what: Some(2),
-        format: Some(2),
+        what: Some(22),
+        format: Some(23),
     });
     #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_0a")))]
     let refresh_client = refresh_client!((refresh_client), -C(3, 4));
@@ -287,7 +287,7 @@ fn refresh_client_macro() {
     #[cfg(feature = "tmux_3_2")]
     let refresh_client = refresh_client!((refresh_client), -f flags);
     #[cfg(feature = "tmux_3_3")]
-    let refresh_client = refresh_client!((refresh_client), -l "8");
+    let refresh_client = refresh_client!((refresh_client), -l Some("7"));
     #[cfg(feature = "tmux_3_5")]
     let refresh_client = refresh_client!((refresh_client), -r "9");
     #[cfg(feature = "tmux_0_8")]
@@ -319,7 +319,7 @@ fn refresh_client_macro() {
     #[cfg(feature = "tmux_3_2")]
     s.extend_from_slice(&["-A", "1:on"]);
     #[cfg(feature = "tmux_3_2")]
-    s.extend_from_slice(&["-B", "2"]);
+    s.extend_from_slice(&["-B", "%2:22:23"]);
     #[cfg(all(feature = "tmux_2_4", not(feature = "tmux_3_0a")))]
     s.extend_from_slice(&["-C", "3,4"]);
     #[cfg(all(feature = "tmux_3_0a", not(feature = "tmux_3_3")))]
@@ -331,7 +331,7 @@ fn refresh_client_macro() {
     #[cfg(feature = "tmux_3_2")]
     s.extend_from_slice(&["-f", "active-pane"]);
     #[cfg(feature = "tmux_3_3")]
-    s.extend_from_slice(&["-l", "8"]);
+    s.extend_from_slice(&["-l", "7"]);
     #[cfg(feature = "tmux_3_5")]
     s.extend_from_slice(&["-r", "9"]);
     #[cfg(feature = "tmux_0_8")]
