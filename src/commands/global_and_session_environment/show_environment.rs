@@ -1,30 +1,35 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
 pub type ShowEnv<'a> = ShowEnvironment<'a>;
 
+/// Display the environment variables
+///
 /// # Manual
 ///
-/// tmux ^3.2:
+/// tmux >=3.2:
 /// ```text:
 /// show-environment [-hgs] [-t target-session] [variable]
 /// (alias: showenv)
 /// ```
 ///
-/// tmux ^2.1:
+/// tmux >=2.1:
 /// ```text
 /// show-environment [-gs] [-t target-session] [variable]
 /// (alias: showenv)
 /// ```
 ///
-/// tmux ^1.7:
+/// tmux >=1.7:
 /// ```text
 /// show-environment [-g] [-t target-session] [variable]
 /// (alias: showenv)
 /// ```
 ///
-/// tmux ^1.0:
+/// tmux >=1.5:
 /// ```text
 /// show-environment [-g] [-t target-session]
 /// (alias: showenv)
@@ -36,7 +41,7 @@ pub struct ShowEnvironment<'a> {
     pub hidden: bool,
 
     /// `[-g]`
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_1_5")]
     pub global: bool,
 
     /// `[-s]`
@@ -44,7 +49,7 @@ pub struct ShowEnvironment<'a> {
     pub as_shell_commands: bool,
 
     /// `[-t target-session]`
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_1_5")]
     pub target_session: Option<Cow<'a, str>>,
 
     /// `[variable]`
@@ -65,7 +70,7 @@ impl<'a> ShowEnvironment<'a> {
     }
 
     /// `[-g]`
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn global(mut self) -> Self {
         self.global = true;
         self
@@ -79,7 +84,7 @@ impl<'a> ShowEnvironment<'a> {
     }
 
     /// `[-t target-session]`
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
@@ -92,6 +97,7 @@ impl<'a> ShowEnvironment<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -104,7 +110,7 @@ impl<'a> ShowEnvironment<'a> {
         }
 
         // `[-g]`
-        #[cfg(feature = "tmux_1_0")]
+        #[cfg(feature = "tmux_1_5")]
         if self.global {
             cmd.push_flag(G_LOWERCASE_KEY);
         }
@@ -116,7 +122,7 @@ impl<'a> ShowEnvironment<'a> {
         }
 
         // `[-t target-session]`
-        #[cfg(feature = "tmux_1_0")]
+        #[cfg(feature = "tmux_1_5")]
         if let Some(target_session) = self.target_session {
             cmd.push_option(T_LOWERCASE_KEY, target_session);
         }
