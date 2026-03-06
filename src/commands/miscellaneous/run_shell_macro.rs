@@ -1,26 +1,31 @@
+// auto-generated file
+//
+
+/// Execute shell-command using `/bin/sh`
+///
 /// # Manual
 ///
-/// tmux ^3.2:
+/// tmux >=3.6:
+/// ```text
+/// run-shell [-bCE] [-d delay] [-t target-pane] [shell-command]
+/// (alias: run)
+/// ```
+///
+/// tmux >=3.2:
 /// ```text
 /// run-shell [-bC] [-d delay] [-t target-pane] [shell-command]
 /// (alias: run)
 /// ```
 ///
-/// tmux ^1.8:
+/// tmux >=1.8:
 /// ```text
 /// run-shell [-b] [-t target-pane] shell-command
 /// (alias: run)
 /// ```
 ///
-/// tmux ^1.2:
+/// tmux >=1.5:
 /// ```text
 /// run-shell shell-command
-/// (alias: run)
-/// ```
-///
-/// tmux ^1.1:
-/// ```text
-/// run-shell command
 /// (alias: run)
 /// ```
 #[macro_export]
@@ -31,36 +36,42 @@ macro_rules! run_shell {
             $cmd.background()
         }) $($tail)*)
     }};
-    // `[-C]` - execute tmux command
+
+    // `[-C]`
     (@cmd ($cmd:expr) -C, $($tail:tt)*) => {{
         $crate::run_shell!(@cmd ({
             $cmd.tmux_command()
         }) $($tail)*)
     }};
+
+    // `[-E]`
+    (@cmd ($cmd:expr) -E, $($tail:tt)*) => {{
+        $crate::run_shell!(@cmd ({
+            $cmd.redirect_stderr()
+        }) $($tail)*)
+    }};
+
     // `[-d delay]`
     (@cmd ($cmd:expr) -d $delay:expr, $($tail:tt)*) => {{
         $crate::run_shell!(@cmd ({
             $cmd.delay($delay)
         }) $($tail)*)
     }};
+
     // `[-t target-pane]`
     (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
         $crate::run_shell!(@cmd ({
             $cmd.target_pane($target_pane)
         }) $($tail)*)
     }};
-    // `shell-command`
+
+    // `[shell-command]`
     (@cmd ($cmd:expr) $shell_command:expr, $($tail:tt)*) => {{
         $crate::run_shell!(@cmd ({
             $cmd.shell_command($shell_command)
         }) $($tail)*)
     }};
-    // `command`
-    (@cmd ($cmd:expr) $command:expr, $($tail:tt)*) => {{
-        $crate::run_shell!(@cmd ({
-            $cmd.command($command)
-        }) $($tail)*)
-    }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -80,49 +91,49 @@ macro_rules! run_shell {
 
 #[test]
 fn run_shell_macro() {
-    use crate::TargetPane;
     use std::borrow::Cow;
 
+    // Execute shell-command using `/bin/sh`
+    //
     // # Manual
     //
-    // tmux ^3.2:
+    // tmux >=3.6:
+    // ```text
+    // run-shell [-bCE] [-d delay] [-t target-pane] [shell-command]
+    // (alias: run)
+    // ```
+    //
+    // tmux >=3.2:
     // ```text
     // run-shell [-bC] [-d delay] [-t target-pane] [shell-command]
     // (alias: run)
     // ```
     //
-    // tmux ^1.8:
+    // tmux >=1.8:
     // ```text
     // run-shell [-b] [-t target-pane] shell-command
     // (alias: run)
     // ```
     //
-    // tmux ^1.2:
+    // tmux >=1.5:
     // ```text
     // run-shell shell-command
     // (alias: run)
     // ```
-    //
-    // tmux ^1.1:
-    // ```text
-    // run-shell command
-    // (alias: run)
-    // ```
-    let target_pane = TargetPane::Raw("2").to_string();
 
     let run_shell = run_shell!();
     #[cfg(feature = "tmux_1_8")]
     let run_shell = run_shell!((run_shell), -b);
     #[cfg(feature = "tmux_3_2")]
     let run_shell = run_shell!((run_shell), -C);
+    #[cfg(feature = "tmux_3_6")]
+    let run_shell = run_shell!((run_shell), -E);
     #[cfg(feature = "tmux_3_2")]
-    let run_shell = run_shell!((run_shell), -d 1);
+    let run_shell = run_shell!((run_shell), -d "1");
     #[cfg(feature = "tmux_1_8")]
-    let run_shell = run_shell!((run_shell), -t & target_pane);
-    #[cfg(feature = "tmux_1_2")]
+    let run_shell = run_shell!((run_shell), -t "2");
+    #[cfg(feature = "tmux_1_5")]
     let run_shell = run_shell!((run_shell), "3");
-    #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
-    let run_shell = run_shell!((run_shell), "4");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "run-shell";
@@ -135,16 +146,15 @@ fn run_shell_macro() {
     s.push("-b");
     #[cfg(feature = "tmux_3_2")]
     s.push("-C");
+    #[cfg(feature = "tmux_3_6")]
+    s.push("-E");
     #[cfg(feature = "tmux_3_2")]
     s.extend_from_slice(&["-d", "1"]);
     #[cfg(feature = "tmux_1_8")]
     s.extend_from_slice(&["-t", "2"]);
-    #[cfg(feature = "tmux_1_2")]
+    #[cfg(feature = "tmux_1_5")]
     s.push("3");
-    #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
-    s.push("4");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let run_shell = run_shell.build().to_vec();
 
     assert_eq!(run_shell, s);

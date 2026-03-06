@@ -3,31 +3,30 @@
 
 use crate::commands::constants::*;
 use crate::TmuxCommand;
+use std::borrow::Cow;
 
-pub type Lock = LockServer;
+pub type Info<'a> = ServerInfo<'a>;
 
-/// Lock each client individually
+/// Show server information
 ///
-/// # Manual
-///
-/// tmux >=0.8:
+/// tmux >=0.8 && <=1.9:
 /// ```text
-/// lock-server
-/// (alias: lock)
+/// server-info
+/// (alias: info)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct LockServer;
+pub struct ServerInfo<'a> {}
 
-impl LockServer {
+impl<'a> ServerInfo<'a> {
     pub fn new() -> Self {
         Default::default()
     }
 
     /// build command with arguments in right order
-    pub fn build<'a>(self) -> TmuxCommand<'a> {
+    pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
-        cmd.name(LOCK_SERVER);
+        cmd.name(SERVER_INFO);
 
         cmd
     }

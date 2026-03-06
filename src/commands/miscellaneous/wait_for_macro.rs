@@ -1,14 +1,19 @@
+// auto-generated file
+//
+
 // TODO: enum for arg
 // FIXME: not multiple, only one choice
+/// Prevent the client from exiting
+///
 /// # Manual
 ///
-/// tmux ^1.9:
+/// tmux >=1.9:
 /// ```text
 /// wait-for [-L | -S | -U] channel
 /// (alias: wait)
 /// ```
 ///
-/// tmux ^1.8:
+/// tmux >=1.8:
 /// ```text
 /// wait-for -LSU channel
 /// (alias: wait)
@@ -21,24 +26,28 @@ macro_rules! wait_for {
             $cmd.locked()
         }) $($tail)*)
     }};
+
     // `[-S]`
     (@cmd ($cmd:expr) -S, $($tail:tt)*) => {{
         $crate::wait_for!(@cmd ({
             $cmd.woken()
         }) $($tail)*)
     }};
+
     // `[-U]`
     (@cmd ($cmd:expr) -U, $($tail:tt)*) => {{
         $crate::wait_for!(@cmd ({
             $cmd.unlocked()
         }) $($tail)*)
     }};
-    // `channel`
+
+    // `[channel]`
     (@cmd ($cmd:expr) $channel:expr, $($tail:tt)*) => {{
         $crate::wait_for!(@cmd ({
             $cmd.channel($channel)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -60,19 +69,22 @@ macro_rules! wait_for {
 fn wait_for_macro() {
     use std::borrow::Cow;
 
+    // Prevent the client from exiting
+    //
     // # Manual
     //
-    // tmux ^1.9:
+    // tmux >=1.9:
     // ```text
     // wait-for [-L | -S | -U] channel
     // (alias: wait)
     // ```
     //
-    // tmux ^1.8:
+    // tmux >=1.8:
     // ```text
     // wait-for -LSU channel
     // (alias: wait)
     // ```
+
     let wait_for = wait_for!();
     #[cfg(feature = "tmux_1_8")]
     let wait_for = wait_for!((wait_for), -L);
@@ -99,7 +111,6 @@ fn wait_for_macro() {
     #[cfg(feature = "tmux_1_8")]
     s.push("1");
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let wait_for = wait_for.build().to_vec();
 
     assert_eq!(wait_for, s);

@@ -1,32 +1,37 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
 pub type Run<'a> = RunShell<'a>;
 
+/// Execute shell-command using `/bin/sh`
+///
 /// # Manual
 ///
-/// tmux ^3.2:
+/// tmux >=3.6:
+/// ```text
+/// run-shell [-bCE] [-d delay] [-t target-pane] [shell-command]
+/// (alias: run)
+/// ```
+///
+/// tmux >=3.2:
 /// ```text
 /// run-shell [-bC] [-d delay] [-t target-pane] [shell-command]
 /// (alias: run)
 /// ```
 ///
-/// tmux ^1.8:
+/// tmux >=1.8:
 /// ```text
 /// run-shell [-b] [-t target-pane] shell-command
 /// (alias: run)
 /// ```
 ///
-/// tmux ^1.2:
+/// tmux >=1.5:
 /// ```text
 /// run-shell shell-command
-/// (alias: run)
-/// ```
-///
-/// tmux ^1.1:
-/// ```text
-/// run-shell command
 /// (alias: run)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
@@ -35,25 +40,25 @@ pub struct RunShell<'a> {
     #[cfg(feature = "tmux_1_8")]
     pub background: bool,
 
-    /// `[-C]` - execute tmux command
+    /// `[-C]`
     #[cfg(feature = "tmux_3_2")]
     pub tmux_command: bool,
 
+    /// `[-E]`
+    #[cfg(feature = "tmux_3_6")]
+    pub redirect_stderr: bool,
+
     /// `[-d delay]`
-    #[cfg(feature = "tmux_1_8")]
-    pub delay: Option<usize>,
+    #[cfg(feature = "tmux_3_2")]
+    pub delay: Option<Cow<'a, str>>,
 
     /// `[-t target-pane]`
     #[cfg(feature = "tmux_1_8")]
     pub target_pane: Option<Cow<'a, str>>,
 
-    /// `shell-command`
-    #[cfg(feature = "tmux_1_2")]
+    /// `[shell-command]`
+    #[cfg(feature = "tmux_1_5")]
     pub shell_command: Option<Cow<'a, str>>,
-
-    /// `command`
-    #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
-    pub command: Option<Cow<'a, str>>,
 }
 
 impl<'a> RunShell<'a> {
@@ -68,17 +73,24 @@ impl<'a> RunShell<'a> {
         self
     }
 
-    /// `[-C]` - execute tmux command
+    /// `[-C]`
     #[cfg(feature = "tmux_3_2")]
     pub fn tmux_command(mut self) -> Self {
         self.tmux_command = true;
         self
     }
 
+    /// `[-E]`
+    #[cfg(feature = "tmux_3_6")]
+    pub fn redirect_stderr(mut self) -> Self {
+        self.redirect_stderr = true;
+        self
+    }
+
     /// `[-d delay]`
-    #[cfg(feature = "tmux_1_8")]
-    pub fn delay(mut self, delay: usize) -> Self {
-        self.delay = Some(delay);
+    #[cfg(feature = "tmux_3_2")]
+    pub fn delay<S: Into<Cow<'a, str>>>(mut self, delay: S) -> Self {
+        self.delay = Some(delay.into());
         self
     }
 
@@ -89,20 +101,14 @@ impl<'a> RunShell<'a> {
         self
     }
 
-    /// `shell-command`
-    #[cfg(feature = "tmux_1_2")]
+    /// `[shell-command]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
         self.shell_command = Some(shell_command.into());
         self
     }
 
-    /// `command`
-    #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
-    pub fn command<S: Into<Cow<'a, str>>>(mut self, command: S) -> Self {
-        self.command = Some(command.into());
-        self
-    }
-
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -114,16 +120,22 @@ impl<'a> RunShell<'a> {
             cmd.push_flag(B_LOWERCASE_KEY);
         }
 
-        // `[-C]` - execute tmux command
+        // `[-C]`
         #[cfg(feature = "tmux_3_2")]
         if self.tmux_command {
             cmd.push_flag(C_UPPERCASE_KEY);
         }
 
+        // `[-E]`
+        #[cfg(feature = "tmux_3_6")]
+        if self.redirect_stderr {
+            cmd.push_flag(E_UPPERCASE_KEY);
+        }
+
         // `[-d delay]`
-        #[cfg(feature = "tmux_1_8")]
+        #[cfg(feature = "tmux_3_2")]
         if let Some(delay) = self.delay {
-            cmd.push_option(D_LOWERCASE_KEY, delay.to_string());
+            cmd.push_option(D_LOWERCASE_KEY, delay);
         }
 
         // `[-t target-pane]`
@@ -132,16 +144,10 @@ impl<'a> RunShell<'a> {
             cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
 
-        // `shell-command`
-        #[cfg(feature = "tmux_1_2")]
+        // `[shell-command]`
+        #[cfg(feature = "tmux_1_5")]
         if let Some(shell_command) = self.shell_command {
             cmd.push_param(shell_command);
-        }
-
-        // `command`
-        #[cfg(all(feature = "tmux_1_1", not(feature = "tmux_1_2")))]
-        if let Some(command) = self.command {
-            cmd.push_param(command);
         }
 
         cmd

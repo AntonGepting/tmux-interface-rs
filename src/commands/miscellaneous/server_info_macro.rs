@@ -1,17 +1,15 @@
 // auto-generated file
 //
 
-/// Lock each client individually
+/// Show server information
 ///
-/// # Manual
-///
-/// tmux >=0.8:
+/// tmux >=0.8 && <=1.9:
 /// ```text
-/// lock-server
-/// (alias: lock)
+/// server-info
+/// (alias: info)
 /// ```
 #[macro_export]
-macro_rules! lock_server {
+macro_rules! server_info {
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -19,41 +17,39 @@ macro_rules! lock_server {
         $cmd
     }};
     () => {{
-        $crate::LockServer::new()
+        $crate::ServerInfo::new()
     }};
     (($cmd:expr), $($tail:tt)*) => {{
-        $crate::lock_server!(@cmd ($cmd) $($tail)*,)
+        $crate::server_info!(@cmd ($cmd) $($tail)*,)
     }};
     ($($tail:tt)*) => {{
-        $crate::lock_server!(@cmd ({ $crate::LockServer::new() }) $($tail)*,)
+        $crate::server_info!(@cmd ({ $crate::ServerInfo::new() }) $($tail)*,)
     }};
 }
 
 #[test]
-fn lock_server_macro() {
+fn server_info_macro() {
     use std::borrow::Cow;
 
-    // Lock each client individually
+    // Show server information
     //
-    // # Manual
-    //
-    // tmux >=0.8:
+    // tmux >=0.8 && <=1.9:
     // ```text
-    // lock-server
-    // (alias: lock)
+    // server-info
+    // (alias: info)
     // ```
 
-    let lock_server = lock_server!();
+    let server_info = server_info!();
 
     #[cfg(not(feature = "cmd_alias"))]
-    let cmd = "lock-server";
+    let cmd = "server-info";
     #[cfg(feature = "cmd_alias")]
-    let cmd = "lock";
+    let cmd = "info";
 
     let mut s = Vec::new();
     s.push(cmd);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-    let lock_server = lock_server.build().to_vec();
+    let server_info = server_info.build().to_vec();
 
-    assert_eq!(lock_server, s);
+    assert_eq!(server_info, s);
 }

@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -5,16 +8,17 @@ use std::borrow::Cow;
 pub type Wait<'a> = WaitFor<'a>;
 
 // TODO: enum for arg
-// FIXME: not multiple, only one choice
+/// Prevent the client from exiting
+///
 /// # Manual
 ///
-/// tmux ^1.9:
+/// tmux >=1.9:
 /// ```text
 /// wait-for [-L | -S | -U] channel
 /// (alias: wait)
 /// ```
 ///
-/// tmux ^1.8:
+/// tmux >=1.8:
 /// ```text
 /// wait-for -LSU channel
 /// (alias: wait)
@@ -33,7 +37,7 @@ pub struct WaitFor<'a> {
     #[cfg(feature = "tmux_1_8")]
     pub unlocked: bool,
 
-    /// `channel`
+    /// `[channel]`
     #[cfg(feature = "tmux_1_8")]
     pub channel: Option<Cow<'a, str>>,
 }
@@ -64,13 +68,14 @@ impl<'a> WaitFor<'a> {
         self
     }
 
-    /// `channel`
+    /// `[channel]`
     #[cfg(feature = "tmux_1_8")]
     pub fn channel<S: Into<Cow<'a, str>>>(mut self, channel: S) -> Self {
         self.channel = Some(channel.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -94,11 +99,12 @@ impl<'a> WaitFor<'a> {
             cmd.push_flag(U_UPPERCASE_KEY);
         }
 
-        // `channel`
+        // `[channel]`
         #[cfg(feature = "tmux_1_8")]
         if let Some(channel) = self.channel {
             cmd.push_param(channel);
         }
+
         cmd
     }
 }

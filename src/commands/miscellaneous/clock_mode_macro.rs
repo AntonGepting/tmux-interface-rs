@@ -1,26 +1,36 @@
+// auto-generated file
+//
+
+/// Display a large clock
+///
 /// # Manual
 ///
-/// tmux ^1.0:
+/// tmux >=1.5:
 /// ```text
 /// clock-mode [-t target-pane]
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// clock-mode [-t target-window]
 /// ```
 #[macro_export]
 macro_rules! clock_mode {
-    (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
+    // `[-t target-window]`
+    // `[-t target-pane]`
+    (@cmd ($cmd:expr) -t $target:expr, $($tail:tt)*) => {{
         $crate::clock_mode!(@cmd ({
-            $cmd.target_pane($target_pane)
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
+            {
+                $cmd.target_window($target)
+            }
+            #[cfg(feature = "tmux_1_0")]
+            {
+                $cmd.target_pane($target)
+            }
         }) $($tail)*)
     }};
-    (@cmd ($cmd:expr) -t $target_window:expr, $($tail:tt)*) => {{
-        $crate::clock_mode!(@cmd ({
-            $cmd.target_window($target_window)
-        }) $($tail)*)
-    }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -42,33 +52,35 @@ macro_rules! clock_mode {
 fn clock_mode_macro() {
     use std::borrow::Cow;
 
+    // Display a large clock
+    //
     // # Manual
     //
-    // tmux ^1.0:
+    // tmux >=1.5:
     // ```text
     // clock-mode [-t target-pane]
     // ```
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // clock-mode [-t target-window]
     // ```
+
     let clock_mode = clock_mode!();
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let clock_mode = clock_mode!((clock_mode), -t "1");
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
+    #[cfg(feature = "tmux_1_5")]
     let clock_mode = clock_mode!((clock_mode), -t "2");
 
     let cmd = "clock-mode";
 
     let mut s = Vec::new();
     s.push(cmd);
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     s.extend_from_slice(&["-t", "1"]);
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
+    #[cfg(feature = "tmux_1_5")]
     s.extend_from_slice(&["-t", "2"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let clock_mode = clock_mode.build().to_vec();
 
     assert_eq!(clock_mode, s);

@@ -1,15 +1,20 @@
+// auto-generated file
+//
+
+// Lock each client individually
+//
+// # Manual
+//
+// tmux >=0.8:
+// ```text
+// lock-server
+// (alias: lock)
+// ```
 #[test]
 fn lock_server() {
     use crate::LockServer;
     use std::borrow::Cow;
 
-    // # Manual
-    //
-    // tmux ^0.8:
-    // ```text
-    // lock-server
-    // (alias: lock)
-    // ```
     let lock_server = LockServer::new();
 
     #[cfg(not(feature = "cmd_alias"))]
@@ -17,11 +22,11 @@ fn lock_server() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "lock";
 
-    let mut s = Vec::new();
-    s.push(cmd);
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    let mut v = Vec::new();
+    v.push(cmd);
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let lock_server = lock_server.build().to_vec();
 
-    assert_eq!(lock_server, s);
+    assert_eq!(lock_server, v);
 }
