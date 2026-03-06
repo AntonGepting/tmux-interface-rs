@@ -1,49 +1,58 @@
-use crate::TmuxCommand;
+// auto-generated file
+//
 
 /// All functions from man tmux "Options" listed below
 /// ([man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#OPTIONS))
-#[cfg(feature = "tmux_0_8")]
-pub mod set_option;
-// FIXME
-//#[cfg(feature = "tmux_0_8")]
-//pub mod set_option_macro;
+///
+use crate::TmuxCommand;
 
 #[cfg(feature = "tmux_0_8")]
+pub mod set_option;
+#[cfg(feature = "tmux_0_8")]
+pub mod set_option_macro;
+
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
 pub mod set_window_option;
-// FIXME
-//#[cfg(feature = "tmux_0_8")]
-//pub mod set_window_option_macro;
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
+pub mod set_window_option_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub mod show_options;
 #[cfg(feature = "tmux_0_8")]
 pub mod show_options_macro;
 
-#[cfg(feature = "tmux_0_8")]
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
 pub mod show_window_options;
-#[cfg(feature = "tmux_0_8")]
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
 pub mod show_window_options_macro;
 
 #[cfg(feature = "tmux_0_8")]
 pub use set_option::{Set, SetOption};
-#[cfg(feature = "tmux_0_8")]
+
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
 pub use set_window_option::{SetW, SetWindowOption};
+
 #[cfg(feature = "tmux_0_8")]
 pub use show_options::{Show, ShowOptions};
-#[cfg(feature = "tmux_0_8")]
+
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
 pub use show_window_options::{ShowW, ShowWindowOptions};
 
 #[cfg(test)]
 #[path = "."]
 mod options_tests {
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod set_option_tests;
+    mod set_option_tests;
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
+    mod set_window_option_tests;
+
     #[cfg(feature = "tmux_0_8")]
-    pub mod set_window_option_tests;
-    #[cfg(feature = "tmux_0_8")]
-    pub mod show_options_tests;
-    #[cfg(feature = "tmux_0_8")]
-    pub mod show_window_options_tests;
+    mod show_options_tests;
+
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
+    mod show_window_options_tests;
 }
 
 /// All functions from man tmux "Options" listed below
@@ -54,7 +63,7 @@ impl<'a> TmuxCommand<'a> {
         SetOption::new()
     }
 
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
     pub fn set_window_option() -> SetWindowOption<'a> {
         SetWindowOption::new()
     }
@@ -64,7 +73,7 @@ impl<'a> TmuxCommand<'a> {
         ShowOptions::new()
     }
 
-    #[cfg(feature = "tmux_0_8")]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
     pub fn show_window_options() -> ShowWindowOptions<'a> {
         ShowWindowOptions::new()
     }
@@ -77,7 +86,7 @@ impl<'a> From<SetOption<'a>> for TmuxCommand<'a> {
     }
 }
 
-#[cfg(feature = "tmux_0_8")]
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
 impl<'a> From<SetWindowOption<'a>> for TmuxCommand<'a> {
     fn from(item: SetWindowOption<'a>) -> Self {
         item.build()
@@ -91,7 +100,7 @@ impl<'a> From<ShowOptions<'a>> for TmuxCommand<'a> {
     }
 }
 
-#[cfg(feature = "tmux_0_8")]
+#[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
 impl<'a> From<ShowWindowOptions<'a>> for TmuxCommand<'a> {
     fn from(item: ShowWindowOptions<'a>) -> Self {
         item.build()

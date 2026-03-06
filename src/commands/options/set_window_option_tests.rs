@@ -1,63 +1,78 @@
+// auto-generated file
+//
+
+// Set a window option
+//
+// # Manual
+//
+// tmux >=2.6 && <=3.0:
+// ```text
+// set-window-option [-aFgoqu] [-t target-window] option value
+// (alias: setw)
+// ```
+//
+// tmux >=1.9:
+// ```text
+// set-window-option [-agoqu] [-t target-window] option value
+// (alias: setw)
+// ```
+//
+// tmux >=1.7:
+// ```text
+// set-window-option [-agqu] [-t target-window] option value
+// (alias: setw)
+// ```
+//
+// tmux >=1.0:
+// ```text
+// set-window-option [-agu] [-t target-window] option value
+// (alias: setw)
+// ```
+//
+// tmux >=0.8:
+// ```text
+// set-window-option [-gu] [-t target-window] option value
+// (alias: setw)
+// ```
 #[test]
 fn set_window_option() {
-    use crate::{SetWindowOption, TargetWindow};
+    use crate::SetWindowOption;
     use std::borrow::Cow;
 
-    // # Manual
-    //
-    // tmux ^3.0:
-    // ```text
-    // (removed)
-    // ```
-    //
-    // tmux ^2.6:
-    // ```text
-    // set-window-option [-aFgoqu] [-t target-window] option value
-    // (alias: setw)
-    // ```
-    //
-    // tmux ^1.9:
-    // ```text
-    // set-window-option [-agoqu] [-t target-window] option value
-    // (alias: setw)
-    // ```
-    //
-    // tmux ^1.7:
-    // ```text
-    // set-window-option [-agqu] [-t target-window] option value
-    // (alias: setw)
-    // ```
-    //
-    // tmux ^1.0:
-    // ```text
-    // set-window-option [-agu] [-t target-window] option value
-    // (alias: setw)
-    // ```
-    //
-    // tmux ^0.8:
-    // ```text
-    // set-window-option [-gu] [-t target-window] option value
-    // (alias: setw)
-    // ```
-    let target_window = TargetWindow::Raw("1").to_string();
-
     let set_window_option = SetWindowOption::new();
-    #[cfg(feature = "tmux_1_0")]
+    // `[-a]`
+    #[cfg(feature = "tmux_1_5")]
     let set_window_option = set_window_option.append();
+
+    // `[-F]`
     #[cfg(feature = "tmux_2_6")]
     let set_window_option = set_window_option.format();
+
+    // `[-g]`
     #[cfg(feature = "tmux_0_8")]
     let set_window_option = set_window_option.global();
+
+    // `[-o]`
     #[cfg(feature = "tmux_1_9")]
     let set_window_option = set_window_option.not_overwrite();
+
+    // `[-q]`
     #[cfg(feature = "tmux_1_7")]
     let set_window_option = set_window_option.quiet();
+
+    // `[-u]`
     #[cfg(feature = "tmux_0_8")]
     let set_window_option = set_window_option.unset();
+
+    // `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
-    let set_window_option = set_window_option.target_window(&target_window);
+    let set_window_option = set_window_option.target_window("1");
+
+    // `[option]`
     #[cfg(feature = "tmux_0_8")]
     let set_window_option = set_window_option.option("2");
+
+    // `[value]`
     #[cfg(feature = "tmux_0_8")]
     let set_window_option = set_window_option.value("3");
 
@@ -66,29 +81,29 @@ fn set_window_option() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "setw";
 
-    let mut s = Vec::new();
-    s.push(cmd);
-    #[cfg(feature = "tmux_1_0")]
-    s.push("-a");
+    let mut v = Vec::new();
+    v.push(cmd);
+    #[cfg(feature = "tmux_1_5")]
+    v.push("-a");
     #[cfg(feature = "tmux_2_6")]
-    s.push("-F");
+    v.push("-F");
     #[cfg(feature = "tmux_0_8")]
-    s.push("-g");
+    v.push("-g");
     #[cfg(feature = "tmux_1_9")]
-    s.push("-o");
+    v.push("-o");
     #[cfg(feature = "tmux_1_7")]
-    s.push("-q");
+    v.push("-q");
     #[cfg(feature = "tmux_0_8")]
-    s.push("-u");
+    v.push("-u");
     #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-t", "1"]);
+    v.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_0_8")]
-    s.push("2");
+    v.push("2");
     #[cfg(feature = "tmux_0_8")]
-    s.push("3");
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    v.push("3");
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let set_window_option = set_window_option.build().to_vec();
 
-    assert_eq!(set_window_option, s);
+    assert_eq!(set_window_option, v);
 }

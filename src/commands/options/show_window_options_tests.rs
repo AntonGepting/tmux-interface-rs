@@ -1,49 +1,51 @@
+// auto-generated file
+//
+
+// List the window options for `target-window`
+//
+// # Manual
+//
+// tmux >=1.8 && <=3.0:
+// ```text
+// show-window-options [-gv] [-t target-window] [option]
+// (alias: showw)
+// ```
+//
+// tmux >=1.5:
+// ```text
+// show-window-options [-g] [-t target-window] [option]
+// (alias: showw)
+// ```
+//
+// tmux >=0.8:
+// ```text
+// show-window-options [-t target-window] option value
+// (alias: showw)
+// ```
 #[test]
 fn show_window_options() {
-    use crate::{ShowWindowOptions, TargetWindow};
+    use crate::ShowWindowOptions;
     use std::borrow::Cow;
 
-    // tmux ^3.0:
-    // ```text
-    // (removed)
-    // ```
-    //
-    // tmux ^1.8:
-    // ```text
-    // show-window-options [-gv] [-t target-window] [option]
-    // (alias: showw)
-    // ```
-    //
-    // tmux ^1.7:
-    // ```text
-    // show-window-options [-g] [-t target-window] [option]
-    // (alias: showw)
-    // ```
-    //
-    // tmux ^1.0:
-    // ```text
-    // show-window-options [-g] [-t target-window]
-    // (alias: showw)
-    // ```
-    //
-    // tmux ^0.8:
-    // ```text
-    // show-window-options [-t target-window] option value
-    // (alias: showw)
-    // ```
-    // (alias: showw)
-    let target_window = TargetWindow::Raw("1").to_string();
-
     let show_window_options = ShowWindowOptions::new();
-    #[cfg(feature = "tmux_1_0")]
+    // `[-g]`
+    #[cfg(feature = "tmux_1_5")]
     let show_window_options = show_window_options.global();
+
+    // `[-v]`
     #[cfg(feature = "tmux_1_8")]
     let show_window_options = show_window_options.only_value();
+
+    // `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
-    let show_window_options = show_window_options.target_window(&target_window);
+    let show_window_options = show_window_options.target_window("1");
+
+    // `[option]`
     #[cfg(feature = "tmux_0_8")]
     let show_window_options = show_window_options.option("2");
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
+
+    // `[value]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     let show_window_options = show_window_options.value("3");
 
     #[cfg(not(feature = "cmd_alias"))]
@@ -51,21 +53,21 @@ fn show_window_options() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "showw";
 
-    let mut s = Vec::new();
-    s.push(cmd);
-    #[cfg(feature = "tmux_1_0")]
-    s.push("-g");
+    let mut v = Vec::new();
+    v.push(cmd);
+    #[cfg(feature = "tmux_1_5")]
+    v.push("-g");
     #[cfg(feature = "tmux_1_8")]
-    s.push("-v");
+    v.push("-v");
     #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-t", "1"]);
+    v.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_0_8")]
-    s.push("2");
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_0")))]
-    s.push("3");
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    v.push("2");
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    v.push("3");
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let show_window_options = show_window_options.build().to_vec();
 
-    assert_eq!(show_window_options, s);
+    assert_eq!(show_window_options, v);
 }

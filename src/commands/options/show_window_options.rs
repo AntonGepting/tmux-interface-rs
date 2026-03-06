@@ -1,35 +1,29 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
 pub type ShowW<'a> = ShowWindowOptions<'a>;
 
+/// List the window options for `target-window`
+///
 /// # Manual
 ///
-/// tmux ^3.0:
-/// ```text
-/// (removed)
-/// ```
-///
-/// tmux ^1.8:
+/// tmux >=1.8 && <=3.0:
 /// ```text
 /// show-window-options [-gv] [-t target-window] [option]
 /// (alias: showw)
 /// ```
 ///
-/// tmux ^1.7:
+/// tmux >=1.5:
 /// ```text
 /// show-window-options [-g] [-t target-window] [option]
 /// (alias: showw)
 /// ```
 ///
-/// tmux ^1.0:
-/// ```text
-/// show-window-options [-g] [-t target-window]
-/// (alias: showw)
-/// ```
-///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// show-window-options [-t target-window] option value
 /// (alias: showw)
@@ -37,7 +31,7 @@ pub type ShowW<'a> = ShowWindowOptions<'a>;
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ShowWindowOptions<'a> {
     /// `[-g]`
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_1_5")]
     pub global: bool,
 
     /// `[-v]`
@@ -48,12 +42,12 @@ pub struct ShowWindowOptions<'a> {
     #[cfg(feature = "tmux_0_8")]
     pub target_window: Option<Cow<'a, str>>,
 
-    /// `option`
+    /// `[option]`
     #[cfg(feature = "tmux_0_8")]
     pub option: Option<Cow<'a, str>>,
 
-    /// `value`
-    #[cfg(feature = "tmux_0_8")]
+    /// `[value]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub value: Option<Cow<'a, str>>,
 }
 
@@ -63,7 +57,7 @@ impl<'a> ShowWindowOptions<'a> {
     }
 
     /// `[-g]`
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn global(mut self) -> Self {
         self.global = true;
         self
@@ -83,27 +77,28 @@ impl<'a> ShowWindowOptions<'a> {
         self
     }
 
-    /// `option`
+    /// `[option]`
     #[cfg(feature = "tmux_0_8")]
     pub fn option<S: Into<Cow<'a, str>>>(mut self, option: S) -> Self {
         self.option = Some(option.into());
         self
     }
 
-    /// `value`
-    #[cfg(feature = "tmux_0_8")]
+    /// `[value]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub fn value<S: Into<Cow<'a, str>>>(mut self, value: S) -> Self {
         self.value = Some(value.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(SHOW_WINDOW_OPTIONS);
 
         // `[-g]`
-        #[cfg(feature = "tmux_1_0")]
+        #[cfg(feature = "tmux_1_5")]
         if self.global {
             cmd.push_flag(G_LOWERCASE_KEY);
         }
@@ -120,14 +115,14 @@ impl<'a> ShowWindowOptions<'a> {
             cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
-        // `option`
+        // `[option]`
         #[cfg(feature = "tmux_0_8")]
         if let Some(option) = self.option {
             cmd.push_param(option);
         }
 
-        // `value`
-        #[cfg(feature = "tmux_0_8")]
+        // `[value]`
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
         if let Some(value) = self.value {
             cmd.push_param(value);
         }
