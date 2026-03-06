@@ -1,9 +1,14 @@
+// auto-generated file
+//
+
+/// Display status prompt history
+///
 /// # Manual
 ///
-/// tmux ^3.3:
+/// tmux >=3.3:
 /// ```text
 /// show-prompt-history [-T prompt-type]
-/// (alias: showhist)
+/// (alias: showphist)
 /// ```
 #[macro_export]
 macro_rules! show_prompt_history {
@@ -13,6 +18,7 @@ macro_rules! show_prompt_history {
             $cmd.prompt_type($prompt_type)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -34,13 +40,16 @@ macro_rules! show_prompt_history {
 fn show_prompt_history_macro() {
     use std::borrow::Cow;
 
+    // Display status prompt history
+    //
     // # Manual
     //
-    // tmux ^3.3:
+    // tmux >=3.3:
     // ```text
-    // clear-prompt-history [-T prompt-type]
-    // (alias: clearphist)
+    // show-prompt-history [-T prompt-type]
+    // (alias: showphist)
     // ```
+
     let show_prompt_history = show_prompt_history!();
     #[cfg(feature = "tmux_3_3")]
     let show_prompt_history = show_prompt_history!((show_prompt_history), -T "1");
@@ -52,10 +61,9 @@ fn show_prompt_history_macro() {
 
     let mut s = Vec::new();
     s.push(cmd);
-    #[cfg(feature = "tmux_1_5")]
+    #[cfg(feature = "tmux_3_3")]
     s.extend_from_slice(&["-T", "1"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let show_prompt_history = show_prompt_history.build().to_vec();
 
     assert_eq!(show_prompt_history, s);

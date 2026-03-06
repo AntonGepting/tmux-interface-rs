@@ -1,32 +1,37 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
 pub type Confirm<'a> = ConfirmBefore<'a>;
 
+/// Ask for confirmation before executing command
+///
 /// # Manual
 ///
-/// tmux ^3.4:
+/// tmux >=3.4:
 /// ```text
 /// confirm-before [-by] [-c confirm-key] [-p prompt] [-t target-client] command
 /// (alias: confirm)
 /// ```
 ///
-/// tmux ^1.5:
+/// tmux >=3.3:
 /// ```text
-/// confirm-before [-p prompt] [-t target-client] command
+/// confirm-before [-b] [-p prompt] [-t target-client] command
 /// (alias: confirm)
 /// ```
 ///
-/// tmux ^0.9:
+/// tmux >=1.5:
 /// ```text
-/// confirm-before [-t target-client] command
+/// confirm-before [-p prompt] [-t target-client] command
 /// (alias: confirm)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ConfirmBefore<'a> {
     /// `[-b]`
-    #[cfg(feature = "tmux_3_4")]
+    #[cfg(feature = "tmux_3_3")]
     pub background: bool,
 
     /// `[-y]`
@@ -42,11 +47,11 @@ pub struct ConfirmBefore<'a> {
     pub prompt: Option<Cow<'a, str>>,
 
     /// `[-t target-client]`
-    #[cfg(feature = "tmux_0_9")]
+    #[cfg(feature = "tmux_1_5")]
     pub target_client: Option<Cow<'a, str>>,
 
-    /// `command`
-    #[cfg(feature = "tmux_0_9")]
+    /// `[command]`
+    #[cfg(feature = "tmux_1_5")]
     pub command: Option<Cow<'a, str>>,
 }
 
@@ -56,7 +61,7 @@ impl<'a> ConfirmBefore<'a> {
     }
 
     /// `[-b]`
-    #[cfg(feature = "tmux_3_4")]
+    #[cfg(feature = "tmux_3_3")]
     pub fn background(mut self) -> Self {
         self.background = true;
         self
@@ -84,26 +89,27 @@ impl<'a> ConfirmBefore<'a> {
     }
 
     /// `[-t target-client]`
-    #[cfg(feature = "tmux_0_9")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
     }
 
-    /// `command`
-    #[cfg(feature = "tmux_0_9")]
+    /// `[command]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn command<S: Into<Cow<'a, str>>>(mut self, command: S) -> Self {
         self.command = Some(command.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(CONFIRM_BEFORE);
 
         // `[-b]`
-        #[cfg(feature = "tmux_3_4")]
+        #[cfg(feature = "tmux_3_3")]
         if self.background {
             cmd.push_flag(B_LOWERCASE_KEY);
         }
@@ -127,13 +133,13 @@ impl<'a> ConfirmBefore<'a> {
         }
 
         // `[-t target-client]`
-        #[cfg(feature = "tmux_0_9")]
+        #[cfg(feature = "tmux_1_5")]
         if let Some(target_client) = self.target_client {
             cmd.push_option(T_LOWERCASE_KEY, target_client);
         }
 
-        // `command`
-        #[cfg(feature = "tmux_0_9")]
+        // `[command]`
+        #[cfg(feature = "tmux_1_5")]
         if let Some(command) = self.command {
             cmd.push_param(command);
         }

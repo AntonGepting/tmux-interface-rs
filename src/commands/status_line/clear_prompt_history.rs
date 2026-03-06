@@ -1,12 +1,17 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
 
 pub type ClearPHist<'a> = ClearPromptHistory<'a>;
 
+/// Clear status prompt history
+///
 /// # Manual
 ///
-/// tmux ^3.3:
+/// tmux >=3.3:
 /// ```text
 /// clear-prompt-history [-T prompt-type]
 /// (alias: clearphist)
@@ -23,20 +28,21 @@ impl<'a> ClearPromptHistory<'a> {
         Default::default()
     }
 
-    /// `[-T prompt]`
-    #[cfg(feature = "tmux_1_5")]
+    /// `[-T prompt-type]`
+    #[cfg(feature = "tmux_3_3")]
     pub fn prompt_type<S: Into<Cow<'a, str>>>(mut self, prompt_type: S) -> Self {
         self.prompt_type = Some(prompt_type.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(CLEAR_PROMPT_HISTORY);
 
         // `[-T prompt-type]`
-        #[cfg(feature = "tmux_1_5")]
+        #[cfg(feature = "tmux_3_3")]
         if let Some(prompt_type) = self.prompt_type {
             cmd.push_option(T_UPPERCASE_KEY, prompt_type);
         }
