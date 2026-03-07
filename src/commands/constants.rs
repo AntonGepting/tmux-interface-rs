@@ -523,7 +523,10 @@ pub const CAPTURE_PANE: &str = "capturep";
 /// `choose-client`
 pub const CHOOSE_CLIENT: &str = "choose-client";
 
-/// `choose-tree`
+/// `choose-list`
+pub const CHOOSE_LIST: &str = "choose-list";
+
+/// `choose-session`
 pub const CHOOSE_SESSION: &str = "choose-session";
 
 /// `choose-tree`
