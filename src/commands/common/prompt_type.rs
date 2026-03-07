@@ -1,3 +1,6 @@
+// used by commands:
+//  * command-prompt
+//
 #[cfg(feature = "tmux_3_3")]
 use std::fmt;
 

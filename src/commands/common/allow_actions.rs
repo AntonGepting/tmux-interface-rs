@@ -1,3 +1,6 @@
+// used by commands:
+//  * refresh-client
+
 #[cfg(feature = "tmux_3_2")]
 use std::borrow::Cow;
 

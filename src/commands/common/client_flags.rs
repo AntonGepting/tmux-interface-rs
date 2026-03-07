@@ -1,3 +1,9 @@
+// used by commands:
+//  * attach-session
+//  * new-session
+//  * refresh-client
+//
+
 // TODO: parse from_str
 
 #[cfg(feature = "tmux_2_9a")]
