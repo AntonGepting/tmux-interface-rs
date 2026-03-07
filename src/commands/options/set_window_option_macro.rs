@@ -93,7 +93,7 @@ macro_rules! set_window_option {
     }};
 
     // `[value]`
-    (@cmd ($cmd:expr) $value:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) --value $value:expr, $($tail:tt)*) => {{
         $crate::set_window_option!(@cmd ({
             $cmd.value($value)
         }) $($tail)*)
@@ -172,7 +172,7 @@ fn set_window_option_macro() {
     #[cfg(feature = "tmux_0_8")]
     let set_window_option = set_window_option!((set_window_option), "2");
     #[cfg(feature = "tmux_0_8")]
-    let set_window_option = set_window_option!((set_window_option), "3");
+    let set_window_option = set_window_option!((set_window_option), --value "3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "set-window-option";

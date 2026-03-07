@@ -53,7 +53,7 @@ macro_rules! show_window_options {
     }};
 
     // `[value]`
-    (@cmd ($cmd:expr) $value:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) --value $value:expr, $($tail:tt)*) => {{
         $crate::show_window_options!(@cmd ({
             $cmd.value($value)
         }) $($tail)*)
@@ -112,7 +112,7 @@ fn show_window_options_macro() {
     #[cfg(feature = "tmux_0_8")]
     let show_window_options = show_window_options!((show_window_options), "2");
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
-    let show_window_options = show_window_options!((show_window_options), "3");
+    let show_window_options = show_window_options!((show_window_options), --value "3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "show-window-options";
