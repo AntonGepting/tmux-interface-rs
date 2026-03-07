@@ -50,7 +50,7 @@ pub trait GetOptionTr {
     {
         let cmd = ShowOptions::new().option(name);
         let cmd = match target {
-            Some(target) => cmd.target(target),
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()
@@ -73,7 +73,7 @@ pub trait GetOptionTr {
     {
         let cmd = ShowOptions::new();
         let cmd = match target {
-            Some(target) => cmd.target(target),
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()

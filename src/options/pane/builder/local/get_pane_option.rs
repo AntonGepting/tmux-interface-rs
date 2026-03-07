@@ -11,7 +11,7 @@ impl GetOptionTr for GetPaneOption {
     ) -> TmuxCommand<'a> {
         let cmd = ShowOptions::new().pane().option(name);
         let cmd = match target {
-            Some(target) => cmd.target(target),
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()

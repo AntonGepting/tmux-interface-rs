@@ -20,7 +20,7 @@ impl GetOptionTr for GetGlobalWindowOptionValue {
     ) -> TmuxCommand<'a> {
         let cmd = ShowOptions::new().window().global().option(name).value();
         let cmd = match target {
-            Some(target) => cmd.target(target),
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()

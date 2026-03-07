@@ -114,7 +114,7 @@ impl<'a> PaneOptionsCtl<'a> {
     ) -> Result<PaneOptions<'a>, Error> {
         let cmd = ShowOptions::new().pane();
         let cmd = match target {
-            Some(target) => cmd.target(target),
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         let cmd = cmd.build();

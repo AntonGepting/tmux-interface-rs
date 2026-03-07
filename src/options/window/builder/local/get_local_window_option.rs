@@ -15,7 +15,7 @@ impl GetOptionTr for GetLocalWindowOption {
     ) -> TmuxCommand<'a> {
         let cmd = ShowOptions::new().window().option(name);
         let cmd = match target {
-            Some(target) => cmd.target(target),
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()
@@ -24,7 +24,7 @@ impl GetOptionTr for GetLocalWindowOption {
     fn get_all<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
         let cmd = ShowOptions::new().window();
         let cmd = match target {
-            Some(target) => cmd.target(target),
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()

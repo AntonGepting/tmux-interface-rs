@@ -17,7 +17,7 @@ impl GetOptionTr for GetGlobalSessionOption {
     ) -> TmuxCommand<'a> {
         let cmd = ShowOptions::new().global().option(name);
         let cmd = match target {
-            Some(target) => cmd.target(target),
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()
@@ -26,7 +26,7 @@ impl GetOptionTr for GetGlobalSessionOption {
     fn get_all<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
         let cmd = ShowOptions::new().global();
         let cmd = match target {
-            Some(target) => cmd.target(target),
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()

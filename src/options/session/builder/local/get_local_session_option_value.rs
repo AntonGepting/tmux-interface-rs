@@ -33,7 +33,7 @@ impl GetOptionTr for GetLocalSessionOptionValue {
     ) -> TmuxCommand<'a> {
         let cmd = ShowOptions::new().value().option(name);
         let cmd = match target {
-            Some(target) => cmd.target(target),
+            Some(target) => cmd.target_pane(target),
             None => cmd,
         };
         cmd.build()
