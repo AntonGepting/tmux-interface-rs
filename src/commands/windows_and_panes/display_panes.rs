@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,31 +11,31 @@ pub type DisplayP<'a> = DisplayPanes<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^3.2:
+/// tmux >=3.2:
 /// ```text
 /// display-panes [-bN] [-d duration] [-t target-client] [template]
 /// (alias: displayp)
 /// ```
 ///
-/// tmux ^2.9:
+/// tmux >=2.9:
 /// ```text
 /// display-panes [-b] [-d duration] [-t target-client] [template]
 /// (alias: displayp)
 /// ```
 ///
-/// tmux ^2.6:
+/// tmux >=2.6:
 /// ```text
 /// display-panes [-d duration] [-t target-client] [template]
 /// (alias: displayp)
 /// ```
 ///
-/// tmux ^2.3:
+/// tmux >=2.3:
 /// ```text
 /// display-panes [-t target-client] [template]
 /// (alias: displayp)
 /// ```
 ///
-/// tmux ^1.0:
+/// tmux >=1.5:
 /// ```text
 /// display-panes [-t target-client]
 /// (alias: displayp)
@@ -53,7 +56,7 @@ pub struct DisplayPanes<'a> {
     pub duration: Option<Cow<'a, str>>,
 
     /// `[-t target-client]`
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_1_5")]
     pub target_client: Option<Cow<'a, str>>,
 
     /// `[template]`
@@ -87,8 +90,8 @@ impl<'a> DisplayPanes<'a> {
         self
     }
 
-    /// `[-d target-client]`
-    #[cfg(feature = "tmux_1_0")]
+    /// `[-t target-client]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn target_client<S: Into<Cow<'a, str>>>(mut self, target_client: S) -> Self {
         self.target_client = Some(target_client.into());
         self
@@ -101,6 +104,7 @@ impl<'a> DisplayPanes<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -124,8 +128,8 @@ impl<'a> DisplayPanes<'a> {
             cmd.push_option(D_LOWERCASE_KEY, duration);
         }
 
-        // `[-d duration]`
-        #[cfg(feature = "tmux_1_0")]
+        // `[-t target-client]`
+        #[cfg(feature = "tmux_1_5")]
         if let Some(target_client) = self.target_client {
             cmd.push_option(T_LOWERCASE_KEY, target_client);
         }

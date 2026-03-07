@@ -1,98 +1,115 @@
+// auto-generated file
+//
+
+// Resize a pane, up, down, left or right
+//
+// # Manual
+//
+// tmux >=3.2:
+// ```text
+// resize-pane [-DLMRTUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+// (alias: resizep)
+// ```
+//
+// tmux >=2.1:
+// ```text
+// resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+// (alias: resizep)
+// ```
+//
+// tmux >=1.8:
+// ```text
+// resize-pane [-DLRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
+// (alias: resizep)
+// ```
+//
+// tmux >=1.5:
+// ```text
+// resize-pane [-DLRU] [-t target-pane] [adjustment]
+// (alias: resizep)
+// ```
 #[test]
 fn resize_pane() {
-    use crate::{ResizePane, TargetPane};
+    use crate::ResizePane;
     use std::borrow::Cow;
 
-    // Resize a pane, up, down, left or right
-    //
-    // # Manual
-    //
-    // tmux ^3.2:
-    // ```text
-    // resize-pane [-DLMRTUZ] [-t target-pane] [-x width] [-y height] [adjustment]
-    // (alias: resizep)
-    // ```
-    //
-    // tmux ^2.1:
-    // ```text
-    // resize-pane [-DLMRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
-    // (alias: resizep)
-    // ```
-    //
-    // tmux ^1.8:
-    // ```text
-    // resize-pane [-DLRUZ] [-t target-pane] [-x width] [-y height] [adjustment]
-    // (alias: resizep)
-    // ```
-    //
-    // tmux ^1.0:
-    // ```text
-    // resize-pane [-DLRU] [-t target-pane] [adjustment]
-    // (alias: resizep)
-    // ```
-    //
-    // tmux ^0.9:
-    // ```text
-    // resize-pane [-DU] [-p pane-index] [-t target-pane] [adjustment]
-    // (alias: resizep)
-    // ```
-    let target_pane = TargetPane::Raw("1").to_string();
     let resize_pane = ResizePane::new();
-    #[cfg(feature = "tmux_0_9")]
+    // `[-D]`
+    #[cfg(feature = "tmux_1_5")]
     let resize_pane = resize_pane.down();
-    #[cfg(feature = "tmux_1_8")]
+
+    // `[-L]`
+    #[cfg(feature = "tmux_1_5")]
     let resize_pane = resize_pane.left();
+
+    // `[-M]`
     #[cfg(feature = "tmux_2_1")]
     let resize_pane = resize_pane.mouse();
-    #[cfg(feature = "tmux_1_8")]
+
+    // `[-R]`
+    #[cfg(feature = "tmux_1_5")]
     let resize_pane = resize_pane.right();
+
+    // `[-T]`
     #[cfg(feature = "tmux_3_2")]
     let resize_pane = resize_pane.trim();
-    #[cfg(feature = "tmux_0_9")]
+
+    // `[-U]`
+    #[cfg(feature = "tmux_1_5")]
     let resize_pane = resize_pane.up();
+
+    // `[-Z]`
     #[cfg(feature = "tmux_1_8")]
     let resize_pane = resize_pane.zoom();
-    #[cfg(feature = "tmux_0_9")]
-    let resize_pane = resize_pane.target_pane(&target_pane);
+
+    // `[-t target-pane]`
+    #[cfg(feature = "tmux_1_5")]
+    let resize_pane = resize_pane.target_pane("2");
+
+    // `[-x width]`
     #[cfg(feature = "tmux_1_8")]
-    let resize_pane = resize_pane.width(2);
+    let resize_pane = resize_pane.width("3");
+
+    // `[-y height]`
     #[cfg(feature = "tmux_1_8")]
-    let resize_pane = resize_pane.height(3);
-    #[cfg(feature = "tmux_0_9")]
-    let resize_pane = resize_pane.adjustment("4");
+    let resize_pane = resize_pane.height("4");
+
+    // `[adjustment]`
+    #[cfg(feature = "tmux_1_5")]
+    let resize_pane = resize_pane.adjustment("5");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "resize-pane";
     #[cfg(feature = "cmd_alias")]
     let cmd = "resizep";
 
-    let mut s = Vec::new();
-    s.push(cmd);
-    #[cfg(feature = "tmux_0_9")]
-    s.push("-D");
-    #[cfg(feature = "tmux_1_8")]
-    s.push("-L");
+    let mut v = Vec::new();
+    v.push(cmd);
+    #[cfg(feature = "tmux_1_5")]
+    v.push("-D");
+    #[cfg(feature = "tmux_1_5")]
+    v.push("-L");
     #[cfg(feature = "tmux_2_1")]
-    s.push("-M");
-    #[cfg(feature = "tmux_1_8")]
-    s.push("-R");
+    v.push("-M");
+    #[cfg(feature = "tmux_1_5")]
+    v.push("-R");
     #[cfg(feature = "tmux_3_2")]
-    s.push("-T");
-    #[cfg(feature = "tmux_0_9")]
-    s.push("-U");
+    v.push("-T");
+    #[cfg(feature = "tmux_1_5")]
+    v.push("-U");
     #[cfg(feature = "tmux_1_8")]
-    s.push("-Z");
-    #[cfg(feature = "tmux_0_9")]
-    s.extend_from_slice(&["-t", "1"]);
+    v.push("-Z");
+    #[cfg(feature = "tmux_1_5")]
+    v.extend_from_slice(&["-t", "2"]);
     #[cfg(feature = "tmux_1_8")]
-    s.extend_from_slice(&["-x", "2"]);
+    v.extend_from_slice(&["-x", "3"]);
     #[cfg(feature = "tmux_1_8")]
-    s.extend_from_slice(&["-y", "3"]);
-    #[cfg(feature = "tmux_0_9")]
-    s.push("4");
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    v.extend_from_slice(&["-y", "4"]);
+    #[cfg(feature = "tmux_1_5")]
+    v.push("5");
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let resize_pane = resize_pane.build().to_vec();
 
-    assert_eq!(resize_pane, s);
+    assert_eq!(resize_pane, v);
 }

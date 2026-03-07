@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,7 +11,7 @@ pub type RenameW<'a> = RenameWindow<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// rename-window [-t target-window] new-name
 /// (alias: renamew)
@@ -19,7 +22,7 @@ pub struct RenameWindow<'a> {
     #[cfg(feature = "tmux_0_8")]
     pub target_window: Option<Cow<'a, str>>,
 
-    /// `new-name`
+    /// `[new-name]`
     #[cfg(feature = "tmux_0_8")]
     pub new_name: Option<Cow<'a, str>>,
 }
@@ -36,13 +39,14 @@ impl<'a> RenameWindow<'a> {
         self
     }
 
-    /// `new-name`
+    /// `[new-name]`
     #[cfg(feature = "tmux_0_8")]
     pub fn new_name<S: Into<Cow<'a, str>>>(mut self, new_name: S) -> Self {
         self.new_name = Some(new_name.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -54,11 +58,12 @@ impl<'a> RenameWindow<'a> {
             cmd.push_option(T_LOWERCASE_KEY, target_window);
         }
 
-        // `new-name`
+        // `[new-name]`
         #[cfg(feature = "tmux_0_8")]
         if let Some(new_name) = self.new_name {
             cmd.push_param(new_name);
         }
+
         cmd
     }
 }

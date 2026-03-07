@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,13 +11,13 @@ pub type Prev<'a> = PreviousWindow<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^0.9:
+/// tmux >=1.5:
 /// ```text
 /// previous-window [-a] [-t target-session]
 /// (alias: prev)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// previous-window [-t target-session]
 /// (alias: prev)
@@ -22,7 +25,7 @@ pub type Prev<'a> = PreviousWindow<'a>;
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct PreviousWindow<'a> {
     /// `[-a]`
-    #[cfg(feature = "tmux_0_9")]
+    #[cfg(feature = "tmux_1_5")]
     pub parent_sighup: bool,
 
     /// `[-t target-session]`
@@ -36,7 +39,7 @@ impl<'a> PreviousWindow<'a> {
     }
 
     /// `[-a]`
-    #[cfg(feature = "tmux_0_9")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn parent_sighup(mut self) -> Self {
         self.parent_sighup = true;
         self
@@ -49,13 +52,14 @@ impl<'a> PreviousWindow<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(PREVIOUS_WINDOW);
 
         // `[-a]`
-        #[cfg(feature = "tmux_0_9")]
+        #[cfg(feature = "tmux_1_5")]
         if self.parent_sighup {
             cmd.push_flag(A_LOWERCASE_KEY);
         }

@@ -1,56 +1,64 @@
+// auto-generated file
+//
+
 /// Select the window at target-window.
 ///
 /// # Manual
 ///
-/// tmux ^1.8:
+/// tmux >=1.8:
 /// ```text
 /// select-window [-lnpT] [-t target-window]
 /// (alias: selectw)
 /// ```
 ///
-/// tmux ^1.5:
+/// tmux >=1.5:
 /// ```text
 /// select-window [-lnp] [-t target-window]
 /// (alias: selectw)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// select-window [-t target-window]
 /// (alias: selectw)
 /// ```
 #[macro_export]
 macro_rules! select_window {
-    // `[-l]` - equivalent to last-window
+    // `[-l]`
     (@cmd ($cmd:expr) -l, $($tail:tt)*) => {{
         $crate::select_window!(@cmd ({
             $cmd.last()
         }) $($tail)*)
     }};
-    // `[-n]` - equivalent to next-window
+
+    // `[-n]`
     (@cmd ($cmd:expr) -n, $($tail:tt)*) => {{
         $crate::select_window!(@cmd ({
             $cmd.next()
         }) $($tail)*)
     }};
-    // `[-p]` - equivalent to previous-window
+
+    // `[-p]`
     (@cmd ($cmd:expr) -p, $($tail:tt)*) => {{
         $crate::select_window!(@cmd ({
             $cmd.previous()
         }) $($tail)*)
     }};
-    // `[-T]` - if the selected window is already the current window, behave like last-window
+
+    // `[-T]`
     (@cmd ($cmd:expr) -T, $($tail:tt)*) => {{
         $crate::select_window!(@cmd ({
             $cmd.switch()
         }) $($tail)*)
     }};
-    // `[-t target-window]` - target-window
+
+    // `[-t target-window]`
     (@cmd ($cmd:expr) -t $target_window:expr, $($tail:tt)*) => {{
         $crate::select_window!(@cmd ({
             $cmd.target_window($target_window)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -70,31 +78,29 @@ macro_rules! select_window {
 
 #[test]
 fn select_window_macro() {
-    use crate::TargetWindow;
     use std::borrow::Cow;
 
     // Select the window at target-window.
     //
     // # Manual
     //
-    // tmux ^1.8:
+    // tmux >=1.8:
     // ```text
     // select-window [-lnpT] [-t target-window]
     // (alias: selectw)
     // ```
     //
-    // tmux ^1.5:
+    // tmux >=1.5:
     // ```text
     // select-window [-lnp] [-t target-window]
     // (alias: selectw)
     // ```
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // select-window [-t target-window]
     // (alias: selectw)
     // ```
-    let target_window = TargetWindow::Raw("1").to_string();
 
     let select_window = select_window!();
     #[cfg(feature = "tmux_1_5")]
@@ -106,7 +112,7 @@ fn select_window_macro() {
     #[cfg(feature = "tmux_1_8")]
     let select_window = select_window!((select_window), -T);
     #[cfg(feature = "tmux_0_8")]
-    let select_window = select_window!((select_window), -t & target_window);
+    let select_window = select_window!((select_window), -t "1");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "select-window";
@@ -126,7 +132,6 @@ fn select_window_macro() {
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "1"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let select_window = select_window.build().to_vec();
 
     assert_eq!(select_window, s);

@@ -1,22 +1,26 @@
+// auto-generated file
+//
+
+// Rename the current window, or the window at target-window if specified, to new-name
+//
+// # Manual
+//
+// tmux >=0.8:
+// ```text
+// rename-window [-t target-window] new-name
+// (alias: renamew)
+// ```
 #[test]
 fn rename_window() {
-    use crate::{RenameWindow, TargetWindow};
+    use crate::RenameWindow;
     use std::borrow::Cow;
 
-    // Rename the current window, or the window at target-window if specified, to new-name
-    //
-    // # Manual
-    //
-    // tmux ^0.8:
-    // ```text
-    // rename-window [-t target-window] new-name
-    // (alias: renamew)
-    // ```
-    let target_window = TargetWindow::Raw("1").to_string();
-
     let rename_window = RenameWindow::new();
+    // `[-t target-window]`
     #[cfg(feature = "tmux_0_8")]
-    let rename_window = rename_window.target_window(&target_window);
+    let rename_window = rename_window.target_window("1");
+
+    // `[new-name]`
     #[cfg(feature = "tmux_0_8")]
     let rename_window = rename_window.new_name("2");
 
@@ -25,15 +29,15 @@ fn rename_window() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "renamew";
 
-    let mut s = Vec::new();
-    s.push(cmd);
+    let mut v = Vec::new();
+    v.push(cmd);
     #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-t", "1"]);
+    v.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_0_8")]
-    s.push("2");
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    v.push("2");
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let rename_window = rename_window.build().to_vec();
 
-    assert_eq!(rename_window, s);
+    assert_eq!(rename_window, v);
 }

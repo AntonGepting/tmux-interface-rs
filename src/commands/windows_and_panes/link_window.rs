@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,36 +11,46 @@ pub type LinkW<'a> = LinkWindow<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^2.1:
+/// tmux >=3.2:
+/// ```text
+/// link-window [-abdk] [-s src-window] [-t dst-window]
+/// (alias: linkw)
+/// ```
+///
+/// tmux >=2.1:
 /// ```text
 /// link-window [-adk] [-s src-window] [-t dst-window]
 /// (alias: linkw)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// link-window [-dk] [-s src-window] [-t dst-window]
 /// (alias: linkw)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct LinkWindow<'a> {
-    /// `[-a]` - the window is moved to the next index up
+    /// `[-a]`
     #[cfg(feature = "tmux_2_1")]
-    pub add: bool,
+    pub after: bool,
 
-    /// `[-d]` - the newly linked window is not selected
+    /// `[-b]`
+    #[cfg(feature = "tmux_3_2")]
+    pub before: bool,
+
+    /// `[-d]`
     #[cfg(feature = "tmux_0_8")]
     pub detached: bool,
 
-    /// `[-k]` - if dst-window exists, it is killed, otherwise an error is generated
+    /// `[-k]`
     #[cfg(feature = "tmux_0_8")]
     pub kill: bool,
 
-    /// `[-s src-window]` - src-window
+    /// `[-s src-window]`
     #[cfg(feature = "tmux_0_8")]
     pub src_window: Option<Cow<'a, str>>,
 
-    /// `[-t dst-window]` - dst-window
+    /// `[-t dst-window]`
     #[cfg(feature = "tmux_0_8")]
     pub dst_window: Option<Cow<'a, str>>,
 }
@@ -47,71 +60,85 @@ impl<'a> LinkWindow<'a> {
         Default::default()
     }
 
-    /// `[-a]` - the window is moved to the next index up
+    /// `[-a]`
     #[cfg(feature = "tmux_2_1")]
-    pub fn add(mut self) -> Self {
-        self.add = true;
+    pub fn after(mut self) -> Self {
+        self.after = true;
         self
     }
 
-    /// `[-d]` - the newly linked window is not selected
+    /// `[-b]`
+    #[cfg(feature = "tmux_3_2")]
+    pub fn before(mut self) -> Self {
+        self.before = true;
+        self
+    }
+
+    /// `[-d]`
     #[cfg(feature = "tmux_0_8")]
     pub fn detached(mut self) -> Self {
         self.detached = true;
         self
     }
 
-    /// `[-k]` - if dst-window exists, it is killed, otherwise an error is generated
+    /// `[-k]`
     #[cfg(feature = "tmux_0_8")]
     pub fn kill(mut self) -> Self {
         self.kill = true;
         self
     }
 
-    /// `[-s src-window]` - src-window
+    /// `[-s src-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn src_window<S: Into<Cow<'a, str>>>(mut self, src_window: S) -> Self {
         self.src_window = Some(src_window.into());
         self
     }
 
-    /// `[-t dst-window]` - dst-window
+    /// `[-t dst-window]`
     #[cfg(feature = "tmux_0_8")]
     pub fn dst_window<S: Into<Cow<'a, str>>>(mut self, dst_window: S) -> Self {
         self.dst_window = Some(dst_window.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(LINK_WINDOW);
 
-        // `[-a]` - the window is moved to the next index up
+        // `[-a]`
         #[cfg(feature = "tmux_2_1")]
-        if self.add {
+        if self.after {
             cmd.push_flag(A_LOWERCASE_KEY);
         }
 
-        // `[-d]` - the newly linked window is not selected
+        // `[-b]`
+        #[cfg(feature = "tmux_3_2")]
+        if self.before {
+            cmd.push_flag(B_LOWERCASE_KEY);
+        }
+
+        // `[-d]`
         #[cfg(feature = "tmux_0_8")]
         if self.detached {
             cmd.push_flag(D_LOWERCASE_KEY);
         }
 
-        // `[-k]` - if dst-window exists, it is killed, otherwise an error is generated
+        // `[-k]`
         #[cfg(feature = "tmux_0_8")]
         if self.kill {
             cmd.push_flag(K_LOWERCASE_KEY);
         }
 
-        // `[-s src-window]` - src-window
+        // `[-s src-window]`
         #[cfg(feature = "tmux_0_8")]
         if let Some(src_window) = self.src_window {
             cmd.push_option(S_LOWERCASE_KEY, src_window);
         }
 
-        // `[-t dst-window]` - dst-window
+        // `[-t dst-window]`
         #[cfg(feature = "tmux_0_8")]
         if let Some(dst_window) = self.dst_window {
             cmd.push_option(T_LOWERCASE_KEY, dst_window);

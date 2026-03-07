@@ -1,123 +1,153 @@
+// auto-generated file
+//
+
+/// Capture the contents of a pane
+///
 /// # Manual
 ///
-/// tmux ^3.4:
+/// tmux >=3.6:
+/// ```text
+/// capture-pane [-aepPqCJMNT] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
+/// (alias: capturep)
+/// ```
+///
+/// tmux >=3.4:
 /// ```text
 /// capture-pane [-aAepPqCJNT] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
 /// (alias: capturep)
 /// ```
 ///
-/// tmux ^3.1:
+/// tmux >=3.1:
 /// ```text
 /// capture-pane [-aepPqCJN] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
 /// (alias: capturep)
 /// ```
 ///
-/// tmux ^2.4:
+/// tmux >=2.4:
 /// ```text
 /// capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
 /// (alias: capturep)
 /// ```
 ///
-/// tmux ^1.8:
+/// tmux >=1.8:
 /// ```text
 /// capture-pane [-aepPq] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
 /// (alias: capturep)
 /// ```
 ///
-/// tmux ^1.5:
+/// tmux >=1.5:
 /// ```text
 /// capture-pane [-b buffer-index] [-E end-line] [-S start-line] [-t target-pane]
 /// (alias: capturep)
 /// ```
-///
-/// tmux ^1.2:
-/// ```text
-/// capture-pane [-b buffer-index] [-t target-pane]
-/// (alias: capturep)
-/// ```
 #[macro_export]
 macro_rules! capture_pane {
-    // `[-a]` - the alternate screen is used, and the history is not accessible
+    // `[-a]`
     (@cmd ($cmd:expr) -a, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
             $cmd.alternate_screen()
         }) $($tail)*)
     }};
-    // `[-e]` - the output includes escape sequences for text and background attributes
+
+    // `[-A]`
+    (@cmd ($cmd:expr) -A, $($tail:tt)*) => {{
+        $crate::capture_pane!(@cmd ({
+            $cmd.a()
+        }) $($tail)*)
+    }};
+
+    // `[-e]`
     (@cmd ($cmd:expr) -e, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
             $cmd.escape_sequences()
         }) $($tail)*)
     }};
-    // `[-p]` - the output goes to stdout
+
+    // `[-p]`
     (@cmd ($cmd:expr) -p, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
             $cmd.stdout()
         }) $($tail)*)
     }};
-    // `[-P]` - capture only any output that the pane has received that is the beginning of an
-    // as-yet incomplete escape sequence
+
+    // `[-P]`
     (@cmd ($cmd:expr) -P, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
             $cmd.pane()
         }) $($tail)*)
     }};
-    // `[-q]` - quiet
+
+    // `[-q]`
     (@cmd ($cmd:expr) -q, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
             $cmd.quiet()
         }) $($tail)*)
     }};
-    // `[-C]` - escape non-printable characters as octal \xxx
+
+    // `[-C]`
     (@cmd ($cmd:expr) -C, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
             $cmd.escape_non_printable()
         }) $($tail)*)
     }};
-    // `[-J]` - preserve trailing spaces and joins any wrapped lines
+
+    // `[-J]`
     (@cmd ($cmd:expr) -J, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
             $cmd.join()
         }) $($tail)*)
     }};
-    // `[-N]` - preserves trailing spaces at each line's end
+
+    // `[-M]`
+    (@cmd ($cmd:expr) -M, $($tail:tt)*) => {{
+        $crate::capture_pane!(@cmd ({
+            $cmd.screen_for_mode()
+        }) $($tail)*)
+    }};
+
+    // `[-N]`
     (@cmd ($cmd:expr) -N, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
             $cmd.trailing_spaces()
         }) $($tail)*)
     }};
-    // `[-T]` - ignores trailing positions that do not contain a character
-    (@cmd ($cmd:expr) -T, $($tail:tt)*) => {{
+
+    // `[-b buffer-index]`
+    // `[-b buffer-name]`
+    (@cmd ($cmd:expr) -b $buffer:expr, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
-            $cmd.ignore_trailing_positions()
+            #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
+            {
+                $cmd.buffer_index($buffer)
+            }
+            #[cfg(feature = "tmux_2_0")]
+            {
+                $cmd.buffer_name($buffer)
+            }
         }) $($tail)*)
     }};
-    // `[-b buffer-name]` - buffer-name
-    (@cmd ($cmd:expr) -b $buffer_name:expr, $($tail:tt)*) => {{
-        $crate::capture_pane!(@cmd ({
-            $cmd.buffer_name($buffer_name)
-        }) $($tail)*)
-    }};
-    // XXX: type?
-    // `[-E end-line]` - specify the ending line number
+
+    // `[-E end-line]`
     (@cmd ($cmd:expr) -E $end_line:expr, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
             $cmd.end_line($end_line)
         }) $($tail)*)
     }};
-    // XXX: type?
-    // `[-S start-line]` - specify the starting line number
+
+    // `[-S start-line]`
     (@cmd ($cmd:expr) -S $start_line:expr, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
             $cmd.start_line($start_line)
         }) $($tail)*)
     }};
-    // `[-t target-pane]` - specify target-pane
+
+    // `[-t target-pane]`
     (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
         $crate::capture_pane!(@cmd ({
             $cmd.target_pane($target_pane)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -137,53 +167,53 @@ macro_rules! capture_pane {
 
 #[test]
 fn capture_pane_macro() {
-    use crate::TargetPane;
     use std::borrow::Cow;
 
+    // Capture the contents of a pane
+    //
     // # Manual
     //
-    // tmux ^3.4:
+    // tmux >=3.6:
+    // ```text
+    // capture-pane [-aepPqCJMNT] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
+    // (alias: capturep)
+    // ```
+    //
+    // tmux >=3.4:
     // ```text
     // capture-pane [-aAepPqCJNT] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
     // (alias: capturep)
     // ```
     //
-    // tmux ^3.1:
+    // tmux >=3.1:
     // ```text
     // capture-pane [-aepPqCJN] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
     // (alias: capturep)
     // ```
     //
-    // tmux ^2.4:
+    // tmux >=2.4:
     // ```text
     // capture-pane [-aepPqCJ] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
     // (alias: capturep)
     // ```
     //
-    // tmux ^1.8:
+    // tmux >=1.8:
     // ```text
     // capture-pane [-aepPq] [-b buffer-name] [-E end-line] [-S start-line] [-t target-pane]
     // (alias: capturep)
     // ```
     //
-    // tmux ^1.5:
+    // tmux >=1.5:
     // ```text
     // capture-pane [-b buffer-index] [-E end-line] [-S start-line] [-t target-pane]
     // (alias: capturep)
     // ```
-    //
-    // tmux ^1.2:
-    // ```text
-    // capture-pane [-b buffer-index] [-t target-pane]
-    // (alias: capturep)
-    // ```
-
-    #[cfg(feature = "tmux_1_2")]
-    let target_pane = TargetPane::Raw("4").to_string();
 
     let capture_pane = capture_pane!();
     #[cfg(feature = "tmux_1_8")]
     let capture_pane = capture_pane!((capture_pane), -a);
+    #[cfg(feature = "tmux_3_4")]
+    let capture_pane = capture_pane!((capture_pane), -A);
     #[cfg(feature = "tmux_1_8")]
     let capture_pane = capture_pane!((capture_pane), -e);
     #[cfg(feature = "tmux_1_8")]
@@ -196,18 +226,20 @@ fn capture_pane_macro() {
     let capture_pane = capture_pane!((capture_pane), -C);
     #[cfg(feature = "tmux_2_4")]
     let capture_pane = capture_pane!((capture_pane), -J);
+    #[cfg(feature = "tmux_3_6")]
+    let capture_pane = capture_pane!((capture_pane), -M);
     #[cfg(feature = "tmux_3_1")]
     let capture_pane = capture_pane!((capture_pane), -N);
-    #[cfg(feature = "tmux_3_4")]
-    let capture_pane = capture_pane!((capture_pane), -T);
-    #[cfg(feature = "tmux_1_8")]
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
     let capture_pane = capture_pane!((capture_pane), -b "1");
+    #[cfg(feature = "tmux_2_0")]
+    let capture_pane = capture_pane!((capture_pane), -b "2");
     #[cfg(feature = "tmux_1_5")]
-    let capture_pane = capture_pane!((capture_pane), -E "2");
+    let capture_pane = capture_pane!((capture_pane), -E "3");
     #[cfg(feature = "tmux_1_5")]
-    let capture_pane = capture_pane!((capture_pane), -S "3");
-    #[cfg(feature = "tmux_1_2")]
-    let capture_pane = capture_pane!((capture_pane), -t & target_pane);
+    let capture_pane = capture_pane!((capture_pane), -S "4");
+    #[cfg(feature = "tmux_1_5")]
+    let capture_pane = capture_pane!((capture_pane), -t "5");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "capture-pane";
@@ -218,6 +250,8 @@ fn capture_pane_macro() {
     s.push(cmd);
     #[cfg(feature = "tmux_1_8")]
     s.push("-a");
+    #[cfg(feature = "tmux_3_4")]
+    s.push("-A");
     #[cfg(feature = "tmux_1_8")]
     s.push("-e");
     #[cfg(feature = "tmux_1_8")]
@@ -230,20 +264,21 @@ fn capture_pane_macro() {
     s.push("-C");
     #[cfg(feature = "tmux_2_4")]
     s.push("-J");
+    #[cfg(feature = "tmux_3_6")]
+    s.push("-M");
     #[cfg(feature = "tmux_3_1")]
     s.push("-N");
-    #[cfg(feature = "tmux_3_4")]
-    s.push("-T");
-    #[cfg(feature = "tmux_1_8")]
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
     s.extend_from_slice(&["-b", "1"]);
+    #[cfg(feature = "tmux_2_0")]
+    s.extend_from_slice(&["-b", "2"]);
     #[cfg(feature = "tmux_1_5")]
-    s.extend_from_slice(&["-E", "2"]);
+    s.extend_from_slice(&["-E", "3"]);
     #[cfg(feature = "tmux_1_5")]
-    s.extend_from_slice(&["-S", "3"]);
-    #[cfg(feature = "tmux_1_2")]
-    s.extend_from_slice(&["-t", "4"]);
+    s.extend_from_slice(&["-S", "4"]);
+    #[cfg(feature = "tmux_1_5")]
+    s.extend_from_slice(&["-t", "5"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let capture_pane = capture_pane.build().to_vec();
 
     assert_eq!(capture_pane, s);

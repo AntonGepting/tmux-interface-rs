@@ -1,19 +1,24 @@
+// auto-generated file
+//
+
 /// Select the last (previously selected) window
 ///
 /// # Manual
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// last-window [-t target-session]
 /// (alias: last)
 /// ```
 #[macro_export]
 macro_rules! last_window {
+    // `[-t target-session]`
     (@cmd ($cmd:expr) -t $target_session:expr, $($tail:tt)*) => {{
         $crate::last_window!(@cmd ({
             $cmd.target_session($target_session)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -39,11 +44,12 @@ fn last_window_macro() {
     //
     // # Manual
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // last-window [-t target-session]
     // (alias: last)
     // ```
+
     let last_window = last_window!();
     #[cfg(feature = "tmux_0_8")]
     let last_window = last_window!((last_window), -t "1");
@@ -58,7 +64,6 @@ fn last_window_macro() {
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "1"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let last_window = last_window.build().to_vec();
 
     assert_eq!(last_window, s);

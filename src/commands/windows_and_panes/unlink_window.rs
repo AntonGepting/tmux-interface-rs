@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,13 +11,13 @@ pub type UnlinkW<'a> = UnlinkWindow<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^1.0:
+/// tmux >=1.5:
 /// ```text
 /// unlink-window [-k] [-t target-window]
 /// (alias: unlinkw)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// unlink-window [-t target-window]
 /// (alias: unlinkw)
@@ -22,7 +25,7 @@ pub type UnlinkW<'a> = UnlinkWindow<'a>;
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct UnlinkWindow<'a> {
     /// `[-k]`
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_1_5")]
     pub detach_other: bool,
 
     /// `[-t target-window]`
@@ -36,7 +39,7 @@ impl<'a> UnlinkWindow<'a> {
     }
 
     /// `[-k]`
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn detach_other(mut self) -> Self {
         self.detach_other = true;
         self
@@ -49,13 +52,14 @@ impl<'a> UnlinkWindow<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(UNLINK_WINDOW);
 
         // `[-k]`
-        #[cfg(feature = "tmux_1_0")]
+        #[cfg(feature = "tmux_1_5")]
         if self.detach_other {
             cmd.push_flag(K_LOWERCASE_KEY);
         }

@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::PaneSize;
 use crate::TmuxCommand;
@@ -10,56 +13,56 @@ pub type JoinP<'a> = JoinPane<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^3.1:
+/// tmux >=3.1:
 /// ```text
 /// join-pane [-bdfhv] [-l size] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
 ///
-/// tmux ^1.7:
+/// tmux >=1.7:
 /// ```text
 /// join-pane [-bdhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
 ///
-/// tmux ^1.2:
+/// tmux >=1.5:
 /// ```text
 /// join-pane [-dhv] [-l size | -p percentage] [-s src-pane] [-t dst-pane]
 /// (alias: joinp)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct JoinPane<'a> {
-    /// `[-b]` - cause src-pane to be joined to left of or above dst-pane
-    #[cfg(feature = "tmux_2_6")]
+    /// `[-b]`
+    #[cfg(feature = "tmux_1_7")]
     pub left_above: bool,
 
-    /// `[-d]` -
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-d]`
+    #[cfg(feature = "tmux_1_5")]
     pub detached: bool,
 
-    /// `[-f]` - creates a new pane spanning the full window height/width
-    #[cfg(feature = "tmux_2_6")]
+    /// `[-f]`
+    #[cfg(feature = "tmux_3_1")]
     pub full_size: bool,
 
-    /// `[-h]` - full height
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-h]`
+    #[cfg(feature = "tmux_1_5")]
     pub horizontal: bool,
 
-    /// `[-v]` - full width
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-v]`
+    #[cfg(feature = "tmux_1_5")]
     pub vertical: bool,
 
     /// `[-l size]`
-    /// `[-l size | -p percentage]` - specify the size of the new pane in lines/columns
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-l size | -p percentage]`
+    #[cfg(feature = "tmux_1_5")]
     pub size: Option<&'a PaneSize>,
 
-    /// `[-s src-pane]` - src-pane
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-s src-pane]`
+    #[cfg(feature = "tmux_1_5")]
     pub src_pane: Option<Cow<'a, str>>,
 
-    /// `[-t dst-pane]` - dst-pane
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-t dst-pane]`
+    #[cfg(feature = "tmux_1_5")]
     pub dst_pane: Option<Cow<'a, str>>,
 }
 
@@ -68,101 +71,102 @@ impl<'a> JoinPane<'a> {
         Default::default()
     }
 
-    /// `[-b]` - cause src-pane to be joined to left of or above dst-pane
-    #[cfg(feature = "tmux_2_6")]
+    /// `[-b]`
+    #[cfg(feature = "tmux_1_7")]
     pub fn left_above(mut self) -> Self {
         self.left_above = true;
         self
     }
 
-    /// `[-d]` -
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-d]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn detached(mut self) -> Self {
         self.detached = true;
         self
     }
 
-    /// `[-f]` - creates a new pane spanning the full window height/width
-    #[cfg(feature = "tmux_2_6")]
+    /// `[-f]`
+    #[cfg(feature = "tmux_3_1")]
     pub fn full_size(mut self) -> Self {
         self.full_size = true;
         self
     }
 
-    /// `[-h]` - full height
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-h]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn horizontal(mut self) -> Self {
         self.horizontal = true;
         self
     }
 
-    /// `[-v]` - full width
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-v]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn vertical(mut self) -> Self {
         self.vertical = true;
         self
     }
 
     /// `[-l size]`
-    /// `[-l size | -p percentage]` - specify the size of the new pane in lines/columns
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-l size | -p percentage]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn size(mut self, size: &'a PaneSize) -> Self {
         self.size = Some(size);
         self
     }
 
-    /// `[-s src-pane]` - src-pane
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-s src-pane]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn src_pane<S: Into<Cow<'a, str>>>(mut self, src_pane: S) -> Self {
         self.src_pane = Some(src_pane.into());
         self
     }
 
-    /// `[-t dst-pane]` - dst-pane
-    #[cfg(feature = "tmux_1_2")]
+    /// `[-t dst-pane]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn dst_pane<S: Into<Cow<'a, str>>>(mut self, dst_pane: S) -> Self {
         self.dst_pane = Some(dst_pane.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(JOIN_PANE);
 
-        // `[-b]` - cause src-pane to be joined to left of or above dst-pane
-        #[cfg(feature = "tmux_2_6")]
+        // `[-b]`
+        #[cfg(feature = "tmux_1_7")]
         if self.left_above {
             cmd.push_flag(B_LOWERCASE_KEY);
         }
 
-        // `[-d]` -
-        #[cfg(feature = "tmux_1_2")]
+        // `[-d]`
+        #[cfg(feature = "tmux_1_5")]
         if self.detached {
             cmd.push_flag(D_LOWERCASE_KEY);
         }
 
-        // `[-f]` - creates a new pane spanning the full window height/width
-        #[cfg(feature = "tmux_2_6")]
+        // `[-f]`
+        #[cfg(feature = "tmux_3_1")]
         if self.full_size {
             cmd.push_flag(F_LOWERCASE_KEY);
         }
 
-        // `[-h]` - full height
-        #[cfg(feature = "tmux_1_2")]
+        // `[-h]`
+        #[cfg(feature = "tmux_1_5")]
         if self.horizontal {
             cmd.push_flag(H_LOWERCASE_KEY);
         }
 
-        // `[-v]` - full width
-        #[cfg(feature = "tmux_1_2")]
+        // `[-v]`
+        #[cfg(feature = "tmux_1_5")]
         if self.vertical {
             cmd.push_flag(V_LOWERCASE_KEY);
         }
 
         // `[-l size]`
-        // `[-l size | -p percentage]` - specify the size of the new pane in lines/columns
-        #[cfg(feature = "tmux_1_2")]
+        // `[-l size | -p percentage]`
+        #[cfg(feature = "tmux_1_5")]
         if let Some(size) = &self.size {
             #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_1")))]
             match size {
@@ -179,14 +183,14 @@ impl<'a> JoinPane<'a> {
             };
         }
 
-        // `[-s src-pane]` - src-pane
-        #[cfg(feature = "tmux_1_2")]
+        // `[-s src-pane]`
+        #[cfg(feature = "tmux_1_5")]
         if let Some(src_pane) = self.src_pane {
             cmd.push_option(S_LOWERCASE_KEY, src_pane);
         }
 
-        // `[-t dst-pane]` - dst-pane
-        #[cfg(feature = "tmux_1_2")]
+        // `[-t dst-pane]`
+        #[cfg(feature = "tmux_1_5")]
         if let Some(dst_pane) = self.dst_pane {
             cmd.push_option(T_LOWERCASE_KEY, dst_pane);
         }

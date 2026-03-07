@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -9,13 +12,13 @@ pub type KillW<'a> = KillWindow<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^1.7:
+/// tmux >=1.7:
 /// ```text
 /// kill-window [-a] [-t target-window]
 /// (alias: killw)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// kill-window [-a] [-t target-window]
 /// (alias: killw)
@@ -50,6 +53,7 @@ impl<'a> KillWindow<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 

@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,13 +11,13 @@ pub type Next<'a> = NextWindow<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^0.9:
+/// tmux >=1.5:
 /// ```text
 /// next-window [-a] [-t target-session]
 /// (alias: next)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// next-window [-t target-session]
 /// (alias: next)
@@ -22,7 +25,7 @@ pub type Next<'a> = NextWindow<'a>;
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct NextWindow<'a> {
     /// `[-a]`
-    #[cfg(feature = "tmux_0_9")]
+    #[cfg(feature = "tmux_1_5")]
     pub attach: bool,
 
     /// `[-t target-session]`
@@ -36,7 +39,7 @@ impl<'a> NextWindow<'a> {
     }
 
     /// `[-a]`
-    #[cfg(feature = "tmux_0_9")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn attach(mut self) -> Self {
         self.attach = true;
         self
@@ -49,13 +52,14 @@ impl<'a> NextWindow<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(NEXT_WINDOW);
 
         // `[-a]`
-        #[cfg(feature = "tmux_0_9")]
+        #[cfg(feature = "tmux_1_5")]
         if self.attach {
             cmd.push_flag(A_LOWERCASE_KEY);
         }

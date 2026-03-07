@@ -1,100 +1,123 @@
+// auto-generated file
+//
+
+// Put a pane into client mode, allowing a client to be selected interactively from a list
+//
+// # Manual
+//
+// tmux >=3.6:
+// ```text
+// choose-client [-NryZ] [-F format] [-f filter] [-K key-format] [-O sort-order] [-t target-pane] [template]
+// ```
+//
+// tmux >=3.2:
+// ```text
+// choose-client [-NrZ] [-F format] [-f filter] [-K key-format] [-O sort-order] [-t target-pane] [template]
+// ```
+//
+// tmux >=3.1:
+// ```text
+// choose-client [-NrZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+// ```
+//
+// tmux >=2.7:
+// ```text
+// choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+// ```
+//
+// tmux >=2.6:
+// ```text
+// choose-client [-N] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
+// ```
+//
+// tmux >=1.7:
+// ```text
+// choose-client [-F format] [-t target-window] [template]
+// ```
+//
+// tmux >=1.0:
+// ```text
+// choose-client  [-t target-window] [template]
+// ```
 #[test]
 fn choose_client() {
     use crate::ChooseClient;
-    #[cfg(feature = "tmux_2_6")]
-    use crate::TargetPane;
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
-    use crate::TargetWindow;
     use std::borrow::Cow;
 
-    // Put a pane into client mode, allowing a client to be selected interactively from a list
-    //
-    // # Manual
-    //
-    // tmux ^3.2:
-    // ```text
-    // choose-client [-NrZ] [-F format] [-f filter] [-K key-format] [-O sort-order] [-t target-pane] [template]
-    // ```
-    //
-    // tmux ^3.1:
-    // ```text
-    // choose-client [-NrZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
-    // ```
-    //
-    // tmux ^2.7:
-    // ```text
-    // choose-client [-NZ] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
-    // ```
-    //
-    // tmux ^2.6:
-    // ```text
-    // choose-client [-N] [-F format] [-f filter] [-O sort-order] [-t target-pane] [template]
-    // ```
-    //
-    // tmux ^1.7:
-    // ```text
-    // choose-client [-F format] [-t target-window] [template]
-    // ```
-    //
-    // tmux ^1.0:
-    // ```text
-    // choose-client  [-t target-window] [template]
-    // ```
-
-    #[cfg(feature = "tmux_2_6")]
-    let target_pane = TargetPane::Raw("5").to_string();
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
-    let target_window = TargetWindow::Raw("5").to_string();
-
     let choose_client = ChooseClient::new();
+    // `[-N]`
     #[cfg(feature = "tmux_2_6")]
     let choose_client = choose_client.without_preview();
+
+    // `[-r]`
     #[cfg(feature = "tmux_3_1")]
     let choose_client = choose_client.reverse_sort_order();
-    #[cfg(feature = "tmux_3_1")]
+
+    // `[-y]`
+    #[cfg(feature = "tmux_3_6")]
+    let choose_client = choose_client.disable_confirmation();
+
+    // `[-Z]`
+    #[cfg(feature = "tmux_2_7")]
     let choose_client = choose_client.zoom();
+
+    // `[-F format]`
     #[cfg(feature = "tmux_1_7")]
     let choose_client = choose_client.format("1");
+
+    // `[-f filter]`
     #[cfg(feature = "tmux_2_6")]
     let choose_client = choose_client.filter("2");
+
+    // `[-K key-format]`
     #[cfg(feature = "tmux_3_2")]
     let choose_client = choose_client.key_format("3");
+
+    // `[-O sort-order]`
     #[cfg(feature = "tmux_2_6")]
     let choose_client = choose_client.sort_order("4");
+
+    // `[-t target-window]`
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+    let choose_client = choose_client.target_window("5");
+
+    // `[-t target-pane]`
     #[cfg(feature = "tmux_2_6")]
-    let choose_client = choose_client.target_pane(&target_pane);
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
-    let choose_client = choose_client.target_window(&target_window);
-    #[cfg(feature = "tmux_1_0")]
-    let choose_client = choose_client.template("6");
+    let choose_client = choose_client.target_pane("6");
+
+    // `[template]`
+    #[cfg(feature = "tmux_1_5")]
+    let choose_client = choose_client.template("7");
 
     let cmd = "choose-client";
 
-    let mut s = Vec::new();
-    s.push(cmd);
+    let mut v = Vec::new();
+    v.push(cmd);
     #[cfg(feature = "tmux_2_6")]
-    s.push("-N");
+    v.push("-N");
     #[cfg(feature = "tmux_3_1")]
-    s.push("-r");
-    #[cfg(feature = "tmux_3_1")]
-    s.push("-Z");
+    v.push("-r");
+    #[cfg(feature = "tmux_3_6")]
+    v.push("-y");
+    #[cfg(feature = "tmux_2_7")]
+    v.push("-Z");
     #[cfg(feature = "tmux_1_7")]
-    s.extend_from_slice(&["-F", "1"]);
+    v.extend_from_slice(&["-F", "1"]);
     #[cfg(feature = "tmux_2_6")]
-    s.extend_from_slice(&["-f", "2"]);
+    v.extend_from_slice(&["-f", "2"]);
     #[cfg(feature = "tmux_3_2")]
-    s.extend_from_slice(&["-K", "3"]);
+    v.extend_from_slice(&["-K", "3"]);
     #[cfg(feature = "tmux_2_6")]
-    s.extend_from_slice(&["-O", "4"]);
+    v.extend_from_slice(&["-O", "4"]);
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_6")))]
+    v.extend_from_slice(&["-t", "5"]);
     #[cfg(feature = "tmux_2_6")]
-    s.extend_from_slice(&["-t", "5"]);
-    #[cfg(all(feature = "tmux_1_0", not(feature = "tmux_2_6")))]
-    s.extend_from_slice(&["-t", "5"]);
-    #[cfg(feature = "tmux_1_0")]
-    s.push("6");
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    v.extend_from_slice(&["-t", "6"]);
+    #[cfg(feature = "tmux_1_5")]
+    v.push("7");
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let choose_client = choose_client.build().to_vec();
 
-    assert_eq!(choose_client, s);
+    assert_eq!(choose_client, v);
 }

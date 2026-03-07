@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,13 +11,13 @@ pub type RotateW<'a> = RotateWindow<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^3.1:
+/// tmux >=3.1:
 /// ```text
 /// rotate-window [-DUZ] [-t target-window]
 /// (alias: rotatew)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// rotate-window [-DU] [-t target-window]
 /// (alias: rotatew)
@@ -71,6 +74,7 @@ impl<'a> RotateWindow<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 

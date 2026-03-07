@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,7 +11,7 @@ pub type SwapW<'a> = SwapWindow<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// swap-window [-d] [-s src-window] [-t dst-window]
 /// (alias: swapw)
@@ -54,6 +57,7 @@ impl<'a> SwapWindow<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 

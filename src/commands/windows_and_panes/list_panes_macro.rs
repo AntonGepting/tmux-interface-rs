@@ -1,23 +1,25 @@
-// XXX: better return type
+// auto-generated file
+//
+
 /// List panes on the server
 ///
 /// # Manual
 ///
-/// tmux ^1.6:
+/// tmux >=3.2:
+/// ```text
+/// list-panes [-as] [-F format] [-f filter] [-t target]
+/// (alias: lsp)
+/// ```
+///
+/// tmux >=1.6:
 /// ```text
 /// list-panes [-as] [-F format] [-t target]
 /// (alias: lsp)
 /// ```
 ///
-/// tmux ^1.5:
+/// tmux >=1.5:
 /// ```text
 /// list-panes [-as] [-t target]
-/// (alias: lsp)
-/// ```
-///
-/// tmux ^0.8:
-/// ```text
-/// list-panes [-t target]
 /// (alias: lsp)
 /// ```
 #[macro_export]
@@ -28,24 +30,35 @@ macro_rules! list_panes {
             $cmd.all()
         }) $($tail)*)
     }};
+
     // `[-s]`
     (@cmd ($cmd:expr) -s, $($tail:tt)*) => {{
         $crate::list_panes!(@cmd ({
             $cmd.session()
         }) $($tail)*)
     }};
+
     // `[-F format]`
     (@cmd ($cmd:expr) -F $format:expr, $($tail:tt)*) => {{
         $crate::list_panes!(@cmd ({
             $cmd.format($format)
         }) $($tail)*)
     }};
+
+    // `[-f filter]`
+    (@cmd ($cmd:expr) -f $filter:expr, $($tail:tt)*) => {{
+        $crate::list_panes!(@cmd ({
+            $cmd.filter($filter)
+        }) $($tail)*)
+    }};
+
     // `[-t target]`
     (@cmd ($cmd:expr) -t $target:expr, $($tail:tt)*) => {{
         $crate::list_panes!(@cmd ({
             $cmd.target($target)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -71,23 +84,24 @@ fn list_panes_macro() {
     //
     // # Manual
     //
-    // tmux ^1.6:
+    // tmux >=3.2:
+    // ```text
+    // list-panes [-as] [-F format] [-f filter] [-t target]
+    // (alias: lsp)
+    // ```
+    //
+    // tmux >=1.6:
     // ```text
     // list-panes [-as] [-F format] [-t target]
     // (alias: lsp)
     // ```
     //
-    // tmux ^1.5:
+    // tmux >=1.5:
     // ```text
     // list-panes [-as] [-t target]
     // (alias: lsp)
     // ```
-    //
-    // tmux ^0.8:
-    // ```text
-    // list-panes [-t target]
-    // (alias: lsp)
-    // ```
+
     let list_panes = list_panes!();
     #[cfg(feature = "tmux_1_5")]
     let list_panes = list_panes!((list_panes), -a);
@@ -95,8 +109,10 @@ fn list_panes_macro() {
     let list_panes = list_panes!((list_panes), -s);
     #[cfg(feature = "tmux_1_6")]
     let list_panes = list_panes!((list_panes), -F "1");
-    #[cfg(feature = "tmux_0_8")]
-    let list_panes = list_panes!((list_panes), -t "2");
+    #[cfg(feature = "tmux_3_2")]
+    let list_panes = list_panes!((list_panes), -f "2");
+    #[cfg(feature = "tmux_1_5")]
+    let list_panes = list_panes!((list_panes), -t "3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "list-panes";
@@ -111,10 +127,11 @@ fn list_panes_macro() {
     s.push("-s");
     #[cfg(feature = "tmux_1_6")]
     s.extend_from_slice(&["-F", "1"]);
-    #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-t", "2"]);
+    #[cfg(feature = "tmux_3_2")]
+    s.extend_from_slice(&["-f", "2"]);
+    #[cfg(feature = "tmux_1_5")]
+    s.extend_from_slice(&["-t", "3"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let list_panes = list_panes.build().to_vec();
 
     assert_eq!(list_panes, s);

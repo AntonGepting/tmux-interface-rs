@@ -1,14 +1,17 @@
+// auto-generated file
+//
+
 /// Move to the previous window in the session
 ///
 /// # Manual
 ///
-/// tmux ^0.9:
+/// tmux >=1.5:
 /// ```text
 /// previous-window [-a] [-t target-session]
 /// (alias: prev)
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// previous-window [-t target-session]
 /// (alias: prev)
@@ -21,12 +24,14 @@ macro_rules! previous_window {
             $cmd.parent_sighup()
         }) $($tail)*)
     }};
+
     // `[-t target-session]`
     (@cmd ($cmd:expr) -t $target_session:expr, $($tail:tt)*) => {{
         $crate::previous_window!(@cmd ({
             $cmd.target_session($target_session)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -48,19 +53,24 @@ macro_rules! previous_window {
 fn previous_window_macro() {
     use std::borrow::Cow;
 
-    // tmux ^0.9:
+    // Move to the previous window in the session
+    //
+    // # Manual
+    //
+    // tmux >=1.5:
     // ```text
     // previous-window [-a] [-t target-session]
     // (alias: prev)
     // ```
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // previous-window [-t target-session]
     // (alias: prev)
     // ```
+
     let previous_window = previous_window!();
-    #[cfg(feature = "tmux_0_9")]
+    #[cfg(feature = "tmux_1_5")]
     let previous_window = previous_window!((previous_window), -a);
     #[cfg(feature = "tmux_0_8")]
     let previous_window = previous_window!((previous_window), -t "1");
@@ -72,12 +82,11 @@ fn previous_window_macro() {
 
     let mut s = Vec::new();
     s.push(cmd);
-    #[cfg(feature = "tmux_0_9")]
+    #[cfg(feature = "tmux_1_5")]
     s.push("-a");
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "1"]);
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let previous_window = previous_window.build().to_vec();
 
     assert_eq!(previous_window, s);

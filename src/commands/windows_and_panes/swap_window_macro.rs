@@ -1,8 +1,11 @@
+// auto-generated file
+//
+
 /// This is similar to link-window, except the source and destination windows are swapped
 ///
 /// # Manual
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// swap-window [-d] [-s src-window] [-t dst-window]
 /// (alias: swapw)
@@ -15,18 +18,21 @@ macro_rules! swap_window {
             $cmd.detached()
         }) $($tail)*)
     }};
+
     // `[-s src-window]`
     (@cmd ($cmd:expr) -s $src_window:expr, $($tail:tt)*) => {{
         $crate::swap_window!(@cmd ({
             $cmd.src_window($src_window)
         }) $($tail)*)
     }};
+
     // `[-t dst-window]`
     (@cmd ($cmd:expr) -t $dst_window:expr, $($tail:tt)*) => {{
         $crate::swap_window!(@cmd ({
             $cmd.dst_window($dst_window)
         }) $($tail)*)
     }};
+
     //(@cmd ($cmd:expr) -$unknown:tt, $($tail:tt)*) => {{
         //::std::compile_error!("unknown flag, option or parameter: {}", $unknown);
     //}};
@@ -46,28 +52,25 @@ macro_rules! swap_window {
 
 #[test]
 fn swap_window_macro() {
-    use crate::TargetWindow;
     use std::borrow::Cow;
 
     // This is similar to link-window, except the source and destination windows are swapped
     //
     // # Manual
     //
-    // tmux ^0.8:
+    // tmux >=0.8:
     // ```text
     // swap-window [-d] [-s src-window] [-t dst-window]
     // (alias: swapw)
     // ```
-    let src_window = TargetWindow::Raw("1").to_string();
-    let dst_window = TargetWindow::Raw("2").to_string();
 
     let swap_window = swap_window!();
     #[cfg(feature = "tmux_0_8")]
     let swap_window = swap_window!((swap_window), -d);
     #[cfg(feature = "tmux_0_8")]
-    let swap_window = swap_window!((swap_window), -s & src_window);
+    let swap_window = swap_window!((swap_window), -s "1");
     #[cfg(feature = "tmux_0_8")]
-    let swap_window = swap_window!((swap_window), -t & dst_window);
+    let swap_window = swap_window!((swap_window), -t "2");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "swap-window";
@@ -82,9 +85,7 @@ fn swap_window_macro() {
     s.extend_from_slice(&["-s", "1"]);
     #[cfg(feature = "tmux_0_8")]
     s.extend_from_slice(&["-t", "2"]);
-
     let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
-
     let swap_window = swap_window.build().to_vec();
 
     assert_eq!(swap_window, s);

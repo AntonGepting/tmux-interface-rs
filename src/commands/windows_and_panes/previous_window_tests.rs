@@ -1,22 +1,32 @@
+// auto-generated file
+//
+
+// Move to the previous window in the session
+//
+// # Manual
+//
+// tmux >=1.5:
+// ```text
+// previous-window [-a] [-t target-session]
+// (alias: prev)
+// ```
+//
+// tmux >=0.8:
+// ```text
+// previous-window [-t target-session]
+// (alias: prev)
+// ```
 #[test]
 fn previous_window() {
     use crate::PreviousWindow;
     use std::borrow::Cow;
 
-    // tmux ^0.9:
-    // ```text
-    // previous-window [-a] [-t target-session]
-    // (alias: prev)
-    // ```
-    //
-    // tmux ^0.8:
-    // ```text
-    // previous-window [-t target-session]
-    // (alias: prev)
-    // ```
     let previous_window = PreviousWindow::new();
-    #[cfg(feature = "tmux_0_9")]
+    // `[-a]`
+    #[cfg(feature = "tmux_1_5")]
     let previous_window = previous_window.parent_sighup();
+
+    // `[-t target-session]`
     #[cfg(feature = "tmux_0_8")]
     let previous_window = previous_window.target_session("1");
 
@@ -25,15 +35,15 @@ fn previous_window() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "prev";
 
-    let mut s = Vec::new();
-    s.push(cmd);
-    #[cfg(feature = "tmux_0_9")]
-    s.push("-a");
+    let mut v = Vec::new();
+    v.push(cmd);
+    #[cfg(feature = "tmux_1_5")]
+    v.push("-a");
     #[cfg(feature = "tmux_0_8")]
-    s.extend_from_slice(&["-t", "1"]);
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    v.extend_from_slice(&["-t", "1"]);
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let previous_window = previous_window.build().to_vec();
 
-    assert_eq!(previous_window, s);
+    assert_eq!(previous_window, v);
 }

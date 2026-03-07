@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
@@ -8,24 +11,23 @@ pub type LastP<'a> = LastPane<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^3.1:
+/// tmux >=3.1:
 /// ```text
 /// last-pane [-deZ] [-t target-window]
 /// (alias: lastp)
 /// ```
 ///
-/// tmux ^2.0:
+/// tmux >=2.0:
 /// ```text
 /// last-pane [-de] [-t target-window]
 /// (alias: lastp)
 /// ```
 ///
-/// tmux ^1.4:
+/// tmux >=1.5:
 /// ```text
 /// last-pane [-t target-window]
 /// (alias: lastp)
 /// ```
-// FIXME: versions and function parameters
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct LastPane<'a> {
     /// `[-d]`
@@ -41,7 +43,7 @@ pub struct LastPane<'a> {
     pub keep_zoomed: bool,
 
     /// `[-t target-window]`
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_5")]
     pub target_window: Option<Cow<'a, str>>,
 }
 
@@ -72,12 +74,13 @@ impl<'a> LastPane<'a> {
     }
 
     /// `[-t target-window]`
-    #[cfg(feature = "tmux_1_4")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
         self.target_window = Some(target_window.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -102,7 +105,7 @@ impl<'a> LastPane<'a> {
         }
 
         // `[-t target-window]`
-        #[cfg(feature = "tmux_1_4")]
+        #[cfg(feature = "tmux_1_5")]
         if let Some(target_window) = self.target_window {
             cmd.push_option(T_LOWERCASE_KEY, target_window);
         }

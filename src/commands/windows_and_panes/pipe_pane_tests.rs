@@ -1,40 +1,45 @@
+// auto-generated file
+//
+
+// Pipe output sent by the program in target-pane to a shell command or vice versa
+//
+// # Manual
+//
+// tmux >=2.7:
+// ```text
+// pipe-pane [-IOo] [-t target-pane] [shell-command]
+// (alias: pipep)
+// ```
+//
+// tmux >=1.5:
+// ```text
+// pipe-pane [-o] [-t target-pane] [shell-command]
+// (alias: pipep)
+// ```
 #[test]
 fn pipe_pane() {
-    use crate::{PipePane, TargetPane};
+    use crate::PipePane;
     use std::borrow::Cow;
 
-    // Pipe output sent by the program in target-pane to a shell command or vice versa
-    //
-    // # Manual
-    //
-    // tmux ^2.7:
-    // ```text
-    // pipe-pane [-IOo] [-t target-pane] [shell-command]
-    // (alias: pipep)
-    // ```
-    //
-    // tmux ^1.2:
-    // ```text
-    // pipe-pane [-o] [-t target-pane] [shell-command]
-    // (alias: pipep)
-    // ```
-    //
-    // tmux ^1.1:
-    // ```text
-    // pipe-pane [-o] [-t target-pane] [command]
-    // (alias: pipep)
-    // ```
-    let target_pane = TargetPane::Raw("1").to_string();
     let pipe_pane = PipePane::new();
+    // `[-I]`
     #[cfg(feature = "tmux_2_7")]
     let pipe_pane = pipe_pane.stdout();
+
+    // `[-O]`
     #[cfg(feature = "tmux_2_7")]
     let pipe_pane = pipe_pane.stdin();
-    #[cfg(feature = "tmux_1_1")]
+
+    // `[-o]`
+    #[cfg(feature = "tmux_1_5")]
     let pipe_pane = pipe_pane.open();
-    #[cfg(feature = "tmux_1_1")]
-    let pipe_pane = pipe_pane.target_pane(&target_pane);
-    #[cfg(feature = "tmux_1_2")]
+
+    // `[-t target-pane]`
+    #[cfg(feature = "tmux_1_5")]
+    let pipe_pane = pipe_pane.target_pane("1");
+
+    // `[shell-command]`
+    #[cfg(feature = "tmux_1_5")]
     let pipe_pane = pipe_pane.shell_command("2");
 
     #[cfg(not(feature = "cmd_alias"))]
@@ -42,21 +47,21 @@ fn pipe_pane() {
     #[cfg(feature = "cmd_alias")]
     let cmd = "pipep";
 
-    let mut s = Vec::new();
-    s.push(cmd);
+    let mut v = Vec::new();
+    v.push(cmd);
     #[cfg(feature = "tmux_2_7")]
-    s.push("-I");
+    v.push("-I");
     #[cfg(feature = "tmux_2_7")]
-    s.push("-O");
-    #[cfg(feature = "tmux_1_1")]
-    s.push("-o");
-    #[cfg(feature = "tmux_1_1")]
-    s.extend_from_slice(&["-t", "1"]);
-    #[cfg(feature = "tmux_1_2")]
-    s.push("2");
-    let s: Vec<Cow<str>> = s.into_iter().map(|a| a.into()).collect();
+    v.push("-O");
+    #[cfg(feature = "tmux_1_5")]
+    v.push("-o");
+    #[cfg(feature = "tmux_1_5")]
+    v.extend_from_slice(&["-t", "1"]);
+    #[cfg(feature = "tmux_1_5")]
+    v.push("2");
+    let v: Vec<Cow<str>> = v.into_iter().map(|a| a.into()).collect();
 
     let pipe_pane = pipe_pane.build().to_vec();
 
-    assert_eq!(pipe_pane, s);
+    assert_eq!(pipe_pane, v);
 }

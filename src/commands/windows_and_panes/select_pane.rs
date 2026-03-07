@@ -1,7 +1,9 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
-use std::marker::PhantomData;
 
 pub type SelectP<'a> = SelectPane<'a>;
 
@@ -9,112 +11,106 @@ pub type SelectP<'a> = SelectPane<'a>;
 ///
 /// # Manual
 ///
-/// tmux ^3.1:
+/// tmux >=3.1:
 /// ```text
 /// select-pane [-DdeLlMmRUZ] [-T title] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
-/// tmux ^2.6:
+/// tmux >=2.6:
 /// ```text
 /// select-pane [-DdeLlMmRU] [-T title] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
-/// tmux ^2.1:
+/// tmux >=2.1:
 /// ```text
 /// select-pane [-DdegLlMmRU] [-P style] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
-/// tmux ^2.0:
+/// tmux >=2.0:
 /// ```text
 /// select-pane [-DdeLlRU] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
-/// tmux ^1.5:
+/// tmux >=1.5:
 /// ```text
 /// select-pane [-DLlRU] [-t target-pane]
 /// (alias: selectp)
 /// ```
 ///
-/// tmux ^1.3:
-/// ```text
-/// select-pane [-DLRU] [-t target-pane]
-/// (alias: selectp)
-/// ```
-///
-/// tmux ^1.0:
-/// ```text
-/// select-pane [-t target-pane]
-/// (alias: selectp)
-/// ```
-///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// select-pane [-p pane-index] [-t target-window]
 /// (alias: selectp)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct SelectPane<'a> {
-    /// `[-D]` - pane below
-    #[cfg(feature = "tmux_1_3")]
+    /// `[-D]`
+    #[cfg(feature = "tmux_1_5")]
     pub down: bool,
 
-    /// `[-d]` - disable input
+    /// `[-d]`
     #[cfg(feature = "tmux_2_0")]
     pub disable: bool,
 
-    /// `[-e]` - enable input
+    /// `[-e]`
     #[cfg(feature = "tmux_2_0")]
     pub enable: bool,
 
-    /// `[-g]` - show the current pane style
-    #[cfg(feature = "tmux_2_1")]
+    /// `[-g]`
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_1")))]
     pub show_style: bool,
 
-    /// `[-L]` - pane left
-    #[cfg(feature = "tmux_1_3")]
+    /// `[-L]`
+    #[cfg(feature = "tmux_1_5")]
     pub left: bool,
 
-    /// `[-l]` - equivalent to last-pane command
+    /// `[-l]`
     #[cfg(feature = "tmux_1_5")]
     pub last: bool,
 
-    /// `[-M]` - clear marked pane
+    /// `[-M]`
     #[cfg(feature = "tmux_2_1")]
     pub set_marked: bool,
 
-    /// `[-m]` - set marked pane
+    /// `[-m]`
     #[cfg(feature = "tmux_2_1")]
     pub clear_marked: bool,
 
-    /// `[-R]` - pane right
-    #[cfg(feature = "tmux_1_3")]
+    /// `[-R]`
+    #[cfg(feature = "tmux_1_5")]
     pub right: bool,
 
-    /// `[-U]` - pane above
-    #[cfg(feature = "tmux_1_3")]
+    /// `[-U]`
+    #[cfg(feature = "tmux_1_5")]
     pub up: bool,
 
-    /// `[-Z]` - keep the window zoomed if it was zoomed
+    /// `[-Z]`
     #[cfg(feature = "tmux_3_1")]
     pub keep_zoomed: bool,
 
-    /// `[-P style]` - set the style for a single pane
-    #[cfg(feature = "tmux_2_1")]
+    /// `[-p pane-index]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    pub pane_index: Option<Cow<'a, str>>,
+
+    /// `[-P style]`
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0a")))]
     pub style: Option<Cow<'a, str>>,
 
-    /// `[-T title]` - title
+    /// `[-T title]`
     #[cfg(feature = "tmux_2_6")]
     pub title: Option<Cow<'a, str>>,
 
-    /// `[-t target-pane]` - target-pane
-    #[cfg(feature = "tmux_1_0")]
-    pub target_pane: Option<Cow<'a, str>>,
+    /// `[-t target-window]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    pub target_window: Option<Cow<'a, str>>,
 
-    _phantom_data: PhantomData<&'a ()>,
+    /// `[-t target-pane]`
+    #[cfg(feature = "tmux_1_5")]
+    pub target_pane: Option<Cow<'a, str>>,
 }
 
 impl<'a> SelectPane<'a> {
@@ -122,189 +118,216 @@ impl<'a> SelectPane<'a> {
         Default::default()
     }
 
-    /// `[-D]` - pane below
-    #[cfg(feature = "tmux_1_3")]
+    /// `[-D]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn down(mut self) -> Self {
         self.down = true;
         self
     }
 
-    /// `[-d]` - disable input
+    /// `[-d]`
     #[cfg(feature = "tmux_2_0")]
     pub fn disable(mut self) -> Self {
         self.disable = true;
         self
     }
 
-    /// `[-e]` - enable input
+    /// `[-e]`
     #[cfg(feature = "tmux_2_0")]
     pub fn enable(mut self) -> Self {
         self.enable = true;
         self
     }
 
-    /// `[-g]` - show the current pane style
-    #[cfg(feature = "tmux_2_1")]
+    /// `[-g]`
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_1")))]
     pub fn show_style(mut self) -> Self {
         self.show_style = true;
         self
     }
 
-    /// `[-L]` - pane left
-    #[cfg(feature = "tmux_1_3")]
+    /// `[-L]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn left(mut self) -> Self {
         self.left = true;
         self
     }
 
-    /// `[-l]` - equivalent to last-pane command
+    /// `[-l]`
     #[cfg(feature = "tmux_1_5")]
     pub fn last(mut self) -> Self {
         self.last = true;
         self
     }
 
-    /// `[-M]` - clear marked pane
+    /// `[-M]`
     #[cfg(feature = "tmux_2_1")]
     pub fn set_marked(mut self) -> Self {
         self.set_marked = true;
         self
     }
 
-    /// `[-m]` - set marked pane
+    /// `[-m]`
     #[cfg(feature = "tmux_2_1")]
     pub fn clear_marked(mut self) -> Self {
         self.clear_marked = true;
         self
     }
 
-    /// `[-R]` - pane right
-    #[cfg(feature = "tmux_1_3")]
+    /// `[-R]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn right(mut self) -> Self {
         self.right = true;
         self
     }
 
-    /// `[-U]` - pane above
-    #[cfg(feature = "tmux_1_3")]
+    /// `[-U]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn up(mut self) -> Self {
         self.up = true;
         self
     }
 
-    /// `[-Z]` - keep the window zoomed if it was zoomed
+    /// `[-Z]`
     #[cfg(feature = "tmux_3_1")]
     pub fn keep_zoomed(mut self) -> Self {
         self.keep_zoomed = true;
         self
     }
 
-    /// `[-P style]` - set the style for a single pane
-    #[cfg(feature = "tmux_2_1")]
+    /// `[-p pane-index]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    pub fn pane_index<S: Into<Cow<'a, str>>>(mut self, pane_index: S) -> Self {
+        self.pane_index = Some(pane_index.into());
+        self
+    }
+
+    /// `[-P style]`
+    #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0a")))]
     pub fn style<S: Into<Cow<'a, str>>>(mut self, style: S) -> Self {
         self.style = Some(style.into());
         self
     }
 
-    /// `[-T title]` - title
+    /// `[-T title]`
     #[cfg(feature = "tmux_2_6")]
     pub fn title<S: Into<Cow<'a, str>>>(mut self, title: S) -> Self {
         self.title = Some(title.into());
         self
     }
 
-    /// `[-t target-pane]` - target-pane
-    #[cfg(feature = "tmux_1_0")]
+    /// `[-t target-window]`
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+    pub fn target_window<S: Into<Cow<'a, str>>>(mut self, target_window: S) -> Self {
+        self.target_window = Some(target_window.into());
+        self
+    }
+
+    /// `[-t target-pane]`
+    #[cfg(feature = "tmux_1_5")]
     pub fn target_pane<S: Into<Cow<'a, str>>>(mut self, target_pane: S) -> Self {
         self.target_pane = Some(target_pane.into());
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(SELECT_PANE);
 
-        // `[-D]` - pane below
-        #[cfg(feature = "tmux_1_3")]
+        // `[-D]`
+        #[cfg(feature = "tmux_1_5")]
         if self.down {
             cmd.push_flag(D_UPPERCASE_KEY);
         }
 
-        // `[-d]` - disable input
+        // `[-d]`
         #[cfg(feature = "tmux_2_0")]
         if self.disable {
             cmd.push_flag(D_LOWERCASE_KEY);
         }
 
-        // `[-e]` - enable input
+        // `[-e]`
         #[cfg(feature = "tmux_2_0")]
         if self.enable {
             cmd.push_flag(E_LOWERCASE_KEY);
         }
 
-        // `[-g]` - show the current pane style
-        #[cfg(feature = "tmux_2_1")]
+        // `[-g]`
+        #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_1")))]
         if self.show_style {
             cmd.push_flag(G_LOWERCASE_KEY);
         }
 
-        // `[-L]` - pane left
-        #[cfg(feature = "tmux_1_3")]
+        // `[-L]`
+        #[cfg(feature = "tmux_1_5")]
         if self.left {
             cmd.push_flag(L_UPPERCASE_KEY);
         }
 
-        // `[-l]` - equivalent to last-pane command
+        // `[-l]`
         #[cfg(feature = "tmux_1_5")]
         if self.last {
             cmd.push_flag(L_LOWERCASE_KEY);
         }
 
-        // `[-M]` - clear marked pane
+        // `[-M]`
         #[cfg(feature = "tmux_2_1")]
         if self.set_marked {
             cmd.push_flag(M_UPPERCASE_KEY);
         }
 
-        // `[-m]` - set marked pane
+        // `[-m]`
         #[cfg(feature = "tmux_2_1")]
         if self.clear_marked {
             cmd.push_flag(M_LOWERCASE_KEY);
         }
 
-        // `[-R]` - pane right
-        #[cfg(feature = "tmux_1_3")]
+        // `[-R]`
+        #[cfg(feature = "tmux_1_5")]
         if self.right {
             cmd.push_flag(R_UPPERCASE_KEY);
         }
 
-        // `[-U]` - pane above
-        #[cfg(feature = "tmux_1_3")]
+        // `[-U]`
+        #[cfg(feature = "tmux_1_5")]
         if self.up {
             cmd.push_flag(U_UPPERCASE_KEY);
         }
 
-        // `[-Z]` - keep the window zoomed if it was zoomed
+        // `[-Z]`
         #[cfg(feature = "tmux_3_1")]
         if self.keep_zoomed {
             cmd.push_flag(Z_UPPERCASE_KEY);
         }
 
-        // `[-P style]` - set the style for a single pane
-        #[cfg(feature = "tmux_2_1")]
+        // `[-p pane-index]`
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+        if let Some(pane_index) = self.pane_index {
+            cmd.push_option(P_LOWERCASE_KEY, pane_index);
+        }
+
+        // `[-P style]`
+        #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_3_0a")))]
         if let Some(style) = self.style {
             cmd.push_option(P_UPPERCASE_KEY, style);
         }
 
-        // `[-T title]` - title
+        // `[-T title]`
         #[cfg(feature = "tmux_2_6")]
         if let Some(title) = self.title {
             cmd.push_option(T_UPPERCASE_KEY, title);
         }
 
-        // `[-t target-pane]` - target-pane
-        #[cfg(feature = "tmux_1_0")]
+        // `[-t target-window]`
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
+        if let Some(target_window) = self.target_window {
+            cmd.push_option(T_LOWERCASE_KEY, target_window);
+        }
+
+        // `[-t target-pane]`
+        #[cfg(feature = "tmux_1_5")]
         if let Some(target_pane) = self.target_pane {
             cmd.push_option(T_LOWERCASE_KEY, target_pane);
         }
