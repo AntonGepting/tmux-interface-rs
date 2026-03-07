@@ -111,15 +111,17 @@ macro_rules! bind_key {
         }) $($tail)*)
     }};
 
+    // FIXME: no difference between key, command and arguments for macro
     // `[command]`
-    (@cmd ($cmd:expr) $command:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) --command $command:expr, $($tail:tt)*) => {{
         $crate::bind_key!(@cmd ({
             $cmd.command($command)
         }) $($tail)*)
     }};
 
+    // FIXME: no difference between key, command and arguments for macro
     // `[arguments]`
-    (@cmd ($cmd:expr) $arguments:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) --argument $arguments:expr, $($tail:tt)*) => {{
         $crate::bind_key!(@cmd ({
             $cmd.arguments($arguments)
         }) $($tail)*)
@@ -212,9 +214,9 @@ fn bind_key_macro() {
     #[cfg(feature = "tmux_0_8")]
     let bind_key = bind_key!((bind_key), "6");
     #[cfg(feature = "tmux_0_8")]
-    let bind_key = bind_key!((bind_key), "7");
+    let bind_key = bind_key!((bind_key), --command "7");
     #[cfg(feature = "tmux_0_8")]
-    let bind_key = bind_key!((bind_key), "8");
+    let bind_key = bind_key!((bind_key), --argument "8");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "bind-key";

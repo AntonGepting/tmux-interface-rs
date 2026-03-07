@@ -146,8 +146,9 @@ macro_rules! set_option {
         }) $($tail)*)
     }};
 
+    // FIXME: no difference between option and value for macro
     // `[value]`
-    (@cmd ($cmd:expr) $value:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) --value $value:expr, $($tail:tt)*) => {{
         $crate::set_option!(@cmd ({
             $cmd.value($value)
         }) $($tail)*)
@@ -250,7 +251,7 @@ fn set_option_macro() {
     #[cfg(feature = "tmux_0_8")]
     let set_option = set_option!((set_option), "4");
     #[cfg(feature = "tmux_0_8")]
-    let set_option = set_option!((set_option), "5");
+    let set_option = set_option!((set_option), --value "5");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "set-option";

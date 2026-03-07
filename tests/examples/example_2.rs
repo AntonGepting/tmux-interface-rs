@@ -4,15 +4,16 @@ fn example_2() {
 
     let target_session = "example_2";
     let target_window = "example_2_window_1";
+    let target_pane = "example_2_window_1_pane_1";
 
     // tmux new-session -d -s example_2 ;
     //              new-window -n example_2_window_1 ;
-    //              split-window -t example_2_window_1 ;
+    //              split-window -t example_2_window_1_pane_1 ;
     //              kill-session -t example_2
     let output = Tmux::new()
         .add_command(NewSession::new().detached().session_name(target_session))
         .add_command(NewWindow::new().window_name(target_window))
-        .add_command(SplitWindow::new().target_window(target_window))
+        .add_command(SplitWindow::new().target_pane(target_pane))
         .add_command(KillSession::new().target_session(target_session))
         .output()
         .unwrap();

@@ -5,10 +5,11 @@ fn example_3() {
 
     let target_session = "example_3";
     let target_window = "example_3_window_1";
+    let target_pane = "example_3_window_1_pane_1";
 
     // tmux new-session -d -s example_3 ;
     //              new-window -n example_3_window_1 ;
-    //              split-window -t example_3_window_1 ;
+    //              split-window -t example_3_window_1_pane_1 ;
     //              kill-session -t example_3
 
     let new_session = NewSession {
@@ -23,7 +24,7 @@ fn example_3() {
     };
 
     let split_window = SplitWindow {
-        target_window: Some(Cow::Borrowed(target_window)),
+        target_pane: Some(Cow::Borrowed(target_pane)),
         ..Default::default()
     };
 

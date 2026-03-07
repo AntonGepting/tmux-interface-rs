@@ -87,8 +87,9 @@ macro_rules! set_hook {
         }) $($tail)*)
     }};
 
+    // FIXME: no difference between hook-name and command for macro
     // `[command]`
-    (@cmd ($cmd:expr) $command:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) --command $command:expr, $($tail:tt)*) => {{
         $crate::set_hook!(@cmd ({
             $cmd.command($command)
         }) $($tail)*)
@@ -162,7 +163,7 @@ fn set_hook_macro() {
     #[cfg(feature = "tmux_2_2")]
     let set_hook = set_hook!((set_hook), "2");
     #[cfg(feature = "tmux_2_2")]
-    let set_hook = set_hook!((set_hook), "3");
+    let set_hook = set_hook!((set_hook), --command "3");
 
     let cmd = "set-hook";
 

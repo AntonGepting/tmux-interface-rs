@@ -38,16 +38,17 @@ macro_rules! show_hooks {
     }};
 
     // `[-t target-session]`
-    (@cmd ($cmd:expr) -t $target_session:expr, $($tail:tt)*) => {{
-        $crate::show_hooks!(@cmd ({
-            $cmd.target_session($target_session)
-        }) $($tail)*)
-    }};
-
     // `[-t target-pane]`
-    (@cmd ($cmd:expr) -t $target_pane:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -t $target:expr, $($tail:tt)*) => {{
         $crate::show_hooks!(@cmd ({
-            $cmd.target_pane($target_pane)
+            #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_3_2")))]
+            {
+                $cmd.target_session($target)
+            }
+            #[cfg(feature = "tmux_3_2")]
+            {
+                $cmd.target_pane($target)
+            }
         }) $($tail)*)
     }};
 
@@ -93,7 +94,7 @@ fn show_hooks_macro() {
     let show_hooks = show_hooks!((show_hooks), -p);
     #[cfg(feature = "tmux_3_2")]
     let show_hooks = show_hooks!((show_hooks), -w);
-    #[cfg(feature = "tmux_2_2")]
+    #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_3_2")))]
     let show_hooks = show_hooks!((show_hooks), -t "1");
     #[cfg(feature = "tmux_3_2")]
     let show_hooks = show_hooks!((show_hooks), -t "2");
@@ -108,7 +109,7 @@ fn show_hooks_macro() {
     s.push("-p");
     #[cfg(feature = "tmux_3_2")]
     s.push("-w");
-    #[cfg(feature = "tmux_2_2")]
+    #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_3_2")))]
     s.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_3_2")]
     s.extend_from_slice(&["-t", "2"]);

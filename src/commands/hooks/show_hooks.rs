@@ -33,7 +33,7 @@ pub struct ShowHooks<'a> {
     pub window: bool,
 
     /// `[-t target-session]`
-    #[cfg(feature = "tmux_2_2")]
+    #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_3_2")))]
     pub target_session: Option<Cow<'a, str>>,
 
     /// `[-t target-pane]`
@@ -68,7 +68,7 @@ impl<'a> ShowHooks<'a> {
     }
 
     /// `[-t target-session]`
-    #[cfg(feature = "tmux_2_2")]
+    #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_3_2")))]
     pub fn target_session<S: Into<Cow<'a, str>>>(mut self, target_session: S) -> Self {
         self.target_session = Some(target_session.into());
         self
@@ -106,7 +106,7 @@ impl<'a> ShowHooks<'a> {
         }
 
         // `[-t target-session]`
-        #[cfg(feature = "tmux_2_2")]
+        #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_3_2")))]
         if let Some(target_session) = self.target_session {
             cmd.push_option(T_LOWERCASE_KEY, target_session);
         }

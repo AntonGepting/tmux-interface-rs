@@ -53,7 +53,7 @@ fn join_pane() {
 
     // `[-l size]`
     #[cfg(feature = "tmux_1_5")]
-    let join_pane = join_pane.size(&PaneSize::Percentage(1));
+    let join_pane = join_pane.size(&PaneSize::Size(1));
 
     // `[-p percentage]`
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_3_1")))]

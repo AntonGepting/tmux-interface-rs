@@ -67,8 +67,9 @@ macro_rules! set_environment {
         }) $($tail)*)
     }};
 
+    // FIXME: no difference between name and value for macro
     // `[value]`
-    (@cmd ($cmd:expr) $value:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) --value $value:expr, $($tail:tt)*) => {{
         $crate::set_environment!(@cmd ({
             $cmd.value($value)
         }) $($tail)*)
@@ -127,7 +128,7 @@ fn set_environment_macro() {
     #[cfg(feature = "tmux_1_5")]
     let set_environment = set_environment!((set_environment), "2");
     #[cfg(feature = "tmux_1_5")]
-    let set_environment = set_environment!((set_environment), "3");
+    let set_environment = set_environment!((set_environment), --value "3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "set-environment";

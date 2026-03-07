@@ -33,7 +33,7 @@ fn show_hooks() {
     let show_hooks = show_hooks.window();
 
     // `[-t target-session]`
-    #[cfg(feature = "tmux_2_2")]
+    #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_3_2")))]
     let show_hooks = show_hooks.target_session("1");
 
     // `[-t target-pane]`
@@ -50,7 +50,7 @@ fn show_hooks() {
     v.push("-p");
     #[cfg(feature = "tmux_3_2")]
     v.push("-w");
-    #[cfg(feature = "tmux_2_2")]
+    #[cfg(all(feature = "tmux_2_2", not(feature = "tmux_3_2")))]
     v.extend_from_slice(&["-t", "1"]);
     #[cfg(feature = "tmux_3_2")]
     v.extend_from_slice(&["-t", "2"]);

@@ -60,8 +60,9 @@ macro_rules! if_shell {
         }) $($tail)*)
     }};
 
+    // FIXME: no difference between shell-command command for macro
     // `[command]`
-    (@cmd ($cmd:expr) $command:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) --command $command:expr, $($tail:tt)*) => {{
         $crate::if_shell!(@cmd ({
             $cmd.command($command)
         }) $($tail)*)
@@ -126,7 +127,7 @@ fn if_shell_macro() {
     #[cfg(feature = "tmux_1_5")]
     let if_shell = if_shell!((if_shell), "2");
     #[cfg(feature = "tmux_1_5")]
-    let if_shell = if_shell!((if_shell), "3");
+    let if_shell = if_shell!((if_shell), --command "3");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "if-shell";

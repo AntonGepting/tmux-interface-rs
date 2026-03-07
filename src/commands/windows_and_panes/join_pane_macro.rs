@@ -146,7 +146,7 @@ fn join_pane_macro() {
     #[cfg(feature = "tmux_1_5")]
     let join_pane = join_pane!((join_pane), -v);
     #[cfg(feature = "tmux_1_5")]
-    let join_pane = join_pane!((join_pane), -l & PaneSize::Percentage(1));
+    let join_pane = join_pane!((join_pane), -l & PaneSize::Size(1));
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_3_1")))]
     let join_pane = join_pane!((join_pane), -p "2");
     #[cfg(feature = "tmux_1_5")]

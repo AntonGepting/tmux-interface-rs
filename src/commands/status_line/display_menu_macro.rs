@@ -107,15 +107,16 @@ macro_rules! display_menu {
         }) $($tail)*)
     }};
 
+    // FIXME: no difference between key and command for macro
     // `[key]`
-    (@cmd ($cmd:expr) $key:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) --key $key:expr, $($tail:tt)*) => {{
         $crate::display_menu!(@cmd ({
             $cmd.key($key)
         }) $($tail)*)
     }};
 
     // `[command]`
-    (@cmd ($cmd:expr) $command:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) --command $command:expr, $($tail:tt)*) => {{
         $crate::display_menu!(@cmd ({
             $cmd.command($command)
         }) $($tail)*)
@@ -194,9 +195,9 @@ fn display_menu_macro() {
     #[cfg(feature = "tmux_3_0")]
     let display_menu = display_menu!((display_menu), "9");
     #[cfg(feature = "tmux_3_0")]
-    let display_menu = display_menu!((display_menu), "10");
+    let display_menu = display_menu!((display_menu), --key "10");
     #[cfg(feature = "tmux_3_0")]
-    let display_menu = display_menu!((display_menu), "11");
+    let display_menu = display_menu!((display_menu), --command "11");
 
     #[cfg(not(feature = "cmd_alias"))]
     let cmd = "display-menu";
