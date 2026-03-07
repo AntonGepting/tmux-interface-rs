@@ -529,6 +529,9 @@ pub const CHOOSE_TREE: &str = "choose-tree";
 /// `copy-mode`
 pub const COPY_MODE: &str = "copy-mode";
 
+/// `customize-mode`
+pub const CUSTOMIZE_MODE: &str = "customize-mode";
+
 /// `display-panes`
 #[cfg(not(feature = "cmd_alias"))]
 pub const DISPLAY_PANES: &str = "display-panes";
