@@ -414,6 +414,13 @@ pub const RUN_SHELL: &str = "run-shell";
 #[cfg(feature = "cmd_alias")]
 pub const RUN_SHELL: &str = "run";
 
+/// `server-info`
+#[cfg(not(feature = "cmd_alias"))]
+pub const SERVER_INFO: &str = "server-info";
+/// `info`
+#[cfg(feature = "cmd_alias")]
+pub const SERVER_INFO: &str = "info";
+
 /// `wait-for`
 #[cfg(not(feature = "cmd_alias"))]
 pub const WAIT_FOR: &str = "wait-for";
