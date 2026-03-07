@@ -76,7 +76,7 @@ macro_rules! unbind_key {
         $crate::unbind_key!(@cmd ({
             #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
             {
-                $cmd.mode_key($table)
+                $cmd.mode_table($table)
             }
             #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
             {

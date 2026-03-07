@@ -20,6 +20,9 @@ impl GetOptionTr for GetLocalWindowOptionValue {
     ) -> TmuxCommand<'a> {
         let cmd = ShowOptions::new().window().value().option(name);
         let cmd = match target {
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
+            Some(target) => cmd.target_session(target),
+            #[cfg(feature = "tmux_3_0a")]
             Some(target) => cmd.target_pane(target),
             None => cmd,
         };

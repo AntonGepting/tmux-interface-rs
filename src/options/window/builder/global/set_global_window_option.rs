@@ -14,9 +14,9 @@ impl SetOptionTr for SetGlobalWindowOption {
     ) -> TmuxCommand<'a> {
         let cmd = SetOption::new().window().global().option(name);
         let cmd = match target {
-            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-            Some(target) => cmd.target(target),
-            #[cfg(feature = "tmux_3_0")]
+            #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_3_0a")))]
+            Some(target) => cmd.target_window(target),
+            #[cfg(feature = "tmux_3_0a")]
             Some(target) => cmd.target_pane(target),
             None => cmd,
         };
@@ -33,9 +33,9 @@ impl SetOptionTr for SetGlobalWindowOption {
     ) -> TmuxCommand<'a> {
         let cmd = SetOption::new().window().global().option(name).unset();
         let cmd = match target {
-            #[cfg(all(feature = "tmux_1_2", not(feature = "tmux_3_0")))]
-            Some(target) => cmd.target(target),
-            #[cfg(feature = "tmux_3_0")]
+            #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_3_0a")))]
+            Some(target) => cmd.target_window(target),
+            #[cfg(feature = "tmux_3_0a")]
             Some(target) => cmd.target_pane(target),
             None => cmd,
         };

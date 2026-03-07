@@ -143,16 +143,16 @@ macro_rules! choose_tree {
     }};
 
     // `[-S format]`
-    (@cmd ($cmd:expr) -S $format:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -S $session_format:expr, $($tail:tt)*) => {{
         $crate::choose_tree!(@cmd ({
-            $cmd.format($format)
+            $cmd.session_format($session_format)
         }) $($tail)*)
     }};
 
     // `[-W format]`
-    (@cmd ($cmd:expr) -W $format:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -W $window_format:expr, $($tail:tt)*) => {{
         $crate::choose_tree!(@cmd ({
-            $cmd.format($format)
+            $cmd.window_format($window_format)
         }) $($tail)*)
     }};
 

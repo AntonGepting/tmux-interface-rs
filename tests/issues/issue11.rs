@@ -21,7 +21,7 @@ fn issue11() {
     let select_layout1 = select_layout1.last_layout();
     #[cfg(feature = "tmux_1_5")]
     let select_layout1 = select_layout1.previous_layout();
-    #[cfg(feature = "tmux_0_9")]
+    #[cfg(feature = "tmux_2_7")]
     let select_layout1 = select_layout1.target_pane(target);
     #[cfg(feature = "tmux_1_0")]
     let select_layout1 = select_layout1.layout_name(layout_name);
@@ -31,7 +31,7 @@ fn issue11() {
     let select_layout2 = SelectLayout::new();
     #[cfg(feature = "tmux_1_0")]
     let select_layout2 = select_layout2.layout_name(layout_name);
-    #[cfg(feature = "tmux_0_9")]
+    #[cfg(feature = "tmux_2_7")]
     let select_layout2 = select_layout2.target_pane(target);
     #[cfg(feature = "tmux_1_5")]
     let select_layout2 = select_layout2.previous_layout();

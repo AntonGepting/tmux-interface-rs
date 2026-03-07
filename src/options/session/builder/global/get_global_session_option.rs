@@ -17,6 +17,9 @@ impl GetOptionTr for GetGlobalSessionOption {
     ) -> TmuxCommand<'a> {
         let cmd = ShowOptions::new().global().option(name);
         let cmd = match target {
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
+            Some(target) => cmd.target_session(target),
+            #[cfg(feature = "tmux_3_0a")]
             Some(target) => cmd.target_pane(target),
             None => cmd,
         };
@@ -26,6 +29,9 @@ impl GetOptionTr for GetGlobalSessionOption {
     fn get_all<'a, S: Into<Cow<'a, str>>>(target: Option<S>) -> TmuxCommand<'a> {
         let cmd = ShowOptions::new().global();
         let cmd = match target {
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
+            Some(target) => cmd.target_session(target),
+            #[cfg(feature = "tmux_3_0a")]
             Some(target) => cmd.target_pane(target),
             None => cmd,
         };

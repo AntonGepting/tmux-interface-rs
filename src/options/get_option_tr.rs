@@ -50,6 +50,9 @@ pub trait GetOptionTr {
     {
         let cmd = ShowOptions::new().option(name);
         let cmd = match target {
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
+            Some(target) => cmd.target_session(target),
+            #[cfg(feature = "tmux_3_0a")]
             Some(target) => cmd.target_pane(target),
             None => cmd,
         };
@@ -73,6 +76,9 @@ pub trait GetOptionTr {
     {
         let cmd = ShowOptions::new();
         let cmd = match target {
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_3_0a")))]
+            Some(target) => cmd.target_session(target),
+            #[cfg(feature = "tmux_3_0a")]
             Some(target) => cmd.target_pane(target),
             None => cmd,
         };

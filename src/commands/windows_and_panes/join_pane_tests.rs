@@ -52,12 +52,9 @@ fn join_pane() {
     let join_pane = join_pane.vertical();
 
     // `[-l size]`
+    // `[-p percentage]`
     #[cfg(feature = "tmux_1_5")]
     let join_pane = join_pane.size(&PaneSize::Size(1));
-
-    // `[-p percentage]`
-    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_3_1")))]
-    let join_pane = join_pane.percentage("2");
 
     // `[-s src-pane]`
     #[cfg(feature = "tmux_1_5")]
@@ -86,8 +83,6 @@ fn join_pane() {
     v.push("-v");
     #[cfg(feature = "tmux_1_5")]
     v.extend_from_slice(&["-l", "1"]);
-    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_3_1")))]
-    v.extend_from_slice(&["-p", "2"]);
     #[cfg(feature = "tmux_1_5")]
     v.extend_from_slice(&["-s", "3"]);
     #[cfg(feature = "tmux_1_5")]

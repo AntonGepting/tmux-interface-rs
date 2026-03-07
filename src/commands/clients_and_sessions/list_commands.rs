@@ -4,6 +4,7 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
+use std::marker::PhantomData;
 
 pub type LsCm<'a> = ListCommands<'a>;
 
@@ -37,6 +38,8 @@ pub struct ListCommands<'a> {
     /// `[command]`
     #[cfg(feature = "tmux_3_1a")]
     pub command: Option<Cow<'a, str>>,
+
+    _phantom: PhantomData<&'a str>,
 }
 
 impl<'a> ListCommands<'a> {

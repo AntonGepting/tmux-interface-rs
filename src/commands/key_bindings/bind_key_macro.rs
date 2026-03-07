@@ -84,16 +84,17 @@ macro_rules! bind_key {
     }};
 
     // `[-t key-table]`
-    (@cmd ($cmd:expr) -t $key_table:expr, $($tail:tt)*) => {{
-        $crate::bind_key!(@cmd ({
-            $cmd.key_table($key_table)
-        }) $($tail)*)
-    }};
-
     // `[-t mode-table]`
-    (@cmd ($cmd:expr) -t $mode_table:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -t $table:expr, $($tail:tt)*) => {{
         $crate::bind_key!(@cmd ({
-            $cmd.mode_table($mode_table)
+            #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_0")))]
+            {
+                $cmd.key_table($table)
+            }
+            #[cfg(all(feature = "tmux_2_0", not(feature = "tmux_2_4")))]
+            {
+                $cmd.mode_table($table)
+            }
         }) $($tail)*)
     }};
 

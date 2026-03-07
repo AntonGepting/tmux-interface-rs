@@ -106,11 +106,11 @@ pub struct ChooseTree<'a> {
 
     /// `[-S format]`
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    pub format: Option<Cow<'a, str>>,
+    pub session_format: Option<Cow<'a, str>>,
 
     /// `[-W format]`
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    pub format: Option<Cow<'a, str>>,
+    pub window_format: Option<Cow<'a, str>>,
 
     /// `[-t target-window]`
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
@@ -230,15 +230,15 @@ impl<'a> ChooseTree<'a> {
 
     /// `[-S format]`
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    pub fn format<S: Into<Cow<'a, str>>>(mut self, format: S) -> Self {
-        self.format = Some(format.into());
+    pub fn session_format<S: Into<Cow<'a, str>>>(mut self, session_format: S) -> Self {
+        self.session_format = Some(session_format.into());
         self
     }
 
     /// `[-W format]`
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    pub fn format<S: Into<Cow<'a, str>>>(mut self, format: S) -> Self {
-        self.format = Some(format.into());
+    pub fn window_format<S: Into<Cow<'a, str>>>(mut self, window_format: S) -> Self {
+        self.window_format = Some(window_format.into());
         self
     }
 
@@ -355,13 +355,13 @@ impl<'a> ChooseTree<'a> {
 
         // `[-S format]`
         #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-        if let Some(format) = self.format {
+        if let Some(format) = self.session_format {
             cmd.push_option(S_UPPERCASE_KEY, format);
         }
 
         // `[-W format]`
         #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-        if let Some(format) = self.format {
+        if let Some(format) = self.window_format {
             cmd.push_option(W_UPPERCASE_KEY, format);
         }
 

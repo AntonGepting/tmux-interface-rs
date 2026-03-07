@@ -96,11 +96,11 @@ macro_rules! break_pane {
     // `[-t dst-window]`
     (@cmd ($cmd:expr) -t $target:expr, $($tail:tt)*) => {{
         $crate::break_pane!(@cmd ({
-            #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_1")))]
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
             {
                 $cmd.target_window($target)
             }
-            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_7")))]
+            #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_1")))]
             {
                 $cmd.target_pane($target)
             }

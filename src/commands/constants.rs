@@ -524,7 +524,13 @@ pub const CAPTURE_PANE: &str = "capturep";
 pub const CHOOSE_CLIENT: &str = "choose-client";
 
 /// `choose-tree`
+pub const CHOOSE_SESSION: &str = "choose-session";
+
+/// `choose-tree`
 pub const CHOOSE_TREE: &str = "choose-tree";
+
+/// `choose-window`
+pub const CHOOSE_WINDOW: &str = "choose-window";
 
 /// `copy-mode`
 pub const COPY_MODE: &str = "copy-mode";

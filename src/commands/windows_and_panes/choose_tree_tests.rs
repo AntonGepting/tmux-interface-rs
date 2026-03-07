@@ -106,11 +106,11 @@ fn choose_tree() {
 
     // `[-S format]`
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    let choose_tree = choose_tree.format("7");
+    let choose_tree = choose_tree.session_format("7");
 
     // `[-W format]`
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]
-    let choose_tree = choose_tree.format("8");
+    let choose_tree = choose_tree.window_format("8");
 
     // `[-t target-window]`
     #[cfg(all(feature = "tmux_1_7", not(feature = "tmux_2_6")))]

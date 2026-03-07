@@ -61,16 +61,10 @@ macro_rules! join_pane {
     }};
 
     // `[-l size]`
+    // `[-p percentage]`
     (@cmd ($cmd:expr) -l $size:expr, $($tail:tt)*) => {{
         $crate::join_pane!(@cmd ({
             $cmd.size($size)
-        }) $($tail)*)
-    }};
-
-    // `[-p percentage]`
-    (@cmd ($cmd:expr) -p $percentage:expr, $($tail:tt)*) => {{
-        $crate::join_pane!(@cmd ({
-            $cmd.percentage($percentage)
         }) $($tail)*)
     }};
 
@@ -147,8 +141,6 @@ fn join_pane_macro() {
     let join_pane = join_pane!((join_pane), -v);
     #[cfg(feature = "tmux_1_5")]
     let join_pane = join_pane!((join_pane), -l & PaneSize::Size(1));
-    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_3_1")))]
-    let join_pane = join_pane!((join_pane), -p "2");
     #[cfg(feature = "tmux_1_5")]
     let join_pane = join_pane!((join_pane), -s "3");
     #[cfg(feature = "tmux_1_5")]
@@ -173,8 +165,6 @@ fn join_pane_macro() {
     s.push("-v");
     #[cfg(feature = "tmux_1_5")]
     s.extend_from_slice(&["-l", "1"]);
-    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_3_1")))]
-    s.extend_from_slice(&["-p", "2"]);
     #[cfg(feature = "tmux_1_5")]
     s.extend_from_slice(&["-s", "3"]);
     #[cfg(feature = "tmux_1_5")]
