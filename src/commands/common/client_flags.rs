@@ -1,3 +1,6 @@
+// ```
+// tmux >=2.9a:
+// ```
 // used by commands:
 //  * attach-session
 //  * new-session
@@ -6,10 +9,8 @@
 
 // TODO: parse from_str
 
-#[cfg(feature = "tmux_2_9a")]
 use std::fmt;
 
-#[cfg(feature = "tmux_2_9a")]
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct ClientFlags {
     /// `active-pane` the client has an independent active pane
@@ -18,6 +19,7 @@ pub struct ClientFlags {
     pub ignore_size: Option<bool>,
     /// `no-output` the client does not receive pane output in control mode
     pub no_output: Option<bool>,
+    // TODO: (bool state, seconds)
     /// `pause-after=seconds` output is paused once the pane is seconds behind in control mode
     pub pause_after: Option<usize>,
     /// `read-only` the client is read-only
@@ -26,13 +28,12 @@ pub struct ClientFlags {
     pub wait_exit: Option<bool>,
 }
 
-#[cfg(feature = "tmux_2_9a")]
 impl ClientFlags {
-    fn bool_to_flag<S: AsRef<str>>(value: bool, flag_name: S) -> String {
-        if value {
-            flag_name.as_ref().to_string()
-        } else {
-            format!("!{}", flag_name.as_ref())
+    // set/unset flag by adding `!` in front of it
+    fn bool_to_flag<S: AsRef<str>>(flag_name: S, state: bool) -> String {
+        match state {
+            true => flag_name.as_ref().to_string(),
+            false => format!("!{}", flag_name.as_ref()),
         }
     }
 }
@@ -44,31 +45,30 @@ const CLIENT_FLAG_PAUSE_AFTER: &str = "pause-after";
 const CLIENT_FLAG_READ_ONLY: &str = "read-only";
 const CLIENT_FLAG_WAIT_EXIT: &str = "wait-exit";
 
-#[cfg(feature = "tmux_2_9a")]
 impl fmt::Display for ClientFlags {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut v = Vec::new();
         if let Some(active_pane) = self.active_pane {
-            v.push(Self::bool_to_flag(active_pane, CLIENT_FLAG_ACTIVE_PANE));
+            v.push(Self::bool_to_flag(CLIENT_FLAG_ACTIVE_PANE, active_pane));
         }
         if let Some(ignore_size) = self.ignore_size {
-            v.push(Self::bool_to_flag(ignore_size, CLIENT_FLAG_IGNORE_SIZE));
+            v.push(Self::bool_to_flag(CLIENT_FLAG_IGNORE_SIZE, ignore_size));
         }
         if let Some(no_output) = self.no_output {
-            v.push(Self::bool_to_flag(no_output, CLIENT_FLAG_NO_OUTPUT));
+            v.push(Self::bool_to_flag(CLIENT_FLAG_NO_OUTPUT, no_output));
         }
         if let Some(pause_after) = self.pause_after {
             v.push(format!(
                 "{}={}",
-                Self::bool_to_flag(true, CLIENT_FLAG_PAUSE_AFTER),
+                Self::bool_to_flag(CLIENT_FLAG_PAUSE_AFTER, true),
                 pause_after
             ));
         }
         if let Some(read_only) = self.read_only {
-            v.push(Self::bool_to_flag(read_only, CLIENT_FLAG_READ_ONLY));
+            v.push(Self::bool_to_flag(CLIENT_FLAG_READ_ONLY, read_only));
         }
         if let Some(wait_exit) = self.wait_exit {
-            v.push(Self::bool_to_flag(wait_exit, CLIENT_FLAG_WAIT_EXIT));
+            v.push(Self::bool_to_flag(CLIENT_FLAG_WAIT_EXIT, wait_exit));
         }
         let s = v.join(",");
         write!(f, "{}", s)

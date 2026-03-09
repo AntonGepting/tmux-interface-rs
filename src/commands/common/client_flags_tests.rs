@@ -1,3 +1,6 @@
+// ```
+// tmux >=2.9a:
+// ```
 #[test]
 fn to_string() {
     use crate::ClientFlags;
