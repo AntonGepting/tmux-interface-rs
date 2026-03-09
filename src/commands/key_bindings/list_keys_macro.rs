@@ -65,16 +65,17 @@ macro_rules! list_keys {
     }};
 
     // `[-t key-table]`
-    (@cmd ($cmd:expr) -t $key_table:expr, $($tail:tt)*) => {{
-        $crate::list_keys!(@cmd ({
-            $cmd.key_table($key_table)
-        }) $($tail)*)
-    }};
-
     // `[-t mode-table]`
-    (@cmd ($cmd:expr) -t $mode_table:expr, $($tail:tt)*) => {{
+    (@cmd ($cmd:expr) -t $table:expr, $($tail:tt)*) => {{
         $crate::list_keys!(@cmd ({
-            $cmd.mode_table($mode_table)
+            #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_2_1")))]
+            {
+                $cmd.key_table($table)
+            }
+            #[cfg(all(feature = "tmux_2_1", not(feature = "tmux_2_4")))]
+            {
+                $cmd.mode_table($table)
+            }
         }) $($tail)*)
     }};
 
