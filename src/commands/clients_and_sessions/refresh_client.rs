@@ -307,17 +307,16 @@ impl<'a> RefreshClient<'a> {
         }
 
         // TODO: accept target_pane
+        // TODO: -A may be given multiple times for different panes
         // `[-A pane:state]` - allows a control mode client to trigger actions on a pane
         // `[-A allow-actions]`
         #[cfg(feature = "tmux_3_2")]
         if let Some(allow_actions) = self.allow_actions {
-            cmd.push_option(
-                A_UPPERCASE_KEY,
-                format!("{}:{}", allow_actions.pane, allow_actions.state),
-            );
+            cmd.push_option(A_UPPERCASE_KEY, allow_actions.to_string());
         }
 
         // TODO: refactor, accept target_pane, target_window and masks * ...
+        // TODO: according to man
         // `[-B subscribe]`
         #[cfg(feature = "tmux_3_2")]
         if let Some(subscribe) = self.subscribe {

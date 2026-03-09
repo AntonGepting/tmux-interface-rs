@@ -284,7 +284,7 @@ fn set_option_macro() {
     s.extend_from_slice(&["-t", "1"]);
     #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_3_0a")))]
     s.extend_from_slice(&["-t", "2"]);
-    #[cfg(feature = "tmux_3_1")]
+    #[cfg(feature = "tmux_3_0a")]
     s.extend_from_slice(&["-t", "3"]);
     #[cfg(feature = "tmux_0_8")]
     s.push("4");

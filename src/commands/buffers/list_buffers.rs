@@ -4,6 +4,7 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
+use std::marker::PhantomData;
 
 pub type LsB<'a> = ListBuffers<'a>;
 
@@ -47,6 +48,9 @@ pub struct ListBuffers<'a> {
     /// `[-t target_session]`
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub target_session: Option<Cow<'a, str>>,
+
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_1_7")))]
+    _phantom_data: PhantomData<&'a ()>,
 }
 
 impl<'a> ListBuffers<'a> {

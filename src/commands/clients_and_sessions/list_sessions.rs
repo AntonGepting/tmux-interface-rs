@@ -4,6 +4,7 @@
 use crate::commands::constants::*;
 use crate::TmuxCommand;
 use std::borrow::Cow;
+use std::marker::PhantomData;
 pub type Ls<'a> = ListSessions<'a>;
 
 // XXX: better result return?
@@ -37,6 +38,9 @@ pub struct ListSessions<'a> {
     /// `[-f filter]`
     #[cfg(feature = "tmux_3_2")]
     pub filter: Option<Cow<'a, str>>,
+
+    #[cfg(not(feature = "tmux_1_6"))]
+    _phantom_data: PhantomData<&'a ()>,
 }
 
 impl<'a> ListSessions<'a> {

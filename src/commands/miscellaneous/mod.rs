@@ -102,7 +102,7 @@ impl<'a> TmuxCommand<'a> {
     }
 
     #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
-    pub fn server_info() -> ServerInfo<'a> {
+    pub fn server_info() -> ServerInfo {
         ServerInfo::new()
     }
 
@@ -140,8 +140,8 @@ impl<'a> From<RunShell<'a>> for TmuxCommand<'a> {
 }
 
 #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_9")))]
-impl<'a> From<ServerInfo<'a>> for TmuxCommand<'a> {
-    fn from(item: ServerInfo<'a>) -> Self {
+impl<'a> From<ServerInfo> for TmuxCommand<'a> {
+    fn from(item: ServerInfo) -> Self {
         item.build()
     }
 }

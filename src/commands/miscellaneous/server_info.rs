@@ -3,9 +3,8 @@
 
 use crate::commands::constants::*;
 use crate::TmuxCommand;
-use std::borrow::Cow;
 
-pub type Info<'a> = ServerInfo<'a>;
+pub type Info = ServerInfo;
 
 /// Show server information
 ///
@@ -15,15 +14,15 @@ pub type Info<'a> = ServerInfo<'a>;
 /// (alias: info)
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct ServerInfo<'a> {}
+pub struct ServerInfo;
 
-impl<'a> ServerInfo<'a> {
+impl ServerInfo {
     pub fn new() -> Self {
         Default::default()
     }
 
     /// build command with arguments in right order
-    pub fn build(self) -> TmuxCommand<'a> {
+    pub fn build<'a>(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
         cmd.name(SERVER_INFO);
