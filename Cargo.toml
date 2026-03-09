@@ -82,7 +82,7 @@ tmux_X_X = ["tmux_3_6a"]
 # tmux latest synonymous version
 tmux_latest = ["tmux_3_6a"]
 # tmux stable synonymous version
-tmux_stable = ["tmux_3_6a"]
+tmux_stable = ["tmux_3_6"]
 
 
 # use alias instead of full tmux command name (e.g. `list-sessions` -> `ls`)
