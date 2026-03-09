@@ -21,6 +21,8 @@ fn issue11() {
     let select_layout1 = select_layout1.last_layout();
     #[cfg(feature = "tmux_1_5")]
     let select_layout1 = select_layout1.previous_layout();
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_7")))]
+    let select_layout1 = select_layout1.target_window(target);
     #[cfg(feature = "tmux_2_7")]
     let select_layout1 = select_layout1.target_pane(target);
     #[cfg(feature = "tmux_1_0")]
@@ -31,6 +33,8 @@ fn issue11() {
     let select_layout2 = SelectLayout::new();
     #[cfg(feature = "tmux_1_0")]
     let select_layout2 = select_layout2.layout_name(layout_name);
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_7")))]
+    let select_layout2 = select_layout2.target_window(target);
     #[cfg(feature = "tmux_2_7")]
     let select_layout2 = select_layout2.target_pane(target);
     #[cfg(feature = "tmux_1_5")]
@@ -59,7 +63,9 @@ fn issue11() {
     s.push("-o");
     #[cfg(feature = "tmux_1_5")]
     s.push("-p");
-    #[cfg(feature = "tmux_0_9")]
+    #[cfg(all(feature = "tmux_1_5", not(feature = "tmux_2_7")))]
+    s.extend_from_slice(&["-t", target]);
+    #[cfg(feature = "tmux_2_7")]
     s.extend_from_slice(&["-t", target]);
     #[cfg(feature = "tmux_1_0")]
     s.push(layout_name);
