@@ -1,6 +1,13 @@
 # Changelog
 
 <!--## tmux_interface vX.X.X-->
+
+## tmux_interface v0.4.0
+* include PR(#22), PR(#23), PR(#24)
+* feature: add tmux 3.5 partial support (cargo features: `tmux_3_5`, `tmux_3_5a`)
+* feature: add tmux 3.6 partial support (cargo features: `tmux_3_6`, `tmux_3_6a`)
+* fix errors in commands conditional compilation for multiple versions
+
 ## tmux_interface v0.3.2
 * feature: add tmux 3.4 support
 * add type aliases for command structures, synonymous to tmux commands aliases (e.g. `NewSession` -> `New`)

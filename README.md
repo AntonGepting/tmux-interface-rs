@@ -86,10 +86,10 @@ under following conditions:
 
 - Tmux (covered tmux versions crate features):
     - [ ] master - `tmux_X_X`
-    - [ ] 3.6a - `tmux_3_6a`
-    - [ ] 3.6 - `tmux_3_6`
-    - [ ] 3.5a - `tmux_3_5a`
-    - [ ] 3.5 - `tmux_3_5`
+    - [x] 3.6a - `tmux_3_6a`
+    - [x] 3.6 - `tmux_3_6`
+    - [x] 3.5a - `tmux_3_5a`
+    - [x] 3.5 - `tmux_3_5`
     - [x] 3.4 - `tmux_3_4`
     - [x] 3.3a - `tmux_3_3a`
     - [x] 3.3 - `tmux_3_3`
@@ -118,6 +118,7 @@ under following conditions:
     - [ ] 1.7 - `tmux_1_7`
     - [ ] 1.6 - `tmux_1_6`
     - [ ] 1.5 - `tmux_1_5`
+<!--
     - [ ] 1.4 - `tmux_1_4` - tmux compilation error
     - [ ] 1.3 - `tmux_1_3` - tmux compilation error
     - [ ] 1.2 - `tmux_1_2` - tmux compilation error
@@ -125,7 +126,7 @@ under following conditions:
     - [ ] 1.0 - `tmux_1_0` - tmux compilation error
     - [ ] 0.9 - `tmux_0_9` - tmux compilation error
     - [ ] 0.8 - `tmux_0_8` - tmux compilation error
-
+-->
 
 ## Contributors
 
