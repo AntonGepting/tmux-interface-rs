@@ -1,3 +1,6 @@
+// auto-generated file
+//
+
 use crate::commands::constants::*;
 use crate::{Error, TmuxCommand, TmuxCommands, TmuxOutput};
 use std::borrow::Cow;
@@ -29,57 +32,62 @@ impl From<StdIO> for Stdio {
     }
 }
 
+// XXX: using environment vars
 // XXX: set_cmds_separator
 // NOTE: [-N] missing in man
 /// [man tmux](http://man7.org/linux/man-pages/man1/tmux.1.html#DESCRIPTION)
 ///
 /// # Manual
 ///
-/// tmux ^3.2:
+/// tmux >=3.6:
 /// ```text
 /// tmux [-2CDluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [-T features] [command [flags]]
 /// ```
 ///
-/// tmux ^2.1:
+/// tmux >=3.2:
+/// ```text
+/// tmux [-2CDluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [-T features] [command [flags]]
+/// ```
+///
+/// tmux >=2.1:
 /// ```text
 /// tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 ///
-/// tmux ^1.9:
+/// tmux >=1.9:
 /// ```text
 /// tmux [-2lCquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 ///
-/// tmux ^1.8:
+/// tmux >=1.8:
 /// ```text
 /// tmux [-28lCquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]
 /// ```
 ///
-/// tmux ^1.4:
+/// tmux >=1.4:
 /// ```text
 /// tmux [-28lquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 ///
-/// tmux ^1.1:
+/// tmux >=1.1:
 /// ```text
 /// tmux [-28lquv] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 ///
-/// tmux ^1.0:
+/// tmux >=1.0:
 /// ```text
 /// tmux [-28dlqUuv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 ///
-/// tmux ^0.9:
+/// tmux >=0.9:
 /// ```text
 /// tmux [-28dqUuv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 ///
-/// tmux ^0.8:
+/// tmux >=0.8:
 /// ```text
 /// tmux [-28dqUuVv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
-// XXX: using environment vars
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Tmux<'a> {
     /// `[-2]` - Force tmux to assume the terminal supports 256 colours
@@ -91,7 +99,7 @@ pub struct Tmux<'a> {
     pub colours88: bool,
 
     /// `[-d]` - indicates that tmux supports defaults colours
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub default_colours: bool,
 
     /// `[-q]` - prevent the server sending various information messages
@@ -106,20 +114,24 @@ pub struct Tmux<'a> {
     #[cfg(feature = "tmux_1_8")]
     pub disable_echo: bool,
 
-    /// `[-D]` - Do not start the tmux server as a daemon. This also turns the exit-empty option off.  With -D, command may not be specified.
+    /// `[-D]` - Do not start the tmux server as a daemon
     #[cfg(feature = "tmux_3_2")]
     pub no_daemon: bool,
 
+    /// `[-h]` - Print usage information and exit
+    #[cfg(feature = "tmux_3_6")]
+    pub help: bool,
+
     /// `[-l]` - Behave as a login shell
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_1_5")]
     pub login_shell: bool,
 
-    /// `[-N]` - Do not start the server even if the command would normally do so (for example new-session or start-server).
-    #[cfg(feature = "tmux_3_2")]
+    /// `[-N]` - Do not start the server even if the command would normally do so (for example new-session or start-server)
+    #[cfg(feature = "tmux_3_4")]
     pub no_start: bool,
 
     /// `[-U]` - Unlock the server
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub unlock: bool,
 
     /// `[-u]` - Write UTF-8 output to the terminal
@@ -135,7 +147,7 @@ pub struct Tmux<'a> {
     pub version: bool,
 
     /// `[-c shell-command]` - Execute shell-command using the default shell
-    #[cfg(feature = "tmux_1_1")]
+    #[cfg(feature = "tmux_1_5")]
     pub shell_command: Option<Cow<'a, str>>,
 
     /// `[-f file]` - Specify an alternative configuration file
@@ -187,7 +199,7 @@ impl<'a> Tmux<'a> {
     }
 
     /// `[-d]` - indicates that tmux supports defaults colours
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub fn default_colours(mut self) -> Self {
         self.default_colours = true;
         self
@@ -214,29 +226,36 @@ impl<'a> Tmux<'a> {
         self
     }
 
-    /// `[-D]` - Do not start the tmux server as a daemon. This also turns the exit-empty option off.  With -D, command may not be specified.
+    /// `[-D]` - Do not start the tmux server as a daemon
     #[cfg(feature = "tmux_3_2")]
     pub fn no_daemon(mut self) -> Self {
         self.no_daemon = true;
         self
     }
 
+    /// `[-h]` - Print usage information and exit
+    #[cfg(feature = "tmux_3_6")]
+    pub fn help(mut self) -> Self {
+        self.help = true;
+        self
+    }
+
     /// `[-l]` - Behave as a login shell
-    #[cfg(feature = "tmux_1_0")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn login_shell(mut self) -> Self {
         self.login_shell = true;
         self
     }
 
-    /// `[-N]` - Do not start the server even if the command would normally do so (for example new-session or start-server).
-    #[cfg(feature = "tmux_3_2")]
+    /// `[-N]` - Do not start the server even if the command would normally do so (for example new-session or start-server)
+    #[cfg(feature = "tmux_3_4")]
     pub fn no_start(mut self) -> Self {
         self.no_start = true;
         self
     }
 
     /// `[-U]` - Unlock the server
-    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+    #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
     pub fn unlock(mut self) -> Self {
         self.unlock = true;
         self
@@ -264,7 +283,7 @@ impl<'a> Tmux<'a> {
     }
 
     /// `[-c shell-command]` - Execute shell-command using the default shell
-    #[cfg(feature = "tmux_1_1")]
+    #[cfg(feature = "tmux_1_5")]
     pub fn shell_command<S: Into<Cow<'a, str>>>(mut self, shell_command: S) -> Self {
         self.shell_command = Some(shell_command.into());
         self
@@ -298,7 +317,8 @@ impl<'a> Tmux<'a> {
         self
     }
 
-    /// `[command]`
+    /// `[command]` -
+    #[cfg(feature = "tmux_0_8")]
     pub fn command<T: Into<TmuxCommand<'a>>>(mut self, command: T) -> Self {
         self.command
             .get_or_insert(TmuxCommands::new())
@@ -306,6 +326,7 @@ impl<'a> Tmux<'a> {
         self
     }
 
+    /// build command with arguments in right order
     pub fn build(self) -> TmuxCommand<'a> {
         let mut cmd = TmuxCommand::new();
 
@@ -324,7 +345,7 @@ impl<'a> Tmux<'a> {
         }
 
         // `[-d]` - indicates that tmux supports defaults colours
-        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
         if self.default_colours {
             cmd.push_flag(D_LOWERCASE_KEY);
         }
@@ -347,26 +368,32 @@ impl<'a> Tmux<'a> {
             cmd.push_flag(CC_UPPERCASE_KEY);
         }
 
-        // `[-D]` - Do not start the tmux server as a daemon. This also turns the exit-empty option off.  With -D, command may not be specified.
+        // `[-D]` - Do not start the tmux server as a daemon
         #[cfg(feature = "tmux_3_2")]
         if self.no_daemon {
             cmd.push_flag(D_UPPERCASE_KEY);
         }
 
+        // `[-h]` - Print usage information and exit
+        #[cfg(feature = "tmux_3_6")]
+        if self.help {
+            cmd.push_flag(H_LOWERCASE_KEY);
+        }
+
         // `[-l]` - Behave as a login shell
-        #[cfg(feature = "tmux_1_0")]
+        #[cfg(feature = "tmux_1_5")]
         if self.login_shell {
             cmd.push_flag(L_LOWERCASE_KEY);
         }
 
-        // `[-N]` - Do not start the server even if the command would normally do so (for example new-session or start-server).
-        #[cfg(feature = "tmux_3_2")]
+        // `[-N]` - Do not start the server even if the command would normally do so (for example new-session or start-server)
+        #[cfg(feature = "tmux_3_4")]
         if self.no_start {
             cmd.push_flag(N_UPPERCASE_KEY);
         }
 
         // `[-U]` - Unlock the server
-        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_1")))]
+        #[cfg(all(feature = "tmux_0_8", not(feature = "tmux_1_5")))]
         if self.unlock {
             cmd.push_flag(U_UPPERCASE_KEY);
         }
@@ -390,7 +417,7 @@ impl<'a> Tmux<'a> {
         }
 
         // `[-c shell-command]` - Execute shell-command using the default shell
-        #[cfg(feature = "tmux_1_1")]
+        #[cfg(feature = "tmux_1_5")]
         if let Some(shell_command) = self.shell_command {
             cmd.push_option(C_LOWERCASE_KEY, shell_command);
         }
@@ -419,7 +446,8 @@ impl<'a> Tmux<'a> {
             cmd.push_option(T_UPPERCASE_KEY, features);
         }
 
-        // `[command]`
+        // `[command]` -
+        #[cfg(feature = "tmux_0_8")]
         if let Some(command) = self.command {
             cmd.push_cmds(command);
         }
