@@ -41,7 +41,12 @@ impl From<StdIO> for Stdio {
 ///
 /// tmux >=3.6:
 /// ```text
-/// tmux [-2CDluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [-T features] [command [flags]]
+/// tmux [-2CDhlNuVv] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [-T features] [command [flags]]
+/// ```
+///
+/// tmux >=3.4:
+/// ```text
+/// tmux [-2CDlNuVv] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [-T features] [command [flags]]
 /// ```
 ///
 /// tmux >=3.2:
@@ -54,34 +59,14 @@ impl From<StdIO> for Stdio {
 /// tmux [-2CluvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 ///
-/// tmux >=1.9:
-/// ```text
-/// tmux [-2lCquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
-/// ```
-///
 /// tmux >=1.8:
 /// ```text
 /// tmux [-28lCquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]
 /// ```
 ///
-/// tmux >=1.4:
+/// tmux >=1.5:
 /// ```text
 /// tmux [-28lquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
-/// ```
-///
-/// tmux >=1.1:
-/// ```text
-/// tmux [-28lquv] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
-/// ```
-///
-/// tmux >=1.0:
-/// ```text
-/// tmux [-28dlqUuv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
-/// ```
-///
-/// tmux >=0.9:
-/// ```text
-/// tmux [-28dqUuv] [-f file] [-L socket-name] [-S socket-path] [command [flags]]
 /// ```
 ///
 /// tmux >=0.8:
